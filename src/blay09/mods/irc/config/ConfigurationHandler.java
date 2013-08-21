@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import blay09.mods.irc.IRCConnection;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.Property;
 import net.minecraftforge.common.Property.Type;
@@ -17,7 +18,7 @@ public class ConfigurationHandler {
 
 	public static final String DEFAULT_NICK = "EiraBot";
 	public static final String CATEGORY_SERVERS = "servers.";
-	public static final String FLAGS_PREFIX = "flags.";
+	public static final String CATEGORY_FLAGS_SUFFIX = ".flags";
 	
 	private static final Map<String, ServerConfig> serverConfigs = new HashMap<String, ServerConfig>();
 	private static Configuration config;
@@ -33,7 +34,7 @@ public class ConfigurationHandler {
 		GlobalConfig.enableAliases = config.get("global", "enableAliases", GlobalConfig.enableAliases).getBoolean(GlobalConfig.enableAliases);
 		GlobalConfig.opColor = config.get("global", "opColor", GlobalConfig.opColor).getString();
 		GlobalConfig.ircColor = config.get("global", "ircColor", GlobalConfig.ircColor).getString();
-		String[] colorBlackList = config.get("global", "colorBlackList", new String[0]).getStringList();
+		String[] colorBlackList = config.get("global", "colorBlackList", new String[] { "black" }).getStringList();
 		for(int i = 0; i < colorBlackList.length; i++) {
 			GlobalConfig.colorBlackList.add(colorBlackList[i]);
 		}
@@ -48,16 +49,17 @@ public class ConfigurationHandler {
 			}
 			String nick = config.get(category, "nick", GlobalConfig.nick).getString();
 			ServerConfig serverConfig = new ServerConfig(category.substring(CATEGORY_SERVERS.length()).replaceAll("_", "."), nick);
-			String[] channels = config.get(category, "channels", new String[0]).getStringList();
+			String[] channels = config.get(category, "channels", new String[] { "Bread" }).getStringList();
 			for(int i = 0; i < channels.length; i++) {
-				serverConfig.channels.add(channels[i]);
-				if(config.hasKey(category, FLAGS_PREFIX + channels[i])) {
-					serverConfig.channelFlags.put(channels[i], config.get(category, FLAGS_PREFIX + channels[i], "").getString());
+				serverConfig.channels.add("#" + channels[i]);
+				if(config.hasKey(category + CATEGORY_FLAGS_SUFFIX, channels[i])) {
+					serverConfig.channelFlags.put("#" + channels[i], config.get(category + CATEGORY_FLAGS_SUFFIX, channels[i], "").getString());
 				}				
 			}
 			serverConfig.nickServName = config.get(category, "nickServName", serverConfig.nickServName).getString();
 			serverConfig.nickServPassword = config.get(category, "nickServPassword", serverConfig.nickServPassword).getString();
 			serverConfig.allowPrivateMessages = config.get(category, "allowPrivateMessages", true).getBoolean(true);
+			serverConfig.autoConnect = config.get(category, "autoConnect", true).getBoolean(true);
 			serverConfigs.put(serverConfig.host, serverConfig);
 		}
 		
@@ -68,14 +70,21 @@ public class ConfigurationHandler {
 		for(ServerConfig serverConfig : serverConfigs.values()) {
 			String category = CATEGORY_SERVERS + serverConfig.host.replaceAll("\\.", "_");
 			config.get(category, "nick", GlobalConfig.nick).set(serverConfig.nick);
-			config.get(category, "channels", new String[0]).set(serverConfig.channels.toArray(new String[serverConfig.channels.size()]));
+			String[] channels = serverConfig.channels.toArray(new String[serverConfig.channels.size()]);
+			for(int i = 0; i < channels.length; i++) {
+				channels[i] = channels[i].substring(1);
+			}
+			config.get(category, "channels", channels).set(channels);
 			for(Entry<String, String> entry : serverConfig.channelFlags.entrySet()) {
 				if(serverConfig.channels.contains(entry.getKey())) {
-					config.get(category, FLAGS_PREFIX + entry.getKey(), entry.getValue()).set(entry.getValue());
+					config.get(category + CATEGORY_FLAGS_SUFFIX, entry.getKey().substring(1), entry.getValue()).set(entry.getValue());
 				}
 			}
 			config.get(category, "nickServName", serverConfig.nickServName).set(serverConfig.nickServName);
 			config.get(category, "nickServPassword", serverConfig.nickServPassword).set(serverConfig.nickServPassword);
+			config.get(category, "allowPrivateMessages", serverConfig.allowPrivateMessages).set(serverConfig.allowPrivateMessages);
+			config.get(category, "autoConnect", serverConfig.autoConnect).set(serverConfig.autoConnect);
+			
 		}
 		
 		config.save();
@@ -92,6 +101,10 @@ public class ConfigurationHandler {
 
 	public static Collection<ServerConfig> getServerConfigs() {
 		return serverConfigs.values();
+	}
+
+	public static void removeServerConfig(String host) {
+		serverConfigs.remove(host);
 	}
 
 }

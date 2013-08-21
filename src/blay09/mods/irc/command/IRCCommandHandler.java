@@ -53,6 +53,7 @@ public class IRCCommandHandler {
 			if(connection.connect()) {
 				EiraIRC.instance.addConnection(connection);				
 			} else {
+				ConfigurationHandler.removeServerConfig(connection.getHost());
 				sender.sendChatToPlayer(sender.translateString(Globals.MOD_ID + ":irc.connectionError", args[1]));
 			}
 			return true;
@@ -383,6 +384,7 @@ public class IRCCommandHandler {
 				throw new WrongUsageException(Globals.MOD_ID + ":commands.irc.usage.msg", serverSide ? "servirc" : "irc");
 			}
 			String nick = args[c];
+			c++;
 			if(serverSide) {
 				boolean foundNick = false;
 				for(String channel : connection.getConfig().channels) {
@@ -402,7 +404,7 @@ public class IRCCommandHandler {
 			}
 			message = message.trim();
 			if(message.isEmpty()) {
-				return true;
+				throw new WrongUsageException(Globals.MOD_ID + ":commands.irc.usage.msg", serverSide ? "servirc" : "irc");
 			}
 			connection.sendPrivateMessage(nick, message);
 			String mcMessage = "[" + nick + "] <" + Minecraft.getMinecraft().thePlayer.username + "> " + message;
@@ -455,6 +457,8 @@ public class IRCCommandHandler {
 					serverConfig.nickServPassword = value;
 				} else if(config.equals("allowPrivateMessages")) {
 					serverConfig.allowPrivateMessages = Boolean.parseBoolean(value);
+				} else if(config.equals("autoConnect")) {
+					serverConfig.autoConnect = Boolean.parseBoolean(value);
 				} else {
 					sender.sendChatToPlayer(sender.translateString(Globals.MOD_ID + ":irc.invalidConfigChange", host, config));
 					return true;
@@ -505,6 +509,30 @@ public class IRCCommandHandler {
 				sender.sendChatToPlayer(sender.translateString(Globals.MOD_ID + ":irc.helpTopics"));
 			}
 			return true;
+		} else if(cmd.equals("list")) {
+			if(serverSide) {
+				sender.sendChatToPlayer(sender.translateString(Globals.MOD_ID + ":irc.server.activeConnections"));
+			} else {
+				sender.sendChatToPlayer(sender.translateString(Globals.MOD_ID + ":irc.client.activeConnections"));
+			}
+			if(EiraIRC.instance.getConnectionCount() == 0) {
+				if(serverSide) {
+					sender.sendChatToPlayer(sender.translateString(Globals.MOD_ID + ":irc.server.notConnected", "IRC"));
+				} else {
+					sender.sendChatToPlayer(sender.translateString(Globals.MOD_ID + ":irc.client.notConnected", "IRC"));
+				}
+				return true;
+			}
+			for(IRCConnection connection : EiraIRC.instance.getConnections()) {
+				String channels = "";
+				for(String channel : connection.getConfig().channels) {
+					if(channels.length() > 0) {
+						channels += ", ";
+					}
+					channels += channel;
+				}
+				sender.sendChatToPlayer("* " + connection.getHost() + " (" + channels + ")");
+			}
 		}
 		return false;
 	}
@@ -524,6 +552,7 @@ public class IRCCommandHandler {
 			list.add("connect");
 			list.add("twitch");
 			list.add("disconnect");
+			list.add("list");
 			list.add("nick");
 			list.add("config");
 			list.add("help");
@@ -541,6 +570,8 @@ public class IRCCommandHandler {
 				Utils.addConnectionsToList(list);
 			} else if(args[0].equals("disconnect")) {
 				Utils.addConnectionsToList(list);
+			} else if(args[0].equals("connect")) {
+				list.add("irc.esper.net");
 			}
 		} else if(args.length == 3) {
 			if(args[0].equals("config")) {

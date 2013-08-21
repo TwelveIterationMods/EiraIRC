@@ -327,6 +327,10 @@ public class IRCConnection implements Runnable {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		EiraIRC.instance.getEventHandler().onIRCDisconnect(this);
+		if(config.autoConnect && connected) {
+			connect();
+		}
 	}
 	
 	public void joinChannel(String channel) throws IOException {
@@ -361,8 +365,14 @@ public class IRCConnection implements Runnable {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		if(!nick.equals(config.nickServName) && !privateChannels.contains(nick)) {
-			privateChannels.add(nick);
+		if(config.clientSide && !privateChannels.contains(nick)) {
+			NickServSettings settings = NickServSettings.settings.get(host);
+			if(settings == null) {
+				return;
+			}
+			if(!nick.equals(settings.getBotName())) {
+				privateChannels.add(nick);
+			}
 		}
 	}
 
@@ -380,10 +390,10 @@ public class IRCConnection implements Runnable {
 
 	public void disconnect() {
 		try {
+			connected = false;
 			if(socket != null) {
 				socket.close();
 			}
-			EiraIRC.instance.getEventHandler().onIRCDisconnect(this);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

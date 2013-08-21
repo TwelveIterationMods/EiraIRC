@@ -7,7 +7,10 @@ import blay09.mods.irc.config.GlobalConfig;
 import blay09.mods.irc.config.Globals;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.network.INetworkManager;
+import net.minecraft.network.NetLoginHandler;
 import net.minecraft.network.packet.NetHandler;
+import net.minecraft.network.packet.Packet1Login;
 import net.minecraft.network.packet.Packet3Chat;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumChatFormatting;
@@ -18,8 +21,10 @@ import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import cpw.mods.fml.common.IPlayerTracker;
 import cpw.mods.fml.common.network.IChatListener;
+import cpw.mods.fml.common.network.IConnectionHandler;
+import cpw.mods.fml.common.network.Player;
 
-public class IRCEventHandler implements IPlayerTracker {
+public class IRCEventHandler implements IPlayerTracker, IConnectionHandler {
 	
 	public void onIRCConnect(IRCConnection connection) {
 		String mcMessage = StringTranslate.getInstance().translateKeyFormat(Globals.MOD_ID + ":irc.connected", connection.getHost());
@@ -239,6 +244,35 @@ public class IRCEventHandler implements IPlayerTracker {
 		for(IRCConnection connection : EiraIRC.instance.getConnections()) {
 			connection.broadcastMessage(message, "w");
 		}
+	}
+
+	@Override
+	public void playerLoggedIn(Player player, NetHandler netHandler, INetworkManager manager) {
+	}
+
+	@Override
+	public String connectionReceived(NetLoginHandler netHandler, INetworkManager manager) {
+		return null;
+	}
+
+	@Override
+	public void connectionOpened(NetHandler netClientHandler, String server, int port, INetworkManager manager) {
+	}
+
+	@Override
+	public void connectionOpened(NetHandler netClientHandler, MinecraftServer server, INetworkManager manager) {
+	}
+
+	@Override
+	public void connectionClosed(INetworkManager manager) {
+		if(MinecraftServer.getServer() == null || MinecraftServer.getServer().isSinglePlayer()) {
+			EiraIRC.instance.stopIRC();
+		}
+	}
+
+	@Override
+	public void clientLoggedIn(NetHandler clientHandler, INetworkManager manager, Packet1Login login) {
+		EiraIRC.instance.startIRC(true);
 	}
 
 }

@@ -30,6 +30,7 @@ public class ServerConfig {
 	public final Map<String, String> channelFlags = new HashMap<String, String>();
 	public boolean clientSide = false;
 	public boolean allowPrivateMessages = true;
+	public boolean autoConnect = true;
 	
 	public ServerConfig(String host, String nick) {
 		this.host = host;

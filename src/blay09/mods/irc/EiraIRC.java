@@ -23,11 +23,14 @@ import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.Mod.PostInit;
 import cpw.mods.fml.common.Mod.PreInit;
 import cpw.mods.fml.common.Mod.ServerStarting;
+import cpw.mods.fml.common.Mod.ServerStopping;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.event.FMLServerStoppingEvent;
+import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 @Mod(modid = Globals.MOD_ID, name = Globals.MOD_NAME, version = Globals.MOD_VERSION)
@@ -58,6 +61,7 @@ public class EiraIRC {
 		
 		eventListener = new IRCEventHandler();
 		GameRegistry.registerPlayerTracker(eventListener);
+		NetworkRegistry.instance().registerConnectionHandler(eventListener);
 		MinecraftForge.EVENT_BUS.register(eventListener);
 		
 		Localization.init();
@@ -74,10 +78,31 @@ public class EiraIRC {
 		event.registerServerCommand(new CommandIRC());
 		
 		if(!MinecraftServer.getServer().isSinglePlayer()) {
-			for(ServerConfig serverConfig : ConfigurationHandler.getServerConfigs()) {
-				addConnection(new IRCConnection(serverConfig.host, false));
+			startIRC(false);
+		}
+	}
+	
+	@ServerStopping
+	public void serverStop(FMLServerStoppingEvent event) {
+		if(!MinecraftServer.getServer().isSinglePlayer()) {
+			stopIRC();
+		}
+	}
+	
+	public void startIRC(boolean clientSide) {
+		for(ServerConfig serverConfig : ConfigurationHandler.getServerConfigs()) {
+			IRCConnection connection = new IRCConnection(serverConfig.host, clientSide);
+			if(connection.connect()) {
+				addConnection(connection);
 			}
 		}
+	}
+	
+	public void stopIRC() {
+		for(IRCConnection connection : connections.values()) {
+			connection.disconnect();
+		}
+		connections.clear();
 	}
 	
 	public Collection<IRCConnection> getConnections() {

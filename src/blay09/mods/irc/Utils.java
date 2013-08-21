@@ -26,7 +26,11 @@ public class Utils {
 	}
 	
 	public static String getNickFromUser(String user) {
-		return user.substring(0, user.indexOf("!~"));
+		int i = user.indexOf("!~");
+		if(i == -1) {
+			return user;
+		}
+		return user.substring(0, i);
 	}
 	
 	public static String getAliasForPlayer(EntityPlayer player) {
@@ -68,7 +72,8 @@ public class Utils {
 		} else {
 			alias = player.username;
 		}
-		if(!GlobalConfig.enableNameColors) {
+		boolean isOP = isOP(player);
+		if(!GlobalConfig.enableNameColors && !isOP) {
 			return alias;
 		}
 		String colorName = tagCompound.getString("NameColor");
@@ -78,7 +83,7 @@ public class Utils {
 				return alias;
 			}
 			return getColoredName(alias, colorCode);
-		} else if(isOP(player)) {
+		} else if(isOP) {
 			if(!GlobalConfig.opColor.isEmpty()) {
 				char colorCode = getColorCode(colorName);
 				if(colorCode == INVALID_COLOR) {
