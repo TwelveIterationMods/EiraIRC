@@ -9,7 +9,7 @@ import cpw.mods.fml.common.registry.LanguageRegistry;
 public class Localization {
 
 	public static void init() {
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":commands.irc.usage", "/%s <connect|disconnect|join|leave|nick|who|color|alias|twitch|mode|msg|config|help>");
+		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":commands.irc.usage", "/%s <connect|disconnect|join|leave|nick|who|color|alias|twitch|mode|msg|list|config|help>");
 		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":commands.irc.usage.connect", "/%s connect <server> [password]");
 		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":commands.irc.usage.twitch", "/%s twitch <username> <password>");
 		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":commands.irc.usage.nick", "/%s nick [server] <nick>");
@@ -29,8 +29,11 @@ public class Localization {
 		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.client.alreadyConnected", "You are already connected to %s");
 		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.server.notConnected", "The server is not connected to %s");
 		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.client.notConnected", "You are not connected to %s");
+		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.server.activeConnections", "The server is connected to:");
+		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.client.activeConnections", "The client is connected to:");
 		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.connecting", "Connecting to %s...");
 		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.connected", "Connected to %s");
+		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.disconnecting", "Disconnecting from %s...");
 		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.disconnected", "Disconnected from %s");
 		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.joinChannel", "Joining channel %s on %s");
 		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.leaveChannel", "Leaving channel %s on %s");

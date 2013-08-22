@@ -102,11 +102,7 @@ public class IRCCommandHandler {
 					connection.disconnect();
 				}
 				EiraIRC.instance.clearConnections();
-				if(serverSide) {
-					sender.sendChatToPlayer(sender.translateString(Globals.MOD_ID + ":irc.server.disconnected", "IRC"));
-				} else {					
-					sender.sendChatToPlayer(sender.translateString(Globals.MOD_ID + ":irc.client.disconnected", "IRC"));
-				}
+				sender.sendChatToPlayer(sender.translateString(Globals.MOD_ID + ":irc.disconnecting", "IRC"));
 				return true;
 			} else {
 				IRCConnection connection = EiraIRC.instance.getConnection(args[1]);
@@ -118,7 +114,7 @@ public class IRCCommandHandler {
 					}
 					return true;
 				}
-				sender.sendChatToPlayer(sender.translateString(Globals.MOD_ID + ":irc.client.disconnected", args[2]));
+				sender.sendChatToPlayer(sender.translateString(Globals.MOD_ID + ":irc.disconnecting", args[2]));
 				connection.disconnect();
 				EiraIRC.instance.removeConnection(connection);
 			}

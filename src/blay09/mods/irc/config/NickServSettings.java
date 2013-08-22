@@ -1,7 +1,7 @@
 // Copyright (c) 2013, Christopher "blay09" Baker
 // All rights reserved.
 
-package blay09.mods.irc;
+package blay09.mods.irc.config;
 
 import java.util.HashMap;
 import java.util.Map;

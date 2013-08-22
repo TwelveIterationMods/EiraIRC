@@ -21,6 +21,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import blay09.mods.irc.config.ConfigurationHandler;
 import blay09.mods.irc.config.GlobalConfig;
+import blay09.mods.irc.config.NickServSettings;
 import blay09.mods.irc.config.ServerConfig;
 
 public class IRCConnection implements Runnable {
@@ -178,7 +179,7 @@ public class IRCConnection implements Runnable {
 				return;
 			}
 			int i = message.indexOf(" ", 5);
-			String playerName = message.substring(5, i - 1);
+			String playerName = message.substring(4, i);
 			EntityPlayer entityPlayer = MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(playerName);
 			if(entityPlayer == null) {
 				List<EntityPlayer> playerEntityList = MinecraftServer.getServer().getConfigurationManager().playerEntityList;
