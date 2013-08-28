@@ -26,7 +26,7 @@ public class Utils {
 	}
 	
 	public static String getNickFromUser(String user) {
-		int i = user.indexOf("!~");
+		int i = user.indexOf("!");
 		if(i == -1) {
 			return user;
 		}
