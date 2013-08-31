@@ -21,6 +21,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import blay09.mods.irc.config.ConfigurationHandler;
 import blay09.mods.irc.config.GlobalConfig;
+import blay09.mods.irc.config.Globals;
 import blay09.mods.irc.config.NickServSettings;
 import blay09.mods.irc.config.ServerConfig;
 
@@ -119,6 +120,10 @@ public class IRCConnection implements Runnable {
 	
 	public void onPrivateMessage(String user, String message) {
 		String nick = Utils.getNickFromUser(user);
+		if(nick.equals("jtv") && host.equals(Globals.TWITCH_SERVER)) {
+			// ignore them for now, maybe transfer Twitch colors to MC colors at some point later
+			return;
+		}
 		if(config.clientSide) {
 			EiraIRC.instance.getEventHandler().onIRCPrivateMessage(this, user, Utils.getNickFromUser(user), message);
 			return;

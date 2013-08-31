@@ -125,7 +125,7 @@ public class IRCEventHandler implements IPlayerTracker, IConnectionHandler {
 				if(emote.length() == 0) {
 					return;
 				}
-				String message = "* " + Utils.getAliasForPlayer((EntityPlayer) event.sender) + emote;
+				String message = "* " + Utils.getAliasForPlayer((EntityPlayer) event.sender) + " " + emote;
 				Utils.addMessageToChat(message);
 				if(!MinecraftServer.getServer().isSinglePlayer()) {
 					for(IRCConnection connection : EiraIRC.instance.getConnections()) {
@@ -174,19 +174,19 @@ public class IRCEventHandler implements IPlayerTracker, IConnectionHandler {
 			String[] channel = target.split(":");
 			IRCConnection connection = EiraIRC.instance.getConnection(channel[0]);
 			if(connection != null) {
-				connection.sendChannelMessage(channel[1], "ACTION" + text + "");
-				Utils.addMessageToChat("[" + channel[1] + "] * " + Minecraft.getMinecraft().thePlayer.username + text);
+				connection.sendChannelMessage(channel[1], "ACTION " + text + "");
+				Utils.addMessageToChat("[" + channel[1] + "] * " + Minecraft.getMinecraft().thePlayer.username + " " + text);
 			}
 			return false;
 		}
 		boolean doMC = chatTarget == EnumChatTarget.All || chatTarget == EnumChatTarget.MinecraftOnly;
 		boolean doIRC = chatTarget == EnumChatTarget.All || chatTarget == EnumChatTarget.IRCOnly;
 		if(!doMC) {
-			Utils.addMessageToChat("[IRC] * " + Minecraft.getMinecraft().thePlayer.username + text);
+			Utils.addMessageToChat("[IRC] * " + Minecraft.getMinecraft().thePlayer.username + " " + text);
 		}
 		if(doIRC) {
 			for(IRCConnection connection : EiraIRC.instance.getConnections()) {
-				connection.broadcastMessage("ACTION" + text + "", "wE");
+				connection.broadcastMessage("ACTION " + text + "", "wE");
 			}			
 		}
 		return doMC;

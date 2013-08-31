@@ -3,10 +3,10 @@
 
 package blay09.mods.irc.client;
 
-import org.lwjgl.input.Keyboard;
-
-import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.World;
 import blay09.mods.irc.CommonProxy;
+import blay09.mods.irc.config.GlobalConfig;
 import cpw.mods.fml.client.registry.KeyBindingRegistry;
 
 public class ClientProxy extends CommonProxy {
@@ -15,5 +15,5 @@ public class ClientProxy extends CommonProxy {
 	public void registerKeybindings() {
 		KeyBindingRegistry.registerKeyBinding(new KeyBindingHandler());
 	}
-	
+
 }

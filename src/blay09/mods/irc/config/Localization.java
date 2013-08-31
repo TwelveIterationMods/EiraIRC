@@ -67,7 +67,8 @@ public class Localization {
 		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.colorInvalid", "'%s' is not a valid color.");
 		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.aliasNotFound", "The alias '%s' cannot be found.");
 		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.connectionError", "Could not connect to %s");
-		
+		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.nickServUpdated", "Updated nickserv information for %s");
+		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.serverOnlyCommand", "This command only works on the server side. Use the GUI (default: I) for the client settings.");
 	}
 	
 }

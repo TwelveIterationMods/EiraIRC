@@ -31,6 +31,7 @@ public class ServerConfig {
 	public boolean clientSide = false;
 	public boolean allowPrivateMessages = true;
 	public boolean autoConnect = true;
+	public boolean saveCredentials = false;
 	
 	public ServerConfig(String host, String nick) {
 		this.host = host;

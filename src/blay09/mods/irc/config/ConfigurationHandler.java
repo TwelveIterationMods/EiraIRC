@@ -44,7 +44,7 @@ public class ConfigurationHandler {
 		GlobalConfig.allowPrivateMessages = config.get("global", "allowPrivateMessages", GlobalConfig.allowPrivateMessages).getBoolean(GlobalConfig.allowPrivateMessages);
 		
 		for(String category : config.getCategoryNames()) {
-			if(!category.startsWith(CATEGORY_SERVERS)) {
+			if(!category.startsWith(CATEGORY_SERVERS) || category.endsWith(CATEGORY_FLAGS_SUFFIX)) {
 				continue;
 			}
 			String nick = config.get(category, "nick", GlobalConfig.nick).getString();
@@ -58,6 +58,8 @@ public class ConfigurationHandler {
 			}
 			serverConfig.nickServName = config.get(category, "nickServName", serverConfig.nickServName).getString();
 			serverConfig.nickServPassword = config.get(category, "nickServPassword", serverConfig.nickServPassword).getString();
+			serverConfig.serverPassword = config.get(category, "serverPassword", serverConfig.serverPassword).getString();
+			serverConfig.saveCredentials = config.get(category, "saveCredentials", false).getBoolean(false);
 			serverConfig.allowPrivateMessages = config.get(category, "allowPrivateMessages", true).getBoolean(true);
 			serverConfig.autoConnect = config.get(category, "autoConnect", true).getBoolean(true);
 			serverConfigs.put(serverConfig.host, serverConfig);
@@ -80,8 +82,12 @@ public class ConfigurationHandler {
 					config.get(category + CATEGORY_FLAGS_SUFFIX, entry.getKey().substring(1), entry.getValue()).set(entry.getValue());
 				}
 			}
-			config.get(category, "nickServName", serverConfig.nickServName).set(serverConfig.nickServName);
-			config.get(category, "nickServPassword", serverConfig.nickServPassword).set(serverConfig.nickServPassword);
+			if(serverConfig.saveCredentials) {
+				config.get(category, "nickServName", serverConfig.nickServName).set(serverConfig.nickServName);
+				config.get(category, "nickServPassword", serverConfig.nickServPassword).set(serverConfig.nickServPassword);
+				config.get(category, "serverPassword", serverConfig.serverPassword).set(serverConfig.serverPassword);
+			}
+			config.get(category, "allowPrivateMessages", serverConfig.saveCredentials).set(serverConfig.saveCredentials);
 			config.get(category, "allowPrivateMessages", serverConfig.allowPrivateMessages).set(serverConfig.allowPrivateMessages);
 			config.get(category, "autoConnect", serverConfig.autoConnect).set(serverConfig.autoConnect);
 			
