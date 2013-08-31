@@ -61,7 +61,15 @@ public class IRCCommandHandler {
 				return true;
 			}
 			if(!serverSide) {
-				sender.sendChatToPlayer(sender.translateString(Globals.MOD_ID + ":irc.serverOnlyCommand"));
+				if(ConfigurationHandler.hasServerConfig(Globals.TWITCH_SERVER) || args.length > 1) {
+					sender.sendChatToPlayer(sender.translateString(Globals.MOD_ID + ":irc.serverOnlyCommand"));
+				} else {
+					sender.sendChatToPlayer(sender.translateString(Globals.MOD_ID + ":irc.connecting", "Twitch"));
+					IRCConnection connection = new IRCConnection(Globals.TWITCH_SERVER, true);
+					if(connection.connect()) {
+						EiraIRC.instance.addConnection(connection);
+					}
+				}
 				return true;
 			} else {
 				if(args.length < 3) {
@@ -85,8 +93,9 @@ public class IRCCommandHandler {
 					connection.getConfig().channels.add("#" + username);
 				}
 				ConfigurationHandler.save();
-				connection.connect();
-				EiraIRC.instance.addConnection(connection);
+				if(connection.connect()) {
+					EiraIRC.instance.addConnection(connection);
+				}
 			}
 			return true;
 		} else if(cmd.equals("nickserv")) {

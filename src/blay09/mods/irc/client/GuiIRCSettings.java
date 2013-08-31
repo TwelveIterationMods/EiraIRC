@@ -9,19 +9,29 @@ import net.minecraft.client.gui.GuiScreen;
 
 public class GuiIRCSettings extends GuiScreen {
 
+	private GuiButton btnGlobalSettings;
+	private GuiButton btnServerList;
 	private GuiButton btnTwitch;
 	private GuiButton btnNickServ;
 	private GuiButton btnBack;
 	
 	@Override
 	public void initGui() {
-		btnTwitch = new GuiButton(0, width / 2 - 200 / 2, 30, "Twitch");
+		btnGlobalSettings = new GuiButton(0, width / 2 - 200 / 2, 30, "Global Settings");
+		buttonList.add(btnGlobalSettings);
+		
+		btnServerList = new GuiButton(1, width / 2 - 200 / 2, 60, "Server List");
+		btnServerList.enabled = false;
+		buttonList.add(btnServerList);
+		
+		btnTwitch = new GuiButton(2, width / 2 - 200 / 2, 90, "Twitch");
 		buttonList.add(btnTwitch);
 		
-		btnNickServ = new GuiButton(1, width / 2 - 200 / 2, 60, "NickServ");
+		btnNickServ = new GuiButton(3, width / 2 - 200 / 2, 120, "NickServ");
+		btnNickServ.enabled = false;
 		buttonList.add(btnNickServ);
 		
-		btnBack = new GuiButton(2, width / 2 - 200 / 2, 90, "Back");
+		btnBack = new GuiButton(4, width / 2 - 200 / 2, 150, "Back");
 		buttonList.add(btnBack);
 	}
 	
@@ -30,6 +40,9 @@ public class GuiIRCSettings extends GuiScreen {
 		if(button == btnTwitch) {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiIRCTwitch());
 		} else if(button == btnNickServ) {
+		} else if(button == btnServerList) {
+		} else if(button == btnGlobalSettings) {
+			Minecraft.getMinecraft().displayGuiScreen(new GuiIRCGlobalSettings());
 		} else if(button == btnBack) {
 			Minecraft.getMinecraft().displayGuiScreen(null);
 		}

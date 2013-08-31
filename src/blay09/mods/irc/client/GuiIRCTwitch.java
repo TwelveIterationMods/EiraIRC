@@ -3,19 +3,18 @@
 
 package blay09.mods.irc.client;
 
-import blay09.mods.irc.config.ConfigurationHandler;
-import blay09.mods.irc.config.Globals;
-import blay09.mods.irc.config.ServerConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.gui.inventory.GuiContainer;
+import blay09.mods.irc.EiraIRC;
+import blay09.mods.irc.IRCConnection;
+import blay09.mods.irc.config.ConfigurationHandler;
+import blay09.mods.irc.config.Globals;
+import blay09.mods.irc.config.ServerConfig;
 
 public class GuiIRCTwitch extends GuiScreen {
 
-	private static final int TEXT_COLOR = 16777215;
-	
 	private ServerConfig config;
 	private GuiTextField txtUsername;
 	private GuiTextField txtPassword;
@@ -30,11 +29,7 @@ public class GuiIRCTwitch extends GuiScreen {
 	@Override
 	public void initGui() {
 		txtUsername = new GuiTextField(fontRenderer, width / 2 - 100 / 2, 50, 100, 15);
-		txtUsername.setMaxStringLength(16);
-		txtUsername.setEnableBackgroundDrawing(true);
-		txtUsername.setVisible(true);
-		txtUsername.setTextColor(TEXT_COLOR);
-		
+
 		txtPassword = new GuiTextField(fontRenderer, width / 2 - 100 / 2, 90, 100, 15) {
 			private static final char PASSWORD_CHAR = '*';
 			
@@ -50,13 +45,8 @@ public class GuiIRCTwitch extends GuiScreen {
 				setText(oldText);
 			}
 		};
-		txtPassword.setMaxStringLength(32);
-		txtPassword.setEnableBackgroundDrawing(true);
-		txtPassword.setVisible(true);
-		txtPassword.setTextColor(TEXT_COLOR);
 		
 		btnConnectOnStartup = new GuiButton(0, width / 2 - 200 / 2, 120, "Connect on Startup: ???");
-		btnConnectOnStartup.enabled = false;
 		buttonList.add(btnConnectOnStartup);
 		
 		btnSaveCredentials = new GuiButton(0, width / 2 - 200 / 2, 145, "Save Credentials: ???");
@@ -71,16 +61,29 @@ public class GuiIRCTwitch extends GuiScreen {
 	public void loadFromConfig() {
 		txtUsername.setText(config.nick);
 		txtPassword.setText(config.serverPassword);
-		btnConnectOnStartup.displayString = "Connect on Startup: " + (config.saveCredentials ? "Yes" : "No");
+		btnConnectOnStartup.displayString = "Connect on Startup: " + (config.autoConnect ? "Yes" : "No");
 		btnSaveCredentials.displayString = "Save Credentials: " + (config.saveCredentials ? "Yes" : "No");
 	}
 	
 	@Override
 	public void actionPerformed(GuiButton button) {
 		if(button == btnBack) {
+			ConfigurationHandler.save();
+			if(config.autoConnect || EiraIRC.instance.isConnectedTo(Globals.TWITCH_SERVER)) {
+				IRCConnection connection = EiraIRC.instance.getConnection(Globals.TWITCH_SERVER);
+				if(connection != null) {
+					connection.disconnect();
+					EiraIRC.instance.removeConnection(connection);
+				}
+				connection = new IRCConnection(Globals.TWITCH_SERVER, true);
+				if(connection.connect()) {
+					EiraIRC.instance.addConnection(connection);
+				}
+			}
 			Minecraft.getMinecraft().displayGuiScreen(new GuiIRCSettings());
 		} else if(button == btnConnectOnStartup) {
-			
+			config.autoConnect = !config.autoConnect;
+			btnConnectOnStartup.displayString = "Connect on Startup: " + (config.autoConnect ? "Yes" : "No");
 		} else if(button == btnSaveCredentials) {
 			config.saveCredentials = !config.saveCredentials;
 			btnSaveCredentials.displayString = "Save Credentials: " + (config.saveCredentials ? "Yes" : "No");
@@ -118,11 +121,11 @@ public class GuiIRCTwitch extends GuiScreen {
 	public void drawScreen(int par1, int par2, float par3) {
 		this.drawBackground(0);
 		String caption = "EiraIRC - Twitch Settings";
-		fontRenderer.drawString(caption, width / 2 - fontRenderer.getStringWidth(caption) / 2, 10, TEXT_COLOR);
+		fontRenderer.drawString(caption, width / 2 - fontRenderer.getStringWidth(caption) / 2, 10, Globals.TEXT_COLOR);
 		String usernameCaption = "Twitch Username:";
-		fontRenderer.drawString(usernameCaption, width / 2 - fontRenderer.getStringWidth(usernameCaption) / 2, 35, TEXT_COLOR);
+		fontRenderer.drawString(usernameCaption, width / 2 - fontRenderer.getStringWidth(usernameCaption) / 2, 35, Globals.TEXT_COLOR);
 		String passwordCaption = "Twitch Password:";
-		fontRenderer.drawString(passwordCaption, width / 2 - fontRenderer.getStringWidth(passwordCaption) / 2, 75, TEXT_COLOR);
+		fontRenderer.drawString(passwordCaption, width / 2 - fontRenderer.getStringWidth(passwordCaption) / 2, 75, Globals.TEXT_COLOR);
 		txtUsername.drawTextBox();
 		txtPassword.drawTextBox();
 		super.drawScreen(par1, par2, par3);

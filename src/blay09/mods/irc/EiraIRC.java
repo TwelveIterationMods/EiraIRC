@@ -92,7 +92,7 @@ public class EiraIRC {
 	public void startIRC(boolean clientSide) {
 		for(ServerConfig serverConfig : ConfigurationHandler.getServerConfigs()) {
 			IRCConnection connection = new IRCConnection(serverConfig.host, clientSide);
-			if(connection.connect()) {
+			if(connection.getConfig().autoConnect && connection.connect()) {
 				addConnection(connection);
 			}
 		}

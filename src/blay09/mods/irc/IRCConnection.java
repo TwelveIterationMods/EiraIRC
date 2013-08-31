@@ -47,11 +47,11 @@ public class IRCConnection implements Runnable {
 		this.host = host;
 		config = ConfigurationHandler.getServerConfig(host);
 		config.clientSide = clientSide;
-		if(clientSide) {
-			config.nick = Minecraft.getMinecraft().thePlayer.username;
-		}
 		channelUserMap = new HashMap<String, List<String>>();
 		if(clientSide) {
+			if(config.nick.isEmpty()) {
+				config.nick = Minecraft.getMinecraft().thePlayer.username;
+			}
 			privateChannels = new ArrayList<String>();
 		}
 	}
@@ -236,7 +236,7 @@ public class IRCConnection implements Runnable {
 				writer.write("PASS " + config.serverPassword + "\r\n");
 				writer.flush();
 			}
-			changeNick(config.nick);
+			changeNick(config.nick.isEmpty() ? GlobalConfig.nick + (int) (Math.random() * 10000) : config.nick);
 			writer.write("USER " + LOGIN + " \"\" \"\" :" + DESCRIPTION + "\r\n");
 			writer.flush();
 			String line = null;
@@ -328,14 +328,17 @@ public class IRCConnection implements Runnable {
 					}
 					continue;
 				}
-//				System.out.println(line);
+				System.out.println(line);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		EiraIRC.instance.getEventHandler().onIRCDisconnect(this);
-		if(config.autoConnect && connected) {
-			connect();
+		EiraIRC.instance.removeConnection(this);
+		if(connected) {
+			if(connect()) {
+				EiraIRC.instance.addConnection(this);
+			}
 		}
 	}
 	

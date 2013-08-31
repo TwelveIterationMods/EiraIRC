@@ -87,10 +87,9 @@ public class ConfigurationHandler {
 				config.get(category, "nickServPassword", serverConfig.nickServPassword).set(serverConfig.nickServPassword);
 				config.get(category, "serverPassword", serverConfig.serverPassword).set(serverConfig.serverPassword);
 			}
-			config.get(category, "allowPrivateMessages", serverConfig.saveCredentials).set(serverConfig.saveCredentials);
 			config.get(category, "allowPrivateMessages", serverConfig.allowPrivateMessages).set(serverConfig.allowPrivateMessages);
 			config.get(category, "autoConnect", serverConfig.autoConnect).set(serverConfig.autoConnect);
-			
+			config.get(category, "saveCredentials", serverConfig.saveCredentials).set(serverConfig.saveCredentials);
 		}
 		
 		config.save();
@@ -99,7 +98,7 @@ public class ConfigurationHandler {
 	public static ServerConfig getServerConfig(String host) {
 		ServerConfig serverConfig = serverConfigs.get(host);
 		if(serverConfig == null) {
-			serverConfig = new ServerConfig(host, DEFAULT_NICK + (int) (Math.random() * 10000));
+			serverConfig = new ServerConfig(host, "");
 			serverConfigs.put(host, serverConfig);
 		}
 		return serverConfig;
@@ -111,6 +110,10 @@ public class ConfigurationHandler {
 
 	public static void removeServerConfig(String host) {
 		serverConfigs.remove(host);
+	}
+
+	public static boolean hasServerConfig(String host) {
+		return serverConfigs.containsKey(host);
 	}
 
 }
