@@ -12,7 +12,6 @@ public class GuiIRCSettings extends GuiScreen {
 	private GuiButton btnGlobalSettings;
 	private GuiButton btnServerList;
 	private GuiButton btnTwitch;
-	private GuiButton btnNickServ;
 	private GuiButton btnBack;
 	
 	@Override
@@ -27,11 +26,7 @@ public class GuiIRCSettings extends GuiScreen {
 		btnTwitch = new GuiButton(2, width / 2 - 200 / 2, 90, "Twitch");
 		buttonList.add(btnTwitch);
 		
-		btnNickServ = new GuiButton(3, width / 2 - 200 / 2, 120, "NickServ");
-		btnNickServ.enabled = false;
-		buttonList.add(btnNickServ);
-		
-		btnBack = new GuiButton(4, width / 2 - 200 / 2, 150, "Back");
+		btnBack = new GuiButton(3, width / 2 - 200 / 2, 120, "Back");
 		buttonList.add(btnBack);
 	}
 	
@@ -39,7 +34,6 @@ public class GuiIRCSettings extends GuiScreen {
 	public void actionPerformed(GuiButton button) {
 		if(button == btnTwitch) {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiIRCTwitch());
-		} else if(button == btnNickServ) {
 		} else if(button == btnServerList) {
 		} else if(button == btnGlobalSettings) {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiIRCGlobalSettings());

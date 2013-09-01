@@ -3,6 +3,7 @@
 
 package blay09.mods.irc;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import blay09.mods.irc.config.GlobalConfig;
@@ -16,13 +17,43 @@ import net.minecraft.server.MinecraftServer;
 public class Utils {
 
 	private static final char INVALID_COLOR = 'n';
+	private static final int MAX_CHAT_LENGTH = 100;
 	
 	public static void addMessageToChat(String text) {
-		if(MinecraftServer.getServer() != null) {
-			MinecraftServer.getServer().getConfigurationManager().sendChatMsg(text);
-		} else {
-			Minecraft.getMinecraft().thePlayer.addChatMessage(text);
+		for(String string : wrapString(text, MAX_CHAT_LENGTH)) {
+			if(MinecraftServer.getServer() != null) {
+				MinecraftServer.getServer().getConfigurationManager().sendChatMsg(string);
+			} else {
+				Minecraft.getMinecraft().thePlayer.addChatMessage(string);
+			}
 		}
+	}
+	
+	private static List<String> tmpStrings = new ArrayList<String>();
+	public static List<String> wrapString(String text, int maxLength) {
+		tmpStrings.clear();
+		if(text.length() <= maxLength) {
+			tmpStrings.add(text);
+			return tmpStrings;
+		}
+		while(text.length() > maxLength) {
+			int i = maxLength;
+			while(true) {
+				if(text.charAt(i) == ' ') {
+					break;
+				} else if(i == 0) {
+					i = maxLength;
+					break;
+				}
+				i--;
+			}
+			tmpStrings.add(text.substring(0, i));
+			text = text.substring(i);
+		}
+		if(text.length() > 0) {
+			tmpStrings.add(text);
+		}
+		return tmpStrings;
 	}
 	
 	public static String getNickFromUser(String user) {

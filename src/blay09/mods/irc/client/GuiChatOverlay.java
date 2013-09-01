@@ -4,7 +4,7 @@
 package blay09.mods.irc.client;
 
 import blay09.mods.irc.EiraIRC;
-
+import blay09.mods.irc.config.Globals;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
@@ -12,7 +12,6 @@ import net.minecraft.client.gui.GuiScreen;
 public class GuiChatOverlay {
 
 	public static final int COLOR_BACKGROUND = Integer.MIN_VALUE;
-	public static final int COLOR_TEXT = 16777215;
 	
 	public static void drawOverlay(int i, int j, float k) {
 		if(EiraIRC.instance.getConnectionCount() == 0) {
@@ -26,7 +25,8 @@ public class GuiChatOverlay {
 			text += "All";
 			break;
 		case ChannelOnly:
-			text += EiraIRC.instance.getTargetChannel().split(":")[1];
+			String[] ss = EiraIRC.instance.getTargetChannel().split(":");
+			text += ss[1] + " (" + ss[0] + ")";
 			break;
 		case IRCOnly:
 			text += "IRC only";
@@ -35,7 +35,7 @@ public class GuiChatOverlay {
 			text += "Minecraft only";
 			break;
 		}
-		fontRenderer.drawString(text, 5, 5, COLOR_TEXT);
+		fontRenderer.drawString(text, 5, 5, Globals.TEXT_COLOR);
 	}
 	
 	

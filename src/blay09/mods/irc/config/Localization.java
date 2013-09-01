@@ -9,7 +9,7 @@ import cpw.mods.fml.common.registry.LanguageRegistry;
 public class Localization {
 
 	public static void init() {
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":commands.irc.usage", "/%s <connect|disconnect|join|leave|nick|who|color|alias|twitch|mode|msg|list|config|help>");
+		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":commands.irc.usage", "/%s <connect|disconnect|join|leave|nick|who|color|alias|twitch|nickserv|mode|msg|list|config|help>");
 		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":commands.irc.usage.connect", "/%s connect <server> [password]");
 		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":commands.irc.usage.twitch", "/%s twitch <username> <password>");
 		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":commands.irc.usage.nick", "/%s nick [server] <nick>");
@@ -52,7 +52,8 @@ public class Localization {
 		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.partMsgMC", "* %s left the game");
 		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.nickChangeIRC", "[%s] * %s is now known as %s");
 		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.nickChangeMC", "* %s is now known as %s");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.channelMode", "Mode %s for channel %s");
+		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.channelMode", "Mode for channel %s on %s is %s");
+		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.channelModeChange", "Mode %s for channel %s");
 		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.specifyChannel", "You have to specify a channel.");
 		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.specifyServer", "You have to specify a server.");
 		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.msgDisabled", "Private messages are not enabled.");
@@ -60,7 +61,7 @@ public class Localization {
 		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.configNoAbuse", "To prevent abuse, this setting can only be changed in the config file.");
 		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.helpValidTopics", EnumChatFormatting.YELLOW + "Valid topics are:");
 		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.helpTopics", EnumChatFormatting.YELLOW + "* color, alias, twitch, msg, mode, commands, config");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.helpInvalidTopic", EnumChatFormatting.YELLOW + "Invalid help topic. Valid topics are:");
+		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.helpInvalidTopic", EnumChatFormatting.YELLOW + "Invalid help topic '%s'. Valid topics are:");
 		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.configChange", "[%s] Setting config option '%s' to '%s'");
 		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.invalidConfigChange", "[%s] Invalid config option %s. Use TAB to loop through valid options.");
 		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.nickChange", "[%s] Changing nick to %s...");
@@ -68,7 +69,7 @@ public class Localization {
 		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.aliasNotFound", "The alias '%s' cannot be found.");
 		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.connectionError", "Could not connect to %s");
 		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.nickServUpdated", "Updated nickserv information for %s");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.serverOnlyCommand", "This command only works on the server side. Use the GUI (default: I) for the client settings.");
+		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.serverOnlyCommand", "This command only works on the server side. Use the GUI (default: I) or the config file for the client settings.");
 	}
 	
 }
