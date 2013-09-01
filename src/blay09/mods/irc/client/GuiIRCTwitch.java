@@ -3,6 +3,8 @@
 
 package blay09.mods.irc.client;
 
+import org.lwjgl.input.Keyboard;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -15,6 +17,7 @@ import blay09.mods.irc.config.ServerConfig;
 
 public class GuiIRCTwitch extends GuiScreen {
 
+	private GuiScreen parentScreen;
 	private ServerConfig config;
 	private GuiTextField txtUsername;
 	private GuiTextField txtPassword;
@@ -22,29 +25,17 @@ public class GuiIRCTwitch extends GuiScreen {
 	private GuiButton btnSaveCredentials;
 	private GuiButton btnBack;
 	
-	public GuiIRCTwitch() {
+	public GuiIRCTwitch(GuiScreen parentScreen) {
+		this.parentScreen = parentScreen;
 		config = ConfigurationHandler.getServerConfig(Globals.TWITCH_SERVER);
 	}
 	
 	@Override
 	public void initGui() {
+		Keyboard.enableRepeatEvents(true);
+		
 		txtUsername = new GuiTextField(fontRenderer, width / 2 - 100 / 2, 50, 100, 15);
-
-		txtPassword = new GuiTextField(fontRenderer, width / 2 - 100 / 2, 90, 100, 15) {
-			private static final char PASSWORD_CHAR = '*';
-			
-			@Override
-			public void drawTextBox() {
-				String oldText = getText();
-				StringBuilder sb = new StringBuilder();
-				for(int i = 0; i < oldText.length(); i++) {
-					sb.append(PASSWORD_CHAR);
-				}
-				setText(sb.toString());
-				super.drawTextBox();
-				setText(oldText);
-			}
-		};
+		txtPassword = new GuiPasswordTextField(fontRenderer, width / 2 - 100 / 2, 90, 100, 15);
 		
 		btnConnectOnStartup = new GuiButton(0, width / 2 - 200 / 2, 120, "Connect on Startup: ???");
 		buttonList.add(btnConnectOnStartup);
@@ -56,6 +47,11 @@ public class GuiIRCTwitch extends GuiScreen {
 		buttonList.add(btnBack);
 		
 		loadFromConfig();
+	}
+	
+	@Override
+	public void onGuiClosed() {
+		Keyboard.enableRepeatEvents(false);
 	}
 	
 	public void loadFromConfig() {
@@ -80,7 +76,7 @@ public class GuiIRCTwitch extends GuiScreen {
 					EiraIRC.instance.addConnection(connection);
 				}
 			}
-			Minecraft.getMinecraft().displayGuiScreen(new GuiIRCSettings());
+			Minecraft.getMinecraft().displayGuiScreen(parentScreen);
 		} else if(button == btnConnectOnStartup) {
 			config.autoConnect = !config.autoConnect;
 			btnConnectOnStartup.displayString = "Connect on Startup: " + (config.autoConnect ? "Yes" : "No");

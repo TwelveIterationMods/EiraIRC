@@ -20,7 +20,7 @@ public class GuiIRCSettings extends GuiScreen {
 		buttonList.add(btnGlobalSettings);
 		
 		btnServerList = new GuiButton(1, width / 2 - 200 / 2, 60, "Server List");
-		btnServerList.enabled = false;
+//		btnServerList.enabled = false;
 		buttonList.add(btnServerList);
 		
 		btnTwitch = new GuiButton(2, width / 2 - 200 / 2, 90, "Twitch");
@@ -33,8 +33,9 @@ public class GuiIRCSettings extends GuiScreen {
 	@Override
 	public void actionPerformed(GuiButton button) {
 		if(button == btnTwitch) {
-			Minecraft.getMinecraft().displayGuiScreen(new GuiIRCTwitch());
+			Minecraft.getMinecraft().displayGuiScreen(new GuiIRCTwitch(this));
 		} else if(button == btnServerList) {
+			Minecraft.getMinecraft().displayGuiScreen(new GuiIRCServerList());
 		} else if(button == btnGlobalSettings) {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiIRCGlobalSettings());
 		} else if(button == btnBack) {

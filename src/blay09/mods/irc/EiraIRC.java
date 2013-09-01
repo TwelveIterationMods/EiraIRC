@@ -44,7 +44,7 @@ public class EiraIRC {
 	
 	private IRCEventHandler eventListener;
 	private Map<String, IRCConnection> connections;
-	
+	private boolean ircRunning;
 	private EnumChatTarget chatTarget = EnumChatTarget.All;
 	private final List<String> validTargetChannels = new ArrayList<String>();
 	private int targetChannelIndex;
@@ -95,6 +95,7 @@ public class EiraIRC {
 				addConnection(connection);
 			}
 		}
+		ircRunning = true;
 	}
 	
 	public void stopIRC() {
@@ -102,6 +103,11 @@ public class EiraIRC {
 			connection.disconnect();
 		}
 		connections.clear();
+		ircRunning = false;
+	}
+	
+	public boolean isIRCRunning() {
+		return ircRunning;
 	}
 	
 	public Collection<IRCConnection> getConnections() {
