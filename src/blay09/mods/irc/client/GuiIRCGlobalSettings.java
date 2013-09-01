@@ -1,3 +1,6 @@
+// Copyright (c) 2013, Christopher "blay09" Baker
+// All rights reserved.
+
 package blay09.mods.irc.client;
 
 import net.minecraft.client.Minecraft;
@@ -19,21 +22,21 @@ public class GuiIRCGlobalSettings extends GuiScreen {
 	
 	@Override
 	public void initGui() {
-		txtNick = new GuiTextField(fontRenderer, width / 2 - 100 / 2, 45, 100, 15);
+		txtNick = new GuiTextField(fontRenderer, width / 2 - 50, height / 2 - 90, 100, 15);
 		
-		btnDeathMessages = new GuiButton(0, width / 2 - 200 / 2, 65, "Relay Death Messages: ???");
+		btnDeathMessages = new GuiButton(0, width / 2 - 100, height / 2 - 70, "Relay Death Messages: ???");
 		buttonList.add(btnDeathMessages);
 		
-		btnMCJoinLeave = new GuiButton(1, width / 2 - 200 / 2, 90, "Relay Minecraft Joins: ???");
+		btnMCJoinLeave = new GuiButton(1, width / 2 - 100, height / 2 - 45, "Relay Minecraft Joins: ???");
 		buttonList.add(btnMCJoinLeave);
 		
-		btnIRCJoinLeave = new GuiButton(2, width / 2 - 200 / 2, 115, "Relay IRC Joins: ???");
+		btnIRCJoinLeave = new GuiButton(2, width / 2 - 100, height / 2 - 20, "Relay IRC Joins: ???");
 		buttonList.add(btnIRCJoinLeave);
 		
-		btnPrivateMessages = new GuiButton(3, width / 2 - 200 / 2, 140, "Allow Private Messages: ???");
+		btnPrivateMessages = new GuiButton(3, width / 2 - 100, height / 2 + 5, "Allow Private Messages: ???");
 		buttonList.add(btnPrivateMessages);
 		
-		btnBack = new GuiButton(4, width / 2 - 200 / 2, 165, "Back");
+		btnBack = new GuiButton(4, width / 2 - 100, height / 2 + 35, "Back");
 		buttonList.add(btnBack);
 		
 		loadFromConfig();
@@ -90,11 +93,9 @@ public class GuiIRCGlobalSettings extends GuiScreen {
 	
 	@Override
 	public void drawScreen(int par1, int par2, float par3) {
-		drawBackground(0);
-		String caption = "EiraIRC - Global Settings";
-		fontRenderer.drawString(caption, width / 2 - fontRenderer.getStringWidth(caption) / 2, 10, Globals.TEXT_COLOR);
-		String nickCaption = "Nickname";
-		fontRenderer.drawString(nickCaption, width / 2 - fontRenderer.getStringWidth(nickCaption) / 2, 30, Globals.TEXT_COLOR);
+		drawDefaultBackground();
+		drawCenteredString(fontRenderer, "EiraIRC - Global Settings", width / 2, height / 2 - 125, Globals.TEXT_COLOR);
+		drawCenteredString(fontRenderer, "Nickname:", width / 2, height / 2 - 105, Globals.TEXT_COLOR);
 		txtNick.drawTextBox();
 		super.drawScreen(par1, par2, par3);
 	}

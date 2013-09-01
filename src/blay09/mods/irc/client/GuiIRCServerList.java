@@ -1,9 +1,13 @@
+// Copyright (c) 2013, Christopher "blay09" Baker
+// All rights reserved.
+
 package blay09.mods.irc.client;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiYesNo;
 import blay09.mods.irc.EiraIRC;
 import blay09.mods.irc.IRCConnection;
 import blay09.mods.irc.config.ConfigurationHandler;
@@ -66,14 +70,24 @@ public class GuiIRCServerList extends GuiScreen {
 		} else if(button == btnEdit) {
 			onElementClicked(selectedElement);
 		} else if(button == btnDelete) {
-			// TODO confirmation screen
-			IRCConnection connection = EiraIRC.instance.getConnection(configs[selectedElement].host);
-			if(connection != null) {
-				connection.disconnect();
-			}
-			ConfigurationHandler.removeServerConfig(configs[selectedElement].host);
-			initGui();
+			Minecraft.getMinecraft().displayGuiScreen(new GuiYesNo(this, "Do you really want to remove this server?", "This will delete it from the config file.", selectedElement));
+		} else if(button == btnAdd) {
+			Minecraft.getMinecraft().displayGuiScreen(new GuiIRCServerConfig());
 		}
+	}
+	
+	@Override
+	public void confirmClicked(boolean yup, int serverIdx) {
+		if(!yup) {
+			Minecraft.getMinecraft().displayGuiScreen(this);
+			return;
+		}
+		IRCConnection connection = EiraIRC.instance.getConnection(configs[serverIdx].host);
+		if(connection != null) {
+			connection.disconnect();
+		}
+		ConfigurationHandler.removeServerConfig(configs[serverIdx].host);
+		Minecraft.getMinecraft().displayGuiScreen(this);
 	}
 	
 	@Override
@@ -96,7 +110,7 @@ public class GuiIRCServerList extends GuiScreen {
 	}
 	
 	public void onElementClicked(int i) {
-		// TODO open edit screen
+		Minecraft.getMinecraft().displayGuiScreen(new GuiIRCServerConfig(configs[i]));
 	}
 	
 	public void onElementSelected(int i) {

@@ -49,17 +49,19 @@ public class ConfigurationHandler {
 			}
 			String nick = config.get(category, "nick", "").getString();
 			ServerConfig serverConfig = new ServerConfig(category.substring(CATEGORY_SERVERS.length()).replaceAll("_", "."), nick);
-			String[] channels = config.get(category, "channels", new String[] { "Bread" }).getStringList();
+			String[] channels = config.get(category, "channels", new String[0]).getStringList();
 			for(int i = 0; i < channels.length; i++) {
 				serverConfig.channels.add("#" + channels[i]);
 				if(config.hasKey(category + CATEGORY_FLAGS_SUFFIX, channels[i])) {
 					serverConfig.channelFlags.put("#" + channels[i], config.get(category + CATEGORY_FLAGS_SUFFIX, channels[i], "").getString());
 				}				
 			}
-			serverConfig.nickServName = config.get(category, "nickServName", serverConfig.nickServName).getString();
-			serverConfig.nickServPassword = config.get(category, "nickServPassword", serverConfig.nickServPassword).getString();
-			serverConfig.serverPassword = config.get(category, "serverPassword", serverConfig.serverPassword).getString();
 			serverConfig.saveCredentials = config.get(category, "saveCredentials", false).getBoolean(false);
+			if(serverConfig.saveCredentials) {
+				serverConfig.nickServName = config.get(category, "nickServName", serverConfig.nickServName).getString();
+				serverConfig.nickServPassword = config.get(category, "nickServPassword", serverConfig.nickServPassword).getString();
+				serverConfig.serverPassword = config.get(category, "serverPassword", serverConfig.serverPassword).getString();
+			}
 			serverConfig.allowPrivateMessages = config.get(category, "allowPrivateMessages", true).getBoolean(true);
 			serverConfig.autoConnect = config.get(category, "autoConnect", false).getBoolean(false);
 			serverConfigs.put(serverConfig.host, serverConfig);

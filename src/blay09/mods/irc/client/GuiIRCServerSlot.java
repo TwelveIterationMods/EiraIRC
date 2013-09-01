@@ -1,3 +1,6 @@
+// Copyright (c) 2013, Christopher "blay09" Baker
+// All rights reserved.
+
 package blay09.mods.irc.client;
 
 import net.minecraft.client.Minecraft;
@@ -37,7 +40,7 @@ public class GuiIRCServerSlot extends GuiSlot {
 
 	@Override
 	protected void drawBackground() {
-		parentGui.drawBackground(0);
+		parentGui.drawDefaultBackground();
 	}
 	
 	protected int getContentHeight() {

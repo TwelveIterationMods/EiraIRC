@@ -34,16 +34,16 @@ public class GuiIRCTwitch extends GuiScreen {
 	public void initGui() {
 		Keyboard.enableRepeatEvents(true);
 		
-		txtUsername = new GuiTextField(fontRenderer, width / 2 - 100 / 2, 50, 100, 15);
-		txtPassword = new GuiPasswordTextField(fontRenderer, width / 2 - 100 / 2, 90, 100, 15);
+		txtUsername = new GuiTextField(fontRenderer, width / 2 - 50, height / 2 - 85, 100, 15);
+		txtPassword = new GuiPasswordTextField(fontRenderer, width / 2 - 50, height / 2 - 45, 100, 15);
 		
-		btnConnectOnStartup = new GuiButton(0, width / 2 - 200 / 2, 120, "Connect on Startup: ???");
+		btnConnectOnStartup = new GuiButton(0, width / 2 - 100, height / 2 - 20, "Connect on Startup: ???");
 		buttonList.add(btnConnectOnStartup);
 		
-		btnSaveCredentials = new GuiButton(0, width / 2 - 200 / 2, 145, "Save Credentials: ???");
+		btnSaveCredentials = new GuiButton(0, width / 2 - 100, height / 2 + 5, "Save Credentials: ???");
 		buttonList.add(btnSaveCredentials);
 		
-		btnBack = new GuiButton(2, width / 2 - 200 / 2, 170, "Back");
+		btnBack = new GuiButton(2, width / 2 - 100, height / 2 + 35, "Back");
 		buttonList.add(btnBack);
 		
 		loadFromConfig();
@@ -115,13 +115,10 @@ public class GuiIRCTwitch extends GuiScreen {
 	
 	@Override
 	public void drawScreen(int par1, int par2, float par3) {
-		this.drawBackground(0);
-		String caption = "EiraIRC - Twitch Settings";
-		fontRenderer.drawString(caption, width / 2 - fontRenderer.getStringWidth(caption) / 2, 10, Globals.TEXT_COLOR);
-		String usernameCaption = "Twitch Username:";
-		fontRenderer.drawString(usernameCaption, width / 2 - fontRenderer.getStringWidth(usernameCaption) / 2, 35, Globals.TEXT_COLOR);
-		String passwordCaption = "Twitch Password:";
-		fontRenderer.drawString(passwordCaption, width / 2 - fontRenderer.getStringWidth(passwordCaption) / 2, 75, Globals.TEXT_COLOR);
+		drawDefaultBackground();
+		drawCenteredString(fontRenderer, "EiraIRC - Twitch Settings", width / 2, height / 2 - 120, Globals.TEXT_COLOR);
+		drawCenteredString(fontRenderer, "Twitch Username:", width / 2, height / 2 - 100, Globals.TEXT_COLOR);
+		drawCenteredString(fontRenderer, "Twitch Password:", width / 2, height / 2 - 60, Globals.TEXT_COLOR);
 		txtUsername.drawTextBox();
 		txtPassword.drawTextBox();
 		super.drawScreen(par1, par2, par3);
