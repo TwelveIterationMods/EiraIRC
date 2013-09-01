@@ -44,7 +44,6 @@ public class EiraIRC {
 	
 	private IRCEventHandler eventListener;
 	private Map<String, IRCConnection> connections;
-	private IRCConnection defaultConnection;
 	
 	private EnumChatTarget chatTarget = EnumChatTarget.All;
 	private final List<String> validTargetChannels = new ArrayList<String>();
@@ -111,7 +110,6 @@ public class EiraIRC {
 	
 	public void addConnection(IRCConnection connection) {
 		connections.put(connection.getHost(), connection);
-		defaultConnection = connection;
 	}
 
 	public int getConnectionCount() {
@@ -119,7 +117,10 @@ public class EiraIRC {
 	}
 	
 	public IRCConnection getDefaultConnection() {
-		return defaultConnection;
+		for(IRCConnection connection : connections.values()) {
+			return connection;
+		}
+		return null;
 	}
 
 	public IRCConnection getConnection(String host) {

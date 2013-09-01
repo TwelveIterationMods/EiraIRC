@@ -9,19 +9,19 @@ import cpw.mods.fml.common.registry.LanguageRegistry;
 public class Localization {
 
 	public static void init() {
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":commands.irc.usage", "/%s <connect|disconnect|join|leave|nick|who|color|alias|twitch|nickserv|mode|msg|list|config|help>");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":commands.irc.usage.connect", "/%s connect <server> [password]");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":commands.irc.usage.twitch", "/%s twitch <username> <password>");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":commands.irc.usage.nick", "/%s nick [server] <nick>");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":commands.irc.usage.join", "/%s join [server] <channel>");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":commands.irc.usage.leave", "/%s leave [server] <channel>");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":commands.irc.usage.who", "/%s who [server] [channel]");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":commands.irc.usage.mode", "/%s mode [server] <channel> <flags>");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":commands.irc.usage.msg", "/%s msg [server] <nick> <message>");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":commands.irc.usage.config", "/%s config <global|<server>> <option> <value>");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":commands.irc.usage.help", "/%s help <topic>");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":commands.irc.usage.color", "/irc color <color>");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":commands.irc.usage.alias", "/irc alias <username> <alias> OR /irc alias <alias>");
+		LanguageRegistry.instance().addStringLocalization("commands.irc.usage", "/%s <connect|disconnect|join|leave|nick|who|color|alias|twitch|nickserv|mode|msg|list|config|help>");
+		LanguageRegistry.instance().addStringLocalization("commands.irc.usage.connect", "/%s connect <server> [password]");
+		LanguageRegistry.instance().addStringLocalization("commands.irc.usage.twitch", "/%s twitch <username> <password>");
+		LanguageRegistry.instance().addStringLocalization("commands.irc.usage.nick", "/%s nick [server] <nick>");
+		LanguageRegistry.instance().addStringLocalization("commands.irc.usage.join", "/%s join [server] <channel>");
+		LanguageRegistry.instance().addStringLocalization("commands.irc.usage.leave", "/%s leave [server] <channel>");
+		LanguageRegistry.instance().addStringLocalization("commands.irc.usage.who", "/%s who [server] [channel]");
+		LanguageRegistry.instance().addStringLocalization("commands.irc.usage.mode", "/%s mode [server] [channel] [flags]");
+		LanguageRegistry.instance().addStringLocalization("commands.irc.usage.msg", "/%s msg [server] <nick> <message>");
+		LanguageRegistry.instance().addStringLocalization("commands.irc.usage.config", "/%s config <global|<server>> <option> <value>");
+		LanguageRegistry.instance().addStringLocalization("commands.irc.usage.help", "/%s help <topic>");
+		LanguageRegistry.instance().addStringLocalization("commands.irc.usage.color", "/irc color <color>");
+		LanguageRegistry.instance().addStringLocalization("commands.irc.usage.alias", "/irc alias <username> <alias> OR /irc alias <alias>");
 
 		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.nopermission", EnumChatFormatting.RED + "You do not have permission to use this command.");
 		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.nosuchplayer", EnumChatFormatting.RED + "That player cannot be found");

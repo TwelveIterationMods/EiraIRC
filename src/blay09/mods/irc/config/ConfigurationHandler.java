@@ -47,7 +47,7 @@ public class ConfigurationHandler {
 			if(!category.startsWith(CATEGORY_SERVERS) || category.endsWith(CATEGORY_FLAGS_SUFFIX)) {
 				continue;
 			}
-			String nick = config.get(category, "nick", GlobalConfig.nick).getString();
+			String nick = config.get(category, "nick", "").getString();
 			ServerConfig serverConfig = new ServerConfig(category.substring(CATEGORY_SERVERS.length()).replaceAll("_", "."), nick);
 			String[] channels = config.get(category, "channels", new String[] { "Bread" }).getStringList();
 			for(int i = 0; i < channels.length; i++) {
@@ -61,7 +61,7 @@ public class ConfigurationHandler {
 			serverConfig.serverPassword = config.get(category, "serverPassword", serverConfig.serverPassword).getString();
 			serverConfig.saveCredentials = config.get(category, "saveCredentials", false).getBoolean(false);
 			serverConfig.allowPrivateMessages = config.get(category, "allowPrivateMessages", true).getBoolean(true);
-			serverConfig.autoConnect = config.get(category, "autoConnect", true).getBoolean(true);
+			serverConfig.autoConnect = config.get(category, "autoConnect", false).getBoolean(false);
 			serverConfigs.put(serverConfig.host, serverConfig);
 		}
 		
@@ -71,7 +71,7 @@ public class ConfigurationHandler {
 	public static void save() {
 		for(ServerConfig serverConfig : serverConfigs.values()) {
 			String category = CATEGORY_SERVERS + serverConfig.host.replaceAll("\\.", "_");
-			config.get(category, "nick", GlobalConfig.nick).set(serverConfig.nick);
+			config.get(category, "nick", "").set(serverConfig.nick);
 			String[] channels = serverConfig.channels.toArray(new String[serverConfig.channels.size()]);
 			for(int i = 0; i < channels.length; i++) {
 				channels[i] = channels[i].substring(1);

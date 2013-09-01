@@ -32,6 +32,7 @@ public class IRCConnection implements Runnable {
 	private static final String DESCRIPTION = "EiraIRC Bot";
 	
 	private String host;
+	private String currrentNick;
 	private ServerConfig config;
 	private boolean connected;
 	private Map<String, List<String>> channelUserMap;
@@ -354,8 +355,7 @@ public class IRCConnection implements Runnable {
 	public void changeNick(String nick) throws IOException {
 		writer.write("NICK " + nick + "\r\n");
 		writer.flush();
-		config.nick = nick;
-		ConfigurationHandler.save();
+		currrentNick = nick;
 	}
 
 	public void sendChannelMessage(String channel, String message) {
