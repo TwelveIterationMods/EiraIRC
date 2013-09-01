@@ -32,7 +32,7 @@ public class CommandIRC implements ICommand {
 
 	@Override
 	public String getCommandUsage(ICommandSender icommandsender) {
-		return Globals.MOD_ID + ":commands.irc.usage";
+		return "commands.irc.usage";
 	}
 
 	@Override
@@ -53,81 +53,96 @@ public class CommandIRC implements ICommand {
 	@Override
 	public void processCommand(ICommandSender sender, String[] args) {
 		if(args.length < 1) {
-			throw new WrongUsageException(Globals.MOD_ID + ":commands.irc.usage", "irc");
+			throw new WrongUsageException("commands.irc.usage", "irc");
 		}
 		String cmd = args[0];
 		if(cmd.equals("who")) {
 			IRCCommandHandler.processCommand(sender, args, true);
 		} else if(cmd.equals("color")) {
 			if(!GlobalConfig.enableNameColors) {
-				sender.sendChatToPlayer(sender.translateString(Globals.MOD_ID + ":irc.colorDisabled"));
+				IRCCommandHandler.sendLocalizedMessage(sender, "irc.colorDisabled");
 				return;
 			}
 			if(args.length < 2) {
-				throw new WrongUsageException(Globals.MOD_ID + ":commands.irc.usage.color");
+				throw new WrongUsageException("commands.irc.usage.color");
 			}
 			if(sender instanceof EntityPlayer) {
 				String colorName = args[1].toLowerCase();
 				if(!isOP(sender) && (GlobalConfig.colorBlackList.contains(colorName) || GlobalConfig.opColor.equals(colorName))) {
-					sender.sendChatToPlayer(sender.translateString(Globals.MOD_ID + ":irc.colorBlackList", colorName));
+					IRCCommandHandler.sendLocalizedMessage(sender, "irc.colorBlackList", colorName);
 					return;
 				}
-				if(!Utils.isValidColor(colorName)) {
-					sender.sendChatToPlayer(sender.translateString(Globals.MOD_ID + ":irc.colorInvalid", colorName));
+				if(!colorName.equals("none") && !Utils.isValidColor(colorName)) {
+					IRCCommandHandler.sendLocalizedMessage(sender, "irc.colorInvalid", colorName);
 					return;
 				}
 				EntityPlayer entityPlayer = (EntityPlayer) sender;
 				NBTTagCompound persistentTag = entityPlayer.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG);
 				NBTTagCompound tagCompound = persistentTag.getCompoundTag("EiraIRC");
-				tagCompound.setString("NameColor", colorName);
+				if(colorName.equals("none")) {
+					tagCompound.removeTag("NameColor");
+				} else {
+					tagCompound.setString("NameColor", colorName);
+				}
 				persistentTag.setTag("EiraIRC", tagCompound);
 				entityPlayer.getEntityData().setTag(EntityPlayer.PERSISTED_NBT_TAG, persistentTag);
-				sender.sendChatToPlayer(sender.translateString(Globals.MOD_ID + ":irc.colorSet", args[1]));
+				IRCCommandHandler.sendLocalizedMessage(sender, "irc.colorSet", colorName);
 			}
 		} else if(cmd.equals("alias")) {
 			if(!GlobalConfig.enableAliases) {
-				sender.sendChatToPlayer(sender.translateString(Globals.MOD_ID + ":irc.aliasDisabled"));
+				IRCCommandHandler.sendLocalizedMessage(sender, "irc.aliasDisabled");
 				return;
 			}
 			if(args.length < 2) {
-				throw new WrongUsageException(Globals.MOD_ID + ":commands.irc.usage.alias");
+				throw new WrongUsageException("commands.irc.usage.alias");
 			}
 			List<EntityPlayerMP> playerEntityList = MinecraftServer.getServer().getConfigurationManager().playerEntityList;
 			if(args.length < 3) {
+				String alias = args[1];
 				for(int i = 0; i < playerEntityList.size(); i++) {
 					EntityPlayerMP playerEntity = playerEntityList.get(i);
-					if(playerEntity.getEntityData().getCompoundTag("EiraIRC").getString("Alias").equals(args[1])) {
-						sender.sendChatToPlayer(sender.translateString(Globals.MOD_ID + ":irc.aliasLookup", args[1], playerEntity.username));
+					if(playerEntity.getEntityData().getCompoundTag("EiraIRC").getString("Alias").equals(alias)) {
+						IRCCommandHandler.sendLocalizedMessage(sender, "irc.aliasLookup", alias, playerEntity.username);
 						return;
 					}
 				}
-				sender.sendChatToPlayer(sender.translateString(Globals.MOD_ID + ":irc.aliasNotFound", args[1]));
+				IRCCommandHandler.sendLocalizedMessage(sender, "irc.aliasNotFound", alias);
 			} else {
 				if(!isOP(sender)) {
-					sender.sendChatToPlayer(sender.translateString(Globals.MOD_ID + ":irc.nopermission"));
+					IRCCommandHandler.sendLocalizedMessage(sender, "irc.nopermission");
 					return;
 				}
-				EntityPlayerMP entityPlayer = MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(args[1]);
+				String username = args[1];
+				String alias = args[2];
+				EntityPlayerMP entityPlayer = MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(username);
 				if(entityPlayer == null) {
 					for(int i = 0; i < playerEntityList.size(); i++) {
 						EntityPlayerMP playerEntity = playerEntityList.get(i);
-						if(playerEntity.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getCompoundTag("EiraIRC").getString("Alias").equals(args[1])) {
+						if(playerEntity.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getCompoundTag("EiraIRC").getString("Alias").equals(username)) {
 							entityPlayer = playerEntity;
 							break;
 						}
 					}
 					if(entityPlayer == null) {
-						sender.sendChatToPlayer(sender.translateString(Globals.MOD_ID + ":irc.nosuchplayer"));
+						IRCCommandHandler.sendLocalizedMessage(sender, "irc.nosuchplayer");
 						return;
 					}
 				}
 				NBTTagCompound persistentTag = entityPlayer.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG);
 				NBTTagCompound tagCompound = persistentTag.getCompoundTag("EiraIRC");
-				tagCompound.setString("Alias", args[2]);
+				String oldAlias = username;
+				if(tagCompound.hasKey("Alias")) {
+					oldAlias = tagCompound.getString("Alias");
+				}
+				if(alias.equals("none")) {
+					tagCompound.removeTag("Alias");
+				} else {
+					tagCompound.setString("Alias", alias);
+				}
 				persistentTag.setTag("EiraIRC", tagCompound);
 				entityPlayer.getEntityData().setTag(EntityPlayer.PERSISTED_NBT_TAG, persistentTag);
-				sender.sendChatToPlayer(sender.translateString(Globals.MOD_ID + ":irc.aliasSet", args[1], args[2]));
-				EiraIRC.instance.getEventHandler().onPlayerNickChange(entityPlayer.username, args[2]);
+				IRCCommandHandler.sendLocalizedMessage(sender, "irc.aliasSet", oldAlias, alias);
+				EiraIRC.instance.getEventHandler().onPlayerNickChange(oldAlias, alias);
 			}
 		}
 	}

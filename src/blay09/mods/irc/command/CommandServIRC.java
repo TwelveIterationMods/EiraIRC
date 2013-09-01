@@ -25,7 +25,7 @@ public class CommandServIRC implements ICommand {
 	
 	@Override
 	public String getCommandUsage(ICommandSender sender) {
-		return Globals.MOD_ID + ":commands.irc.usage";
+		return "commands.irc.usage";
 	}
 	
 	public boolean isOP(ICommandSender sender) {
@@ -41,11 +41,11 @@ public class CommandServIRC implements ICommand {
 	@Override
 	public void processCommand(ICommandSender sender, String[] args) {
 		if(MinecraftServer.getServer().isSinglePlayer()) {
-			sender.sendChatToPlayer(sender.translateString(Globals.MOD_ID + ":irc.notMultiplayer"));
+			IRCCommandHandler.sendLocalizedMessage(sender, "irc.notMultiplayer");
 			return;
 		}
 		if(args.length < 1) {
-			 throw new WrongUsageException(Globals.MOD_ID + ":commands.irc.usage", "servIrc");	
+			 throw new WrongUsageException("commands.irc.usage", "servIrc");	
 		}
 		IRCCommandHandler.processCommand(sender, args, true);
 	}

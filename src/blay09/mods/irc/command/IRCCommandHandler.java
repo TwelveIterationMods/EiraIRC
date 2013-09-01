@@ -698,6 +698,7 @@ public class IRCCommandHandler {
 		} else if(args.length == 2) {
 			if(args[0].equals("color")) {
 				Utils.addValidColorsToList(list);
+				list.add("none");
 			} else if(args[0].equals("help")) {
 				list.add("alias");
 				list.add("color");
@@ -726,6 +727,8 @@ public class IRCCommandHandler {
 					list.add("allowPrivateMessages");
 					list.add("autoConnect");
 				}
+			} else if(args[0].equals("alias")) {
+				list.add("none");
 			}
 		} else if(args.length == 4) {
 			if(args[0].equals("config")) {
