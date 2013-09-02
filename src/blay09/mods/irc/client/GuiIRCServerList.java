@@ -87,6 +87,7 @@ public class GuiIRCServerList extends GuiScreen {
 			connection.disconnect();
 		}
 		ConfigurationHandler.removeServerConfig(configs[serverIdx].host);
+		ConfigurationHandler.save();
 		Minecraft.getMinecraft().displayGuiScreen(this);
 	}
 	
