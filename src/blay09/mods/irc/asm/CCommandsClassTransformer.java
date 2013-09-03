@@ -5,6 +5,8 @@ package blay09.mods.irc.asm;
 
 import java.util.Iterator;
 
+import net.minecraft.launchwrapper.IClassTransformer;
+
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
@@ -19,8 +21,6 @@ import org.objectweb.asm.tree.LineNumberNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
-
-import cpw.mods.fml.relauncher.IClassTransformer;
 
 public class CCommandsClassTransformer implements IClassTransformer {
 

@@ -22,11 +22,11 @@ import blay09.mods.irc.config.ServerConfig;
 public class IRCCommandHandler {
 
 	public static void sendLocalizedMessage(ICommandSender sender, String key, Object... args) {
-		sender.sendChatToPlayer(sender.translateString(Globals.MOD_ID + ":" + key, args));
+		sender.sendChatToPlayer(Utils.getLocalizedChatMessage(Globals.MOD_ID + ":" + key, args));
 	}
 	
 	public static void sendUnlocalizedMessage(ICommandSender sender, String text) {
-		sender.sendChatToPlayer(text);
+		sender.sendChatToPlayer(Utils.getUnlocalizedChatMessage(text));
 	}
 	
 	public static boolean processCommand(ICommandSender sender, String[] args, boolean serverSide) {

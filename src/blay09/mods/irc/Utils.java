@@ -7,22 +7,46 @@ import java.util.ArrayList;
 import java.util.List;
 
 import blay09.mods.irc.config.GlobalConfig;
+import blay09.mods.irc.config.Globals;
 import blay09.mods.irc.config.ServerConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.StatCollector;
 
 public class Utils {
 
 	private static final char INVALID_COLOR = 'n';
 	private static final int MAX_CHAT_LENGTH = 100;
 	
-	public static void addMessageToChat(String text) {
+	public static ChatMessageComponent getUnlocalizedChatMessage(String text) {
+		return ChatMessageComponent.func_111077_e(text);
+	}
+	
+	public static ChatMessageComponent getLocalizedChatMessage(String key, Object...args) {
+		return ChatMessageComponent.func_111082_b(key, args);
+	}
+	
+	public static String getLocalizedMessage(String key, Object... args) {
+		return StatCollector.translateToLocalFormatted(Globals.MOD_ID + ":" + key, args);
+	}
+	
+	public static void addLocalizedMessageToChat(String key, Object... args) {
+		key = Globals.MOD_ID + ":" + key;
+		if(MinecraftServer.getServer() != null) {
+			MinecraftServer.getServer().getConfigurationManager().sendChatMsg(getLocalizedChatMessage(key, args));
+		} else {
+			Minecraft.getMinecraft().ingameGUI.getChatGUI().addTranslatedMessage(key, args);
+		}
+	}
+	
+	public static void addUnlocalizedMessageToChat(String text) {
 		for(String string : wrapString(text, MAX_CHAT_LENGTH)) {
 			if(MinecraftServer.getServer() != null) {
-				MinecraftServer.getServer().getConfigurationManager().sendChatMsg(string);
+				MinecraftServer.getServer().getConfigurationManager().sendChatMsg(getUnlocalizedChatMessage(text));
 			} else {
 				Minecraft.getMinecraft().thePlayer.addChatMessage(string);
 			}
