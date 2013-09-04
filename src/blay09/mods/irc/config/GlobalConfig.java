@@ -11,7 +11,7 @@ public class GlobalConfig {
 	public static String nick = ConfigurationHandler.DEFAULT_NICK;
 	public static final List<String> colorBlackList = new ArrayList<String>();
 	public static String opColor = "red";
-	public static String ircColor = "darkgray";
+	public static String ircColor = "gray";
 	public static boolean enableNameColors = true;
 	public static boolean enableAliases = true;
 	public static boolean showDeathMessages = true;

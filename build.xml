@@ -88,6 +88,10 @@
 		<jar destfile="${build.dir.release}\${build.release.minecraft.version}\${build.release.mod.version}\EiraIRC-${build.release.mod.version}.${build_number.build_number}.jar">
 			<fileset dir="${build.dir.forge}\mcp\src\minecraft\" includes="mcmod.info" />
 			<fileset dir="${build.dir.forge}\mcp\reobf\minecraft" />
+			
+			<manifest>
+			    <attribute name="FMLCorePlugin" value="blay09.mods.irc.asm.CCommandsLoadingPlugin" />
+			</manifest>
 		</jar>
 
 		<!-- Sign the finished jar -->

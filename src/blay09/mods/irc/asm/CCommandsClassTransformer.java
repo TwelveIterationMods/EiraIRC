@@ -27,7 +27,7 @@ public class CCommandsClassTransformer implements IClassTransformer {
 	@Override
 	public byte[] transform(String name, String transformedName, byte[] bytes) {
 		// EntityClientPlayerMP
-		if(name.equals("bdv")) {
+		if(name.equals("bdf")) {
 			System.out.println("********* INSIDE OBFUSCATED ENTITYCLIENTPLAYERMP TRANSFORMER ABOUT TO PATCH: " + name);
 			return patchClassASM("EntityClientPlayerMP", name, bytes, true);
 		}
@@ -36,7 +36,7 @@ public class CCommandsClassTransformer implements IClassTransformer {
 			return patchClassASM("EntityClientPlayerMP", name, bytes, false);
 		}
 		// GuiChat
-		if(name.equals("awj")) {
+		if(name.equals("aut")) {
 			System.out.println("********* INSIDE OBFUSCATED GUICHAT TRANSFORMER ABOUT TO PATCH: " + name);
 			return patchClassASM("GuiChat", name, bytes, true);
 		}
@@ -51,7 +51,7 @@ public class CCommandsClassTransformer implements IClassTransformer {
 		String targetMethodName = null;
 		String targetMethodDesc = null;
 		if(cname.equals("EntityClientPlayerMP")) {
-			targetMethodName = obfuscated ? "d" : "sendChatMessage";
+			targetMethodName = obfuscated ? "b" : "sendChatMessage";
 			targetMethodDesc = "(Ljava/lang/String;)V";
 		} else if(cname.equals("GuiChat")) {
 			targetMethodName = obfuscated ? "a" : "drawScreen";
