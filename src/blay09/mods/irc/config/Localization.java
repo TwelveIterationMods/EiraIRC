@@ -45,12 +45,12 @@ public class Localization {
 		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.colorSet", "Name color set to '%s'");
 		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.colorBlackList", "The color '%s' is not allowed on this server.");
 		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.usersOnline", "%d users online in %s on %s:");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.joinMsgIRC", "[%s] * %s joined the channel");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.partMsgIRC", "[%s] * %s left the channel");
+		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.joinMsgIRC", EnumChatFormatting.YELLOW + "[%s] * %s joined the channel");
+		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.partMsgIRC", EnumChatFormatting.YELLOW + "[%s] * %s left the channel");
 		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.joinMsgMC", "* %s joined the game");
 		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.deathMsgMC", "* %s has died: %s");
 		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.partMsgMC", "* %s left the game");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.nickChangeIRC", "[%s] * %s is now known as %s");
+		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.nickChangeIRC", EnumChatFormatting.YELLOW + "[%s] * %s is now known as %s");
 		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.nickChangeMC", "* %s is now known as %s");
 		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.channelMode", "Mode for channel %s on %s is %s");
 		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.channelModeChange", "Mode %s for channel %s");

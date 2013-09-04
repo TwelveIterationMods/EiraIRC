@@ -18,12 +18,8 @@ import blay09.mods.irc.config.Globals;
 import blay09.mods.irc.config.Localization;
 import blay09.mods.irc.config.ServerConfig;
 import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.Init;
+import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.Mod.PostInit;
-import cpw.mods.fml.common.Mod.PreInit;
-import cpw.mods.fml.common.Mod.ServerStarting;
-import cpw.mods.fml.common.Mod.ServerStopping;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -49,12 +45,12 @@ public class EiraIRC {
 	private final List<String> validTargetChannels = new ArrayList<String>();
 	private int targetChannelIndex;
 
-	@PreInit
+	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		ConfigurationHandler.load(event.getSuggestedConfigurationFile());
 	}
 	
-	@Init
+	@EventHandler
 	public void load(FMLInitializationEvent event) {
 		proxy.registerKeybindings();
 		
@@ -66,12 +62,12 @@ public class EiraIRC {
 		Localization.init();
 	}
 	
-	@PostInit
+	@EventHandler
 	public void modsLoaded(FMLPostInitializationEvent event) {
 		connections = new HashMap<String, IRCConnection>();
 	}
 	
-	@ServerStarting
+	@EventHandler
 	public void serverLoad(FMLServerStartingEvent event) {
 		event.registerServerCommand(new CommandServIRC());
 		event.registerServerCommand(new CommandIRC());
@@ -81,7 +77,7 @@ public class EiraIRC {
 		}
 	}
 	
-	@ServerStopping
+	@EventHandler
 	public void serverStop(FMLServerStoppingEvent event) {
 		if(!MinecraftServer.getServer().isSinglePlayer()) {
 			stopIRC();
