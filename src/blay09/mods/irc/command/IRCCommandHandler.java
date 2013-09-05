@@ -244,7 +244,6 @@ public class IRCCommandHandler {
 			if(args.length <= 2) {
 				channel = args[1];
 				if(EiraIRC.instance.getConnectionCount() > 1) {
-					// TODO try to find server
 					sendLocalizedMessage(sender, "irc.specifyServer");
 					throw new WrongUsageException("commands.irc.usage.join", commandName);
 				} else {
@@ -624,6 +623,7 @@ public class IRCCommandHandler {
 					sendLocalizedMessage(sender, "irc.invalidConfigChange", "Global", config);
 					return true;
 				}
+				ConfigurationHandler.save();
 				sendLocalizedMessage(sender, "irc.configChange", "Global", config, value);
 			} else {
 				IRCConnection connection = EiraIRC.instance.getConnection(host);
@@ -636,11 +636,7 @@ public class IRCCommandHandler {
 					return true;
 				}
 				ServerConfig serverConfig = connection.getConfig();
-				if(config.equals("nickServName")) {
-					serverConfig.nickServName = value;
-				} else if(config.equals("nickServPassword")) {
-					serverConfig.nickServPassword = value;
-				} else if(config.equals("allowPrivateMessages")) {
+				if(config.equals("allowPrivateMessages")) {
 					serverConfig.allowPrivateMessages = Boolean.parseBoolean(value);
 				} else if(config.equals("autoConnect")) {
 					serverConfig.autoConnect = Boolean.parseBoolean(value);
@@ -650,6 +646,7 @@ public class IRCCommandHandler {
 					sendLocalizedMessage(sender, "irc.invalidConfigChange", host, config);
 					return true;
 				}
+				ConfigurationHandler.save();
 				sendLocalizedMessage(sender, "irc.configChange", host, config, value);
 			}
 			return true;
