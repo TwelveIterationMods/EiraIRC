@@ -1,0 +1,62 @@
+# Command Usage #
+commands.irc.usage=/%s <connect|disconnect|join|leave|nick|who|color|alias|twitch|nickserv|mode|msg|list|config|help>
+commands.irc.usage.connect=/%s connect <server> [password]
+commands.irc.usage.twitch=/%s twitch <username> <password>
+commands.irc.usage.nick=/%s nick [server] <nick>
+commands.irc.usage.join=/%s join [server] <channel>
+commands.irc.usage.leave=/%s leave [server] <channel>
+commands.irc.usage.who=/%s who [server] [channel]
+commands.irc.usage.mode=/%s mode [server] [channel] [flags]
+commands.irc.usage.msg=/%s msg [server] <nick> <message>
+commands.irc.usage.config=/%s config <global|<server>> <option> <value>
+commands.irc.usage.help=/%s help <topic>
+commands.irc.usage.color=/irc color <color>
+commands.irc.usage.alias=/irc alias <username> <alias> OR /irc alias <alias>
+
+EiraIRC:irc.nopermission=You do not have permission to use this command.
+EiraIRC:irc.nosuchplayer=That player cannot be found
+EiraIRC:irc.server.alreadyConnected=The server is already connected to %s
+EiraIRC:irc.client.alreadyConnected=You are already connected to %s
+EiraIRC:irc.server.notConnected=The server is not connected to %s
+EiraIRC:irc.client.notConnected=You are not connected to %s
+EiraIRC:irc.server.activeConnections=The server is connected to:
+EiraIRC:irc.client.activeConnections=The client is connected to:
+EiraIRC:irc.connecting=Connecting to %s...
+EiraIRC:irc.connected=Connected to %s
+EiraIRC:irc.disconnecting=Disconnecting from %s...
+EiraIRC:irc.disconnected=Disconnected from %s
+EiraIRC:irc.joinChannel=Joining channel %s on %s
+EiraIRC:irc.leaveChannel=Leaving channel %s on %s
+EiraIRC:irc.notMultiplayer=This is not a multiplayer server. Use /irc instead.
+EiraIRC:irc.aliasSet=Alias for '%s' set to '%s'
+EiraIRC:irc.aliasDisabled=Aliases are disabled on this server.
+EiraIRC:irc.aliasLookup=The username for '%s' is '%s'
+EiraIRC:irc.colorDisabled=Name colors are disabled on this server.
+EiraIRC:irc.colorSet=Name color set to '%s'
+EiraIRC:irc.colorBlackList=The color '%s' is not allowed on this server.
+EiraIRC:irc.usersOnline=%d users online in %s on %s:
+EiraIRC:irc.joinMsgIRC=[%s] * %s joined the channel
+EiraIRC:irc.partMsgIRC=[%s] * %s left the channel
+EiraIRC:irc.joinMsgMC=* %s joined the game
+EiraIRC:irc.deathMsgMC=* %s has died: %s
+EiraIRC:irc.partMsgMC=* %s left the game
+EiraIRC:irc.nickChangeIRC=[%s] * %s is now known as %s
+EiraIRC:irc.nickChangeMC=* %s is now known as %s
+EiraIRC:irc.channelMode=Mode for channel %s on %s is %s
+EiraIRC:irc.channelModeChange=Mode %s for channel %s
+EiraIRC:irc.specifyChannel=You have to specify a channel.
+EiraIRC:irc.specifyServer=You have to specify a server.
+EiraIRC:irc.msgDisabled=Private messages are not enabled.
+EiraIRC:irc.msgInvalidTarget=%s is not in a valid target channel.
+EiraIRC:irc.configNoAbuse=To prevent abuse, this setting can only be changed in the config file.
+EiraIRC:irc.helpValidTopics", EnumChatFormatting.YELLOW + "Valid topics are:
+EiraIRC:irc.helpTopics", EnumChatFormatting.YELLOW + "* color, alias, twitch, msg, mode, commands, config
+EiraIRC:irc.helpInvalidTopic", EnumChatFormatting.YELLOW + "Invalid help topic '%s'. Valid topics are:
+EiraIRC:irc.configChange=[%s] Setting config option '%s' to '%s'
+EiraIRC:irc.invalidConfigChange=[%s] Invalid config option %s. Use TAB to loop through valid options.
+EiraIRC:irc.nickChange=[%s] Changing nick to %s...
+EiraIRC:irc.colorInvalid='%s' is not a valid color.
+EiraIRC:irc.aliasNotFound=The alias '%s' cannot be found.
+EiraIRC:irc.connectionError=Could not connect to %s
+EiraIRC:irc.nickServUpdated=Updated nickserv information for %s
+EiraIRC:irc.serverOnlyCommand=This command only works on the server side. Use the GUI (default: I) or the config file for the client settings.
