@@ -3,12 +3,15 @@
 
 package blay09.mods.irc.client;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import blay09.mods.irc.EiraIRC;
 import blay09.mods.irc.config.Globals;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 
+@SideOnly(Side.CLIENT)
 public class GuiChatOverlay {
 
 	public static final int COLOR_BACKGROUND = Integer.MIN_VALUE;

@@ -23,7 +23,7 @@
 	</target>
 
 	<target name="replace_tokens">
-		<replace dir="${build.dir.forge}\mcp\src\minecraft" token="@VERSION@" value="${build.release.mod.version}" />
+		<replace dir="${build.dir.forge}\mcp\src\minecraft" token="@VERSION@" value="${build.release.mod.version}.${build_number.build_number}" />
 		<replace dir="${build.dir.forge}\mcp\src\minecraft" token="@MCVERSION@" value="${build.release.minecraft.version}" />
 		<replace dir="${build.dir.forge}\mcp\src\minecraft" token="@FINGERPRINT@" value="${build.release.mod.fingerprint}" />
 		<replace dir="${build.dir.forge}\mcp\src\minecraft" token="@BUILD_NUMBER@" value="${build_number.build_number}" />
@@ -67,6 +67,7 @@
 			
 			<manifest>
 			    <attribute name="FMLCorePlugin" value="blay09.mods.irc.asm.CCommandsLoadingPlugin" />
+				<attribute name="FMLCorePluginContainsFMLMod" value="true" />
 			</manifest>
 		</jar>
 
@@ -91,12 +92,15 @@
 			
 			<manifest>
 			    <attribute name="FMLCorePlugin" value="blay09.mods.irc.asm.CCommandsLoadingPlugin" />
+			    <attribute name="FMLCorePluginContainsFMLMod" value="true" />
 			</manifest>
 		</jar>
 
 		<!-- Sign the finished jar -->
 		<antcall target="sign_jar" />
 
+		<copy file="${build.dir.release}\${build.release.minecraft.version}\${build.release.mod.version}\EiraIRC-${build.release.mod.version}.${build_number.build_number}.jar" tofile="${build.dir.release}\${build.release.minecraft.version}\EiraIRC-${build.release.minecraft.version}-latest.jar" />
+		
 		<!-- Clean up the MCP source now that we are done -->
 		<antcall target="clean" />
 	</target>

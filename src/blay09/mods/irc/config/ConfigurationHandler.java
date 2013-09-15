@@ -51,10 +51,11 @@ public class ConfigurationHandler {
 			ServerConfig serverConfig = new ServerConfig(category.substring(CATEGORY_SERVERS.length()).replaceAll("_", "."), nick);
 			String[] channels = config.get(category, "channels", new String[0]).getStringList();
 			for(int i = 0; i < channels.length; i++) {
-				serverConfig.channels.add("#" + channels[i]);
+				channels[i] = channels[i];
+				serverConfig.channels.add(unescape(channels[i]));
 				if(config.hasKey(category + CATEGORY_FLAGS_SUFFIX, channels[i])) {
-					serverConfig.channelFlags.put("#" + channels[i], config.get(category + CATEGORY_FLAGS_SUFFIX, channels[i], "").getString());
-				}				
+					serverConfig.channelFlags.put(unescape(channels[i]), config.get(category + CATEGORY_FLAGS_SUFFIX, channels[i], "").getString());
+				}
 			}
 			serverConfig.saveCredentials = config.get(category, "saveCredentials", false).getBoolean(false);
 			if(serverConfig.saveCredentials) {
@@ -69,6 +70,14 @@ public class ConfigurationHandler {
 		
 		config.save();
 	}
+
+	public static String unescape(String s) {
+		return s.substring(1, s.length() - 1);
+	}
+	
+	public static String escape(String s) {
+		return "\"" + s + "\"";
+	}
 	
 	public static void save() {
 		for(ServerConfig serverConfig : serverConfigs.values()) {
@@ -76,12 +85,12 @@ public class ConfigurationHandler {
 			config.get(category, "nick", "").set(serverConfig.nick);
 			String[] channels = serverConfig.channels.toArray(new String[serverConfig.channels.size()]);
 			for(int i = 0; i < channels.length; i++) {
-				channels[i] = channels[i].substring(1);
+				channels[i] = escape(channels[i]);
 			}
 			config.get(category, "channels", channels).set(channels);
 			for(Entry<String, String> entry : serverConfig.channelFlags.entrySet()) {
 				if(serverConfig.channels.contains(entry.getKey())) {
-					config.get(category + CATEGORY_FLAGS_SUFFIX, entry.getKey().substring(1), entry.getValue()).set(entry.getValue());
+					config.get(category + CATEGORY_FLAGS_SUFFIX, escape(entry.getKey()), entry.getValue()).set(entry.getValue());
 				}
 			}
 			if(serverConfig.saveCredentials) {

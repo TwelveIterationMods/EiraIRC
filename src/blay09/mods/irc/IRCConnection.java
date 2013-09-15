@@ -32,7 +32,7 @@ public class IRCConnection implements Runnable {
 	private static final String DESCRIPTION = "EiraIRC Bot";
 	
 	private String host;
-	private String currrentNick;
+	private String currentNick;
 	private ServerConfig config;
 	private boolean connected;
 	private Map<String, List<String>> channelUserMap;
@@ -257,14 +257,14 @@ public class IRCConnection implements Runnable {
 					String message = null;
 					if(line.contains("ACTION")) {
 						message = line.substring(j + 9, line.length() - 1);
-						if(channel.equals(config.nick)) {
+						if(channel.equals(currentNick)) {
 							onPrivateEmote(user, message);
 						} else {
 							onChannelEmote(channel, user, message);
 						}
 					} else {
 						message = line.substring(j + 1);
-						if(channel.equals(config.nick)) {
+						if(channel.equals(currentNick)) {
 							onPrivateMessage(user, message);
 						} else {
 							onChannelMessage(channel, user, message);
@@ -355,7 +355,7 @@ public class IRCConnection implements Runnable {
 	public void changeNick(String nick) throws IOException {
 		writer.write("NICK " + nick + "\r\n");
 		writer.flush();
-		currrentNick = nick;
+		currentNick = nick;
 	}
 
 	public void sendChannelMessage(String channel, String message) {
