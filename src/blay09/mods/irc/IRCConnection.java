@@ -264,7 +264,7 @@ public class IRCConnection implements Runnable {
 						}
 					} else {
 						message = line.substring(j + 1);
-						if(channel.equals(currentNick)) {
+						if(channel.equalsIgnoreCase(currentNick)) {
 							onPrivateMessage(user, message);
 						} else {
 							onChannelMessage(channel, user, message);
@@ -329,7 +329,7 @@ public class IRCConnection implements Runnable {
 					}
 					continue;
 				}
-				System.out.println(line);
+//				System.out.println(line);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
