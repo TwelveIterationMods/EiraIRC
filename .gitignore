@@ -1,3 +1,5 @@
 /releases
 /build_number.properties
 /build.properties
+/debug
+/private.properties

@@ -35,7 +35,9 @@ public class GuiIRCTwitch extends GuiScreen {
 		Keyboard.enableRepeatEvents(true);
 		
 		txtUsername = new GuiTextField(fontRenderer, width / 2 - 50, height / 2 - 85, 100, 15);
+		txtUsername.setMaxStringLength(Integer.MAX_VALUE);
 		txtPassword = new GuiPasswordTextField(fontRenderer, width / 2 - 50, height / 2 - 45, 100, 15);
+		txtPassword.setMaxStringLength(Integer.MAX_VALUE);
 		
 		btnConnectOnStartup = new GuiButton(0, width / 2 - 100, height / 2 - 20, "Connect on Startup: ???");
 		buttonList.add(btnConnectOnStartup);
@@ -118,7 +120,7 @@ public class GuiIRCTwitch extends GuiScreen {
 		drawDefaultBackground();
 		drawCenteredString(fontRenderer, "EiraIRC - Twitch Settings", width / 2, height / 2 - 120, Globals.TEXT_COLOR);
 		drawCenteredString(fontRenderer, "Twitch Username:", width / 2, height / 2 - 100, Globals.TEXT_COLOR);
-		drawCenteredString(fontRenderer, "Twitch Password:", width / 2, height / 2 - 60, Globals.TEXT_COLOR);
+		drawCenteredString(fontRenderer, "OAuth Token:", width / 2, height / 2 - 60, Globals.TEXT_COLOR);
 		txtUsername.drawTextBox();
 		txtPassword.drawTextBox();
 		super.drawScreen(par1, par2, par3);
