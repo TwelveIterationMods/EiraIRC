@@ -23,11 +23,11 @@ public class Utils {
 	private static final int MAX_CHAT_LENGTH = 100;
 	
 	public static ChatMessageComponent getUnlocalizedChatMessage(String text) {
-		return ChatMessageComponent.func_111077_e(text);
+		return ChatMessageComponent.createFromText(text);
 	}
 	
 	public static ChatMessageComponent getLocalizedChatMessage(String key, Object...args) {
-		return ChatMessageComponent.func_111082_b(key, args);
+		return ChatMessageComponent.createFromTranslationWithSubstitutions(key, args);
 	}
 	
 	public static String getLocalizedMessage(String key, Object... args) {

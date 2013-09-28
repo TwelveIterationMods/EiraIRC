@@ -35,7 +35,7 @@ public class ClientChatHandler {
 			try {
 				return IRCCommandHandler.processCommand(sender, args, false);
 			} catch (WrongUsageException e) {
-				sender.sendChatToPlayer(Utils.getUnlocalizedChatMessage(EnumChatFormatting.RED + "Wrong Usage: ").func_111073_a(Utils.getLocalizedChatMessage(e.getMessage(), "irc")));
+				sender.sendChatToPlayer(Utils.getUnlocalizedChatMessage(EnumChatFormatting.RED + "Wrong Usage: ").addFormatted(e.getMessage(), "irc"));
 				return true;
 			}
 		} else if(cmd.equals("me")) {

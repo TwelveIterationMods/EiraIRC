@@ -329,7 +329,7 @@ public class IRCConnection implements Runnable {
 					}
 					continue;
 				}
-//				System.out.println(line);
+				System.out.println(line);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

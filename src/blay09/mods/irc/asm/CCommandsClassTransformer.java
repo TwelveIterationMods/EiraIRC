@@ -27,7 +27,7 @@ public class CCommandsClassTransformer implements IClassTransformer {
 	@Override
 	public byte[] transform(String name, String transformedName, byte[] bytes) {
 		// EntityClientPlayerMP
-		if(name.equals("bdf")) {
+		if(name.equals("bdi")) {
 			System.out.println("********* INSIDE OBFUSCATED ENTITYCLIENTPLAYERMP TRANSFORMER ABOUT TO PATCH: " + name);
 			return patchClassASM("EntityClientPlayerMP", name, bytes, true);
 		}
@@ -36,7 +36,7 @@ public class CCommandsClassTransformer implements IClassTransformer {
 			return patchClassASM("EntityClientPlayerMP", name, bytes, false);
 		}
 		// GuiChat
-		if(name.equals("aut")) {
+		if(name.equals("auw")) {
 			System.out.println("********* INSIDE OBFUSCATED GUICHAT TRANSFORMER ABOUT TO PATCH: " + name);
 			return patchClassASM("GuiChat", name, bytes, true);
 		}

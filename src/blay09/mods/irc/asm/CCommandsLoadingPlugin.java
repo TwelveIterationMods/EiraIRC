@@ -8,7 +8,7 @@ import java.util.Map;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin.MCVersion;
 
-@MCVersion("1.6.2")
+@MCVersion("1.6.4")
 public class CCommandsLoadingPlugin implements IFMLLoadingPlugin {
 
 	@Override
