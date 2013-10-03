@@ -66,7 +66,7 @@ public class IRCCommandHandler {
 				sendLocalizedMessage(sender, "irc.connectionError", host);
 			}
 			return true;
-		} else if(cmd.equals("twitch")) { // servirc twitch <username> <password> OR irc twitch
+		} else if(cmd.equals("twitch")) { // servirc twitch <username> <oauth> OR irc twitch
 			if(serverSide && !Utils.isOP(sender)) {
 				sendLocalizedMessage(sender, "irc.nopermissions");
 				return true;
@@ -231,7 +231,7 @@ public class IRCCommandHandler {
 				e.printStackTrace();
 			}
 			return true;
-		} else if(cmd.equals("join")) { // [serv]irc join [host] <channel>
+		} else if(cmd.equals("join")) { // [serv]irc join [host] <channel> [password]
 			if(serverSide && !Utils.isOP(sender)) {
 				sendLocalizedMessage(sender, "irc.nopermission");
 				return true;
@@ -241,8 +241,12 @@ public class IRCCommandHandler {
 			}
 			IRCConnection connection = null;
 			String channel = null;
-			if(args.length <= 2) {
+			String password = null;
+			if(args.length <= 2 || (args.length <= 3 && args[1].startsWith("#"))) {
 				channel = args[1];
+				if(args.length > 2) {
+					password = args[2];
+				}
 				if(EiraIRC.instance.getConnectionCount() > 1) {
 					sendLocalizedMessage(sender, "irc.specifyServer");
 					throw new WrongUsageException("commands.irc.usage.join", commandName);
@@ -260,6 +264,9 @@ public class IRCCommandHandler {
 			} else {
 				String host = args[1];
 				channel = args[2];
+				if(args.length > 3) {
+					password = args[3];
+				}
 				connection = EiraIRC.instance.getConnection(host);
 				if(connection == null) {
 					if(serverSide) {
@@ -272,7 +279,7 @@ public class IRCCommandHandler {
 			}
 			try {
 				sendLocalizedMessage(sender, "irc.joinChannel", channel, connection.getHost());
-				connection.joinChannel(channel);
+				connection.joinChannel(channel, password);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -619,6 +626,12 @@ public class IRCCommandHandler {
 					GlobalConfig.showIRCJoinLeave = Boolean.parseBoolean(value);
 				} else if(config.equals("showMinecraftJoinLeave")) {
 					GlobalConfig.showMinecraftJoinLeave = Boolean.parseBoolean(value);
+				} else if(config.equals("showNickChanges")) {
+					GlobalConfig.showNickChanges = Boolean.parseBoolean(value);
+				} else if(config.equals("enableLinkFilter")) {
+					GlobalConfig.enableLinkFilter = Boolean.parseBoolean(value);
+				} else if(config.equals("persistentConnection")) {
+					GlobalConfig.persistentConnection = Boolean.parseBoolean(value);
 				} else {
 					sendLocalizedMessage(sender, "irc.invalidConfigChange", "Global", config);
 					return true;
@@ -718,6 +731,9 @@ public class IRCCommandHandler {
 				sendUnlocalizedMessage(sender, "* " + connection.getHost() + " (" + channels + ")");
 			}
 			return true;
+		} else if(cmd.equals("op")) { // [serv]irc op <command>
+			sendUnlocalizedMessage(sender, "Not yet implemented.");
+			return true;
 		}
 		return false;
 	}
@@ -740,6 +756,7 @@ public class IRCCommandHandler {
 			list.add("disconnect");
 			list.add("list");
 			list.add("nick");
+			list.add("op");
 			list.add("config");
 			list.add("help");
 		} else if(args.length == 2) {
@@ -770,6 +787,9 @@ public class IRCCommandHandler {
 					list.add("showDeathMessages");
 					list.add("showIRCJoinLeave");
 					list.add("showMinecraftJoinLeave");
+					list.add("enableLinkFilter");
+					list.add("showNickChanges");
+					list.add("persistentConnection");
 				} else {
 					list.add("allowPrivateMessages");
 					list.add("autoConnect");

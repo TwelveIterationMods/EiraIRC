@@ -13,30 +13,53 @@ import blay09.mods.irc.config.Globals;
 
 public class GuiIRCGlobalSettings extends GuiScreen {
 	
+	private static final int BUTTON_WIDTH = 190;
+	private static final int BUTTON_HEIGHT = 20;
+	private static final int BUTTON_GAP = 5;
+	
 	private GuiTextField txtNick;
 	private GuiButton btnDeathMessages;
 	private GuiButton btnMCJoinLeave;
 	private GuiButton btnIRCJoinLeave;
 	private GuiButton btnPrivateMessages;
+	private GuiButton btnLinkFilter;
+	private GuiButton btnNickChanges;
+	private GuiButton btnPersistentConnections;
+	private GuiButton btnMessageDisplayMode;
 	private GuiButton btnBack;
 	
 	@Override
 	public void initGui() {
+		int leftX = width / 2 - BUTTON_WIDTH - BUTTON_GAP;
+		int rightX = width / 2 + BUTTON_GAP;
+		
 		txtNick = new GuiTextField(fontRenderer, width / 2 - 50, height / 2 - 90, 100, 15);
 		
-		btnDeathMessages = new GuiButton(0, width / 2 - 100, height / 2 - 70, "Relay Death Messages: ???");
+		btnDeathMessages = new GuiButton(1, leftX, height / 2 - 70, BUTTON_WIDTH, BUTTON_HEIGHT, "Relay Death Messages: ???");
 		buttonList.add(btnDeathMessages);
 		
-		btnMCJoinLeave = new GuiButton(1, width / 2 - 100, height / 2 - 45, "Relay Minecraft Joins: ???");
+		btnMCJoinLeave = new GuiButton(2, leftX, height / 2 - 45, BUTTON_WIDTH, BUTTON_HEIGHT, "Relay Minecraft Joins: ???");
 		buttonList.add(btnMCJoinLeave);
 		
-		btnIRCJoinLeave = new GuiButton(2, width / 2 - 100, height / 2 - 20, "Relay IRC Joins: ???");
+		btnIRCJoinLeave = new GuiButton(3, leftX, height / 2 - 20, BUTTON_WIDTH, BUTTON_HEIGHT, "Relay IRC Joins: ???");
 		buttonList.add(btnIRCJoinLeave);
 		
-		btnPrivateMessages = new GuiButton(3, width / 2 - 100, height / 2 + 5, "Allow Private Messages: ???");
+		btnNickChanges = new GuiButton(4, leftX, height / 2 + 5, BUTTON_WIDTH, BUTTON_HEIGHT, "Relay Nick Changes: ???");
+		buttonList.add(btnNickChanges);
+		
+		btnPersistentConnections = new GuiButton(5, rightX, height / 2 - 70, BUTTON_WIDTH, BUTTON_HEIGHT, "Persistent Connections: ???");
+		buttonList.add(btnPersistentConnections);
+		
+		btnLinkFilter = new GuiButton(6, rightX, height / 2 - 45, BUTTON_WIDTH, BUTTON_HEIGHT, "Filter Links: ???");
+		buttonList.add(btnLinkFilter);
+		
+		btnPrivateMessages = new GuiButton(7, rightX, height / 2 - 20, BUTTON_WIDTH, BUTTON_HEIGHT, "Allow Private Messages: ???");
 		buttonList.add(btnPrivateMessages);
 		
-		btnBack = new GuiButton(4, width / 2 - 100, height / 2 + 35, "Back");
+		btnMessageDisplayMode = new GuiButton(8, rightX, height / 2 + 5, BUTTON_WIDTH, BUTTON_HEIGHT, "Message Display: ???");
+		buttonList.add(btnMessageDisplayMode);
+		
+		btnBack = new GuiButton(0, width / 2 - 100, height / 2 + 35, "Back");
 		buttonList.add(btnBack);
 		
 		loadFromConfig();
@@ -48,6 +71,25 @@ public class GuiIRCGlobalSettings extends GuiScreen {
 		btnMCJoinLeave.displayString = "Relay Minecraft Joins: " + (GlobalConfig.showMinecraftJoinLeave ? "Yes" : "No");
 		btnIRCJoinLeave.displayString = "Relay IRC Joins: " + (GlobalConfig.showIRCJoinLeave ? "Yes" : "No");
 		btnPrivateMessages.displayString = "Allow Private Messages: " + (GlobalConfig.allowPrivateMessages ? "Yes" : "No");
+		btnNickChanges.displayString = "Relay Nick Changes: " + (GlobalConfig.showNickChanges ? "Yes" : "No");
+		btnLinkFilter.displayString = "Filter Links: " + (GlobalConfig.enableLinkFilter ? "Yes" : "No");
+		btnPersistentConnections.displayString = "Persistent Connections: " + (GlobalConfig.persistentConnection ? "Yes" : "No");
+		updateMessageDisplayMode();
+	}
+	
+	public void updateMessageDisplayMode() {
+		String msgDisplayMode = "Custom";
+		String currentDM = GlobalConfig.mcChannelMsgFormat;
+		if(currentDM.equals(GlobalConfig.MC_CMESSAGE_FORMAT_NORMAL)) {
+			msgDisplayMode = "Default";
+		} else if(currentDM.equals(GlobalConfig.MC_CMESSAGE_FORMAT_LIGHT)) {
+			msgDisplayMode = "Light";
+		} else if(currentDM.equals(GlobalConfig.MC_CMESSAGE_FORMAT_SLIGHT)) {
+			msgDisplayMode = "S-Light";
+		} else if(currentDM.equals(GlobalConfig.MC_CMESSAGE_FORMAT_DETAIL)) {
+			msgDisplayMode = "Detailed";
+		}
+		btnMessageDisplayMode.displayString = "Message Display: " + msgDisplayMode;
 	}
 	
 	@Override
@@ -64,6 +106,39 @@ public class GuiIRCGlobalSettings extends GuiScreen {
 		} else if(button == btnPrivateMessages) {
 			GlobalConfig.allowPrivateMessages = !GlobalConfig.allowPrivateMessages;
 			btnPrivateMessages.displayString = "Allow Private Messages: " + (GlobalConfig.allowPrivateMessages ? "Yes" : "No");
+		} else if(button == btnNickChanges) {
+			GlobalConfig.showNickChanges = !GlobalConfig.showNickChanges;
+			btnNickChanges.displayString = "Relay Nick Changes: " + (GlobalConfig.showNickChanges ? "Yes" : "No");
+		} else if(button == btnLinkFilter) {
+			GlobalConfig.enableLinkFilter = !GlobalConfig.enableLinkFilter;
+			btnLinkFilter.displayString = "Filter Links: " + (GlobalConfig.enableLinkFilter ? "Yes" : "No");
+		} else if(button == btnPersistentConnections) {
+			GlobalConfig.persistentConnection = !GlobalConfig.persistentConnection;
+			btnPersistentConnections.displayString = "Persistent Connections: " + (GlobalConfig.persistentConnection ? "Yes" : "No");
+		} else if(button == btnMessageDisplayMode) {
+			String currentDM = GlobalConfig.mcChannelMsgFormat;
+			if(currentDM.equals(GlobalConfig.MC_CMESSAGE_FORMAT_NORMAL)) {
+				GlobalConfig.mcChannelMsgFormat = GlobalConfig.MC_CMESSAGE_FORMAT_LIGHT;
+				GlobalConfig.mcPrivateMsgFormat = GlobalConfig.MC_PMESSAGE_FORMAT_LIGHT;
+				GlobalConfig.mcChannelEmtFormat = GlobalConfig.MC_CEMOTE_FORMAT_NORMAL;
+				GlobalConfig.mcPrivateEmtFormat = GlobalConfig.MC_PEMOTE_FORMAT_NORMAL;
+			} else if(currentDM.equals(GlobalConfig.MC_CMESSAGE_FORMAT_LIGHT)) {
+				GlobalConfig.mcChannelMsgFormat = GlobalConfig.MC_CMESSAGE_FORMAT_SLIGHT;
+				GlobalConfig.mcPrivateMsgFormat = GlobalConfig.MC_PMESSAGE_FORMAT_SLIGHT;
+				GlobalConfig.mcChannelEmtFormat = GlobalConfig.MC_CEMOTE_FORMAT_NORMAL;
+				GlobalConfig.mcPrivateEmtFormat = GlobalConfig.MC_PEMOTE_FORMAT_NORMAL;
+			} else if(currentDM.equals(GlobalConfig.MC_CMESSAGE_FORMAT_SLIGHT)) {
+				GlobalConfig.mcChannelMsgFormat = GlobalConfig.MC_CMESSAGE_FORMAT_DETAIL;
+				GlobalConfig.mcPrivateMsgFormat = GlobalConfig.MC_PMESSAGE_FORMAT_DETAIL;
+				GlobalConfig.mcChannelEmtFormat = GlobalConfig.MC_CEMOTE_FORMAT_NORMAL;
+				GlobalConfig.mcPrivateEmtFormat = GlobalConfig.MC_PEMOTE_FORMAT_NORMAL;
+			} else if(currentDM.equals(GlobalConfig.MC_CMESSAGE_FORMAT_DETAIL)) {
+				GlobalConfig.mcChannelMsgFormat = GlobalConfig.MC_CMESSAGE_FORMAT_NORMAL;
+				GlobalConfig.mcPrivateMsgFormat = GlobalConfig.MC_PMESSAGE_FORMAT_NORMAL;
+				GlobalConfig.mcChannelEmtFormat = GlobalConfig.MC_CEMOTE_FORMAT_NORMAL;
+				GlobalConfig.mcPrivateEmtFormat = GlobalConfig.MC_PEMOTE_FORMAT_NORMAL;
+			}
+			updateMessageDisplayMode();
 		} else if(button == btnBack) {
 			ConfigurationHandler.save();
 			Minecraft.getMinecraft().displayGuiScreen(new GuiIRCSettings());

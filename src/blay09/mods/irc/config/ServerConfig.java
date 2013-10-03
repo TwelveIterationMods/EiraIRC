@@ -27,6 +27,7 @@ public class ServerConfig {
 	public String nickServName = "";
 	public String nickServPassword = "";
 	public final List<String> channels = new ArrayList<String>();
+	public final Map<String, String> channelPasswords = new HashMap<String, String>();
 	public final Map<String, String> channelFlags = new HashMap<String, String>();
 	public boolean clientSide = false;
 	public boolean allowPrivateMessages = true;

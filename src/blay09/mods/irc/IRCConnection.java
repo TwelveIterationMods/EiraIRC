@@ -141,6 +141,7 @@ public class IRCConnection implements Runnable {
 			sendPrivateMessage(nick, "HELP            Prints this command list");
 			sendPrivateMessage(nick, "ALIAS            Look up the username of an online player");
 			sendPrivateMessage(nick, "MSG            Send a private message to an online player");
+			sendPrivateMessage(nick, "OP            Performs an OP command on the server");
 			sendPrivateMessage(nick, "***** End of Help *****");
 			return;
 		} else if(message.equals("WHO")) {
@@ -203,6 +204,8 @@ public class IRCConnection implements Runnable {
 			EiraIRC.instance.getEventHandler().onIRCPrivateMessageToPlayer(this, user, nick, entityPlayer, targetMessage);
 			sendPrivateMessage(nick, "Message sent to " + playerName + ": " + targetMessage);
 			return;
+		} else if(message.startsWith("OP ")) {
+			sendPrivateMessage(nick, "Not implemented yet.");
 		}
 		sendPrivateMessage(nick, "Unknown command. Type HELP for a list of all commands.");
 	}
@@ -325,11 +328,11 @@ public class IRCConnection implements Runnable {
 					nickServ();
 					connected = true;
 					for(String channel : config.channels) {
-						joinChannel(channel);
+						joinChannel(channel, config.channelPasswords.get(channel));
 					}
 					continue;
 				}
-				System.out.println(line);
+//				System.out.println(line);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -344,7 +347,15 @@ public class IRCConnection implements Runnable {
 	}
 	
 	public void joinChannel(String channel) throws IOException {
-		writer.write("JOIN " + channel + "\r\n");
+		joinChannel(channel, null);
+	}
+	
+	public void joinChannel(String channel, String password) throws IOException {
+		if(password != null) {
+			writer.write("JOIN " + channel + " " + password + "\r\n");
+		} else {
+			writer.write("JOIN " + channel + "\r\n");
+		}
 		writer.flush();
 		if(!config.channels.contains(channel)) {
 			config.channels.add(channel);

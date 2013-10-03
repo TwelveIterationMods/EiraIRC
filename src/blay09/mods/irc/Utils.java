@@ -3,21 +3,26 @@
 
 package blay09.mods.irc;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import blay09.mods.irc.config.GlobalConfig;
-import blay09.mods.irc.config.ServerConfig;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
+import blay09.mods.irc.config.GlobalConfig;
 
 public class Utils {
 
 	private static final char INVALID_COLOR = 'n';
 	private static final int MAX_CHAT_LENGTH = 100;
+	private static final Pattern pattern = Pattern.compile("^(?:(https?)://)?([-\\w_\\.]{2,}\\.[a-z]{2,4})(/\\S*)?$");
 	
 	public static void addMessageToChat(String text) {
 		for(String string : wrapString(text, MAX_CHAT_LENGTH)) {
@@ -205,5 +210,44 @@ public class Utils {
 		list.add("true");
 		list.add("false");		
 	}
+
+	public static String getCurrentServerName() {
+		if(Minecraft.getMinecraft().isSingleplayer()) {
+			return "Singleplayer";
+		}
+		ServerData serverData = Minecraft.getMinecraft().getServerData();
+		if(serverData.isHidingAddress()) {
+			return serverData.serverName;
+		} else {
+			return serverData.serverIP;
+		}
+	}
 	
+	public static String formatMessage(String format, String user, String nick, String message) {
+		return formatMessage(format, getCurrentServerName(), "", user, nick, message);
+	}
+	
+	public static String formatMessage(String format, IRCConnection connection, String user, String nick, String message) {
+		return formatMessage(format, connection.getHost(), "", user, nick, message);
+	}
+
+	public static String formatMessage(String format, String server, String channel, String user, String nick, String message) {
+		String result = format;
+		result = result.replaceAll("\\{SERVER\\}", server);
+		result = result.replaceAll("\\{CHANNEL\\}", channel);
+		result = result.replaceAll("\\{USER\\}", user);
+		result = result.replaceAll("\\{NICK\\}", nick);
+		result = result.replaceAll("\\{MESSAGE\\}", message);
+		return result;
+	}
+	
+	public static String filterLinks(String message) {
+		String[] s = message.split(" ");
+		String result = "";
+		for(int i = 0; i < s.length; i++) {
+			Matcher matcher = pattern.matcher(s[i]);
+			result += ((i > 0) ? " " : "") + matcher.replaceAll("<link removed>");
+		}
+		return result;
+	}
 }

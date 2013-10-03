@@ -11,9 +11,9 @@ public class Localization {
 	public static void init() {
 		LanguageRegistry.instance().addStringLocalization("commands.irc.usage", "/%s <connect|disconnect|join|leave|nick|who|color|alias|twitch|nickserv|mode|msg|list|config|help>");
 		LanguageRegistry.instance().addStringLocalization("commands.irc.usage.connect", "/%s connect <server> [password]");
-		LanguageRegistry.instance().addStringLocalization("commands.irc.usage.twitch", "/%s twitch <username> <password>");
+		LanguageRegistry.instance().addStringLocalization("commands.irc.usage.twitch", "/%s twitch <username> <oauth>");
 		LanguageRegistry.instance().addStringLocalization("commands.irc.usage.nick", "/%s nick [server] <nick>");
-		LanguageRegistry.instance().addStringLocalization("commands.irc.usage.join", "/%s join [server] <channel>");
+		LanguageRegistry.instance().addStringLocalization("commands.irc.usage.join", "/%s join [server] <channel> [password]");
 		LanguageRegistry.instance().addStringLocalization("commands.irc.usage.leave", "/%s leave [server] <channel>");
 		LanguageRegistry.instance().addStringLocalization("commands.irc.usage.who", "/%s who [server] [channel]");
 		LanguageRegistry.instance().addStringLocalization("commands.irc.usage.mode", "/%s mode [server] [channel] [flags]");
