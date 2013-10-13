@@ -9,7 +9,7 @@ import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin.MCVersion;
 
 @MCVersion("1.5.2")
-public class CCommandsLoadingPlugin implements IFMLLoadingPlugin {
+public class IRCLoadingPlugin implements IFMLLoadingPlugin {
 
 	@Override
 	public String[] getLibraryRequestClass() {
@@ -18,7 +18,7 @@ public class CCommandsLoadingPlugin implements IFMLLoadingPlugin {
 
 	@Override
 	public String[] getASMTransformerClass() {
-		return new String[] { CCommandsClassTransformer.class.getName() };
+		return new String[] { IRCClassTransformer.class.getName() };
 	}
 
 	@Override

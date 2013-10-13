@@ -10,6 +10,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import blay09.mods.eirairc.EiraIRC;
+import blay09.mods.eirairc.Utils;
 import blay09.mods.eirairc.config.ConfigurationHandler;
 import blay09.mods.eirairc.config.Globals;
 import blay09.mods.eirairc.config.ServerConfig;
@@ -22,7 +23,6 @@ public class GuiIRCTwitch extends GuiScreen {
 	private GuiTextField txtUsername;
 	private GuiTextField txtPassword;
 	private GuiButton btnConnectOnStartup;
-	private GuiButton btnSaveCredentials;
 	private GuiButton btnBack;
 	
 	public GuiIRCTwitch(GuiScreen parentScreen) {
@@ -42,9 +42,6 @@ public class GuiIRCTwitch extends GuiScreen {
 		btnConnectOnStartup = new GuiButton(0, width / 2 - 100, height / 2 - 20, "Connect on Startup: ???");
 		buttonList.add(btnConnectOnStartup);
 		
-		btnSaveCredentials = new GuiButton(0, width / 2 - 100, height / 2 + 5, "Save Credentials: ???");
-		buttonList.add(btnSaveCredentials);
-		
 		btnBack = new GuiButton(2, width / 2 - 100, height / 2 + 35, "Back");
 		buttonList.add(btnBack);
 		
@@ -57,34 +54,27 @@ public class GuiIRCTwitch extends GuiScreen {
 	}
 	
 	public void loadFromConfig() {
-		txtUsername.setText(config.nick);
-		txtPassword.setText(config.serverPassword);
-		btnConnectOnStartup.displayString = "Connect on Startup: " + (config.autoConnect ? "Yes" : "No");
-		btnSaveCredentials.displayString = "Save Credentials: " + (config.saveCredentials ? "Yes" : "No");
+		txtUsername.setText(config.getNick());
+		txtPassword.setText(config.getServerPassword());
+		btnConnectOnStartup.displayString = "Connect on Startup: " + (config.isAutoConnect() ? "Yes" : "No");
 	}
 	
 	@Override
 	public void actionPerformed(GuiButton button) {
 		if(button == btnBack) {
 			ConfigurationHandler.save();
-			if(config.autoConnect || EiraIRC.instance.isConnectedTo(Globals.TWITCH_SERVER)) {
+			if(config.isAutoConnect() || EiraIRC.instance.isConnectedTo(Globals.TWITCH_SERVER)) {
 				IRCConnection connection = EiraIRC.instance.getConnection(Globals.TWITCH_SERVER);
 				if(connection != null) {
-					connection.disconnect();
+					connection.disconnect("Leaving.");
 					EiraIRC.instance.removeConnection(connection);
 				}
-				connection = new IRCConnection(Globals.TWITCH_SERVER, true);
-				if(connection.connect()) {
-					EiraIRC.instance.addConnection(connection);
-				}
+				Utils.connectTo(config);
 			}
 			Minecraft.getMinecraft().displayGuiScreen(parentScreen);
 		} else if(button == btnConnectOnStartup) {
-			config.autoConnect = !config.autoConnect;
-			btnConnectOnStartup.displayString = "Connect on Startup: " + (config.autoConnect ? "Yes" : "No");
-		} else if(button == btnSaveCredentials) {
-			config.saveCredentials = !config.saveCredentials;
-			btnSaveCredentials.displayString = "Save Credentials: " + (config.saveCredentials ? "Yes" : "No");
+			config.setAutoConnect(!config.isAutoConnect());
+			btnConnectOnStartup.displayString = "Connect on Startup: " + (config.isAutoConnect() ? "Yes" : "No");
 		}
 	}
 	
@@ -92,11 +82,11 @@ public class GuiIRCTwitch extends GuiScreen {
 	public void keyTyped(char unicode, int keyCode) {
 		super.keyTyped(unicode, keyCode);
 		if(txtUsername.textboxKeyTyped(unicode, keyCode)) {
-			config.nick = txtUsername.getText();
+			config.setNick(txtUsername.getText());
 			return;
 		}
 		if(txtPassword.textboxKeyTyped(unicode, keyCode)) {
-			config.serverPassword = txtPassword.getText();
+			config.setServerPassword(txtPassword.getText());
 			return;
 		}
 	}

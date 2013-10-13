@@ -22,7 +22,7 @@ import org.objectweb.asm.tree.VarInsnNode;
 
 import cpw.mods.fml.relauncher.IClassTransformer;
 
-public class CCommandsClassTransformer implements IClassTransformer {
+public class IRCClassTransformer implements IClassTransformer {
 
 	@Override
 	public byte[] transform(String name, String transformedName, byte[] bytes) {
@@ -86,7 +86,7 @@ public class CCommandsClassTransformer implements IClassTransformer {
 				if(cname.equals("EntityClientPlayerMP")) {
 					toInject.add(new VarInsnNode(Opcodes.ALOAD, 0));
 					toInject.add(new VarInsnNode(Opcodes.ALOAD, 1));
-					toInject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "blay09/mods/irc/client/ClientChatHandler", "handleClientChat", "(Ljava/lang/String;)Z"));
+					toInject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "blay09/mods/eirairc/client/ClientChatHandler", "handleClientChat", "(Ljava/lang/String;)Z"));
 					LabelNode l1 = new LabelNode();
 					toInject.add(new JumpInsnNode(Opcodes.IFEQ, l1));
 					LabelNode l2 = new LabelNode();
@@ -99,7 +99,7 @@ public class CCommandsClassTransformer implements IClassTransformer {
 					toInject.add(new VarInsnNode(Opcodes.ILOAD, 1));
 					toInject.add(new VarInsnNode(Opcodes.ILOAD, 2));
 					toInject.add(new VarInsnNode(Opcodes.FLOAD, 3));
-					toInject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "blay09/mods/irc/client/GuiChatOverlay", "drawOverlay", "(IIF)V"));
+					toInject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "blay09/mods/eirairc/client/GuiChatOverlay", "drawOverlay", "(IIF)V"));
 				}
 				m.instructions.insert(targetNode, toInject);
 				System.out.println("********* PATCHING COMPLETE");

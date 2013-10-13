@@ -13,10 +13,12 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
 import blay09.mods.eirairc.command.CommandIRC;
 import blay09.mods.eirairc.command.CommandServIRC;
+import blay09.mods.eirairc.config.ChannelConfig;
 import blay09.mods.eirairc.config.ConfigurationHandler;
 import blay09.mods.eirairc.config.Globals;
 import blay09.mods.eirairc.config.Localization;
 import blay09.mods.eirairc.config.ServerConfig;
+import blay09.mods.eirairc.irc.IRCChannel;
 import blay09.mods.eirairc.irc.IRCConnection;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
@@ -40,14 +42,15 @@ public class EiraIRC {
 	@Instance(Globals.MOD_ID)
 	public static EiraIRC instance;
 	
-	@SidedProxy(serverSide = "blay09.mods.irc.CommonProxy", clientSide = "blay09.mods.irc.client.ClientProxy")
+	@SidedProxy(serverSide = "blay09.mods.eirairc.CommonProxy", clientSide = "blay09.mods.eirairc.client.ClientProxy")
 	public static CommonProxy proxy;
 	
-	private IRCEventHandler eventListener;
+	private IRCEventHandler eventHandler;
 	private Map<String, IRCConnection> connections;
 	private boolean ircRunning;
 	private EnumChatTarget chatTarget = EnumChatTarget.All;
 	private final List<String> validTargetChannels = new ArrayList<String>();
+	private final List<String> privateTargets = new ArrayList<String>();
 	private int targetChannelIndex;
 
 	@PreInit
@@ -59,10 +62,10 @@ public class EiraIRC {
 	public void load(FMLInitializationEvent event) {
 		proxy.registerKeybindings();
 		
-		eventListener = new IRCEventHandler();
-		GameRegistry.registerPlayerTracker(eventListener);
-		NetworkRegistry.instance().registerConnectionHandler(eventListener);
-		MinecraftForge.EVENT_BUS.register(eventListener);
+		eventHandler = new IRCEventHandler();
+		GameRegistry.registerPlayerTracker(eventHandler);
+		NetworkRegistry.instance().registerConnectionHandler(eventHandler);
+		MinecraftForge.EVENT_BUS.register(eventHandler);
 		
 		Localization.init();
 	}
@@ -91,17 +94,14 @@ public class EiraIRC {
 	
 	public void startIRC(boolean clientSide) {
 		for(ServerConfig serverConfig : ConfigurationHandler.getServerConfigs()) {
-			IRCConnection connection = new IRCConnection(serverConfig.host, clientSide);
-			if(connection.getConfig().autoConnect && connection.connect()) {
-				addConnection(connection);
-			}
+			Utils.connectTo(serverConfig);
 		}
 		ircRunning = true;
 	}
 	
 	public void stopIRC() {
 		for(IRCConnection connection : connections.values()) {
-			connection.disconnect();
+			connection.disconnect("Leaving.");
 		}
 		connections.clear();
 		ircRunning = false;
@@ -147,7 +147,7 @@ public class EiraIRC {
 	}
 	
 	public IRCEventHandler getEventHandler() {
-		return eventListener;
+		return eventHandler;
 	}
 
 	public String getTargetChannel() {
@@ -164,12 +164,11 @@ public class EiraIRC {
 			}
 			validTargetChannels.clear();
 			for(IRCConnection connection : connections.values()) {
-				for(String channel : connection.getConfig().channels) {
-					if(connection.getConfig().hasChannelFlag(channel, 'w')) {
-						validTargetChannels.add(connection.getHost() + ":" + channel);
-					}
+				ServerConfig serverConfig = ConfigurationHandler.getServerConfig(connection.getHost());
+				for(IRCChannel channel : connection.getChannels()) {
+					validTargetChannels.add(connection.getHost() + ":" + channel.getName());
 				}
-				for(String pchannel : connection.getPrivateChannels()) {
+				for(String pchannel : privateTargets) {
 					validTargetChannels.add(connection.getHost() + ":" + pchannel);
 				}
 			}

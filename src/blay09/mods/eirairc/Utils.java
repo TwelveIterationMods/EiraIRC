@@ -3,8 +3,6 @@
 
 package blay09.mods.eirairc;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -16,7 +14,10 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
+import blay09.mods.eirairc.config.ConfigurationHandler;
 import blay09.mods.eirairc.config.GlobalConfig;
+import blay09.mods.eirairc.config.NickServSettings;
+import blay09.mods.eirairc.config.ServerConfig;
 import blay09.mods.eirairc.irc.IRCConnection;
 
 public class Utils {
@@ -250,5 +251,36 @@ public class Utils {
 			result += ((i > 0) ? " " : "") + matcher.replaceAll("<link removed>");
 		}
 		return result;
+	}
+
+	public static ServerConfig getServerConfig(IRCConnection connection) {
+		return ConfigurationHandler.getServerConfig(connection.getHost());
+	}
+
+	public static String getNickForConfig(ServerConfig serverConfig) {
+		return (serverConfig.getNick() != null && !serverConfig.getNick().isEmpty()) ? serverConfig.getNick() : GlobalConfig.nick;
+	}
+
+	public static IRCConnection connectTo(ServerConfig config) {
+		IRCConnection connection = new IRCConnection(config.getHost(), IRCConnection.IRC_DEFAULT_PORT, config.getServerPassword(), getNickForConfig(config));
+		connection.setEventHandler(EiraIRC.instance.getEventHandler());
+		if(connection.connect()) {
+			EiraIRC.instance.addConnection(connection);
+			return connection;
+		}
+		return null;
+	}
+	
+	public static void doNickServ(IRCConnection connection, ServerConfig config) {
+		NickServSettings settings = NickServSettings.settings.get(connection.getHost());
+		if(settings == null) {
+			return;
+		}
+		String username = config.getNickServName();
+		String password = config.getNickServPassword();
+		if(username == null || username.isEmpty() || password == null || password.isEmpty()) {
+			return;
+		}
+		connection.sendPrivateMessage(settings.getBotName(), settings.getCommand() + " " + username + " " + password);
 	}
 }

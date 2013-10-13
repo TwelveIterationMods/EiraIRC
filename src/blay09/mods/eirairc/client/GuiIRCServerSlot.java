@@ -50,9 +50,9 @@ public class GuiIRCServerSlot extends GuiSlot {
 	@Override
 	protected void drawSlot(int i, int x, int y, int l, Tessellator tessellator) {
 		ServerConfig config = parentGui.getServerConfig(i);
-		String connectedString = EiraIRC.instance.isConnectedTo(config.host) ? EnumChatFormatting.GREEN + "Connected" :  EnumChatFormatting.RED + "Not Connected";
+		String connectedString = EiraIRC.instance.isConnectedTo(config.getHost()) ? EnumChatFormatting.GREEN + "Connected" :  EnumChatFormatting.RED + "Not Connected";
 		
-		parentGui.drawString(parentGui.getFontRenderer(), config.host, x + 2, y + 1, Globals.TEXT_COLOR);
+		parentGui.drawString(parentGui.getFontRenderer(), config.getHost(), x + 2, y + 1, Globals.TEXT_COLOR);
 		parentGui.drawString(parentGui.getFontRenderer(), connectedString, x + 4, y + 11, Globals.TEXT_COLOR);
 	}
 

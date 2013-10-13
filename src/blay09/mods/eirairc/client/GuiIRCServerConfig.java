@@ -3,13 +3,15 @@
 
 package blay09.mods.eirairc.client;
 
-import blay09.mods.eirairc.config.ConfigurationHandler;
-import blay09.mods.eirairc.config.Globals;
-import blay09.mods.eirairc.config.ServerConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
+import blay09.mods.eirairc.EiraIRC;
+import blay09.mods.eirairc.Utils;
+import blay09.mods.eirairc.config.ConfigurationHandler;
+import blay09.mods.eirairc.config.Globals;
+import blay09.mods.eirairc.config.ServerConfig;
 
 public class GuiIRCServerConfig extends GuiScreen {
 
@@ -18,7 +20,6 @@ public class GuiIRCServerConfig extends GuiScreen {
 	private GuiButton btnCancel;
 	private GuiButton btnSave;
 	private GuiButton btnAutoConnect;
-	private GuiButton btnSaveCredentials;
 	private GuiButton btnPrivateMessages;
 	private GuiTextField txtHost;
 	private GuiTextField txtNick;
@@ -51,9 +52,6 @@ public class GuiIRCServerConfig extends GuiScreen {
 		btnAutoConnect = new GuiButton(0, width / 2 - 10, height / 2 - 40, 130, 20, "Connect on Startup: ???");
 		buttonList.add(btnAutoConnect);
 		
-		btnSaveCredentials = new GuiButton(0, width / 2 - 10, height / 2 - 15, 130, 20, "Save Credentials: ???");
-		buttonList.add(btnSaveCredentials);
-		
 		btnSave = new GuiButton(0, width / 2 + 3, height / 2 + 50, 100, 20, "Save");
 		buttonList.add(btnSave);
 		
@@ -61,16 +59,18 @@ public class GuiIRCServerConfig extends GuiScreen {
 		buttonList.add(btnCancel);
 		
 		if(config != null) {
-			txtHost.setText(config.host);
-			txtNick.setText(config.nick);
-			txtServerPassword.setText(config.serverPassword);
-			txtNickServName.setText(config.nickServName);
-			txtNickServPassword.setText(config.nickServPassword);
-			autoConnect = config.autoConnect;
-			saveCredentials = config.saveCredentials;
-			privateMessages = config.allowPrivateMessages;
-			updateButtons();
+			txtHost.setText(config.getHost());
+			txtNick.setText(config.getNick());
+			txtServerPassword.setText(config.getServerPassword());
+			txtNickServName.setText(config.getNickServName());
+			txtNickServPassword.setText(config.getNickServPassword());
+			autoConnect = config.isAutoConnect();
+			privateMessages = config.allowsPrivateMessages();
+		} else {
+			autoConnect = true;
+			privateMessages = true;
 		}
+		updateButtons();
 	}
 	
 	@Override
@@ -141,31 +141,29 @@ public class GuiIRCServerConfig extends GuiScreen {
 		}
 		btnPrivateMessages.displayString = "Private Messages: " + (privateMessages ? "Yes" : "No");
 		btnAutoConnect.displayString = "Connect on Startup: " + (autoConnect ? "Yes" : "No");
-		btnSaveCredentials.displayString = "Save Credentials: " + (saveCredentials ? "Yes" : "No");
 	}
 	
 	@Override
 	public void actionPerformed(GuiButton button) {
 		if(button == btnSave) {
-			if(config == null) {
+			if(config == null || !config.getHost().equals(txtHost.getText())) {
 				config = ConfigurationHandler.getServerConfig(txtHost.getText());
 			}
-			config.nick = txtNick.getText();
-			config.nickServName = txtNickServName.getText();
-			config.nickServPassword = txtNickServPassword.getText();
-			config.serverPassword = txtServerPassword.getText();
-			config.autoConnect = autoConnect;
-			config.saveCredentials = saveCredentials;
-			config.allowPrivateMessages = privateMessages;
+			config.setNick(txtNick.getText());
+			config.setNickServ(txtNickServName.getText(), txtNickServPassword.getText());
+			config.setServerPassword(txtServerPassword.getText());
+			config.setAutoConnect(autoConnect);
+			config.setAllowPrivateMessages(privateMessages);
+			ConfigurationHandler.addServerConfig(config);
 			ConfigurationHandler.save();
+			if(autoConnect && !EiraIRC.instance.isConnectedTo(config.getHost())) {
+				Utils.connectTo(config);
+			}
 			Minecraft.getMinecraft().displayGuiScreen(new GuiIRCServerList());
 		} else if(button == btnCancel) {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiIRCServerList());
 		} else if(button == btnPrivateMessages) {
 			privateMessages = !privateMessages;
-			updateButtons();
-		} else if(button == btnSaveCredentials) {
-			saveCredentials = !saveCredentials;
 			updateButtons();
 		} else if(button == btnAutoConnect) {
 			autoConnect = !autoConnect;

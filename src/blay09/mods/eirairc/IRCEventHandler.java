@@ -3,16 +3,14 @@
 
 package blay09.mods.eirairc;
 
-import blay09.mods.eirairc.config.GlobalConfig;
-import blay09.mods.eirairc.config.Globals;
-import blay09.mods.eirairc.irc.IRCConnection;
+import java.io.IOException;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.NetLoginHandler;
 import net.minecraft.network.packet.NetHandler;
 import net.minecraft.network.packet.Packet1Login;
-import net.minecraft.network.packet.Packet3Chat;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StringTranslate;
@@ -20,106 +18,20 @@ import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import blay09.mods.eirairc.config.ChannelConfig;
+import blay09.mods.eirairc.config.GlobalConfig;
+import blay09.mods.eirairc.config.Globals;
+import blay09.mods.eirairc.config.ServerConfig;
+import blay09.mods.eirairc.irc.IIRCEventHandler;
+import blay09.mods.eirairc.irc.IRCChannel;
+import blay09.mods.eirairc.irc.IRCConnection;
+import blay09.mods.eirairc.irc.IRCUser;
 import cpw.mods.fml.common.IPlayerTracker;
-import cpw.mods.fml.common.network.IChatListener;
 import cpw.mods.fml.common.network.IConnectionHandler;
 import cpw.mods.fml.common.network.Player;
 
-public class IRCEventHandler implements IPlayerTracker, IConnectionHandler {
-	
-	public void onIRCConnect(IRCConnection connection) {
-		String mcMessage = StringTranslate.getInstance().translateKeyFormat(Globals.MOD_ID + ":irc.connected", connection.getHost());
-		Utils.addMessageToChat(mcMessage);
-	}
-	
-	public void onIRCDisconnect(IRCConnection connection) {
-		String mcMessage = StringTranslate.getInstance().translateKeyFormat(Globals.MOD_ID + ":irc.disconnected", connection.getHost());
-		Utils.addMessageToChat(mcMessage);
-	}
-	
-	public void onIRCJoin(IRCConnection connection, String channel, String user, String nick) {
-		if(!GlobalConfig.showIRCJoinLeave)  {
-			return;
-		}
-		if(connection.getConfig().hasChannelFlags(channel, "rj")) {
-			String mcMessage = EnumChatFormatting.YELLOW + StringTranslate.getInstance().translateKeyFormat(Globals.MOD_ID + ":irc.joinMsgIRC", channel, nick);
-			Utils.addMessageToChat(mcMessage);
-		}
-	}
-	
-	public void onIRCNickChange(IRCConnection connection, String oldNick, String newNick) {
-		if(!GlobalConfig.showNickChanges) {
-			return;
-		}
-		String mcMessage = StringTranslate.getInstance().translateKeyFormat(Globals.MOD_ID + ":irc.nickChangeIRC", connection.getHost(), oldNick, newNick);
-		Utils.addMessageToChat(mcMessage);
-	}
-	
-	public void onIRCPart(IRCConnection connection, String channel, String user, String nick) {
-		if(!GlobalConfig.showIRCJoinLeave) {
-			return;
-		}
-		if(connection.getConfig().hasChannelFlags(channel, "rj")) {
-			String mcMessage = EnumChatFormatting.YELLOW + StringTranslate.getInstance().translateKeyFormat(Globals.MOD_ID + ":irc.partMsgIRC", channel, nick);
-			Utils.addMessageToChat(mcMessage);
-		}
-	}
-	
-	public void onIRCPrivateMessage(IRCConnection connection, String user, String nick, String message) {
-		if(!GlobalConfig.allowPrivateMessages) {
-			connection.sendPrivateMessage(nick, "Private Messages are disabled.");
-			return;
-		}
-		if(connection.getConfig().allowPrivateMessages) {
-			if(GlobalConfig.enableLinkFilter) {
-				message = Utils.filterLinks(message);
-			}
-			String mcMessage = Utils.formatMessage(GlobalConfig.mcPrivateMsgFormat, connection, user, Utils.getColoredName(nick, GlobalConfig.ircColor), message);
-			Utils.addMessageToChat(mcMessage);
-		}
-	}
-	
-	public void onIRCPrivateMessageToPlayer(IRCConnection connection, String user, String nick, EntityPlayer entityPlayer, String message) {
-		if(GlobalConfig.enableLinkFilter) {
-			message = Utils.filterLinks(message);
-		}
-		String mcMessage = Utils.formatMessage(GlobalConfig.mcPrivateMsgFormat, connection, user, Utils.getColoredName(nick, GlobalConfig.ircColor), message);
-		entityPlayer.sendChatToPlayer(mcMessage);
-	}
+public class IRCEventHandler implements IIRCEventHandler, IPlayerTracker, IConnectionHandler {
 
-	public void onIRCPrivateEmote(IRCConnection connection, String user, String nick, String message) {
-		if(!GlobalConfig.allowPrivateMessages) {
-			return;
-		}
-		if(connection.getConfig().allowPrivateMessages) {
-			if(GlobalConfig.enableLinkFilter) {
-				message = Utils.filterLinks(message);
-			}
-			String mcMessage = Utils.formatMessage(GlobalConfig.mcPrivateEmtFormat, connection, user, nick, message);
-			Utils.addMessageToChat(mcMessage);
-		}
-	}
-	
-	public void onIRCMessage(IRCConnection connection, String channel, String user, String nick, String message) {
-		if(connection.getConfig().hasChannelFlags(channel, "r")) {
-			if(GlobalConfig.enableLinkFilter) {
-				message = Utils.filterLinks(message);
-			}
-			String mcMessage = Utils.formatMessage(GlobalConfig.mcChannelMsgFormat, connection.getHost(), channel, user, Utils.getColoredName(nick, GlobalConfig.ircColor), message);
-			Utils.addMessageToChat(mcMessage);
-		}
-	}
-	
-	public void onIRCEmote(IRCConnection connection, String channel, String user, String nick, String message) {
-		if(connection.getConfig().hasChannelFlags(channel, "re")) {
-			if(GlobalConfig.enableLinkFilter) {
-				message = Utils.filterLinks(message);
-			}
-			String mcMessage = Utils.formatMessage(GlobalConfig.mcChannelEmtFormat, connection.getHost(), channel, user, nick, message);
-			Utils.addMessageToChat(mcMessage);
-		}
-	}
-	
 	@Override
 	public void onPlayerLogin(EntityPlayer player) {
 		if(!GlobalConfig.showMinecraftJoinLeave) {
@@ -128,7 +40,13 @@ public class IRCEventHandler implements IPlayerTracker, IConnectionHandler {
 		String name = Utils.getAliasForPlayer(player);
 		String ircMessage = StringTranslate.getInstance().translateKeyFormat(Globals.MOD_ID + ":irc.joinMsgMC", name);
 		for(IRCConnection connection : EiraIRC.instance.getConnections()) {
-			connection.broadcastMessage(ircMessage, "wJ");
+			ServerConfig serverConfig = Utils.getServerConfig(connection);
+			for(IRCChannel channel : connection.getChannels()) {
+				ChannelConfig channelConfig = serverConfig.getChannelConfig(channel);
+				if(!channelConfig.isObserver() && channelConfig.relayMinecraftJoinLeave) {
+					connection.sendChannelMessage(channel, ircMessage);
+				}
+			}
 		}
 	}
 
@@ -150,7 +68,13 @@ public class IRCEventHandler implements IPlayerTracker, IConnectionHandler {
 				if(!MinecraftServer.getServer().isSinglePlayer()) {
 					String ircMessage = Utils.formatMessage(GlobalConfig.ircChannelEmtFormat, event.sender.getCommandSenderName(), alias, emote);
 					for(IRCConnection connection : EiraIRC.instance.getConnections()) {
-						connection.broadcastMessage(ircMessage, "wE");
+						ServerConfig serverConfig = Utils.getServerConfig(connection);
+						for(IRCChannel channel : connection.getChannels()) {
+							ChannelConfig channelConfig = serverConfig.getChannelConfig(channel);
+							if(!channelConfig.isObserver()) {
+								connection.sendChannelMessage(channel, ircMessage);
+							}
+						}
 					}
 				}
 				event.setCanceled(true);
@@ -166,9 +90,9 @@ public class IRCEventHandler implements IPlayerTracker, IConnectionHandler {
 			IRCConnection connection = EiraIRC.instance.getConnection(channel[0]);
 			if(connection != null) {
 				if(channel[1].startsWith("#")) {
-					connection.sendChannelMessage(channel[1], text);
+					connection.sendChannelMessage(connection.getChannel(channel[1]), text);
 				} else {
-					connection.sendPrivateMessage(channel[1], text);
+					connection.sendPrivateMessage(connection.getUser(channel[1]), text);
 				}
 				String mcMessage = "[" + channel[1] + "] <" + Utils.getColorAliasForPlayer(Minecraft.getMinecraft().thePlayer) + "> " + text;
 				Utils.addMessageToChat(mcMessage);
@@ -182,8 +106,14 @@ public class IRCEventHandler implements IPlayerTracker, IConnectionHandler {
 		}
 		if(doIRC) {
 			for(IRCConnection connection : EiraIRC.instance.getConnections()) {
-				connection.broadcastMessage(text, "w");
-			}			
+				ServerConfig serverConfig = Utils.getServerConfig(connection);
+				for(IRCChannel channel : connection.getChannels()) {
+					ChannelConfig channelConfig = serverConfig.getChannelConfig(channel);
+					if(!channelConfig.isObserver()) {
+						connection.sendChannelMessage(channel, text);
+					}
+				}
+			}
 		}
 		return doMC;
 	}
@@ -195,7 +125,7 @@ public class IRCEventHandler implements IPlayerTracker, IConnectionHandler {
 			String[] channel = target.split(":");
 			IRCConnection connection = EiraIRC.instance.getConnection(channel[0]);
 			if(connection != null) {
-				connection.sendChannelMessage(channel[1], "ACTION " + text + "");
+				connection.sendChannelMessage(connection.getChannel(channel[1]), "ACTION " + text + "");
 				Utils.addMessageToChat("[" + channel[1] + "] * " + Utils.getAliasForPlayer(Minecraft.getMinecraft().thePlayer) + " " + text);
 			}
 			return false;
@@ -207,8 +137,14 @@ public class IRCEventHandler implements IPlayerTracker, IConnectionHandler {
 		}
 		if(doIRC) {
 			for(IRCConnection connection : EiraIRC.instance.getConnections()) {
-				connection.broadcastMessage("ACTION " + text + "", "wE");
-			}			
+				ServerConfig serverConfig = Utils.getServerConfig(connection);
+				for(IRCChannel channel : connection.getChannels()) {
+					ChannelConfig channelConfig = serverConfig.getChannelConfig(channel);
+					if(!channelConfig.isObserver()) {
+						connection.sendChannelMessage(channel, "ACTION " + text + "");
+					}
+				}
+			}
 		}
 		return doMC;
 	}
@@ -220,7 +156,13 @@ public class IRCEventHandler implements IPlayerTracker, IConnectionHandler {
 		if(!MinecraftServer.getServer().isSinglePlayer()) {
 			String ircMessage = Utils.formatMessage(GlobalConfig.mcChannelMsgFormat, event.player.username, nick, event.message);
 			for(IRCConnection connection : EiraIRC.instance.getConnections()) {
-				connection.broadcastMessage(ircMessage, "w");
+				ServerConfig serverConfig = Utils.getServerConfig(connection);
+				for(IRCChannel channel : connection.getChannels()) {
+					ChannelConfig channelConfig = serverConfig.getChannelConfig(channel);
+					if(!channelConfig.isObserver()) {
+						connection.sendChannelMessage(channel, ircMessage);
+					}
+				}
 			}
 		}
 	}
@@ -234,7 +176,13 @@ public class IRCEventHandler implements IPlayerTracker, IConnectionHandler {
 			String name = Utils.getAliasForPlayer((EntityPlayer) event.entityLiving);
 			String ircMessage = StringTranslate.getInstance().translateKeyFormat(Globals.MOD_ID + ":irc.deathMsgMC", name, event.source.damageType);
 			for(IRCConnection connection : EiraIRC.instance.getConnections()) {
-				connection.broadcastMessage(ircMessage, "wD");
+				ServerConfig serverConfig = Utils.getServerConfig(connection);
+				for(IRCChannel channel : connection.getChannels()) {
+					ChannelConfig channelConfig = serverConfig.getChannelConfig(channel);
+					if(!channelConfig.isObserver() && channelConfig.relayDeathMessages) {
+						connection.sendChannelMessage(channel, ircMessage);
+					}
+				}
 			}
 		}
 	}
@@ -247,7 +195,13 @@ public class IRCEventHandler implements IPlayerTracker, IConnectionHandler {
 		String name = Utils.getAliasForPlayer(player);
 		String ircMessage = StringTranslate.getInstance().translateKeyFormat(Globals.MOD_ID + ":irc.partMsgMC", name);
 		for(IRCConnection connection : EiraIRC.instance.getConnections()) {
-			connection.broadcastMessage(ircMessage, "wJ");
+			ServerConfig serverConfig = Utils.getServerConfig(connection);
+			for(IRCChannel channel : connection.getChannels()) {
+				ChannelConfig channelConfig = serverConfig.getChannelConfig(channel);
+				if(!channelConfig.isObserver() && channelConfig.relayMinecraftJoinLeave) {
+					connection.sendChannelMessage(channel, ircMessage);
+				}
+			}
 		}
 	}
 
@@ -263,7 +217,13 @@ public class IRCEventHandler implements IPlayerTracker, IConnectionHandler {
 		String message = StringTranslate.getInstance().translateKeyFormat(Globals.MOD_ID + ":irc.nickChangeMC", oldNick, newNick);
 		Utils.addMessageToChat(message);
 		for(IRCConnection connection : EiraIRC.instance.getConnections()) {
-			connection.broadcastMessage(message, "w");
+			ServerConfig serverConfig = Utils.getServerConfig(connection);
+			for(IRCChannel channel : connection.getChannels()) {
+				ChannelConfig channelConfig = serverConfig.getChannelConfig(channel);
+				if(!channelConfig.isObserver()) {
+					connection.sendChannelMessage(channel, message);
+				}
+			}
 		}
 	}
 
@@ -300,4 +260,143 @@ public class IRCEventHandler implements IPlayerTracker, IConnectionHandler {
 		}
 	}
 
+	@Override
+	public void onConnected(IRCConnection connection) {
+		String mcMessage = StringTranslate.getInstance().translateKeyFormat(Globals.MOD_ID + ":irc.connected", connection.getHost());
+		Utils.addMessageToChat(mcMessage);
+		ServerConfig serverConfig = Utils.getServerConfig(connection);
+		Utils.doNickServ(connection, serverConfig);
+		for(ChannelConfig channelConfig : serverConfig.getChannelConfigs()) {
+			if(channelConfig.isAutoJoin()) {
+				connection.join(channelConfig.getName(), channelConfig.getPassword());
+			}
+		}
+	}
+
+	@Override
+	public void onDisconnected(IRCConnection connection) {
+		String mcMessage = StringTranslate.getInstance().translateKeyFormat(Globals.MOD_ID + ":irc.disconnected", connection.getHost());
+		Utils.addMessageToChat(mcMessage);
+	}
+
+	@Override
+	public void onIRCError(IRCConnection connection, int errorCode) {
+		
+	}
+
+	@Override
+	public void onNickChange(IRCConnection connection, IRCUser user, String nick) {
+		if(!GlobalConfig.showNickChanges) {
+			return;
+		}
+		String mcMessage = StringTranslate.getInstance().translateKeyFormat(Globals.MOD_ID + ":irc.nickChangeIRC", connection.getHost(), user.getNick(), nick);
+		Utils.addMessageToChat(mcMessage);
+	}
+
+	@Override
+	public void onUserJoin(IRCConnection connection, IRCUser user, IRCChannel channel) {
+		if(!GlobalConfig.showIRCJoinLeave)  {
+			return;
+		}
+		ChannelConfig channelConfig = Utils.getServerConfig(connection).getChannelConfig(channel);
+		if(!channelConfig.isMuted() && channelConfig.relayIRCJoinLeave) {
+			String mcMessage = EnumChatFormatting.YELLOW + StringTranslate.getInstance().translateKeyFormat(Globals.MOD_ID + ":irc.joinMsgIRC", channel.getName(), user.getNick());
+			Utils.addMessageToChat(mcMessage);
+		}
+	}
+
+	@Override
+	public void onUserPart(IRCConnection connection, IRCUser user, IRCChannel channel, String quitMessage) {
+		if(!GlobalConfig.showIRCJoinLeave) {
+			return;
+		}
+		ChannelConfig channelConfig = Utils.getServerConfig(connection).getChannelConfig(channel);
+		if(!channelConfig.isMuted() && channelConfig.relayIRCJoinLeave) {
+			String mcMessage = EnumChatFormatting.YELLOW + StringTranslate.getInstance().translateKeyFormat(Globals.MOD_ID + ":irc.partMsgIRC", channel.getName(), user.getNick());
+			Utils.addMessageToChat(mcMessage);
+		}
+	}
+
+	@Override
+	public void onUserQuit(IRCConnection connection, IRCUser user, String quitMessage) {
+		if(!GlobalConfig.showIRCJoinLeave) {
+			return;
+		}
+		ServerConfig serverConfig = Utils.getServerConfig(connection);
+		boolean hasFlags = false;
+		for(IRCChannel channel : user.getChannels()) {
+			ChannelConfig channelConfig = serverConfig.getChannelConfig(channel);
+			if(!channelConfig.isMuted() && channelConfig.relayIRCJoinLeave) {
+				hasFlags = true;
+				break;
+			}
+		}
+		if(hasFlags) {
+			String mcMessage = EnumChatFormatting.YELLOW + StringTranslate.getInstance().translateKeyFormat(Globals.MOD_ID + ":irc.quitMsgIRC", connection.getHost(), user.getNick());
+			Utils.addMessageToChat(mcMessage);
+		}
+	}
+
+	@Override
+	public void onPrivateEmote(IRCConnection connection, IRCUser user, String message) {
+		if(!GlobalConfig.allowPrivateMessages) {
+			return;
+		}
+		ServerConfig serverConfig = Utils.getServerConfig(connection);
+		if(serverConfig.allowsPrivateMessages()) {
+			if(GlobalConfig.enableLinkFilter) {
+				message = Utils.filterLinks(message);
+			}
+			String mcMessage = Utils.formatMessage(GlobalConfig.mcPrivateEmtFormat, connection, user.getUsername(), user.getNick(), message);
+			Utils.addMessageToChat(mcMessage);
+		}
+	}
+
+	@Override
+	public void onPrivateMessage(IRCConnection connection, IRCUser user, String message) {
+		if(!GlobalConfig.allowPrivateMessages) {
+			connection.sendPrivateMessage(user, "Private Messages are disabled.");
+			return;
+		}
+		ServerConfig serverConfig = Utils.getServerConfig(connection);
+		if(serverConfig.allowsPrivateMessages()) {
+			if(GlobalConfig.enableLinkFilter) {
+				message = Utils.filterLinks(message);
+			}
+			String mcMessage = Utils.formatMessage(GlobalConfig.mcPrivateMsgFormat, connection, user.getUsername(), Utils.getColoredName(user.getNick(), GlobalConfig.ircColor), message);
+			Utils.addMessageToChat(mcMessage);
+		}
+	}
+
+	@Override
+	public void onChannelEmote(IRCConnection connection, IRCChannel channel, IRCUser user, String message) {
+		ChannelConfig channelConfig = Utils.getServerConfig(connection).getChannelConfig(channel);
+		if(!channelConfig.isMuted()) {
+			if(GlobalConfig.enableLinkFilter) {
+				message = Utils.filterLinks(message);
+			}
+			String mcMessage = Utils.formatMessage(GlobalConfig.mcChannelEmtFormat, connection.getHost(), channel.getName(), user.getUsername(), user.getNick(), message);
+			Utils.addMessageToChat(mcMessage);
+		}
+	}
+
+	@Override
+	public void onChannelMessage(IRCConnection connection, IRCChannel channel, IRCUser user, String message) {
+		ChannelConfig channelConfig = Utils.getServerConfig(connection).getChannelConfig(channel);
+		if(!channelConfig.isMuted()) {
+			if(GlobalConfig.enableLinkFilter) {
+				message = Utils.filterLinks(message);
+			}
+			String mcMessage = Utils.formatMessage(GlobalConfig.mcChannelMsgFormat, connection.getHost(), channel.getName(), user.getUsername(), Utils.getColoredName(user.getNick(), GlobalConfig.ircColor), message);
+			Utils.addMessageToChat(mcMessage);
+		}
+	}
+
+	private void onIRCPrivateMessageToPlayer(IRCConnection connection, IRCUser user, String nick, EntityPlayer entityPlayer, String message) {
+		if(GlobalConfig.enableLinkFilter) {
+			message = Utils.filterLinks(message);
+		}
+		String mcMessage = Utils.formatMessage(GlobalConfig.mcPrivateMsgFormat, connection, user.getUsername(), Utils.getColoredName(nick, GlobalConfig.ircColor), message);
+		entityPlayer.sendChatToPlayer(mcMessage);
+	}
 }

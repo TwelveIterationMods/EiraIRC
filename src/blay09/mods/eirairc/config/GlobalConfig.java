@@ -28,7 +28,7 @@ public class GlobalConfig {
 	public static String nick = ConfigurationHandler.DEFAULT_NICK;
 	public static final List<String> colorBlackList = new ArrayList<String>();
 	public static String opColor = "red";
-	public static String ircColor = "darkgray";
+	public static String ircColor = "gray";
 	public static boolean enableNameColors = true;
 	public static boolean enableAliases = true;
 	public static boolean showDeathMessages = true;
@@ -36,6 +36,7 @@ public class GlobalConfig {
 	public static boolean showIRCJoinLeave = true;
 	public static boolean allowPrivateMessages = true;
 	public static boolean persistentConnection = true;
+	public static boolean saveCredentials = false;
 	public static boolean showNickChanges = true;
 	public static boolean enableLinkFilter = true;
 	public static String mcChannelMsgFormat = MC_CMESSAGE_FORMAT_NORMAL;

@@ -9,6 +9,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiYesNo;
 import blay09.mods.eirairc.EiraIRC;
+import blay09.mods.eirairc.Utils;
 import blay09.mods.eirairc.config.ConfigurationHandler;
 import blay09.mods.eirairc.config.Globals;
 import blay09.mods.eirairc.config.ServerConfig;
@@ -57,14 +58,11 @@ public class GuiIRCServerList extends GuiScreen {
 		if(button == btnBack) {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiIRCSettings());
 		} else if(button == btnConnect) {
-			IRCConnection connection = EiraIRC.instance.getConnection(configs[selectedElement].host);
+			IRCConnection connection = EiraIRC.instance.getConnection(configs[selectedElement].getHost());
 			if(connection != null) {
-				connection.disconnect();
+				connection.disconnect(Globals.DEFAULT_QUIT_MESSAGE);
 			} else {
-				connection = new IRCConnection(configs[selectedElement].host, true);
-				if(connection.connect()) {
-					EiraIRC.instance.addConnection(connection);
-				}
+				Utils.connectTo(configs[selectedElement]);
 			}
 			onElementSelected(selectedElement);
 		} else if(button == btnEdit) {
@@ -82,11 +80,11 @@ public class GuiIRCServerList extends GuiScreen {
 			Minecraft.getMinecraft().displayGuiScreen(this);
 			return;
 		}
-		IRCConnection connection = EiraIRC.instance.getConnection(configs[serverIdx].host);
+		IRCConnection connection = EiraIRC.instance.getConnection(configs[serverIdx].getHost());
 		if(connection != null) {
-			connection.disconnect();
+			connection.disconnect(Globals.DEFAULT_QUIT_MESSAGE);
 		}
-		ConfigurationHandler.removeServerConfig(configs[serverIdx].host);
+		ConfigurationHandler.removeServerConfig(configs[serverIdx].getHost());
 		ConfigurationHandler.save();
 		Minecraft.getMinecraft().displayGuiScreen(this);
 	}
@@ -122,7 +120,7 @@ public class GuiIRCServerList extends GuiScreen {
 		btnConnect.enabled = true;
 		btnEdit.enabled = true;
 		btnDelete.enabled = true;
-		if(EiraIRC.instance.isConnectedTo(configs[i].host)) {
+		if(EiraIRC.instance.isConnectedTo(configs[i].getHost())) {
 			btnConnect.displayString = "Disconnect";
 		} else {
 			btnConnect.displayString = "Connect";
