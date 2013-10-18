@@ -134,11 +134,9 @@ public class ServerConfig {
 		String categoryName = category.getQualifiedName();
 		config.get(categoryName, "host", "").set(Utils.quote(host));
 		config.get(categoryName, "nick", "").set(Utils.quote(nick != null ? nick : ""));
-		if(GlobalConfig.saveCredentials) {
-			config.get(categoryName, "nickServName", "").set(Utils.quote(nickServName != null ? nickServName : ""));
-			config.get(categoryName, "nickServPassword", "").set(Utils.quote(nickServPassword != null ? nickServPassword : ""));
-			config.get(categoryName, "serverPassword", "").set(Utils.quote(serverPassword != null ? serverPassword : ""));
-		}
+		config.get(categoryName, "nickServName", "").set(Utils.quote(GlobalConfig.saveCredentials && nickServName != null ? nickServName : ""));
+		config.get(categoryName, "nickServPassword", "").set(Utils.quote(GlobalConfig.saveCredentials && nickServPassword != null ? nickServPassword : ""));
+		config.get(categoryName, "serverPassword", "").set(Utils.quote(GlobalConfig.saveCredentials && serverPassword != null ? serverPassword : ""));
 		config.get(categoryName, "allowPrivateMessages", allowPrivateMessages).set(allowPrivateMessages);
 		config.get(categoryName, "autoConnect", autoConnect).set(autoConnect);
 		

@@ -247,7 +247,7 @@ public class Utils {
 		result = result.replaceAll("\\{CHANNEL\\}", channel);
 		result = result.replaceAll("\\{USER\\}", user);
 		result = result.replaceAll("\\{NICK\\}", nick);
-		result = result.replaceAll("\\{MESSAGE\\}", message);
+		result = result.replaceAll("\\{MESSAGE\\}", Matcher.quoteReplacement(message)).replaceAll("\\\\$", "\\$");
 		return result;
 	}
 	
@@ -259,6 +259,10 @@ public class Utils {
 			result += ((i > 0) ? " " : "") + matcher.replaceAll("<link removed>");
 		}
 		return result;
+	}
+	
+	public static String filterCodes(String message) {
+		return message.replaceAll("\\§", "");
 	}
 
 	public static ServerConfig getServerConfig(IRCConnection connection) {

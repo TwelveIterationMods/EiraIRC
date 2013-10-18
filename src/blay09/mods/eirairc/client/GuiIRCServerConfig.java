@@ -85,6 +85,7 @@ public class GuiIRCServerConfig extends GuiScreen {
 	@Override
 	public void drawScreen(int par1, int par2, float par3) {
 		drawDefaultBackground();
+		drawCenteredString(fontRenderer, "EiraIRC - Edit Server", width / 2, height / 2 - 115, Globals.TEXT_COLOR);
 		fontRenderer.drawString("Server Address:", width / 2 - 125, height / 2 - 115, Globals.TEXT_COLOR);
 		txtHost.drawTextBox();
 		fontRenderer.drawString("Server Password:", width / 2, height / 2 - 115, Globals.TEXT_COLOR);

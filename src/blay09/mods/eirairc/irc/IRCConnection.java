@@ -1,3 +1,5 @@
+// Copyright (c) 2013, Christopher "blay09" Baker
+
 package blay09.mods.eirairc.irc;
 
 import java.io.BufferedReader;

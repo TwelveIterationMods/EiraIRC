@@ -82,9 +82,7 @@ public class ChannelConfig {
 	public void save(Configuration config, ConfigCategory category) {
 		String categoryName = category.getQualifiedName();
 		config.get(categoryName, "name", "").set(Utils.quote(name));
-		if(GlobalConfig.saveCredentials) {
-			config.get(categoryName, "password", "").set(Utils.quote(password != null ? password : ""));
-		}
+		config.get(categoryName, "password", "").set(Utils.quote(GlobalConfig.saveCredentials && password != null ? password : ""));
 		config.get(categoryName, "observer", observer).set(observer);
 		config.get(categoryName, "muted", muted).set(muted);
 		config.get(categoryName, "autoJoin", autoJoin).set(autoJoin);

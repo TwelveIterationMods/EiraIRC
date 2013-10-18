@@ -353,6 +353,7 @@ public class IRCEventHandler implements IIRCEventHandler, IPlayerTracker, IConne
 			if(GlobalConfig.enableLinkFilter) {
 				message = Utils.filterLinks(message);
 			}
+			message = Utils.filterCodes(message);
 			String mcMessage = Utils.formatMessage(GlobalConfig.mcPrivateEmtFormat, connection, user.getUsername(), user.getNick(), message);
 			Utils.addMessageToChat(mcMessage);
 		}
@@ -366,11 +367,16 @@ public class IRCEventHandler implements IIRCEventHandler, IPlayerTracker, IConne
 		}
 		ServerConfig serverConfig = Utils.getServerConfig(connection);
 		if(serverConfig.allowsPrivateMessages()) {
-			if(GlobalConfig.enableLinkFilter) {
-				message = Utils.filterLinks(message);
+			if(serverConfig.isClientSide()) {
+				if(GlobalConfig.enableLinkFilter) {
+					message = Utils.filterLinks(message);
+				}
+				message = Utils.filterCodes(message);
+				String mcMessage = Utils.formatMessage(GlobalConfig.mcPrivateMsgFormat, connection, user.getUsername(), Utils.getColoredName(user.getNick(), GlobalConfig.ircColor), message);
+				Utils.addMessageToChat(mcMessage);
+			} else {
+				onIRCBotCommand(connection, user, message);
 			}
-			String mcMessage = Utils.formatMessage(GlobalConfig.mcPrivateMsgFormat, connection, user.getUsername(), Utils.getColoredName(user.getNick(), GlobalConfig.ircColor), message);
-			Utils.addMessageToChat(mcMessage);
 		}
 	}
 
@@ -381,6 +387,7 @@ public class IRCEventHandler implements IIRCEventHandler, IPlayerTracker, IConne
 			if(GlobalConfig.enableLinkFilter) {
 				message = Utils.filterLinks(message);
 			}
+			message = Utils.filterCodes(message);
 			String mcMessage = Utils.formatMessage(GlobalConfig.mcChannelEmtFormat, connection.getHost(), channel.getName(), user.getUsername(), user.getNick(), message);
 			Utils.addMessageToChat(mcMessage);
 		}
@@ -393,15 +400,21 @@ public class IRCEventHandler implements IIRCEventHandler, IPlayerTracker, IConne
 			if(GlobalConfig.enableLinkFilter) {
 				message = Utils.filterLinks(message);
 			}
+			message = Utils.filterCodes(message);
 			String mcMessage = Utils.formatMessage(GlobalConfig.mcChannelMsgFormat, connection.getHost(), channel.getName(), user.getUsername(), Utils.getColoredName(user.getNick(), GlobalConfig.ircColor), message);
 			Utils.addMessageToChat(mcMessage);
 		}
 	}
 
+	private void onIRCBotCommand(IRCConnection connection, IRCUser user, String message) {
+		
+	}
+	
 	private void onIRCPrivateMessageToPlayer(IRCConnection connection, IRCUser user, String nick, EntityPlayer entityPlayer, String message) {
 		if(GlobalConfig.enableLinkFilter) {
 			message = Utils.filterLinks(message);
 		}
+		message = Utils.filterCodes(message);
 		String mcMessage = Utils.formatMessage(GlobalConfig.mcPrivateMsgFormat, connection, user.getUsername(), Utils.getColoredName(nick, GlobalConfig.ircColor), message);
 		entityPlayer.sendChatToPlayer(mcMessage);
 	}

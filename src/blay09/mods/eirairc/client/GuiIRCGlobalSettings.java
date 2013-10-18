@@ -26,6 +26,7 @@ public class GuiIRCGlobalSettings extends GuiScreen {
 	private GuiButton btnNickChanges;
 	private GuiButton btnPersistentConnections;
 	private GuiButton btnMessageDisplayMode;
+	private GuiButton btnSaveCredentials;
 	private GuiButton btnBack;
 	
 	@Override
@@ -33,33 +34,36 @@ public class GuiIRCGlobalSettings extends GuiScreen {
 		int leftX = width / 2 - BUTTON_WIDTH - BUTTON_GAP;
 		int rightX = width / 2 + BUTTON_GAP;
 		
-		txtNick = new GuiTextField(fontRenderer, width / 2 - 50, height / 2 - 90, 100, 15);
+		txtNick = new GuiTextField(fontRenderer, width / 2 - 50, height / 2 - 85, 100, 15);
 		
-		btnDeathMessages = new GuiButton(1, leftX, height / 2 - 70, BUTTON_WIDTH, BUTTON_HEIGHT, "Relay Death Messages: ???");
+		btnDeathMessages = new GuiButton(1, leftX, height / 2 - 65, BUTTON_WIDTH, BUTTON_HEIGHT, "Relay Death Messages: ???");
 		buttonList.add(btnDeathMessages);
 		
-		btnMCJoinLeave = new GuiButton(2, leftX, height / 2 - 45, BUTTON_WIDTH, BUTTON_HEIGHT, "Relay Minecraft Joins: ???");
+		btnMCJoinLeave = new GuiButton(2, leftX, height / 2 - 40, BUTTON_WIDTH, BUTTON_HEIGHT, "Relay Minecraft Joins: ???");
 		buttonList.add(btnMCJoinLeave);
 		
-		btnIRCJoinLeave = new GuiButton(3, leftX, height / 2 - 20, BUTTON_WIDTH, BUTTON_HEIGHT, "Relay IRC Joins: ???");
+		btnIRCJoinLeave = new GuiButton(3, leftX, height / 2 - 15, BUTTON_WIDTH, BUTTON_HEIGHT, "Relay IRC Joins: ???");
 		buttonList.add(btnIRCJoinLeave);
 		
-		btnNickChanges = new GuiButton(4, leftX, height / 2 + 5, BUTTON_WIDTH, BUTTON_HEIGHT, "Relay Nick Changes: ???");
+		btnNickChanges = new GuiButton(4, leftX, height / 2 + 10, BUTTON_WIDTH, BUTTON_HEIGHT, "Relay Nick Changes: ???");
 		buttonList.add(btnNickChanges);
 		
-		btnPersistentConnections = new GuiButton(5, rightX, height / 2 - 70, BUTTON_WIDTH, BUTTON_HEIGHT, "Persistent Connections: ???");
+		btnPersistentConnections = new GuiButton(5, rightX, height / 2 - 65, BUTTON_WIDTH, BUTTON_HEIGHT, "Persistent Connections: ???");
 		buttonList.add(btnPersistentConnections);
 		
-		btnLinkFilter = new GuiButton(6, rightX, height / 2 - 45, BUTTON_WIDTH, BUTTON_HEIGHT, "Filter Links: ???");
+		btnLinkFilter = new GuiButton(6, rightX, height / 2 - 40, BUTTON_WIDTH, BUTTON_HEIGHT, "Filter Links: ???");
 		buttonList.add(btnLinkFilter);
 		
-		btnPrivateMessages = new GuiButton(7, rightX, height / 2 - 20, BUTTON_WIDTH, BUTTON_HEIGHT, "Allow Private Messages: ???");
+		btnPrivateMessages = new GuiButton(7, rightX, height / 2 - 15, BUTTON_WIDTH, BUTTON_HEIGHT, "Allow Private Messages: ???");
 		buttonList.add(btnPrivateMessages);
 		
-		btnMessageDisplayMode = new GuiButton(8, rightX, height / 2 + 5, BUTTON_WIDTH, BUTTON_HEIGHT, "Message Display: ???");
+		btnMessageDisplayMode = new GuiButton(8, rightX, height / 2 + 10, BUTTON_WIDTH, BUTTON_HEIGHT, "Message Display: ???");
 		buttonList.add(btnMessageDisplayMode);
 		
-		btnBack = new GuiButton(0, width / 2 - 100, height / 2 + 35, "Back");
+		btnSaveCredentials = new GuiButton(9, rightX, height / 2 + 35, BUTTON_WIDTH, BUTTON_HEIGHT, "Save Credentials: ???");
+		buttonList.add(btnSaveCredentials);
+		
+		btnBack = new GuiButton(0, width / 2 - 100, height / 2 + 65, "Back");
 		buttonList.add(btnBack);
 		
 		loadFromConfig();
@@ -74,6 +78,7 @@ public class GuiIRCGlobalSettings extends GuiScreen {
 		btnNickChanges.displayString = "Relay Nick Changes: " + (GlobalConfig.showNickChanges ? "Yes" : "No");
 		btnLinkFilter.displayString = "Filter Links: " + (GlobalConfig.enableLinkFilter ? "Yes" : "No");
 		btnPersistentConnections.displayString = "Persistent Connections: " + (GlobalConfig.persistentConnection ? "Yes" : "No");
+		btnSaveCredentials.displayString = "Save Credentials: " + (GlobalConfig.saveCredentials ? "Yes" : "No");
 		updateMessageDisplayMode();
 	}
 	
@@ -115,6 +120,9 @@ public class GuiIRCGlobalSettings extends GuiScreen {
 		} else if(button == btnPersistentConnections) {
 			GlobalConfig.persistentConnection = !GlobalConfig.persistentConnection;
 			btnPersistentConnections.displayString = "Persistent Connections: " + (GlobalConfig.persistentConnection ? "Yes" : "No");
+		} else if(button == btnSaveCredentials) {
+			GlobalConfig.saveCredentials = !GlobalConfig.saveCredentials;
+			btnSaveCredentials.displayString = "Save Credentials: " + (GlobalConfig.saveCredentials ? "Yes" : "No");
 		} else if(button == btnMessageDisplayMode) {
 			String currentDM = GlobalConfig.mcChannelMsgFormat;
 			if(currentDM.equals(GlobalConfig.MC_CMESSAGE_FORMAT_NORMAL)) {
@@ -169,8 +177,8 @@ public class GuiIRCGlobalSettings extends GuiScreen {
 	@Override
 	public void drawScreen(int par1, int par2, float par3) {
 		drawDefaultBackground();
-		drawCenteredString(fontRenderer, "EiraIRC - Global Settings", width / 2, height / 2 - 125, Globals.TEXT_COLOR);
-		drawCenteredString(fontRenderer, "Nickname:", width / 2, height / 2 - 105, Globals.TEXT_COLOR);
+		drawCenteredString(fontRenderer, "EiraIRC - Global Settings", width / 2, height / 2 - 115, Globals.TEXT_COLOR);
+		drawCenteredString(fontRenderer, "Nickname:", width / 2, height / 2 - 100, Globals.TEXT_COLOR);
 		txtNick.drawTextBox();
 		super.drawScreen(par1, par2, par3);
 	}
