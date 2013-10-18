@@ -8,11 +8,11 @@ import net.minecraftforge.common.Configuration;
 
 public class ChannelConfig {
 
-	private String name;
+	private final String name;
 	private String password;
 	private boolean observer;
 	private boolean muted;
-	private boolean autoJoin;
+	private boolean autoJoin = true;
 	
 	public boolean relayMinecraftJoinLeave;
 	public boolean relayDeathMessages;
@@ -40,7 +40,15 @@ public class ChannelConfig {
 	}
 	
 	public void load(Configuration config, ConfigCategory category) {
-		password = ConfigurationHandler.unquote(config.get(category.getQualifiedName(), "password", "").getString());
+		String categoryName = category.getQualifiedName();
+		password = ConfigurationHandler.unquote(config.get(categoryName, "password", "").getString());
+		observer = config.get(categoryName, "observer", observer).getBoolean(observer);
+		muted = config.get(categoryName, "muted", muted).getBoolean(muted);
+		autoJoin = config.get(categoryName, "autoJoin", autoJoin).getBoolean(autoJoin);
+		relayMinecraftJoinLeave = config.get(categoryName, "relayMinecraftJoinLeave", relayMinecraftJoinLeave).getBoolean(relayMinecraftJoinLeave);
+		relayDeathMessages = config.get(categoryName, "relayDeathMessages", relayDeathMessages).getBoolean(relayDeathMessages);
+		relayIRCJoinLeave = config.get(categoryName, "relayIRCJoinLeave", relayIRCJoinLeave).getBoolean(relayIRCJoinLeave);
+		relayIRCNickChange = config.get(categoryName, "relayIRCNickChange", relayIRCNickChange).getBoolean(relayIRCNickChange);
 	}
 
 	public void setAutoJoin(boolean autoJoin) {

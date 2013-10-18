@@ -52,7 +52,7 @@ public class ConfigurationHandler {
 		for(String categoryName : config.getCategoryNames()) {
 			ConfigCategory category = config.getCategory(categoryName);
 			if(category.parent == serverCategory) {
-				String host = unquote(categoryName.substring(CATEGORY_SERVERS.length() + 1));
+				String host = unquote(config.get(categoryName, "host", "").getString());
 				ServerConfig serverConfig = new ServerConfig(host);
 				serverConfig.setNick(unquote(config.get(categoryName, "nick", "").getString()));
 				serverConfig.setNickServ(unquote(config.get(categoryName, "nickServName", "").getString()), unquote(config.get(categoryName, "nickServPassword", "").getString()));
@@ -63,11 +63,11 @@ public class ConfigurationHandler {
 				String channelsCategoryName = categoryName + Configuration.CATEGORY_SPLITTER + CATEGORY_CHANNELS;
 				ConfigCategory channelsCategory = config.getCategory(channelsCategoryName);
 				for(ConfigCategory channelCategory : channelsCategory.getChildren()) {
-					String channelName = unquote(channelCategory.getQualifiedName().substring(channelsCategoryName.length()));
-					ChannelConfig channelConfig = new ChannelConfig(channelName);
+					ChannelConfig channelConfig = new ChannelConfig(config.get(channelCategory.getQualifiedName(), "name", "").getString());
 					channelConfig.load(config, channelCategory);
 					serverConfig.addChannelConfig(channelConfig);
 				}
+				serverConfigs.put(host, serverConfig);
 			}
 		}
 		

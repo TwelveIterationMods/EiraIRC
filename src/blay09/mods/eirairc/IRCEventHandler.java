@@ -3,8 +3,6 @@
 
 package blay09.mods.eirairc;
 
-import java.io.IOException;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
@@ -29,6 +27,8 @@ import blay09.mods.eirairc.irc.IRCUser;
 import cpw.mods.fml.common.IPlayerTracker;
 import cpw.mods.fml.common.network.IConnectionHandler;
 import cpw.mods.fml.common.network.Player;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class IRCEventHandler implements IIRCEventHandler, IPlayerTracker, IConnectionHandler {
 
@@ -82,6 +82,7 @@ public class IRCEventHandler implements IIRCEventHandler, IPlayerTracker, IConne
 		}
 	}
 
+	@SideOnly(Side.CLIENT)
 	public boolean onClientChat(String text) {
 		EnumChatTarget chatTarget = EiraIRC.instance.getChatTarget();
 		if(chatTarget == EnumChatTarget.ChannelOnly) {
@@ -118,6 +119,7 @@ public class IRCEventHandler implements IIRCEventHandler, IPlayerTracker, IConne
 		return doMC;
 	}
 	
+	@SideOnly(Side.CLIENT)
 	public boolean onClientEmote(String text) {
 		EnumChatTarget chatTarget = EiraIRC.instance.getChatTarget();
 		if(chatTarget == EnumChatTarget.ChannelOnly) {
