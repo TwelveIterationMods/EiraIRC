@@ -5,7 +5,7 @@
   "description": "An IRC Connector that works both on clients and servers independently, with some neat special features.",
   "version": "@VERSION@",
   "mcversion": "1.5.2",
-  "url": "http://eiradir.org/blay09/",
+  "url": "http://blay09.net/",
   "updateUrl": "",
   "authors": [
     "blay09"

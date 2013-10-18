@@ -17,6 +17,7 @@ import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import blay09.mods.eirairc.config.ChannelConfig;
+import blay09.mods.eirairc.config.ConfigurationHandler;
 import blay09.mods.eirairc.config.GlobalConfig;
 import blay09.mods.eirairc.config.Globals;
 import blay09.mods.eirairc.config.ServerConfig;
@@ -257,8 +258,11 @@ public class IRCEventHandler implements IIRCEventHandler, IPlayerTracker, IConne
 
 	@Override
 	public void clientLoggedIn(NetHandler clientHandler, INetworkManager manager, Packet1Login login) {
-		if(!GlobalConfig.persistentConnection || EiraIRC.instance.isIRCRunning()) {
-			EiraIRC.instance.startIRC(true);
+		if(!GlobalConfig.persistentConnection || !EiraIRC.instance.isIRCRunning()) {
+			if(GlobalConfig.nick.startsWith(ConfigurationHandler.DEFAULT_NICK)) {
+				GlobalConfig.nick = Minecraft.getMinecraft().thePlayer.username;
+			}
+			EiraIRC.instance.startIRC();
 		}
 	}
 

@@ -7,6 +7,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.minecraftforge.common.ConfigCategory;
+import net.minecraftforge.common.Configuration;
+import blay09.mods.eirairc.Utils;
 import blay09.mods.eirairc.irc.IRCChannel;
 
 public class ServerConfig {
@@ -109,4 +112,42 @@ public class ServerConfig {
 		return channels.values();
 	}
 
+	public void load(Configuration config, ConfigCategory category) {
+		String categoryName = category.getQualifiedName();
+		nick = Utils.unquote(config.get(categoryName, "nick", "").getString());
+		nickServName = Utils.unquote(config.get(categoryName, "nickServName", "").getString());
+		nickServPassword = Utils.unquote(config.get(categoryName, "nickServPassword", "").getString());
+		serverPassword = Utils.unquote(config.get(categoryName, "serverPassword", "").getString());
+		allowPrivateMessages = config.get(categoryName, "allowPrivateMessages", true).getBoolean(true);
+		autoConnect = config.get(categoryName, "autoConnect", true).getBoolean(true);
+		
+		String channelsCategoryName = categoryName + Configuration.CATEGORY_SPLITTER + ConfigurationHandler.CATEGORY_CHANNELS;
+		ConfigCategory channelsCategory = config.getCategory(channelsCategoryName);
+		for(ConfigCategory channelCategory : channelsCategory.getChildren()) {
+			ChannelConfig channelConfig = new ChannelConfig(Utils.unquote(config.get(channelCategory.getQualifiedName(), "name", "").getString()));
+			channelConfig.load(config, channelCategory);
+			addChannelConfig(channelConfig);
+		}
+	}
+
+	public void save(Configuration config, ConfigCategory category) {
+		String categoryName = category.getQualifiedName();
+		config.get(categoryName, "host", "").set(Utils.quote(host));
+		config.get(categoryName, "nick", "").set(Utils.quote(nick != null ? nick : ""));
+		if(GlobalConfig.saveCredentials) {
+			config.get(categoryName, "nickServName", "").set(Utils.quote(nickServName != null ? nickServName : ""));
+			config.get(categoryName, "nickServPassword", "").set(Utils.quote(nickServPassword != null ? nickServPassword : ""));
+			config.get(categoryName, "serverPassword", "").set(Utils.quote(serverPassword != null ? serverPassword : ""));
+		}
+		config.get(categoryName, "allowPrivateMessages", allowPrivateMessages).set(allowPrivateMessages);
+		config.get(categoryName, "autoConnect", autoConnect).set(autoConnect);
+		
+		String channelsCategoryName = categoryName + Configuration.CATEGORY_SPLITTER + ConfigurationHandler.CATEGORY_CHANNELS;
+		int c = 0;
+		for(ChannelConfig channelConfig : channels.values()) {
+			String channelCategoryName = channelsCategoryName + Configuration.CATEGORY_SPLITTER + ConfigurationHandler.CATEGORY_CHANNEL_PREFIX;
+			channelConfig.save(config, config.getCategory(channelCategoryName));
+			c++;
+		}
+	}
 }

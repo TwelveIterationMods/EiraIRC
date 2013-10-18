@@ -81,7 +81,7 @@ public class EiraIRC {
 		event.registerServerCommand(new CommandIRC());
 		
 		if(!MinecraftServer.getServer().isSinglePlayer()) {
-			startIRC(false);
+			startIRC();
 		}
 	}
 	
@@ -92,16 +92,18 @@ public class EiraIRC {
 		}
 	}
 	
-	public void startIRC(boolean clientSide) {
+	public void startIRC() {
 		for(ServerConfig serverConfig : ConfigurationHandler.getServerConfigs()) {
-			Utils.connectTo(serverConfig);
+			if(serverConfig.isAutoConnect()) {
+				Utils.connectTo(serverConfig);
+			}
 		}
 		ircRunning = true;
 	}
 	
 	public void stopIRC() {
 		for(IRCConnection connection : connections.values()) {
-			connection.disconnect("Leaving.");
+			connection.disconnect(Globals.DEFAULT_QUIT_MESSAGE);
 		}
 		connections.clear();
 		ircRunning = false;

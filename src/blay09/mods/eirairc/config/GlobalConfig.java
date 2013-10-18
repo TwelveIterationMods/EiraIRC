@@ -39,8 +39,8 @@ public class GlobalConfig {
 	public static boolean saveCredentials = false;
 	public static boolean showNickChanges = true;
 	public static boolean enableLinkFilter = true;
-	public static String mcChannelMsgFormat = MC_CMESSAGE_FORMAT_NORMAL;
-	public static String mcPrivateMsgFormat = MC_PMESSAGE_FORMAT_NORMAL;
+	public static String mcChannelMsgFormat = MC_CMESSAGE_FORMAT_SLIGHT;
+	public static String mcPrivateMsgFormat = MC_PMESSAGE_FORMAT_SLIGHT;
 	public static String mcChannelEmtFormat = MC_CEMOTE_FORMAT_NORMAL;
 	public static String mcPrivateEmtFormat = MC_PEMOTE_FORMAT_NORMAL;
 	public static String ircChannelMsgFormat = IRC_CMESSAGE_FORMAT_NORMAL;
