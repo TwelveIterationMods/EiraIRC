@@ -71,7 +71,7 @@ public class CommandServIRC implements ICommand {
 	}
 
 	@Override
-	public boolean isUsernameIndex(String[] astring, int i) {
-		return false;
+	public boolean isUsernameIndex(String[] args, int i) {
+		return IRCCommandHandler.isUsernameIndex(args, i);
 	}
 }

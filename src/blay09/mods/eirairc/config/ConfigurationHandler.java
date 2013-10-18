@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.ConfigCategory;
 import net.minecraftforge.common.Configuration;
 import blay09.mods.eirairc.Utils;
@@ -44,6 +45,7 @@ public class ConfigurationHandler {
 		GlobalConfig.allowPrivateMessages = config.get(CATEGORY_GLOBAL, "allowPrivateMessages", GlobalConfig.allowPrivateMessages).getBoolean(GlobalConfig.allowPrivateMessages);
 		GlobalConfig.enableLinkFilter = config.get(CATEGORY_GLOBAL, "enableLinkFilter", GlobalConfig.enableLinkFilter).getBoolean(GlobalConfig.enableLinkFilter);
 		GlobalConfig.saveCredentials = config.get(CATEGORY_GLOBAL, "saveCredentials", GlobalConfig.saveCredentials).getBoolean(GlobalConfig.saveCredentials);
+		GlobalConfig.registerShortCommands = config.get(CATEGORY_GLOBAL, "registerShortCommands", GlobalConfig.registerShortCommands).getBoolean(GlobalConfig.registerShortCommands);
 		config.getCategory(CATEGORY_GLOBAL).setComment("These are settings that are applied on all servers and channels. Can be overriden by server and channel config.");
 		
 		/*
@@ -111,6 +113,7 @@ public class ConfigurationHandler {
 		config.get(CATEGORY_GLOBAL, "allowPrivateMessages", GlobalConfig.allowPrivateMessages).set(GlobalConfig.allowPrivateMessages);
 		config.get(CATEGORY_GLOBAL, "enableLinkFilter", GlobalConfig.enableLinkFilter).set(GlobalConfig.enableLinkFilter);
 		config.get(CATEGORY_GLOBAL, "saveCredentials", GlobalConfig.saveCredentials).set(GlobalConfig.saveCredentials);
+		config.get(CATEGORY_GLOBAL, "quitMessage", GlobalConfig.quitMessage).set(GlobalConfig.quitMessage);
 		
 		/*
 		 * Display Config

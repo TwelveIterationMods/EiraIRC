@@ -157,7 +157,7 @@ public class IRCEventHandler implements IIRCEventHandler, IPlayerTracker, IConne
 		String nick = Utils.getColorAliasForPlayer(event.player);
 		event.line = "<" + nick + "> " + event.message;
 		if(!MinecraftServer.getServer().isSinglePlayer()) {
-			String ircMessage = Utils.formatMessage(GlobalConfig.mcChannelMsgFormat, event.player.username, nick, event.message);
+			String ircMessage = Utils.formatMessage(GlobalConfig.ircChannelMsgFormat, event.player.username, nick, event.message);
 			for(IRCConnection connection : EiraIRC.instance.getConnections()) {
 				ServerConfig serverConfig = Utils.getServerConfig(connection);
 				for(IRCChannel channel : connection.getChannels()) {
@@ -372,11 +372,13 @@ public class IRCEventHandler implements IIRCEventHandler, IPlayerTracker, IConne
 					message = Utils.filterLinks(message);
 				}
 				message = Utils.filterCodes(message);
-				String mcMessage = Utils.formatMessage(GlobalConfig.mcPrivateMsgFormat, connection, user.getUsername(), Utils.getColoredName(user.getNick(), GlobalConfig.ircColor), message);
+				String mcMessage = Utils.formatMessage(GlobalConfig.mcPrivateMsgFormat, connection, user.getUsername(), Utils.getColoredName(user.getNick(), Utils.getIRCColor(connection)), message);
 				Utils.addMessageToChat(mcMessage);
 			} else {
 				onIRCBotCommand(connection, user, message);
 			}
+		} else {
+			connection.sendPrivateMessage(user, "Private Messages are disabled.");
 		}
 	}
 
@@ -401,7 +403,7 @@ public class IRCEventHandler implements IIRCEventHandler, IPlayerTracker, IConne
 				message = Utils.filterLinks(message);
 			}
 			message = Utils.filterCodes(message);
-			String mcMessage = Utils.formatMessage(GlobalConfig.mcChannelMsgFormat, connection.getHost(), channel.getName(), user.getUsername(), Utils.getColoredName(user.getNick(), GlobalConfig.ircColor), message);
+			String mcMessage = Utils.formatMessage(GlobalConfig.mcChannelMsgFormat, connection.getHost(), channel.getName(), user.getUsername(), Utils.getColoredName(user.getNick(), Utils.getIRCColor(connection)), message);
 			Utils.addMessageToChat(mcMessage);
 		}
 	}
@@ -415,7 +417,7 @@ public class IRCEventHandler implements IIRCEventHandler, IPlayerTracker, IConne
 			message = Utils.filterLinks(message);
 		}
 		message = Utils.filterCodes(message);
-		String mcMessage = Utils.formatMessage(GlobalConfig.mcPrivateMsgFormat, connection, user.getUsername(), Utils.getColoredName(nick, GlobalConfig.ircColor), message);
+		String mcMessage = Utils.formatMessage(GlobalConfig.mcPrivateMsgFormat, connection, user.getUsername(), Utils.getColoredName(nick, Utils.getIRCColor(connection)), message);
 		entityPlayer.sendChatToPlayer(mcMessage);
 	}
 }

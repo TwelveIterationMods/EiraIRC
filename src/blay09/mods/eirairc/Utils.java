@@ -19,6 +19,8 @@ import blay09.mods.eirairc.config.GlobalConfig;
 import blay09.mods.eirairc.config.NickServSettings;
 import blay09.mods.eirairc.config.ServerConfig;
 import blay09.mods.eirairc.irc.IRCConnection;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class Utils {
 
@@ -222,14 +224,19 @@ public class Utils {
 	}
 
 	public static String getCurrentServerName() {
-		if(Minecraft.getMinecraft().isSingleplayer()) {
-			return "Singleplayer";
-		}
-		ServerData serverData = Minecraft.getMinecraft().getServerData();
-		if(serverData.isHidingAddress()) {
-			return serverData.serverName;
+		if(MinecraftServer.getServer() != null) {
+			if(MinecraftServer.getServer().isSinglePlayer()) {
+				return "Singleplayer";
+			} else {
+				return MinecraftServer.getServer().getServerHostname();
+			}
 		} else {
-			return serverData.serverIP;
+			ServerData serverData = Minecraft.getMinecraft().getServerData();
+			if(serverData.isHidingAddress()) {
+				return serverData.serverName;
+			} else {
+				return serverData.serverIP;
+			}
 		}
 	}
 	
@@ -294,5 +301,21 @@ public class Utils {
 			return;
 		}
 		connection.sendPrivateMessage(settings.getBotName(), settings.getCommand() + " " + username + " " + password);
+	}
+
+	public static String getQuitMessage(IRCConnection connection) {
+		ServerConfig serverConfig = ConfigurationHandler.getServerConfig(connection.getHost());
+		if(serverConfig.getQuitMessage() != null && !serverConfig.getQuitMessage().isEmpty()) {
+			return serverConfig.getQuitMessage();
+		}
+		return GlobalConfig.quitMessage;
+	}
+
+	public static String getIRCColor(IRCConnection connection) {
+		ServerConfig serverConfig = ConfigurationHandler.getServerConfig(connection.getHost());
+		if(serverConfig.getIRCColor() != null && !serverConfig.getIRCColor().isEmpty()) {
+			return serverConfig.getIRCColor();
+		}
+		return GlobalConfig.ircColor;
 	}
 }

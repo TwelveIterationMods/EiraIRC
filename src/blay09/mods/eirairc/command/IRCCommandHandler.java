@@ -57,7 +57,6 @@ public class IRCCommandHandler {
 			}
 			sendLocalizedMessage(sender, "irc.connecting", host);
 			ServerConfig serverConfig = ConfigurationHandler.getServerConfig(host);
-			serverConfig.setServerSide(serverSide);
 			String password = null;
 			if(args.length > 2) {
 				password = args[2];
@@ -183,7 +182,7 @@ public class IRCCommandHandler {
 					return true;
 				}
 				for(IRCConnection connection : EiraIRC.instance.getConnections()) {
-					connection.disconnect(Globals.DEFAULT_QUIT_MESSAGE);
+					connection.disconnect(Utils.getQuitMessage(connection));
 				}
 				EiraIRC.instance.clearConnections();
 				sendLocalizedMessage(sender, "irc.disconnecting", "IRC");
@@ -200,7 +199,7 @@ public class IRCCommandHandler {
 					return true;
 				}
 				sendLocalizedMessage(sender, "irc.disconnecting", host);
-				connection.disconnect(Globals.DEFAULT_QUIT_MESSAGE);
+				connection.disconnect(Utils.getQuitMessage(connection));
 				EiraIRC.instance.removeConnection(connection);
 			}
 			return true;
@@ -729,4 +728,15 @@ public class IRCCommandHandler {
 		return list;
 	}
 	
+	public static String[] getShiftedArgs(String[] args) {
+		String[] shiftedArgs = new String[args.length + 1];
+		for(int i = 1; i < shiftedArgs.length; i++) {
+			shiftedArgs[i] = args[i];
+		}
+		return shiftedArgs;
+	}
+
+	public static boolean isUsernameIndex(String[] args, int i) {
+		return false;
+	}
 }

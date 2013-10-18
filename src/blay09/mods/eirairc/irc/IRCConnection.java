@@ -337,7 +337,7 @@ public class IRCConnection implements Runnable {
 				} else {
 					eventHandler.onChannelMessage(this, channel, user, message);
 				}
-			} else if(target.equals(nick)) {
+			} else if(target.equals(this.nick)) {
 				if(isEmote) {
 					eventHandler.onPrivateEmote(this, user, message);
 				} else {

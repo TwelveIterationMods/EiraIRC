@@ -12,9 +12,11 @@ import java.util.Map;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
 import blay09.mods.eirairc.command.CommandIRC;
+import blay09.mods.eirairc.command.CommandJoin;
 import blay09.mods.eirairc.command.CommandServIRC;
 import blay09.mods.eirairc.config.ChannelConfig;
 import blay09.mods.eirairc.config.ConfigurationHandler;
+import blay09.mods.eirairc.config.GlobalConfig;
 import blay09.mods.eirairc.config.Globals;
 import blay09.mods.eirairc.config.Localization;
 import blay09.mods.eirairc.config.ServerConfig;
@@ -79,6 +81,9 @@ public class EiraIRC {
 	public void serverLoad(FMLServerStartingEvent event) {
 		event.registerServerCommand(new CommandServIRC());
 		event.registerServerCommand(new CommandIRC());
+		if(GlobalConfig.registerShortCommands) {
+			event.registerServerCommand(new CommandJoin());
+		}
 		
 		if(!MinecraftServer.getServer().isSinglePlayer()) {
 			startIRC();
@@ -103,7 +108,7 @@ public class EiraIRC {
 	
 	public void stopIRC() {
 		for(IRCConnection connection : connections.values()) {
-			connection.disconnect(Globals.DEFAULT_QUIT_MESSAGE);
+			connection.disconnect(Utils.getQuitMessage(connection));
 		}
 		connections.clear();
 		ircRunning = false;

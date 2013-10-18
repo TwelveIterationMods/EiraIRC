@@ -60,7 +60,7 @@ public class GuiIRCServerList extends GuiScreen {
 		} else if(button == btnConnect) {
 			IRCConnection connection = EiraIRC.instance.getConnection(configs[selectedElement].getHost());
 			if(connection != null) {
-				connection.disconnect(Globals.DEFAULT_QUIT_MESSAGE);
+				connection.disconnect(Utils.getQuitMessage(connection));
 			} else {
 				Utils.connectTo(configs[selectedElement]);
 			}
@@ -82,7 +82,7 @@ public class GuiIRCServerList extends GuiScreen {
 		}
 		IRCConnection connection = EiraIRC.instance.getConnection(configs[serverIdx].getHost());
 		if(connection != null) {
-			connection.disconnect(Globals.DEFAULT_QUIT_MESSAGE);
+			connection.disconnect(Utils.getQuitMessage(connection));
 		}
 		ConfigurationHandler.removeServerConfig(configs[serverIdx].getHost());
 		ConfigurationHandler.save();

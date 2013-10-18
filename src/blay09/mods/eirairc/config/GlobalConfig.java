@@ -29,6 +29,7 @@ public class GlobalConfig {
 	public static final List<String> colorBlackList = new ArrayList<String>();
 	public static String opColor = "red";
 	public static String ircColor = "gray";
+	public static String quitMessage = "Leaving.";
 	public static boolean enableNameColors = true;
 	public static boolean enableAliases = true;
 	public static boolean showDeathMessages = true;
@@ -39,6 +40,7 @@ public class GlobalConfig {
 	public static boolean saveCredentials = false;
 	public static boolean showNickChanges = true;
 	public static boolean enableLinkFilter = true;
+	public static boolean registerShortCommands = true;
 	public static String mcChannelMsgFormat = MC_CMESSAGE_FORMAT_SLIGHT;
 	public static String mcPrivateMsgFormat = MC_PMESSAGE_FORMAT_SLIGHT;
 	public static String mcChannelEmtFormat = MC_CEMOTE_FORMAT_NORMAL;

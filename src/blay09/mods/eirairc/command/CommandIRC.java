@@ -159,7 +159,7 @@ public class CommandIRC implements ICommand {
 
 	@Override
 	public boolean isUsernameIndex(String[] args, int i) {
-		return false;
+		return IRCCommandHandler.isUsernameIndex(IRCCommandHandler.getShiftedArgs(args), i);
 	}
 
 }

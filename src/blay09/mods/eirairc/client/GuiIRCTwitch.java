@@ -66,7 +66,7 @@ public class GuiIRCTwitch extends GuiScreen {
 			if(config.isAutoConnect() || EiraIRC.instance.isConnectedTo(Globals.TWITCH_SERVER)) {
 				IRCConnection connection = EiraIRC.instance.getConnection(Globals.TWITCH_SERVER);
 				if(connection != null) {
-					connection.disconnect(Globals.DEFAULT_QUIT_MESSAGE);
+					connection.disconnect(Utils.getQuitMessage(connection));
 					EiraIRC.instance.removeConnection(connection);
 				}
 				Utils.connectTo(config);

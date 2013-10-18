@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.ConfigCategory;
 import net.minecraftforge.common.Configuration;
 import blay09.mods.eirairc.Utils;
@@ -23,9 +24,20 @@ public class ServerConfig {
 	private boolean serverSide;
 	private boolean allowPrivateMessages = true;
 	private boolean autoConnect = true;
+	private String quitMessage;
+	private String ircColor;
 	
 	public ServerConfig(String host) {
 		this.host = host;
+		if(MinecraftServer.getServer() != null) {
+			if(MinecraftServer.getServer().isSinglePlayer()) {
+				serverSide = false;
+			} else {
+				serverSide = true;
+			}
+		} else {
+			serverSide = false;
+		}
 	}
 	
 	public String getHost() {
@@ -79,6 +91,8 @@ public class ServerConfig {
 			} else {
 				channelConfig.defaultClient();
 			}
+			channels.put(channel.getName(), channelConfig);
+			ConfigurationHandler.save();
 		}
 		return channelConfig;
 	}
@@ -104,10 +118,10 @@ public class ServerConfig {
 		return channels.containsKey(channelName);
 	}
 
-	public void setServerSide(boolean serverSide) {
-		this.serverSide = serverSide;
+	public String getQuitMessage() {
+		return quitMessage;
 	}
-
+	
 	public Collection<ChannelConfig> getChannelConfigs() {
 		return channels.values();
 	}
@@ -115,11 +129,13 @@ public class ServerConfig {
 	public void load(Configuration config, ConfigCategory category) {
 		String categoryName = category.getQualifiedName();
 		nick = Utils.unquote(config.get(categoryName, "nick", "").getString());
+		ircColor = Utils.unquote(config.get(categoryName, "ircColor", "").getString());
+		quitMessage = Utils.unquote(config.get(categoryName, "quitMessage", "").getString());
 		nickServName = Utils.unquote(config.get(categoryName, "nickServName", "").getString());
 		nickServPassword = Utils.unquote(config.get(categoryName, "nickServPassword", "").getString());
 		serverPassword = Utils.unquote(config.get(categoryName, "serverPassword", "").getString());
-		allowPrivateMessages = config.get(categoryName, "allowPrivateMessages", true).getBoolean(true);
-		autoConnect = config.get(categoryName, "autoConnect", true).getBoolean(true);
+		allowPrivateMessages = config.get(categoryName, "allowPrivateMessages", allowPrivateMessages).getBoolean(allowPrivateMessages);
+		autoConnect = config.get(categoryName, "autoConnect", autoConnect).getBoolean(autoConnect);
 		
 		String channelsCategoryName = categoryName + Configuration.CATEGORY_SPLITTER + ConfigurationHandler.CATEGORY_CHANNELS;
 		ConfigCategory channelsCategory = config.getCategory(channelsCategoryName);
@@ -134,6 +150,8 @@ public class ServerConfig {
 		String categoryName = category.getQualifiedName();
 		config.get(categoryName, "host", "").set(Utils.quote(host));
 		config.get(categoryName, "nick", "").set(Utils.quote(nick != null ? nick : ""));
+		config.get(categoryName, "ircColor", "").set(Utils.quote(ircColor != null ? ircColor : ""));
+		config.get(categoryName, "quitMessage", "").set(Utils.quote(quitMessage != null ? quitMessage : ""));
 		config.get(categoryName, "nickServName", "").set(Utils.quote(GlobalConfig.saveCredentials && nickServName != null ? nickServName : ""));
 		config.get(categoryName, "nickServPassword", "").set(Utils.quote(GlobalConfig.saveCredentials && nickServPassword != null ? nickServPassword : ""));
 		config.get(categoryName, "serverPassword", "").set(Utils.quote(GlobalConfig.saveCredentials && serverPassword != null ? serverPassword : ""));
@@ -143,9 +161,13 @@ public class ServerConfig {
 		String channelsCategoryName = categoryName + Configuration.CATEGORY_SPLITTER + ConfigurationHandler.CATEGORY_CHANNELS;
 		int c = 0;
 		for(ChannelConfig channelConfig : channels.values()) {
-			String channelCategoryName = channelsCategoryName + Configuration.CATEGORY_SPLITTER + ConfigurationHandler.CATEGORY_CHANNEL_PREFIX;
+			String channelCategoryName = channelsCategoryName + Configuration.CATEGORY_SPLITTER + ConfigurationHandler.CATEGORY_CHANNEL_PREFIX + c;
 			channelConfig.save(config, config.getCategory(channelCategoryName));
 			c++;
 		}
+	}
+
+	public String getIRCColor() {
+		return ircColor;
 	}
 }
