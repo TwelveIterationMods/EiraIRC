@@ -24,18 +24,21 @@ import blay09.mods.eirairc.irc.IRCUser;
 
 public class IRCCommandHandler {
 
+	@Deprecated
 	public static void sendLocalizedMessage(ICommandSender sender, String key, Object... args) {
-		sender.sendChatToPlayer(sender.translateString(Globals.MOD_ID + ":" + key, args));
+		Utils.sendLocalizedMessage(sender, key, args);
 	}
 	
+	@Deprecated
 	public static void sendUnlocalizedMessage(ICommandSender sender, String text) {
-		sender.sendChatToPlayer(text);
+		Utils.sendUnlocalizedMessage(sender, text);
 	}
 	
 	public static boolean processCommand(ICommandSender sender, String[] args, boolean serverSide) {
 		String commandName = serverSide ? "servirc" : "irc";
 		if(args.length < 1) {
-			throw new WrongUsageException("commands.irc.usage", commandName);
+			sendIRCUsage(sender);
+			return true;
 		}
 		String cmd = args[0];
 		if(cmd.equals("connect")) { // [serv]irc connect <host> [password]
@@ -104,7 +107,7 @@ public class IRCCommandHandler {
 					serverConfig.setServerPassword(args[2]);
 					String userChannel = "#" + args[1];
 					if(!serverConfig.hasChannelConfig(userChannel)) {
-						ChannelConfig channelConfig = new ChannelConfig(userChannel);
+						ChannelConfig channelConfig = new ChannelConfig(serverConfig, userChannel);
 						channelConfig.defaultTwitch();
 						serverConfig.addChannelConfig(channelConfig);
 					}
@@ -200,7 +203,6 @@ public class IRCCommandHandler {
 				}
 				sendLocalizedMessage(sender, "irc.disconnecting", host);
 				connection.disconnect(Utils.getQuitMessage(connection));
-				EiraIRC.instance.removeConnection(connection);
 			}
 			return true;
 		} else if(cmd.equals("nick")) { // [serv]irc nick [host] <nick>
@@ -347,33 +349,33 @@ public class IRCCommandHandler {
 			return true;
 		} else if(cmd.equals("who")) { // [serv]irc who [host] <channel>
 			IRCConnection connection = null;
-			String channel = null;
+			String channelName = null;
 			if(args.length <= 1) {
 				if(EiraIRC.instance.getConnectionCount() > 1) {
-					sendLocalizedMessage(sender, "irc.specifyServer");
+					Utils.sendLocalizedMessage(sender, "irc.specifyServer");
 					throw new WrongUsageException("commands.irc.usage.who", commandName);
 				} else {
 					connection = EiraIRC.instance.getDefaultConnection();
 					if(connection == null) {
 						if(serverSide) {
-							sendLocalizedMessage(sender, "irc.server.notConnected", "IRC");
+							Utils.sendLocalizedMessage(sender, "irc.server.notConnected", "IRC");
 						} else {
-							sendLocalizedMessage(sender, "irc.client.notConnected", "IRC");
+							Utils.sendLocalizedMessage(sender, "irc.client.notConnected", "IRC");
 						}
 						return true;
 					}
 				}
 				if(connection.getChannels().size() > 1) {
-					sendLocalizedMessage(sender, "irc.specifyChannel");
+					Utils.sendLocalizedMessage(sender, "irc.specifyChannel");
 					throw new WrongUsageException("commands.irc.usage.who", commandName);
 				} else {
-					channel = connection.getChannels().iterator().next().getName();
+					channelName = connection.getChannels().iterator().next().getName();
 				}
 			} else if(args.length <= 2) {
-				channel = args[1];
+				channelName = args[1];
 				if(EiraIRC.instance.getConnectionCount() > 1) {
 					for(IRCConnection con : EiraIRC.instance.getConnections()) {
-						if(con.getChannel(channel) != null) {
+						if(con.getChannel(channelName) != null) {
 							if(connection != null) {
 								connection = null;
 								break;
@@ -382,58 +384,39 @@ public class IRCCommandHandler {
 						}
 					}
 					if(connection == null) {
-						sendLocalizedMessage(sender, "irc.specifyServer");
+						Utils.sendLocalizedMessage(sender, "irc.specifyServer");
 						throw new WrongUsageException("commands.irc.usage.who", commandName);
 					}
 				} else {
 					connection = EiraIRC.instance.getDefaultConnection();
 					if(connection == null) {
 						if(serverSide) {
-							sendLocalizedMessage(sender, "irc.server.notConnected", "IRC");
+							Utils.sendLocalizedMessage(sender, "irc.server.notConnected", "IRC");
 						} else {
-							sendLocalizedMessage(sender, "irc.client.notConnected", "IRC");
+							Utils.sendLocalizedMessage(sender, "irc.client.notConnected", "IRC");
 						}
 						return true;
 					}
 				}
 			} else {
 				String host = args[1];
-				channel = args[2];
+				channelName = args[2];
 				connection = EiraIRC.instance.getConnection(host);
 				if(connection == null) {
 					if(serverSide) {
-						sendLocalizedMessage(sender, "irc.server.notConnected", host);
+						Utils.sendLocalizedMessage(sender, "irc.server.notConnected", host);
 					} else {
-						sendLocalizedMessage(sender, "irc.client.notConnected", host);
+						Utils.sendLocalizedMessage(sender, "irc.client.notConnected", host);
 					}
 					return true;
 				}
 			}
-			if(connection.getChannel(channel) == null) {
-				sendLocalizedMessage(sender, "irc.channelNotFound", channel);
+			IRCChannel channel = connection.getChannel(channelName);
+			if(channel == null) {
+				Utils.sendLocalizedMessage(sender, "irc.channelNotFound", channel);
 				return true;
 			}
-			List<IRCUser> userList = connection.getChannel(channel).getUserList();
-			if(userList.size() == 0) {
-				sendLocalizedMessage(sender, "irc.noUsersOnline", channel, connection.getHost());
-				return true;
-			}
-			sendLocalizedMessage(sender, "irc.usersOnline", userList.size(), channel, connection.getHost());
-			String s = "* ";
-			for(int i = 0; i < userList.size(); i++) {
-				IRCUser user = userList.get(i);
-				if(s.length() + user.getNick().length() > Globals.CHAT_MAX_LENGTH) {
-					sendUnlocalizedMessage(sender, s);
-					s = "* ";
-				}
-				if(s.length() > 2) {
-					s += ", ";
-				}
-				s += user.getNick();
-			}
-			if(s.length() > 2) {
-				sendUnlocalizedMessage(sender, s);
-			}
+			Utils.sendUserList(sender, connection, channel);
 			return true;
 		} else if(cmd.equals("msg")) { // [serv]irc msg [host] <nick> <text>
 			if(!GlobalConfig.allowPrivateMessages) {
@@ -523,63 +506,64 @@ public class IRCCommandHandler {
 			if(args.length <= 3) {
 				throw new WrongUsageException("commands.irc.usage.config", commandName);
 			}
-			String host = args[1];
+			String target = args[1];
 			String config = args[2];
 			String value = args[3];
-			if(host.equals("global")) {
-				if(config.equals("opColor")) {
-					GlobalConfig.opColor = value;
-				} else if(config.equals("ircColor")) {
-					GlobalConfig.ircColor = value;
-				} else if(config.equals("enableNameColors")) {
-					GlobalConfig.enableNameColors = Boolean.parseBoolean(value);
-				} else if(config.equals("enableAliases")) {
-					sendLocalizedMessage(sender, "irc.configNoAbuse");
-					return true;
-				} else if(config.equals("allowPrivateMessages")) {
-					GlobalConfig.allowPrivateMessages = Boolean.parseBoolean(value);
-				} else if(config.equals("showDeathMessages")) {
-					GlobalConfig.showDeathMessages = Boolean.parseBoolean(value);
-				} else if(config.equals("showIRCJoinLeave")) {
-					GlobalConfig.showIRCJoinLeave = Boolean.parseBoolean(value);
-				} else if(config.equals("showMinecraftJoinLeave")) {
-					GlobalConfig.showMinecraftJoinLeave = Boolean.parseBoolean(value);
-				} else if(config.equals("showNickChanges")) {
-					GlobalConfig.showNickChanges = Boolean.parseBoolean(value);
-				} else if(config.equals("enableLinkFilter")) {
-					GlobalConfig.enableLinkFilter = Boolean.parseBoolean(value);
-				} else if(config.equals("persistentConnection")) {
-					GlobalConfig.persistentConnection = Boolean.parseBoolean(value);
-				} else if(config.equals("saveCredentials")) {
-					GlobalConfig.saveCredentials = Boolean.parseBoolean(value);
-				} else {
-					sendLocalizedMessage(sender, "irc.invalidConfigChange", "Global", config);
-					return true;
-				}
-				ConfigurationHandler.save();
-				sendLocalizedMessage(sender, "irc.configChange", "Global", config, value);
-			} else {
-				IRCConnection connection = EiraIRC.instance.getConnection(host);
-				if(connection == null) {
-					if(serverSide) {
-						sendLocalizedMessage(sender, "irc.server.notConnected", host);
-					} else {
-						sendLocalizedMessage(sender, "irc.client.notConnected", host);
-					}
-					return true;
-				}
-				ServerConfig serverConfig = ConfigurationHandler.getServerConfig(host);
-				if(config.equals("allowPrivateMessages")) {
-					serverConfig.setAllowPrivateMessages(Boolean.parseBoolean(value));
-				} else if(config.equals("autoConnect")) {
-					serverConfig.setAutoConnect(Boolean.parseBoolean(value));
-				} else {
-					sendLocalizedMessage(sender, "irc.invalidConfigChange", host, config);
-					return true;
-				}
-				ConfigurationHandler.save();
-				sendLocalizedMessage(sender, "irc.configChange", host, config, value);
-			}
+			ConfigurationHandler.handleConfigCommand(sender, target, config, value);
+//			if(host.equals("global")) {
+//				if(config.equals("opColor")) {
+//					GlobalConfig.opColor = value;
+//				} else if(config.equals("ircColor")) {
+//					GlobalConfig.ircColor = value;
+//				} else if(config.equals("enableNameColors")) {
+//					GlobalConfig.enableNameColors = Boolean.parseBoolean(value);
+//				} else if(config.equals("enableAliases")) {
+//					sendLocalizedMessage(sender, "irc.configNoAbuse");
+//					return true;
+//				} else if(config.equals("allowPrivateMessages")) {
+//					GlobalConfig.allowPrivateMessages = Boolean.parseBoolean(value);
+//				} else if(config.equals("showDeathMessages")) {
+//					GlobalConfig.relayDeathMessages = Boolean.parseBoolean(value);
+//				} else if(config.equals("showIRCJoinLeave")) {
+//					GlobalConfig.relayIRCJoinLeave = Boolean.parseBoolean(value);
+//				} else if(config.equals("showMinecraftJoinLeave")) {
+//					GlobalConfig.relayMinecraftJoinLeave = Boolean.parseBoolean(value);
+//				} else if(config.equals("showNickChanges")) {
+//					GlobalConfig.relayNickChanges = Boolean.parseBoolean(value);
+//				} else if(config.equals("enableLinkFilter")) {
+//					GlobalConfig.enableLinkFilter = Boolean.parseBoolean(value);
+//				} else if(config.equals("persistentConnection")) {
+//					GlobalConfig.persistentConnection = Boolean.parseBoolean(value);
+//				} else if(config.equals("saveCredentials")) {
+//					GlobalConfig.saveCredentials = Boolean.parseBoolean(value);
+//				} else {
+//					sendLocalizedMessage(sender, "irc.invalidConfigChange", "Global", config);
+//					return true;
+//				}
+//				ConfigurationHandler.save();
+//				sendLocalizedMessage(sender, "irc.configChange", "Global", config, value);
+//			} else {
+//				IRCConnection connection = EiraIRC.instance.getConnection(host);
+//				if(connection == null) {
+//					if(serverSide) {
+//						sendLocalizedMessage(sender, "irc.server.notConnected", host);
+//					} else {
+//						sendLocalizedMessage(sender, "irc.client.notConnected", host);
+//					}
+//					return true;
+//				}
+//				ServerConfig serverConfig = ConfigurationHandler.getServerConfig(host);
+//				if(config.equals("allowPrivateMessages")) {
+//					serverConfig.setAllowPrivateMessages(Boolean.parseBoolean(value));
+//				} else if(config.equals("autoConnect")) {
+//					serverConfig.setAutoConnect(Boolean.parseBoolean(value));
+//				} else {
+//					sendLocalizedMessage(sender, "irc.invalidConfigChange", host, config);
+//					return true;
+//				}
+//				ConfigurationHandler.save();
+//				sendLocalizedMessage(sender, "irc.configChange", host, config, value);
+//			}
 			return true;
 		} else if(cmd.equals("help")) { // [serv]irc help <topic>
 			if(args.length <= 1) {
@@ -728,15 +712,23 @@ public class IRCCommandHandler {
 		return list;
 	}
 	
-	public static String[] getShiftedArgs(String[] args) {
+	public static String[] getShiftedArgs(String[] args, String cmd) {
 		String[] shiftedArgs = new String[args.length + 1];
-		for(int i = 1; i < shiftedArgs.length; i++) {
-			shiftedArgs[i] = args[i];
+		shiftedArgs[0] = cmd;
+		for(int i = 0; i < args.length; i++) {
+			shiftedArgs[i + 1] = args[i];
 		}
 		return shiftedArgs;
 	}
 
 	public static boolean isUsernameIndex(String[] args, int i) {
 		return false;
+	}
+
+	public static void sendIRCUsage(ICommandSender sender) {
+		Utils.sendLocalizedMessage(sender, "commands.irc.usage");
+		Utils.sendLocalizedMessage(sender, "irc.cmdlist.general");
+		Utils.sendLocalizedMessage(sender, "irc.cmdlist.irc");
+		Utils.sendLocalizedMessage(sender, "irc.cmdlist.special");
 	}
 }

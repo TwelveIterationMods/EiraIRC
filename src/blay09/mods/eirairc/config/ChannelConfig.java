@@ -3,24 +3,29 @@
 
 package blay09.mods.eirairc.config;
 
+import net.minecraft.command.ICommandSender;
 import net.minecraftforge.common.ConfigCategory;
 import net.minecraftforge.common.Configuration;
 import blay09.mods.eirairc.Utils;
+import blay09.mods.eirairc.irc.IRCConnection;
 
 public class ChannelConfig {
 
+	private final ServerConfig serverConfig;
 	private final String name;
 	private String password;
-	private boolean observer;
+	private boolean readOnly;
 	private boolean muted;
+	private boolean autoWho;
 	private boolean autoJoin = true;
 	
 	public boolean relayMinecraftJoinLeave;
 	public boolean relayDeathMessages;
 	public boolean relayIRCJoinLeave;
-	public boolean relayIRCNickChange;
+	public boolean relayNickChanges;
 	
-	public ChannelConfig(String name) {
+	public ChannelConfig(ServerConfig serverConfig, String name) {
+		this.serverConfig = serverConfig;
 		this.name = name;
 	}
 
@@ -36,8 +41,8 @@ public class ChannelConfig {
 		return muted;
 	}
 	
-	public boolean isObserver() {
-		return observer;
+	public boolean isReadOnly() {
+		return readOnly;
 	}
 	
 	public void setAutoJoin(boolean autoJoin) {
@@ -49,33 +54,37 @@ public class ChannelConfig {
 	}
 
 	public void defaultTwitch() {
-		observer = true;
+		readOnly = true;
+		autoWho = false;
 	}
 	
 	public void defaultServer() {
 		relayMinecraftJoinLeave = true;
 		relayDeathMessages = true;
 		relayIRCJoinLeave = true;
-		relayIRCNickChange = true;
+		relayNickChanges = true;
+		autoWho = true;
 	}
 	
 	public void defaultClient() {
 		relayMinecraftJoinLeave = false;
 		relayDeathMessages = false;
 		relayIRCJoinLeave = true;
-		relayIRCNickChange = true;
+		relayNickChanges = true;
+		autoWho = false;
 	}
 
 	public void load(Configuration config, ConfigCategory category) {
 		String categoryName = category.getQualifiedName();
 		password = Utils.unquote(config.get(categoryName, "password", "").getString());
-		observer = config.get(categoryName, "observer", observer).getBoolean(observer);
+		readOnly = config.get(categoryName, "readOnly", readOnly).getBoolean(readOnly);
 		muted = config.get(categoryName, "muted", muted).getBoolean(muted);
 		autoJoin = config.get(categoryName, "autoJoin", autoJoin).getBoolean(autoJoin);
+		autoWho = config.get(categoryName, "autoWho", autoWho).getBoolean(autoWho);
 		relayMinecraftJoinLeave = config.get(categoryName, "relayMinecraftJoinLeave", relayMinecraftJoinLeave).getBoolean(relayMinecraftJoinLeave);
 		relayDeathMessages = config.get(categoryName, "relayDeathMessages", relayDeathMessages).getBoolean(relayDeathMessages);
 		relayIRCJoinLeave = config.get(categoryName, "relayIRCJoinLeave", relayIRCJoinLeave).getBoolean(relayIRCJoinLeave);
-		relayIRCNickChange = config.get(categoryName, "relayIRCNickChange", relayIRCNickChange).getBoolean(relayIRCNickChange);
+		relayNickChanges = config.get(categoryName, "relayIRCNickChange", relayNickChanges).getBoolean(relayNickChanges);
 	}
 
 	
@@ -83,13 +92,58 @@ public class ChannelConfig {
 		String categoryName = category.getQualifiedName();
 		config.get(categoryName, "name", "").set(Utils.quote(name));
 		config.get(categoryName, "password", "").set(Utils.quote(GlobalConfig.saveCredentials && password != null ? password : ""));
-		config.get(categoryName, "observer", observer).set(observer);
+		config.get(categoryName, "readOnly", readOnly).set(readOnly);
 		config.get(categoryName, "muted", muted).set(muted);
 		config.get(categoryName, "autoJoin", autoJoin).set(autoJoin);
+		config.get(categoryName, "autoWho", autoWho).set(autoWho);
 		config.get(categoryName, "relayMinecraftJoinLeave", relayMinecraftJoinLeave).set(relayMinecraftJoinLeave);
 		config.get(categoryName, "relayDeathMessages", relayDeathMessages).set(relayDeathMessages);
 		config.get(categoryName, "relayIRCJoinLeave", relayIRCJoinLeave).set(relayIRCJoinLeave);
-		config.get(categoryName, "relayIRCNickChange", relayIRCNickChange).set(relayIRCNickChange);
+		config.get(categoryName, "relayNickChanges", relayNickChanges).set(relayNickChanges);
+	}
+
+	public void handleConfigCommand(ICommandSender sender, String key, String value) {
+		if(key.equals("observer")) {
+			readOnly = Boolean.parseBoolean(value);
+		} else if(key.equals("muted")) {
+			muted = Boolean.parseBoolean(value);
+		} else if(key.equals("autoJoin")) {
+			autoJoin = Boolean.parseBoolean(value);
+		} else if(key.equals("relayMinecraftJoinLeave")) {
+			relayMinecraftJoinLeave = Boolean.parseBoolean(value);
+		} else if(key.equals("relayDeathMessages")) {
+			relayDeathMessages = Boolean.parseBoolean(value);
+		} else if(key.equals("relayIRCJoinLeave")) {
+			relayIRCJoinLeave = Boolean.parseBoolean(value);
+		} else if(key.equals("relayNickChanges")) {
+			relayNickChanges = Boolean.parseBoolean(value);
+		} else if(key.equals("autoWho")) {
+			autoWho = Boolean.parseBoolean(value);
+		}
+	}
+
+	public ServerConfig getServerConfig() {
+		return serverConfig;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public void setMuted(boolean muted) {
+		this.muted = muted;
+	}
+	
+	public void setAutoWho(boolean autoWho) {
+		this.autoWho = autoWho;
+	}
+	
+	public boolean isAutoWho() {
+		return autoWho;
+	}
+	
+	public void setReadOnly(boolean readOnly) {
+		this.readOnly = readOnly;
 	}
 	
 }

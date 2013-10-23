@@ -53,7 +53,8 @@ public class CommandIRC implements ICommand {
 	@Override
 	public void processCommand(ICommandSender sender, String[] args) {
 		if(args.length < 1) {
-			throw new WrongUsageException("commands.irc.usage", "irc");
+			IRCCommandHandler.sendIRCUsage(sender);
+			return;
 		}
 		String cmd = args[0];
 		if(cmd.equals("who")) {
@@ -159,7 +160,7 @@ public class CommandIRC implements ICommand {
 
 	@Override
 	public boolean isUsernameIndex(String[] args, int i) {
-		return IRCCommandHandler.isUsernameIndex(IRCCommandHandler.getShiftedArgs(args), i);
+		return IRCCommandHandler.isUsernameIndex(IRCCommandHandler.getShiftedArgs(args, getCommandName()), i);
 	}
 
 }

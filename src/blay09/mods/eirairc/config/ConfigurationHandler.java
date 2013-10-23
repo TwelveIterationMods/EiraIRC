@@ -8,10 +8,12 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.ConfigCategory;
 import net.minecraftforge.common.Configuration;
 import blay09.mods.eirairc.Utils;
+import blay09.mods.eirairc.command.IRCCommandHandler;
 
 public class ConfigurationHandler {
 
@@ -46,16 +48,16 @@ public class ConfigurationHandler {
 		GlobalConfig.enableLinkFilter = config.get(CATEGORY_GLOBAL, "enableLinkFilter", GlobalConfig.enableLinkFilter).getBoolean(GlobalConfig.enableLinkFilter);
 		GlobalConfig.saveCredentials = config.get(CATEGORY_GLOBAL, "saveCredentials", GlobalConfig.saveCredentials).getBoolean(GlobalConfig.saveCredentials);
 		GlobalConfig.registerShortCommands = config.get(CATEGORY_GLOBAL, "registerShortCommands", GlobalConfig.registerShortCommands).getBoolean(GlobalConfig.registerShortCommands);
-		config.getCategory(CATEGORY_GLOBAL).setComment("These are settings that are applied on all servers and channels. Can be overriden by server and channel config.");
+		config.getCategory(CATEGORY_GLOBAL).setComment("These are settings that are applied on all servers and channels.");
 		
 		/*
 		 * Display Config
 		 */
 		GlobalConfig.ircColor = config.get(CATEGORY_DISPLAY, "ircColor", GlobalConfig.ircColor).getString();
-		GlobalConfig.showDeathMessages = config.get(CATEGORY_DISPLAY, "showDeathMessages", GlobalConfig.showDeathMessages).getBoolean(GlobalConfig.showDeathMessages);
-		GlobalConfig.showMinecraftJoinLeave = config.get(CATEGORY_DISPLAY, "showMinecraftJoinLeave", GlobalConfig.showMinecraftJoinLeave).getBoolean(GlobalConfig.showMinecraftJoinLeave);
-		GlobalConfig.showIRCJoinLeave = config.get(CATEGORY_DISPLAY, "showIRCJoinLeave", GlobalConfig.showIRCJoinLeave).getBoolean(GlobalConfig.showIRCJoinLeave);
-		GlobalConfig.showNickChanges = config.get(CATEGORY_DISPLAY, "showNickChanges", GlobalConfig.showNickChanges).getBoolean(GlobalConfig.showNickChanges);
+		GlobalConfig.relayDeathMessages = config.get(CATEGORY_DISPLAY, "showDeathMessages", GlobalConfig.relayDeathMessages).getBoolean(GlobalConfig.relayDeathMessages);
+		GlobalConfig.relayMinecraftJoinLeave = config.get(CATEGORY_DISPLAY, "showMinecraftJoinLeave", GlobalConfig.relayMinecraftJoinLeave).getBoolean(GlobalConfig.relayMinecraftJoinLeave);
+		GlobalConfig.relayIRCJoinLeave = config.get(CATEGORY_DISPLAY, "showIRCJoinLeave", GlobalConfig.relayIRCJoinLeave).getBoolean(GlobalConfig.relayIRCJoinLeave);
+		GlobalConfig.relayNickChanges = config.get(CATEGORY_DISPLAY, "showNickChanges", GlobalConfig.relayNickChanges).getBoolean(GlobalConfig.relayNickChanges);
 		config.getCategory(CATEGORY_DISPLAY).setComment("These options determine how the chat is displayed and what gets sent / received to and from IRC.");
 		
 		/*
@@ -119,10 +121,10 @@ public class ConfigurationHandler {
 		 * Display Config
 		 */
 		config.get(CATEGORY_DISPLAY, "ircColor", GlobalConfig.ircColor).set(GlobalConfig.ircColor);
-		config.get(CATEGORY_DISPLAY, "showDeathMessages", GlobalConfig.showDeathMessages).set(GlobalConfig.showDeathMessages);
-		config.get(CATEGORY_DISPLAY, "showMinecraftJoinLeave", GlobalConfig.showMinecraftJoinLeave).set(GlobalConfig.showMinecraftJoinLeave);
-		config.get(CATEGORY_DISPLAY, "showIRCJoinLeave", GlobalConfig.showIRCJoinLeave).set(GlobalConfig.showIRCJoinLeave);
-		config.get(CATEGORY_DISPLAY, "showNickChanges", GlobalConfig.showNickChanges).set(GlobalConfig.showNickChanges);
+		config.get(CATEGORY_DISPLAY, "showDeathMessages", GlobalConfig.relayDeathMessages).set(GlobalConfig.relayDeathMessages);
+		config.get(CATEGORY_DISPLAY, "showMinecraftJoinLeave", GlobalConfig.relayMinecraftJoinLeave).set(GlobalConfig.relayMinecraftJoinLeave);
+		config.get(CATEGORY_DISPLAY, "showIRCJoinLeave", GlobalConfig.relayIRCJoinLeave).set(GlobalConfig.relayIRCJoinLeave);
+		config.get(CATEGORY_DISPLAY, "showNickChanges", GlobalConfig.relayNickChanges).set(GlobalConfig.relayNickChanges);
 		
 		/*
 		 * ClientOnly Config
@@ -170,6 +172,36 @@ public class ConfigurationHandler {
 
 	public static boolean hasServerConfig(String host) {
 		return serverConfigs.containsKey(host);
+	}
+
+	public static void handleConfigCommand(ICommandSender sender, String target, String key, String value) {
+		if(target.equals("global")) {
+			GlobalConfig.handleConfigCommand(sender, key, value);
+		} else if(target.startsWith("#")) {
+			ChannelConfig foundConfig = null;
+			for(ServerConfig serverConfig : serverConfigs.values()) {
+				if(serverConfig.hasChannelConfig(target)) {
+					if(foundConfig != null) {
+						IRCCommandHandler.sendLocalizedMessage(sender, "irc.specifyServer");
+						return;
+					} else {
+						foundConfig = serverConfig.getChannelConfig(target);
+					}
+				}
+			}
+			if(foundConfig != null) {
+				foundConfig.handleConfigCommand(sender, key, value);
+			} else {
+				IRCCommandHandler.sendLocalizedMessage(sender, "irc.invalidTarget");
+			}
+		} else {
+			ServerConfig serverConfig = serverConfigs.get(target);
+			if(serverConfig != null) {
+				serverConfig.handleConfigCommand(sender, key, value);
+			} else {
+				IRCCommandHandler.sendLocalizedMessage(sender, "irc.invalidTarget");
+			}
+		}
 	}
 
 }

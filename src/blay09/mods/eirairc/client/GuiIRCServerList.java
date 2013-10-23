@@ -21,6 +21,7 @@ public class GuiIRCServerList extends GuiScreen {
 	private GuiButton btnConnect;
 	private GuiButton btnAdd;
 	private GuiButton btnEdit;
+	private GuiButton btnChannels;
 	private GuiButton btnDelete;
 	private GuiButton btnBack;
 	
@@ -31,22 +32,26 @@ public class GuiIRCServerList extends GuiScreen {
 	public void initGui() {
 		guiServerSlot = new GuiIRCServerSlot(this);
 		
-		btnConnect = new GuiButton(0, width / 2 - 153, height - 50, 150, 20, "Connect");
+		btnConnect = new GuiButton(1, width / 2 - 153, height - 50, 100, 20, "Connect");
 		btnConnect.enabled = false;
 		buttonList.add(btnConnect);
 		
-		btnAdd = new GuiButton(1, width / 2 + 3, height - 50, 150, 20, "Add Server");
+		btnAdd = new GuiButton(2, width / 2 + 53, height - 50, 100, 20, "Add Server");
 		buttonList.add(btnAdd);
 		
-		btnEdit = new GuiButton(2, width / 2 - 126, height - 25, 80, 20, "Edit");
+		btnEdit = new GuiButton(3, width / 2 - 126, height - 25, 80, 20, "Edit");
 		btnEdit.enabled = false;
 		buttonList.add(btnEdit);
 		
-		btnDelete = new GuiButton(3, width / 2 - 40, height - 25, 80, 20, "Delete");
+		btnDelete = new GuiButton(4, width / 2 - 40, height - 25, 80, 20, "Delete");
 		btnDelete.enabled = false;
 		buttonList.add(btnDelete);
 		
-		btnBack = new GuiButton(4, width / 2 + 46, height - 25, 80, 20, "Back");
+		btnChannels = new GuiButton(5, width / 2 - 50, height - 50, 100, 20, "Channels");
+		btnChannels.enabled = false;
+		buttonList.add(btnChannels);
+		
+		btnBack = new GuiButton(0, width / 2 + 46, height - 25, 80, 20, "Back");
 		buttonList.add(btnBack);
 		
 		selectedElement = -1;
@@ -71,6 +76,8 @@ public class GuiIRCServerList extends GuiScreen {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiYesNo(this, "Do you really want to remove this server?", "This will delete it from the config file.", selectedElement));
 		} else if(button == btnAdd) {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiIRCServerConfig());
+		} else if(button == btnChannels) {
+			Minecraft.getMinecraft().displayGuiScreen(new GuiIRCChannelList(this, configs[selectedElement]));
 		}
 	}
 	
@@ -120,6 +127,7 @@ public class GuiIRCServerList extends GuiScreen {
 		btnConnect.enabled = true;
 		btnEdit.enabled = true;
 		btnDelete.enabled = true;
+		btnChannels.enabled = true;
 		if(EiraIRC.instance.isConnectedTo(configs[i].getHost())) {
 			btnConnect.displayString = "Disconnect";
 		} else {

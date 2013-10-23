@@ -28,7 +28,6 @@ public class GuiIRCServerConfig extends GuiScreen {
 	private GuiPasswordTextField txtServerPassword;
 	
 	private boolean autoConnect;
-	private boolean saveCredentials;
 	private boolean privateMessages;
 	
 	public GuiIRCServerConfig() {
@@ -40,37 +39,28 @@ public class GuiIRCServerConfig extends GuiScreen {
 	
 	@Override
 	public void initGui() {
-		txtHost = new GuiTextField(fontRenderer, width / 2 - 120, height / 2 - 100, 100, 15);
-		txtNick = new GuiTextField(fontRenderer, width / 2 - 120, height / 2 - 60, 100, 15);
-		txtServerPassword = new GuiPasswordTextField(fontRenderer, width / 2 + 5, height / 2 - 100, 100, 15);
-		txtNickServName = new GuiTextField(fontRenderer, width / 2 - 120, height / 2 - 20, 100, 15);
-		txtNickServPassword = new GuiPasswordTextField(fontRenderer, width / 2 - 120, height / 2 + 20, 100, 15);
+		txtHost = new GuiTextField(fontRenderer, width / 2 - 120, height / 2 - 85, 100, 15);
+		txtNick = new GuiTextField(fontRenderer, width / 2 - 120, height / 2 - 45, 100, 15);
+		txtServerPassword = new GuiPasswordTextField(fontRenderer, width / 2 + 5, height / 2 - 85, 100, 15);
+		txtNickServName = new GuiTextField(fontRenderer, width / 2 - 120, height / 2 - 5, 100, 15);
+		txtNickServPassword = new GuiPasswordTextField(fontRenderer, width / 2 - 120, height / 2 + 35, 100, 15);
 		
-		btnPrivateMessages = new GuiButton(0, width / 2 - 10, height / 2 - 65, 130, 20, "Private Messages: ???");
+		btnPrivateMessages = new GuiButton(2, width / 2 - 10, height / 2 - 65, 130, 20, "Private Messages: ???");
 		buttonList.add(btnPrivateMessages);
 		
-		btnAutoConnect = new GuiButton(0, width / 2 - 10, height / 2 - 40, 130, 20, "Connect on Startup: ???");
+		btnAutoConnect = new GuiButton(3, width / 2 - 10, height / 2 - 40, 130, 20, "Connect on Startup: ???");
 		buttonList.add(btnAutoConnect);
 		
-		btnSave = new GuiButton(0, width / 2 + 3, height / 2 + 50, 100, 20, "Save");
+		btnChannels = new GuiButton(4, width / 2 - 10, height / 2 - 15, 130, 20, "Channels");
+		buttonList.add(btnChannels);
+		
+		btnSave = new GuiButton(1, width / 2 + 3, height / 2 + 65, 100, 20, "Save");
 		buttonList.add(btnSave);
 		
-		btnCancel = new GuiButton(1, width / 2 - 103, height / 2 + 50, 100, 20, "Cancel");
+		btnCancel = new GuiButton(0, width / 2 - 103, height / 2 + 65, 100, 20, "Cancel");
 		buttonList.add(btnCancel);
 		
-		if(config != null) {
-			txtHost.setText(config.getHost());
-			txtNick.setText(config.getNick());
-			txtServerPassword.setText(config.getServerPassword());
-			txtNickServName.setText(config.getNickServName());
-			txtNickServPassword.setText(config.getNickServPassword());
-			autoConnect = config.isAutoConnect();
-			privateMessages = config.allowsPrivateMessages();
-		} else {
-			autoConnect = true;
-			privateMessages = true;
-		}
-		updateButtons();
+		loadFromConfig();
 	}
 	
 	@Override
@@ -84,17 +74,17 @@ public class GuiIRCServerConfig extends GuiScreen {
 	
 	@Override
 	public void drawScreen(int par1, int par2, float par3) {
-		drawDefaultBackground();
+		drawBackground(0);
 		drawCenteredString(fontRenderer, "EiraIRC - Edit Server", width / 2, height / 2 - 115, Globals.TEXT_COLOR);
-		fontRenderer.drawString("Server Address:", width / 2 - 125, height / 2 - 115, Globals.TEXT_COLOR);
+		fontRenderer.drawString("Server Address:", width / 2 - 125, height / 2 - 100, Globals.TEXT_COLOR);
 		txtHost.drawTextBox();
-		fontRenderer.drawString("Server Password:", width / 2, height / 2 - 115, Globals.TEXT_COLOR);
+		fontRenderer.drawString("Server Password:", width / 2, height / 2 - 100, Globals.TEXT_COLOR);
 		txtServerPassword.drawTextBox();
-		fontRenderer.drawString("Nick:", width / 2 - 125, height / 2 - 75, Globals.TEXT_COLOR);
+		fontRenderer.drawString("Nick:", width / 2 - 125, height / 2 - 60, Globals.TEXT_COLOR);
 		txtNick.drawTextBox();
-		fontRenderer.drawString("NickServ Username:", width / 2 - 125, height / 2 - 35, Globals.TEXT_COLOR);
+		fontRenderer.drawString("NickServ Username:", width / 2 - 125, height / 2 - 20, Globals.TEXT_COLOR);
 		txtNickServName.drawTextBox();
-		fontRenderer.drawString("NickServ Password:", width / 2 - 125, height / 2 + 5, Globals.TEXT_COLOR);
+		fontRenderer.drawString("NickServ Password:", width / 2 - 125, height / 2 + 20, Globals.TEXT_COLOR);
 		txtNickServPassword.drawTextBox();
 		super.drawScreen(par1, par2, par3);
 	}
@@ -105,8 +95,10 @@ public class GuiIRCServerConfig extends GuiScreen {
 		if(txtHost.textboxKeyTyped(unicode, keyCode)) {
 			if(txtHost.getText().length() > 0) {
 				btnSave.enabled = true;
+				btnChannels.enabled = true;
 			} else {
 				btnSave.enabled = false;
+				btnChannels.enabled = false;
 			}
 			return;
 		}
@@ -137,8 +129,10 @@ public class GuiIRCServerConfig extends GuiScreen {
 	private void updateButtons() {
 		if(txtHost.getText().length() > 0) {
 			btnSave.enabled = true;
+			btnChannels.enabled = true;
 		} else {
 			btnSave.enabled = false;
+			btnChannels.enabled = false;
 		}
 		btnPrivateMessages.displayString = "Private Messages: " + (privateMessages ? "Yes" : "No");
 		btnAutoConnect.displayString = "Connect on Startup: " + (autoConnect ? "Yes" : "No");
@@ -147,16 +141,7 @@ public class GuiIRCServerConfig extends GuiScreen {
 	@Override
 	public void actionPerformed(GuiButton button) {
 		if(button == btnSave) {
-			if(config == null || !config.getHost().equals(txtHost.getText())) {
-				config = ConfigurationHandler.getServerConfig(txtHost.getText());
-			}
-			config.setNick(txtNick.getText());
-			config.setNickServ(txtNickServName.getText(), txtNickServPassword.getText());
-			config.setServerPassword(txtServerPassword.getText());
-			config.setAutoConnect(autoConnect);
-			config.setAllowPrivateMessages(privateMessages);
-			ConfigurationHandler.addServerConfig(config);
-			ConfigurationHandler.save();
+			saveToConfig();
 			if(autoConnect && !EiraIRC.instance.isConnectedTo(config.getHost())) {
 				Utils.connectTo(config);
 			}
@@ -169,6 +154,41 @@ public class GuiIRCServerConfig extends GuiScreen {
 		} else if(button == btnAutoConnect) {
 			autoConnect = !autoConnect;
 			updateButtons();
+		} else if(button == btnChannels) {
+			saveToConfig();
+			Minecraft.getMinecraft().displayGuiScreen(new GuiIRCChannelList(this, config));
 		}
+	}
+	
+	public void loadFromConfig() {
+		if(config != null) {
+			txtHost.setText(config.getHost());
+			txtNick.setText(config.getNick());
+			txtServerPassword.setText(config.getServerPassword());
+			txtNickServName.setText(config.getNickServName());
+			txtNickServPassword.setText(config.getNickServPassword());
+			autoConnect = config.isAutoConnect();
+			privateMessages = config.allowsPrivateMessages();
+		} else {
+			autoConnect = true;
+			privateMessages = true;
+		}
+		updateButtons();
+	}
+	
+	public void saveToConfig() {
+		if(config == null || !config.getHost().equals(txtHost.getText())) {
+			if(config != null) {
+				ConfigurationHandler.removeServerConfig(config.getHost());
+			}
+			config = ConfigurationHandler.getServerConfig(txtHost.getText());
+		}
+		config.setNick(txtNick.getText());
+		config.setNickServ(txtNickServName.getText(), txtNickServPassword.getText());
+		config.setServerPassword(txtServerPassword.getText());
+		config.setAutoConnect(autoConnect);
+		config.setAllowPrivateMessages(privateMessages);
+		ConfigurationHandler.addServerConfig(config);
+		ConfigurationHandler.save();
 	}
 }

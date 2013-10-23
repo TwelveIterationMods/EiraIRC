@@ -15,5 +15,6 @@ public interface IIRCEventHandler {
 	public void onPrivateMessage(IRCConnection connection, IRCUser user, String message);
 	public void onChannelEmote(IRCConnection connection, IRCChannel channel, IRCUser user, String message);
 	public void onChannelMessage(IRCConnection connection, IRCChannel channel, IRCUser user, String message);
+	public void onTopicChange(IRCChannel channel, String topic);
 	
 }

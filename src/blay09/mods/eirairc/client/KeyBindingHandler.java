@@ -21,7 +21,7 @@ import cpw.mods.fml.common.TickType;
 
 public class KeyBindingHandler extends KeyHandler {
 
-	private static KeyBinding toggleChatTarget = new KeyBinding("ToggleChatTarget", Keyboard.KEY_TAB);
+	private static KeyBinding toggleChatTarget = new KeyBinding("ToggleChatTarget", Keyboard.KEY_F4);
 	private static KeyBinding ircSettings = new KeyBinding("IRCSettings", Keyboard.KEY_I);
 	
 	

@@ -7,10 +7,12 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.ConfigCategory;
 import net.minecraftforge.common.Configuration;
 import blay09.mods.eirairc.Utils;
+import blay09.mods.eirairc.command.IRCCommandHandler;
 import blay09.mods.eirairc.irc.IRCChannel;
 
 public class ServerConfig {
@@ -80,10 +82,10 @@ public class ServerConfig {
 		return allowPrivateMessages;
 	}
 	
-	public ChannelConfig getChannelConfig(IRCChannel channel) {
-		ChannelConfig channelConfig = channels.get(channel.getName());
+	public ChannelConfig getChannelConfig(String channelName) {
+		ChannelConfig channelConfig = channels.get(channelName);
 		if(channelConfig == null) {
-			channelConfig = new ChannelConfig(channel.getName());
+			channelConfig = new ChannelConfig(this, channelName);
 			if(host.equals(Globals.TWITCH_SERVER)) {
 				channelConfig.defaultTwitch();
 			} else if(serverSide) {
@@ -91,10 +93,14 @@ public class ServerConfig {
 			} else {
 				channelConfig.defaultClient();
 			}
-			channels.put(channel.getName(), channelConfig);
+			channels.put(channelName, channelConfig);
 			ConfigurationHandler.save();
 		}
 		return channelConfig;
+	}
+	
+	public ChannelConfig getChannelConfig(IRCChannel channel) {
+		return getChannelConfig(channel.getName());
 	}
 
 	public void setNickServ(String nickServName, String nickServPassword) {
@@ -112,6 +118,10 @@ public class ServerConfig {
 
 	public void addChannelConfig(ChannelConfig channelConfig) {
 		channels.put(channelConfig.getName(), channelConfig);
+	}
+	
+	public void removeChannelConfig(String channelName) {
+		channels.remove(channelName);
 	}
 
 	public boolean hasChannelConfig(String channelName) {
@@ -140,7 +150,7 @@ public class ServerConfig {
 		String channelsCategoryName = categoryName + Configuration.CATEGORY_SPLITTER + ConfigurationHandler.CATEGORY_CHANNELS;
 		ConfigCategory channelsCategory = config.getCategory(channelsCategoryName);
 		for(ConfigCategory channelCategory : channelsCategory.getChildren()) {
-			ChannelConfig channelConfig = new ChannelConfig(Utils.unquote(config.get(channelCategory.getQualifiedName(), "name", "").getString()));
+			ChannelConfig channelConfig = new ChannelConfig(this, Utils.unquote(config.get(channelCategory.getQualifiedName(), "name", "").getString()));
 			channelConfig.load(config, channelCategory);
 			addChannelConfig(channelConfig);
 		}
@@ -170,4 +180,25 @@ public class ServerConfig {
 	public String getIRCColor() {
 		return ircColor;
 	}
+
+	public void handleConfigCommand(ICommandSender sender, String key, String value) {
+		if(key.equals("ircColor")) {
+			if(Utils.isValidColor(value)) {
+				ircColor = value;
+			} else {
+				IRCCommandHandler.sendLocalizedMessage(sender, "irc.colorInvalid", value);
+				return;
+			}
+		} else if(key.equals("quitMessage")) {
+			quitMessage = value;
+		} else if(key.equals("allowPrivateMessages")) {
+			allowPrivateMessages = Boolean.parseBoolean(value);
+		} else if(key.equals("autoConnect")) {
+			autoConnect = Boolean.parseBoolean(value);
+		} else {
+			IRCCommandHandler.sendLocalizedMessage(sender, "irc.configChange", host, key, value);
+			ConfigurationHandler.save();
+		}
+	}
+	
 }

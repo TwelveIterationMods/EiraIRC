@@ -67,7 +67,6 @@ public class GuiIRCTwitch extends GuiScreen {
 				IRCConnection connection = EiraIRC.instance.getConnection(Globals.TWITCH_SERVER);
 				if(connection != null) {
 					connection.disconnect(Utils.getQuitMessage(connection));
-					EiraIRC.instance.removeConnection(connection);
 				}
 				Utils.connectTo(config);
 			}
@@ -107,7 +106,7 @@ public class GuiIRCTwitch extends GuiScreen {
 	
 	@Override
 	public void drawScreen(int par1, int par2, float par3) {
-		drawDefaultBackground();
+		drawBackground(0);
 		drawCenteredString(fontRenderer, "EiraIRC - Twitch Settings", width / 2, height / 2 - 115, Globals.TEXT_COLOR);
 		drawCenteredString(fontRenderer, "Twitch Username:", width / 2, height / 2 - 95, Globals.TEXT_COLOR);
 		drawCenteredString(fontRenderer, "OAuth Token:", width / 2, height / 2 - 55, Globals.TEXT_COLOR);

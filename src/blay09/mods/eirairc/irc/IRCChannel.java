@@ -12,6 +12,7 @@ public class IRCChannel {
 
 	private IRCConnection connection;
 	private String name;
+	private String topic;
 	private List<IRCUser> users = new ArrayList<IRCUser>();
 	
 	public IRCChannel(IRCConnection connection, String name) {
@@ -43,5 +44,16 @@ public class IRCChannel {
 	public String getName() {
 		return name;
 	}
+
+	public boolean hasTopic() {
+		return topic != null;
+	}
 	
+	public void setTopic(String topic) {
+		this.topic = topic;
+	}
+
+	public String getTopic() {
+		return topic;
+	}
 }

@@ -45,7 +45,7 @@ public class GuiIRCSettings extends GuiScreen {
 	
 	@Override
 	public void drawScreen(int par1, int par2, float par3) {
-		drawDefaultBackground();
+		drawBackground(0);
 		this.drawCenteredString(fontRenderer, "EiraIRC Settings", width / 2, height / 2 - 110, Globals.TEXT_COLOR);
 		super.drawScreen(par1, par2, par3);
 	}

@@ -35,17 +35,20 @@ public class IRCEventHandler implements IIRCEventHandler, IPlayerTracker, IConne
 
 	@Override
 	public void onPlayerLogin(EntityPlayer player) {
-		if(!GlobalConfig.showMinecraftJoinLeave) {
-			return;
-		}
 		String name = Utils.getAliasForPlayer(player);
 		String ircMessage = StringTranslate.getInstance().translateKeyFormat(Globals.MOD_ID + ":irc.joinMsgMC", name);
 		for(IRCConnection connection : EiraIRC.instance.getConnections()) {
 			ServerConfig serverConfig = Utils.getServerConfig(connection);
 			for(IRCChannel channel : connection.getChannels()) {
 				ChannelConfig channelConfig = serverConfig.getChannelConfig(channel);
-				if(!channelConfig.isObserver() && channelConfig.relayMinecraftJoinLeave) {
+				if(GlobalConfig.relayMinecraftJoinLeave && !channelConfig.isReadOnly() && channelConfig.relayMinecraftJoinLeave) {
 					connection.sendChannelMessage(channel, ircMessage);
+				}
+				if(channel.hasTopic()) {
+					Utils.sendLocalizedMessage(player, "irc.topic", channel.getName(), channel.getTopic());
+				}
+				if(channelConfig.isAutoWho()) {
+					Utils.sendUserList(player, connection, channel);
 				}
 			}
 		}
@@ -72,7 +75,7 @@ public class IRCEventHandler implements IIRCEventHandler, IPlayerTracker, IConne
 						ServerConfig serverConfig = Utils.getServerConfig(connection);
 						for(IRCChannel channel : connection.getChannels()) {
 							ChannelConfig channelConfig = serverConfig.getChannelConfig(channel);
-							if(!channelConfig.isObserver()) {
+							if(!channelConfig.isReadOnly()) {
 								connection.sendChannelMessage(channel, ircMessage);
 							}
 						}
@@ -111,7 +114,7 @@ public class IRCEventHandler implements IIRCEventHandler, IPlayerTracker, IConne
 				ServerConfig serverConfig = Utils.getServerConfig(connection);
 				for(IRCChannel channel : connection.getChannels()) {
 					ChannelConfig channelConfig = serverConfig.getChannelConfig(channel);
-					if(!channelConfig.isObserver()) {
+					if(!channelConfig.isReadOnly()) {
 						connection.sendChannelMessage(channel, text);
 					}
 				}
@@ -143,7 +146,7 @@ public class IRCEventHandler implements IIRCEventHandler, IPlayerTracker, IConne
 				ServerConfig serverConfig = Utils.getServerConfig(connection);
 				for(IRCChannel channel : connection.getChannels()) {
 					ChannelConfig channelConfig = serverConfig.getChannelConfig(channel);
-					if(!channelConfig.isObserver()) {
+					if(!channelConfig.isReadOnly()) {
 						connection.sendChannelMessage(channel, "ACTION " + text + "");
 					}
 				}
@@ -162,7 +165,7 @@ public class IRCEventHandler implements IIRCEventHandler, IPlayerTracker, IConne
 				ServerConfig serverConfig = Utils.getServerConfig(connection);
 				for(IRCChannel channel : connection.getChannels()) {
 					ChannelConfig channelConfig = serverConfig.getChannelConfig(channel);
-					if(!channelConfig.isObserver()) {
+					if(!channelConfig.isReadOnly()) {
 						connection.sendChannelMessage(channel, ircMessage);
 					}
 				}
@@ -172,7 +175,7 @@ public class IRCEventHandler implements IIRCEventHandler, IPlayerTracker, IConne
 	
 	@ForgeSubscribe
 	public void onPlayerDeath(LivingDeathEvent event) {
-		if(!GlobalConfig.showDeathMessages) {
+		if(!GlobalConfig.relayDeathMessages) {
 			return;
 		}
 		if(event.entityLiving instanceof EntityPlayer) {
@@ -182,7 +185,7 @@ public class IRCEventHandler implements IIRCEventHandler, IPlayerTracker, IConne
 				ServerConfig serverConfig = Utils.getServerConfig(connection);
 				for(IRCChannel channel : connection.getChannels()) {
 					ChannelConfig channelConfig = serverConfig.getChannelConfig(channel);
-					if(!channelConfig.isObserver() && channelConfig.relayDeathMessages) {
+					if(!channelConfig.isReadOnly() && channelConfig.relayDeathMessages) {
 						connection.sendChannelMessage(channel, ircMessage);
 					}
 				}
@@ -192,7 +195,7 @@ public class IRCEventHandler implements IIRCEventHandler, IPlayerTracker, IConne
 	
 	@Override
 	public void onPlayerLogout(EntityPlayer player) {
-		if(!GlobalConfig.showMinecraftJoinLeave) {
+		if(!GlobalConfig.relayMinecraftJoinLeave) {
 			return;
 		}
 		String name = Utils.getAliasForPlayer(player);
@@ -201,7 +204,7 @@ public class IRCEventHandler implements IIRCEventHandler, IPlayerTracker, IConne
 			ServerConfig serverConfig = Utils.getServerConfig(connection);
 			for(IRCChannel channel : connection.getChannels()) {
 				ChannelConfig channelConfig = serverConfig.getChannelConfig(channel);
-				if(!channelConfig.isObserver() && channelConfig.relayMinecraftJoinLeave) {
+				if(!channelConfig.isReadOnly() && channelConfig.relayMinecraftJoinLeave) {
 					connection.sendChannelMessage(channel, ircMessage);
 				}
 			}
@@ -223,7 +226,7 @@ public class IRCEventHandler implements IIRCEventHandler, IPlayerTracker, IConne
 			ServerConfig serverConfig = Utils.getServerConfig(connection);
 			for(IRCChannel channel : connection.getChannels()) {
 				ChannelConfig channelConfig = serverConfig.getChannelConfig(channel);
-				if(!channelConfig.isObserver()) {
+				if(!channelConfig.isReadOnly()) {
 					connection.sendChannelMessage(channel, message);
 				}
 			}
@@ -292,7 +295,7 @@ public class IRCEventHandler implements IIRCEventHandler, IPlayerTracker, IConne
 
 	@Override
 	public void onNickChange(IRCConnection connection, IRCUser user, String nick) {
-		if(!GlobalConfig.showNickChanges) {
+		if(!GlobalConfig.relayNickChanges) {
 			return;
 		}
 		String mcMessage = StringTranslate.getInstance().translateKeyFormat(Globals.MOD_ID + ":irc.nickChangeIRC", connection.getHost(), user.getNick(), nick);
@@ -301,19 +304,19 @@ public class IRCEventHandler implements IIRCEventHandler, IPlayerTracker, IConne
 
 	@Override
 	public void onUserJoin(IRCConnection connection, IRCUser user, IRCChannel channel) {
-		if(!GlobalConfig.showIRCJoinLeave)  {
-			return;
-		}
 		ChannelConfig channelConfig = Utils.getServerConfig(connection).getChannelConfig(channel);
-		if(!channelConfig.isMuted() && channelConfig.relayIRCJoinLeave) {
+		if(GlobalConfig.relayIRCJoinLeave && !channelConfig.isMuted() && channelConfig.relayIRCJoinLeave) {
 			String mcMessage = EnumChatFormatting.YELLOW + StringTranslate.getInstance().translateKeyFormat(Globals.MOD_ID + ":irc.joinMsgIRC", channel.getName(), user.getNick());
 			Utils.addMessageToChat(mcMessage);
+		}
+		if(channelConfig.isAutoWho()) {
+			Utils.sendUserList(connection, user);
 		}
 	}
 
 	@Override
 	public void onUserPart(IRCConnection connection, IRCUser user, IRCChannel channel, String quitMessage) {
-		if(!GlobalConfig.showIRCJoinLeave) {
+		if(!GlobalConfig.relayIRCJoinLeave) {
 			return;
 		}
 		ChannelConfig channelConfig = Utils.getServerConfig(connection).getChannelConfig(channel);
@@ -325,7 +328,7 @@ public class IRCEventHandler implements IIRCEventHandler, IPlayerTracker, IConne
 
 	@Override
 	public void onUserQuit(IRCConnection connection, IRCUser user, String quitMessage) {
-		if(!GlobalConfig.showIRCJoinLeave) {
+		if(!GlobalConfig.relayIRCJoinLeave) {
 			return;
 		}
 		ServerConfig serverConfig = Utils.getServerConfig(connection);
@@ -419,5 +422,11 @@ public class IRCEventHandler implements IIRCEventHandler, IPlayerTracker, IConne
 		message = Utils.filterCodes(message);
 		String mcMessage = Utils.formatMessage(GlobalConfig.mcPrivateMsgFormat, connection, user.getUsername(), Utils.getColoredName(nick, Utils.getIRCColor(connection)), message);
 		entityPlayer.sendChatToPlayer(mcMessage);
+	}
+
+	@Override
+	public void onTopicChange(IRCChannel channel, String topic) {
+		String mcMessage = Utils.getLocalizedMessage("irc.topic", channel.getName(), channel.getTopic());
+		Utils.addMessageToChat(mcMessage);
 	}
 }

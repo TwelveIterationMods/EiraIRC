@@ -227,6 +227,7 @@ public class IRCConnection implements Runnable {
 		try {
 			writer.write("PART " + channelName + "\r\n");
 			writer.flush();
+			channels.remove(channelName);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -309,6 +310,15 @@ public class IRCConnection implements Runnable {
 			connected = true;
 			eventHandler.onConnected(this);
 			break;
+		case IRCReplyCodes.RPL_TOPIC:
+			IRCChannel channel = channels.get(cmd[3]);
+			if(channel != null) {
+				int textIdx = line.indexOf(':', 1);
+				String topic = line.substring(textIdx + 1);
+				channel.setTopic(topic);
+				eventHandler.onTopicChange(channel, topic);
+			}
+			break;
 		}
 		return false;
 	}
@@ -364,13 +374,15 @@ public class IRCConnection implements Runnable {
 				users.put(nick, user);
 			}
 			IRCChannel channel = channels.get(cmd[2]);
-			channel.removeUser(user);
-			int quitMessageIdx = cmd[0].length() + 6 + cmd[2].length() + 2;
-			String quitMessage = null;
-			if(line.length() >= quitMessageIdx) {
-				quitMessage = line.substring(quitMessageIdx);
+			if(channel != null) {
+				channel.removeUser(user);
+				int quitMessageIdx = cmd[0].length() + 6 + cmd[2].length() + 2;
+				String quitMessage = null;
+				if(line.length() >= quitMessageIdx) {
+					quitMessage = line.substring(quitMessageIdx);
+				}
+				eventHandler.onUserPart(this, user, channel, quitMessage);
 			}
-			eventHandler.onUserPart(this, user, channel, quitMessage);
 		} else if(msg.equals("NICK")) {
 			String newNick = cmd[2].substring(1);
 			IRCUser user = users.get(nick);

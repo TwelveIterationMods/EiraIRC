@@ -29,7 +29,7 @@ public class CommandJoin implements ICommand {
 
 	@Override
 	public void processCommand(ICommandSender sender, String[] args) {
-		IRCCommandHandler.processCommand(sender, IRCCommandHandler.getShiftedArgs(args), true);
+		IRCCommandHandler.processCommand(sender, IRCCommandHandler.getShiftedArgs(args, getCommandName()), true);
 	}
 
 	@Override
@@ -39,12 +39,12 @@ public class CommandJoin implements ICommand {
 
 	@Override
 	public List addTabCompletionOptions(ICommandSender sender, String[] args) {
-		return IRCCommandHandler.addTabCompletionOptions(getCommandName(), sender, IRCCommandHandler.getShiftedArgs(args));
+		return IRCCommandHandler.addTabCompletionOptions(getCommandName(), sender, IRCCommandHandler.getShiftedArgs(args, getCommandName()));
 	}
 
 	@Override
 	public boolean isUsernameIndex(String[] args, int i) {
-		return IRCCommandHandler.isUsernameIndex(IRCCommandHandler.getShiftedArgs(args), i);
+		return IRCCommandHandler.isUsernameIndex(IRCCommandHandler.getShiftedArgs(args, getCommandName()), i);
 	}
 
 }

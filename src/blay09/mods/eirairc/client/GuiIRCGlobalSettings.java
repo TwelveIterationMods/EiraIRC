@@ -71,11 +71,11 @@ public class GuiIRCGlobalSettings extends GuiScreen {
 	
 	public void loadFromConfig() {
 		txtNick.setText(GlobalConfig.nick);
-		btnDeathMessages.displayString = "Relay Death Messages: " + (GlobalConfig.showDeathMessages ? "Yes" : "No");
-		btnMCJoinLeave.displayString = "Relay Minecraft Joins: " + (GlobalConfig.showMinecraftJoinLeave ? "Yes" : "No");
-		btnIRCJoinLeave.displayString = "Relay IRC Joins: " + (GlobalConfig.showIRCJoinLeave ? "Yes" : "No");
+		btnDeathMessages.displayString = "Relay Death Messages: " + (GlobalConfig.relayDeathMessages ? "Yes" : "No");
+		btnMCJoinLeave.displayString = "Relay Minecraft Joins: " + (GlobalConfig.relayMinecraftJoinLeave ? "Yes" : "No");
+		btnIRCJoinLeave.displayString = "Relay IRC Joins: " + (GlobalConfig.relayIRCJoinLeave ? "Yes" : "No");
 		btnPrivateMessages.displayString = "Allow Private Messages: " + (GlobalConfig.allowPrivateMessages ? "Yes" : "No");
-		btnNickChanges.displayString = "Relay Nick Changes: " + (GlobalConfig.showNickChanges ? "Yes" : "No");
+		btnNickChanges.displayString = "Relay Nick Changes: " + (GlobalConfig.relayNickChanges ? "Yes" : "No");
 		btnLinkFilter.displayString = "Filter Links: " + (GlobalConfig.enableLinkFilter ? "Yes" : "No");
 		btnPersistentConnections.displayString = "Persistent Connections: " + (GlobalConfig.persistentConnection ? "Yes" : "No");
 		btnSaveCredentials.displayString = "Save Credentials: " + (GlobalConfig.saveCredentials ? "Yes" : "No");
@@ -100,20 +100,20 @@ public class GuiIRCGlobalSettings extends GuiScreen {
 	@Override
 	public void actionPerformed(GuiButton button) {
 		if(button == btnDeathMessages) {
-			GlobalConfig.showDeathMessages = !GlobalConfig.showDeathMessages;
-			btnDeathMessages.displayString = "Relay Death Messages: " + (GlobalConfig.showDeathMessages ? "Yes" : "No");
+			GlobalConfig.relayDeathMessages = !GlobalConfig.relayDeathMessages;
+			btnDeathMessages.displayString = "Relay Death Messages: " + (GlobalConfig.relayDeathMessages ? "Yes" : "No");
 		} else if(button == btnMCJoinLeave) {
-			GlobalConfig.showMinecraftJoinLeave = !GlobalConfig.showMinecraftJoinLeave;
-			btnMCJoinLeave.displayString = "Relay Minecraft Joins: " + (GlobalConfig.showMinecraftJoinLeave ? "Yes" : "No");
+			GlobalConfig.relayMinecraftJoinLeave = !GlobalConfig.relayMinecraftJoinLeave;
+			btnMCJoinLeave.displayString = "Relay Minecraft Joins: " + (GlobalConfig.relayMinecraftJoinLeave ? "Yes" : "No");
 		} else if(button == btnIRCJoinLeave) {
-			GlobalConfig.showIRCJoinLeave = !GlobalConfig.showIRCJoinLeave;
-			btnIRCJoinLeave.displayString = "Relay IRC Joins: " + (GlobalConfig.showIRCJoinLeave ? "Yes" : "No");
+			GlobalConfig.relayIRCJoinLeave = !GlobalConfig.relayIRCJoinLeave;
+			btnIRCJoinLeave.displayString = "Relay IRC Joins: " + (GlobalConfig.relayIRCJoinLeave ? "Yes" : "No");
 		} else if(button == btnPrivateMessages) {
 			GlobalConfig.allowPrivateMessages = !GlobalConfig.allowPrivateMessages;
 			btnPrivateMessages.displayString = "Allow Private Messages: " + (GlobalConfig.allowPrivateMessages ? "Yes" : "No");
 		} else if(button == btnNickChanges) {
-			GlobalConfig.showNickChanges = !GlobalConfig.showNickChanges;
-			btnNickChanges.displayString = "Relay Nick Changes: " + (GlobalConfig.showNickChanges ? "Yes" : "No");
+			GlobalConfig.relayNickChanges = !GlobalConfig.relayNickChanges;
+			btnNickChanges.displayString = "Relay Nick Changes: " + (GlobalConfig.relayNickChanges ? "Yes" : "No");
 		} else if(button == btnLinkFilter) {
 			GlobalConfig.enableLinkFilter = !GlobalConfig.enableLinkFilter;
 			btnLinkFilter.displayString = "Filter Links: " + (GlobalConfig.enableLinkFilter ? "Yes" : "No");
@@ -176,7 +176,7 @@ public class GuiIRCGlobalSettings extends GuiScreen {
 	
 	@Override
 	public void drawScreen(int par1, int par2, float par3) {
-		drawDefaultBackground();
+		drawBackground(0);
 		drawCenteredString(fontRenderer, "EiraIRC - Global Settings", width / 2, height / 2 - 115, Globals.TEXT_COLOR);
 		drawCenteredString(fontRenderer, "Nickname:", width / 2, height / 2 - 100, Globals.TEXT_COLOR);
 		txtNick.drawTextBox();

@@ -45,7 +45,8 @@ public class CommandServIRC implements ICommand {
 			return;
 		}
 		if(args.length < 1) {
-			 throw new WrongUsageException("commands.irc.usage", "servIrc");	
+			IRCCommandHandler.sendIRCUsage(sender);
+			return;	
 		}
 		IRCCommandHandler.processCommand(sender, args, true);
 	}

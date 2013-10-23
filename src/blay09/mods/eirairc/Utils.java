@@ -14,11 +14,15 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.StringTranslate;
 import blay09.mods.eirairc.config.ConfigurationHandler;
 import blay09.mods.eirairc.config.GlobalConfig;
+import blay09.mods.eirairc.config.Globals;
 import blay09.mods.eirairc.config.NickServSettings;
 import blay09.mods.eirairc.config.ServerConfig;
+import blay09.mods.eirairc.irc.IRCChannel;
 import blay09.mods.eirairc.irc.IRCConnection;
+import blay09.mods.eirairc.irc.IRCUser;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -27,6 +31,18 @@ public class Utils {
 	private static final char INVALID_COLOR = 'n';
 	private static final int MAX_CHAT_LENGTH = 100;
 	private static final Pattern pattern = Pattern.compile("^(?:(https?)://)?([-\\w_\\.]{2,}\\.[a-z]{2,4})(/\\S*|.)?$");
+	
+	public static void sendLocalizedMessage(ICommandSender sender, String key, Object... args) {
+		sender.sendChatToPlayer(sender.translateString(Globals.MOD_ID + ":" + key, args));
+	}
+	
+	public static void sendUnlocalizedMessage(ICommandSender sender, String text) {
+		sender.sendChatToPlayer(text);
+	}
+	
+	public static String getLocalizedMessage(String key, Object... args) {
+		return StringTranslate.getInstance().translateKeyFormat(Globals.MOD_ID + ":" + key, args);
+	}
 	
 	public static void addMessageToChat(String text) {
 		for(String string : wrapString(text, MAX_CHAT_LENGTH)) {
@@ -317,5 +333,57 @@ public class Utils {
 			return serverConfig.getIRCColor();
 		}
 		return GlobalConfig.ircColor;
+	}
+	
+	public static void sendUserList(ICommandSender sender, IRCConnection connection, IRCChannel channel) {
+		List<IRCUser> userList = channel.getUserList();
+		if(userList.size() == 0) {
+			sendLocalizedMessage(sender, "irc.noUsersOnlineIRC", channel, connection.getHost());
+			return;
+		}
+		sendLocalizedMessage(sender, "irc.usersOnlineIRC", userList.size(), channel, connection.getHost());
+		String s = "* ";
+		for(int i = 0; i < userList.size(); i++) {
+			IRCUser user = userList.get(i);
+			if(s.length() + user.getNick().length() > Globals.CHAT_MAX_LENGTH) {
+				sendUnlocalizedMessage(sender, s);
+				s = "* ";
+			}
+			if(s.length() > 2) {
+				s += ", ";
+			}
+			s += user.getNick();
+		}
+		if(s.length() > 2) {
+			sendUnlocalizedMessage(sender, s);
+		}
+	}
+
+	public static void sendUserList(IRCConnection connection, IRCUser user) {
+		if(MinecraftServer.getServer() == null || MinecraftServer.getServer().isSinglePlayer()) {
+			return;
+		}
+		List<EntityPlayer> userList = MinecraftServer.getServer().getConfigurationManager().playerEntityList;
+		if(userList.size() == 0) {
+			connection.sendPrivateMessage(user, getLocalizedMessage("irc.noUsersOnlineMC"));
+			return;
+		}
+		connection.sendPrivateMessage(user, getLocalizedMessage("irc.usersOnlineMC", userList.size()));
+		String s = "* ";
+		for(int i = 0; i < userList.size(); i++) {
+			EntityPlayer entityPlayer = userList.get(i);
+			String alias = Utils.getAliasForPlayer(entityPlayer);
+			if(s.length() + alias.length() > Globals.CHAT_MAX_LENGTH) {
+				connection.sendPrivateMessage(user, s);
+				s = "* ";
+			}
+			if(s.length() > 2) {
+				s += ", ";
+			}
+			s += alias;
+		}
+		if(s.length() > 2) {
+			connection.sendPrivateMessage(user, s);
+		}
 	}
 }
