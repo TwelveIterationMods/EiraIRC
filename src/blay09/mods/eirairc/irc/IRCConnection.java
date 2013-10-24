@@ -431,4 +431,25 @@ public class IRCConnection implements Runnable {
 		}
 	}
 
+	public void sendPrivateNotice(IRCUser user, String message) {
+		sendPrivateNotice(user.getNick(), message);
+	}
+	
+	public void sendPrivateNotice(String nick, String message) {
+		try {
+			writer.write("NOTICE " + nick + " :" + message + "\r\n");
+			writer.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void sendChannelNotice(IRCChannel channel, String message) {
+		try {
+			writer.write("NOTICE " + channel.getName() + " :" + message + "\r\n");
+			writer.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }

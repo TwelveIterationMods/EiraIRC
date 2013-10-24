@@ -3,6 +3,8 @@
 
 package blay09.mods.eirairc;
 
+import java.util.List;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
@@ -378,7 +380,7 @@ public class IRCEventHandler implements IIRCEventHandler, IPlayerTracker, IConne
 				String mcMessage = Utils.formatMessage(GlobalConfig.mcPrivateMsgFormat, connection, user.getUsername(), Utils.getColoredName(user.getNick(), Utils.getIRCColor(connection)), message);
 				Utils.addMessageToChat(mcMessage);
 			} else {
-				onIRCBotCommand(connection, user, message);
+				onIRCBotPrivateCommand(connection, user, message);
 			}
 		} else {
 			connection.sendPrivateMessage(user, "Private Messages are disabled.");
@@ -400,6 +402,9 @@ public class IRCEventHandler implements IIRCEventHandler, IPlayerTracker, IConne
 
 	@Override
 	public void onChannelMessage(IRCConnection connection, IRCChannel channel, IRCUser user, String message) {
+		if(onIRCBotCommand(connection, channel, user, message)) {
+			return;
+		}
 		ChannelConfig channelConfig = Utils.getServerConfig(connection).getChannelConfig(channel);
 		if(!channelConfig.isMuted()) {
 			if(GlobalConfig.enableLinkFilter) {
@@ -411,16 +416,86 @@ public class IRCEventHandler implements IIRCEventHandler, IPlayerTracker, IConne
 		}
 	}
 
-	private void onIRCBotCommand(IRCConnection connection, IRCUser user, String message) {
-		
+	private boolean onIRCBotCommand(IRCConnection connection, IRCChannel channel, IRCUser user, String message) {
+		if(message.equals("!who")) {
+			Utils.sendUserList(connection, channel);
+			return true;
+		}
+		if(message.equals("!help")) {
+			connection.sendChannelNotice(channel, "Available channel commands: !who");
+			return true;
+		}
+		return false;
 	}
 	
-	private void onIRCPrivateMessageToPlayer(IRCConnection connection, IRCUser user, String nick, EntityPlayer entityPlayer, String message) {
+	private void onIRCBotPrivateCommand(IRCConnection connection, IRCUser user, String message) {
+		String lmessage = message.toLowerCase();
+		if(lmessage.equals("help")) {
+			connection.sendPrivateNotice(user, "***** EiraIRC Help *****");
+			connection.sendPrivateNotice(user, "EiraIRC connects a Minecraft client or a whole server");
+			connection.sendPrivateNotice(user, "to one or multiple IRC channels and servers.");
+			connection.sendPrivateNotice(user, "Visit http://blay09.net/?page_id=63 for more information on this bot.");
+			connection.sendPrivateNotice(user, " ");
+			connection.sendPrivateNotice(user, "The following commands are available:");
+			connection.sendPrivateNotice(user, "HELP            Prints this command list");
+			connection.sendPrivateNotice(user, "WHO            Prints out a list of all players online");
+			connection.sendPrivateNotice(user, "ALIAS            Look up the username of an online player");
+			connection.sendPrivateNotice(user, "MSG            Send a private message to an online player");
+//			connection.sendPrivateNotice(user, "OP            Performs an OP command on the server");
+			connection.sendPrivateNotice(user, "***** End of Help *****");
+		} else if(lmessage.equals("who")) {
+			Utils.sendUserList(connection, user);
+		} else if(lmessage.equals("alias")) {
+			if(!GlobalConfig.enableAliases) {
+				connection.sendPrivateNotice(user, "Aliases are not enabled on this server.");
+				return;
+			}
+			int i = message.indexOf(" ", 7);
+			String alias = message.substring(7);
+			List<EntityPlayer> playerEntityList = MinecraftServer.getServer().getConfigurationManager().playerEntityList;
+			for(EntityPlayer entity : playerEntityList) {
+				if(Utils.getAliasForPlayer(entity).equals(alias)) {
+					connection.sendPrivateNotice(user, "The username for '" + alias + "' is '" + entity.username + "'.");
+					return;
+				}
+			}
+			connection.sendPrivateNotice(user, "That player cannot be found.");
+		} else if(lmessage.equals("msg")) {
+			ServerConfig serverConfig = Utils.getServerConfig(connection);
+			if(!GlobalConfig.allowPrivateMessages || !serverConfig.allowsPrivateMessages()) {
+				connection.sendPrivateNotice(user, "Private messages are disabled on this server.");
+				return;
+			}
+			int i = message.indexOf(" ", 5);
+			String playerName = message.substring(4, i);
+			EntityPlayer entityPlayer = MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(playerName);
+			if(entityPlayer == null) {
+				List<EntityPlayer> playerEntityList = MinecraftServer.getServer().getConfigurationManager().playerEntityList;
+				for(EntityPlayer entity : playerEntityList) {
+					if(Utils.getAliasForPlayer(entity).equals(playerName)) {
+						entityPlayer = entity;
+					}
+				}
+				if(entityPlayer == null) {
+					connection.sendPrivateNotice(user, "That player cannot be found.");
+					return;
+				}
+			}
+			String targetMessage = message.substring(i + 1);
+			EiraIRC.instance.getEventHandler().onIRCPrivateMessageToPlayer(connection, user, entityPlayer, targetMessage);
+			connection.sendPrivateNotice(user, "Message sent to " + playerName + ": " + targetMessage);
+			return;
+		} else {
+			connection.sendPrivateNotice(user, Utils.getLocalizedMessage("irc.bot.unknownCommand"));
+		}
+	}
+	
+	private void onIRCPrivateMessageToPlayer(IRCConnection connection, IRCUser user, EntityPlayer entityPlayer, String message) {
 		if(GlobalConfig.enableLinkFilter) {
 			message = Utils.filterLinks(message);
 		}
 		message = Utils.filterCodes(message);
-		String mcMessage = Utils.formatMessage(GlobalConfig.mcPrivateMsgFormat, connection, user.getUsername(), Utils.getColoredName(nick, Utils.getIRCColor(connection)), message);
+		String mcMessage = Utils.formatMessage(GlobalConfig.mcPrivateMsgFormat, connection, user.getUsername(), Utils.getColoredName(user.getNick(), Utils.getIRCColor(connection)), message);
 		entityPlayer.sendChatToPlayer(mcMessage);
 	}
 

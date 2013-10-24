@@ -74,6 +74,7 @@ public class Localization {
 		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.nickServUpdated", "Updated nickserv information for %s");
 		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.serverOnlyCommand", "This command only works on the server side. Use the GUI (default: I) or the config file for the client settings.");
 		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.topic", EnumChatFormatting.YELLOW + "Topic for %s: " + EnumChatFormatting.WHITE + "%s");
+		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.noUsersOnlineMC", "No players online.");
 	}
 	
 }

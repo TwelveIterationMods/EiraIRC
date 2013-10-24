@@ -365,16 +365,16 @@ public class Utils {
 		}
 		List<EntityPlayer> userList = MinecraftServer.getServer().getConfigurationManager().playerEntityList;
 		if(userList.size() == 0) {
-			connection.sendPrivateMessage(user, getLocalizedMessage("irc.noUsersOnlineMC"));
+			connection.sendPrivateNotice(user, getLocalizedMessage("irc.noUsersOnlineMC"));
 			return;
 		}
-		connection.sendPrivateMessage(user, getLocalizedMessage("irc.usersOnlineMC", userList.size()));
+		connection.sendPrivateNotice(user, getLocalizedMessage("irc.usersOnlineMC", userList.size()));
 		String s = "* ";
 		for(int i = 0; i < userList.size(); i++) {
 			EntityPlayer entityPlayer = userList.get(i);
 			String alias = Utils.getAliasForPlayer(entityPlayer);
 			if(s.length() + alias.length() > Globals.CHAT_MAX_LENGTH) {
-				connection.sendPrivateMessage(user, s);
+				connection.sendPrivateNotice(user, s);
 				s = "* ";
 			}
 			if(s.length() > 2) {
@@ -383,7 +383,35 @@ public class Utils {
 			s += alias;
 		}
 		if(s.length() > 2) {
-			connection.sendPrivateMessage(user, s);
+			connection.sendPrivateNotice(user, s);
+		}
+	}
+
+	public static void sendUserList(IRCConnection connection, IRCChannel channel) {
+		if(MinecraftServer.getServer() == null || MinecraftServer.getServer().isSinglePlayer()) {
+			return;
+		}
+		List<EntityPlayer> userList = MinecraftServer.getServer().getConfigurationManager().playerEntityList;
+		if(userList.size() == 0) {
+			connection.sendChannelNotice(channel, getLocalizedMessage("irc.noUsersOnlineMC"));
+			return;
+		}
+		connection.sendChannelNotice(channel, getLocalizedMessage("irc.usersOnlineMC", userList.size()));
+		String s = "* ";
+		for(int i = 0; i < userList.size(); i++) {
+			EntityPlayer entityPlayer = userList.get(i);
+			String alias = Utils.getAliasForPlayer(entityPlayer);
+			if(s.length() + alias.length() > Globals.CHAT_MAX_LENGTH) {
+				connection.sendChannelNotice(channel, s);
+				s = "* ";
+			}
+			if(s.length() > 2) {
+				s += ", ";
+			}
+			s += alias;
+		}
+		if(s.length() > 2) {
+			connection.sendChannelNotice(channel, s);
 		}
 	}
 }
