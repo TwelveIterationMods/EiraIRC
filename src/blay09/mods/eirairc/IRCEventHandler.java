@@ -363,7 +363,7 @@ public class IRCEventHandler implements IIRCEventHandler, IPlayerTracker, IConne
 	@Override
 	public void onPrivateMessage(IRCConnection connection, IRCUser user, String message) {
 		if(!GlobalConfig.allowPrivateMessages) {
-			connection.sendPrivateMessage(user, "Private Messages are disabled.");
+			connection.sendPrivateNotice(user, "Private Messages are disabled.");
 			return;
 		}
 		ServerConfig serverConfig = Utils.getServerConfig(connection);
@@ -379,7 +379,7 @@ public class IRCEventHandler implements IIRCEventHandler, IPlayerTracker, IConne
 				onIRCBotPrivateCommand(connection, user, message);
 			}
 		} else {
-			connection.sendPrivateMessage(user, "Private Messages are disabled.");
+			connection.sendPrivateNotice(user, "Private Messages are disabled.");
 		}
 	}
 
@@ -413,6 +413,9 @@ public class IRCEventHandler implements IIRCEventHandler, IPlayerTracker, IConne
 	}
 
 	private boolean onIRCBotCommand(IRCConnection connection, IRCChannel channel, IRCUser user, String message) {
+		if(Utils.getServerConfig(connection).isClientSide()) {
+			return false;
+		}
 		if(message.equals("!who")) {
 			Utils.sendUserList(connection, channel);
 			return true;
