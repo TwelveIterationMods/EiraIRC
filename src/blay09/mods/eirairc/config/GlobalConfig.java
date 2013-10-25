@@ -13,12 +13,12 @@ import blay09.mods.eirairc.command.IRCCommandHandler;
 public class GlobalConfig {
 
 	public static final String MC_CMESSAGE_FORMAT_NORMAL = "[{CHANNEL}] <{NICK}> {MESSAGE}";
-	public static final String MC_CMESSAGE_FORMAT_LIGHT = "[#] <{NICK}> {MESSAGE}";
+	public static final String MC_CMESSAGE_FORMAT_LIGHT = "[<{NICK}> {MESSAGE}]";
 	public static final String MC_CMESSAGE_FORMAT_SLIGHT = "[{NICK}] {MESSAGE}";
 	public static final String MC_CMESSAGE_FORMAT_DETAIL = "[{SERVER}:{CHANNEL}] <{NICK}> {MESSAGE}";
 	public static final String MC_CEMOTE_FORMAT_NORMAL = "[{CHANNEL}] * {NICK} {MESSAGE}";
 	public static final String MC_PMESSAGE_FORMAT_NORMAL = "[Private] <{NICK}> {MESSAGE}";
-	public static final String MC_PMESSAGE_FORMAT_LIGHT = "[P] <{NICK}> {MESSAGE}";
+	public static final String MC_PMESSAGE_FORMAT_LIGHT = "[<{NICK}> {MESSAGE}]";
 	public static final String MC_PMESSAGE_FORMAT_SLIGHT = "[[{NICK}]] {MESSAGE}";
 	public static final String MC_PMESSAGE_FORMAT_DETAIL = "[{SERVER}] <{NICK}> {MESSAGE}";
 	public static final String MC_PEMOTE_FORMAT_NORMAL = "* {NICK} {MESSAGE}";

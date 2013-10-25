@@ -15,6 +15,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.StringTranslate;
+import blay09.mods.eirairc.config.ChannelConfig;
 import blay09.mods.eirairc.config.ConfigurationHandler;
 import blay09.mods.eirairc.config.GlobalConfig;
 import blay09.mods.eirairc.config.Globals;
@@ -23,8 +24,6 @@ import blay09.mods.eirairc.config.ServerConfig;
 import blay09.mods.eirairc.irc.IRCChannel;
 import blay09.mods.eirairc.irc.IRCConnection;
 import blay09.mods.eirairc.irc.IRCUser;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class Utils {
 
@@ -412,6 +411,47 @@ public class Utils {
 		}
 		if(s.length() > 2) {
 			connection.sendChannelNotice(channel, s);
+		}
+	}
+	
+	public static Object resolveIRCTarget(String target, boolean allowServers, boolean allowChannels) {
+		String server = null;
+		String channel = null;
+		if(target.startsWith("#")) {
+			channel = target;
+			ChannelConfig foundConfig = null;
+			for(ServerConfig serverConfig : ConfigurationHandler.getServerConfigs()) {
+				if(serverConfig.hasChannelConfig(channel)) {
+					if(foundConfig != null) {
+						return IRCTargetError.SpecifyServer;
+					}
+					foundConfig = serverConfig.getChannelConfig(channel);
+				}
+			}
+			if(foundConfig == null) {
+				return IRCTargetError.ChannelNotFound;
+			}
+			return foundConfig;
+		} else {
+			int channelIndex = target.indexOf('/');
+			if(channelIndex != -1) {
+				server = target.substring(0, channelIndex);
+				channel = target.substring(channelIndex + 1);
+				if(!ConfigurationHandler.hasServerConfig(server)) {
+					return IRCTargetError.ServerNotFound;
+				}
+				ServerConfig serverConfig = ConfigurationHandler.getServerConfig(server);
+				if(!serverConfig.hasChannelConfig(channel)) {
+					return IRCTargetError.ChannelNotFound;
+				}
+				return serverConfig.getChannelConfig(channel);
+			} else {
+				if(ConfigurationHandler.hasServerConfig(target)) {
+					return ConfigurationHandler.getServerConfig(target);
+				} else {
+					return IRCTargetError.ServerNotFound;
+				}
+			}
 		}
 	}
 }
