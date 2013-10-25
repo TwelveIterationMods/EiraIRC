@@ -375,6 +375,7 @@ public class IRCEventHandler implements IIRCEventHandler, IPlayerTracker, IConne
 				message = Utils.filterCodes(message);
 				String mcMessage = Utils.formatMessage(GlobalConfig.mcPrivateMsgFormat, connection, user.getUsername(), Utils.getColoredName(user.getNick(), Utils.getIRCColor(connection)), message);
 				Utils.addMessageToChat(mcMessage);
+				EiraIRC.instance.addPrivateTarget(user.getNick());
 			} else {
 				onIRCBotPrivateCommand(connection, user, message);
 			}

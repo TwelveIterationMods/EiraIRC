@@ -116,7 +116,7 @@ public class GuiIRCServerList extends GuiScreen {
 	}
 	
 	public void onElementClicked(int i) {
-		Minecraft.getMinecraft().displayGuiScreen(new GuiIRCServerConfig(configs[i]));
+		Minecraft.getMinecraft().displayGuiScreen(new GuiIRCChannelList(this, configs[i]));
 	}
 	
 	public void onElementSelected(int i) {

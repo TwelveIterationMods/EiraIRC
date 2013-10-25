@@ -30,7 +30,7 @@ public class Utils {
 
 	private static final char INVALID_COLOR = 'n';
 	private static final int MAX_CHAT_LENGTH = 100;
-	private static final Pattern pattern = Pattern.compile("^(?:(https?)://)?([-\\w_\\.]{2,}\\.[a-z]{2,4})(/\\S*|.)?$");
+	private static final Pattern pattern = Pattern.compile("^(?:(https?)://)?([-\\w_\\.]{2,}\\.[a-z]{2,4})(/\\S*)?$");
 	
 	public static void sendLocalizedMessage(ICommandSender sender, String key, Object... args) {
 		sender.sendChatToPlayer(sender.translateString(Globals.MOD_ID + ":" + key, args));

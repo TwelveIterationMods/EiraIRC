@@ -164,6 +164,10 @@ public class EiraIRC {
 		return null;
 	}
 	
+	public void addPrivateTarget(String privateTarget) {
+		privateTargets.add(privateTarget);
+	}
+	
 	public void setChatTarget(EnumChatTarget chatTarget) {
 		if(chatTarget == EnumChatTarget.ChannelOnly) {
 			if(chatTarget != this.chatTarget) {
