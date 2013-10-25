@@ -319,6 +319,27 @@ public class IRCConnection implements Runnable {
 				eventHandler.onTopicChange(channel, topic);
 			}
 			break;
+		case IRCReplyCodes.ERR_ERRONEUSNICKNAME:
+		case IRCReplyCodes.ERR_NICKNAMEINUSE:
+		case IRCReplyCodes.ERR_NICKCOLLISION:
+		case IRCReplyCodes.ERR_BANNEDFROMCHAN:
+		case IRCReplyCodes.ERR_INVITEONLYCHAN:
+		case IRCReplyCodes.ERR_BADCHANNELKEY:
+		case IRCReplyCodes.ERR_CHANNELISFULL:
+		case IRCReplyCodes.ERR_NOSUCHCHANNEL:
+		case IRCReplyCodes.ERR_BADCHANMASK:
+		case IRCReplyCodes.ERR_TOOMANYCHANNELS:
+		case IRCReplyCodes.ERR_NOTONCHANNEL:
+		case IRCReplyCodes.ERR_ALREADYREGISTRED:
+		case IRCReplyCodes.ERR_NEEDMOREPARAMS:
+		case IRCReplyCodes.ERR_CHANOPRIVSNEEDED:
+		case IRCReplyCodes.ERR_NOSUCHNICK:
+		case IRCReplyCodes.ERR_CANNOTSENDTOCHAN:
+			eventHandler.onIRCError(this, replyCode, line, cmd);
+			break;
+		default:
+			System.out.println("Unhandled reply code: " + replyCode + " (" + line + ")");
+			break;
 		}
 		return false;
 	}

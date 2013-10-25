@@ -32,7 +32,7 @@ public class IRCReplyCodes {
 	public static final int ERR_USERSDISABLED = 446;
 	public static final int ERR_NOTREGISTERED = 451;
 	public static final int ERR_NEEDMOREPARAMS = 461;
-	public static final int ERR_ALREADYREGISTERED = 462;
+	public static final int ERR_ALREADYREGISTRED = 462;
 	public static final int ERR_NOPERMFORHOST = 463;
 	public static final int ERR_PASSWDMISMATCH = 464;
 	public static final int ERR_YOUREBANNEDCREEP = 465;
@@ -43,7 +43,7 @@ public class IRCReplyCodes {
 	public static final int ERR_BANNEDFROMCHAN = 474;
 	public static final int ERR_BADCHANNELKEY = 475;
 	public static final int ERR_NOPRIVILEGES = 481;
-	public static final int ERR_CHANNOPRIVSNEEDED = 482;
+	public static final int ERR_CHANOPRIVSNEEDED = 482;
 	public static final int ERR_CANTKILLSERVER = 483;
 	public static final int ERR_NOOPERHOST = 491;
 	public static final int ERR_MODEUNKNOWNFLAG = 501;

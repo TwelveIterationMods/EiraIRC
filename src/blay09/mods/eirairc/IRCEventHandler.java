@@ -26,6 +26,7 @@ import blay09.mods.eirairc.config.ServerConfig;
 import blay09.mods.eirairc.irc.IIRCEventHandler;
 import blay09.mods.eirairc.irc.IRCChannel;
 import blay09.mods.eirairc.irc.IRCConnection;
+import blay09.mods.eirairc.irc.IRCReplyCodes;
 import blay09.mods.eirairc.irc.IRCUser;
 import cpw.mods.fml.common.IPlayerTracker;
 import cpw.mods.fml.common.network.IConnectionHandler;
@@ -182,7 +183,7 @@ public class IRCEventHandler implements IIRCEventHandler, IPlayerTracker, IConne
 		}
 		if(event.entityLiving instanceof EntityPlayer) {
 			String name = Utils.getAliasForPlayer((EntityPlayer) event.entityLiving);
-			String ircMessage = StringTranslate.getInstance().translateKeyFormat(Globals.MOD_ID + ":irc.deathMsgMC", name, event.source.damageType);
+			String ircMessage = event.entityLiving.field_94063_bt.func_94546_b();
 			for(IRCConnection connection : EiraIRC.instance.getConnections()) {
 				ServerConfig serverConfig = Utils.getServerConfig(connection);
 				for(IRCChannel channel : connection.getChannels()) {
@@ -288,11 +289,6 @@ public class IRCEventHandler implements IIRCEventHandler, IPlayerTracker, IConne
 	public void onDisconnected(IRCConnection connection) {
 		String mcMessage = StringTranslate.getInstance().translateKeyFormat(Globals.MOD_ID + ":irc.disconnected", connection.getHost());
 		Utils.addMessageToChat(mcMessage);
-	}
-
-	@Override
-	public void onIRCError(IRCConnection connection, int errorCode) {
-		
 	}
 
 	@Override
@@ -504,4 +500,29 @@ public class IRCEventHandler implements IIRCEventHandler, IPlayerTracker, IConne
 		String mcMessage = Utils.getLocalizedMessage("irc.topic", channel.getName(), channel.getTopic());
 		Utils.addMessageToChat(mcMessage);
 	}
+
+	@Override
+	public void onIRCError(IRCConnection connection, int errorCode, String line, String[] cmd) {
+		switch(errorCode) {
+		case IRCReplyCodes.ERR_NICKNAMEINUSE:
+			String failNick = cmd[3];
+			String tryNick = failNick + "_";
+			Utils.addMessageToChat(failNick + " is already in use. Trying " + tryNick + "...");
+			connection.nick(tryNick);
+			break;
+		case IRCReplyCodes.ERR_ERRONEUSNICKNAME:
+			Utils.addMessageToChat(cmd[3] + " is not a valid nick.");
+			ServerConfig serverConfig = Utils.getServerConfig(connection);
+			if(serverConfig.getNick() != null) {
+				serverConfig.setNick(connection.getNick());
+			} else {
+				GlobalConfig.nick = connection.getNick();
+			}
+			break;
+		default:
+			System.out.println("Unhandled error code: " + errorCode + " (" + line + ")");
+			break;
+		}
+	}
+
 }
