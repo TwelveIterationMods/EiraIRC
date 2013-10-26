@@ -8,73 +8,89 @@ import cpw.mods.fml.common.registry.LanguageRegistry;
 
 public class Localization {
 
+	public static void addString(String key, String text) {
+		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":" + key, text);
+	}
+	
 	public static void init() {
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":commands.irc.usage", "/[serv]irc <command>");
-		LanguageRegistry.instance().addStringLocalization("commands.irc.usage.connect", "/%s connect <server> [password]");
-		LanguageRegistry.instance().addStringLocalization("commands.irc.usage.twitch", "/%s twitch <username> <oauth>");
-		LanguageRegistry.instance().addStringLocalization("commands.irc.usage.nick", "/%s nick [server] <nick>");
-		LanguageRegistry.instance().addStringLocalization("commands.irc.usage.join", "/%s join [server] <channel> [password]");
-		LanguageRegistry.instance().addStringLocalization("commands.irc.usage.leave", "/%s leave [server] <channel>");
-		LanguageRegistry.instance().addStringLocalization("commands.irc.usage.who", "/%s who [server] [channel]");
-		LanguageRegistry.instance().addStringLocalization("commands.irc.usage.msg", "/%s msg [server] <nick> <message>");
-		LanguageRegistry.instance().addStringLocalization("commands.irc.usage.config", "/%s config <global|<server>> <option> <value>");
-		LanguageRegistry.instance().addStringLocalization("commands.irc.usage.help", "/%s help <topic>");
-		LanguageRegistry.instance().addStringLocalization("commands.irc.usage.color", "/irc color <color>");
-		LanguageRegistry.instance().addStringLocalization("commands.irc.usage.alias", "/irc alias <username> <alias> OR /irc alias <alias>");
-
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.cmdlist.general", EnumChatFormatting.YELLOW + "General Commands: " + EnumChatFormatting.WHITE + "config, help, list");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.cmdlist.irc", EnumChatFormatting.YELLOW + "IRC Commands: " + EnumChatFormatting.WHITE + "connect, disconnect, join, leave, nick, msg, who");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.cmdlist.special", EnumChatFormatting.YELLOW + "Special Commands: " + EnumChatFormatting.WHITE + "twitch, color, alias");
 		
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.nopermission", EnumChatFormatting.RED + "You do not have permission to use this command.");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.nosuchplayer", EnumChatFormatting.RED + "That player cannot be found");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.server.alreadyConnected", "The server is already connected to %s");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.client.alreadyConnected", "You are already connected to %s");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.server.notConnected", "The server is not connected to %s");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.client.notConnected", "You are not connected to %s");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.server.activeConnections", "The server is connected to:");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.client.activeConnections", "The client is connected to:");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.connecting", "Connecting to %s...");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.connected", "Connected to %s");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.disconnecting", "Disconnecting from %s...");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.disconnected", "Disconnected from %s");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.joinChannel", "Joining channel %s on %s");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.leaveChannel", "Leaving channel %s on %s");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.notMultiplayer", EnumChatFormatting.RED + "This is not a multiplayer server. Use /irc instead.");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.aliasSet", "Alias for '%s' set to '%s'");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.aliasDisabled", "Aliases are disabled on this server.");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.aliasLookup", "The username for '%s' is '%s'");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.colorDisabled", "Name colors are disabled on this server.");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.colorSet", "Name color set to '%s'");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.colorBlackList", "The color '%s' is not allowed on this server.");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.usersOnlineIRC", "%d users online in %s:");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.joinMsgIRC", "[%s] * %s joined the channel");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.partMsgIRC", "[%s] * %s left the channel");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.joinMsgMC", "* %s joined the game");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.deathMsgMC", "* %s has died: %s");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.partMsgMC", "* %s left the game");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.nickChangeIRC", "[%s] * %s is now known as %s");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.nickChangeMC", "* %s is now known as %s");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.channelMode", "Mode for channel %s on %s is %s");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.channelModeChange", "Mode %s for channel %s");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.specifyChannel", "You have to specify a channel.");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.specifyServer", "You have to specify a server.");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.msgDisabled", "Private messages are not enabled.");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.msgInvalidTarget", "%s is not in a valid target channel.");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.configNoAbuse", "To prevent abuse, this setting can only be changed in the config file.");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.helpValidTopics", EnumChatFormatting.YELLOW + "Valid topics are:");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.helpTopics", EnumChatFormatting.YELLOW + "* color, alias, twitch, msg, mode, commands, config");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.helpInvalidTopic", EnumChatFormatting.YELLOW + "Invalid help topic '%s'. Valid topics are:");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.configChange", "[%s] Setting config option '%s' to '%s'");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.invalidConfigChange", "[%s] Invalid config option %s. Use TAB to loop through valid options.");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.nickChange", "[%s] Changing nick to %s...");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.colorInvalid", "'%s' is not a valid color.");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.aliasNotFound", "The alias '%s' cannot be found.");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.connectionError", "Could not connect to %s");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.nickServUpdated", "Updated nickserv information for %s");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.serverOnlyCommand", "This command only works on the server side. Use the GUI (default: I) or the config file for the client settings.");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.topic", EnumChatFormatting.YELLOW + "Topic for %s: " + EnumChatFormatting.WHITE + "%s");
-		LanguageRegistry.instance().addStringLocalization(Globals.MOD_ID + ":irc.noUsersOnlineMC", "No players online.");
+		/* COMMANDS */
+		addString("irc.commands.irc", "/[serv]irc <command>");
+		addString("irc.commands.connect", "/[serv]irc connect <server> [password]");
+		addString("irc.commands.disconnect", "/[serv]irc disconnect [server]");
+		addString("irc.commands.join", "/[serv]irc join [server/]<channel> (ex. irc.esper.net/#EiraIRC)");
+		addString("irc.commands.leave", "/[serv]irc leave [server/]<channel> (ex. irc.esper.net/#EiraIRC)");
+		addString("irc.commands.who", "/[serv]irc who [(<server>|<channel>)]");
+		addString("irc.commands.msg", "/[serv]irc msg <nick> <message ...>");
+		addString("irc.commands.help", "/[serv]irc help <topic>");
+		addString("irc.commands.nick", "/[serv]irc nick [server] <nick>");
+		addString("irc.commands.config", "/[serv]irc config (global|<server>) <key> <value>");
+		addString("irc.commands.twitch", "/servirc twitch <username> <oauth>");
+		addString("irc.commands.nickserv", "/servirc nickserv <username> <password>");
+		addString("irc.commands.color", "/irc color <color>");
+		addString("irc.commands.alias", "/irc alias <username> <alias> OR /irc alias <alias>");
+		
+		/* COMMAND LIST */
+		addString("irc.cmdlist.general", EnumChatFormatting.YELLOW + "General Commands: " + EnumChatFormatting.WHITE + "config, help, list");
+		addString("irc.cmdlist.irc", EnumChatFormatting.YELLOW + "IRC Commands: " + EnumChatFormatting.WHITE + "connect, disconnect, join, leave, nick, msg, who");
+		addString("irc.cmdlist.special", EnumChatFormatting.YELLOW + "Special Commands: " + EnumChatFormatting.WHITE + "twitch, color, alias");
+		
+		/* GENERAL */
+		addString("irc.general.notConnected", EnumChatFormatting.RED + "You are not connected to %s.");
+		addString("irc.general.alreadyConnected", EnumChatFormatting.RED + "You are already connected to %s.");
+		addString("irc.general.notOnChannel", EnumChatFormatting.RED + "You are not on channel %s.");
+		addString("irc.general.noPermission", EnumChatFormatting.RED + "You do not have permission to use this command.");
+		addString("irc.general.noSuchPlayer", "That player cannot be found.");
+		addString("irc.general.notMultiplayer", EnumChatFormatting.RED + "This is not a multiplayer server. Use /irc instead.");
+		addString("irc.general.serverOnlyCommand", "This command only works on the server side. Use the GUI (Default: I) or the config file for the client settings.");
+		
+		/* BASIC IRC */
+		addString("irc.basic.connecting", "Connecting to %s...");
+		addString("irc.basic.connected", "Connected to %s.");
+		addString("irc.basic.disconnecting", "Disconnecting from %s...");
+		addString("irc.basic.disconnected", "Disconnected from %s.");
+		addString("irc.basic.joiningChannel", "Joining channel %s on %s...");
+		addString("irc.basic.leavingChannel", "Leaving channel %s on %s...");
+		addString("irc.basic.changingNick", "[%s] Changing nick to %s...");
+		addString("irc.basic.nickServUpdated", "Updated nickserv information for %s.");
+		
+		/* COMMAND SPECIFIC */
+		addString("irc.list.activeConnections", "EiraIRC is connected to: ");
+		addString("irc.alias.set", "Alias for %s set to '%s'.");
+		addString("irc.alias.reset", "Alias removed for %s.");
+		addString("irc.alias.disabled", "Aliases are disabled on this server.");
+		addString("irc.alias.lookup", "The username for %s is '%s'.");
+		addString("irc.alias.notFound", "The alias '%s' cannot be found.");
+		addString("irc.color.disabled", "Name colors are disabled on this server.");
+		addString("irc.color.set", "Name color set to '%s'.");
+		addString("irc.color.reset", "Name color reset.");
+		addString("irc.color.blacklist", "The color '%s' is not allowed on this server.");
+		addString("irc.color.invalid", "'%s' is not a valid color. Use TAB to loop through valid options.");
+		addString("irc.who.usersOnlineIRC", "%d users online in %s:");
+		addString("irc.who.noUsersOnlineIRC", "No users online.");
+		addString("irc.who.usersOnlineMC", "%d players online:");
+		addString("irc.who.noUsersOnlineMC", "No players online.");
+		addString("irc.msg.disabled", "Private messages are not enabled.");
+		addString("irc.config.noAbuse", "To prevent abuse, this setting can only be changed in the config file.");
+		addString("irc.config.change", "[%s] Setting config option '%s' to '%s'");
+		addString("irc.config.invalidOption", "[%s] Invalid config option '%s'. Use TAB to loop through valid options.");
+		addString("irc.help.validTopics", EnumChatFormatting.YELLOW + "Valid topics are: ");
+		addString("irc.help.topicList", "* color, alias, twitch, msg, commands, config");
+		addString("irc.help.invalidTopic", EnumChatFormatting.RED + "Invalid help topic '%s'. Valid topics are: ");
+		addString("irc.connect.error", "Could not connect to %s.");
+		
+		/* DISPLAY FORMAT */
+		addString("irc.display.irc.joinMsg", "[%s] * %s joined the channel");
+		addString("irc.display.irc.partMsg", "[%s] * %s left the channel");
+		addString("irc.display.irc.nickChange", "[%s] * %s now known as %s");
+		addString("irc.display.mc.joinMsg", "* %s joined the game");
+		addString("irc.display.mc.partMsg", "* %s left the game");
+		addString("irc.display.mc.nickChange", "* %s is now known as %s");
+		addString("irc.display.topic", EnumChatFormatting.YELLOW + "Topic for %s: " + EnumChatFormatting.WHITE + "%s");
+		
+		/* TARGET ERRORS */
+		addString("irc.target.specifyChannel", "You have to specify a channel.");
+		addString("irc.target.specifyServer", "You have to specify a server.");
 	}
 	
 }
