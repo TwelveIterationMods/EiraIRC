@@ -56,4 +56,8 @@ public class IRCChannel {
 	public String getTopic() {
 		return topic;
 	}
+
+	public IRCConnection getConnection() {
+		return connection;
+	}
 }

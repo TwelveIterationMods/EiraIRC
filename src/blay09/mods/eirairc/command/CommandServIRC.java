@@ -3,18 +3,13 @@
 
 package blay09.mods.eirairc.command;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
-import blay09.mods.eirairc.config.Globals;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
+import blay09.mods.eirairc.Utils;
 
 public class CommandServIRC implements ICommand {
 
@@ -41,7 +36,7 @@ public class CommandServIRC implements ICommand {
 	@Override
 	public void processCommand(ICommandSender sender, String[] args) {
 		if(MinecraftServer.getServer().isSinglePlayer()) {
-			IRCCommandHandler.sendLocalizedMessage(sender, "irc.notMultiplayer");
+			Utils.sendLocalizedMessage(sender, "irc.notMultiplayer");
 			return;
 		}
 		if(args.length < 1) {

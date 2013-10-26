@@ -6,14 +6,13 @@ package blay09.mods.eirairc.config;
 import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import net.minecraft.command.ICommandSender;
-import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.ConfigCategory;
 import net.minecraftforge.common.Configuration;
 import blay09.mods.eirairc.Utils;
-import blay09.mods.eirairc.command.IRCCommandHandler;
 
 public class ConfigurationHandler {
 
@@ -182,7 +181,7 @@ public class ConfigurationHandler {
 			for(ServerConfig serverConfig : serverConfigs.values()) {
 				if(serverConfig.hasChannelConfig(target)) {
 					if(foundConfig != null) {
-						IRCCommandHandler.sendLocalizedMessage(sender, "irc.specifyServer");
+						Utils.sendLocalizedMessage(sender, "irc.specifyServer");
 						return;
 					} else {
 						foundConfig = serverConfig.getChannelConfig(target);
@@ -192,16 +191,24 @@ public class ConfigurationHandler {
 			if(foundConfig != null) {
 				foundConfig.handleConfigCommand(sender, key, value);
 			} else {
-				IRCCommandHandler.sendLocalizedMessage(sender, "irc.invalidTarget");
+				Utils.sendLocalizedMessage(sender, "irc.invalidTarget");
 			}
 		} else {
 			ServerConfig serverConfig = serverConfigs.get(target);
 			if(serverConfig != null) {
 				serverConfig.handleConfigCommand(sender, key, value);
 			} else {
-				IRCCommandHandler.sendLocalizedMessage(sender, "irc.invalidTarget");
+				Utils.sendLocalizedMessage(sender, "irc.invalidTarget");
 			}
 		}
+	}
+
+	public static ServerConfig getDefaultServerConfig() {
+		Iterator<ServerConfig> it = serverConfigs.values().iterator();
+		if(it.hasNext()) {
+			return it.next();
+		}
+		return null;
 	}
 
 }

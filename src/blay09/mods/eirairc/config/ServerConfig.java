@@ -186,7 +186,7 @@ public class ServerConfig {
 			if(Utils.isValidColor(value)) {
 				ircColor = value;
 			} else {
-				IRCCommandHandler.sendLocalizedMessage(sender, "irc.colorInvalid", value);
+				Utils.sendLocalizedMessage(sender, "irc.colorInvalid", value);
 				return;
 			}
 		} else if(key.equals("quitMessage")) {
@@ -196,7 +196,7 @@ public class ServerConfig {
 		} else if(key.equals("autoConnect")) {
 			autoConnect = Boolean.parseBoolean(value);
 		} else {
-			IRCCommandHandler.sendLocalizedMessage(sender, "irc.configChange", host, key, value);
+			Utils.sendLocalizedMessage(sender, "irc.configChange", host, key, value);
 			ConfigurationHandler.save();
 		}
 	}

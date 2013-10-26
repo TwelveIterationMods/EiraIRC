@@ -5,6 +5,10 @@ public enum IRCTargetError {
 	SpecifyServer,
 	ServerNotFound,
 	ChannelNotFound,
-	UserNotFound
+	UserNotFound, 
+	InvalidTarget, 
+	TargetNotFound, 
+	NotConnected, 
+	NotOnChannel
 	
 }

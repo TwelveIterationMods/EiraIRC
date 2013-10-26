@@ -414,10 +414,13 @@ public class Utils {
 		}
 	}
 	
-	public static Object resolveIRCTarget(String target, boolean allowServers, boolean allowChannels) {
+	public static Object resolveIRCTarget(String target, boolean allowServers, boolean requireConnected, boolean allowChannels, boolean requireOnChannel, boolean allowUsers, boolean channelUsersOnly) {
 		String server = null;
 		String channel = null;
 		if(target.startsWith("#")) {
+			if(!allowChannels) {
+				return IRCTargetError.InvalidTarget;
+			}
 			channel = target;
 			ChannelConfig foundConfig = null;
 			for(ServerConfig serverConfig : ConfigurationHandler.getServerConfigs()) {
@@ -429,29 +432,118 @@ public class Utils {
 				}
 			}
 			if(foundConfig == null) {
-				return IRCTargetError.ChannelNotFound;
+				if(EiraIRC.instance.getConnectionCount() > 0) {
+					return IRCTargetError.SpecifyServer;
+				} else {
+					foundConfig = ConfigurationHandler.getDefaultServerConfig().getChannelConfig(channel);
+				}
+			}
+			if(requireConnected || requireOnChannel) {
+				ServerConfig serverConfig = foundConfig.getServerConfig();
+				IRCConnection connection = EiraIRC.instance.getConnection(serverConfig.getHost());
+				if(connection == null) {
+					return IRCTargetError.NotConnected;
+				}
+				if(requireOnChannel) {
+					IRCChannel foundChannel = connection.getChannel(foundConfig.getName());
+					if(foundChannel == null) {
+						return IRCTargetError.NotOnChannel;
+					}
+					return foundChannel;
+				}
 			}
 			return foundConfig;
 		} else {
 			int channelIndex = target.indexOf('/');
 			if(channelIndex != -1) {
 				server = target.substring(0, channelIndex);
-				channel = target.substring(channelIndex + 1);
 				if(!ConfigurationHandler.hasServerConfig(server)) {
 					return IRCTargetError.ServerNotFound;
 				}
 				ServerConfig serverConfig = ConfigurationHandler.getServerConfig(server);
-				if(!serverConfig.hasChannelConfig(channel)) {
-					return IRCTargetError.ChannelNotFound;
+				channel = target.substring(channelIndex + 1);
+				if(channel.startsWith("#")) {
+					if(!allowChannels) {
+						return IRCTargetError.InvalidTarget;
+					}
+					if(requireConnected || requireOnChannel) {
+						IRCConnection connection = EiraIRC.instance.getConnection(serverConfig.getHost());
+						if(connection == null) {
+							return IRCTargetError.NotConnected;
+						}
+						ChannelConfig channelConfig = serverConfig.getChannelConfig(channel);
+						if(requireOnChannel) {
+							IRCChannel foundChannel = connection.getChannel(channelConfig.getName());
+							if(foundChannel == null) {
+								return IRCTargetError.NotOnChannel;
+							}
+							return foundChannel;
+						}
+						return channelConfig;
+					}
+				} else {
+					if(!allowUsers) {
+						return IRCTargetError.InvalidTarget;
+					}
+					IRCConnection connection = EiraIRC.instance.getConnection(serverConfig.getHost());
+					if(connection == null) {
+						return IRCTargetError.NotConnected;
+					}
+					IRCUser user = connection.getUser(channel);
+					if(user == null) {
+						if(channelUsersOnly) {
+							return IRCTargetError.UserNotFound;
+						}
+						return new IRCUser(connection, channel);
+					}
+					return user;
 				}
-				return serverConfig.getChannelConfig(channel);
 			} else {
 				if(ConfigurationHandler.hasServerConfig(target)) {
+					if(!allowServers) {
+						return IRCTargetError.InvalidTarget;
+					}
+					if(requireConnected) {
+						IRCConnection connection = EiraIRC.instance.getConnection(target);
+						if(connection == null) {
+							return IRCTargetError.NotConnected;
+						}
+						return connection;
+					}
 					return ConfigurationHandler.getServerConfig(target);
 				} else {
-					return IRCTargetError.ServerNotFound;
+					if(allowUsers) {
+						IRCUser foundUser = null;
+						for(IRCConnection connection : EiraIRC.instance.getConnections()) {
+							IRCUser user = connection.getUser(target);
+							if(user != null) {
+								if(foundUser != null) {
+									return IRCTargetError.SpecifyServer;
+								}
+								foundUser = user;
+							}
+						}
+						if(foundUser == null) {
+							if(channelUsersOnly) {
+								return IRCTargetError.UserNotFound;
+							} else {
+								if(EiraIRC.instance.getConnectionCount() > 0) {
+									return IRCTargetError.SpecifyServer;
+								} else {
+									return new IRCUser(EiraIRC.instance.getDefaultConnection(), target);
+								}
+							}
+						}
+						return foundUser;
+					}
+					if(allowServers && !allowUsers) {
+						return IRCTargetError.ServerNotFound;
+					} else if(allowUsers && !allowServers) {
+						return IRCTargetError.UserNotFound;
+					}
 				}
 			}
 		}
+		return IRCTargetError.TargetNotFound;
 	}
 }

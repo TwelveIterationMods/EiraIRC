@@ -6,6 +6,7 @@ package blay09.mods.eirairc;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -14,7 +15,6 @@ import net.minecraftforge.common.MinecraftForge;
 import blay09.mods.eirairc.command.CommandIRC;
 import blay09.mods.eirairc.command.CommandJoin;
 import blay09.mods.eirairc.command.CommandServIRC;
-import blay09.mods.eirairc.config.ChannelConfig;
 import blay09.mods.eirairc.config.ConfigurationHandler;
 import blay09.mods.eirairc.config.GlobalConfig;
 import blay09.mods.eirairc.config.Globals;
@@ -131,8 +131,9 @@ public class EiraIRC {
 	}
 	
 	public IRCConnection getDefaultConnection() {
-		for(IRCConnection connection : connections.values()) {
-			return connection;
+		Iterator<IRCConnection> it = connections.values().iterator();
+		if(it.hasNext()) {
+			return it.next();
 		}
 		return null;
 	}

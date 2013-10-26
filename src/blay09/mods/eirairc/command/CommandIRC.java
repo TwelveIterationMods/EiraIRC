@@ -61,7 +61,7 @@ public class CommandIRC implements ICommand {
 			IRCCommandHandler.processCommand(sender, args, true);
 		} else if(cmd.equals("color")) {
 			if(!GlobalConfig.enableNameColors) {
-				IRCCommandHandler.sendLocalizedMessage(sender, "irc.colorDisabled");
+				Utils.sendLocalizedMessage(sender, "irc.colorDisabled");
 				return;
 			}
 			if(args.length < 2) {
@@ -70,11 +70,11 @@ public class CommandIRC implements ICommand {
 			if(sender instanceof EntityPlayer) {
 				String colorName = args[1].toLowerCase();
 				if(!isOP(sender) && (GlobalConfig.colorBlackList.contains(colorName) || GlobalConfig.opColor.equals(colorName))) {
-					IRCCommandHandler.sendLocalizedMessage(sender, "irc.colorBlackList", colorName);
+					Utils.sendLocalizedMessage(sender, "irc.colorBlackList", colorName);
 					return;
 				}
 				if(!colorName.equals("none") && !Utils.isValidColor(colorName)) {
-					IRCCommandHandler.sendLocalizedMessage(sender, "irc.colorInvalid", colorName);
+					Utils.sendLocalizedMessage(sender, "irc.colorInvalid", colorName);
 					return;
 				}
 				EntityPlayer entityPlayer = (EntityPlayer) sender;
@@ -87,11 +87,11 @@ public class CommandIRC implements ICommand {
 				}
 				persistentTag.setTag("EiraIRC", tagCompound);
 				entityPlayer.getEntityData().setTag(EntityPlayer.PERSISTED_NBT_TAG, persistentTag);
-				IRCCommandHandler.sendLocalizedMessage(sender, "irc.colorSet", colorName);
+				Utils.sendLocalizedMessage(sender, "irc.colorSet", colorName);
 			}
 		} else if(cmd.equals("alias")) {
 			if(!GlobalConfig.enableAliases) {
-				IRCCommandHandler.sendLocalizedMessage(sender, "irc.aliasDisabled");
+				Utils.sendLocalizedMessage(sender, "irc.aliasDisabled");
 				return;
 			}
 			if(args.length < 2) {
@@ -103,14 +103,14 @@ public class CommandIRC implements ICommand {
 				for(int i = 0; i < playerEntityList.size(); i++) {
 					EntityPlayerMP playerEntity = playerEntityList.get(i);
 					if(playerEntity.getEntityData().getCompoundTag("EiraIRC").getString("Alias").equals(alias)) {
-						IRCCommandHandler.sendLocalizedMessage(sender, "irc.aliasLookup", alias, playerEntity.username);
+						Utils.sendLocalizedMessage(sender, "irc.aliasLookup", alias, playerEntity.username);
 						return;
 					}
 				}
-				IRCCommandHandler.sendLocalizedMessage(sender, "irc.aliasNotFound", alias);
+				Utils.sendLocalizedMessage(sender, "irc.aliasNotFound", alias);
 			} else {
 				if(!isOP(sender)) {
-					IRCCommandHandler.sendLocalizedMessage(sender, "irc.nopermission");
+					Utils.sendLocalizedMessage(sender, "irc.nopermission");
 					return;
 				}
 				String username = args[1];
@@ -125,7 +125,7 @@ public class CommandIRC implements ICommand {
 						}
 					}
 					if(entityPlayer == null) {
-						IRCCommandHandler.sendLocalizedMessage(sender, "irc.nosuchplayer");
+						Utils.sendLocalizedMessage(sender, "irc.nosuchplayer");
 						return;
 					}
 				}
@@ -142,7 +142,7 @@ public class CommandIRC implements ICommand {
 				}
 				persistentTag.setTag("EiraIRC", tagCompound);
 				entityPlayer.getEntityData().setTag(EntityPlayer.PERSISTED_NBT_TAG, persistentTag);
-				IRCCommandHandler.sendLocalizedMessage(sender, "irc.aliasSet", oldAlias, alias);
+				Utils.sendLocalizedMessage(sender, "irc.aliasSet", oldAlias, alias);
 				EiraIRC.instance.getEventHandler().onPlayerNickChange(oldAlias, alias);
 			}
 		}

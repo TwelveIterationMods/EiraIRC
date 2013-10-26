@@ -60,14 +60,14 @@ public class GlobalConfig {
 			if(Utils.isValidColor(value)) {
 				opColor = value;
 			} else {
-				IRCCommandHandler.sendLocalizedMessage(sender, "irc.colorInvalid", value);
+				Utils.sendLocalizedMessage(sender, "irc.colorInvalid", value);
 				return;
 			}
 		} else if(key.equals("ircColor")) {
 			if(Utils.isValidColor(value)) {
 				ircColor = value;
 			} else {
-				IRCCommandHandler.sendLocalizedMessage(sender, "irc.colorInvalid", value);
+				Utils.sendLocalizedMessage(sender, "irc.colorInvalid", value);
 				return;
 			}
 		} else if(key.equals("quitMessage")) {
@@ -92,15 +92,15 @@ public class GlobalConfig {
 			enableLinkFilter = Boolean.parseBoolean(value);
 		} else if(key.equals("registerShortCommands")){
 			registerShortCommands = Boolean.parseBoolean(value);
-			IRCCommandHandler.sendLocalizedMessage(sender, "irc.configRequiresRestart");
+			Utils.sendLocalizedMessage(sender, "irc.configRequiresRestart");
 		} else if(key.equals("interOp") || key.equals("enableAliases")) {
-			IRCCommandHandler.sendLocalizedMessage(sender, "irc.configNoAbuse");
+			Utils.sendLocalizedMessage(sender, "irc.configNoAbuse");
 			return;
 		} else {
-			IRCCommandHandler.sendLocalizedMessage(sender, "irc.invalidConfigChange", "Global", key);
+			Utils.sendLocalizedMessage(sender, "irc.invalidConfigChange", "Global", key);
 			return;
 		}
-		IRCCommandHandler.sendLocalizedMessage(sender, "irc.configChange", "Global", key, value);
+		Utils.sendLocalizedMessage(sender, "irc.configChange", "Global", key, value);
 		ConfigurationHandler.save();
 	}
 	

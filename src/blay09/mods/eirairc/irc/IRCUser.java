@@ -32,4 +32,8 @@ public class IRCUser {
 	public String getUsername() {
 		return connection.getHost() + ":" + nick;
 	}
+
+	public IRCConnection getConnection() {
+		return connection;
+	}
 }
