@@ -12,9 +12,14 @@ import java.util.Map;
 
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
+import blay09.mods.eirairc.command.CommandConnect;
+import blay09.mods.eirairc.command.CommandDisconnect;
 import blay09.mods.eirairc.command.CommandIRC;
 import blay09.mods.eirairc.command.CommandJoin;
+import blay09.mods.eirairc.command.CommandNick;
+import blay09.mods.eirairc.command.CommandPart;
 import blay09.mods.eirairc.command.CommandServIRC;
+import blay09.mods.eirairc.command.CommandWho;
 import blay09.mods.eirairc.config.ConfigurationHandler;
 import blay09.mods.eirairc.config.GlobalConfig;
 import blay09.mods.eirairc.config.Globals;
@@ -83,6 +88,11 @@ public class EiraIRC {
 		event.registerServerCommand(new CommandIRC());
 		if(GlobalConfig.registerShortCommands) {
 			event.registerServerCommand(new CommandJoin());
+			event.registerServerCommand(new CommandPart());
+			event.registerServerCommand(new CommandConnect());
+			event.registerServerCommand(new CommandDisconnect());
+			event.registerServerCommand(new CommandNick());
+			event.registerServerCommand(new CommandWho());
 		}
 		
 		if(!MinecraftServer.getServer().isSinglePlayer()) {

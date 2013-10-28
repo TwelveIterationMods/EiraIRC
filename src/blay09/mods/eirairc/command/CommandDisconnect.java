@@ -19,7 +19,7 @@ public class CommandDisconnect implements ICommand {
 
 	@Override
 	public String getCommandUsage(ICommandSender icommandsender) {
-		return "commands.irc.usage.disconnect";
+		return "irc.commands.disconnect";
 	}
 
 	@Override

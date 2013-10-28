@@ -103,7 +103,7 @@ public class ChannelConfig {
 	}
 
 	public void handleConfigCommand(ICommandSender sender, String key, String value) {
-		if(key.equals("observer")) {
+		if(key.equals("readOnly")) {
 			readOnly = Boolean.parseBoolean(value);
 		} else if(key.equals("muted")) {
 			muted = Boolean.parseBoolean(value);
@@ -119,7 +119,12 @@ public class ChannelConfig {
 			relayNickChanges = Boolean.parseBoolean(value);
 		} else if(key.equals("autoWho")) {
 			autoWho = Boolean.parseBoolean(value);
+		} else {
+			Utils.sendLocalizedMessage(sender, "irc.config.invalidOption", name, key, value);
+			return;
 		}
+		Utils.sendLocalizedMessage(sender, "irc.config.change", name, key, value);
+		ConfigurationHandler.save();
 	}
 
 	public ServerConfig getServerConfig() {

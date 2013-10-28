@@ -229,22 +229,21 @@ public class IRCCommandHandler {
 			Object target = Utils.resolveIRCTarget(args[1], false, true, true, false, false, false);
 			if(target instanceof IRCTargetError) {
 				switch((IRCTargetError) target) {
-				case ChannelNotFound:
+				case NotConnected: Utils.sendLocalizedMessage(sender, "irc.target.notConnected", args[1]);
 					break;
-				case NotConnected:
+				case ServerNotFound: Utils.sendLocalizedMessage(sender, "irc.target.serverNotFound", args[1]);
 					break;
-				case ServerNotFound:
+				case SpecifyServer: Utils.sendLocalizedMessage(sender, "irc.target.specifyServer");
 					break;
-				case SpecifyServer:
-					break;
-				default:
+				default: Utils.sendLocalizedMessage(sender, "irc.target.unknown");
 					break;
 				}
 				return true;
 			}
 			ChannelConfig channelConfig = (ChannelConfig) target;
+			channelConfig.setAutoJoin(true);
 			String password = null;
-			if(args.length <= 2) {
+			if(args.length > 2) {
 				password = args[2];
 			}
 			IRCConnection connection = EiraIRC.instance.getConnection(channelConfig.getServerConfig().getHost());
@@ -280,6 +279,7 @@ public class IRCCommandHandler {
 				return true;
 			}
 			IRCChannel channel = (IRCChannel) target;
+			Utils.getServerConfig(channel.getConnection()).getChannelConfig(channel).setAutoJoin(false);
 			Utils.sendLocalizedMessage(sender, "irc.basic.leavingChannel", channel.getName(), channel.getConnection().getHost());
 			channel.getConnection().part(channel.getName());
 			return true;
@@ -321,6 +321,7 @@ public class IRCCommandHandler {
 					Utils.sendUserList(sender, channel.getConnection(), channel);
 				}
 			}
+			return true;
 		} else if(cmd.equals("msg")) { // [serv]irc msg <target> <text>
 			if(!GlobalConfig.allowPrivateMessages) {
 				Utils.sendLocalizedMessage(sender, "irc.msg.disabled");
@@ -383,9 +384,9 @@ public class IRCCommandHandler {
 				Utils.sendUnlocalizedMessage(sender, EnumChatFormatting.GREEN + "To prevent abuse, they can only be set by OPs and have to be enabled in the config file.");
 			} else if(topic.equals("color")) {
 				Utils.sendUnlocalizedMessage(sender, EnumChatFormatting.GREEN + "Name colors are an easy way to distinguish between players in the chat.");
-				Utils.sendUnlocalizedMessage(sender, EnumChatFormatting.GREEN + "The colors are disabled to Minecraft's vanilla chat colors and are mostly similar to wool colors.");
+				Utils.sendUnlocalizedMessage(sender, EnumChatFormatting.GREEN + "The colors are limited to Minecraft's vanilla chat colors and are mostly similar to wool colors.");
 				Utils.sendUnlocalizedMessage(sender, EnumChatFormatting.GREEN + "OPs can disallow certain colors by putting them on the blacklist or disable this function altogether in the config.");
-				Utils.sendUnlocalizedMessage(sender, EnumChatFormatting.GREEN + "The config also has the two options opColor and ircColor, which can be set to nothing if not wanted.");
+				Utils.sendUnlocalizedMessage(sender, EnumChatFormatting.GREEN + "The config also has the two options opColor and ircColor, which can be set to none if not wanted.");
 			} else if(topic.equals("msg")) {
 				Utils.sendUnlocalizedMessage(sender, EnumChatFormatting.GREEN + "On the serverside, private messages can only be sent to users in the same channel as the bot in order to prevent abuse.");
 				Utils.sendUnlocalizedMessage(sender, EnumChatFormatting.GREEN + "Private messages work both ways - IRC users can use the bot's MSG command to communicate with a specific player.");
@@ -400,8 +401,8 @@ public class IRCCommandHandler {
 				Utils.sendUnlocalizedMessage(sender, EnumChatFormatting.GREEN + "* connect, twitch, join, msg, who, nick");
 			} else if(topic.equals("twitch")) {
 				Utils.sendUnlocalizedMessage(sender, EnumChatFormatting.GREEN + "Using the /irc twitch command, you can easily connect your client or server to your twitch chat.");
-				Utils.sendUnlocalizedMessage(sender, EnumChatFormatting.GREEN + "For that purpose, you need to specify your twitch username and password.");
-				Utils.sendUnlocalizedMessage(sender, EnumChatFormatting.GREEN + "Keep in mind that Minecraft will show the password in readable form while typing!");
+				Utils.sendUnlocalizedMessage(sender, EnumChatFormatting.GREEN + "For that purpose, you need to specify your twitch username and oauth key.");
+				Utils.sendUnlocalizedMessage(sender, EnumChatFormatting.GREEN + "Keep in mind that Minecraft will show the oauth key in readable form while typing!");
 			} else {
 				Utils.sendLocalizedMessage(sender, "irc.help.invalidTopic", topic);
 				Utils.sendLocalizedMessage(sender, "irc.help.topicList");
@@ -421,7 +422,7 @@ public class IRCCommandHandler {
 					}
 					channels += channel.getName();
 				}
-				Utils.sendUnlocalizedMessage(sender, "* " + connection.getHost() + " (" + channels + ")");
+				Utils.sendUnlocalizedMessage(sender, " * " + connection.getHost() + " (" + channels + ")");
 			}
 			return true;
 		}
@@ -519,7 +520,7 @@ public class IRCCommandHandler {
 	}
 
 	public static void sendIRCUsage(ICommandSender sender) {
-		Utils.sendLocalizedMessage(sender, "commands.irc.usage");
+		Utils.sendLocalizedMessage(sender, "irc.general.usage", Utils.getLocalizedMessage("irc.commands.irc"));
 		Utils.sendLocalizedMessage(sender, "irc.cmdlist.general");
 		Utils.sendLocalizedMessage(sender, "irc.cmdlist.irc");
 		Utils.sendLocalizedMessage(sender, "irc.cmdlist.special");

@@ -16,6 +16,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.StringTranslate;
 import blay09.mods.eirairc.config.ChannelConfig;
+import blay09.mods.eirairc.config.ConfigHelper;
 import blay09.mods.eirairc.config.ConfigurationHandler;
 import blay09.mods.eirairc.config.GlobalConfig;
 import blay09.mods.eirairc.config.Globals;
@@ -278,7 +279,7 @@ public class Utils {
 		String result = "";
 		for(int i = 0; i < s.length; i++) {
 			Matcher matcher = pattern.matcher(s[i]);
-			result += ((i > 0) ? " " : "") + matcher.replaceAll("<link removed>");
+			result += ((i > 0) ? " " : "") + matcher.replaceAll(Utils.getLocalizedMessage("irc.general.linkRemoved"));
 		}
 		return result;
 	}
@@ -291,12 +292,8 @@ public class Utils {
 		return ConfigurationHandler.getServerConfig(connection.getHost());
 	}
 
-	public static String getNickForConfig(ServerConfig serverConfig) {
-		return (serverConfig.getNick() != null && !serverConfig.getNick().isEmpty()) ? serverConfig.getNick() : GlobalConfig.nick;
-	}
-
 	public static IRCConnection connectTo(ServerConfig config) {
-		IRCConnection connection = new IRCConnection(config.getHost(), IRCConnection.IRC_DEFAULT_PORT, config.getServerPassword(), getNickForConfig(config));
+		IRCConnection connection = new IRCConnection(config.getHost(), IRCConnection.IRC_DEFAULT_PORT, config.getServerPassword(), ConfigHelper.getNick(config));
 		connection.setEventHandler(EiraIRC.instance.getEventHandler());
 		if(connection.connect()) {
 			EiraIRC.instance.addConnection(connection);
@@ -325,35 +322,27 @@ public class Utils {
 		}
 		return GlobalConfig.quitMessage;
 	}
-
-	public static String getIRCColor(IRCConnection connection) {
-		ServerConfig serverConfig = ConfigurationHandler.getServerConfig(connection.getHost());
-		if(serverConfig.getIRCColor() != null && !serverConfig.getIRCColor().isEmpty()) {
-			return serverConfig.getIRCColor();
-		}
-		return GlobalConfig.ircColor;
-	}
 	
 	public static void sendUserList(ICommandSender sender, IRCConnection connection, IRCChannel channel) {
 		List<IRCUser> userList = channel.getUserList();
 		if(userList.size() == 0) {
-			sendLocalizedMessage(sender, "irc.noUsersOnlineIRC", channel, connection.getHost());
+			sendLocalizedMessage(sender, "irc.who.noUsersOnline", connection.getHost(), channel.getName());
 			return;
 		}
-		sendLocalizedMessage(sender, "irc.usersOnlineIRC", userList.size(), channel, connection.getHost());
-		String s = "* ";
+		sendLocalizedMessage(sender, "irc.who.usersOnline", connection.getHost(), userList.size(), channel.getName());
+		String s = " * ";
 		for(int i = 0; i < userList.size(); i++) {
 			IRCUser user = userList.get(i);
 			if(s.length() + user.getNick().length() > Globals.CHAT_MAX_LENGTH) {
 				sendUnlocalizedMessage(sender, s);
-				s = "* ";
+				s = " * ";
 			}
-			if(s.length() > 2) {
+			if(s.length() > 3) {
 				s += ", ";
 			}
 			s += user.getNick();
 		}
-		if(s.length() > 2) {
+		if(s.length() > 3) {
 			sendUnlocalizedMessage(sender, s);
 		}
 	}
@@ -364,24 +353,24 @@ public class Utils {
 		}
 		List<EntityPlayer> userList = MinecraftServer.getServer().getConfigurationManager().playerEntityList;
 		if(userList.size() == 0) {
-			connection.sendPrivateNotice(user, getLocalizedMessage("irc.noUsersOnlineMC"));
+			connection.sendPrivateNotice(user, getLocalizedMessage("irc.bot.noPlayersOnline"));
 			return;
 		}
-		connection.sendPrivateNotice(user, getLocalizedMessage("irc.usersOnlineMC", userList.size()));
-		String s = "* ";
+		connection.sendPrivateNotice(user, getLocalizedMessage("irc.bot.playersOnline", userList.size()));
+		String s = " * ";
 		for(int i = 0; i < userList.size(); i++) {
 			EntityPlayer entityPlayer = userList.get(i);
 			String alias = Utils.getAliasForPlayer(entityPlayer);
 			if(s.length() + alias.length() > Globals.CHAT_MAX_LENGTH) {
 				connection.sendPrivateNotice(user, s);
-				s = "* ";
+				s = " * ";
 			}
-			if(s.length() > 2) {
+			if(s.length() > 3) {
 				s += ", ";
 			}
 			s += alias;
 		}
-		if(s.length() > 2) {
+		if(s.length() > 3) {
 			connection.sendPrivateNotice(user, s);
 		}
 	}
@@ -392,24 +381,24 @@ public class Utils {
 		}
 		List<EntityPlayer> userList = MinecraftServer.getServer().getConfigurationManager().playerEntityList;
 		if(userList.size() == 0) {
-			connection.sendChannelNotice(channel, getLocalizedMessage("irc.noUsersOnlineMC"));
+			connection.sendChannelNotice(channel, getLocalizedMessage("irc.bot.noPlayersOnline"));
 			return;
 		}
-		connection.sendChannelNotice(channel, getLocalizedMessage("irc.usersOnlineMC", userList.size()));
-		String s = "* ";
+		connection.sendChannelNotice(channel, getLocalizedMessage("irc.bot.playersOnline", userList.size()));
+		String s = " * ";
 		for(int i = 0; i < userList.size(); i++) {
 			EntityPlayer entityPlayer = userList.get(i);
 			String alias = Utils.getAliasForPlayer(entityPlayer);
 			if(s.length() + alias.length() > Globals.CHAT_MAX_LENGTH) {
 				connection.sendChannelNotice(channel, s);
-				s = "* ";
+				s = " * ";
 			}
-			if(s.length() > 2) {
+			if(s.length() > 3) {
 				s += ", ";
 			}
 			s += alias;
 		}
-		if(s.length() > 2) {
+		if(s.length() > 3) {
 			connection.sendChannelNotice(channel, s);
 		}
 	}
@@ -432,7 +421,7 @@ public class Utils {
 				}
 			}
 			if(foundConfig == null) {
-				if(EiraIRC.instance.getConnectionCount() > 0) {
+				if(EiraIRC.instance.getConnectionCount() > 1) {
 					return IRCTargetError.SpecifyServer;
 				} else {
 					foundConfig = ConfigurationHandler.getDefaultServerConfig().getChannelConfig(channel);
@@ -455,7 +444,7 @@ public class Utils {
 			return foundConfig;
 		} else {
 			int channelIndex = target.indexOf('/');
-			if(channelIndex != -1) {
+			if(channelIndex != -1 && channelIndex < target.length() - 1) {
 				server = target.substring(0, channelIndex);
 				if(!ConfigurationHandler.hasServerConfig(server)) {
 					return IRCTargetError.ServerNotFound;
@@ -499,6 +488,9 @@ public class Utils {
 					return user;
 				}
 			} else {
+				if(target.endsWith("/")) {
+					target = target.substring(0, target.length() - 1);
+				}
 				if(ConfigurationHandler.hasServerConfig(target)) {
 					if(!allowServers) {
 						return IRCTargetError.InvalidTarget;
@@ -527,7 +519,7 @@ public class Utils {
 							if(channelUsersOnly) {
 								return IRCTargetError.UserNotFound;
 							} else {
-								if(EiraIRC.instance.getConnectionCount() > 0) {
+								if(EiraIRC.instance.getConnectionCount() > 1) {
 									return IRCTargetError.SpecifyServer;
 								} else {
 									return new IRCUser(EiraIRC.instance.getDefaultConnection(), target);

@@ -4,36 +4,24 @@
 package blay09.mods.eirairc.config;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.minecraft.command.ICommandSender;
+import net.minecraftforge.common.ConfigCategory;
 import blay09.mods.eirairc.Utils;
-import blay09.mods.eirairc.command.IRCCommandHandler;
 
 public class GlobalConfig {
 
-	public static final String MC_CMESSAGE_FORMAT_NORMAL = "[{CHANNEL}] <{NICK}> {MESSAGE}";
-	public static final String MC_CMESSAGE_FORMAT_LIGHT = "[<{NICK}> {MESSAGE}]";
-	public static final String MC_CMESSAGE_FORMAT_SLIGHT = "[{NICK}] {MESSAGE}";
-	public static final String MC_CMESSAGE_FORMAT_DETAIL = "[{SERVER}:{CHANNEL}] <{NICK}> {MESSAGE}";
-	public static final String MC_CEMOTE_FORMAT_NORMAL = "[{CHANNEL}] * {NICK} {MESSAGE}";
-	public static final String MC_PMESSAGE_FORMAT_NORMAL = "[Private] <{NICK}> {MESSAGE}";
-	public static final String MC_PMESSAGE_FORMAT_LIGHT = "[<{NICK}> {MESSAGE}]";
-	public static final String MC_PMESSAGE_FORMAT_SLIGHT = "[[{NICK}]] {MESSAGE}";
-	public static final String MC_PMESSAGE_FORMAT_DETAIL = "[{SERVER}] <{NICK}> {MESSAGE}";
-	public static final String MC_PEMOTE_FORMAT_NORMAL = "* {NICK} {MESSAGE}";
-	public static final String IRC_CMESSAGE_FORMAT_NORMAL = "<{NICK}> {MESSAGE}";
-	public static final String IRC_CMESSAGE_FORMAT_DETAIL = "[{SERVER}] <{NICK}> {MESSAGE}";
-	public static final String IRC_CEMOTE_FORMAT_NORMAL = "{NICK} {MESSAGE}";
-	public static final String IRC_PMESSAGE_FORMAT_NORMAL = "<{NICK}> {MESSAGE}";
-	public static final String IRC_PMESSAGE_FORMAT_DETAIL = "[{SERVER}] <{NICK}> {MESSAGE}";
-	public static final String IRC_PEMOTE_FORMAT_NORMAL = "{NICK} {MESSAGE}";
-	
 	public static String nick = ConfigurationHandler.DEFAULT_NICK;
 	public static final List<String> colorBlackList = new ArrayList<String>();
+	public static final Map<String, DisplayFormatConfig> displayFormates = new HashMap<String, DisplayFormatConfig>();
 	public static String opColor = "red";
 	public static String ircColor = "gray";
+	public static String emoteColor = "purple";
 	public static String quitMessage = "Leaving.";
+	public static String displayMode = "S-Light";
 	public static boolean enableNameColors = true;
 	public static boolean enableAliases = true;
 	public static boolean relayDeathMessages = true;
@@ -46,28 +34,39 @@ public class GlobalConfig {
 	public static boolean enableLinkFilter = true;
 	public static boolean registerShortCommands = true;
 	public static boolean interOp = false;
-	public static String mcChannelMsgFormat = MC_CMESSAGE_FORMAT_SLIGHT;
-	public static String mcPrivateMsgFormat = MC_PMESSAGE_FORMAT_SLIGHT;
-	public static String mcChannelEmtFormat = MC_CEMOTE_FORMAT_NORMAL;
-	public static String mcPrivateEmtFormat = MC_PEMOTE_FORMAT_NORMAL;
-	public static String ircChannelMsgFormat = IRC_CMESSAGE_FORMAT_NORMAL;
-	public static String ircPrivateMsgFormat = IRC_PMESSAGE_FORMAT_NORMAL;
-	public static String ircChannelEmtFormat = IRC_CEMOTE_FORMAT_NORMAL;
-	public static String ircPrivateEmtFormat = IRC_PEMOTE_FORMAT_NORMAL;
+	
+	public static DisplayFormatConfig getDisplayFormatConfig() {
+		DisplayFormatConfig dfc = displayFormates.get(displayMode);
+		if(dfc == null) {
+			displayMode = "S-Light";
+			dfc = displayFormates.get(displayMode);
+			if(dfc == null) {
+				return new DisplayFormatConfig(new ConfigCategory("unknown"));
+			}
+		}
+		return dfc;
+	}
 	
 	public static void handleConfigCommand(ICommandSender sender, String key, String value) {
 		if(key.equals("opColor")) {
 			if(Utils.isValidColor(value)) {
 				opColor = value;
 			} else {
-				Utils.sendLocalizedMessage(sender, "irc.colorInvalid", value);
+				Utils.sendLocalizedMessage(sender, "irc.color.invalid", value);
 				return;
 			}
 		} else if(key.equals("ircColor")) {
 			if(Utils.isValidColor(value)) {
 				ircColor = value;
 			} else {
-				Utils.sendLocalizedMessage(sender, "irc.colorInvalid", value);
+				Utils.sendLocalizedMessage(sender, "irc.color.invalid", value);
+				return;
+			}
+		} else if(key.equals("emoteColor")) {
+			if(Utils.isValidColor(value)) {
+				emoteColor = value;
+			} else {
+				Utils.sendLocalizedMessage(sender, "irc.color.invalid", value);
 				return;
 			}
 		} else if(key.equals("quitMessage")) {
@@ -92,15 +91,15 @@ public class GlobalConfig {
 			enableLinkFilter = Boolean.parseBoolean(value);
 		} else if(key.equals("registerShortCommands")){
 			registerShortCommands = Boolean.parseBoolean(value);
-			Utils.sendLocalizedMessage(sender, "irc.configRequiresRestart");
+			Utils.sendLocalizedMessage(sender, "irc.config.requiresRestart");
 		} else if(key.equals("interOp") || key.equals("enableAliases")) {
-			Utils.sendLocalizedMessage(sender, "irc.configNoAbuse");
+			Utils.sendLocalizedMessage(sender, "irc.config.noAbuse");
 			return;
 		} else {
-			Utils.sendLocalizedMessage(sender, "irc.invalidConfigChange", "Global", key);
+			Utils.sendLocalizedMessage(sender, "irc.config.invalidOption", "Global", key);
 			return;
 		}
-		Utils.sendLocalizedMessage(sender, "irc.configChange", "Global", key, value);
+		Utils.sendLocalizedMessage(sender, "irc.config.change", "Global", key, value);
 		ConfigurationHandler.save();
 	}
 	

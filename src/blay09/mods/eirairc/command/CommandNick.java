@@ -19,7 +19,7 @@ public class CommandNick implements ICommand {
 
 	@Override
 	public String getCommandUsage(ICommandSender icommandsender) {
-		return "commands.irc.usage.nick";
+		return "irc.commands.nick";
 	}
 
 	@Override

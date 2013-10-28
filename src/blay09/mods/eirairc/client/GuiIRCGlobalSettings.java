@@ -3,11 +3,14 @@
 
 package blay09.mods.eirairc.client;
 
+import java.util.Iterator;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import blay09.mods.eirairc.config.ConfigurationHandler;
+import blay09.mods.eirairc.config.DisplayFormatConfig;
 import blay09.mods.eirairc.config.GlobalConfig;
 import blay09.mods.eirairc.config.Globals;
 
@@ -28,6 +31,8 @@ public class GuiIRCGlobalSettings extends GuiScreen {
 	private GuiButton btnMessageDisplayMode;
 	private GuiButton btnSaveCredentials;
 	private GuiButton btnBack;
+	
+	private Iterator<DisplayFormatConfig> displayFormatIterator;
 	
 	@Override
 	public void initGui() {
@@ -79,22 +84,12 @@ public class GuiIRCGlobalSettings extends GuiScreen {
 		btnLinkFilter.displayString = "Filter Links: " + (GlobalConfig.enableLinkFilter ? "Yes" : "No");
 		btnPersistentConnections.displayString = "Persistent Connections: " + (GlobalConfig.persistentConnection ? "Yes" : "No");
 		btnSaveCredentials.displayString = "Save Credentials: " + (GlobalConfig.saveCredentials ? "Yes" : "No");
+		displayFormatIterator = GlobalConfig.displayFormates.values().iterator();
 		updateMessageDisplayMode();
 	}
 	
 	public void updateMessageDisplayMode() {
-		String msgDisplayMode = "Custom";
-		String currentDM = GlobalConfig.mcChannelMsgFormat;
-		if(currentDM.equals(GlobalConfig.MC_CMESSAGE_FORMAT_NORMAL)) {
-			msgDisplayMode = "Default";
-		} else if(currentDM.equals(GlobalConfig.MC_CMESSAGE_FORMAT_LIGHT)) {
-			msgDisplayMode = "Light";
-		} else if(currentDM.equals(GlobalConfig.MC_CMESSAGE_FORMAT_SLIGHT)) {
-			msgDisplayMode = "S-Light";
-		} else if(currentDM.equals(GlobalConfig.MC_CMESSAGE_FORMAT_DETAIL)) {
-			msgDisplayMode = "Detailed";
-		}
-		btnMessageDisplayMode.displayString = "Message Display: " + msgDisplayMode;
+		btnMessageDisplayMode.displayString = "Message Display: " + GlobalConfig.displayMode;
 	}
 	
 	@Override
@@ -124,28 +119,10 @@ public class GuiIRCGlobalSettings extends GuiScreen {
 			GlobalConfig.saveCredentials = !GlobalConfig.saveCredentials;
 			btnSaveCredentials.displayString = "Save Credentials: " + (GlobalConfig.saveCredentials ? "Yes" : "No");
 		} else if(button == btnMessageDisplayMode) {
-			String currentDM = GlobalConfig.mcChannelMsgFormat;
-			if(currentDM.equals(GlobalConfig.MC_CMESSAGE_FORMAT_NORMAL)) {
-				GlobalConfig.mcChannelMsgFormat = GlobalConfig.MC_CMESSAGE_FORMAT_LIGHT;
-				GlobalConfig.mcPrivateMsgFormat = GlobalConfig.MC_PMESSAGE_FORMAT_LIGHT;
-				GlobalConfig.mcChannelEmtFormat = GlobalConfig.MC_CEMOTE_FORMAT_NORMAL;
-				GlobalConfig.mcPrivateEmtFormat = GlobalConfig.MC_PEMOTE_FORMAT_NORMAL;
-			} else if(currentDM.equals(GlobalConfig.MC_CMESSAGE_FORMAT_LIGHT)) {
-				GlobalConfig.mcChannelMsgFormat = GlobalConfig.MC_CMESSAGE_FORMAT_SLIGHT;
-				GlobalConfig.mcPrivateMsgFormat = GlobalConfig.MC_PMESSAGE_FORMAT_SLIGHT;
-				GlobalConfig.mcChannelEmtFormat = GlobalConfig.MC_CEMOTE_FORMAT_NORMAL;
-				GlobalConfig.mcPrivateEmtFormat = GlobalConfig.MC_PEMOTE_FORMAT_NORMAL;
-			} else if(currentDM.equals(GlobalConfig.MC_CMESSAGE_FORMAT_SLIGHT)) {
-				GlobalConfig.mcChannelMsgFormat = GlobalConfig.MC_CMESSAGE_FORMAT_DETAIL;
-				GlobalConfig.mcPrivateMsgFormat = GlobalConfig.MC_PMESSAGE_FORMAT_DETAIL;
-				GlobalConfig.mcChannelEmtFormat = GlobalConfig.MC_CEMOTE_FORMAT_NORMAL;
-				GlobalConfig.mcPrivateEmtFormat = GlobalConfig.MC_PEMOTE_FORMAT_NORMAL;
-			} else if(currentDM.equals(GlobalConfig.MC_CMESSAGE_FORMAT_DETAIL)) {
-				GlobalConfig.mcChannelMsgFormat = GlobalConfig.MC_CMESSAGE_FORMAT_NORMAL;
-				GlobalConfig.mcPrivateMsgFormat = GlobalConfig.MC_PMESSAGE_FORMAT_NORMAL;
-				GlobalConfig.mcChannelEmtFormat = GlobalConfig.MC_CEMOTE_FORMAT_NORMAL;
-				GlobalConfig.mcPrivateEmtFormat = GlobalConfig.MC_PEMOTE_FORMAT_NORMAL;
+			if(!displayFormatIterator.hasNext()) {
+				displayFormatIterator = GlobalConfig.displayFormates.values().iterator();
 			}
+			GlobalConfig.displayMode = displayFormatIterator.next().getName();
 			updateMessageDisplayMode();
 		} else if(button == btnBack) {
 			ConfigurationHandler.save();

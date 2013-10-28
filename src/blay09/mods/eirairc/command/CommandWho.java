@@ -19,7 +19,7 @@ public class CommandWho implements ICommand {
 
 	@Override
 	public String getCommandUsage(ICommandSender icommandsender) {
-		return "commands.irc.usage.who";
+		return "irc.commands.who";
 	}
 
 	@Override

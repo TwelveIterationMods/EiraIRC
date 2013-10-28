@@ -12,6 +12,7 @@ import java.util.Map;
 import net.minecraft.command.ICommandSender;
 import net.minecraftforge.common.ConfigCategory;
 import net.minecraftforge.common.Configuration;
+import blay09.mods.eirairc.IRCTargetError;
 import blay09.mods.eirairc.Utils;
 
 public class ConfigurationHandler {
@@ -53,11 +54,19 @@ public class ConfigurationHandler {
 		 * Display Config
 		 */
 		GlobalConfig.ircColor = config.get(CATEGORY_DISPLAY, "ircColor", GlobalConfig.ircColor).getString();
+		GlobalConfig.emoteColor = config.get(CATEGORY_DISPLAY, "emoteColor", GlobalConfig.emoteColor).getString();
 		GlobalConfig.relayDeathMessages = config.get(CATEGORY_DISPLAY, "showDeathMessages", GlobalConfig.relayDeathMessages).getBoolean(GlobalConfig.relayDeathMessages);
 		GlobalConfig.relayMinecraftJoinLeave = config.get(CATEGORY_DISPLAY, "showMinecraftJoinLeave", GlobalConfig.relayMinecraftJoinLeave).getBoolean(GlobalConfig.relayMinecraftJoinLeave);
 		GlobalConfig.relayIRCJoinLeave = config.get(CATEGORY_DISPLAY, "showIRCJoinLeave", GlobalConfig.relayIRCJoinLeave).getBoolean(GlobalConfig.relayIRCJoinLeave);
 		GlobalConfig.relayNickChanges = config.get(CATEGORY_DISPLAY, "showNickChanges", GlobalConfig.relayNickChanges).getBoolean(GlobalConfig.relayNickChanges);
-		config.getCategory(CATEGORY_DISPLAY).setComment("These options determine how the chat is displayed and what gets sent / received to and from IRC.");
+		ConfigCategory displayCategory = config.getCategory(CATEGORY_DISPLAY);
+		DisplayFormatConfig.defaultConfig(config, displayCategory);
+		for(ConfigCategory category : displayCategory.getChildren()) {
+			DisplayFormatConfig dfc = new DisplayFormatConfig(category);
+			dfc.load(config);
+			GlobalConfig.displayFormates.put(dfc.getName(), dfc);
+		}
+		displayCategory.setComment("These options determine how the chat is displayed and what gets sent / received to and from IRC.");
 		
 		/*
 		 * ClientOnly Config
@@ -103,7 +112,6 @@ public class ConfigurationHandler {
 				config.removeCategory(category);
 			}
 		}
-		
 	}
 	
 	public static void save() {
@@ -120,6 +128,7 @@ public class ConfigurationHandler {
 		 * Display Config
 		 */
 		config.get(CATEGORY_DISPLAY, "ircColor", GlobalConfig.ircColor).set(GlobalConfig.ircColor);
+		config.get(CATEGORY_DISPLAY, "emoteColor", GlobalConfig.emoteColor).set(GlobalConfig.emoteColor);
 		config.get(CATEGORY_DISPLAY, "showDeathMessages", GlobalConfig.relayDeathMessages).set(GlobalConfig.relayDeathMessages);
 		config.get(CATEGORY_DISPLAY, "showMinecraftJoinLeave", GlobalConfig.relayMinecraftJoinLeave).set(GlobalConfig.relayMinecraftJoinLeave);
 		config.get(CATEGORY_DISPLAY, "showIRCJoinLeave", GlobalConfig.relayIRCJoinLeave).set(GlobalConfig.relayIRCJoinLeave);
@@ -176,29 +185,25 @@ public class ConfigurationHandler {
 	public static void handleConfigCommand(ICommandSender sender, String target, String key, String value) {
 		if(target.equals("global")) {
 			GlobalConfig.handleConfigCommand(sender, key, value);
-		} else if(target.startsWith("#")) {
-			ChannelConfig foundConfig = null;
-			for(ServerConfig serverConfig : serverConfigs.values()) {
-				if(serverConfig.hasChannelConfig(target)) {
-					if(foundConfig != null) {
-						Utils.sendLocalizedMessage(sender, "irc.specifyServer");
-						return;
-					} else {
-						foundConfig = serverConfig.getChannelConfig(target);
-					}
-				}
-			}
-			if(foundConfig != null) {
-				foundConfig.handleConfigCommand(sender, key, value);
-			} else {
-				Utils.sendLocalizedMessage(sender, "irc.invalidTarget");
-			}
 		} else {
-			ServerConfig serverConfig = serverConfigs.get(target);
-			if(serverConfig != null) {
-				serverConfig.handleConfigCommand(sender, key, value);
-			} else {
-				Utils.sendLocalizedMessage(sender, "irc.invalidTarget");
+			Object rt = Utils.resolveIRCTarget(target, true, false, true, false, false, false);
+			if(rt instanceof IRCTargetError) {
+				switch((IRCTargetError) rt) {
+				case ChannelNotFound: Utils.sendLocalizedMessage(sender, "irc.target.channelNotFound", target);
+					break;
+				case InvalidTarget: Utils.sendLocalizedMessage(sender, "irc.target.invalid");
+					break;
+				case ServerNotFound: Utils.sendLocalizedMessage(sender, "irc.target.serverNotFound", target);
+					break;
+				case SpecifyServer: Utils.sendLocalizedMessage(sender, "irc.target.unknown");
+					break;
+				default: Utils.sendLocalizedMessage(sender, "irc.target.unknown");
+					break;
+				}
+			} else if(rt instanceof ServerConfig) {
+				((ServerConfig) rt).handleConfigCommand(sender, key, value);
+			} else if(rt instanceof ChannelConfig) {
+				((ChannelConfig) rt).handleConfigCommand(sender, key, value);
 			}
 		}
 	}

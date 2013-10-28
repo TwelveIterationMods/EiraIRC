@@ -28,6 +28,7 @@ public class ServerConfig {
 	private boolean autoConnect = true;
 	private String quitMessage;
 	private String ircColor;
+	private String emoteColor;
 	
 	public ServerConfig(String host) {
 		this.host = host;
@@ -140,6 +141,7 @@ public class ServerConfig {
 		String categoryName = category.getQualifiedName();
 		nick = Utils.unquote(config.get(categoryName, "nick", "").getString());
 		ircColor = Utils.unquote(config.get(categoryName, "ircColor", "").getString());
+		emoteColor = Utils.unquote(config.get(categoryName, "emoteColor", "").getString());
 		quitMessage = Utils.unquote(config.get(categoryName, "quitMessage", "").getString());
 		nickServName = Utils.unquote(config.get(categoryName, "nickServName", "").getString());
 		nickServPassword = Utils.unquote(config.get(categoryName, "nickServPassword", "").getString());
@@ -161,6 +163,7 @@ public class ServerConfig {
 		config.get(categoryName, "host", "").set(Utils.quote(host));
 		config.get(categoryName, "nick", "").set(Utils.quote(nick != null ? nick : ""));
 		config.get(categoryName, "ircColor", "").set(Utils.quote(ircColor != null ? ircColor : ""));
+		config.get(categoryName, "emoteColor", "").set(Utils.quote(emoteColor != null ? emoteColor : ""));
 		config.get(categoryName, "quitMessage", "").set(Utils.quote(quitMessage != null ? quitMessage : ""));
 		config.get(categoryName, "nickServName", "").set(Utils.quote(GlobalConfig.saveCredentials && nickServName != null ? nickServName : ""));
 		config.get(categoryName, "nickServPassword", "").set(Utils.quote(GlobalConfig.saveCredentials && nickServPassword != null ? nickServPassword : ""));
@@ -180,13 +183,24 @@ public class ServerConfig {
 	public String getIRCColor() {
 		return ircColor;
 	}
+	
+	public String getEmoteColor() {
+		return emoteColor;
+	}
 
 	public void handleConfigCommand(ICommandSender sender, String key, String value) {
 		if(key.equals("ircColor")) {
 			if(Utils.isValidColor(value)) {
 				ircColor = value;
 			} else {
-				Utils.sendLocalizedMessage(sender, "irc.colorInvalid", value);
+				Utils.sendLocalizedMessage(sender, "irc.color.invalid", value);
+				return;
+			}
+		} else if(key.equals("emoteColor")) {
+			if(Utils.isValidColor(value)) {
+				emoteColor = value;
+			} else {
+				Utils.sendLocalizedMessage(sender, "irc.color.invalid", value);
 				return;
 			}
 		} else if(key.equals("quitMessage")) {
@@ -196,9 +210,11 @@ public class ServerConfig {
 		} else if(key.equals("autoConnect")) {
 			autoConnect = Boolean.parseBoolean(value);
 		} else {
-			Utils.sendLocalizedMessage(sender, "irc.configChange", host, key, value);
-			ConfigurationHandler.save();
+			Utils.sendLocalizedMessage(sender, "irc.config.invalidOption", host, key, value);
+			return;
 		}
+		Utils.sendLocalizedMessage(sender, "irc.config.change", host, key, value);
+		ConfigurationHandler.save();
 	}
 	
 }

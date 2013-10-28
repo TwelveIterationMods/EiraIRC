@@ -20,7 +20,7 @@ public class CommandServIRC implements ICommand {
 	
 	@Override
 	public String getCommandUsage(ICommandSender sender) {
-		return "commands.irc.usage";
+		return "irc.commands.irc";
 	}
 	
 	public boolean isOP(ICommandSender sender) {
@@ -36,7 +36,7 @@ public class CommandServIRC implements ICommand {
 	@Override
 	public void processCommand(ICommandSender sender, String[] args) {
 		if(MinecraftServer.getServer().isSinglePlayer()) {
-			Utils.sendLocalizedMessage(sender, "irc.notMultiplayer");
+			Utils.sendLocalizedMessage(sender, "irc.general.notMultiplayer");
 			return;
 		}
 		if(args.length < 1) {

@@ -19,7 +19,7 @@ public class CommandConnect implements ICommand {
 
 	@Override
 	public String getCommandUsage(ICommandSender icommandsender) {
-		return "commands.irc.usage.connect";
+		return "irc.commands.connect";
 	}
 
 	@Override

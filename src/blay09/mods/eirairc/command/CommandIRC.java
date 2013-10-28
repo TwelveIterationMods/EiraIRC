@@ -32,7 +32,7 @@ public class CommandIRC implements ICommand {
 
 	@Override
 	public String getCommandUsage(ICommandSender icommandsender) {
-		return "commands.irc.usage";
+		return "irc.commands.irc";
 	}
 
 	@Override
@@ -61,20 +61,20 @@ public class CommandIRC implements ICommand {
 			IRCCommandHandler.processCommand(sender, args, true);
 		} else if(cmd.equals("color")) {
 			if(!GlobalConfig.enableNameColors) {
-				Utils.sendLocalizedMessage(sender, "irc.colorDisabled");
+				Utils.sendLocalizedMessage(sender, "irc.color.disabled");
 				return;
 			}
 			if(args.length < 2) {
-				throw new WrongUsageException("commands.irc.usage.color");
+				throw new WrongUsageException("EiraIRC:irc.commands.color");
 			}
 			if(sender instanceof EntityPlayer) {
 				String colorName = args[1].toLowerCase();
 				if(!isOP(sender) && (GlobalConfig.colorBlackList.contains(colorName) || GlobalConfig.opColor.equals(colorName))) {
-					Utils.sendLocalizedMessage(sender, "irc.colorBlackList", colorName);
+					Utils.sendLocalizedMessage(sender, "irc.color.blackList", colorName);
 					return;
 				}
 				if(!colorName.equals("none") && !Utils.isValidColor(colorName)) {
-					Utils.sendLocalizedMessage(sender, "irc.colorInvalid", colorName);
+					Utils.sendLocalizedMessage(sender, "irc.color.invalid", colorName);
 					return;
 				}
 				EntityPlayer entityPlayer = (EntityPlayer) sender;
@@ -87,15 +87,19 @@ public class CommandIRC implements ICommand {
 				}
 				persistentTag.setTag("EiraIRC", tagCompound);
 				entityPlayer.getEntityData().setTag(EntityPlayer.PERSISTED_NBT_TAG, persistentTag);
-				Utils.sendLocalizedMessage(sender, "irc.colorSet", colorName);
+				if(colorName.equals("none")) {
+					Utils.sendLocalizedMessage(sender, "irc.color.reset", colorName);
+				} else {
+					Utils.sendLocalizedMessage(sender, "irc.color.set", colorName);
+				}
 			}
 		} else if(cmd.equals("alias")) {
 			if(!GlobalConfig.enableAliases) {
-				Utils.sendLocalizedMessage(sender, "irc.aliasDisabled");
+				Utils.sendLocalizedMessage(sender, "irc.alias.disabled");
 				return;
 			}
 			if(args.length < 2) {
-				throw new WrongUsageException("commands.irc.usage.alias");
+				throw new WrongUsageException("EiraIRC:irc.commands.alias");
 			}
 			List<EntityPlayerMP> playerEntityList = MinecraftServer.getServer().getConfigurationManager().playerEntityList;
 			if(args.length < 3) {
@@ -103,14 +107,14 @@ public class CommandIRC implements ICommand {
 				for(int i = 0; i < playerEntityList.size(); i++) {
 					EntityPlayerMP playerEntity = playerEntityList.get(i);
 					if(playerEntity.getEntityData().getCompoundTag("EiraIRC").getString("Alias").equals(alias)) {
-						Utils.sendLocalizedMessage(sender, "irc.aliasLookup", alias, playerEntity.username);
+						Utils.sendLocalizedMessage(sender, "irc.alias.lookup", alias, playerEntity.username);
 						return;
 					}
 				}
-				Utils.sendLocalizedMessage(sender, "irc.aliasNotFound", alias);
+				Utils.sendLocalizedMessage(sender, "irc.alias.notFound", alias);
 			} else {
 				if(!isOP(sender)) {
-					Utils.sendLocalizedMessage(sender, "irc.nopermission");
+					Utils.sendLocalizedMessage(sender, "irc.gemeral.noPermission");
 					return;
 				}
 				String username = args[1];
@@ -125,7 +129,7 @@ public class CommandIRC implements ICommand {
 						}
 					}
 					if(entityPlayer == null) {
-						Utils.sendLocalizedMessage(sender, "irc.nosuchplayer");
+						Utils.sendLocalizedMessage(sender, "irc.general.noSuchPlayer");
 						return;
 					}
 				}
@@ -142,7 +146,11 @@ public class CommandIRC implements ICommand {
 				}
 				persistentTag.setTag("EiraIRC", tagCompound);
 				entityPlayer.getEntityData().setTag(EntityPlayer.PERSISTED_NBT_TAG, persistentTag);
-				Utils.sendLocalizedMessage(sender, "irc.aliasSet", oldAlias, alias);
+				if(alias.equals("none")) {
+					Utils.sendLocalizedMessage(sender, "irc.alias.reset", oldAlias, alias);
+				} else {
+					Utils.sendLocalizedMessage(sender, "irc.alias.set", oldAlias, alias);
+				}
 				EiraIRC.instance.getEventHandler().onPlayerNickChange(oldAlias, alias);
 			}
 		}

@@ -19,7 +19,7 @@ public class CommandJoin implements ICommand {
 
 	@Override
 	public String getCommandUsage(ICommandSender icommandsender) {
-		return "commands.irc.usage.join";
+		return "irc.commands.join";
 	}
 
 	@Override

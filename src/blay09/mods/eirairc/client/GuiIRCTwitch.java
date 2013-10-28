@@ -68,7 +68,9 @@ public class GuiIRCTwitch extends GuiScreen {
 				if(connection != null) {
 					connection.disconnect(Utils.getQuitMessage(connection));
 				}
-				Utils.connectTo(config);
+				if(!config.getNick().isEmpty() && !config.getServerPassword().isEmpty()) {
+					Utils.connectTo(config);
+				}
 			}
 			Minecraft.getMinecraft().displayGuiScreen(parentScreen);
 		} else if(button == btnConnectOnStartup) {

@@ -20,7 +20,7 @@ public class CommandPart implements ICommand {
 
 	@Override
 	public String getCommandUsage(ICommandSender icommandsender) {
-		return "commands.irc.usage.leave";
+		return "irc.commands.leave";
 	}
 
 	@Override
