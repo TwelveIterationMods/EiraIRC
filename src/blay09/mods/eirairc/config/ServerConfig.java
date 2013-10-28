@@ -5,6 +5,7 @@ package blay09.mods.eirairc.config;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import net.minecraft.command.ICommandSender;
@@ -12,7 +13,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.ConfigCategory;
 import net.minecraftforge.common.Configuration;
 import blay09.mods.eirairc.Utils;
-import blay09.mods.eirairc.command.IRCCommandHandler;
 import blay09.mods.eirairc.irc.IRCChannel;
 
 public class ServerConfig {
@@ -217,4 +217,19 @@ public class ServerConfig {
 		ConfigurationHandler.save();
 	}
 	
+	public static void addOptionstoList(List<String> list) {
+		list.add("ircColor");
+		list.add("emoteColor");
+		list.add("quitMessage");
+		list.add("allowPrivateMessages");
+		list.add("autoConnect");
+	}
+
+	public static void addValuesToList(List<String> list, String option) {
+		if(option.equals("ircColor") || option.equals("emoteColor")) {
+			Utils.addValidColorsToList(list);
+		} else if(option.equals("allowPrivateMessages") || option.equals("autoConnect")) {
+			Utils.addBooleansToList(list);
+		}
+	}
 }

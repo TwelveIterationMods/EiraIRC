@@ -94,6 +94,23 @@ public class GlobalConfig {
 		ConfigurationHandler.save();
 	}
 	
+	public static void addOptionsToList(List<String> list) {
+		list.add("opColor");
+		list.add("ircColor");
+		list.add("emoteColor");
+		list.add("quitMessage");
+		list.add("enableNameColors");
+		list.add("relayDeathMessages");
+		list.add("relayMinecraftJoinLeave");
+		list.add("relayIRCJoinLeave");
+		list.add("relayNickChanges");
+		list.add("allowPrivateMessages");
+		list.add("persistentConnection");
+		list.add("saveCredentials");
+		list.add("enableLinkFilter");
+		list.add("registerShortCommands");
+	}
+	
 	public static void load(Configuration config) {
 		/*
 		 * Global Config
@@ -110,10 +127,10 @@ public class GlobalConfig {
 		 */
 		GlobalConfig.ircColor = config.get(ConfigurationHandler.CATEGORY_DISPLAY, "ircColor", GlobalConfig.ircColor).getString();
 		GlobalConfig.emoteColor = config.get(ConfigurationHandler.CATEGORY_DISPLAY, "emoteColor", GlobalConfig.emoteColor).getString();
-		GlobalConfig.relayDeathMessages = config.get(ConfigurationHandler.CATEGORY_DISPLAY, "showDeathMessages", GlobalConfig.relayDeathMessages).getBoolean(GlobalConfig.relayDeathMessages);
-		GlobalConfig.relayMinecraftJoinLeave = config.get(ConfigurationHandler.CATEGORY_DISPLAY, "showMinecraftJoinLeave", GlobalConfig.relayMinecraftJoinLeave).getBoolean(GlobalConfig.relayMinecraftJoinLeave);
-		GlobalConfig.relayIRCJoinLeave = config.get(ConfigurationHandler.CATEGORY_DISPLAY, "showIRCJoinLeave", GlobalConfig.relayIRCJoinLeave).getBoolean(GlobalConfig.relayIRCJoinLeave);
-		GlobalConfig.relayNickChanges = config.get(ConfigurationHandler.CATEGORY_DISPLAY, "showNickChanges", GlobalConfig.relayNickChanges).getBoolean(GlobalConfig.relayNickChanges);
+		GlobalConfig.relayDeathMessages = config.get(ConfigurationHandler.CATEGORY_DISPLAY, "relayDeathMessages", GlobalConfig.relayDeathMessages).getBoolean(GlobalConfig.relayDeathMessages);
+		GlobalConfig.relayMinecraftJoinLeave = config.get(ConfigurationHandler.CATEGORY_DISPLAY, "relayMinecraftJoinLeave", GlobalConfig.relayMinecraftJoinLeave).getBoolean(GlobalConfig.relayMinecraftJoinLeave);
+		GlobalConfig.relayIRCJoinLeave = config.get(ConfigurationHandler.CATEGORY_DISPLAY, "relayIRCJoinLeave", GlobalConfig.relayIRCJoinLeave).getBoolean(GlobalConfig.relayIRCJoinLeave);
+		GlobalConfig.relayNickChanges = config.get(ConfigurationHandler.CATEGORY_DISPLAY, "relayNickChanges", GlobalConfig.relayNickChanges).getBoolean(GlobalConfig.relayNickChanges);
 		ConfigCategory displayCategory = config.getCategory(ConfigurationHandler.CATEGORY_DISPLAY);
 		DisplayFormatConfig.defaultConfig(config, displayCategory);
 		for(ConfigCategory category : displayCategory.getChildren()) {
@@ -173,10 +190,10 @@ public class GlobalConfig {
 		 */
 		config.get(ConfigurationHandler.CATEGORY_DISPLAY, "ircColor", GlobalConfig.ircColor).set(GlobalConfig.ircColor);
 		config.get(ConfigurationHandler.CATEGORY_DISPLAY, "emoteColor", GlobalConfig.emoteColor).set(GlobalConfig.emoteColor);
-		config.get(ConfigurationHandler.CATEGORY_DISPLAY, "showDeathMessages", GlobalConfig.relayDeathMessages).set(GlobalConfig.relayDeathMessages);
-		config.get(ConfigurationHandler.CATEGORY_DISPLAY, "showMinecraftJoinLeave", GlobalConfig.relayMinecraftJoinLeave).set(GlobalConfig.relayMinecraftJoinLeave);
-		config.get(ConfigurationHandler.CATEGORY_DISPLAY, "showIRCJoinLeave", GlobalConfig.relayIRCJoinLeave).set(GlobalConfig.relayIRCJoinLeave);
-		config.get(ConfigurationHandler.CATEGORY_DISPLAY, "showNickChanges", GlobalConfig.relayNickChanges).set(GlobalConfig.relayNickChanges);
+		config.get(ConfigurationHandler.CATEGORY_DISPLAY, "relayDeathMessages", GlobalConfig.relayDeathMessages).set(GlobalConfig.relayDeathMessages);
+		config.get(ConfigurationHandler.CATEGORY_DISPLAY, "relayMinecraftJoinLeave", GlobalConfig.relayMinecraftJoinLeave).set(GlobalConfig.relayMinecraftJoinLeave);
+		config.get(ConfigurationHandler.CATEGORY_DISPLAY, "relayIRCJoinLeave", GlobalConfig.relayIRCJoinLeave).set(GlobalConfig.relayIRCJoinLeave);
+		config.get(ConfigurationHandler.CATEGORY_DISPLAY, "relayNickChanges", GlobalConfig.relayNickChanges).set(GlobalConfig.relayNickChanges);
 		
 		/*
 		 * ClientOnly Config
@@ -200,5 +217,13 @@ public class GlobalConfig {
 		}
 		
 		config.save();
+	}
+
+	public static void addValuesToList(List<String> list, String option) {
+		if(option.equals("ircColor") || option.equals("emoteColor") || option.equals("opColor")) {
+			Utils.addValidColorsToList(list);
+		} else if(option.startsWith("enable") || option.startsWith("show") || option.startsWith("allow") || option.equals("saveCredentials") || option.equals("persistentConnection")) {
+			Utils.addBooleansToList(list);
+		}
 	}
 }

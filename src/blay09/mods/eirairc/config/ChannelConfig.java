@@ -3,11 +3,12 @@
 
 package blay09.mods.eirairc.config;
 
+import java.util.List;
+
 import net.minecraft.command.ICommandSender;
 import net.minecraftforge.common.ConfigCategory;
 import net.minecraftforge.common.Configuration;
 import blay09.mods.eirairc.Utils;
-import blay09.mods.eirairc.irc.IRCConnection;
 
 public class ChannelConfig {
 
@@ -87,7 +88,6 @@ public class ChannelConfig {
 		relayNickChanges = config.get(categoryName, "relayIRCNickChange", relayNickChanges).getBoolean(relayNickChanges);
 	}
 
-	
 	public void save(Configuration config, ConfigCategory category) {
 		String categoryName = category.getQualifiedName();
 		config.get(categoryName, "name", "").set(Utils.quote(name));
@@ -127,6 +127,17 @@ public class ChannelConfig {
 		ConfigurationHandler.save();
 	}
 
+	public static void addOptionsToList(List<String> list) {
+		list.add("readOnly");
+		list.add("muted");
+		list.add("autoJoin");
+		list.add("relayMinecraftJoinLeave");
+		list.add("relayDeathMessages");
+		list.add("relayIRCJoinLeave");
+		list.add("relayNickChanges");
+		list.add("autoWho");
+	}
+	
 	public ServerConfig getServerConfig() {
 		return serverConfig;
 	}
@@ -149,6 +160,10 @@ public class ChannelConfig {
 	
 	public void setReadOnly(boolean readOnly) {
 		this.readOnly = readOnly;
+	}
+
+	public static void addValuesToList(List<String> list, String option) {
+		Utils.addBooleansToList(list);
 	}
 	
 }

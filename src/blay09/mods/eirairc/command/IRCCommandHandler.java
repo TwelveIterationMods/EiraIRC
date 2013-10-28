@@ -471,19 +471,11 @@ public class IRCCommandHandler {
 		} else if(args.length == 3) {
 			if(args[0].equals("config")) {
 				if(args[1].equals("global")) {
-					list.add("opColor");
-					list.add("ircColor");
-					list.add("enableNameColors");
-					list.add("allowPrivateMessages");
-					list.add("showDeathMessages");
-					list.add("showIRCJoinLeave");
-					list.add("showMinecraftJoinLeave");
-					list.add("enableLinkFilter");
-					list.add("showNickChanges");
-					list.add("persistentConnection");
+					GlobalConfig.addOptionsToList(list);
+				} else if(args[1].contains("#")) {
+					ChannelConfig.addOptionsToList(list);
 				} else {
-					list.add("allowPrivateMessages");
-					list.add("autoConnect");
+					ServerConfig.addOptionstoList(list);
 				}
 			} else if(args[0].equals("alias")) {
 				list.add("none");
@@ -491,15 +483,11 @@ public class IRCCommandHandler {
 		} else if(args.length == 4) {
 			if(args[0].equals("config")) {
 				if(args[1].equals("global")) {
-					if(args[2].equals("opColor") || args[2].equals("ircColor")) {
-						Utils.addValidColorsToList(list);
-					} else if(args[2].equals("enableNameColors") || args[2].equals("allowPrivateMessages") || args[2].equals("showDeathMessages") || args[2].equals("showIRCJoinLeave") || args[2].equals("showMinecraftJoinLeave")) {
-						Utils.addBooleansToList(list);
-					}
+					GlobalConfig.addValuesToList(list, args[2]);
+				} else if(args[1].contains("#")) {
+					ChannelConfig.addValuesToList(list, args[2]);
 				} else {
-					if(args[2].equals("allowPrivateMessages")) {
-						Utils.addBooleansToList(list);
-					}
+					ServerConfig.addValuesToList(list, args[2]);
 				}
 			}
 		}
