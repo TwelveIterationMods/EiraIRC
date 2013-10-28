@@ -1,9 +1,22 @@
 package blay09.mods.eirairc.config;
 
+import net.minecraftforge.common.ConfigCategory;
 import blay09.mods.eirairc.irc.IRCConnection;
 
 public class ConfigHelper {
 
+	public static DisplayFormatConfig getDisplayFormatConfig() {
+		DisplayFormatConfig dfc = GlobalConfig.displayFormates.get(GlobalConfig.displayMode);
+		if(dfc == null) {
+			GlobalConfig.displayMode = "S-Light";
+			dfc = GlobalConfig.displayFormates.get(GlobalConfig.displayMode);
+			if(dfc == null) {
+				return new DisplayFormatConfig(new ConfigCategory("unknown"));
+			}
+		}
+		return dfc;
+	}
+	
 	public static String getEmoteColor(ChannelConfig channelConfig) {
 		return getEmoteColor(channelConfig.getServerConfig());
 	}
