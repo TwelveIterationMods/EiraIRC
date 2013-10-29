@@ -128,55 +128,17 @@ public class IRCConnection implements Runnable {
 				if(handleMessage(line, cmd)) {
 					continue;
 				}
-				// Message
-//				// Nick Already in Use
-//				if(line.contains(" 433 ")) {
-//					changeNick(config.nick + "_");
-//					continue;
-//				}
-//				// Names List
-//				if(line.contains(" 353 ")) {
-//					int i = line.indexOf(" = ");
-//					int j = line.indexOf(":", i);
-//					String channel = line.substring(i + 3, j - 1);
-//					List<String> userList = channelUserMap.get(channel);
-//					if(userList == null) {
-//						userList = new ArrayList<String>();
-//						channelUserMap.put(channel, userList);
-//					} else {
-//						userList.clear();
-//					}
-//					String[] userArray = line.substring(j + 1).split(" ");
-//					for(int k = 0; k < userArray.length; k++) {
-//						if(userArray[k].startsWith("+") || userArray[k].startsWith("@")) {
-//							userArray[k] = userArray[k].substring(1);
-//						}
-//						userList.add(userArray[k]);
-//					}
-//					continue;
-//				}
-//				// End of MOTD
-//				if(line.contains(" 376 ")) {
-//					EiraIRC.instance.getEventHandler().onIRCConnect(this);
-//					nickServ();
-//					connected = true;
-//					for(String channel : config.channels) {
-//						joinChannel(channel, config.channelPasswords.get(channel));
-//					}
-//					continue;
-//				}
-//				System.out.println(line);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-//		EiraIRC.instance.getEventHandler().onIRCDisconnect(this);
-//		EiraIRC.instance.removeConnection(this);
-//		if(connected) {
-//			if(connect()) {
-//				EiraIRC.instance.addConnection(this);
-//			}
-//		}
+		EiraIRC.instance.getEventHandler().onDisconnected(this);
+		EiraIRC.instance.removeConnection(this);
+		if(connected) {
+			if(connect()) {
+				EiraIRC.instance.addConnection(this);
+			}
+		}
 	}
 	
 	public void disconnect(String quitMessage) {
