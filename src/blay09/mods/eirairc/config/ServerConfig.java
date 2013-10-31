@@ -188,6 +188,20 @@ public class ServerConfig {
 		return emoteColor;
 	}
 
+	public void handleConfigCommand(ICommandSender sender, String key) {
+		String value = null;
+		if(key.equals("ircColor")) value = ircColor;
+		else if(key.equals("emoteColor")) value = emoteColor;
+		else if(key.equals("quitMessage")) value = quitMessage;
+		else if(key.equals("allowPrivateMessages")) value = String.valueOf(allowPrivateMessages);
+		else if(key.equals("autoConnect")) value = String.valueOf(autoConnect);
+		if(value != null) {
+			Utils.sendLocalizedMessage(sender, "irc.config.lookup", host, key, value);
+		} else {
+			Utils.sendLocalizedMessage(sender, "irc.config.invalidOption", host, key);
+		}
+	}
+	
 	public void handleConfigCommand(ICommandSender sender, String key, String value) {
 		if(key.equals("ircColor")) {
 			if(Utils.isValidColor(value)) {

@@ -9,6 +9,7 @@ import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumChatFormatting;
 import blay09.mods.eirairc.EiraIRC;
 import blay09.mods.eirairc.IRCTargetError;
@@ -358,17 +359,20 @@ public class IRCCommandHandler {
 				throw new WrongUsageException("EiraIRC:irc.commands.msg", commandName);
 			}
 			targetUser.getConnection().sendPrivateMessage(targetUser, message);
-			String mcMessage = "[-> " + targetUser.getNick() + "] <" + Utils.getColorAliasForPlayer(Minecraft.getMinecraft().thePlayer) + "> " + message;
+			String mcMessage = "[-> " + targetUser.getNick() + "] <" + Utils.getColorAliasForPlayer((EntityPlayer) sender) + "> " + message;
 			Utils.sendUnlocalizedMessage(sender, mcMessage);
 			return true;
-		} else if(cmd.equals("config")) { // [serv]irc config global|<host> <option> <value>
-			if(args.length <= 3) {
+		} else if(cmd.equals("config")) { // [serv]irc config global|<host> <option> [value]
+			if(args.length <= 2) {
 				throw new WrongUsageException("EiraIRC:irc.commands.config", commandName);
 			}
 			String target = args[1];
 			String config = args[2];
-			String value = args[3];
-			ConfigurationHandler.handleConfigCommand(sender, target, config, value);
+			if(args.length > 3) {
+				ConfigurationHandler.handleConfigCommand(sender, target, config, args[3]);
+			} else {
+				ConfigurationHandler.handleConfigCommand(sender, target, config);
+			}
 			return true;
 		} else if(cmd.equals("help")) { // [serv]irc help <topic>
 			if(args.length <= 1) {

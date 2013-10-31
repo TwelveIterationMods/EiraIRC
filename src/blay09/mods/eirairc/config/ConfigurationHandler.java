@@ -19,6 +19,7 @@ public class ConfigurationHandler {
 
 	public static final String CATEGORY_GLOBAL = "global";
 	public static final String CATEGORY_DISPLAY = "display";
+	public static final String CATEGORY_FORMATS = "formats";
 	public static final String CATEGORY_SERVERONLY = "serveronly";
 	public static final String CATEGORY_CLIENTONLY = "clientonly";
 	public static final String CATEGORY_SERVERS = "servers";
@@ -113,6 +114,32 @@ public class ConfigurationHandler {
 
 	public static void save() {
 		GlobalConfig.save(config);
+	}
+
+	public static void handleConfigCommand(ICommandSender sender, String target, String key) {
+		if(target.equals("global")) {
+			GlobalConfig.handleConfigCommand(sender, key);
+		} else {
+			Object rt = Utils.resolveIRCTarget(target, true, false, true, false, false, false);
+			if(rt instanceof IRCTargetError) {
+				switch((IRCTargetError) rt) {
+				case ChannelNotFound: Utils.sendLocalizedMessage(sender, "irc.target.channelNotFound", target);
+					break;
+				case InvalidTarget: Utils.sendLocalizedMessage(sender, "irc.target.invalid");
+					break;
+				case ServerNotFound: Utils.sendLocalizedMessage(sender, "irc.target.serverNotFound", target);
+					break;
+				case SpecifyServer: Utils.sendLocalizedMessage(sender, "irc.target.unknown");
+					break;
+				default: Utils.sendLocalizedMessage(sender, "irc.target.unknown");
+					break;
+				}
+			} else if(rt instanceof ServerConfig) {
+				((ServerConfig) rt).handleConfigCommand(sender, key);
+			} else if(rt instanceof ChannelConfig) {
+				((ChannelConfig) rt).handleConfigCommand(sender, key);
+			}
+		}
 	}
 
 }

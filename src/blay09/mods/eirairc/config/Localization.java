@@ -24,7 +24,7 @@ public class Localization {
 		addString("irc.commands.msg", "/[serv]irc msg <nick> <message ...>");
 		addString("irc.commands.help", "/[serv]irc help <topic>");
 		addString("irc.commands.nick", "/[serv]irc nick [server] <nick>");
-		addString("irc.commands.config", "/[serv]irc config (global|<server>|<channel>) <key> <value>");
+		addString("irc.commands.config", "/[serv]irc config (global|<server>|<channel>) <key> [value]");
 		addString("irc.commands.twitch", "/servirc twitch <username> <oauth>");
 		addString("irc.commands.nickserv", "/servirc nickserv <username> <password>");
 		addString("irc.commands.color", "/irc color <color>");
@@ -81,6 +81,7 @@ public class Localization {
 		addString("irc.msg.disabled", "Private messages are not enabled.");
 		addString("irc.config.noAbuse", "To prevent abuse, this setting can only be changed in the config file.");
 		addString("irc.config.change", "[%s] Setting config option '%s' to '%s'");
+		addString("irc.config.lookup", "[%s] Config option '%s' is set to '%s'");
 		addString("irc.config.invalidOption", "[%s] Invalid config option '%s'. Use TAB to loop through valid options.");
 		addString("irc.config.requiresRestart", "This config option requires a restart to take effect.");
 		addString("irc.help.validTopics", EnumChatFormatting.YELLOW + "Valid topics are: ");
@@ -91,6 +92,7 @@ public class Localization {
 		/* DISPLAY FORMAT */
 		addString("irc.display.irc.joinMsg", EnumChatFormatting.YELLOW + "[%s] * %s joined the channel");
 		addString("irc.display.irc.partMsg", EnumChatFormatting.YELLOW + "[%s] * %s left the channel");
+		addString("irc.display.irc.partMsg", EnumChatFormatting.YELLOW + "[%s] * %s disconnected from IRC (%s)");
 		addString("irc.display.irc.nickChange", EnumChatFormatting.YELLOW + "[%s] * %s is now known as %s");
 		addString("irc.display.irc.topic", EnumChatFormatting.YELLOW + "Topic for %s: " + EnumChatFormatting.WHITE + "%s");
 		addString("irc.display.mc.joinMsg", "* %s joined the game");
@@ -102,6 +104,7 @@ public class Localization {
 		addString("irc.target.specifyServer", "You have to specify a server.");
 		addString("irc.target.serverNotFound", "The server at %s cannot not be found.");
 		addString("irc.target.invalidTarget", "Invalid target. Expected %s.");
+		addString("irc.target.notConnected", "You are not connected to the server at %s.");
 	}
 	
 }

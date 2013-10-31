@@ -38,6 +38,30 @@ public class GlobalConfig {
 	public static boolean registerShortCommands = true;
 	public static boolean interOp = false;
 	
+	public static void handleConfigCommand(ICommandSender sender, String key) {
+		String value = null;
+		if(key.equals("opColor")) value = opColor;
+		else if(key.equals("ircColor")) value = ircColor;
+		else if(key.equals("emoteColor")) value = emoteColor;
+		else if(key.equals("quitMessage")) value = quitMessage;
+		else if(key.equals("enableNameColors")) value = String.valueOf(enableNameColors);
+		else if(key.equals("relayMinecraftJoinLeave")) value = String.valueOf(relayMinecraftJoinLeave);
+		else if(key.equals("relayIRCJoinLeave")) value = String.valueOf(relayIRCJoinLeave);
+		else if(key.equals("relayDeathMessages")) value = String.valueOf(relayDeathMessages);
+		else if(key.equals("relayNickChanges")) value = String.valueOf(relayNickChanges);
+		else if(key.equals("persistentConnection")) value = String.valueOf(persistentConnection);
+		else if(key.equals("saveCredentials")) value = String.valueOf(saveCredentials);
+		else if(key.equals("enableLinkFilter")) value = String.valueOf(enableLinkFilter);
+		else if(key.equals("registerShortCommands")) value = String.valueOf(registerShortCommands);
+		else if(key.equals("interOp")) value = String.valueOf(interOp);
+		else if(key.equals("enableAliases")) value = String.valueOf(enableAliases);
+		if(value != null) {
+			Utils.sendLocalizedMessage(sender, "irc.config.lookup", "Global", key, value);
+		} else {
+			Utils.sendLocalizedMessage(sender, "irc.config.invalidOption", "Global", key);
+		}
+	}
+	
 	public static void handleConfigCommand(ICommandSender sender, String key, String value) {
 		if(key.equals("opColor")) {
 			if(Utils.isValidColor(value)) {
@@ -131,14 +155,14 @@ public class GlobalConfig {
 		GlobalConfig.relayMinecraftJoinLeave = config.get(ConfigurationHandler.CATEGORY_DISPLAY, "relayMinecraftJoinLeave", GlobalConfig.relayMinecraftJoinLeave).getBoolean(GlobalConfig.relayMinecraftJoinLeave);
 		GlobalConfig.relayIRCJoinLeave = config.get(ConfigurationHandler.CATEGORY_DISPLAY, "relayIRCJoinLeave", GlobalConfig.relayIRCJoinLeave).getBoolean(GlobalConfig.relayIRCJoinLeave);
 		GlobalConfig.relayNickChanges = config.get(ConfigurationHandler.CATEGORY_DISPLAY, "relayNickChanges", GlobalConfig.relayNickChanges).getBoolean(GlobalConfig.relayNickChanges);
-		ConfigCategory displayCategory = config.getCategory(ConfigurationHandler.CATEGORY_DISPLAY);
-		DisplayFormatConfig.defaultConfig(config, displayCategory);
-		for(ConfigCategory category : displayCategory.getChildren()) {
+		ConfigCategory displayFormatCategory = config.getCategory(ConfigurationHandler.CATEGORY_DISPLAY + Configuration.CATEGORY_SPLITTER + ConfigurationHandler.CATEGORY_FORMATS);
+		DisplayFormatConfig.defaultConfig(config, displayFormatCategory);
+		for(ConfigCategory category : displayFormatCategory.getChildren()) {
 			DisplayFormatConfig dfc = new DisplayFormatConfig(category);
 			dfc.load(config);
 			GlobalConfig.displayFormates.put(dfc.getName(), dfc);
 		}
-		displayCategory.setComment("These options determine how the chat is displayed and what gets sent / received to and from IRC.");
+		config.getCategory(ConfigurationHandler.CATEGORY_DISPLAY).setComment("These options determine how the chat is displayed and what gets sent / received to and from IRC.");
 		
 		/*
 		 * ClientOnly Config
@@ -183,7 +207,7 @@ public class GlobalConfig {
 		config.get(ConfigurationHandler.CATEGORY_GLOBAL, "allowPrivateMessages", GlobalConfig.allowPrivateMessages).set(GlobalConfig.allowPrivateMessages);
 		config.get(ConfigurationHandler.CATEGORY_GLOBAL, "enableLinkFilter", GlobalConfig.enableLinkFilter).set(GlobalConfig.enableLinkFilter);
 		config.get(ConfigurationHandler.CATEGORY_GLOBAL, "saveCredentials", GlobalConfig.saveCredentials).set(GlobalConfig.saveCredentials);
-		config.get(ConfigurationHandler.CATEGORY_GLOBAL, "quitMessage", GlobalConfig.quitMessage).set(GlobalConfig.quitMessage);
+		config.get(ConfigurationHandler.CATEGORY_GLOBAL, "quitMessage", "").set(Utils.quote(GlobalConfig.quitMessage));
 		
 		/*
 		 * Display Config
@@ -209,6 +233,7 @@ public class GlobalConfig {
 		config.get(ConfigurationHandler.CATEGORY_SERVERONLY, "colorBlackList", new String[0]).set(GlobalConfig.colorBlackList.toArray(new String[GlobalConfig.colorBlackList.size()]));
 		config.get(ConfigurationHandler.CATEGORY_SERVERONLY, "interOp", GlobalConfig.interOp).set(GlobalConfig.interOp);
 		
+		config.removeCategory(config.getCategory(ConfigurationHandler.CATEGORY_SERVERS));
 		int c = 0;
 		for(ServerConfig serverConfig : ConfigurationHandler.getServerConfigs()) {
 			String category = ConfigurationHandler.CATEGORY_SERVERS + Configuration.CATEGORY_SPLITTER + ConfigurationHandler.CATEGORY_SERVER_PREFIX + c;

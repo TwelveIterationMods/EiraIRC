@@ -189,7 +189,7 @@ public class GuiIRCChannelConfig extends GuiScreen {
 	public void loadFromConfig() {
 		if(config != null) {
 			txtName.setText(config.getName());
-			txtChannelPassword.setText(config.getPassword());
+			txtChannelPassword.setText(config.getPassword() != null ? config.getPassword() : "");
 			autoJoin = config.isAutoJoin();
 			muted = config.isMuted();
 			readOnly = config.isReadOnly();

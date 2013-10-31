@@ -20,6 +20,7 @@ import blay09.mods.eirairc.config.ChannelConfig;
 import blay09.mods.eirairc.config.ConfigHelper;
 import blay09.mods.eirairc.config.ConfigurationHandler;
 import blay09.mods.eirairc.config.GlobalConfig;
+import blay09.mods.eirairc.config.Globals;
 import blay09.mods.eirairc.config.ServerConfig;
 import blay09.mods.eirairc.irc.IIRCEventHandler;
 import blay09.mods.eirairc.irc.IRCChannel;
@@ -277,6 +278,10 @@ public class IRCEventHandler implements IIRCEventHandler, IPlayerTracker, IConne
 		String mcMessage = Utils.getLocalizedMessage("irc.basic.connected", connection.getHost());
 		Utils.addMessageToChat(mcMessage);
 		ServerConfig serverConfig = Utils.getServerConfig(connection);
+		if(serverConfig.getHost().equals(Globals.TWITCH_SERVER) && serverConfig.getNick() != null) {
+			ChannelConfig twitchChannel = serverConfig.getChannelConfig(serverConfig.getNick());
+			twitchChannel.setAutoJoin(true);
+		}
 		Utils.doNickServ(connection, serverConfig);
 		for(ChannelConfig channelConfig : serverConfig.getChannelConfigs()) {
 			if(channelConfig.isAutoJoin()) {
@@ -339,7 +344,7 @@ public class IRCEventHandler implements IIRCEventHandler, IPlayerTracker, IConne
 			}
 		}
 		if(hasFlags) {
-			String mcMessage = Utils.getLocalizedMessage("irc.quitMsgIRC", connection.getHost(), user.getNick());
+			String mcMessage = Utils.getLocalizedMessage("irc.display.irc.quitMsg", connection.getHost(), user.getNick(), quitMessage);
 			Utils.addMessageToChat(mcMessage);
 		}
 	}
@@ -368,6 +373,12 @@ public class IRCEventHandler implements IIRCEventHandler, IPlayerTracker, IConne
 			return;
 		}
 		ServerConfig serverConfig = Utils.getServerConfig(connection);
+		if(serverConfig.getHost().equals(Globals.TWITCH_SERVER)) {
+			if(user.getNick().equals("jtv")) {
+				// Ignore messages from Twitch bot for now
+				return;
+			}
+		}
 		if(serverConfig.allowsPrivateMessages()) {
 			if(serverConfig.isClientSide()) {
 				if(GlobalConfig.enableLinkFilter) {

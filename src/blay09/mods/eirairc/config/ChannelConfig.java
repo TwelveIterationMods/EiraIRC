@@ -102,6 +102,23 @@ public class ChannelConfig {
 		config.get(categoryName, "relayNickChanges", relayNickChanges).set(relayNickChanges);
 	}
 
+	public void handleConfigCommand(ICommandSender sender, String key) {
+		String value = null;
+		if(key.equals("readOnly")) value = String.valueOf(readOnly);
+		else if(key.equals("muted")) value = String.valueOf(muted);
+		else if(key.equals("autoJoin")) value = String.valueOf(autoJoin);
+		else if(key.equals("relayMinecraftJoinLeave")) value = String.valueOf(relayMinecraftJoinLeave);
+		else if(key.equals("relayDeathMessages")) value = String.valueOf(relayDeathMessages);
+		else if(key.equals("relayIRCJoinLeave")) value = String.valueOf(relayIRCJoinLeave);
+		else if(key.equals("relayNickChanges")) value = String.valueOf(relayNickChanges);
+		else if(key.equals("autoWho")) value = String.valueOf(autoWho);
+		if(value != null) {
+			Utils.sendLocalizedMessage(sender, "irc.config.lookup", name, key, value);
+		} else {
+			Utils.sendLocalizedMessage(sender, "irc.config.invalidOption", name, key);
+		}
+	}
+	
 	public void handleConfigCommand(ICommandSender sender, String key, String value) {
 		if(key.equals("readOnly")) {
 			readOnly = Boolean.parseBoolean(value);

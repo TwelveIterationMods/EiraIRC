@@ -62,14 +62,18 @@ public class GuiIRCTwitch extends GuiScreen {
 	@Override
 	public void actionPerformed(GuiButton button) {
 		if(button == btnBack) {
-			ConfigurationHandler.save();
 			if(config.isAutoConnect() || EiraIRC.instance.isConnectedTo(Globals.TWITCH_SERVER)) {
 				IRCConnection connection = EiraIRC.instance.getConnection(Globals.TWITCH_SERVER);
 				if(connection != null) {
 					connection.disconnect(Utils.getQuitMessage(connection));
 				}
-				if(!config.getNick().isEmpty() && !config.getServerPassword().isEmpty()) {
+				if(config.getNick() != null && !config.getNick().isEmpty() && config.getServerPassword() != null && !config.getServerPassword().isEmpty()) {
 					Utils.connectTo(config);
+					ConfigurationHandler.addServerConfig(config);
+					ConfigurationHandler.save();
+				} else {
+					ConfigurationHandler.removeServerConfig(config.getHost());
+					ConfigurationHandler.save();
 				}
 			}
 			Minecraft.getMinecraft().displayGuiScreen(parentScreen);
