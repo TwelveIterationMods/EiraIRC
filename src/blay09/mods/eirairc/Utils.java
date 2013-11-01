@@ -14,6 +14,8 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.StatCollector;
 import net.minecraft.util.StringTranslate;
 import blay09.mods.eirairc.config.ChannelConfig;
 import blay09.mods.eirairc.config.ConfigHelper;
@@ -33,21 +35,31 @@ public class Utils {
 	private static final Pattern pattern = Pattern.compile("^(?:(https?)://)?([-\\w_\\.]{2,}\\.[a-z]{2,4})(/\\S*)?$");
 	
 	public static void sendLocalizedMessage(ICommandSender sender, String key, Object... args) {
-		sender.sendChatToPlayer(sender.translateString(Globals.MOD_ID + ":" + key, args));
+		sender.sendChatToPlayer(getLocalizedChatMessage(key, args));
 	}
 	
 	public static void sendUnlocalizedMessage(ICommandSender sender, String text) {
-		sender.sendChatToPlayer(text);
+		sender.sendChatToPlayer(getUnlocalizedChatMessage(text));
 	}
 	
 	public static String getLocalizedMessage(String key, Object... args) {
-		return StringTranslate.getInstance().translateKeyFormat(Globals.MOD_ID + ":" + key, args);
+		return StatCollector.translateToLocalFormatted(Globals.MOD_ID + ":" + key, args);
+		// TODO Private getter? ..okay.
+//		return StringTranslate.getInstance().translateKeyFormat(Globals.MOD_ID + ":" + key, args);
+	}
+	
+	public static ChatMessageComponent getLocalizedChatMessage(String key, Object... args) {
+		return ChatMessageComponent.createFromTranslationWithSubstitutions(Globals.MOD_ID + ":" + key, args);
+	}
+	
+	public static ChatMessageComponent getUnlocalizedChatMessage(String text) {
+		return ChatMessageComponent.createFromText(text);
 	}
 	
 	public static void addMessageToChat(String text) {
 		for(String string : wrapString(text, MAX_CHAT_LENGTH)) {
 			if(MinecraftServer.getServer() != null) {
-				MinecraftServer.getServer().getConfigurationManager().sendChatMsg(string);
+				MinecraftServer.getServer().getConfigurationManager().sendChatMsg(Utils.getUnlocalizedChatMessage(string));
 			} else {
 				Minecraft.getMinecraft().thePlayer.addChatMessage(string);
 			}
@@ -247,12 +259,15 @@ public class Utils {
 				return MinecraftServer.getServer().getServerHostname();
 			}
 		} else {
-			ServerData serverData = Minecraft.getMinecraft().getServerData();
-			if(serverData.isHidingAddress()) {
-				return serverData.serverName;
-			} else {
-				return serverData.serverIP;
-			}
+			return "Multiplayer";
+//			A variable that could be useful? Let's make it private and remove all getters for it!
+//			TODO Find out if there's another way to get this information...later
+//			ServerData serverData = Minecraft.getMinecraft().getServerData();
+//			if(serverData.isHidingAddress()) {
+//				return serverData.serverName;
+//			} else {
+//				return serverData.serverIP;
+//			}
 		}
 	}
 	

@@ -5,6 +5,8 @@ package blay09.mods.eirairc.asm;
 
 import java.util.Iterator;
 
+import net.minecraft.launchwrapper.IClassTransformer;
+
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
@@ -20,14 +22,17 @@ import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
-import cpw.mods.fml.relauncher.IClassTransformer;
-
 public class IRCClassTransformer implements IClassTransformer {
 
+	private static final String obfEntityClientPlayerMP = "bdi";
+	private static final String obfGuiChat = "auw";
+	private static final String objSendChatMessage = "b";
+	private static final String objDrawScreen = "a";
+	
 	@Override
 	public byte[] transform(String name, String transformedName, byte[] bytes) {
 		// EntityClientPlayerMP
-		if(name.equals("bdv")) {
+		if(name.equals(obfEntityClientPlayerMP)) {
 			System.out.println("********* INSIDE OBFUSCATED ENTITYCLIENTPLAYERMP TRANSFORMER ABOUT TO PATCH: " + name);
 			return patchClassASM("EntityClientPlayerMP", name, bytes, true);
 		}
@@ -36,7 +41,7 @@ public class IRCClassTransformer implements IClassTransformer {
 			return patchClassASM("EntityClientPlayerMP", name, bytes, false);
 		}
 		// GuiChat
-		if(name.equals("awj")) {
+		if(name.equals(obfGuiChat)) {
 			System.out.println("********* INSIDE OBFUSCATED GUICHAT TRANSFORMER ABOUT TO PATCH: " + name);
 			return patchClassASM("GuiChat", name, bytes, true);
 		}
@@ -51,10 +56,10 @@ public class IRCClassTransformer implements IClassTransformer {
 		String targetMethodName = null;
 		String targetMethodDesc = null;
 		if(cname.equals("EntityClientPlayerMP")) {
-			targetMethodName = obfuscated ? "d" : "sendChatMessage";
+			targetMethodName = obfuscated ? objSendChatMessage : "sendChatMessage";
 			targetMethodDesc = "(Ljava/lang/String;)V";
 		} else if(cname.equals("GuiChat")) {
-			targetMethodName = obfuscated ? "a" : "drawScreen";
+			targetMethodName = obfuscated ? objDrawScreen : "drawScreen";
 			targetMethodDesc = "(IIF)V";
 		}
 		

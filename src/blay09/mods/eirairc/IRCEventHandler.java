@@ -162,7 +162,7 @@ public class IRCEventHandler implements IIRCEventHandler, IPlayerTracker, IConne
 	@ForgeSubscribe
 	public void onServerChat(ServerChatEvent event) {
 		String nick = Utils.getColorAliasForPlayer(event.player);
-		event.line = "<" + nick + "> " + event.message;
+		event.component = Utils.getUnlocalizedChatMessage("<" + nick + "> " + event.message);
 		if(!MinecraftServer.getServer().isSinglePlayer()) {
 			String ircMessage = Utils.formatMessage(ConfigHelper.getDisplayFormatConfig().ircChannelMessage, event.player.username, nick, event.message);
 			for(IRCConnection connection : EiraIRC.instance.getConnections()) {
@@ -184,7 +184,7 @@ public class IRCEventHandler implements IIRCEventHandler, IPlayerTracker, IConne
 		}
 		if(event.entityLiving instanceof EntityPlayer) {
 			String name = Utils.getAliasForPlayer((EntityPlayer) event.entityLiving);
-			String ircMessage = event.entityLiving.field_94063_bt.func_94546_b();
+			String ircMessage = event.entityLiving.func_110142_aN().func_94546_b().toString();
 			for(IRCConnection connection : EiraIRC.instance.getConnections()) {
 				ServerConfig serverConfig = Utils.getServerConfig(connection);
 				for(IRCChannel channel : connection.getChannels()) {
@@ -509,7 +509,7 @@ public class IRCEventHandler implements IIRCEventHandler, IPlayerTracker, IConne
 		message = Utils.filterCodes(message);
 		ServerConfig serverConfig = ConfigurationHandler.getServerConfig(connection.getHost());
 		String mcMessage = Utils.formatMessage(ConfigHelper.getDisplayFormatConfig().mcPrivateMessage, connection, user.getUsername(), Utils.getColoredName(user.getNick(), ConfigHelper.getIRCColor(serverConfig)), message);
-		entityPlayer.sendChatToPlayer(mcMessage);
+		entityPlayer.sendChatToPlayer(Utils.getUnlocalizedChatMessage(mcMessage));
 	}
 
 	@Override
