@@ -92,7 +92,7 @@ public class Localization {
 		/* DISPLAY FORMAT */
 		addString("irc.display.irc.joinMsg", EnumChatFormatting.YELLOW + "[%s] * %s joined the channel");
 		addString("irc.display.irc.partMsg", EnumChatFormatting.YELLOW + "[%s] * %s left the channel");
-		addString("irc.display.irc.partMsg", EnumChatFormatting.YELLOW + "[%s] * %s disconnected from IRC (%s)");
+		addString("irc.display.irc.quitMsg", EnumChatFormatting.YELLOW + "[%s] * %s disconnected from IRC (%s)");
 		addString("irc.display.irc.nickChange", EnumChatFormatting.YELLOW + "[%s] * %s is now known as %s");
 		addString("irc.display.irc.topic", EnumChatFormatting.YELLOW + "Topic for %s: " + EnumChatFormatting.WHITE + "%s");
 		addString("irc.display.mc.joinMsg", "* %s joined the game");

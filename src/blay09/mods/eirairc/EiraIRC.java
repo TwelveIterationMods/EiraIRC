@@ -175,8 +175,8 @@ public class EiraIRC {
 		return null;
 	}
 	
-	public void addPrivateTarget(String privateTarget) {
-		privateTargets.add(privateTarget);
+	public void addPrivateTarget(IRCConnection connection, String privateTarget) {
+		privateTargets.add(connection.getHost() + ":" + privateTarget);
 	}
 	
 	public void setChatTarget(EnumChatTarget chatTarget) {
@@ -190,9 +190,9 @@ public class EiraIRC {
 				for(IRCChannel channel : connection.getChannels()) {
 					validTargetChannels.add(connection.getHost() + ":" + channel.getName());
 				}
-				for(String pchannel : privateTargets) {
-					validTargetChannels.add(connection.getHost() + ":" + pchannel);
-				}
+			}
+			for(String pchannel : privateTargets) {
+				validTargetChannels.add(pchannel);
 			}
 			if(validTargetChannels.isEmpty()) {
 				chatTarget = EnumChatTarget.IRCOnly;

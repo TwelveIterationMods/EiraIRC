@@ -65,7 +65,7 @@
 			<fileset dir="${private.dir.mcp}\reobf\minecraft" />
 			
 			<manifest>
-			    <attribute name="FMLCorePlugin" value="blay09.mods.irc.asm.CCommandsLoadingPlugin" />
+			    <attribute name="FMLCorePlugin" value="blay09.mods.eirairc.asm.IRCLoadingPlugin" />
 				<attribute name="FMLCorePluginContainsFMLMod" value="true" />
 			</manifest>
 		</jar>
@@ -90,7 +90,7 @@
 			<fileset dir="${private.dir.mcp}\reobf\minecraft" />
 			
 			<manifest>
-			    <attribute name="FMLCorePlugin" value="blay09.mods.irc.asm.CCommandsLoadingPlugin" />
+			    <attribute name="FMLCorePlugin" value="blay09.mods.eirairc.asm.IRCLoadingPlugin" />
 			    <attribute name="FMLCorePluginContainsFMLMod" value="true" />
 			</manifest>
 		</jar>

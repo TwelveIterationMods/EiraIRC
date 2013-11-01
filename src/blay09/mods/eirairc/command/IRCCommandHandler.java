@@ -34,7 +34,7 @@ public class IRCCommandHandler {
 		String cmd = args[0];
 		if(cmd.equals("connect")) { // [serv]irc connect <target> [password]
 			if(serverSide && !Utils.isOP(sender)) {
-				Utils.sendLocalizedMessage(sender, "irc.general.noPermissions");
+				Utils.sendLocalizedMessage(sender, "irc.general.noPermission");
 				return true;
 			}
 			if(args.length <= 1) {
@@ -61,7 +61,7 @@ public class IRCCommandHandler {
 			return true;
 		} else if(cmd.equals("twitch")) { // servirc twitch <username> <oauth> OR irc twitch
 			if(serverSide && !Utils.isOP(sender)) {
-				Utils.sendLocalizedMessage(sender, "irc.general.noPermissions");
+				Utils.sendLocalizedMessage(sender, "irc.general.noPermission");
 				return true;
 			}
 			if(!serverSide) {
@@ -106,7 +106,7 @@ public class IRCCommandHandler {
 			return true;
 		} else if(cmd.equals("nickserv")) { // servirc nickserv [target] <nick> <password>
 			if(serverSide && !Utils.isOP(sender)) {
-				Utils.sendLocalizedMessage(sender, "irc.general.noPermissions");
+				Utils.sendLocalizedMessage(sender, "irc.general.noPermission");
 				return true;
 			}
 			if(!serverSide) {
@@ -178,7 +178,7 @@ public class IRCCommandHandler {
 			return true;
 		} else if(cmd.equals("nick")) { // [serv]irc nick [target] <nick>
 			if(serverSide && !Utils.isOP(sender)) {
-				Utils.sendLocalizedMessage(sender, "irc.general.noPermissions");
+				Utils.sendLocalizedMessage(sender, "irc.general.noPermission");
 				return true;
 			}
 			if(args.length <= 1) {
@@ -358,7 +358,7 @@ public class IRCCommandHandler {
 			if(message.isEmpty()) {
 				throw new WrongUsageException("EiraIRC:irc.commands.msg", commandName);
 			}
-			targetUser.getConnection().sendPrivateMessage(targetUser, message);
+			targetUser.getConnection().sendPrivateMessage(targetUser, "<" + Utils.getAliasForPlayer((EntityPlayer) sender) + "> " + message);
 			String mcMessage = "[-> " + targetUser.getNick() + "] <" + Utils.getColorAliasForPlayer((EntityPlayer) sender) + "> " + message;
 			Utils.sendUnlocalizedMessage(sender, mcMessage);
 			return true;

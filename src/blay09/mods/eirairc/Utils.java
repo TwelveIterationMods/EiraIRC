@@ -122,7 +122,7 @@ public class Utils {
 		if(colorCode == INVALID_COLOR) {
 			return name;
 		}
-		return "\u00a7" + String.valueOf(colorCode) + name + "\u00a7f";
+		return "§" + String.valueOf(colorCode) + name + "§f";
 	}
 	
 	public static String getColorAliasForPlayer(EntityPlayer player) {
@@ -285,7 +285,7 @@ public class Utils {
 	}
 	
 	public static String filterCodes(String message) {
-		return message.replaceAll("\\�", "");
+		return message.replaceAll("\\§", "");
 	}
 
 	public static ServerConfig getServerConfig(IRCConnection connection) {

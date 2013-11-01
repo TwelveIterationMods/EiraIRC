@@ -22,7 +22,7 @@ public class ConfigHelper {
 	}
 	
 	public static String getEmoteColor(ServerConfig serverConfig) {
-		if(serverConfig.getEmoteColor() != null) {
+		if(serverConfig.getEmoteColor() != null && !serverConfig.getEmoteColor().isEmpty()) {
 			return serverConfig.getEmoteColor();
 		}
 		return GlobalConfig.emoteColor;

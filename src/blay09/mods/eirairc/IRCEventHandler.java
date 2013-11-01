@@ -69,7 +69,7 @@ public class IRCEventHandler implements IIRCEventHandler, IPlayerTracker, IConne
 					return;
 				}
 				String alias = Utils.getAliasForPlayer((EntityPlayer) event.sender);
-				String mcMessage = (GlobalConfig.emoteColor != null ? Utils.getColorCode(GlobalConfig.emoteColor) : "") + "* " + alias + " " + emote;
+				String mcMessage = (GlobalConfig.emoteColor != null ? "§" + Utils.getColorCode(GlobalConfig.emoteColor) : "") + "* " + alias + " " + emote;
 				Utils.addMessageToChat(mcMessage);
 				if(!MinecraftServer.getServer().isSinglePlayer()) {
 					String ircMessage = Utils.formatMessage(ConfigHelper.getDisplayFormatConfig().ircChannelEmote, event.sender.getCommandSenderName(), alias, emote);
@@ -361,7 +361,7 @@ public class IRCEventHandler implements IIRCEventHandler, IPlayerTracker, IConne
 			}
 			message = Utils.filterCodes(message);
 			String emoteColor = ConfigHelper.getEmoteColor(serverConfig);
-			String mcMessage = (emoteColor != null ? Utils.getColorCode(emoteColor) : "") +Utils.formatMessage(ConfigHelper.getDisplayFormatConfig().mcPrivateEmote, connection, user.getUsername(), user.getNick(), message);
+			String mcMessage = (emoteColor != null ? "§" + Utils.getColorCode(emoteColor) : "") +Utils.formatMessage(ConfigHelper.getDisplayFormatConfig().mcPrivateEmote, connection, user.getUsername(), user.getNick(), message);
 			Utils.addMessageToChat(mcMessage);
 		}
 	}
@@ -387,7 +387,7 @@ public class IRCEventHandler implements IIRCEventHandler, IPlayerTracker, IConne
 				message = Utils.filterCodes(message);
 				String mcMessage = Utils.formatMessage(ConfigHelper.getDisplayFormatConfig().mcPrivateMessage, connection, user.getUsername(), Utils.getColoredName(user.getNick(), ConfigHelper.getIRCColor(serverConfig)), message);
 				Utils.addMessageToChat(mcMessage);
-				EiraIRC.instance.addPrivateTarget(user.getNick());
+				EiraIRC.instance.addPrivateTarget(connection, user.getNick());
 			} else {
 				onIRCBotPrivateCommand(connection, user, message);
 			}
@@ -405,7 +405,7 @@ public class IRCEventHandler implements IIRCEventHandler, IPlayerTracker, IConne
 			}
 			message = Utils.filterCodes(message);
 			String emoteColor = ConfigHelper.getEmoteColor(channelConfig);
-			String mcMessage = (emoteColor != null ? Utils.getColorCode(emoteColor) : "") + Utils.formatMessage(ConfigHelper.getDisplayFormatConfig().mcChannelEmote, connection.getHost(), channel.getName(), user.getUsername(), user.getNick(), message);
+			String mcMessage = (emoteColor != null ? "§" + Utils.getColorCode(emoteColor) : "") + Utils.formatMessage(ConfigHelper.getDisplayFormatConfig().mcChannelEmote, connection.getHost(), channel.getName(), user.getUsername(), user.getNick(), message);
 			Utils.addMessageToChat(mcMessage);
 		}
 	}
