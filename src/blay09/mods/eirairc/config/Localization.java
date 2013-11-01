@@ -76,7 +76,8 @@ public class Localization {
 		addString("irc.color.reset", "Name color reset.");
 		addString("irc.color.blacklist", "The color '%s' is not allowed on this server.");
 		addString("irc.color.invalid", "'%s' is not a valid color. Use TAB to loop through valid options.");
-		addString("irc.who.usersOnline", "[%s] " + EnumChatFormatting.AQUA + "%d users " + EnumChatFormatting.WHITE + "online in " + EnumChatFormatting.YELLOW + "%s" + EnumChatFormatting.WHITE + ":");
+		// TODO for some crazy reason it won't accept %d anymore, so second parameter is string for now
+		addString("irc.who.usersOnline", "[%s] " + EnumChatFormatting.AQUA + "%s users " + EnumChatFormatting.WHITE + "online in " + EnumChatFormatting.YELLOW + "%s" + EnumChatFormatting.WHITE + ":");
 		addString("irc.who.noUsersOnline", "[%s] No users online in %s.");
 		addString("irc.msg.disabled", "Private messages are not enabled.");
 		addString("irc.config.noAbuse", "To prevent abuse, this setting can only be changed in the config file.");
