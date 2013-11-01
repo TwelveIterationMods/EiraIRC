@@ -43,7 +43,8 @@ public class Utils {
 	}
 	
 	public static String getLocalizedMessage(String key, Object... args) {
-		return StatCollector.translateToLocalFormatted(Globals.MOD_ID + ":" + key, args);
+		return Utils.getLocalizedChatMessage(key, args).toString();
+//		return StatCollector.translateToLocalFormatted(Globals.MOD_ID + ":" + key, args);
 		// TODO Private getter? ..okay.
 //		return StringTranslate.getInstance().translateKeyFormat(Globals.MOD_ID + ":" + key, args);
 	}
@@ -61,7 +62,9 @@ public class Utils {
 			if(MinecraftServer.getServer() != null) {
 				MinecraftServer.getServer().getConfigurationManager().sendChatMsg(Utils.getUnlocalizedChatMessage(string));
 			} else {
-				Minecraft.getMinecraft().thePlayer.addChatMessage(string);
+				if(Minecraft.getMinecraft().thePlayer != null) {
+					Minecraft.getMinecraft().thePlayer.addChatMessage(string);
+				}
 			}
 		}
 	}

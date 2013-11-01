@@ -218,6 +218,7 @@ public class IRCCommandHandler {
 					connection.nick(nick);
 				}
 			}
+			ConfigurationHandler.save();
 			return true;
 		} else if(cmd.equals("join")) { // [serv]irc join <target> [password]
 			if(serverSide && !Utils.isOP(sender)) {

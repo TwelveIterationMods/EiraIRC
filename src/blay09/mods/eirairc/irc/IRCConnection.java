@@ -118,7 +118,6 @@ public class IRCConnection implements Runnable {
 			String line = null;
 			while((line = reader.readLine()) != null) {
 				String[] cmd = line.split(" ");
-				System.out.println(line);
 				if(handlePing(line, cmd)) {
 					continue;
 				}
@@ -244,36 +243,36 @@ public class IRCConnection implements Runnable {
 	}
 	
 	private boolean handleNumericReply(int replyCode, String line, String[] cmd) {
+		IRCChannel channel = null;
 		switch(replyCode) {
 		case IRCReplyCodes.RPL_NAMREPLY:
-//			cmd[3] = cmd[3].substring(1);
-//			for(int i = 3; i < cmd.length; i++) {
-//				
-//			}
-//			int i = line.indexOf(" = ");
-//			int j = line.indexOf(":", i);
-//			String channel = line.substring(i + 3, j - 1);
-//			List<String> userList = channelUserMap.get(channel);
-//			if(userList == null) {
-//				userList = new ArrayList<String>();
-//				channelUserMap.put(channel, userList);
-//			} else {
-//				userList.clear();
-//			}
-//			String[] userArray = line.substring(j + 1).split(" ");
-//			for(int k = 0; k < userArray.length; k++) {
-//				if(userArray[k].startsWith("+") || userArray[k].startsWith("@")) {
-//					userArray[k] = userArray[k].substring(1);
-//				}
-//				userList.add(userArray[k]);
-//			}
+			String channelName = cmd[4];
+			channel = channels.get(channelName);
+			
+			String nameList = line.substring(line.lastIndexOf(":") + 1);
+			String[] names = nameList.split(" ");
+			for(int i = 0; i < names.length; i++) {
+				String name = names[i];
+				if(name.startsWith("@")) {
+					// TODO mark user as op for channel
+					name = name.substring(1);
+				} else if(name.startsWith("+")) {
+					// TODO mark user as voiced for channel
+					name = name.substring(1);
+				}
+				IRCUser user = channel.getUserByNick(name);
+				if(user == null) {
+					user = new IRCUser(this, name);
+					channel.addUser(user);
+				}
+			}
 			break;
 		case IRCReplyCodes.RPL_ENDOFMOTD:
 			connected = true;
 			eventHandler.onConnected(this);
 			break;
 		case IRCReplyCodes.RPL_TOPIC:
-			IRCChannel channel = channels.get(cmd[3]);
+			channel = channels.get(cmd[3]);
 			if(channel != null) {
 				int textIdx = line.indexOf(':', 1);
 				String topic = line.substring(textIdx + 1);

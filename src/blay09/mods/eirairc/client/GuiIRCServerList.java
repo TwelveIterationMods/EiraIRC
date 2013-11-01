@@ -71,7 +71,7 @@ public class GuiIRCServerList extends GuiScreen {
 			}
 			onElementSelected(selectedElement);
 		} else if(button == btnEdit) {
-			onElementClicked(selectedElement);
+			Minecraft.getMinecraft().displayGuiScreen(new GuiIRCServerConfig(configs[selectedElement]));
 		} else if(button == btnDelete) {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiYesNo(this, "Do you really want to remove this server?", "This will delete it from the config file.", selectedElement));
 		} else if(button == btnAdd) {
