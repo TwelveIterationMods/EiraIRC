@@ -24,10 +24,15 @@ import cpw.mods.fml.relauncher.IClassTransformer;
 
 public class IRCClassTransformer implements IClassTransformer {
 
+	private static final String obfEntityClientPlayerMP = "bdv";
+	private static final String obfGuiChat = "awj";
+	private static final String objSendChatMessage = "d";
+	private static final String objDrawScreen = "a";
+	
 	@Override
 	public byte[] transform(String name, String transformedName, byte[] bytes) {
 		// EntityClientPlayerMP
-		if(name.equals("bdv")) {
+		if(name.equals(obfEntityClientPlayerMP)) {
 			System.out.println("********* INSIDE OBFUSCATED ENTITYCLIENTPLAYERMP TRANSFORMER ABOUT TO PATCH: " + name);
 			return patchClassASM("EntityClientPlayerMP", name, bytes, true);
 		}
@@ -36,7 +41,7 @@ public class IRCClassTransformer implements IClassTransformer {
 			return patchClassASM("EntityClientPlayerMP", name, bytes, false);
 		}
 		// GuiChat
-		if(name.equals("awj")) {
+		if(name.equals(obfGuiChat)) {
 			System.out.println("********* INSIDE OBFUSCATED GUICHAT TRANSFORMER ABOUT TO PATCH: " + name);
 			return patchClassASM("GuiChat", name, bytes, true);
 		}
@@ -51,10 +56,10 @@ public class IRCClassTransformer implements IClassTransformer {
 		String targetMethodName = null;
 		String targetMethodDesc = null;
 		if(cname.equals("EntityClientPlayerMP")) {
-			targetMethodName = obfuscated ? "d" : "sendChatMessage";
+			targetMethodName = obfuscated ? objSendChatMessage : "sendChatMessage";
 			targetMethodDesc = "(Ljava/lang/String;)V";
 		} else if(cname.equals("GuiChat")) {
-			targetMethodName = obfuscated ? "a" : "drawScreen";
+			targetMethodName = obfuscated ? objDrawScreen : "drawScreen";
 			targetMethodDesc = "(IIF)V";
 		}
 		

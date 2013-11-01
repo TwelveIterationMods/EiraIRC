@@ -8,6 +8,7 @@ import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumChatFormatting;
 import blay09.mods.eirairc.EiraIRC;
+import blay09.mods.eirairc.Utils;
 import blay09.mods.eirairc.command.IRCCommandHandler;
 
 public class ClientChatHandler {
@@ -34,7 +35,7 @@ public class ClientChatHandler {
 			try {
 				return IRCCommandHandler.processCommand(sender, args, false);
 			} catch (WrongUsageException e) {
-				sender.sendChatToPlayer(EnumChatFormatting.RED + "Usage: " + sender.translateString(e.getMessage(), "irc"));
+				sender.sendChatToPlayer(Utils.getLocalizedMessage("irc.general.usage", Utils.getLocalizedMessage(e.getMessage())));
 				return true;
 			}
 		} else if(cmd.equals("me")) {
