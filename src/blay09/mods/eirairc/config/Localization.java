@@ -84,6 +84,7 @@ public class Localization {
 		addString("irc.config.lookup", "[%s] Config option '%s' is set to '%s'");
 		addString("irc.config.invalidOption", "[%s] Invalid config option '%s'. Use TAB to loop through valid options.");
 		addString("irc.config.requiresRestart", "This config option requires a restart to take effect.");
+		addString("irc.config.invalidDisplayMode", "Invalid display mode '%s'");
 		addString("irc.help.validTopics", EnumChatFormatting.YELLOW + "Valid topics are: ");
 		addString("irc.help.topicList", "* color, alias, twitch, msg, commands, config");
 		addString("irc.help.invalidTopic", EnumChatFormatting.RED + "Invalid help topic '%s'. Valid topics are: ");

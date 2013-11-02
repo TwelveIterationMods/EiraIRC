@@ -376,34 +376,6 @@ public class Utils {
 			connection.sendPrivateNotice(user, s);
 		}
 	}
-
-	public static void sendUserList(IRCConnection connection, IRCChannel channel) {
-		if(MinecraftServer.getServer() == null || MinecraftServer.getServer().isSinglePlayer()) {
-			return;
-		}
-		List<EntityPlayer> userList = MinecraftServer.getServer().getConfigurationManager().playerEntityList;
-		if(userList.size() == 0) {
-			connection.sendChannelNotice(channel, getLocalizedMessage("irc.bot.noPlayersOnline"));
-			return;
-		}
-		connection.sendChannelNotice(channel, getLocalizedMessage("irc.bot.playersOnline", userList.size()));
-		String s = " * ";
-		for(int i = 0; i < userList.size(); i++) {
-			EntityPlayer entityPlayer = userList.get(i);
-			String alias = Utils.getAliasForPlayer(entityPlayer);
-			if(s.length() + alias.length() > Globals.CHAT_MAX_LENGTH) {
-				connection.sendChannelNotice(channel, s);
-				s = " * ";
-			}
-			if(s.length() > 3) {
-				s += ", ";
-			}
-			s += alias;
-		}
-		if(s.length() > 3) {
-			connection.sendChannelNotice(channel, s);
-		}
-	}
 	
 	public static Object resolveIRCTarget(String target, boolean allowServers, boolean requireConnected, boolean allowChannels, boolean requireOnChannel, boolean allowUsers, boolean channelUsersOnly) {
 		String server = null;
