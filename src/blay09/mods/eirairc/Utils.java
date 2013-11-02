@@ -42,15 +42,20 @@ public class Utils {
 		sender.sendChatToPlayer(getUnlocalizedChatMessage(text));
 	}
 	
+	public static String getLocalizedMessageNoPrefix(String key, Object... args) {
+		return Utils.getLocalizedChatMessageNoPrefix(key, args).toString();
+	}
+	
 	public static String getLocalizedMessage(String key, Object... args) {
 		return Utils.getLocalizedChatMessage(key, args).toString();
-//		return StatCollector.translateToLocalFormatted(Globals.MOD_ID + ":" + key, args);
-		// TODO Private getter? ..okay.
-//		return StringTranslate.getInstance().translateKeyFormat(Globals.MOD_ID + ":" + key, args);
 	}
 	
 	public static ChatMessageComponent getLocalizedChatMessage(String key, Object... args) {
 		return ChatMessageComponent.createFromTranslationWithSubstitutions(Globals.MOD_ID + ":" + key, args);
+	}
+	
+	public static ChatMessageComponent getLocalizedChatMessageNoPrefix(String key, Object... args) {
+		return ChatMessageComponent.createFromTranslationWithSubstitutions(key, args);
 	}
 	
 	public static ChatMessageComponent getUnlocalizedChatMessage(String text) {
