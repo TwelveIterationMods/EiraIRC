@@ -1,0 +1,88 @@
+﻿# Commands
+EiraIRC:irc.commands.irc=/[serv]irc <command>
+EiraIRC:irc.commands.connect=/[serv]irc connect <server> [password]
+EiraIRC:irc.commands.disconnect=/[serv]irc disconnect [server]
+EiraIRC:irc.commands.join=/[serv]irc join [server/]<channel> (ex. irc.esper.net/#EiraIRC)
+EiraIRC:irc.commands.leave=/[serv]irc leave [server/]<channel> (ex. irc.esper.net/#EiraIRC)
+EiraIRC:irc.commands.who=/[serv]irc who [(<server>|<channel>)]
+EiraIRC:irc.commands.msg=/[serv]irc msg <nick> <message ...>
+EiraIRC:irc.commands.help=/[serv]irc help <topic>
+EiraIRC:irc.commands.nick=/[serv]irc nick [server] <nick>
+EiraIRC:irc.commands.config=/[serv]irc config (global|<server>|<channel>) <key> [value]
+EiraIRC:irc.commands.twitch=/servirc twitch <username> <oauth>
+EiraIRC:irc.commands.nickserv=/servirc nickserv <username> <password>
+EiraIRC:irc.commands.color=/irc color <color>
+EiraIRC:irc.commands.alias=/irc alias <username> <alias> OR /irc alias <alias>
+
+# Command List
+EiraIRC:irc.cmdlist.general=§eGeneral Commands: §fconfig, help, list
+EiraIRC:irc.cmdlist.irc=§eIRC Commands: §fconnect, disconnect, join, leave, nick, msg, who
+EiraIRC:irc.cmdlist.special=§Special Commands: §twitch, color, alias
+
+# Bot
+EiraIRC:irc.bot.cmdlist=Channel Bot Commands: !who
+EiraIRC:irc.bot.unknownCommand=Unknown command. Type HELP to see a list of all available commands.
+EiraIRC:irc.bot.msgSent=Message sent to %s: %s
+EiraIRC:irc.bot.nickInUse=Nickname %s is already in use. Trying %s
+EiraIRC:irc.bot.nickInvalid=%s is not a valid nickname.
+EiraIRC:irc.bot.playersOnline=%d players online:
+EiraIRC:irc.bot.noPlayersOnline=No players online.
+
+# Basic IRC
+EiraIRC:irc.basic.connecting=Connecting to %s
+EiraIRC:irc.basic.connected=Connected to %s
+EiraIRC:irc.basic.disconnecting=Disconnecting from %s
+EiraIRC:irc.basic.disconnected=Disconnected from %s
+EiraIRC:irc.basic.joiningChannel=Joining channel %s on %s
+EiraIRC:irc.basic.leavingChannel=Leaving channel %s on %s
+EiraIRC:irc.basic.changingNick=[%s] Changing nick to %s
+EiraIRC:irc.basic.nickServUpdated=Updated nickserv information for %s
+
+# Command Specific
+## List
+EiraIRC:irc.list.activeConnections=§eEiraIRC is connected to:
+## Alias
+EiraIRC:irc.alias.set=Alias for %s set to '%s'.
+EiraIRC:irc.alias.reset=Alias removed for %s.
+EiraIRC:irc.alias.disabled=Aliases are disabled on this server.
+EiraIRC:irc.alias.lookup=The username for %s is '%s'.
+EiraIRC:irc.alias.notFound=The alias '%s' cannot be found.
+## Color
+EiraIRC:irc.color.set=Name color set to '%s'.
+EiraIRC:irc.color.reset=Name color reset.
+EiraIRC:irc.color.blacklist=The color '%s' is not allowed on this server.
+EiraIRC:irc.color.invalid='%s' is not a valid color. USe TAB to loop through valid options.
+## Who
+EiraIRC:irc.who.usersOnline=[%s] §b%d users §online in §%s§:
+EiraIRC:irc.who.noUsersOnline=[%s] No users online in %s.
+## Msg
+EiraIRC:irc.msg.disabled=Private messages are not enabled.
+## Config
+EiraIRC:irc.config.noAbuse=To prevent abuse, this setting can only be changed in the config file.
+EiraIRC:irc.config.change=[%s] Setting config option '%s' to '%s'
+EiraIRC:irc.config.lookup=[%s] Config option '%s' is set to '%s'
+EiraIRC:irc.config.invalidOption=[%s] Invalid config option '%s'. Use TAB to loop through valid options.
+EiraIRC:irc.config.requiresRestart=This config option requires a restart to take effect.
+## Help
+EiraIRC:irc.help.validTopics=§eValid topics are:
+EiraIRC:irc.help.topicList=* color, alias, twitch, msg, commands, config
+EiraIRC:irc.help.invalidTopic=§Invalid help topic '%s'. Valid topics are:
+## Connect
+EiraIRC.irc.connect.error=Could not connect to %s
+
+# Display Format
+EiraIRC:irc.display.irc.joinMsg=§e[%s] * %s joined the channel
+EiraIRC:irc.display.irc.partMsg=§e[%s] * %s left the channel
+EiraIRC:irc.display.irc.quitMsg=§e[%s] * %s disconnected from IRC (%s)
+EiraIRC:irc.display.irc.nickChange=§e[%s] * %s is now known as %s
+EiraIRC:irc.display.irc.topic=§eTopic for %s: §%s
+EiraIRC:irc.display.msg.joinMsg=* %s joined the game
+EiraIRC:irc.display.msg.partMsg=* %s left the game
+EiraIRC:irc.display.msg.nickChange=* %s is now known as %s
+
+# Target Errors
+EiraIRC:irc.target.specifyChannel=You have to specify a channel.
+EiraIRC:irc.target.specifyServer=You have to specify a server.
+EiraIRC:irc.target.serverNotFound=The server at %s cannot be found.
+EiraIRC:irc.target.invalidTarget=Invalid target. Expected %s.
+EiraIRC:irc.target.notConnected=You are not connected to the server at %s.
