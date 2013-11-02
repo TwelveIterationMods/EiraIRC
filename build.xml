@@ -63,6 +63,7 @@
 		<jar destfile="${private.dir.debug}\${public.release.minecraft.version}\${public.release.mod.version}\EiraIRC-${public.release.mod.version}-${public.debug.build.number}.jar">
 			<fileset dir="${private.dir.mcp}\src\minecraft\" includes="mcmod.info" />
 			<fileset dir="${private.dir.mcp}\reobf\minecraft" />
+			<fileset dir="${private.dir.development}\resources" />
 			
 			<manifest>
 			    <attribute name="FMLCorePlugin" value="blay09.mods.eirairc.asm.IRCLoadingPlugin" />
@@ -77,7 +78,6 @@
 	<target name="release">
 		<!-- Prep for the build -->
 		<antcall target="clean" />
-		<antcall target="increment_build_number" />
 		<antcall target="prep" />
 		<antcall target="replace_tokens" />
 		<antcall target="recompile" />
@@ -88,6 +88,7 @@
 		<jar destfile="${private.dir.release}\${public.release.minecraft.version}\${public.release.mod.version}\EiraIRC-${public.release.mod.version}.jar">
 			<fileset dir="${private.dir.mcp}\src\minecraft\" includes="mcmod.info" />
 			<fileset dir="${private.dir.mcp}\reobf\minecraft" />
+			<fileset dir="${private.dir.development}\resources" />
 			
 			<manifest>
 			    <attribute name="FMLCorePlugin" value="blay09.mods.eirairc.asm.IRCLoadingPlugin" />

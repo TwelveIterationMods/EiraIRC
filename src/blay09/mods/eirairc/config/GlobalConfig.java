@@ -55,6 +55,7 @@ public class GlobalConfig {
 		else if(key.equals("registerShortCommands")) value = String.valueOf(registerShortCommands);
 		else if(key.equals("interOp")) value = String.valueOf(interOp);
 		else if(key.equals("enableAliases")) value = String.valueOf(enableAliases);
+		else if(key.equals("displayMode")) value = displayMode;
 		if(value != null) {
 			Utils.sendLocalizedMessage(sender, "irc.config.lookup", "Global", key, value);
 		} else {
@@ -84,6 +85,12 @@ public class GlobalConfig {
 				Utils.sendLocalizedMessage(sender, "irc.color.invalid", value);
 				return;
 			}
+		} else if(key.equals("displayMode")) {
+			if(GlobalConfig.displayFormates.containsKey(value)) {
+				Utils.sendLocalizedMessage(sender, "irc.config.invalidDisplayMode", value);
+				return;
+			}
+			displayMode = value;
 		} else if(key.equals("quitMessage")) {
 			quitMessage = value;
 		} else if(key.equals("enableNameColors")){

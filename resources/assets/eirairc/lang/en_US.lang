@@ -73,6 +73,7 @@ EiraIRC:irc.config.change=[%s] Setting config option '%s' to '%s'
 EiraIRC:irc.config.lookup=[%s] Config option '%s' is set to '%s'
 EiraIRC:irc.config.invalidOption=[%s] Invalid config option '%s'. Use TAB to loop through valid options.
 EiraIRC:irc.config.requiresRestart=This config option requires a restart to take effect.
+EiraIRC:irc.config.invalidDisplayMode=Invalid display mode '%s'
 ## Help
 EiraIRC:irc.help.validTopics=§eValid topics are:
 EiraIRC:irc.help.topicList=* color, alias, twitch, msg, commands, config
@@ -86,9 +87,9 @@ EiraIRC:irc.display.irc.partMsg=§e[%s] * %s left the channel
 EiraIRC:irc.display.irc.quitMsg=§e[%s] * %s disconnected from IRC (%s)
 EiraIRC:irc.display.irc.nickChange=§e[%s] * %s is now known as %s
 EiraIRC:irc.display.irc.topic=§eTopic for %s: §f%s
-EiraIRC:irc.display.msg.joinMsg=* %s joined the game
-EiraIRC:irc.display.msg.partMsg=* %s left the game
-EiraIRC:irc.display.msg.nickChange=* %s is now known as %s
+EiraIRC:irc.display.mc.joinMsg=* %s joined the game
+EiraIRC:irc.display.mc.partMsg=* %s left the game
+EiraIRC:irc.display.mc.nickChange=* %s is now known as %s
 
 # Target Errors
 EiraIRC:irc.target.specifyChannel=You have to specify a channel.

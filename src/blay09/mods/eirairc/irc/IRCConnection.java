@@ -170,6 +170,7 @@ public class IRCConnection implements Runnable {
 		try {
 			writer.write("NICK " + nick + "\r\n");
 			writer.flush();
+			this.nick = nick;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -434,4 +435,5 @@ public class IRCConnection implements Runnable {
 			e.printStackTrace();
 		}
 	}
+
 }

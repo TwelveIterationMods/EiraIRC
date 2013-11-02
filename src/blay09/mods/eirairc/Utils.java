@@ -35,7 +35,7 @@ public class Utils {
 	private static final Pattern pattern = Pattern.compile("^(?:(https?)://)?([-\\w_\\.]{2,}\\.[a-z]{2,4})(/\\S*)?$");
 	
 	public static void sendLocalizedMessage(ICommandSender sender, String key, Object... args) {
-		sender.sendChatToPlayer(getLocalizedChatMessage(key, args));
+		sender.sendChatToPlayer(getUnlocalizedChatMessage(getLocalizedMessage(key, args)));
 	}
 	
 	public static void sendUnlocalizedMessage(ICommandSender sender, String text) {
@@ -43,11 +43,11 @@ public class Utils {
 	}
 	
 	public static String getLocalizedMessageNoPrefix(String key, Object... args) {
-		return Utils.getLocalizedChatMessageNoPrefix(key, args).toString();
+		return StatCollector.translateToLocalFormatted(key, args);
 	}
 	
 	public static String getLocalizedMessage(String key, Object... args) {
-		return Utils.getLocalizedChatMessage(key, args).toString();
+		return StatCollector.translateToLocalFormatted(Globals.MOD_ID + ":" + key, args);
 	}
 	
 	public static ChatMessageComponent getLocalizedChatMessage(String key, Object... args) {
@@ -395,34 +395,6 @@ public class Utils {
 		}
 		if(s.length() > 3) {
 			connection.sendPrivateNotice(user, s);
-		}
-	}
-
-	public static void sendUserList(IRCConnection connection, IRCChannel channel) {
-		if(MinecraftServer.getServer() == null || MinecraftServer.getServer().isSinglePlayer()) {
-			return;
-		}
-		List<EntityPlayer> userList = MinecraftServer.getServer().getConfigurationManager().playerEntityList;
-		if(userList.size() == 0) {
-			connection.sendChannelNotice(channel, getLocalizedMessage("irc.bot.noPlayersOnline"));
-			return;
-		}
-		connection.sendChannelNotice(channel, getLocalizedMessage("irc.bot.playersOnline", userList.size()));
-		String s = " * ";
-		for(int i = 0; i < userList.size(); i++) {
-			EntityPlayer entityPlayer = userList.get(i);
-			String alias = Utils.getAliasForPlayer(entityPlayer);
-			if(s.length() + alias.length() > Globals.CHAT_MAX_LENGTH) {
-				connection.sendChannelNotice(channel, s);
-				s = " * ";
-			}
-			if(s.length() > 3) {
-				s += ", ";
-			}
-			s += alias;
-		}
-		if(s.length() > 3) {
-			connection.sendChannelNotice(channel, s);
 		}
 	}
 	
