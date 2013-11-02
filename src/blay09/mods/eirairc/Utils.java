@@ -49,7 +49,9 @@ public class Utils {
 			if(MinecraftServer.getServer() != null) {
 				MinecraftServer.getServer().getConfigurationManager().sendChatMsg(string);
 			} else {
-				Minecraft.getMinecraft().thePlayer.addChatMessage(string);
+				if(Minecraft.getMinecraft().thePlayer != null) {
+					Minecraft.getMinecraft().thePlayer.addChatMessage(string);
+				}
 			}
 		}
 	}
