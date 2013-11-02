@@ -347,7 +347,7 @@ public class Utils {
 			sendLocalizedMessage(sender, "irc.who.noUsersOnline", connection.getHost(), channel.getName());
 			return;
 		}
-		sendLocalizedMessage(sender, "irc.who.usersOnline", connection.getHost(), String.valueOf(userList.size()), channel.getName());
+		sendLocalizedMessage(sender, "irc.who.usersOnline", connection.getHost(), userList.size(), channel.getName());
 		String s = " * ";
 		for(int i = 0; i < userList.size(); i++) {
 			IRCUser user = userList.get(i);
