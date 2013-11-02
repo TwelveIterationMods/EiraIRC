@@ -36,7 +36,7 @@ public class Localization {
 		addString("irc.cmdlist.special", EnumChatFormatting.YELLOW + "Special Commands: " + EnumChatFormatting.WHITE + "twitch, color, alias");
 		
 		/* BOT */
-		addString("irc.bot.cmdlist",  EnumChatFormatting.YELLOW + "Channel Bot Commands: " + EnumChatFormatting.WHITE + "!who");
+		addString("irc.bot.cmdlist", "Channel Bot Commands: !who");
 		addString("irc.bot.unknownCommand", "Unknown command. Type HELP to see a list of all available commands.");
 		addString("irc.bot.msgSent", "Message sent to %s: %s");
 		addString("irc.bot.nickInUse", "Nickname %s is already in use. Trying %s...");
@@ -102,7 +102,7 @@ public class Localization {
 		/* TARGET ERRORS */
 		addString("irc.target.specifyChannel", "You have to specify a channel.");
 		addString("irc.target.specifyServer", "You have to specify a server.");
-		addString("irc.target.serverNotFound", "The server at %s cannot not be found.");
+		addString("irc.target.serverNotFound", "The server at %s cannot be found.");
 		addString("irc.target.invalidTarget", "Invalid target. Expected %s.");
 		addString("irc.target.notConnected", "You are not connected to the server at %s.");
 	}
