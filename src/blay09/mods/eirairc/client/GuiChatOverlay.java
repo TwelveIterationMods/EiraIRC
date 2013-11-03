@@ -1,12 +1,12 @@
 // Copyright (c) 2013, Christopher "blay09" Baker
 // All rights reserved.
 
-package blay09.mods.irc.client;
+package blay09.mods.eirairc.client;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import blay09.mods.irc.EiraIRC;
-import blay09.mods.irc.config.Globals;
+import blay09.mods.eirairc.EiraIRC;
+import blay09.mods.eirairc.config.Globals;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
