@@ -31,6 +31,7 @@ public class IRCConnection implements Runnable {
 	private String nick;
 	private String login;
 	private String description;
+	private String charset;
 	private boolean connected;
 	private IIRCEventHandler eventHandler;
 	private final Map<String, IRCChannel> channels = new HashMap<String, IRCChannel>();
@@ -60,6 +61,10 @@ public class IRCConnection implements Runnable {
 		this.nick = nick;
 		this.login = DEFAULT_LOGIN;
 		this.description = DEFAULT_DESCRIPTION;
+	}
+	
+	public void setCharset(String charset) {
+		this.charset = charset;
 	}
 	
 	public void setEventHandler(IIRCEventHandler eventHandler) {
@@ -97,8 +102,8 @@ public class IRCConnection implements Runnable {
 	public boolean connect() {
 		try {
 			socket = new Socket(host, port);
-			writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-			reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), charset));
+			reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), charset));
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 			return false;
@@ -131,6 +136,10 @@ public class IRCConnection implements Runnable {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		tryReconnect();
+	}
+	
+	public void tryReconnect() {
 		EiraIRC.instance.getEventHandler().onDisconnected(this);
 		EiraIRC.instance.removeConnection(this);
 		if(connected) {
@@ -162,6 +171,7 @@ public class IRCConnection implements Runnable {
 			writer.write("USER " + login + " \"\" \"\" :" + description + "\r\n");
 			writer.flush();
 		} catch (IOException e) {
+			tryReconnect();
 			e.printStackTrace();
 		}
 	}
@@ -172,6 +182,7 @@ public class IRCConnection implements Runnable {
 			writer.flush();
 			this.nick = nick;
 		} catch (IOException e) {
+			tryReconnect();
 			e.printStackTrace();
 		}
 	}
@@ -181,6 +192,7 @@ public class IRCConnection implements Runnable {
 			writer.write("JOIN " + channelName + " " + channelKey + "\r\n");
 			writer.flush();
 		} catch (IOException e) {
+			tryReconnect();
 			e.printStackTrace();
 		}
 	}
@@ -191,6 +203,7 @@ public class IRCConnection implements Runnable {
 			writer.flush();
 			channels.remove(channelName);
 		} catch (IOException e) {
+			tryReconnect();
 			e.printStackTrace();
 		}
 	}
@@ -204,6 +217,7 @@ public class IRCConnection implements Runnable {
 			writer.write("MODE " + targetName + " " + flags + (nick != null ? " " + nick : "") + "\r\n");
 			writer.flush();
 		} catch (IOException e) {
+			tryReconnect();
 			e.printStackTrace();
 		}
 	}
@@ -217,6 +231,7 @@ public class IRCConnection implements Runnable {
 			writer.write("TOPIC " + channelName + (topic != null ? " :" + topic : "") + "\r\n");
 			writer.flush();
 		} catch (IOException e) {
+			tryReconnect();
 			e.printStackTrace();
 		}
 	}
@@ -258,9 +273,10 @@ public class IRCConnection implements Runnable {
 				} else if(name.startsWith("+")) {
 					name = name.substring(1);
 				}
-				IRCUser user = channel.getUserByNick(name);
+				IRCUser user = channel.getUser(name);
 				if(user == null) {
 					user = new IRCUser(this, name);
+					users.put(user.getNick(), user);
 					channel.addUser(user);
 				}
 			}
@@ -355,7 +371,7 @@ public class IRCConnection implements Runnable {
 			}
 			IRCChannel channel = channels.get(cmd[2]);
 			if(channel != null) {
-				channel.removeUser(user);
+				channel.removeUser(nick);
 				int quitMessageIdx = cmd[0].length() + 6 + cmd[2].length() + 2;
 				String quitMessage = null;
 				if(line.length() >= quitMessageIdx) {
@@ -399,6 +415,7 @@ public class IRCConnection implements Runnable {
 			writer.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
+			tryReconnect();
 		}
 	}
 
@@ -408,6 +425,7 @@ public class IRCConnection implements Runnable {
 			writer.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
+			tryReconnect();
 		}
 	}
 
@@ -421,6 +439,7 @@ public class IRCConnection implements Runnable {
 			writer.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
+			tryReconnect();
 		}
 	}
 	
@@ -430,6 +449,7 @@ public class IRCConnection implements Runnable {
 			writer.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
+			tryReconnect();
 		}
 	}
 }

@@ -106,6 +106,7 @@ public class Localization {
 		addString("irc.target.serverNotFound", "The server at %s cannot be found.");
 		addString("irc.target.invalidTarget", "Invalid target. Expected %s.");
 		addString("irc.target.notConnected", "You are not connected to the server at %s.");
+		addString("irc.target.notOnChannel", EnumChatFormatting.RED + "You are not on channel %s.");
 	}
 	
 }

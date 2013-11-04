@@ -4,6 +4,7 @@
 package blay09.mods.eirairc;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -326,15 +327,14 @@ public class Utils {
 	}
 	
 	public static void sendUserList(ICommandSender sender, IRCConnection connection, IRCChannel channel) {
-		List<IRCUser> userList = channel.getUserList();
+		Collection<IRCUser> userList = channel.getUserList();
 		if(userList.size() == 0) {
 			sendLocalizedMessage(sender, "irc.who.noUsersOnline", connection.getHost(), channel.getName());
 			return;
 		}
 		sendLocalizedMessage(sender, "irc.who.usersOnline", connection.getHost(), userList.size(), channel.getName());
 		String s = " * ";
-		for(int i = 0; i < userList.size(); i++) {
-			IRCUser user = userList.get(i);
+		for(IRCUser user : userList) {
 			if(s.length() + user.getNick().length() > Globals.CHAT_MAX_LENGTH) {
 				sendUnlocalizedMessage(sender, s);
 				s = " * ";
