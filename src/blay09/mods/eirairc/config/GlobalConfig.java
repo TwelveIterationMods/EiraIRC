@@ -3,6 +3,7 @@
 
 package blay09.mods.eirairc.config;
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,6 +38,7 @@ public class GlobalConfig {
 	public static boolean enableLinkFilter = true;
 	public static boolean registerShortCommands = true;
 	public static boolean interOp = false;
+	public static String charset = "UTF-8";
 	
 	public static void handleConfigCommand(ICommandSender sender, String key) {
 		String value = null;
@@ -56,6 +58,7 @@ public class GlobalConfig {
 		else if(key.equals("interOp")) value = String.valueOf(interOp);
 		else if(key.equals("enableAliases")) value = String.valueOf(enableAliases);
 		else if(key.equals("displayMode")) value = displayMode;
+		else if(key.equals("charset")) value = charset;
 		if(value != null) {
 			Utils.sendLocalizedMessage(sender, "irc.config.lookup", "Global", key, value);
 		} else {
@@ -91,6 +94,9 @@ public class GlobalConfig {
 				return;
 			}
 			displayMode = value;
+		} else if(key.equals("charset")) {
+			charset = value;
+			Utils.sendLocalizedMessage(sender, "irc.config.requiresRestart");
 		} else if(key.equals("quitMessage")) {
 			quitMessage = value;
 		} else if(key.equals("enableNameColors")){
@@ -140,6 +146,8 @@ public class GlobalConfig {
 		list.add("saveCredentials");
 		list.add("enableLinkFilter");
 		list.add("registerShortCommands");
+		list.add("displayMode");
+		list.add("charset");
 	}
 	
 	public static void load(Configuration config) {
@@ -151,6 +159,7 @@ public class GlobalConfig {
 		GlobalConfig.enableLinkFilter = config.get(ConfigurationHandler.CATEGORY_GLOBAL, "enableLinkFilter", GlobalConfig.enableLinkFilter).getBoolean(GlobalConfig.enableLinkFilter);
 		GlobalConfig.saveCredentials = config.get(ConfigurationHandler.CATEGORY_GLOBAL, "saveCredentials", GlobalConfig.saveCredentials).getBoolean(GlobalConfig.saveCredentials);
 		GlobalConfig.registerShortCommands = config.get(ConfigurationHandler.CATEGORY_GLOBAL, "registerShortCommands", GlobalConfig.registerShortCommands).getBoolean(GlobalConfig.registerShortCommands);
+		GlobalConfig.charset = Utils.unquote(config.get(ConfigurationHandler.CATEGORY_GLOBAL, "charset", GlobalConfig.charset).getString());
 		config.getCategory(ConfigurationHandler.CATEGORY_GLOBAL).setComment("These are settings that are applied on all servers and channels.");
 		
 		/*
@@ -215,6 +224,7 @@ public class GlobalConfig {
 		config.get(ConfigurationHandler.CATEGORY_GLOBAL, "enableLinkFilter", GlobalConfig.enableLinkFilter).set(GlobalConfig.enableLinkFilter);
 		config.get(ConfigurationHandler.CATEGORY_GLOBAL, "saveCredentials", GlobalConfig.saveCredentials).set(GlobalConfig.saveCredentials);
 		config.get(ConfigurationHandler.CATEGORY_GLOBAL, "quitMessage", "").set(Utils.quote(GlobalConfig.quitMessage));
+		config.get(ConfigurationHandler.CATEGORY_GLOBAL, "charset", "").set(Utils.quote(GlobalConfig.charset));
 		
 		/*
 		 * Display Config
@@ -256,6 +266,14 @@ public class GlobalConfig {
 			Utils.addValidColorsToList(list);
 		} else if(option.startsWith("enable") || option.startsWith("show") || option.startsWith("allow") || option.equals("saveCredentials") || option.equals("persistentConnection")) {
 			Utils.addBooleansToList(list);
+		} else if(option.equals("charset")) {
+			for(String cs : Charset.availableCharsets().keySet()) {
+				list.add(cs);
+			}
+		} else if(option.equals("displayMode")) {
+			for(String dm : displayFormates.keySet()) {
+				list.add(dm);
+			}
 		}
 	}
 }

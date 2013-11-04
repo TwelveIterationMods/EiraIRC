@@ -97,3 +97,4 @@ EiraIRC:irc.target.specifyServer=You have to specify a server.
 EiraIRC:irc.target.serverNotFound=The server at %s cannot be found.
 EiraIRC:irc.target.invalidTarget=Invalid target. Expected %s.
 EiraIRC:irc.target.notConnected=You are not connected to the server at %s.
+EiraIRC:irc.target.notOnChannel=§cYou are not on channel %s

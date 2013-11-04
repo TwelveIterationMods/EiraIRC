@@ -3,42 +3,36 @@
 
 package blay09.mods.eirairc.irc;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import blay09.mods.eirairc.config.ChannelConfig;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 public class IRCChannel {
 
 	private IRCConnection connection;
 	private String name;
 	private String topic;
-	private List<IRCUser> users = new ArrayList<IRCUser>();
+	private Map<String, IRCUser> users = new HashMap<String, IRCUser>();
 	
 	public IRCChannel(IRCConnection connection, String name) {
 		this.connection = connection;
 		this.name = name;
 	}
 	
-	public List<IRCUser> getUserList() {
-		return users;
+	public Collection<IRCUser> getUserList() {
+		return users.values();
 	}
 	
-	public IRCUser getUserByNick(String nick) {
-		for(int i = 0; i < users.size(); i++) {
-			if(users.get(i).getNick().equals(nick)) {
-				return users.get(i);
-			}
-		}
-		return null;
+	public IRCUser getUser(String nick) {
+		return users.get(nick);
 	}
 	
 	public void addUser(IRCUser user) {
-		users.add(user);
+		users.put(user.getNick(), user);
 	}
 
-	public void removeUser(IRCUser user) {
-		users.remove(user);
+	public void removeUser(String nick) {
+		users.remove(nick);
 	}
 
 	public String getName() {
@@ -59,5 +53,9 @@ public class IRCChannel {
 
 	public IRCConnection getConnection() {
 		return connection;
+	}
+
+	public boolean hasUser(String nick) {
+		return users.containsKey(nick);
 	}
 }
