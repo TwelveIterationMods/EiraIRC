@@ -316,6 +316,7 @@ public class Utils {
 
 	public static IRCConnection connectTo(ServerConfig config) {
 		IRCConnection connection = new IRCConnection(config.getHost(), IRCConnection.IRC_DEFAULT_PORT, config.getServerPassword(), ConfigHelper.getNick(config));
+		connection.setCharset(GlobalConfig.charset);
 		connection.setEventHandler(EiraIRC.instance.getEventHandler());
 		if(connection.connect()) {
 			EiraIRC.instance.addConnection(connection);

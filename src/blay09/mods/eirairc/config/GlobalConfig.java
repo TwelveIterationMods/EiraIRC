@@ -165,6 +165,7 @@ public class GlobalConfig {
 		/*
 		 * Display Config
 		 */
+		GlobalConfig.displayMode = Utils.unquote(config.get(ConfigurationHandler.CATEGORY_DISPLAY, "displayMode", GlobalConfig.displayMode).getString());
 		GlobalConfig.ircColor = config.get(ConfigurationHandler.CATEGORY_DISPLAY, "ircColor", GlobalConfig.ircColor).getString();
 		GlobalConfig.emoteColor = config.get(ConfigurationHandler.CATEGORY_DISPLAY, "emoteColor", GlobalConfig.emoteColor).getString();
 		GlobalConfig.relayDeathMessages = config.get(ConfigurationHandler.CATEGORY_DISPLAY, "relayDeathMessages", GlobalConfig.relayDeathMessages).getBoolean(GlobalConfig.relayDeathMessages);
@@ -229,8 +230,9 @@ public class GlobalConfig {
 		/*
 		 * Display Config
 		 */
-		config.get(ConfigurationHandler.CATEGORY_DISPLAY, "ircColor", GlobalConfig.ircColor).set(GlobalConfig.ircColor);
-		config.get(ConfigurationHandler.CATEGORY_DISPLAY, "emoteColor", GlobalConfig.emoteColor).set(GlobalConfig.emoteColor);
+		config.get(ConfigurationHandler.CATEGORY_DISPLAY, "displayMode", "").set(Utils.quote(GlobalConfig.displayMode));
+		config.get(ConfigurationHandler.CATEGORY_DISPLAY, "ircColor", "").set(GlobalConfig.ircColor);
+		config.get(ConfigurationHandler.CATEGORY_DISPLAY, "emoteColor", "").set(GlobalConfig.emoteColor);
 		config.get(ConfigurationHandler.CATEGORY_DISPLAY, "relayDeathMessages", GlobalConfig.relayDeathMessages).set(GlobalConfig.relayDeathMessages);
 		config.get(ConfigurationHandler.CATEGORY_DISPLAY, "relayMinecraftJoinLeave", GlobalConfig.relayMinecraftJoinLeave).set(GlobalConfig.relayMinecraftJoinLeave);
 		config.get(ConfigurationHandler.CATEGORY_DISPLAY, "relayIRCJoinLeave", GlobalConfig.relayIRCJoinLeave).set(GlobalConfig.relayIRCJoinLeave);

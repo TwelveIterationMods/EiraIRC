@@ -9,14 +9,11 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import blay09.mods.eirairc.EiraIRC;
-import blay09.mods.eirairc.IRCEventHandler;
 import blay09.mods.eirairc.Utils;
 
 public class IRCConnection implements Runnable {
@@ -31,6 +28,7 @@ public class IRCConnection implements Runnable {
 	private String nick;
 	private String login;
 	private String description;
+	private String charset;
 	private boolean connected;
 	private IIRCEventHandler eventHandler;
 	private final Map<String, IRCChannel> channels = new HashMap<String, IRCChannel>();
@@ -74,6 +72,10 @@ public class IRCConnection implements Runnable {
 		this.description = description;
 	}
 	
+	public void setCharset(String charset) {
+		this.charset = charset;
+	}
+	
 	public String getNick() {
 		return nick;
 	}
@@ -97,8 +99,8 @@ public class IRCConnection implements Runnable {
 	public boolean connect() {
 		try {
 			socket = new Socket(host, port);
-			writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF-8"));
-			reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
+			writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), charset));
+			reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), charset));
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 			return false;

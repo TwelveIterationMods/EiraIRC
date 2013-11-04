@@ -170,8 +170,7 @@ public class IRCEventHandler implements IIRCEventHandler, IPlayerTracker, IConne
 		String mcNick = Utils.getColorAliasForPlayer(event.player);
 		event.component = Utils.getUnlocalizedChatMessage("<" + mcNick + "> " + event.message);
 		if(!MinecraftServer.getServer().isSinglePlayer()) {
-			String text = event.component.toString();
-			text = text.substring(text.indexOf(" ") + 1);
+			String text = event.message;
 			if(onChatCommand(event.player, text, true)) {
 				event.setCanceled(true);
 				return;
