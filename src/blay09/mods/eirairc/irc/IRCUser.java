@@ -3,14 +3,15 @@
 
 package blay09.mods.eirairc.irc;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 public class IRCUser {
 
 	private IRCConnection connection;
 	private String nick;
-	private final List<IRCChannel> channels = new ArrayList<IRCChannel>();
+	private final Map<String, IRCChannel> channels = new HashMap<String, IRCChannel>();
 	
 	public IRCUser(IRCConnection connection, String nick) {
 		this.connection = connection;
@@ -25,8 +26,16 @@ public class IRCUser {
 		return nick;
 	}
 
-	public List<IRCChannel> getChannels() {
-		return channels;
+	public void addChannel(IRCChannel channel) {
+		channels.put(channel.getName(), channel);
+	}
+	
+	public void removeChannel(IRCChannel channel) {
+		channels.remove(channel.getName());
+	}
+	
+	public Collection<IRCChannel> getChannels() {
+		return channels.values();
 	}
 
 	public String getUsername() {

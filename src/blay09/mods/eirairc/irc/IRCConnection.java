@@ -277,6 +277,7 @@ public class IRCConnection implements Runnable {
 				if(user == null) {
 					user = new IRCUser(this, name);
 					users.put(user.getNick(), user);
+					user.addChannel(channel);
 					channel.addUser(user);
 				}
 			}
@@ -362,6 +363,7 @@ public class IRCConnection implements Runnable {
 				channels.put(cmd[2], channel);
 			}
 			channel.addUser(user);
+			user.addChannel(channel);
 			eventHandler.onUserJoin(this, user, channel);
 		} else if(msg.equals("PART")) {
 			IRCUser user = users.get(nick);
