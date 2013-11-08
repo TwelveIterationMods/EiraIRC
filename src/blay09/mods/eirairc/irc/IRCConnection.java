@@ -257,6 +257,7 @@ public class IRCConnection implements Runnable {
 	
 	private boolean handleNumericReply(int replyCode, String line, String[] cmd) {
 		IRCChannel channel = null;
+		IRCUser user = null;
 		switch(replyCode) {
 		case IRCReplyCodes.RPL_NAMREPLY:
 			String channelName = cmd[4];
@@ -273,7 +274,7 @@ public class IRCConnection implements Runnable {
 					// TODO mark user as voiced for channel
 					name = name.substring(1);
 				}
-				IRCUser user = channel.getUser(name);
+				user = channel.getUser(name);
 				if(user == null) {
 					user = new IRCUser(this, name);
 					users.put(user.getNick(), user);
@@ -294,6 +295,14 @@ public class IRCConnection implements Runnable {
 				channel.setTopic(topic);
 				eventHandler.onTopicChange(channel, topic);
 			}
+			break;
+		case IRCReplyCodes.RPL_WHOISLOGIN:
+			user = users.get(cmd[3]);
+			if(user == null) {
+				user = new IRCUser(this, cmd[3]);
+				users.put(user.getNick(), user);
+			}
+			user.setAuthLogin(cmd[4]);
 			break;
 		case IRCReplyCodes.ERR_ERRONEUSNICKNAME:
 		case IRCReplyCodes.ERR_NICKNAMEINUSE:
@@ -362,6 +371,7 @@ public class IRCConnection implements Runnable {
 				channel = new IRCChannel(this, cmd[2]);
 				channels.put(cmd[2], channel);
 			}
+			whois(nick);
 			channel.addUser(user);
 			user.addChannel(channel);
 			eventHandler.onUserJoin(this, user, channel);
@@ -407,6 +417,16 @@ public class IRCConnection implements Runnable {
 		return false;
 	}
 
+	private void whois(String nick) {
+		try {
+			writer.write("WHOIS " + nick + "\r\n");
+			writer.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+			tryReconnect();
+		}
+	}
+
 	public void sendPrivateMessage(IRCUser user, String message) {
 		sendPrivateMessage(user.getNick(), message);
 	}
@@ -448,6 +468,16 @@ public class IRCConnection implements Runnable {
 	public void sendChannelNotice(IRCChannel channel, String message) {
 		try {
 			writer.write("NOTICE " + channel.getName() + " :" + message + "\r\n");
+			writer.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+			tryReconnect();
+		}
+	}
+
+	public void kick(String channelName, String nick, String reason) {
+		try {
+			writer.write("KICK " + channelName + " " + nick + (reason != null ? " :" + reason : "") + "\r\n");
 			writer.flush();
 		} catch (IOException e) {
 			e.printStackTrace();

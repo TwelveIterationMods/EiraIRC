@@ -13,6 +13,7 @@ EiraIRC:irc.commands.twitch=/servirc twitch <username> <oauth>
 EiraIRC:irc.commands.nickserv=/servirc nickserv <username> <password>
 EiraIRC:irc.commands.color=/irc color <color>
 EiraIRC:irc.commands.alias=/irc alias <username> <alias> OR /irc alias <alias>
+EiraIRC:irc.commands.interop.user=/irc %s [channel] <user>
 
 # Command List
 EiraIRC:irc.cmdlist.general=§eGeneral Commands: §fconfig, help, list
@@ -79,7 +80,9 @@ EiraIRC:irc.help.validTopics=§eValid topics are:
 EiraIRC:irc.help.topicList=* color, alias, twitch, msg, commands, config
 EiraIRC:irc.help.invalidTopic=§cInvalid help topic '%s'. Valid topics are:
 ## Connect
-EiraIRC.irc.connect.error=Could not connect to %s
+EiraIRC:irc.connect.error=Could not connect to %s
+## InterOP
+EiraIRC:irc.interop.disabled=InterOP is not enabled.
 
 # Display Format
 EiraIRC:irc.display.irc.joinMsg=§e[%s] * %s joined the channel

@@ -430,8 +430,81 @@ public class IRCCommandHandler {
 				Utils.sendUnlocalizedMessage(sender, " * " + connection.getHost() + " (" + channels + ")");
 			}
 			return true;
+		} else if(cmd.equals("op") || cmd.equals("deop") || cmd.equals("voice") || cmd.equals("devoice") || cmd.equals("kick") || cmd.equals("ban") || cmd.equals("unban")) {
+			if(args.length <= 2) {
+				throw new WrongUsageException("EiraIRC:irc.commands.interop." + cmd);
+			}
+			Object target = Utils.resolveIRCTarget(args[1], false, false, true, true, false, false);
+			IRCChannel targetChannel = null;
+			IRCUser targetUser = null;
+			if(target instanceof IRCTargetError) {
+				switch((IRCTargetError) target) {
+					case ChannelNotFound: Utils.sendLocalizedMessage(sender, "irc.target.channelNotFound", args[2]); break;
+					case InvalidTarget: Utils.sendLocalizedMessage(sender, "irc.target.invalidTarget"); break;
+					case NotConnected: Utils.sendLocalizedMessage(sender, "irc.target.notConnected", args[2]); break;
+					case NotOnChannel: Utils.sendLocalizedMessage(sender, "irc.target.notOnChannel", args[2]); break;
+					case ServerNotFound: Utils.sendLocalizedMessage(sender, "irc.target.serverNotFound", args[2]); break;
+					case SpecifyServer: Utils.sendLocalizedMessage(sender, "irc.target.specifyServer"); break;
+					default: Utils.sendLocalizedMessage(sender, "irc.target.unknown"); break;
+				}
+				return true;
+			}
+			targetChannel = (IRCChannel) target;
+			target = Utils.resolveIRCTarget(args[2], false, false, false, false, true, false);
+			if(target instanceof IRCTargetError) {
+				switch((IRCTargetError) target) {
+					case InvalidTarget: Utils.sendLocalizedMessage(sender, "irc.target.invalidTarget"); break;
+					case NotConnected: Utils.sendLocalizedMessage(sender, "irc.target.notConnected", args[2]); break;
+					case NotOnChannel: Utils.sendLocalizedMessage(sender, "irc.target.notOnChannel", args[2]); break;
+					case ServerNotFound: Utils.sendLocalizedMessage(sender, "irc.target.serverNotFound", args[2]); break;
+					case SpecifyServer: Utils.sendLocalizedMessage(sender, "irc.target.specifyServer"); break;
+					case UserNotFound: Utils.sendLocalizedMessage(sender, "irc.target.userNotFound", args[2]); break;
+					default: Utils.sendLocalizedMessage(sender, "irc.target.unknown"); break;
+				}
+				return true;
+			}
+			targetUser = (IRCUser) target;
+			if(!checkInterOP(sender, targetChannel, serverSide)) {
+				return true;
+			}
+			if(cmd.equals("kick")) {
+				String reason = null;
+				if(args.length > 3) {
+					reason = args[3];
+				}
+				targetChannel.getConnection().kick(targetChannel.getName(), targetUser.getNick(), reason);
+			} else if(cmd.equals("ban")) {
+				String reason = null;
+				if(args.length > 3) {
+					reason = args[3];
+				}
+				targetChannel.getConnection().mode(targetChannel.getName(), "+b", targetUser.getUsername());
+				targetChannel.getConnection().kick(targetChannel.getName(), targetUser.getNick(), reason);
+			} else if(cmd.equals("unban")) {
+				targetChannel.getConnection().mode(targetChannel.getName(), "-b", targetUser.getUsername());
+			} else if(cmd.equals("op")) {
+				targetChannel.getConnection().mode(targetChannel.getName(), "+o", targetUser.getNick());
+			} else if(cmd.equals("deop")) {
+				targetChannel.getConnection().mode(targetChannel.getName(), "-o", targetUser.getNick());
+			} else if(cmd.equals("voice")) {
+				targetChannel.getConnection().mode(targetChannel.getName(), "+v", targetUser.getNick());
+			} else if(cmd.equals("devoice")) {
+				targetChannel.getConnection().mode(targetChannel.getName(), "-v", targetUser.getNick());
+			}
 		}
 		return false;
+	}
+	
+	private static boolean checkInterOP(ICommandSender sender, IRCChannel channel, boolean serverSide) {
+		if(serverSide && !Utils.isOP(sender)) {
+			Utils.sendLocalizedMessage(sender, "irc.general.noPermission");
+			return false;
+		}
+		if(!GlobalConfig.interOp) {
+			Utils.sendLocalizedMessage(sender, "irc.interop.disabled");
+			return false;
+		}
+		return true;
 	}
 	
 	public static List<String> addTabCompletionOptions(String cmd, ICommandSender sender, String[] args) {
@@ -444,7 +517,6 @@ public class IRCCommandHandler {
 				list.add("alias");
 			}
 			list.add("join");
-			list.add("mode");
 			list.add("leave");
 			list.add("connect");
 			list.add("twitch");
@@ -452,9 +524,19 @@ public class IRCCommandHandler {
 			list.add("disconnect");
 			list.add("list");
 			list.add("nick");
-			list.add("op");
 			list.add("config");
 			list.add("help");
+			if(GlobalConfig.interOp) {
+				list.add("op");
+				list.add("deop");
+				list.add("kick");
+				list.add("ban");
+				list.add("unban");
+				list.add("voice");
+				list.add("devoice");
+				list.add("mode");
+				list.add("topic");
+			}
 		} else if(args.length == 2) {
 			if(args[0].equals("color")) {
 				Utils.addValidColorsToList(list);

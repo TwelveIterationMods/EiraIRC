@@ -38,6 +38,7 @@ public class GlobalConfig {
 	public static boolean enableLinkFilter = true;
 	public static boolean registerShortCommands = true;
 	public static boolean interOp = false;
+	public static List<String> interOpAuthList = new ArrayList<String>();
 	public static String charset = "UTF-8";
 	
 	public static void handleConfigCommand(ICommandSender sender, String key) {
@@ -198,6 +199,10 @@ public class GlobalConfig {
 			GlobalConfig.colorBlackList.add(colorBlackList[i]);
 		}
 		GlobalConfig.interOp = config.get(ConfigurationHandler.CATEGORY_SERVERONLY, "interOp", GlobalConfig.interOp).getBoolean(GlobalConfig.interOp);
+		String[] interOpAuthList = config.get(ConfigurationHandler.CATEGORY_SERVERONLY, "interOpAuthList", new String[0]).getStringList();
+		for(int i = 0; i < interOpAuthList.length; i++) {
+			GlobalConfig.interOpAuthList.add(interOpAuthList[i]);
+		}
 		config.getCategory(ConfigurationHandler.CATEGORY_SERVERONLY).setComment("These options are only important in the server version as they either have no function on clients or aren't really intended to be client-side.");
 		
 		/*

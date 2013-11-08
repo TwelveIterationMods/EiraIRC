@@ -9,9 +9,10 @@ import java.util.Map;
 
 public class IRCUser {
 
-	private IRCConnection connection;
-	private String nick;
+	private final IRCConnection connection;
 	private final Map<String, IRCChannel> channels = new HashMap<String, IRCChannel>();
+	private String nick;
+	private String authLogin;
 	
 	public IRCUser(IRCConnection connection, String nick) {
 		this.connection = connection;
@@ -44,6 +45,14 @@ public class IRCUser {
 
 	public IRCConnection getConnection() {
 		return connection;
+	}
+
+	public void setAuthLogin(String authLogin) {
+		this.authLogin = authLogin;
+	}
+	
+	public String getAuthLogin() {
+		return authLogin;
 	}
 
 }
