@@ -55,6 +55,7 @@ public class EiraIRC {
 	private final List<String> validTargetChannels = new ArrayList<String>();
 	private final List<String> privateTargets = new ArrayList<String>();
 	private int targetChannelIndex;
+	private IRCChannel suggestedChannel;
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
@@ -204,5 +205,9 @@ public class EiraIRC {
 	
 	public EnumChatTarget getChatTarget() {
 		return chatTarget;
+	}
+	
+	public IRCChannel getSuggestedChannel() {
+		return suggestedChannel;
 	}
 }

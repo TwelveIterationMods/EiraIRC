@@ -1,4 +1,4 @@
-﻿# Commands
+# Commands
 EiraIRC:irc.commands.irc=/[serv]irc <command>
 EiraIRC:irc.commands.connect=/[serv]irc connect <server> [password]
 EiraIRC:irc.commands.disconnect=/[serv]irc disconnect [server]
@@ -13,7 +13,18 @@ EiraIRC:irc.commands.twitch=/servirc twitch <username> <oauth>
 EiraIRC:irc.commands.nickserv=/servirc nickserv <username> <password>
 EiraIRC:irc.commands.color=/irc color <color>
 EiraIRC:irc.commands.alias=/irc alias <username> <alias> OR /irc alias <alias>
-EiraIRC:irc.commands.interop.user=/irc %s [channel] <user>
+## InterOP
+EiraIRC.irc.commands.interop.op=/irc op <channel> <user>
+EiraIRC.irc.commands.interop.deop=/irc deop <channel> <user>
+EiraIRC.irc.commands.interop.voice=/irc voice <channel> <user>
+EiraIRC.irc.commands.interop.devoice=/irc devoice <channel> <user>
+EiraIRC.irc.commands.interop.kick=/irc kick <channel> <user> [reason]
+EiraIRC.irc.commands.interop.ban=/irc ban <channel> <user> [reason]
+EiraIRC.irc.commands.interop.unban=/irc unban <channel> <user>
+EiraIRC.irc.commands.interop.umode=/irc umode <channel> <user> <flags>
+EiraIRC.irc.commands.interop.mode=/irc mode <channel> <flags>
+EiraIRC.irc.commands.interop.topic=/irc topic <channel> <topic>
+
 
 # Command List
 EiraIRC:irc.cmdlist.general=§eGeneral Commands: §fconfig, help, list

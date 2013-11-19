@@ -11,6 +11,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import blay09.mods.eirairc.EiraIRC;
@@ -483,6 +484,14 @@ public class IRCConnection implements Runnable {
 			e.printStackTrace();
 			tryReconnect();
 		}
+	}
+
+	public IRCChannel getDefaultChannel() {
+		Iterator<IRCChannel> it = channels.values().iterator();
+		if(it.hasNext()) {
+			return it.next();
+		}
+		return null;
 	}
 
 }

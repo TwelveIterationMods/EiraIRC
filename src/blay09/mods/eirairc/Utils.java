@@ -5,6 +5,7 @@ package blay09.mods.eirairc;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -395,6 +396,30 @@ public class Utils {
 		if(s.length() > 3) {
 			connection.sendPrivateNotice(user, s);
 		}
+	}
+	
+	public static IRCConnection getSuggestedConnection() {
+		if(EiraIRC.instance.getSuggestedChannel() != null) {
+			return EiraIRC.instance.getSuggestedChannel().getConnection();
+		}
+		if(EiraIRC.instance.getConnectionCount() == 1) {
+			return EiraIRC.instance.getDefaultConnection();
+		}
+		return null;
+	}
+	
+	public static IRCChannel getSuggestedChannel() {
+		if(EiraIRC.instance.getSuggestedChannel() != null) {
+			return EiraIRC.instance.getSuggestedChannel();
+		}
+		IRCConnection connection = getSuggestedConnection();
+		if(connection != null) {
+			if(connection.getChannels().size() == 1) {
+				return connection.getDefaultChannel();
+			}
+			return null;
+		}
+		return null;
 	}
 	
 	public static Object resolveIRCTarget(String target, boolean allowServers, boolean requireConnected, boolean allowChannels, boolean requireOnChannel, boolean allowUsers, boolean channelUsersOnly) {
