@@ -55,7 +55,6 @@ public class ChannelConfig {
 	}
 
 	public void defaultTwitch() {
-		readOnly = true;
 		autoWho = false;
 	}
 	
