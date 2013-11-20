@@ -429,6 +429,9 @@ public class IRCConnection implements Runnable {
 	}
 
 	public void sendPrivateMessage(IRCUser user, String message) {
+		if(user == null) {
+			return;
+		}
 		sendPrivateMessage(user.getNick(), message);
 	}
 	
@@ -443,6 +446,9 @@ public class IRCConnection implements Runnable {
 	}
 
 	public void sendChannelMessage(IRCChannel channel, String message) {
+		if(channel == null) {
+			return;
+		}
 		try {
 			writer.write("PRIVMSG " + channel.getName() + " :" + message + "\r\n");
 			writer.flush();
