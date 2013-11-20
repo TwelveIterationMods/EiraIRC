@@ -55,7 +55,7 @@ public class ConfigurationHandler {
 	}
 	
 	public static ServerConfig getServerConfig(String host) {
-		ServerConfig serverConfig = serverConfigs.get(host);
+		ServerConfig serverConfig = serverConfigs.get(host.toLowerCase());
 		if(serverConfig == null) {
 			serverConfig = new ServerConfig(host);
 		}
@@ -67,15 +67,15 @@ public class ConfigurationHandler {
 	}
 
 	public static void addServerConfig(ServerConfig serverConfig) {
-		serverConfigs.put(serverConfig.getHost(), serverConfig);
+		serverConfigs.put(serverConfig.getHost().toLowerCase(), serverConfig);
 	}
 	
 	public static void removeServerConfig(String host) {
-		serverConfigs.remove(host);
+		serverConfigs.remove(host.toLowerCase());
 	}
 
 	public static boolean hasServerConfig(String host) {
-		return serverConfigs.containsKey(host);
+		return serverConfigs.containsKey(host.toLowerCase());
 	}
 
 	public static void handleConfigCommand(ICommandSender sender, String target, String key, String value) {

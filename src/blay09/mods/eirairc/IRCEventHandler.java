@@ -289,7 +289,7 @@ public class IRCEventHandler implements IIRCEventHandler, IPlayerTracker, IConne
 		Utils.addMessageToChat(mcMessage);
 		ServerConfig serverConfig = Utils.getServerConfig(connection);
 		if(serverConfig.getHost().equals(Globals.TWITCH_SERVER) && serverConfig.getNick() != null) {
-			ChannelConfig twitchChannel = serverConfig.getChannelConfig(serverConfig.getNick());
+			ChannelConfig twitchChannel = serverConfig.getChannelConfig("#" + serverConfig.getNick());
 			twitchChannel.setAutoJoin(true);
 		}
 		Utils.doNickServ(connection, serverConfig);

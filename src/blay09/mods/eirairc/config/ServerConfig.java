@@ -84,7 +84,7 @@ public class ServerConfig {
 	}
 	
 	public ChannelConfig getChannelConfig(String channelName) {
-		ChannelConfig channelConfig = channels.get(channelName);
+		ChannelConfig channelConfig = channels.get(channelName.toLowerCase());
 		if(channelConfig == null) {
 			channelConfig = new ChannelConfig(this, channelName);
 			if(host.equals(Globals.TWITCH_SERVER)) {
@@ -94,14 +94,14 @@ public class ServerConfig {
 			} else {
 				channelConfig.defaultClient();
 			}
-			channels.put(channelName, channelConfig);
+			channels.put(channelName.toLowerCase(), channelConfig);
 			ConfigurationHandler.save();
 		}
 		return channelConfig;
 	}
 	
 	public ChannelConfig getChannelConfig(IRCChannel channel) {
-		return getChannelConfig(channel.getName());
+		return getChannelConfig(channel.getName().toLowerCase());
 	}
 
 	public void setNickServ(String nickServName, String nickServPassword) {
@@ -118,15 +118,15 @@ public class ServerConfig {
 	}
 
 	public void addChannelConfig(ChannelConfig channelConfig) {
-		channels.put(channelConfig.getName(), channelConfig);
+		channels.put(channelConfig.getName().toLowerCase(), channelConfig);
 	}
 	
 	public void removeChannelConfig(String channelName) {
-		channels.remove(channelName);
+		channels.remove(channelName.toLowerCase());
 	}
 
 	public boolean hasChannelConfig(String channelName) {
-		return channels.containsKey(channelName);
+		return channels.containsKey(channelName.toLowerCase());
 	}
 
 	public String getQuitMessage() {
