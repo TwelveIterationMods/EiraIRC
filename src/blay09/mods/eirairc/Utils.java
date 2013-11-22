@@ -421,7 +421,7 @@ public class Utils {
 		}
 		return null;
 	}
-	
+		
 	public static Object resolveIRCTarget(String target, boolean allowServers, boolean requireConnected, boolean allowChannels, boolean requireOnChannel, boolean allowUsers, boolean channelUsersOnly) {
 		String server = null;
 		String channel = null;

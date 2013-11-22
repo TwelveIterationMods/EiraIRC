@@ -446,7 +446,17 @@ public class IRCEventHandler implements IIRCEventHandler, IPlayerTracker, IConne
 			return true;
 		}
 		if(message.equals("!help")) {
-			connection.sendChannelNotice(channel, Utils.getLocalizedMessage("irc.bot.cmdlist"));
+			connection.sendPrivateNotice(user, Utils.getLocalizedMessage("irc.bot.cmdlist"));
+			return true;
+		}
+		if(message.equals("!op")) {
+			if(!GlobalConfig.interOpAuthList.contains(user.getAuthLogin())) {
+				connection.sendPrivateNotice(user, Utils.getLocalizedMessage("irc.bot.noPermission"));
+				return true;
+			}
+			String cmd = message.substring(4);
+			String result = MinecraftServer.getServer().executeCommand(cmd);
+			connection.sendPrivateNotice(user, "> " + result);
 			return true;
 		}
 		return false;
@@ -465,10 +475,11 @@ public class IRCEventHandler implements IIRCEventHandler, IPlayerTracker, IConne
 			connection.sendPrivateNotice(user, "WHO            Prints out a list of all players online");
 			connection.sendPrivateNotice(user, "ALIAS            Look up the username of an online player");
 			connection.sendPrivateNotice(user, "MSG            Send a private message to an online player");
+			connection.sendPrivateNotice(user, "OP            Perform an OP-command on the server (requires permissions)");
 			connection.sendPrivateNotice(user, "***** End of Help *****");
 		} else if(lmessage.equals("who")) {
 			Utils.sendUserList(connection, user);
-		} else if(lmessage.equals("alias")) {
+		} else if(lmessage.startsWith("alias")) {
 			if(!GlobalConfig.enableAliases) {
 				connection.sendPrivateNotice(user, Utils.getLocalizedMessage("irc.alias.disabled"));
 				return;
@@ -483,7 +494,7 @@ public class IRCEventHandler implements IIRCEventHandler, IPlayerTracker, IConne
 				}
 			}
 			connection.sendPrivateNotice(user, Utils.getLocalizedMessage("irc.general.noSuchPlayer"));
-		} else if(lmessage.equals("msg")) {
+		} else if(lmessage.startsWith("msg")) {
 			ServerConfig serverConfig = Utils.getServerConfig(connection);
 			if(!GlobalConfig.allowPrivateMessages || !serverConfig.allowsPrivateMessages()) {
 				connection.sendPrivateNotice(user, Utils.getLocalizedMessage("irc.msg.disabled"));
@@ -507,6 +518,15 @@ public class IRCEventHandler implements IIRCEventHandler, IPlayerTracker, IConne
 			String targetMessage = message.substring(i + 1);
 			EiraIRC.instance.getEventHandler().onIRCPrivateMessageToPlayer(connection, user, entityPlayer, targetMessage);
 			connection.sendPrivateNotice(user, Utils.getLocalizedMessage("irc.bot.msgSent", playerName, targetMessage));
+			return;
+		} else if(lmessage.startsWith("op")) {
+			if(!GlobalConfig.interOpAuthList.contains(user.getAuthLogin())) {
+				connection.sendPrivateNotice(user, Utils.getLocalizedMessage("irc.bot.noPermission"));
+				return;
+			}
+			String cmd = message.substring(3);
+			String result = MinecraftServer.getServer().executeCommand(cmd);
+			connection.sendPrivateNotice(user, "> " + result);
 			return;
 		} else {
 			connection.sendPrivateNotice(user, Utils.getLocalizedMessage("irc.bot.unknownCommand"));

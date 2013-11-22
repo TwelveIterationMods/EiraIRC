@@ -282,6 +282,7 @@ public class IRCConnection implements Runnable {
 					user.addChannel(channel);
 					channel.addUser(user);
 				}
+				whois(name);
 			}
 			break;
 		case IRCReplyCodes.RPL_ENDOFMOTD:

@@ -42,9 +42,6 @@ public class ConfigurationHandler {
 		
 		GlobalConfig.load(config);
 		
-		// TODO disable interop temporarily - oh blay, y u no branch?
-		GlobalConfig.interOp = false;
-		
 		config.save();
 	}
 	
