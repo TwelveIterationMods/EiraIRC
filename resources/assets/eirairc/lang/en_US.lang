@@ -25,6 +25,9 @@ EiraIRC.irc.commands.interop.umode=/irc umode <channel> <user> <flags>
 EiraIRC.irc.commands.interop.mode=/irc mode <channel> <flags>
 EiraIRC.irc.commands.interop.topic=/irc topic <channel> <topic>
 
+# GUI
+EiraIRC:irc.gui.options=Options
+EiraIRC:irc.gui.chatTarget=Chatting to:
 
 # Command List
 EiraIRC:irc.cmdlist.general=§eGeneral Commands: §fconfig, help, list

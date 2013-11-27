@@ -12,6 +12,7 @@ import java.util.Map;
 
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
+import blay09.mods.eirairc.client.EiraTickHandler;
 import blay09.mods.eirairc.command.CommandConnect;
 import blay09.mods.eirairc.command.CommandDisconnect;
 import blay09.mods.eirairc.command.CommandIRC;
@@ -38,6 +39,8 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.common.registry.TickRegistry;
+import cpw.mods.fml.relauncher.Side;
 
 @Mod(modid = Globals.MOD_ID, name = Globals.MOD_NAME, version = Globals.MOD_VERSION)
 public class EiraIRC {
@@ -70,6 +73,8 @@ public class EiraIRC {
 		GameRegistry.registerPlayerTracker(eventHandler);
 		NetworkRegistry.instance().registerConnectionHandler(eventHandler);
 		MinecraftForge.EVENT_BUS.register(eventHandler);
+		
+		TickRegistry.registerTickHandler(new EiraTickHandler(), Side.CLIENT);
 		
 		Localization.init();
 	}
