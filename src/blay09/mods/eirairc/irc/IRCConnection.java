@@ -178,7 +178,7 @@ public class IRCConnection implements Runnable {
 	
 	public void join(String channelName, String channelKey) {
 		try {
-			writer.write("JOIN " + channelName.toLowerCase() + " " + channelKey + "\r\n");
+			writer.write("JOIN " + channelName + " " + channelKey + "\r\n");
 			writer.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -187,7 +187,7 @@ public class IRCConnection implements Runnable {
 	
 	public void part(String channelName) {
 		try {
-			writer.write("PART " + channelName.toLowerCase() + "\r\n");
+			writer.write("PART " + channelName + "\r\n");
 			writer.flush();
 			channels.remove(channelName.toLowerCase());
 		} catch (IOException e) {
@@ -380,7 +380,7 @@ public class IRCConnection implements Runnable {
 			int quitMessageIdx = cmd[0].length() + 8;
 			String quitMessage = null;
 			if(line.length() >= quitMessageIdx) {
-				quitMessage = line.substring(cmd[0].length() + 6);
+				quitMessage = line.substring(cmd[0].length() + 7);
 			}
 			IRCUser user = users.get(nick);
 			if(user == null) {
