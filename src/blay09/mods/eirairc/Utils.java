@@ -129,6 +129,9 @@ public class Utils {
 	}
 	
 	public static boolean isOP(ICommandSender sender) {
+		if(MinecraftServer.getServer() == null) {
+			return false;
+		}
 		if(MinecraftServer.getServer().isSinglePlayer()) {
 			return true;
 		}
