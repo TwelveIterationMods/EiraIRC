@@ -129,11 +129,12 @@ public class Utils {
 	}
 	
 	public static boolean isOP(ICommandSender sender) {
-		if(MinecraftServer.getServer().isSinglePlayer()) {
-			return true;
-		}
 		if(sender instanceof EntityPlayer) {
-			return MinecraftServer.getServerConfigurationManager(MinecraftServer.getServer()).getOps().contains(((EntityPlayer)sender).username.toLowerCase().trim());
+			EntityPlayer player = (EntityPlayer) sender;
+			if (player.worldObj.isRemote())
+			{
+				return MinecraftServer.getServerConfigurationManager(MinecraftServer.getServer()).getOps().contains(((EntityPlayer)sender).username.toLowerCase().trim());
+			}
 		}
 		return true;
 	}
