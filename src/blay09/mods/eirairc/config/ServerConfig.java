@@ -94,7 +94,7 @@ public class ServerConfig {
 			} else {
 				channelConfig.defaultClient();
 			}
-			channels.put(channelName, channelConfig);
+			channels.put(channelConfig.getName(), channelConfig);
 			ConfigurationHandler.save();
 		}
 		return channelConfig;

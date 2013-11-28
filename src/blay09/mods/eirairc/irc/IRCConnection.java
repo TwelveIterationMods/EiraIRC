@@ -79,7 +79,7 @@ public class IRCConnection implements Runnable {
 	}
 	
 	public IRCChannel getChannel(String channelName) {
-		return channels.get(channelName.toLowerCase());
+		return channels.get(channelName);
 	}
 	
 	public IRCUser getUser(String nick) {
@@ -189,7 +189,7 @@ public class IRCConnection implements Runnable {
 		try {
 			writer.write("PART " + channelName + "\r\n");
 			writer.flush();
-			channels.remove(channelName.toLowerCase());
+			channels.remove(channelName);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -346,7 +346,7 @@ public class IRCConnection implements Runnable {
 			IRCChannel channel = getChannel(cmd[2]);
 			if(channel == null) {
 				channel = new IRCChannel(this, cmd[2]);
-				channels.put(cmd[2].toLowerCase(), channel);
+				channels.put(cmd[2], channel);
 			}
 			channel.addUser(user);
 			eventHandler.onUserJoin(this, user, channel);
