@@ -79,7 +79,7 @@ public class IRCConnection implements Runnable {
 	}
 	
 	public IRCChannel getChannel(String channelName) {
-		return channels.get(channelName);
+		return channels.get(channelName.toLowerCase());
 	}
 	
 	public IRCUser getUser(String nick) {
@@ -178,7 +178,7 @@ public class IRCConnection implements Runnable {
 	
 	public void join(String channelName, String channelKey) {
 		try {
-			writer.write("JOIN " + channelName + " " + channelKey + "\r\n");
+			writer.write("JOIN " + channelName.toLowerCase() + " " + channelKey + "\r\n");
 			writer.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -187,9 +187,9 @@ public class IRCConnection implements Runnable {
 	
 	public void part(String channelName) {
 		try {
-			writer.write("PART " + channelName + "\r\n");
+			writer.write("PART " + channelName.toLowerCase() + "\r\n");
 			writer.flush();
-			channels.remove(channelName);
+			channels.remove(channelName.toLowerCase());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -248,7 +248,7 @@ public class IRCConnection implements Runnable {
 		switch(replyCode) {
 		case IRCReplyCodes.RPL_NAMREPLY:
 			String channelName = cmd[4];
-			channel = channels.get(channelName);
+			channel = getChannel(channelName);
 			
 			String nameList = line.substring(line.lastIndexOf(":") + 1);
 			String[] names = nameList.split(" ");
@@ -273,7 +273,7 @@ public class IRCConnection implements Runnable {
 			eventHandler.onConnected(this);
 			break;
 		case IRCReplyCodes.RPL_TOPIC:
-			channel = channels.get(cmd[3]);
+			channel = getChannel(cmd[3]);
 			if(channel != null) {
 				int textIdx = line.indexOf(':', 1);
 				String topic = line.substring(textIdx + 1);
@@ -324,7 +324,7 @@ public class IRCConnection implements Runnable {
 				isEmote = true;
 			}
 			if(target.startsWith("#")) {
-				IRCChannel channel = channels.get(target);
+				IRCChannel channel = getChannel(target);
 				if(isEmote) {
 					eventHandler.onChannelEmote(this, channel, user, message);
 				} else {
@@ -343,10 +343,10 @@ public class IRCConnection implements Runnable {
 				user = new IRCUser(this, nick);
 				users.put(nick, user);
 			}
-			IRCChannel channel = channels.get(cmd[2]);
+			IRCChannel channel = getChannel(cmd[2]);
 			if(channel == null) {
 				channel = new IRCChannel(this, cmd[2]);
-				channels.put(cmd[2], channel);
+				channels.put(cmd[2].toLowerCase(), channel);
 			}
 			channel.addUser(user);
 			eventHandler.onUserJoin(this, user, channel);
@@ -356,7 +356,7 @@ public class IRCConnection implements Runnable {
 				user = new IRCUser(this, nick);
 				users.put(nick, user);
 			}
-			IRCChannel channel = channels.get(cmd[2]);
+			IRCChannel channel = getChannel(cmd[2]);
 			if(channel != null) {
 				channel.removeUser(user);
 				int quitMessageIdx = cmd[0].length() + 6 + cmd[2].length() + 2;
