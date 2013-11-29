@@ -51,7 +51,7 @@ public class EiraIRC {
 	private IRCEventHandler eventHandler;
 	private Map<String, IRCConnection> connections;
 	private boolean ircRunning;
-	private EnumChatTarget chatTarget = EnumChatTarget.All;
+	private EnumChatTarget chatTarget = EnumChatTarget.MinecraftOnly;
 	private final List<String> validTargetChannels = new ArrayList<String>();
 	private final List<String> privateTargets = new ArrayList<String>();
 	private int targetChannelIndex;
