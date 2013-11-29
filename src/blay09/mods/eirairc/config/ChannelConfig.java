@@ -28,6 +28,9 @@ public class ChannelConfig {
 	public ChannelConfig(ServerConfig serverConfig, String name) {
 		this.serverConfig = serverConfig;
 		this.name = name;
+		if(serverConfig.getHost().equals(Globals.TWITCH_SERVER)) {
+			name = name.toLowerCase();
+		}
 	}
 
 	public String getName() {
