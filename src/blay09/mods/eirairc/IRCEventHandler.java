@@ -277,9 +277,6 @@ public class IRCEventHandler implements IIRCEventHandler, IPlayerTracker, IConne
 	@Override
 	public void clientLoggedIn(NetHandler clientHandler, INetworkManager manager, Packet1Login login) {
 		if(!GlobalConfig.persistentConnection || !EiraIRC.instance.isIRCRunning()) {
-			if(GlobalConfig.nick.startsWith(GlobalConfig.DEFAULT_NICK)) {
-				GlobalConfig.nick = Minecraft.getMinecraft().thePlayer.username;
-			}
 			EiraIRC.instance.startIRC();
 		}
 	}

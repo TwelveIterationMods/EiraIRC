@@ -13,20 +13,50 @@ public class GuiIRCSettings extends GuiScreen {
 	private GuiButton btnGlobalSettings;
 	private GuiButton btnServerList;
 	private GuiButton btnTwitch;
+	private GuiButton btnScreenshots;
+	private GuiButton btnProfanityFilter;
+	private GuiButton btnFriendsList;
+	private GuiButton btnIgnoreList;
+	private GuiButton btnNotifications;
+	private GuiButton btnClientServer;
 	private GuiButton btnBack;
 	
 	@Override
 	public void initGui() {
-		btnGlobalSettings = new GuiButton(0, width / 2 - 100, height / 2 - 90, "Global Settings");
+		btnGlobalSettings = new GuiButton(2, width / 2 - 152, height / 2 - 90, 150, 20, "Global Settings");
 		buttonList.add(btnGlobalSettings);
 		
-		btnServerList = new GuiButton(1, width / 2 - 100, height / 2 - 65, "Server List");
+		btnServerList = new GuiButton(3, width / 2 - 152, height / 2 - 65, 150, 20, "Server List");
 		buttonList.add(btnServerList);
 		
-		btnTwitch = new GuiButton(2, width / 2 - 100, height / 2 - 40, "Twitch");
+		btnTwitch = new GuiButton(4, width / 2 - 152, height / 2 - 40, 150, 20, "Twitch Chat");
 		buttonList.add(btnTwitch);
 		
-		btnBack = new GuiButton(3, width / 2 - 100, height / 2 - 10, "Back");
+		btnScreenshots = new GuiButton(5, width / 2 + 2, height / 2 - 90, 150, 20, "Screenshots");
+		btnScreenshots.enabled = false;
+		buttonList.add(btnScreenshots);
+		
+		btnProfanityFilter = new GuiButton(6, width / 2 - 152, height / 2 - 15, 150, 20, "Profanity Filter");
+		btnProfanityFilter.enabled = false;
+		buttonList.add(btnProfanityFilter);
+		
+		btnFriendsList = new GuiButton(7, width / 2 + 2, height / 2 - 65, 150, 20, "Friends List");
+		btnFriendsList.enabled = false;
+		buttonList.add(btnFriendsList);
+		
+		btnIgnoreList = new GuiButton(8, width / 2 + 2, height / 2 - 40, 150, 20, "Ignore List");
+		btnIgnoreList.enabled = false;
+		buttonList.add(btnIgnoreList);
+		
+		btnNotifications = new GuiButton(9, width / 2 + 2, height / 2 - 15, 150, 20, "Notifications");
+		btnNotifications.enabled = false;
+		buttonList.add(btnNotifications);
+		
+		btnClientServer = new GuiButton(1, 1, 1, 60, 20, "Client");
+		btnClientServer.enabled = false;
+		buttonList.add(btnClientServer);
+		
+		btnBack = new GuiButton(0, width / 2 - 100, height / 2 + 90, 200, 20, "Back");
 		buttonList.add(btnBack);
 	}
 	

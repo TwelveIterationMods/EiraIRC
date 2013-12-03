@@ -1,6 +1,8 @@
 package blay09.mods.eirairc.config;
 
 import net.minecraftforge.common.ConfigCategory;
+import blay09.mods.eirairc.EiraIRC;
+import blay09.mods.eirairc.Utils;
 import blay09.mods.eirairc.irc.IRCConnection;
 
 public class ConfigHelper {
@@ -37,6 +39,11 @@ public class ConfigHelper {
 			return serverConfig.getIRCColor();
 		}
 		return GlobalConfig.ircColor;
+	}
+	
+	public static String formatNick(String nickFormate) {
+		String result = nickFormate.replace("%USERNAME%", Utils.getUsername());
+		return result;
 	}
 	
 	public static String getNick(ServerConfig serverConfig) {

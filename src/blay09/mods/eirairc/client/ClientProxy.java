@@ -3,6 +3,7 @@
 
 package blay09.mods.eirairc.client;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import blay09.mods.eirairc.CommonProxy;
@@ -16,4 +17,9 @@ public class ClientProxy extends CommonProxy {
 		KeyBindingRegistry.registerKeyBinding(new KeyBindingHandler());
 	}
 
+	@Override
+	public String getUsername() {
+		return Minecraft.getMinecraft().thePlayer.username;
+	}
+	
 }

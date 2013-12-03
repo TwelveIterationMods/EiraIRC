@@ -33,6 +33,7 @@ public class Utils {
 	private static final char INVALID_COLOR = 'n';
 	private static final int MAX_CHAT_LENGTH = 100;
 	private static final Pattern pattern = Pattern.compile("^(?:(https?)://)?([-\\w_\\.]{2,}\\.[a-z]{2,4})(/\\S*)?$");
+	private static final String DEFAULT_USERNAME = "EiraBot";
 	
 	public static void sendLocalizedMessage(ICommandSender sender, String key, Object... args) {
 		sender.sendChatToPlayer(getUnlocalizedChatMessage(getLocalizedMessage(key, args)));
@@ -559,5 +560,13 @@ public class Utils {
 			}
 		}
 		return IRCTargetError.TargetNotFound;
+	}
+	
+	public static String getUsername() {
+		String username = EiraIRC.proxy.getUsername();
+		if(username == null) {
+			return DEFAULT_USERNAME + Math.round(Math.random() * 10000);
+		}
+		return username;
 	}
 }

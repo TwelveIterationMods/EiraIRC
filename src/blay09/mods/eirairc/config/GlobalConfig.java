@@ -16,9 +16,7 @@ import blay09.mods.eirairc.Utils;
 
 public class GlobalConfig {
 
-	public static final String DEFAULT_NICK = "EiraBot";
-	
-	public static String nick = DEFAULT_NICK;
+	public static String nick = Globals.DEFAULT_NICK;
 	public static final List<String> colorBlackList = new ArrayList<String>();
 	public static final Map<String, DisplayFormatConfig> displayFormates = new HashMap<String, DisplayFormatConfig>();
 	public static String opColor = "red";
@@ -155,7 +153,7 @@ public class GlobalConfig {
 		/*
 		 * Global Config
 		 */
-		GlobalConfig.nick = Utils.unquote(config.get(ConfigurationHandler.CATEGORY_GLOBAL, "nick", DEFAULT_NICK + (int) (Math.random() * 10000)).getString());
+		GlobalConfig.nick = Utils.unquote(config.get(ConfigurationHandler.CATEGORY_GLOBAL, "nick", Globals.DEFAULT_NICK).getString());
 		GlobalConfig.allowPrivateMessages = config.get(ConfigurationHandler.CATEGORY_GLOBAL, "allowPrivateMessages", GlobalConfig.allowPrivateMessages).getBoolean(GlobalConfig.allowPrivateMessages);
 		GlobalConfig.enableLinkFilter = config.get(ConfigurationHandler.CATEGORY_GLOBAL, "enableLinkFilter", GlobalConfig.enableLinkFilter).getBoolean(GlobalConfig.enableLinkFilter);
 		GlobalConfig.saveCredentials = config.get(ConfigurationHandler.CATEGORY_GLOBAL, "saveCredentials", GlobalConfig.saveCredentials).getBoolean(GlobalConfig.saveCredentials);

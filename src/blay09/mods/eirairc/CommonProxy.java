@@ -11,5 +11,9 @@ public class CommonProxy {
 
 	public void registerKeybindings() {
 	}
+
+	public String getUsername() {
+		return null;
+	}
 	
 }
