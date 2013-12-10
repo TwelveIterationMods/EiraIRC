@@ -1,21 +1,23 @@
 // Copyright (c) 2013, Christopher "blay09" Baker
 // All rights reserved.
 
-package blay09.mods.eirairc.client;
+package blay09.mods.eirairc.client.gui;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiSlot;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.EnumChatFormatting;
 import blay09.mods.eirairc.EiraIRC;
+import blay09.mods.eirairc.client.Screenshot;
+import blay09.mods.eirairc.config.ChannelConfig;
 import blay09.mods.eirairc.config.Globals;
 import blay09.mods.eirairc.config.ServerConfig;
 
-public class GuiIRCServerSlot extends GuiSlot {
+public class GuiIRCScreenshotSlot extends GuiSlot {
 
-	private final GuiIRCServerList parentGui;
+	private final GuiIRCScreenshotList parentGui;
 	
-	public GuiIRCServerSlot(GuiIRCServerList parentGui) {
+	public GuiIRCScreenshotSlot(GuiIRCScreenshotList parentGui) {
 		super(Minecraft.getMinecraft(), parentGui.width, parentGui.height, 32, parentGui.height - 64, 36);
 		this.parentGui = parentGui;
 	}
@@ -49,11 +51,13 @@ public class GuiIRCServerSlot extends GuiSlot {
 
 	@Override
 	protected void drawSlot(int i, int x, int y, int l, Tessellator tessellator) {
-		ServerConfig config = parentGui.getServerConfig(i);
-		String connectedString = EiraIRC.instance.isConnectedTo(config.getHost()) ? EnumChatFormatting.GREEN + "Connected" :  EnumChatFormatting.RED + "Not Connected";
-		
-		parentGui.drawString(parentGui.getFontRenderer(), config.getHost(), x + 2, y + 1, Globals.TEXT_COLOR);
-		parentGui.drawString(parentGui.getFontRenderer(), connectedString, x + 4, y + 11, Globals.TEXT_COLOR);
+		Screenshot screenshot = parentGui.getScreenshot(i);
+		parentGui.drawString(parentGui.getFontRenderer(), screenshot.getName(), x + 2, y + 1, Globals.TEXT_COLOR);
+		String sharedString = "Private";
+		if(screenshot.isUploaded()) {
+			sharedString = "Uploaded";
+		}
+		parentGui.drawString(parentGui.getFontRenderer(), sharedString, x + 4, y + 11, Globals.TEXT_COLOR);
 	}
 
 }

@@ -14,6 +14,7 @@ import org.lwjgl.input.Keyboard;
 
 import blay09.mods.eirairc.EiraIRC;
 import blay09.mods.eirairc.EnumChatTarget;
+import blay09.mods.eirairc.client.gui.GuiIRCSettings;
 import blay09.mods.eirairc.config.GlobalConfig;
 import blay09.mods.eirairc.config.Globals;
 import cpw.mods.fml.client.registry.KeyBindingRegistry.KeyHandler;

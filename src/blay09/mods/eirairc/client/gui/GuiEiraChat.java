@@ -1,7 +1,7 @@
 // Copyright (c) 2013, Christopher "blay09" Baker
 // All rights reserved.
 
-package blay09.mods.eirairc.client;
+package blay09.mods.eirairc.client.gui;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -11,6 +11,7 @@ import org.lwjgl.input.Keyboard;
 
 import blay09.mods.eirairc.EiraIRC;
 import blay09.mods.eirairc.Utils;
+import blay09.mods.eirairc.client.ClientChatHandler;
 import blay09.mods.eirairc.config.Globals;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

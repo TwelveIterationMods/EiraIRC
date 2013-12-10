@@ -9,7 +9,8 @@ import cpw.mods.fml.common.network.IGuiHandler;
 
 public class CommonProxy {
 
-	public void registerKeybindings() {
+	public void setupClient() {
+		
 	}
 
 	public String getUsername() {

@@ -5,6 +5,7 @@ package blay09.mods.eirairc.client;
 
 import java.util.EnumSet;
 
+import blay09.mods.eirairc.client.gui.GuiEiraChat;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
 import cpw.mods.fml.common.ITickHandler;

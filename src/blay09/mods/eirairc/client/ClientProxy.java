@@ -13,8 +13,10 @@ import cpw.mods.fml.client.registry.KeyBindingRegistry;
 public class ClientProxy extends CommonProxy {
 
 	@Override
-	public void registerKeybindings() {
+	public void setupClient() {
 		KeyBindingRegistry.registerKeyBinding(new KeyBindingHandler());
+		
+		ScreenshotManager.create();
 	}
 
 	@Override

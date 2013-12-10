@@ -1,7 +1,7 @@
 // Copyright (c) 2013, Christopher "blay09" Baker
 // All rights reserved.
 
-package blay09.mods.eirairc.client;
+package blay09.mods.eirairc.client.gui;
 
 import blay09.mods.eirairc.config.Globals;
 import net.minecraft.client.Minecraft;

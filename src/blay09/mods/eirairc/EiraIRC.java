@@ -67,7 +67,7 @@ public class EiraIRC {
 	
 	@EventHandler
 	public void load(FMLInitializationEvent event) {
-		proxy.registerKeybindings();
+		proxy.setupClient();
 		
 		eventHandler = new IRCEventHandler();
 		GameRegistry.registerPlayerTracker(eventHandler);

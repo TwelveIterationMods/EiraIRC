@@ -1,7 +1,7 @@
 // Copyright (c) 2013, Christopher "blay09" Baker
 // All rights reserved.
 
-package blay09.mods.eirairc.client;
+package blay09.mods.eirairc.client.gui;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiSlot;

@@ -28,6 +28,14 @@ EiraIRC.irc.commands.interop.topic=/irc topic <channel> <topic>
 # GUI
 EiraIRC:irc.gui.options=Options
 EiraIRC:irc.gui.chatTarget=Chatting to:
+EiraIRC:irc.gui.back=Back
+EiraIRC:irc.gui.notifications=EiraIRC - Notifications
+## Notifications
+EiraIRC:irc.gui.textOnly=Text Only
+EiraIRC:irc.gui.textAndSound=Text and Sound
+EiraIRC:irc.gui.userRecording=User Recording:
+EiraIRC:irc.gui.nameMentioned=Name Mentioned:
+EiraIRC:irc.gui.friendJoined=Friend Joined:
 
 # Command List
 EiraIRC:irc.cmdlist.general=§eGeneral Commands: §fconfig, help, list
