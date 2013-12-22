@@ -26,6 +26,7 @@ public class GuiIRCScreenshots extends GuiScreen {
 	private GuiButton btnScreenshotList;
 	private GuiButton btnUploadService;
 	private GuiButton btnCustomUpload;
+	private GuiButton btnScreenshotAction;
 	
 	private GuiButton btnBack;
 	
@@ -43,6 +44,8 @@ public class GuiIRCScreenshots extends GuiScreen {
 		btnCustomUpload = new GuiButton(3, rightX + BUTTON_WIDTH - BUTTON_HEIGHT, height / 2 - 64, BUTTON_HEIGHT, BUTTON_HEIGHT, "...");
 		btnCustomUpload.enabled = false;
 		buttonList.add(btnCustomUpload);
+		
+		btnScreenshotAction = new GuiButton(4, leftX, height / 2 - 48, BUTTON_WIDTH, BUTTON_HEIGHT, "");
 		
 		btnBack = new GuiButton(0, leftX, height / 2, BUTTON_WIDTH, BUTTON_HEIGHT, Utils.getLocalizedMessage("irc.gui.back"));
 		buttonList.add(btnBack);

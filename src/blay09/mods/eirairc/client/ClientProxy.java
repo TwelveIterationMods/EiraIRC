@@ -6,6 +6,7 @@ package blay09.mods.eirairc.client;
 import net.minecraft.client.Minecraft;
 import blay09.mods.eirairc.CommonProxy;
 import blay09.mods.eirairc.NotificationType;
+import blay09.mods.eirairc.client.gui.GuiNotification;
 import blay09.mods.eirairc.config.NotificationConfig;
 import cpw.mods.fml.client.registry.KeyBindingRegistry;
 

@@ -16,7 +16,7 @@ import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import blay09.mods.eirairc.client.GuiNotification;
+import blay09.mods.eirairc.client.gui.GuiNotification;
 import blay09.mods.eirairc.command.IRCCommandHandler;
 import blay09.mods.eirairc.config.ChannelConfig;
 import blay09.mods.eirairc.config.ConfigHelper;

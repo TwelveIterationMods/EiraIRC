@@ -6,6 +6,7 @@ package blay09.mods.eirairc.client.gui;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import blay09.mods.eirairc.config.GlobalConfig;
 import blay09.mods.eirairc.config.Globals;
 
 public class GuiIRCSettings extends GuiScreen {
@@ -33,6 +34,9 @@ public class GuiIRCSettings extends GuiScreen {
 		buttonList.add(btnTwitch);
 		
 		btnScreenshots = new GuiButton(5, width / 2 + 2, height / 2 - 90, 150, 20, "Screenshots");
+		if(!GlobalConfig.manageScreenshots) {
+			btnScreenshots.enabled = false;
+		}
 		buttonList.add(btnScreenshots);
 		
 		btnProfanityFilter = new GuiButton(6, width / 2 - 152, height / 2 - 15, 150, 20, "Profanity Filter");
