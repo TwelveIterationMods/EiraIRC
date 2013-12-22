@@ -262,7 +262,7 @@ public class IRCConnection implements Runnable {
 		switch(replyCode) {
 		case IRCReplyCodes.RPL_NAMREPLY:
 			String channelName = cmd[4];
-			channel = channels.get(channelName);
+			channel = getChannel(channelName);
 			
 			String nameList = line.substring(line.lastIndexOf(":") + 1);
 			String[] names = nameList.split(" ");
@@ -290,7 +290,7 @@ public class IRCConnection implements Runnable {
 			eventHandler.onConnected(this);
 			break;
 		case IRCReplyCodes.RPL_TOPIC:
-			channel = channels.get(cmd[3]);
+			channel = getChannel(cmd[3]);
 			if(channel != null) {
 				int textIdx = line.indexOf(':', 1);
 				String topic = line.substring(textIdx + 1);
@@ -349,7 +349,7 @@ public class IRCConnection implements Runnable {
 				isEmote = true;
 			}
 			if(target.startsWith("#")) {
-				IRCChannel channel = channels.get(target);
+				IRCChannel channel = getChannel(target);
 				if(isEmote) {
 					eventHandler.onChannelEmote(this, channel, user, message);
 				} else {
@@ -368,7 +368,7 @@ public class IRCConnection implements Runnable {
 				user = new IRCUser(this, nick);
 				users.put(nick, user);
 			}
-			IRCChannel channel = channels.get(cmd[2]);
+			IRCChannel channel = getChannel(cmd[2]);
 			if(channel == null) {
 				channel = new IRCChannel(this, cmd[2]);
 				channels.put(cmd[2], channel);
@@ -383,7 +383,7 @@ public class IRCConnection implements Runnable {
 				user = new IRCUser(this, nick);
 				users.put(nick, user);
 			}
-			IRCChannel channel = channels.get(cmd[2]);
+			IRCChannel channel = getChannel(cmd[2]);
 			if(channel != null) {
 				channel.removeUser(nick);
 				int quitMessageIdx = cmd[0].length() + 6 + cmd[2].length() + 2;
@@ -407,7 +407,7 @@ public class IRCConnection implements Runnable {
 			int quitMessageIdx = cmd[0].length() + 8;
 			String quitMessage = null;
 			if(line.length() >= quitMessageIdx) {
-				quitMessage = line.substring(cmd[0].length() + 6);
+				quitMessage = line.substring(cmd[0].length() + 7);
 			}
 			IRCUser user = users.get(nick);
 			if(user == null) {
