@@ -51,10 +51,12 @@ public class ScreenshotManager {
 				return fileName.endsWith(".png");
 			}
 		});
-		for(int i = 0; i < screenshotFiles.length; i++) {
-			Screenshot screenshot = new Screenshot(screenshotFiles[i]);
-			screenshot.setURL(prop.getProperty(screenshot.getName()));
-			screenshots.add(screenshot);
+		if(screenshotFiles != null) {
+			for(int i = 0; i < screenshotFiles.length; i++) {
+				Screenshot screenshot = new Screenshot(screenshotFiles[i]);
+				screenshot.setURL(prop.getProperty(screenshot.getName()));
+				screenshots.add(screenshot);
+			}
 		}
 		Collections.sort(screenshots, comparator);
 	}

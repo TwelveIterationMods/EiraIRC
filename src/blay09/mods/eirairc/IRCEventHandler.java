@@ -16,6 +16,7 @@ import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import blay09.mods.eirairc.client.GuiNotification;
 import blay09.mods.eirairc.command.IRCCommandHandler;
 import blay09.mods.eirairc.config.ChannelConfig;
 import blay09.mods.eirairc.config.ConfigHelper;
@@ -398,6 +399,11 @@ public class IRCEventHandler implements IIRCEventHandler, IPlayerTracker, IConne
 			message = Utils.filterCodes(message);
 			String mcMessage = Utils.formatMessage(ConfigHelper.getDisplayFormatConfig().mcPrivateMessage, connection, user.getUsername(), Utils.getColoredName(user.getNick(), ConfigHelper.getIRCColor(serverConfig)), message);
 			Utils.addMessageToChat(mcMessage);
+			String notifyMsg = mcMessage;
+			if(notifyMsg.length() > 42) {
+				notifyMsg = notifyMsg.substring(0, 42) + "...";
+			}
+			EiraIRC.proxy.publishNotification(NotificationType.PrivateMessage, notifyMsg);
 			EiraIRC.instance.addPrivateTarget(connection, user.getNick());
 		} else {
 			connection.sendPrivateNotice(user, Utils.getLocalizedMessage("irc.msg.disabled"));

@@ -4,10 +4,9 @@
 package blay09.mods.eirairc.client;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.world.World;
 import blay09.mods.eirairc.CommonProxy;
-import blay09.mods.eirairc.config.GlobalConfig;
+import blay09.mods.eirairc.NotificationType;
+import blay09.mods.eirairc.config.NotificationConfig;
 import cpw.mods.fml.client.registry.KeyBindingRegistry;
 
 public class ClientProxy extends CommonProxy {
@@ -16,12 +15,33 @@ public class ClientProxy extends CommonProxy {
 	public void setupClient() {
 		KeyBindingRegistry.registerKeyBinding(new KeyBindingHandler());
 		
+		GuiNotification.instance = new GuiNotification();
 		ScreenshotManager.create();
 	}
 
 	@Override
+	public void publishNotification(NotificationType type, String text) {
+		int config = 0;
+		switch(type) {
+		case FriendJoined: config = NotificationConfig.friendJoined; break;
+		case PlayerMentioned: config = NotificationConfig.playerMentioned; break;
+		case UserRecording: config = NotificationConfig.userRecording; break;
+		default:
+		}
+		if(config != NotificationConfig.VALUE_NONE) {
+			GuiNotification.instance.showNotification(type, text);
+		} else if(config != NotificationConfig.VALUE_SOUNDONLY) {
+			GuiNotification.instance.showNotification(type, text);
+		}
+		if(config == NotificationConfig.VALUE_TEXTANDSOUND) {
+			Minecraft.getMinecraft().sndManager.playSoundFX(NotificationConfig.notificationSound, NotificationConfig.soundVolume, NotificationConfig.soundPitch);
+		}
+	}
+	
+	@Override
 	public String getUsername() {
 		return Minecraft.getMinecraft().thePlayer.username;
 	}
+	
 	
 }

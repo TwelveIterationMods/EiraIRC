@@ -13,6 +13,9 @@ public class CommonProxy {
 		
 	}
 
+	public void publishNotification(NotificationType type, String text) {
+	}
+	
 	public String getUsername() {
 		return null;
 	}
