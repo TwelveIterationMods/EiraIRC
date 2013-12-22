@@ -3,15 +3,24 @@
 
 package blay09.mods.eirairc.client;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ThreadDownloadImageData;
+import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.client.renderer.texture.TextureObject;
+import net.minecraft.util.ResourceLocation;
 
 public class Screenshot {
 
 	private File file;
 	private String uploadURL;
+	private ScreenshotThumbnail thumbnail;
 	
 	public Screenshot(File file) {
 		this.file = file;
+		loadThumbnail();
 	}
 
 	public String getName() {
@@ -34,4 +43,12 @@ public class Screenshot {
 		return file;
 	}
 	
+	public ScreenshotThumbnail getThumbnail() {
+		return thumbnail;
+	}
+	
+	public void loadThumbnail() {
+		thumbnail = new ScreenshotThumbnail(file);
+		Minecraft.getMinecraft().getTextureManager().loadTexture(thumbnail.getResourceLocation(), thumbnail);
+	}
 }

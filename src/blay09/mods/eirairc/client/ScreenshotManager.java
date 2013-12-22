@@ -22,21 +22,30 @@ public class ScreenshotManager {
 	private static ScreenshotManager instance;
 	public static void create() {
 		instance = new ScreenshotManager();
+		instance.load();
+		instance.findNewScreenshots();
 	}
 	public static ScreenshotManager getInstance() {
 		return instance;
 	}
 	
 	private final File screenshotDir = new File(Minecraft.getMinecraft().mcDataDir, "screenshots");
+	private final File managedDir = new File(screenshotDir, "managed");
+	private final File thumbnailDir = new File(screenshotDir, "thumbnails");
 	private final List<Screenshot> screenshots = new ArrayList<Screenshot>();
 	private final Comparator<Screenshot> comparator = new Comparator<Screenshot>() {
 		@Override
 		public int compare(Screenshot first, Screenshot second) {
-			return (int) (second.getFile().lastModified() - first.getFile().lastModified());
+			return (int) (first.getFile().lastModified() - second.getFile().lastModified());
 		}
 	};
 	
 	public ScreenshotManager() {
+		managedDir.mkdir();
+		thumbnailDir.mkdir();
+	}
+	
+	public void load() {
 		Properties prop = new Properties();
 		try {
 			FileInputStream in = new FileInputStream(new File(screenshotDir, "eirairc.properties"));
@@ -45,7 +54,7 @@ public class ScreenshotManager {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		File[] screenshotFiles = screenshotDir.listFiles(new FilenameFilter() {
+		File[] screenshotFiles = managedDir.listFiles(new FilenameFilter() {
 			@Override
 			public boolean accept(File file, String fileName) {
 				return fileName.endsWith(".png");
@@ -81,7 +90,33 @@ public class ScreenshotManager {
 	
 	public void deleteScreenshot(Screenshot screenshot) {
 		screenshot.getFile().delete();
+		screenshot.getThumbnail().getFile().delete();
 		screenshots.remove(screenshot);
 	}
 	
+	public void handleNewScreenshot(Screenshot screenshot) {
+		// TODO if ingame: upload & share if config is set
+	}
+	
+	public void findNewScreenshots() {
+		File[] screenshotFiles = screenshotDir.listFiles(new FilenameFilter() {
+			@Override
+			public boolean accept(File file, String fileName) {
+				return fileName.endsWith(".png");
+			}
+		});
+		if(screenshotFiles != null) {
+			for(int i = 0; i < screenshotFiles.length; i++) {
+				Screenshot screenshot = new Screenshot(screenshotFiles[i]);
+				handleNewScreenshot(screenshot);
+				screenshots.add(screenshot);
+				screenshotFiles[i].renameTo(new File(managedDir, screenshotFiles[i].getName()));
+				System.out.println("Found new screenshot: " + screenshot.getName());
+			}
+		}
+		Collections.sort(screenshots, comparator);
+	}
+	public File getThumbnailDir() {
+		return thumbnailDir;
+	}
 }

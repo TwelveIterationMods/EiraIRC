@@ -5,15 +5,20 @@ package blay09.mods.eirairc.client;
 
 import java.util.EnumSet;
 
-import blay09.mods.eirairc.EiraIRC;
-import blay09.mods.eirairc.client.gui.GuiEiraChat;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
+
+import org.lwjgl.input.Keyboard;
+
+import blay09.mods.eirairc.client.gui.GuiEiraChat;
+import blay09.mods.eirairc.config.GlobalConfig;
 import cpw.mods.fml.common.ITickHandler;
 import cpw.mods.fml.common.TickType;
 
 public class EiraTickHandler implements ITickHandler {
 
+	private int screenshotCheck;
+	
 	@Override
 	public void tickStart(EnumSet<TickType> type, Object... tickData) {
 	}
@@ -21,6 +26,18 @@ public class EiraTickHandler implements ITickHandler {
 	@Override
 	public void tickEnd(EnumSet<TickType> type, Object... tickData) {
 		if(type.contains(TickType.CLIENT)) {
+			if(GlobalConfig.autoShareScreenshots) {
+				// TODO should try to get a proper event for screenshots into Forge once the 1.7 mess is over
+				if(Keyboard.isKeyDown(Keyboard.KEY_F2)) {
+					screenshotCheck = 10;
+				} else if(screenshotCheck > 0) {
+					screenshotCheck--;
+					if(screenshotCheck == 0) {
+						System.out.println("Scanning Screenshots...");
+						ScreenshotManager.getInstance().findNewScreenshots();
+					}
+				}
+			}
 			if(Minecraft.getMinecraft().currentScreen != null && Minecraft.getMinecraft().currentScreen.getClass() == GuiChat.class) {
 				Minecraft.getMinecraft().displayGuiScreen(new GuiEiraChat());
 			}

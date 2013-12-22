@@ -39,6 +39,9 @@ public class GlobalConfig {
 	public static List<String> interOpAuthList = new ArrayList<String>();
 	public static String charset = "UTF-8";
 	
+	public static boolean manageScreenshots = true;
+	public static boolean autoShareScreenshots = true;
+	
 	public static void handleConfigCommand(ICommandSender sender, String key) {
 		String value = null;
 		if(key.equals("opColor")) value = opColor;

@@ -69,11 +69,9 @@ public class GuiIRCScreenshotList extends GuiScreen {
 		} else if(button == btnRename) {
 			onElementClicked(selectedElement);
 		} else if(button == btnDelete) {
-			Minecraft.getMinecraft().displayGuiScreen(new GuiYesNo(this, "Do you really want to delete this screenshot?", "This can't be undone.", selectedElement));
+			Minecraft.getMinecraft().displayGuiScreen(new GuiYesNo(this, "Do you really want to delete this screenshot?", "This action can't be undone.", selectedElement));
 		} else if(button == btnClipboard) {
-			Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-			StringSelection data = new StringSelection(screenshots[selectedElement].getUploadURL());
-			clipboard.setContents(data, data);
+			this.setClipboardString(screenshots[selectedElement].getUploadURL());
 		}
 	}
 	
@@ -88,7 +86,7 @@ public class GuiIRCScreenshotList extends GuiScreen {
 	@Override
 	public void drawScreen(int par1, int par2, float par3) {
 		guiScreenshotSlot.drawScreen(par1, par2, par3);
-		drawCenteredString(fontRenderer, "EiraIRC - Screenshots", width / 2, 20, Globals.TEXT_COLOR);
+		drawCenteredString(fontRenderer, "EiraIRC - Screenshot List", width / 2, 20, Globals.TEXT_COLOR);
 		super.drawScreen(par1, par2, par3);
 	}
 
