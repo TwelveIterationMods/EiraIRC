@@ -3,9 +3,13 @@
 
 package blay09.mods.eirairc;
 
+import java.awt.Desktop;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -569,4 +573,26 @@ public class Utils {
 		}
 		return username;
 	}
+	
+	public static void openWebpage(String url) {
+		try {
+			openWebpage(new URL(url).toURI());
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void openWebpage(URI uri) {
+		Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+		if(desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
+			try {
+				desktop.browse(uri);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
 }

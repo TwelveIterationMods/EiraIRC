@@ -8,8 +8,9 @@ public class NotificationConfig {
 	public static final int VALUE_TEXTANDSOUND = 3;
 	
 	public static int friendJoined;
-	public static int playerMentioned;
+	public static int nameMentioned;
 	public static int userRecording;
+	public static int privateMessage;
 	
 	public static String notificationSound = "note.harp";
 	public static float soundVolume = 1f;

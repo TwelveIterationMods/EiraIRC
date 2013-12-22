@@ -35,12 +35,14 @@ EiraIRC:irc.gui.screenshots=EiraIRC - Screenshots
 EiraIRC:irc.gui.screenshotList=Archive
 ## Notification Config
 EiraIRC:irc.gui.notifications=EiraIRC - Notifications
+EiraIRC:irc.gui.none=None
 EiraIRC:irc.gui.textOnly=Text Only
+EiraIRC:irc.gui.soundOnly=Sound Only
 EiraIRC:irc.gui.textAndSound=Text and Sound
-EiraIRC:irc.gui.userRecording=User Recording:
-EiraIRC:irc.gui.nameMentioned=Name Mentioned:
-EiraIRC:irc.gui.friendJoined=Friend Joined:
-EiraIRC:irc.gui.privateMessage=Private Message:
+EiraIRC:irc.gui.userRecording=User Recording: %s
+EiraIRC:irc.gui.nameMentioned=Name Mentioned: %s
+EiraIRC:irc.gui.friendJoined=Friend Joined: %s
+EiraIRC:irc.gui.privateMessage=Private Message: %s
 
 # Notifications
 EiraIRC:irc.notify.privateMessage=%s: %s

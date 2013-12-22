@@ -3,10 +3,14 @@
 
 package blay09.mods.eirairc.client.gui;
 
+import java.net.URI;
+import java.net.URL;
+
 import org.lwjgl.input.Keyboard;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiConfirmOpenLink;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import blay09.mods.eirairc.EiraIRC;
@@ -22,6 +26,7 @@ public class GuiIRCTwitch extends GuiScreen {
 	private ServerConfig config;
 	private GuiTextField txtUsername;
 	private GuiTextField txtPassword;
+	private GuiButton btnOAuthHelp;
 	private GuiButton btnConnectOnStartup;
 	private GuiButton btnBack;
 	
@@ -38,6 +43,9 @@ public class GuiIRCTwitch extends GuiScreen {
 		txtUsername.setMaxStringLength(Integer.MAX_VALUE);
 		txtPassword = new GuiPasswordTextField(fontRenderer, width / 2 - 50, height / 2 - 40, 100, 15);
 		txtPassword.setMaxStringLength(Integer.MAX_VALUE);
+		
+		btnOAuthHelp = new GuiButton(1, width / 2 + 54, height / 2 - 42, 20, 20, "?");
+		buttonList.add(btnOAuthHelp);
 		
 		btnConnectOnStartup = new GuiButton(0, width / 2 - 100, height / 2 - 15, "Connect on Startup: ???");
 		buttonList.add(btnConnectOnStartup);
@@ -80,7 +88,17 @@ public class GuiIRCTwitch extends GuiScreen {
 		} else if(button == btnConnectOnStartup) {
 			config.setAutoConnect(!config.isAutoConnect());
 			btnConnectOnStartup.displayString = "Connect on Startup: " + (config.isAutoConnect() ? "Yes" : "No");
+		} else if(button == btnOAuthHelp) {
+			Minecraft.getMinecraft().displayGuiScreen(new GuiConfirmOpenLink(this, "http://twitchapps.com/tmi/", 0, false));
 		}
+	}
+	
+	@Override
+	public void confirmClicked(boolean yup, int id) {
+		if(yup) {
+			Utils.openWebpage("http://twitchapps.com/tmi/");
+		}
+		Minecraft.getMinecraft().displayGuiScreen(this);
 	}
 	
 	@Override

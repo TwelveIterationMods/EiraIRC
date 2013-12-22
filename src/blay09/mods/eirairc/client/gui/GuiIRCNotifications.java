@@ -23,8 +23,9 @@ public class GuiIRCNotifications extends GuiScreen {
 	private static final int BUTTON_GAP = 5;
 	
 	private GuiButton btnFriendJoined;
-	private GuiButton btnPlayerMentioned;
+	private GuiButton btnNameMentioned;
 	private GuiButton btnUserRecording;
+	private GuiButton btnPrivateMessage;
 	private GuiButton btnBack;
 	
 	@Override
@@ -35,13 +36,16 @@ public class GuiIRCNotifications extends GuiScreen {
 		btnFriendJoined = new GuiButton(1, leftX, height / 2 - 64, BUTTON_WIDTH, BUTTON_HEIGHT, "");
 		buttonList.add(btnFriendJoined);
 		
-		btnPlayerMentioned = new GuiButton(2, leftX, height / 2 - 64, BUTTON_WIDTH, BUTTON_HEIGHT, "");
-		buttonList.add(btnPlayerMentioned);
+		btnNameMentioned = new GuiButton(2, leftX, height / 2 - 39, BUTTON_WIDTH, BUTTON_HEIGHT, "");
+		buttonList.add(btnNameMentioned);
 		
-		btnUserRecording = new GuiButton(3, leftX, height / 2 - 64, BUTTON_WIDTH, BUTTON_HEIGHT, "");
+		btnUserRecording = new GuiButton(3, leftX, height / 2 - 14, BUTTON_WIDTH, BUTTON_HEIGHT, "");
 		buttonList.add(btnUserRecording);
 		
-		btnBack = new GuiButton(0, leftX, height / 2, BUTTON_WIDTH, BUTTON_HEIGHT, Utils.getLocalizedMessage("irc.gui.back"));
+		btnPrivateMessage = new GuiButton(4, rightX, height / 2 - 64, BUTTON_WIDTH, BUTTON_HEIGHT, "");
+		buttonList.add(btnPrivateMessage);
+		
+		btnBack = new GuiButton(0, width / 2 - BUTTON_WIDTH / 2, height / 2 + 36, BUTTON_WIDTH, BUTTON_HEIGHT, Utils.getLocalizedMessage("irc.gui.back"));
 		buttonList.add(btnBack);
 		
 		updateButtonText();
@@ -52,33 +56,39 @@ public class GuiIRCNotifications extends GuiScreen {
 		if(button == btnBack) {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiIRCSettings());
 		} else if(button == btnFriendJoined) {
-			NotificationConfig.friendJoined++;
-			if(NotificationConfig.friendJoined > NotificationConfig.VALUE_TEXTANDSOUND) {
-				NotificationConfig.friendJoined = NotificationConfig.VALUE_NONE;
-			}
-		} else if(button == btnPlayerMentioned) {
-			NotificationConfig.playerMentioned++;
-			if(NotificationConfig.playerMentioned > NotificationConfig.VALUE_TEXTANDSOUND) {
-				NotificationConfig.playerMentioned = NotificationConfig.VALUE_NONE;
-			}
+			NotificationConfig.friendJoined = getNextValue(NotificationConfig.friendJoined);
+		} else if(button == btnNameMentioned) {
+			NotificationConfig.nameMentioned = getNextValue(NotificationConfig.nameMentioned);
 		} else if(button == btnUserRecording) {
-			NotificationConfig.userRecording++;
-			if(NotificationConfig.userRecording > NotificationConfig.VALUE_TEXTANDSOUND) {
-				NotificationConfig.userRecording = NotificationConfig.VALUE_NONE;
-			}
+			NotificationConfig.userRecording = getNextValue(NotificationConfig.userRecording);
+		} else if(button == btnPrivateMessage) {
+			NotificationConfig.privateMessage = getNextValue(NotificationConfig.privateMessage);
 		}
 		updateButtonText();
 	}
 	
 	public void updateButtonText() {
-		String none = Utils.getLocalizedMessage("irc.gui.none");
-		String textOnly = Utils.getLocalizedMessage("irc.gui.textOnly");
-		String soundOnly = Utils.getLocalizedMessage("irc.gui.soundOnly");
-		String textAndSound = Utils.getLocalizedMessage("irc.gui.textAndSound");
-		
-		btnFriendJoined.displayString = Utils.getLocalizedMessage("irc.gui.friendJoined", (NotificationConfig.friendJoined == NotificationConfig.VALUE_NONE) ? none : (NotificationConfig.friendJoined == NotificationConfig.VALUE_TEXTONLY) ? textOnly : (NotificationConfig.friendJoined == NotificationConfig.VALUE_SOUNDONLY) ? soundOnly : textAndSound);
-		btnPlayerMentioned.displayString = Utils.getLocalizedMessage("irc.gui.playerMentioned", (NotificationConfig.playerMentioned == NotificationConfig.VALUE_NONE) ? none : (NotificationConfig.playerMentioned == NotificationConfig.VALUE_TEXTONLY) ? textOnly : (NotificationConfig.playerMentioned == NotificationConfig.VALUE_SOUNDONLY) ? soundOnly : textAndSound);
-		btnUserRecording.displayString = Utils.getLocalizedMessage("irc.gui.userRecording", (NotificationConfig.userRecording == NotificationConfig.VALUE_NONE) ? none : (NotificationConfig.userRecording == NotificationConfig.VALUE_TEXTONLY) ? textOnly : (NotificationConfig.userRecording == NotificationConfig.VALUE_SOUNDONLY) ? soundOnly : textAndSound);
+		btnFriendJoined.displayString = Utils.getLocalizedMessage("irc.gui.friendJoined", getTextForValue(NotificationConfig.friendJoined));
+		btnNameMentioned.displayString = Utils.getLocalizedMessage("irc.gui.nameMentioned", getTextForValue(NotificationConfig.nameMentioned));
+		btnUserRecording.displayString = Utils.getLocalizedMessage("irc.gui.userRecording", getTextForValue(NotificationConfig.userRecording));
+		btnPrivateMessage.displayString = Utils.getLocalizedMessage("irc.gui.privateMessage", getTextForValue(NotificationConfig.privateMessage));
+	}
+	
+	private int getNextValue(int value) {
+		value++;
+		if(value > NotificationConfig.VALUE_TEXTANDSOUND) {
+			value = NotificationConfig.VALUE_NONE;
+		}
+		return value;
+	}
+	
+	private String getTextForValue(int configValue) {
+		switch(configValue) {
+			case NotificationConfig.VALUE_TEXTONLY: return Utils.getLocalizedMessage("irc.gui.textOnly");
+			case NotificationConfig.VALUE_SOUNDONLY: return Utils.getLocalizedMessage("irc.gui.soundOnly");
+			case NotificationConfig.VALUE_TEXTANDSOUND: return Utils.getLocalizedMessage("irc.gui.textAndSound");
+			default: return Utils.getLocalizedMessage("irc.gui.none");
+		}
 	}
 	
 	@Override

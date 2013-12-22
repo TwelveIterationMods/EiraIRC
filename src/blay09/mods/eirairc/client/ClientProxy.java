@@ -24,16 +24,15 @@ public class ClientProxy extends CommonProxy {
 		int config = 0;
 		switch(type) {
 		case FriendJoined: config = NotificationConfig.friendJoined; break;
-		case PlayerMentioned: config = NotificationConfig.playerMentioned; break;
+		case PlayerMentioned: config = NotificationConfig.nameMentioned; break;
 		case UserRecording: config = NotificationConfig.userRecording; break;
+		case PrivateMessage: config = NotificationConfig.privateMessage; break;
 		default:
 		}
-		if(config != NotificationConfig.VALUE_NONE) {
-			GuiNotification.instance.showNotification(type, text);
-		} else if(config != NotificationConfig.VALUE_SOUNDONLY) {
+		if(config != NotificationConfig.VALUE_NONE && config != NotificationConfig.VALUE_SOUNDONLY) {
 			GuiNotification.instance.showNotification(type, text);
 		}
-		if(config == NotificationConfig.VALUE_TEXTANDSOUND) {
+		if(config == NotificationConfig.VALUE_TEXTANDSOUND || config == NotificationConfig.VALUE_SOUNDONLY) {
 			Minecraft.getMinecraft().sndManager.playSoundFX(NotificationConfig.notificationSound, NotificationConfig.soundVolume, NotificationConfig.soundPitch);
 		}
 	}
