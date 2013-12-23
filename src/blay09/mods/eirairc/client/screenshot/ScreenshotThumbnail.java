@@ -1,4 +1,4 @@
-package blay09.mods.eirairc.client;
+package blay09.mods.eirairc.client.screenshot;
 
 import java.awt.Image;
 import java.awt.image.BufferedImage;

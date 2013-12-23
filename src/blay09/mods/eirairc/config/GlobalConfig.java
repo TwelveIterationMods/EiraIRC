@@ -16,11 +16,6 @@ import blay09.mods.eirairc.Utils;
 
 public class GlobalConfig {
 
-	public static final int SCREENSHOT_NONE = 0;
-	public static final int SCREENSHOT_UPLOAD = 1;
-	public static final int SCREENSHOT_UPLOADSHARE = 2;
-	public static final int SCREENSHOT_UPLOADCLIPBOARD = 3;
-	
 	public static String nick = Globals.DEFAULT_NICK;
 	public static final List<String> colorBlackList = new ArrayList<String>();
 	public static final Map<String, DisplayFormatConfig> displayFormates = new HashMap<String, DisplayFormatConfig>();
@@ -43,9 +38,6 @@ public class GlobalConfig {
 	public static boolean interOp = false;
 	public static List<String> interOpAuthList = new ArrayList<String>();
 	public static String charset = "UTF-8";
-	
-	public static boolean manageScreenshots = true;
-	public static int screenshotAction = 0;
 	
 	public static void handleConfigCommand(ICommandSender sender, String key) {
 		String value = null;

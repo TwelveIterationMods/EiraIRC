@@ -19,5 +19,9 @@ public class CommonProxy {
 	public String getUsername() {
 		return null;
 	}
+
+	public boolean isIngame() {
+		return true;
+	}
 	
 }

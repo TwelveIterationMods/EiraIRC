@@ -12,7 +12,9 @@ import org.lwjgl.input.Keyboard;
 
 import blay09.mods.eirairc.client.gui.GuiEiraChat;
 import blay09.mods.eirairc.client.gui.GuiNotification;
+import blay09.mods.eirairc.client.screenshot.ScreenshotManager;
 import blay09.mods.eirairc.config.GlobalConfig;
+import blay09.mods.eirairc.config.ScreenshotConfig;
 import cpw.mods.fml.common.ITickHandler;
 import cpw.mods.fml.common.TickType;
 
@@ -27,7 +29,7 @@ public class EiraTickHandler implements ITickHandler {
 	@Override
 	public void tickEnd(EnumSet<TickType> type, Object... tickData) {
 		if(type.contains(TickType.CLIENT)) {
-			if(GlobalConfig.screenshotAction != GlobalConfig.SCREENSHOT_NONE) {
+			if(ScreenshotConfig.screenshotAction != ScreenshotConfig.SCREENSHOT_NONE) {
 				// TODO should try to get a proper event for screenshots into Forge once the 1.7 mess is over
 				if(Keyboard.isKeyDown(Keyboard.KEY_F2)) {
 					screenshotCheck = 10;
@@ -35,7 +37,7 @@ public class EiraTickHandler implements ITickHandler {
 					screenshotCheck--;
 					if(screenshotCheck == 0) {
 						System.out.println("Scanning Screenshots...");
-						ScreenshotManager.getInstance().findNewScreenshots();
+						ScreenshotManager.getInstance().findNewScreenshots(true);
 					}
 				}
 			}

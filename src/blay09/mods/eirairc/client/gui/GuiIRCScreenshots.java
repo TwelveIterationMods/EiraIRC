@@ -10,15 +10,18 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import blay09.mods.eirairc.Utils;
+import blay09.mods.eirairc.client.screenshot.ScreenshotManager;
+import blay09.mods.eirairc.client.upload.UploadHoster;
 import blay09.mods.eirairc.config.ConfigurationHandler;
 import blay09.mods.eirairc.config.DisplayFormatConfig;
 import blay09.mods.eirairc.config.GlobalConfig;
 import blay09.mods.eirairc.config.Globals;
 import blay09.mods.eirairc.config.NotificationConfig;
+import blay09.mods.eirairc.config.ScreenshotConfig;
 
 public class GuiIRCScreenshots extends GuiScreen {
 	
-	private static final int BUTTON_WIDTH = 120;
+	private static final int BUTTON_WIDTH = 160;
 	private static final int BUTTON_HEIGHT = 20;
 	private static final int BUTTON_GAP = 5;
 	private static final int CUSTOM_GAP = 1;
@@ -29,6 +32,8 @@ public class GuiIRCScreenshots extends GuiScreen {
 	private GuiButton btnScreenshotAction;
 	
 	private GuiButton btnBack;
+	
+	private int hosterIdx;
 	
 	@Override
 	public void initGui() {
@@ -46,6 +51,7 @@ public class GuiIRCScreenshots extends GuiScreen {
 		buttonList.add(btnCustomUpload);
 		
 		btnScreenshotAction = new GuiButton(4, leftX, height / 2 - 48, BUTTON_WIDTH, BUTTON_HEIGHT, "");
+		buttonList.add(btnScreenshotAction);
 		
 		btnBack = new GuiButton(0, leftX, height / 2, BUTTON_WIDTH, BUTTON_HEIGHT, Utils.getLocalizedMessage("irc.gui.back"));
 		buttonList.add(btnBack);
@@ -59,11 +65,43 @@ public class GuiIRCScreenshots extends GuiScreen {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiIRCScreenshotList(this));
 		} else if(button == btnBack) {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiIRCSettings());
+		} else if(button == btnUploadService) {
+			hosterIdx++;
+			if(hosterIdx >= UploadHoster.availableHosters.length) {
+				hosterIdx = 0;
+			}
+			ScreenshotConfig.uploadHoster = UploadHoster.availableHosters[hosterIdx];
+			updateButtonText();
+		} else if(button == btnScreenshotAction) {
+			int action = ScreenshotConfig.screenshotAction;
+			action++;
+			if(action > ScreenshotConfig.SCREENSHOT_UPLOADCLIPBOARD) {
+				action = ScreenshotConfig.SCREENSHOT_NONE;
+			}
+			ScreenshotConfig.screenshotAction = action;
+			if(action != ScreenshotConfig.SCREENSHOT_NONE) {
+				ScreenshotManager.getInstance().findNewScreenshots(false);
+			}
+			updateButtonText();
 		}
-		updateButtonText();
 	}
 	
 	public void updateButtonText() {
+		btnUploadService.displayString = "Hoster: " + ScreenshotConfig.uploadHoster;
+		UploadHoster host = UploadHoster.getUploadHoster(ScreenshotConfig.uploadHoster);
+		if(host != null && host.isCustomizable()) {
+			btnCustomUpload.enabled = true;
+		} else {
+			btnCustomUpload.enabled = false;
+		}
+		String autoAction = null;
+		switch(ScreenshotConfig.screenshotAction) {
+			case ScreenshotConfig.SCREENSHOT_UPLOAD: autoAction = "Upload";
+			case ScreenshotConfig.SCREENSHOT_UPLOADSHARE: autoAction = "Upload & Share";
+			case ScreenshotConfig.SCREENSHOT_UPLOADCLIPBOARD: autoAction = "Upload & Clipboard";
+			default: autoAction = "None";
+		}
+		btnScreenshotAction.displayString = "Auto-Action: " + autoAction;
 	}
 	
 	@Override

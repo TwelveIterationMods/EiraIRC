@@ -7,6 +7,7 @@ import net.minecraft.client.Minecraft;
 import blay09.mods.eirairc.CommonProxy;
 import blay09.mods.eirairc.NotificationType;
 import blay09.mods.eirairc.client.gui.GuiNotification;
+import blay09.mods.eirairc.client.screenshot.ScreenshotManager;
 import blay09.mods.eirairc.config.NotificationConfig;
 import cpw.mods.fml.client.registry.KeyBindingRegistry;
 
@@ -43,5 +44,8 @@ public class ClientProxy extends CommonProxy {
 		return Minecraft.getMinecraft().thePlayer.username;
 	}
 	
-	
+	@Override
+	public boolean isIngame() {
+		return Minecraft.getMinecraft().theWorld != null;
+	}
 }

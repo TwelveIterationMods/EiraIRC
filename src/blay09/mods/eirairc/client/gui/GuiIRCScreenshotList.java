@@ -12,8 +12,8 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiYesNo;
-import blay09.mods.eirairc.client.Screenshot;
-import blay09.mods.eirairc.client.ScreenshotManager;
+import blay09.mods.eirairc.client.screenshot.Screenshot;
+import blay09.mods.eirairc.client.screenshot.ScreenshotManager;
 import blay09.mods.eirairc.config.Globals;
 
 public class GuiIRCScreenshotList extends GuiScreen {
@@ -65,7 +65,7 @@ public class GuiIRCScreenshotList extends GuiScreen {
 		if(button == btnBack) {
 			Minecraft.getMinecraft().displayGuiScreen(parentScreen);
 		} else if(button == btnUpload) {
-			// TODO upload code
+			ScreenshotManager.getInstance().uploadScreenshot(screenshots[selectedElement]);
 		} else if(button == btnRename) {
 			onElementClicked(selectedElement);
 		} else if(button == btnDelete) {
@@ -117,6 +117,7 @@ public class GuiIRCScreenshotList extends GuiScreen {
 			btnClipboard.enabled = true;
 		} else {
 			btnUpload.displayString = "Upload";
+			btnClipboard.enabled = false;
 		}
 		btnRename.enabled = true;
 		btnDelete.enabled = true;

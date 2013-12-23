@@ -1,7 +1,7 @@
 // Copyright (c) 2013, Christopher "blay09" Baker
 // All rights reserved.
 
-package blay09.mods.eirairc.client;
+package blay09.mods.eirairc.client.screenshot;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,6 +16,15 @@ import java.util.List;
 import java.util.Properties;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
+import blay09.mods.eirairc.EiraIRC;
+import blay09.mods.eirairc.Utils;
+import blay09.mods.eirairc.client.upload.UploadHoster;
+import blay09.mods.eirairc.config.ChannelConfig;
+import blay09.mods.eirairc.config.ScreenshotConfig;
+import blay09.mods.eirairc.config.ServerConfig;
+import blay09.mods.eirairc.irc.IRCChannel;
+import blay09.mods.eirairc.irc.IRCConnection;
 
 public class ScreenshotManager {
 
@@ -23,7 +32,7 @@ public class ScreenshotManager {
 	public static void create() {
 		instance = new ScreenshotManager();
 		instance.load();
-		instance.findNewScreenshots();
+		instance.findNewScreenshots(false);
 	}
 	public static ScreenshotManager getInstance() {
 		return instance;
@@ -36,7 +45,7 @@ public class ScreenshotManager {
 	private final Comparator<Screenshot> comparator = new Comparator<Screenshot>() {
 		@Override
 		public int compare(Screenshot first, Screenshot second) {
-			return (int) (first.getFile().lastModified() - second.getFile().lastModified());
+			return (int) (second.getFile().lastModified() - first.getFile().lastModified());
 		}
 	};
 	
@@ -74,7 +83,9 @@ public class ScreenshotManager {
 		Properties prop = new Properties();
 		for(int i = 0; i < screenshots.size(); i++) {
 			Screenshot screenshot = screenshots.get(i);
-			prop.setProperty(screenshot.getName(), screenshot.getUploadURL());
+			if(screenshot.isUploaded()) {
+				prop.setProperty(screenshot.getName(), screenshot.getUploadURL());
+			}
 		}
 		try {
 			FileOutputStream out = new FileOutputStream(new File(screenshotDir, "eirairc.properties"));
@@ -94,11 +105,43 @@ public class ScreenshotManager {
 		screenshots.remove(screenshot);
 	}
 	
-	public void handleNewScreenshot(Screenshot screenshot) {
-		// TODO if ingame: upload & share if config is set
+	public String uploadScreenshot(Screenshot screenshot) {
+		UploadHoster host = UploadHoster.getUploadHoster(ScreenshotConfig.uploadHoster);
+		if(host != null) {
+			String uploadURL = host.uploadFile(screenshot.getFile());
+			screenshot.setURL(uploadURL);
+			save();
+			return uploadURL;
+		}
+		return null;
 	}
 	
-	public void findNewScreenshots() {
+	public void handleNewScreenshot(Screenshot screenshot) {
+		if(EiraIRC.proxy.isIngame()) {
+			int action = ScreenshotConfig.screenshotAction;
+			if(action != ScreenshotConfig.SCREENSHOT_NONE) {
+				uploadScreenshot(screenshot);
+				if(action == ScreenshotConfig.SCREENSHOT_UPLOADCLIPBOARD) {
+					GuiScreen.setClipboardString(screenshot.getUploadURL());
+				} else if(action == ScreenshotConfig.SCREENSHOT_UPLOADSHARE) {
+					String ircMessage = "just uploaded a screenshot: " + screenshot.getUploadURL();
+					String mcMessage = "/me " + ircMessage;
+					Minecraft.getMinecraft().thePlayer.sendChatMessage(mcMessage);
+					for(IRCConnection connection : EiraIRC.instance.getConnections()) {
+						ServerConfig serverConfig = Utils.getServerConfig(connection);
+						for(IRCChannel channel : connection.getChannels()) {
+							ChannelConfig channelConfig = serverConfig.getChannelConfig(channel);
+							if(!channelConfig.isReadOnly()) {
+								connection.sendChannelMessage(channel, "ACTION " + ircMessage + "");
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	public void findNewScreenshots(boolean autoAction) {
 		File[] screenshotFiles = screenshotDir.listFiles(new FilenameFilter() {
 			@Override
 			public boolean accept(File file, String fileName) {
@@ -107,10 +150,12 @@ public class ScreenshotManager {
 		});
 		if(screenshotFiles != null) {
 			for(int i = 0; i < screenshotFiles.length; i++) {
-				Screenshot screenshot = new Screenshot(screenshotFiles[i]);
-				handleNewScreenshot(screenshot);
-				screenshots.add(screenshot);
 				screenshotFiles[i].renameTo(new File(managedDir, screenshotFiles[i].getName()));
+				Screenshot screenshot = new Screenshot(screenshotFiles[i]);
+				if(autoAction) {
+					handleNewScreenshot(screenshot);
+				}
+				screenshots.add(screenshot);
 				System.out.println("Found new screenshot: " + screenshot.getName());
 			}
 		}
