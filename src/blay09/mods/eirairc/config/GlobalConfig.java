@@ -21,7 +21,7 @@ public class GlobalConfig {
 	public static final Map<String, DisplayFormatConfig> displayFormates = new HashMap<String, DisplayFormatConfig>();
 	public static String opColor = "red";
 	public static String ircColor = "gray";
-	public static String emoteColor = "purple";
+	public static String emoteColor = "gold";
 	public static String quitMessage = "Leaving.";
 	public static String displayMode = "S-Light";
 	public static boolean enableNameColors = true;

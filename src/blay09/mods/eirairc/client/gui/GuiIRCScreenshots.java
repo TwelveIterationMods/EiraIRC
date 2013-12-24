@@ -50,7 +50,7 @@ public class GuiIRCScreenshots extends GuiScreen {
 		btnCustomUpload.enabled = false;
 		buttonList.add(btnCustomUpload);
 		
-		btnScreenshotAction = new GuiButton(4, leftX, height / 2 - 48, BUTTON_WIDTH, BUTTON_HEIGHT, "");
+		btnScreenshotAction = new GuiButton(4, leftX, height / 2 - 39, BUTTON_WIDTH, BUTTON_HEIGHT, "");
 		buttonList.add(btnScreenshotAction);
 		
 		btnBack = new GuiButton(0, leftX, height / 2, BUTTON_WIDTH, BUTTON_HEIGHT, Utils.getLocalizedMessage("irc.gui.back"));
@@ -96,10 +96,10 @@ public class GuiIRCScreenshots extends GuiScreen {
 		}
 		String autoAction = null;
 		switch(ScreenshotConfig.screenshotAction) {
-			case ScreenshotConfig.SCREENSHOT_UPLOAD: autoAction = "Upload";
-			case ScreenshotConfig.SCREENSHOT_UPLOADSHARE: autoAction = "Upload & Share";
-			case ScreenshotConfig.SCREENSHOT_UPLOADCLIPBOARD: autoAction = "Upload & Clipboard";
-			default: autoAction = "None";
+			case ScreenshotConfig.SCREENSHOT_UPLOAD: autoAction = "Upload"; break;
+			case ScreenshotConfig.SCREENSHOT_UPLOADSHARE: autoAction = "Upload & Share"; break;
+			case ScreenshotConfig.SCREENSHOT_UPLOADCLIPBOARD: autoAction = "Upload & Clipboard"; break;
+			default: autoAction = "None"; break;
 		}
 		btnScreenshotAction.displayString = "Auto-Action: " + autoAction;
 	}

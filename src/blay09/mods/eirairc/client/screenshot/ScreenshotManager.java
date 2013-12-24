@@ -150,8 +150,9 @@ public class ScreenshotManager {
 		});
 		if(screenshotFiles != null) {
 			for(int i = 0; i < screenshotFiles.length; i++) {
-				screenshotFiles[i].renameTo(new File(managedDir, screenshotFiles[i].getName()));
-				Screenshot screenshot = new Screenshot(screenshotFiles[i]);
+				File newFile = new File(managedDir, screenshotFiles[i].getName());
+				screenshotFiles[i].renameTo(newFile);
+				Screenshot screenshot = new Screenshot(newFile);
 				if(autoAction) {
 					handleNewScreenshot(screenshot);
 				}
