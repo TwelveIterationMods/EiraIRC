@@ -1,7 +1,7 @@
 // Copyright (c) 2013, Christopher "blay09" Baker
 // All rights reserved.
 
-package blay09.mods.eirairc;
+package blay09.mods.eirairc.util;
 
 import java.awt.Desktop;
 import java.net.MalformedURLException;
@@ -21,6 +21,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.StatCollector;
+import blay09.mods.eirairc.EiraIRC;
 import blay09.mods.eirairc.config.ChannelConfig;
 import blay09.mods.eirairc.config.ConfigHelper;
 import blay09.mods.eirairc.config.ConfigurationHandler;
@@ -326,7 +327,7 @@ public class Utils {
 	public static IRCConnection connectTo(ServerConfig config) {
 		IRCConnection connection = new IRCConnection(config.getHost(), IRCConnection.IRC_DEFAULT_PORT, config.getServerPassword(), ConfigHelper.getNick(config));
 		connection.setCharset(GlobalConfig.charset);
-		connection.setEventHandler(EiraIRC.instance.getEventHandler());
+		connection.setEventHandler(EiraIRC.instance.getIRCEventHandler());
 		if(connection.connect()) {
 			EiraIRC.instance.addConnection(connection);
 			return connection;

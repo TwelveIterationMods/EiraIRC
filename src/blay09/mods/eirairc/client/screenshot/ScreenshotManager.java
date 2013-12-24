@@ -18,13 +18,13 @@ import java.util.Properties;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import blay09.mods.eirairc.EiraIRC;
-import blay09.mods.eirairc.Utils;
 import blay09.mods.eirairc.client.upload.UploadHoster;
 import blay09.mods.eirairc.config.ChannelConfig;
 import blay09.mods.eirairc.config.ScreenshotConfig;
 import blay09.mods.eirairc.config.ServerConfig;
 import blay09.mods.eirairc.irc.IRCChannel;
 import blay09.mods.eirairc.irc.IRCConnection;
+import blay09.mods.eirairc.util.Utils;
 
 public class ScreenshotManager {
 

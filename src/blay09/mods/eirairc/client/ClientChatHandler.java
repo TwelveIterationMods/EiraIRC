@@ -8,14 +8,14 @@ import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumChatFormatting;
 import blay09.mods.eirairc.EiraIRC;
-import blay09.mods.eirairc.Utils;
 import blay09.mods.eirairc.command.IRCCommandHandler;
+import blay09.mods.eirairc.util.Utils;
 
 public class ClientChatHandler {
 	
 	public static boolean handleClientChat(String text) {
 		if(!text.startsWith("/")) {
-			if(!EiraIRC.instance.getEventHandler().onClientChat(text)) {
+			if(!EiraIRC.instance.getMCEventHandler().onClientChat(text)) {
 				return true;
 			}
 			return false;
@@ -47,7 +47,7 @@ public class ClientChatHandler {
 			if(emote.length() == 0) {
 				return false;
 			}
-			if(!EiraIRC.instance.getEventHandler().onClientEmote(emote)) {
+			if(!EiraIRC.instance.getMCEventHandler().onClientEmote(emote)) {
 				return true;
 			}
 			return false;

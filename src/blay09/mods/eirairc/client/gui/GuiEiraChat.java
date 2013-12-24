@@ -10,9 +10,9 @@ import net.minecraft.client.gui.GuiChat;
 import org.lwjgl.input.Keyboard;
 
 import blay09.mods.eirairc.EiraIRC;
-import blay09.mods.eirairc.Utils;
 import blay09.mods.eirairc.client.ClientChatHandler;
 import blay09.mods.eirairc.config.Globals;
+import blay09.mods.eirairc.util.Utils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

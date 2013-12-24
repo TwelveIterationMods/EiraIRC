@@ -7,8 +7,8 @@ import java.util.Queue;
 
 import org.lwjgl.opengl.GL11;
 
-import blay09.mods.eirairc.NotificationType;
 import blay09.mods.eirairc.config.Globals;
+import blay09.mods.eirairc.util.NotificationType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;

@@ -15,7 +15,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import blay09.mods.eirairc.EiraIRC;
-import blay09.mods.eirairc.Utils;
+import blay09.mods.eirairc.util.Utils;
 
 public class IRCConnection implements Runnable {
 
@@ -138,7 +138,7 @@ public class IRCConnection implements Runnable {
 	}
 	
 	public void tryReconnect() {
-		EiraIRC.instance.getEventHandler().onDisconnected(this);
+		EiraIRC.instance.getIRCEventHandler().onDisconnected(this);
 		EiraIRC.instance.removeConnection(this);
 		if(connected) {
 			if(connect()) {

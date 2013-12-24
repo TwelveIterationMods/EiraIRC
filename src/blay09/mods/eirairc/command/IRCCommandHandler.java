@@ -12,8 +12,6 @@ import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumChatFormatting;
 import blay09.mods.eirairc.EiraIRC;
-import blay09.mods.eirairc.IRCTargetError;
-import blay09.mods.eirairc.Utils;
 import blay09.mods.eirairc.config.ChannelConfig;
 import blay09.mods.eirairc.config.ConfigurationHandler;
 import blay09.mods.eirairc.config.GlobalConfig;
@@ -22,9 +20,20 @@ import blay09.mods.eirairc.config.ServerConfig;
 import blay09.mods.eirairc.irc.IRCChannel;
 import blay09.mods.eirairc.irc.IRCConnection;
 import blay09.mods.eirairc.irc.IRCUser;
+import blay09.mods.eirairc.util.IRCTargetError;
+import blay09.mods.eirairc.util.Utils;
 
 public class IRCCommandHandler {
 
+	public static boolean onChatCommand(EntityPlayer sender, String text, boolean serverSide) {
+		String[] params = text.split(" ");
+		if(!params[0].startsWith("!")) {
+			return false;
+		}
+		params[0] = params[0].substring(1);
+		return processCommand(sender, params, serverSide);
+	}
+	
 	public static boolean processCommand(ICommandSender sender, String[] args, boolean serverSide) {
 		String commandName = serverSide ? "servirc" : "irc";
 		if(args.length < 1) {

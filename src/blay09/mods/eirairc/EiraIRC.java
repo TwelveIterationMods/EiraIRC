@@ -28,6 +28,8 @@ import blay09.mods.eirairc.config.Localization;
 import blay09.mods.eirairc.config.ServerConfig;
 import blay09.mods.eirairc.irc.IRCChannel;
 import blay09.mods.eirairc.irc.IRCConnection;
+import blay09.mods.eirairc.util.EnumChatTarget;
+import blay09.mods.eirairc.util.Utils;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -53,9 +55,11 @@ public class EiraIRC {
 	@SidedProxy(serverSide = "blay09.mods.eirairc.CommonProxy", clientSide = "blay09.mods.eirairc.client.ClientProxy")
 	public static CommonProxy proxy;
 	
-	private IRCEventHandler eventHandler;
+	private IRCEventHandler ircEventHandler;
+	private MCEventHandler mcEventHandler;
 	private Map<String, IRCConnection> connections;
 	private boolean ircRunning;
+	
 	private EnumChatTarget chatTarget = EnumChatTarget.MinecraftOnly;
 	private final List<String> validTargetChannels = new ArrayList<String>();
 	private final List<String> privateTargets = new ArrayList<String>();
@@ -71,10 +75,11 @@ public class EiraIRC {
 	public void load(FMLInitializationEvent event) {
 		proxy.setupClient();
 		
-		eventHandler = new IRCEventHandler();
-		GameRegistry.registerPlayerTracker(eventHandler);
-		NetworkRegistry.instance().registerConnectionHandler(eventHandler);
-		MinecraftForge.EVENT_BUS.register(eventHandler);
+		ircEventHandler = new IRCEventHandler();
+		mcEventHandler = new MCEventHandler();
+		GameRegistry.registerPlayerTracker(mcEventHandler);
+		NetworkRegistry.instance().registerConnectionHandler(mcEventHandler);
+		MinecraftForge.EVENT_BUS.register(mcEventHandler);
 		
 		TickRegistry.registerTickHandler(new EiraTickHandler(), Side.CLIENT);
 		
@@ -168,8 +173,12 @@ public class EiraIRC {
 		connections.clear();
 	}
 	
-	public IRCEventHandler getEventHandler() {
-		return eventHandler;
+	public IRCEventHandler getIRCEventHandler() {
+		return ircEventHandler;
+	}
+	
+	public MCEventHandler getMCEventHandler() {
+		return mcEventHandler;
 	}
 
 	public String getTargetChannel() {

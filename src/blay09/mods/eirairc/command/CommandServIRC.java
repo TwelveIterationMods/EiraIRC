@@ -9,7 +9,7 @@ import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
-import blay09.mods.eirairc.Utils;
+import blay09.mods.eirairc.util.Utils;
 
 public class CommandServIRC implements ICommand {
 

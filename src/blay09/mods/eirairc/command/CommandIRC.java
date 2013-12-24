@@ -7,9 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import blay09.mods.eirairc.EiraIRC;
-import blay09.mods.eirairc.Utils;
 import blay09.mods.eirairc.config.GlobalConfig;
 import blay09.mods.eirairc.config.Globals;
+import blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
@@ -151,7 +151,7 @@ public class CommandIRC implements ICommand {
 				} else {
 					Utils.sendLocalizedMessage(sender, "irc.alias.set", oldAlias, alias);
 				}
-				EiraIRC.instance.getEventHandler().onPlayerNickChange(oldAlias, alias);
+				EiraIRC.instance.getMCEventHandler().onPlayerNickChange(oldAlias, alias);
 			}
 		}
 	}

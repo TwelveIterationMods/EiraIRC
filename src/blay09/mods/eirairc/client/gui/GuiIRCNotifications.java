@@ -9,12 +9,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
-import blay09.mods.eirairc.Utils;
 import blay09.mods.eirairc.config.ConfigurationHandler;
 import blay09.mods.eirairc.config.DisplayFormatConfig;
 import blay09.mods.eirairc.config.GlobalConfig;
 import blay09.mods.eirairc.config.Globals;
 import blay09.mods.eirairc.config.NotificationConfig;
+import blay09.mods.eirairc.util.Utils;
 
 public class GuiIRCNotifications extends GuiScreen {
 	

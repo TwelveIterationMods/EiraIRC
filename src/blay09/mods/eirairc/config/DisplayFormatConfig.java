@@ -2,7 +2,7 @@ package blay09.mods.eirairc.config;
 
 import net.minecraftforge.common.ConfigCategory;
 import net.minecraftforge.common.Configuration;
-import blay09.mods.eirairc.Utils;
+import blay09.mods.eirairc.util.Utils;
 
 public class DisplayFormatConfig {
 

@@ -2,8 +2,8 @@ package blay09.mods.eirairc.config;
 
 import net.minecraftforge.common.ConfigCategory;
 import blay09.mods.eirairc.EiraIRC;
-import blay09.mods.eirairc.Utils;
 import blay09.mods.eirairc.irc.IRCConnection;
+import blay09.mods.eirairc.util.Utils;
 
 public class ConfigHelper {
 

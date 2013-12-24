@@ -3,6 +3,7 @@
 
 package blay09.mods.eirairc;
 
+import blay09.mods.eirairc.util.NotificationType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import cpw.mods.fml.common.network.IGuiHandler;

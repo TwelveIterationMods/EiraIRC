@@ -5,18 +5,16 @@ package blay09.mods.eirairc.client;
 
 import net.minecraft.client.Minecraft;
 import blay09.mods.eirairc.CommonProxy;
-import blay09.mods.eirairc.NotificationType;
 import blay09.mods.eirairc.client.gui.GuiNotification;
 import blay09.mods.eirairc.client.screenshot.ScreenshotManager;
 import blay09.mods.eirairc.config.NotificationConfig;
+import blay09.mods.eirairc.util.NotificationType;
 import cpw.mods.fml.client.registry.KeyBindingRegistry;
 
 public class ClientProxy extends CommonProxy {
 
 	@Override
 	public void setupClient() {
-		KeyBindingRegistry.registerKeyBinding(new KeyBindingHandler());
-		
 		GuiNotification.instance = new GuiNotification();
 		ScreenshotManager.create();
 	}
