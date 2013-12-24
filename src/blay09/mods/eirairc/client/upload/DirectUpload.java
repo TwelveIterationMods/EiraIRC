@@ -11,8 +11,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-
-import org.bouncycastle.crypto.tls.ContentType;
+import java.util.List;
+import java.util.Map.Entry;
 
 public class DirectUpload extends UploadHoster {
 
@@ -24,15 +24,18 @@ public class DirectUpload extends UploadHoster {
 	public String uploadFile(File file) {
 		try {
 			String boundary = Long.toHexString(System.currentTimeMillis());
+			boundary = "---------------------------7d41b838504d8";
 			URL apiURL = new URL(API);
 			HttpURLConnection con = (HttpURLConnection) apiURL.openConnection();
 			con.setDoOutput(true);
 			con.setRequestMethod("POST");
+			con.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
+			con.setRequestProperty("Connection", "Keep-Alive");
+			con.setRequestProperty("Cache-Control", "no-cache");
 			
 			DataOutputStream out = new DataOutputStream(con.getOutputStream());
 			out.writeBytes("--" + boundary + "\r\n");
 			out.writeBytes("Content-Disposition: form-data; name=\"file\"; filename=\"" + file.getName() + "\"\r\n");
-			out.writeBytes("Content-Type: binary/octet-stream;boundary=" + boundary + "\r\n");
 			out.writeBytes("\r\n");
 			
 			FileInputStream fis = new FileInputStream(file);
