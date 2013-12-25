@@ -13,6 +13,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.ConfigCategory;
 import net.minecraftforge.common.Configuration;
 import blay09.mods.eirairc.irc.IRCChannel;
+import blay09.mods.eirairc.util.Globals;
 import blay09.mods.eirairc.util.Utils;
 
 public class ServerConfig {

@@ -11,9 +11,9 @@ import net.minecraft.client.gui.GuiYesNo;
 import blay09.mods.eirairc.EiraIRC;
 import blay09.mods.eirairc.config.ChannelConfig;
 import blay09.mods.eirairc.config.ConfigurationHandler;
-import blay09.mods.eirairc.config.Globals;
 import blay09.mods.eirairc.config.ServerConfig;
 import blay09.mods.eirairc.irc.IRCConnection;
+import blay09.mods.eirairc.util.Globals;
 import blay09.mods.eirairc.util.Utils;
 
 public class GuiIRCChannelList extends GuiScreen {

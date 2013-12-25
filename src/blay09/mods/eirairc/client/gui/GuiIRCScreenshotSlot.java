@@ -14,8 +14,8 @@ import blay09.mods.eirairc.EiraIRC;
 import blay09.mods.eirairc.client.screenshot.Screenshot;
 import blay09.mods.eirairc.client.screenshot.ScreenshotThumbnail;
 import blay09.mods.eirairc.config.ChannelConfig;
-import blay09.mods.eirairc.config.Globals;
 import blay09.mods.eirairc.config.ServerConfig;
+import blay09.mods.eirairc.util.Globals;
 
 public class GuiIRCScreenshotSlot extends GuiSlot {
 

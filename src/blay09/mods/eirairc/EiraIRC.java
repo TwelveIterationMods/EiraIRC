@@ -23,12 +23,11 @@ import blay09.mods.eirairc.command.CommandServIRC;
 import blay09.mods.eirairc.command.CommandWho;
 import blay09.mods.eirairc.config.ConfigurationHandler;
 import blay09.mods.eirairc.config.GlobalConfig;
-import blay09.mods.eirairc.config.Globals;
-import blay09.mods.eirairc.config.Localization;
 import blay09.mods.eirairc.config.ServerConfig;
 import blay09.mods.eirairc.irc.IRCChannel;
 import blay09.mods.eirairc.irc.IRCConnection;
-import blay09.mods.eirairc.util.EnumChatTarget;
+import blay09.mods.eirairc.util.Globals;
+import blay09.mods.eirairc.util.Localization;
 import blay09.mods.eirairc.util.Utils;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -57,15 +56,10 @@ public class EiraIRC {
 	
 	private IRCEventHandler ircEventHandler;
 	private MCEventHandler mcEventHandler;
+	private ChatSessionHandler chatSessionHandler;
 	private Map<String, IRCConnection> connections;
 	private boolean ircRunning;
 	
-	private EnumChatTarget chatTarget = EnumChatTarget.MinecraftOnly;
-	private final List<String> validTargetChannels = new ArrayList<String>();
-	private final List<String> privateTargets = new ArrayList<String>();
-	private int targetChannelIndex;
-	private IRCChannel suggestedChannel;
-
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		ConfigurationHandler.load(event.getSuggestedConfigurationFile());
@@ -180,50 +174,8 @@ public class EiraIRC {
 	public MCEventHandler getMCEventHandler() {
 		return mcEventHandler;
 	}
-
-	public String getTargetChannel() {
-		if(chatTarget == EnumChatTarget.ChannelOnly) {
-			return validTargetChannels.get(targetChannelIndex);
-		}
-		return null;
-	}
 	
-	public void addPrivateTarget(IRCConnection connection, String privateTarget) {
-		privateTargets.add(connection.getHost() + ":" + privateTarget);
-	}
-	
-	public void setChatTarget(EnumChatTarget chatTarget) {
-		if(chatTarget == EnumChatTarget.ChannelOnly) {
-			if(chatTarget != this.chatTarget) {
-				targetChannelIndex = -1;
-			}
-			validTargetChannels.clear();
-			for(IRCConnection connection : connections.values()) {
-				ServerConfig serverConfig = ConfigurationHandler.getServerConfig(connection.getHost());
-				for(IRCChannel channel : connection.getChannels()) {
-					validTargetChannels.add(connection.getHost() + ":" + channel.getName());
-				}
-			}
-			for(String pchannel : privateTargets) {
-				validTargetChannels.add(pchannel);
-			}
-			if(validTargetChannels.isEmpty()) {
-				chatTarget = EnumChatTarget.IRCOnly;
-			} else {
-				targetChannelIndex++;
-				if(targetChannelIndex >= validTargetChannels.size()) {
-					targetChannelIndex = 0;
-				}
-			}
-		}
-		this.chatTarget = chatTarget;
-	}
-	
-	public EnumChatTarget getChatTarget() {
-		return chatTarget;
-	}
-	
-	public IRCChannel getSuggestedChannel() {
-		return suggestedChannel;
+	public ChatSessionHandler getChatSessionHandler() {
+		return chatSessionHandler;
 	}
 }

@@ -14,7 +14,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiYesNo;
 import blay09.mods.eirairc.client.screenshot.Screenshot;
 import blay09.mods.eirairc.client.screenshot.ScreenshotManager;
-import blay09.mods.eirairc.config.Globals;
+import blay09.mods.eirairc.util.Globals;
 
 public class GuiIRCScreenshotList extends GuiScreen {
 

@@ -7,14 +7,14 @@ import java.util.Queue;
 
 import org.lwjgl.opengl.GL11;
 
-import blay09.mods.eirairc.config.Globals;
+import blay09.mods.eirairc.util.Globals;
 import blay09.mods.eirairc.util.NotificationType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.util.ResourceLocation;
 
-public class GuiNotification extends Gui {
+public class OverlayNotification extends Gui {
 
 	private static final ResourceLocation backgroundTextures = new ResourceLocation("textures/gui/achievement/achievement_background.png");
 	private static final int WIDTH = 160;
@@ -22,8 +22,6 @@ public class GuiNotification extends Gui {
 	private static final float TIME_ROLLIN = 8f;
 	private static final float TIME_ROLLOUT = 200f;
 	
-	public static GuiNotification instance;
-
     private final Minecraft theGame;
     
     private NotificationType type;
@@ -34,7 +32,7 @@ public class GuiNotification extends Gui {
     private int windowWidth;
     private int windowHeight;
     
-    public GuiNotification() {
+    public OverlayNotification() {
     	theGame = Minecraft.getMinecraft();
     }
     

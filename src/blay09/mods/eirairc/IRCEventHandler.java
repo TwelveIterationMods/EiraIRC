@@ -16,20 +16,19 @@ import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import blay09.mods.eirairc.client.gui.GuiNotification;
+import blay09.mods.eirairc.client.gui.OverlayNotification;
 import blay09.mods.eirairc.command.IRCCommandHandler;
 import blay09.mods.eirairc.config.ChannelConfig;
 import blay09.mods.eirairc.config.ConfigHelper;
 import blay09.mods.eirairc.config.ConfigurationHandler;
 import blay09.mods.eirairc.config.GlobalConfig;
-import blay09.mods.eirairc.config.Globals;
 import blay09.mods.eirairc.config.ServerConfig;
 import blay09.mods.eirairc.irc.IIRCEventHandler;
 import blay09.mods.eirairc.irc.IRCChannel;
 import blay09.mods.eirairc.irc.IRCConnection;
 import blay09.mods.eirairc.irc.IRCReplyCodes;
 import blay09.mods.eirairc.irc.IRCUser;
-import blay09.mods.eirairc.util.EnumChatTarget;
+import blay09.mods.eirairc.util.Globals;
 import blay09.mods.eirairc.util.NotificationType;
 import blay09.mods.eirairc.util.Utils;
 import cpw.mods.fml.common.IPlayerTracker;
@@ -128,7 +127,7 @@ public class IRCEventHandler implements IIRCEventHandler {
 			}
 			message = Utils.filterCodes(message);
 			String emoteColor = ConfigHelper.getEmoteColor(serverConfig);
-			String mcMessage = (emoteColor != null ? "§" + Utils.getColorCode(emoteColor) : "") +Utils.formatMessage(ConfigHelper.getDisplayFormatConfig().mcPrivateEmote, connection, user.getUsername(), user.getNick(), message);
+			String mcMessage = (emoteColor != null ? "§" + Utils.getColorCode(emoteColor) : "") +Utils.formatMessage(ConfigHelper.getDisplayFormatConfig().mcPrivateEmote, connection, user.getIdentifier(), user.getNick(), message);
 			Utils.addMessageToChat(mcMessage);
 		}
 	}
@@ -155,14 +154,14 @@ public class IRCEventHandler implements IIRCEventHandler {
 				message = Utils.filterLinks(message);
 			}
 			message = Utils.filterCodes(message);
-			String mcMessage = Utils.formatMessage(ConfigHelper.getDisplayFormatConfig().mcPrivateMessage, connection, user.getUsername(), Utils.getColoredName(user.getNick(), ConfigHelper.getIRCColor(serverConfig)), message);
+			String mcMessage = Utils.formatMessage(ConfigHelper.getDisplayFormatConfig().mcPrivateMessage, connection, user.getIdentifier(), Utils.getColoredName(user.getNick(), ConfigHelper.getIRCColor(serverConfig)), message);
 			Utils.addMessageToChat(mcMessage);
 			String notifyMsg = mcMessage;
 			if(notifyMsg.length() > 42) {
 				notifyMsg = notifyMsg.substring(0, 42) + "...";
 			}
 			EiraIRC.proxy.publishNotification(NotificationType.PrivateMessage, notifyMsg);
-			EiraIRC.instance.addPrivateTarget(connection, user.getNick());
+			EiraIRC.instance.getChatSessionHandler().addTargetUser(user);
 		} else {
 			connection.sendPrivateNotice(user, Utils.getLocalizedMessage("irc.msg.disabled"));
 		}
@@ -177,7 +176,7 @@ public class IRCEventHandler implements IIRCEventHandler {
 			}
 			message = Utils.filterCodes(message);
 			String emoteColor = ConfigHelper.getEmoteColor(channelConfig);
-			String mcMessage = (emoteColor != null ? "§" + Utils.getColorCode(emoteColor) : "") + Utils.formatMessage(ConfigHelper.getDisplayFormatConfig().mcChannelEmote, connection.getHost(), channel.getName(), user.getUsername(), user.getNick(), message);
+			String mcMessage = (emoteColor != null ? "§" + Utils.getColorCode(emoteColor) : "") + Utils.formatMessage(ConfigHelper.getDisplayFormatConfig().mcChannelEmote, connection.getHost(), channel.getName(), user.getIdentifier(), user.getNick(), message);
 			Utils.addMessageToChat(mcMessage);
 		}
 	}
@@ -193,7 +192,7 @@ public class IRCEventHandler implements IIRCEventHandler {
 				message = Utils.filterLinks(message);
 			}
 			message = Utils.filterCodes(message);
-			String mcMessage = Utils.formatMessage(ConfigHelper.getDisplayFormatConfig().mcChannelMessage, connection.getHost(), channel.getName(), user.getUsername(), Utils.getColoredName(user.getNick(), ConfigHelper.getIRCColor(channelConfig)), message);
+			String mcMessage = Utils.formatMessage(ConfigHelper.getDisplayFormatConfig().mcChannelMessage, connection.getHost(), channel.getName(), user.getIdentifier(), Utils.getColoredName(user.getNick(), ConfigHelper.getIRCColor(channelConfig)), message);
 			Utils.addMessageToChat(mcMessage);
 		}
 	}
@@ -300,7 +299,7 @@ public class IRCEventHandler implements IIRCEventHandler {
 		}
 		message = Utils.filterCodes(message);
 		ServerConfig serverConfig = ConfigurationHandler.getServerConfig(connection.getHost());
-		String mcMessage = Utils.formatMessage(ConfigHelper.getDisplayFormatConfig().mcPrivateMessage, connection, user.getUsername(), Utils.getColoredName(user.getNick(), ConfigHelper.getIRCColor(serverConfig)), message);
+		String mcMessage = Utils.formatMessage(ConfigHelper.getDisplayFormatConfig().mcPrivateMessage, connection, user.getIdentifier(), Utils.getColoredName(user.getNick(), ConfigHelper.getIRCColor(serverConfig)), message);
 		entityPlayer.sendChatToPlayer(Utils.getUnlocalizedChatMessage(mcMessage));
 	}
 

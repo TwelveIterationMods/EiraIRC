@@ -10,8 +10,8 @@ import net.minecraft.client.gui.GuiTextField;
 import blay09.mods.eirairc.EiraIRC;
 import blay09.mods.eirairc.config.ChannelConfig;
 import blay09.mods.eirairc.config.ConfigurationHandler;
-import blay09.mods.eirairc.config.Globals;
 import blay09.mods.eirairc.config.ServerConfig;
+import blay09.mods.eirairc.util.Globals;
 
 public class GuiIRCChannelConfig extends GuiScreen {
 

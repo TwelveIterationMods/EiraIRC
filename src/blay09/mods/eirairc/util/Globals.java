@@ -1,7 +1,7 @@
 // Copyright (c) 2013, Christopher "blay09" Baker
 // All rights reserved.
 
-package blay09.mods.eirairc.config;
+package blay09.mods.eirairc.util;
 
 public class Globals {
 

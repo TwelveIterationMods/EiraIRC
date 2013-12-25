@@ -8,7 +8,7 @@ import java.util.List;
 
 import blay09.mods.eirairc.EiraIRC;
 import blay09.mods.eirairc.config.GlobalConfig;
-import blay09.mods.eirairc.config.Globals;
+import blay09.mods.eirairc.util.Globals;
 import blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;

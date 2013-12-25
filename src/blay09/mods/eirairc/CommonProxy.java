@@ -11,7 +11,6 @@ import cpw.mods.fml.common.network.IGuiHandler;
 public class CommonProxy {
 
 	public void setupClient() {
-		
 	}
 
 	public void publishNotification(NotificationType type, String text) {
@@ -25,4 +24,6 @@ public class CommonProxy {
 		return true;
 	}
 	
+	public void renderTick(float delta) {
+	}
 }

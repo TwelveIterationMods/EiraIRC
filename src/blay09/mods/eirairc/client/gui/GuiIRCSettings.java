@@ -6,8 +6,8 @@ package blay09.mods.eirairc.client.gui;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
-import blay09.mods.eirairc.config.Globals;
 import blay09.mods.eirairc.config.ScreenshotConfig;
+import blay09.mods.eirairc.util.Globals;
 
 public class GuiIRCSettings extends GuiScreen {
 

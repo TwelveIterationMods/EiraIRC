@@ -12,7 +12,7 @@ import net.minecraft.client.gui.GuiTextField;
 import blay09.mods.eirairc.config.ConfigurationHandler;
 import blay09.mods.eirairc.config.DisplayFormatConfig;
 import blay09.mods.eirairc.config.GlobalConfig;
-import blay09.mods.eirairc.config.Globals;
+import blay09.mods.eirairc.util.Globals;
 
 public class GuiIRCGlobalSettings extends GuiScreen {
 	

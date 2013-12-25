@@ -26,7 +26,6 @@ import blay09.mods.eirairc.config.ChannelConfig;
 import blay09.mods.eirairc.config.ConfigHelper;
 import blay09.mods.eirairc.config.ConfigurationHandler;
 import blay09.mods.eirairc.config.GlobalConfig;
-import blay09.mods.eirairc.config.Globals;
 import blay09.mods.eirairc.config.NickServSettings;
 import blay09.mods.eirairc.config.ServerConfig;
 import blay09.mods.eirairc.irc.IRCChannel;
@@ -408,8 +407,8 @@ public class Utils {
 	}
 	
 	public static IRCConnection getSuggestedConnection() {
-		if(EiraIRC.instance.getSuggestedChannel() != null) {
-			return EiraIRC.instance.getSuggestedChannel().getConnection();
+		if(EiraIRC.instance.getChatSessionHandler().getSuggestedChannel() != null) {
+			return EiraIRC.instance.getChatSessionHandler().getSuggestedChannel().getConnection();
 		}
 		if(EiraIRC.instance.getConnectionCount() == 1) {
 			return EiraIRC.instance.getDefaultConnection();
@@ -418,8 +417,8 @@ public class Utils {
 	}
 	
 	public static IRCChannel getSuggestedChannel() {
-		if(EiraIRC.instance.getSuggestedChannel() != null) {
-			return EiraIRC.instance.getSuggestedChannel();
+		if(EiraIRC.instance.getChatSessionHandler().getSuggestedChannel() != null) {
+			return EiraIRC.instance.getChatSessionHandler().getSuggestedChannel();
 		}
 		IRCConnection connection = getSuggestedConnection();
 		if(connection != null) {

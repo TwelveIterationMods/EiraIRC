@@ -10,11 +10,10 @@ import net.minecraft.client.gui.GuiChat;
 
 import org.lwjgl.input.Keyboard;
 
+import blay09.mods.eirairc.EiraIRC;
 import blay09.mods.eirairc.client.gui.GuiEiraChat;
 import blay09.mods.eirairc.client.gui.GuiIRCSettings;
-import blay09.mods.eirairc.client.gui.GuiNotification;
 import blay09.mods.eirairc.client.screenshot.ScreenshotManager;
-import blay09.mods.eirairc.config.GlobalConfig;
 import blay09.mods.eirairc.config.KeyConfig;
 import blay09.mods.eirairc.config.ScreenshotConfig;
 import cpw.mods.fml.common.ITickHandler;
@@ -72,7 +71,7 @@ public class EiraTickHandler implements ITickHandler {
 		}
 		if(type.contains(TickType.RENDER)) {
 			float delta = (Float) tickData[0];
-			GuiNotification.instance.updateAndRender(delta);
+			EiraIRC.proxy.renderTick(delta);
 		}
 	}
 

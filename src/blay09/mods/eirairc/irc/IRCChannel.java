@@ -58,4 +58,8 @@ public class IRCChannel {
 	public boolean hasUser(String nick) {
 		return users.containsKey(nick);
 	}
+
+	public String getIdentifier() {
+		return connection.getHost() + "/" + name;
+	}
 }

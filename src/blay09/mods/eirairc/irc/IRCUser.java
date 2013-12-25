@@ -39,8 +39,13 @@ public class IRCUser {
 		return channels.values();
 	}
 
+	public String getIdentifier() {
+		return connection.getHost() + "/" + nick;
+	}
+	
 	public String getUsername() {
-		return connection.getHost() + ":" + nick;
+		// TODO return IRC style username
+		return nick;
 	}
 
 	public IRCConnection getConnection() {

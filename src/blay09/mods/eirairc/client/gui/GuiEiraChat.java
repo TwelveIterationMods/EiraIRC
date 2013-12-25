@@ -11,7 +11,7 @@ import org.lwjgl.input.Keyboard;
 
 import blay09.mods.eirairc.EiraIRC;
 import blay09.mods.eirairc.client.ClientChatHandler;
-import blay09.mods.eirairc.config.Globals;
+import blay09.mods.eirairc.util.Globals;
 import blay09.mods.eirairc.util.Utils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -77,21 +77,12 @@ public class GuiEiraChat extends GuiChat {
 	public void drawScreen(int i, int j, float k) {
 		super.drawScreen(i, j, k);
 		drawRect(0, 0, 200, 15, COLOR_BACKGROUND);
-		String target = null;
-		switch(EiraIRC.instance.getChatTarget()) {
-		case All:
-			target = "All";
-			break;
-		case ChannelOnly:
-			String[] ss = EiraIRC.instance.getTargetChannel().split(":");
-			target = ss[1] + " (" + ss[0] + ")";
-			break;
-		case IRCOnly:
-			target = "IRC only";
-			break;
-		case MinecraftOnly:
-			target = "Minecraft only";
-			break;
+		String target = EiraIRC.instance.getChatSessionHandler().getChatTarget();
+		if(target == null) {
+			target = "Minecraft";
+		} else {
+			int sepIdx = target.indexOf("/");
+			target = target.substring(sepIdx + 1) + " (" + target.substring(0, sepIdx) + ")";
 		}
 		String text = Utils.getLocalizedMessage("irc.gui.chatTarget", target);
 		fontRenderer.drawString(text, 5, 5, Globals.TEXT_COLOR);

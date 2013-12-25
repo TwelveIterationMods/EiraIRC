@@ -18,7 +18,7 @@ import blay09.mods.eirairc.config.GlobalConfig;
 import blay09.mods.eirairc.config.ServerConfig;
 import blay09.mods.eirairc.irc.IRCChannel;
 import blay09.mods.eirairc.irc.IRCConnection;
-import blay09.mods.eirairc.util.EnumChatTarget;
+import blay09.mods.eirairc.irc.IRCUser;
 import blay09.mods.eirairc.util.Utils;
 import cpw.mods.fml.common.IPlayerTracker;
 import cpw.mods.fml.common.network.IConnectionHandler;
@@ -117,73 +117,59 @@ public class MCEventHandler implements IPlayerTracker, IConnectionHandler {
 		if(EiraIRC.instance.getConnectionCount() > 0 && IRCCommandHandler.onChatCommand(sender, text, false)) {
 			return false;
 		}
-		EnumChatTarget chatTarget = EiraIRC.instance.getChatTarget();
-		if(chatTarget == EnumChatTarget.ChannelOnly) {
-			String target = EiraIRC.instance.getTargetChannel();
-			String[] channel = target.split(":");
-			IRCConnection connection = EiraIRC.instance.getConnection(channel[0]);
-			if(connection != null) {
-				String mcMessage = null;
-				if(channel[1].startsWith("#")) {
-					connection.sendChannelMessage(connection.getChannel(channel[1]), text);
-					mcMessage = "[" + channel[1] + "] <" + Utils.getColorAliasForPlayer(sender) + "> " + text;
-				} else {
-					connection.sendPrivateMessage(connection.getUser(channel[1]), text);
-					mcMessage = "[-> " + channel[1] + "] <" + Utils.getColorAliasForPlayer(sender) + "> " + text;
+		String chatTarget = EiraIRC.instance.getChatSessionHandler().getChatTarget();
+		if(chatTarget == null) {
+			return true;
+		}
+		String[] target = chatTarget.split("/");
+		IRCConnection connection = EiraIRC.instance.getConnection(target[0]);
+		if(connection != null) {
+			String mcMessage = null;
+			if(target[1].startsWith("#")) {
+				IRCChannel targetChannel = connection.getChannel(target[1]);
+				if(targetChannel != null) {
+					connection.sendChannelMessage(targetChannel, text);
+					mcMessage = "[" + targetChannel.getName() + "] <" + Utils.getColorAliasForPlayer(sender) + "> " + text;
 				}
-				Utils.addMessageToChat(mcMessage);
-			}
-			return false;
-		}
-		boolean doMC = chatTarget == EnumChatTarget.All || chatTarget == EnumChatTarget.MinecraftOnly;
-		boolean doIRC = chatTarget == EnumChatTarget.All || chatTarget == EnumChatTarget.IRCOnly;
-		if(!doMC) {
-			Utils.addMessageToChat("[IRC] <" + Utils.getColorAliasForPlayer(sender) + "> " + text);
-		}
-		if(doIRC) {
-			for(IRCConnection connection : EiraIRC.instance.getConnections()) {
-				ServerConfig serverConfig = Utils.getServerConfig(connection);
-				for(IRCChannel channel : connection.getChannels()) {
-					ChannelConfig channelConfig = serverConfig.getChannelConfig(channel);
-					if(!channelConfig.isReadOnly()) {
-						connection.sendChannelMessage(channel, text);
-					}
+			} else {
+				IRCUser targetUser = connection.getUser(target[1]);
+				if(targetUser != null) {
+					connection.sendPrivateMessage(targetUser, text);
+					mcMessage = "[-> " + targetUser.getNick() + "] <" + Utils.getColorAliasForPlayer(sender) + "> " + text;
 				}
 			}
+			Utils.addMessageToChat(mcMessage);
 		}
-		return doMC;
+		return false;
 	}
 	
 	@SideOnly(Side.CLIENT)
 	public boolean onClientEmote(String text) {
-		EnumChatTarget chatTarget = EiraIRC.instance.getChatTarget();
-		if(chatTarget == EnumChatTarget.ChannelOnly) {
-			String target = EiraIRC.instance.getTargetChannel();
-			String[] channel = target.split(":");
-			IRCConnection connection = EiraIRC.instance.getConnection(channel[0]);
-			if(connection != null) {
-				connection.sendChannelMessage(connection.getChannel(channel[1]), "ACTION " + text + "");
-				Utils.addMessageToChat("[" + channel[1] + "] * " + Utils.getAliasForPlayer(Minecraft.getMinecraft().thePlayer) + " " + text);
-			}
-			return false;
+		EntityPlayer sender = Minecraft.getMinecraft().thePlayer;
+		String chatTarget = EiraIRC.instance.getChatSessionHandler().getChatTarget();
+		if(chatTarget == null) {
+			return true;
 		}
-		boolean doMC = chatTarget == EnumChatTarget.All || chatTarget == EnumChatTarget.MinecraftOnly;
-		boolean doIRC = chatTarget == EnumChatTarget.All || chatTarget == EnumChatTarget.IRCOnly;
-		if(!doMC) {
-			Utils.addMessageToChat("[IRC] * " + Utils.getAliasForPlayer(Minecraft.getMinecraft().thePlayer) + " " + text);
-		}
-		if(doIRC) {
-			for(IRCConnection connection : EiraIRC.instance.getConnections()) {
-				ServerConfig serverConfig = Utils.getServerConfig(connection);
-				for(IRCChannel channel : connection.getChannels()) {
-					ChannelConfig channelConfig = serverConfig.getChannelConfig(channel);
-					if(!channelConfig.isReadOnly()) {
-						connection.sendChannelMessage(channel, "ACTION " + text + "");
-					}
+		String[] target = chatTarget.split("/");
+		IRCConnection connection = EiraIRC.instance.getConnection(target[0]);
+		if(connection != null) {
+			String mcMessage = null;
+			if(target[1].startsWith("#")) {
+				IRCChannel targetChannel = connection.getChannel(target[1]);
+				if(targetChannel != null) {
+					connection.sendChannelMessage(targetChannel, IRCConnection.EMOTE_START + text + IRCConnection.EMOTE_END);
+					mcMessage = "[" + targetChannel.getName() + "] * " + Utils.getAliasForPlayer(sender) + " " + text;
+				}
+			} else {
+				IRCUser targetUser = connection.getUser(target[1]);
+				if(targetUser != null) {
+					connection.sendPrivateMessage(targetUser, IRCConnection.EMOTE_START + text + IRCConnection.EMOTE_END);
+					mcMessage = "[-> " + targetUser.getNick() + "] * " + Utils.getAliasForPlayer(sender) + " " + text;
 				}
 			}
+			Utils.addMessageToChat(mcMessage);
 		}
-		return doMC;
+		return false;
 	}
 	
 	@ForgeSubscribe
