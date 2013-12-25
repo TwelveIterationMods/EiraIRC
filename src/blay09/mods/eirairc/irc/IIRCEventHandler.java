@@ -4,9 +4,6 @@ package blay09.mods.eirairc.irc;
 
 public interface IIRCEventHandler {
 
-	public void onConnected(IRCConnection connection);
-	public void onDisconnected(IRCConnection connection);
-	public void onIRCError(IRCConnection connection, int errorCode, String line, String[] cmd);
 	public void onNickChange(IRCConnection connection, IRCUser user, String nick);
 	public void onUserJoin(IRCConnection connection, IRCUser user, IRCChannel channel);
 	public void onUserPart(IRCConnection connection, IRCUser user, IRCChannel channel, String quitMessage);

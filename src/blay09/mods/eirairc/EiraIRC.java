@@ -24,6 +24,7 @@ import blay09.mods.eirairc.command.CommandWho;
 import blay09.mods.eirairc.config.ConfigurationHandler;
 import blay09.mods.eirairc.config.GlobalConfig;
 import blay09.mods.eirairc.config.ServerConfig;
+import blay09.mods.eirairc.irc.IIRCConnectionHandler;
 import blay09.mods.eirairc.irc.IRCChannel;
 import blay09.mods.eirairc.irc.IRCConnection;
 import blay09.mods.eirairc.util.Globals;
@@ -55,6 +56,7 @@ public class EiraIRC {
 	public static CommonProxy proxy;
 	
 	private IRCEventHandler ircEventHandler;
+	private IRCConnectionHandler ircConnectionHandler;
 	private MCEventHandler mcEventHandler;
 	private ChatSessionHandler chatSessionHandler;
 	private Map<String, IRCConnection> connections;
@@ -69,7 +71,9 @@ public class EiraIRC {
 	public void load(FMLInitializationEvent event) {
 		proxy.setupClient();
 		
+		chatSessionHandler = new ChatSessionHandler();
 		ircEventHandler = new IRCEventHandler();
+		ircConnectionHandler = new IRCConnectionHandler();
 		mcEventHandler = new MCEventHandler();
 		GameRegistry.registerPlayerTracker(mcEventHandler);
 		NetworkRegistry.instance().registerConnectionHandler(mcEventHandler);
@@ -177,5 +181,9 @@ public class EiraIRC {
 	
 	public ChatSessionHandler getChatSessionHandler() {
 		return chatSessionHandler;
+	}
+
+	public IIRCConnectionHandler getIRCConnectionHandler() {
+		return ircConnectionHandler;
 	}
 }

@@ -79,10 +79,7 @@ public class IRCCommandHandler {
 				} else {
 					Utils.sendLocalizedMessage(sender, "irc.basic.connecting", "Twitch");
 					ServerConfig serverConfig = ConfigurationHandler.getServerConfig(Globals.TWITCH_SERVER);
-					IRCConnection connection = new IRCConnection(Globals.TWITCH_SERVER, serverConfig.getNick());
-					if(connection.connect()) {
-						EiraIRC.instance.addConnection(connection);
-					}
+					Utils.connectTo(serverConfig);
 				}
 				return true;
 			} else {

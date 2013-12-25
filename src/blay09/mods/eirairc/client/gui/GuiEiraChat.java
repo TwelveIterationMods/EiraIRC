@@ -9,8 +9,10 @@ import net.minecraft.client.gui.GuiChat;
 
 import org.lwjgl.input.Keyboard;
 
+import blay09.mods.eirairc.ChatSessionHandler;
 import blay09.mods.eirairc.EiraIRC;
 import blay09.mods.eirairc.client.ClientChatHandler;
+import blay09.mods.eirairc.config.KeyConfig;
 import blay09.mods.eirairc.util.Globals;
 import blay09.mods.eirairc.util.Utils;
 import cpw.mods.fml.relauncher.Side;
@@ -21,10 +23,14 @@ public class GuiEiraChat extends GuiChat {
 
 	public static final int COLOR_BACKGROUND = Integer.MIN_VALUE;
 	
+	private ChatSessionHandler chatSession;
 	private String defaultInputText;
 	private GuiButton btnOptions;
 	
+	private long lastToggleTarget;
+	
 	public GuiEiraChat() {
+		chatSession = EiraIRC.instance.getChatSessionHandler();
 		defaultInputText = "";
 	}
 	
@@ -64,10 +70,20 @@ public class GuiEiraChat extends GuiChat {
 			}
 			this.mc.displayGuiScreen(null);
 			return;
-		} else if(keyCode == Keyboard.KEY_TAB) {
-			if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-				// TODO switch between Both, IRC, MC target
-				return;
+		} else if(keyCode == KeyConfig.toggleTarget) {
+			if(Keyboard.isRepeatEvent()) {
+				if(System.currentTimeMillis() - lastToggleTarget >= 1000) {
+					chatSession.setChatTarget((String) null);
+				}
+			} else if(!inputField.getText().startsWith("/")) {
+				boolean users = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
+				String newTarget = chatSession.getNextTarget(users);
+				if(!users) {
+					lastToggleTarget = System.currentTimeMillis();
+				}
+				if(!users || newTarget != null) {
+					chatSession.setChatTarget(newTarget);
+				}
 			}
 		}
 		super.keyTyped(unicode, keyCode);
@@ -76,8 +92,7 @@ public class GuiEiraChat extends GuiChat {
 	@Override
 	public void drawScreen(int i, int j, float k) {
 		super.drawScreen(i, j, k);
-		drawRect(0, 0, 200, 15, COLOR_BACKGROUND);
-		String target = EiraIRC.instance.getChatSessionHandler().getChatTarget();
+		String target = chatSession.getChatTarget();
 		if(target == null) {
 			target = "Minecraft";
 		} else {
@@ -85,6 +100,8 @@ public class GuiEiraChat extends GuiChat {
 			target = target.substring(sepIdx + 1) + " (" + target.substring(0, sepIdx) + ")";
 		}
 		String text = Utils.getLocalizedMessage("irc.gui.chatTarget", target);
+		int rectWidth = Math.max(200, fontRenderer.getStringWidth(text) + 10);
+		drawRect(0, 0, rectWidth, fontRenderer.FONT_HEIGHT + 6, COLOR_BACKGROUND);
 		fontRenderer.drawString(text, 5, 5, Globals.TEXT_COLOR);
 	}
 }

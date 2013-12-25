@@ -12,7 +12,7 @@ public class ChatSessionHandler {
 	private final List<IRCChannel> validTargetChannels = new ArrayList<IRCChannel>();
 	private final List<IRCUser> validTargetUsers = new ArrayList<IRCUser>();
 	private IRCChannel suggestedChannel;
-	private int targetChannelIdx = -1;
+	private int targetChannelIdx = 0;
 	private int targetUserIdx = -1;
 	
 	public String getChatTarget() {
@@ -47,6 +47,14 @@ public class ChatSessionHandler {
 		this.chatTarget = chatTarget;
 	}
 	
+	public void setChatTarget(IRCUser user) {
+		this.chatTarget = user.getIdentifier();
+	}
+	
+	public void setChatTarget(IRCChannel channel) {
+		this.chatTarget = channel.getIdentifier();
+	}
+	
 	public boolean isChannelTarget() {
 		return chatTarget.startsWith("#");
 	}
@@ -57,17 +65,26 @@ public class ChatSessionHandler {
 	
 	public String getNextTarget(boolean users) {
 		if(users) {
+			if(validTargetUsers.isEmpty()) {
+				return null;
+			}
 			targetUserIdx++;
 			if(targetUserIdx >= validTargetUsers.size()) {
 				targetUserIdx = 0;
 			}
 			return validTargetUsers.get(targetUserIdx).getIdentifier();
 		} else {
+			if(validTargetChannels.isEmpty()) {
+				return null;
+			}
 			targetChannelIdx++;
-			if(targetChannelIdx >= validTargetChannels.size()) {
+			if(targetChannelIdx > validTargetChannels.size()) {
 				targetChannelIdx = 0;
 			}
-			return validTargetChannels.get(targetChannelIdx).getIdentifier();
+			if(targetChannelIdx == 0) {
+				return null;
+			}
+			return validTargetChannels.get(targetChannelIdx - 1).getIdentifier();
 		}
 	}
 }

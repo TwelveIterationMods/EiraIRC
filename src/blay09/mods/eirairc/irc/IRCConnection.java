@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import blay09.mods.eirairc.EiraIRC;
 import blay09.mods.eirairc.util.Utils;
 
 public class IRCConnection implements Runnable {
@@ -34,6 +33,7 @@ public class IRCConnection implements Runnable {
 	private String charset;
 	private boolean connected;
 	private IIRCEventHandler eventHandler;
+	private IIRCConnectionHandler connectionHandler;
 	private final Map<String, IRCChannel> channels = new HashMap<String, IRCChannel>();
 	private final Map<String, IRCUser> users = new HashMap<String, IRCUser>();
 	
@@ -65,6 +65,10 @@ public class IRCConnection implements Runnable {
 	
 	public void setEventHandler(IIRCEventHandler eventHandler) {
 		this.eventHandler = eventHandler;
+	}
+	
+	public void setConnectionHandler(IIRCConnectionHandler connectionHandler) {
+		this.connectionHandler = connectionHandler;
 	}
 	
 	public void setLogin(String login) {
@@ -104,6 +108,7 @@ public class IRCConnection implements Runnable {
 			socket = new Socket(host, port);
 			writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), charset));
 			reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), charset));
+			connectionHandler.onConnecting(this);
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 			return false;
@@ -140,11 +145,10 @@ public class IRCConnection implements Runnable {
 	}
 	
 	public void tryReconnect() {
-		EiraIRC.instance.getIRCEventHandler().onDisconnected(this);
-		EiraIRC.instance.removeConnection(this);
+		connectionHandler.onDisconnected(this);
 		if(connected) {
 			if(connect()) {
-				EiraIRC.instance.addConnection(this);
+				connectionHandler.onConnecting(this);
 			}
 		}
 	}
@@ -201,6 +205,10 @@ public class IRCConnection implements Runnable {
 		try {
 			writer.write("PART " + channelName + "\r\n");
 			writer.flush();
+			IRCChannel channel = getChannel(channelName);
+			if(channel != null) {
+				connectionHandler.onChannelLeft(this, channel);
+			}
 			channels.remove(channelName);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -286,10 +294,11 @@ public class IRCConnection implements Runnable {
 				}
 				whois(name);
 			}
+			connectionHandler.onChannelJoined(this, channel);
 			break;
 		case IRCReplyCodes.RPL_ENDOFMOTD:
 			connected = true;
-			eventHandler.onConnected(this);
+			connectionHandler.onConnected(this);
 			break;
 		case IRCReplyCodes.RPL_TOPIC:
 			channel = getChannel(cmd[3]);
@@ -324,7 +333,7 @@ public class IRCConnection implements Runnable {
 		case IRCReplyCodes.ERR_CHANOPRIVSNEEDED:
 		case IRCReplyCodes.ERR_NOSUCHNICK:
 		case IRCReplyCodes.ERR_CANNOTSENDTOCHAN:
-			eventHandler.onIRCError(this, replyCode, line, cmd);
+			connectionHandler.onIRCError(this, replyCode, line, cmd);
 			break;
 		default:
 			System.out.println("Unhandled reply code: " + replyCode + " (" + line + ")");

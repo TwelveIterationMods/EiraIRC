@@ -327,8 +327,8 @@ public class Utils {
 		IRCConnection connection = new IRCConnection(config.getHost(), IRCConnection.IRC_DEFAULT_PORT, config.getServerPassword(), ConfigHelper.getNick(config));
 		connection.setCharset(GlobalConfig.charset);
 		connection.setEventHandler(EiraIRC.instance.getIRCEventHandler());
+		connection.setConnectionHandler(EiraIRC.instance.getIRCConnectionHandler());
 		if(connection.connect()) {
-			EiraIRC.instance.addConnection(connection);
 			return connection;
 		}
 		return null;

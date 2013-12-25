@@ -29,6 +29,9 @@ public class EiraTickHandler implements ITickHandler {
 	}
 
 	private boolean isKeyPressed(int keyCode, int keyIdx) {
+		if(keyCode == -1) {
+			return false;
+		}
 		if(Keyboard.isKeyDown(keyCode)) {
 			if(!keyState[keyIdx]) {
 				keyState[keyIdx] = true;
@@ -45,9 +48,6 @@ public class EiraTickHandler implements ITickHandler {
 			if(Minecraft.getMinecraft().currentScreen == null) {
 				Minecraft.getMinecraft().displayGuiScreen(new GuiIRCSettings());
 			}
-		}
-		if(isKeyPressed(KeyConfig.toggleTarget, KeyConfig.IDX_TOGGLETARGET)) {
-			
 		}
 	}
 	

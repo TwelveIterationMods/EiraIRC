@@ -28,7 +28,7 @@ EiraIRC.irc.commands.interop.topic=/irc topic <channel> <topic>
 # GUI
 ## General
 EiraIRC:irc.gui.options=Options
-EiraIRC:irc.gui.chatTarget=Chatting to:
+EiraIRC:irc.gui.chatTarget=Chatting to: %s
 EiraIRC:irc.gui.back=Back
 ## Screenshot Config
 EiraIRC:irc.gui.screenshots=EiraIRC - Screenshots

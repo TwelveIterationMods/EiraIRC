@@ -40,29 +40,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class IRCEventHandler implements IIRCEventHandler {
 
 	@Override
-	public void onConnected(IRCConnection connection) {
-		String mcMessage = Utils.getLocalizedMessage("irc.basic.connected", connection.getHost());
-		Utils.addMessageToChat(mcMessage);
-		ServerConfig serverConfig = Utils.getServerConfig(connection);
-		if(serverConfig.getHost().equals(Globals.TWITCH_SERVER) && serverConfig.getNick() != null) {
-			ChannelConfig twitchChannel = serverConfig.getChannelConfig("#" + serverConfig.getNick());
-			twitchChannel.setAutoJoin(true);
-		}
-		Utils.doNickServ(connection, serverConfig);
-		for(ChannelConfig channelConfig : serverConfig.getChannelConfigs()) {
-			if(channelConfig.isAutoJoin()) {
-				connection.join(channelConfig.getName(), channelConfig.getPassword());
-			}
-		}
-	}
-
-	@Override
-	public void onDisconnected(IRCConnection connection) {
-		String mcMessage = Utils.getLocalizedMessage("irc.basic.disconnected", connection.getHost());
-		Utils.addMessageToChat(mcMessage);
-	}
-
-	@Override
 	public void onNickChange(IRCConnection connection, IRCUser user, String nick) {
 		if(!GlobalConfig.relayNickChanges) {
 			return;
@@ -307,30 +284,6 @@ public class IRCEventHandler implements IIRCEventHandler {
 	public void onTopicChange(IRCChannel channel, String topic) {
 		String mcMessage = Utils.getLocalizedMessage("irc.display.irc.topic", channel.getName(), channel.getTopic());
 		Utils.addMessageToChat(mcMessage);
-	}
-
-	@Override
-	public void onIRCError(IRCConnection connection, int errorCode, String line, String[] cmd) {
-		switch(errorCode) {
-		case IRCReplyCodes.ERR_NICKNAMEINUSE:
-			String failNick = cmd[3];
-			String tryNick = failNick + "_";
-			Utils.addMessageToChat(Utils.getLocalizedMessage("irc.bot.nickInUse", failNick, tryNick));
-			connection.nick(tryNick);
-			break;
-		case IRCReplyCodes.ERR_ERRONEUSNICKNAME:
-			Utils.addMessageToChat(Utils.getLocalizedMessage("irc.bot.nickInvalid", cmd[3]));
-			ServerConfig serverConfig = Utils.getServerConfig(connection);
-			if(serverConfig.getNick() != null) {
-				serverConfig.setNick(connection.getNick());
-			} else {
-				GlobalConfig.nick = connection.getNick();
-			}
-			break;
-		default:
-			System.out.println("Unhandled error code: " + errorCode + " (" + line + ")");
-			break;
-		}
 	}
 
 }
