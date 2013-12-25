@@ -1,11 +1,16 @@
 package blay09.mods.eirairc.net.packet;
 
 public enum PacketType {
-	Hello(0, PacketHello.class);
+	Hello(0, PacketHello.class),
+	RecLiveState(1, PacketRecLiveState.class), 
+	Notification(2, PacketNotification.class);
 
-	private static final PacketType[] packetRegister = new PacketType[10];
+	private static PacketType[] packetRegister;
 	
 	public static void registerPacket(int id, PacketType packetType) {
+		if(packetRegister == null) {
+			packetRegister = new PacketType[10];
+		}
 		packetRegister[id] = packetType;
 	}
 	
@@ -36,6 +41,10 @@ public enum PacketType {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	public int getId() {
+		return id;
 	}
 	
 }

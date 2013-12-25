@@ -18,9 +18,11 @@ public class PacketRecLiveState extends EiraPacket {
 	private boolean liveState;
 	
 	public PacketRecLiveState() {
+		super(PacketType.RecLiveState);
 	}
 	
 	public PacketRecLiveState(String username, boolean recState, boolean liveState) {
+		this();
 		this.username = username;
 		this.recState = recState;
 		this.liveState = liveState;
@@ -39,9 +41,19 @@ public class PacketRecLiveState extends EiraPacket {
 		out.writeBoolean(recState);
 		out.writeBoolean(liveState);
 	}
-
+	
 	@Override
-	public void execute(INetworkManager manager, EntityPlayer player) {
+	public void executeClient(INetworkManager manager, EntityPlayer player) {
+		EiraPlayerInfo playerInfo = EiraIRC.instance.getNetHandler().getPlayerInfo(username);
+		playerInfo.isLive = liveState;
+		playerInfo.isRecording = recState;
+	}
+	
+	@Override
+	public void executeServer(INetworkManager manager, EntityPlayer player) {
+		if(!player.username.equals(username)) {
+			return;
+		}
 		EiraPlayerInfo playerInfo = EiraIRC.instance.getNetHandler().getPlayerInfo(username);
 		if(playerInfo.isLive != liveState) {
 			EiraIRC.proxy.publishNotification(NotificationType.UserLive, username + (liveState ? " is now live." : " has stopped livestreaming."));
@@ -51,15 +63,6 @@ public class PacketRecLiveState extends EiraPacket {
 		}
 		playerInfo.isLive = liveState;
 		playerInfo.isRecording = recState;
-		
-	}
-	
-	@Override
-	public void executeServer(INetworkManager manager, EntityPlayer player) {
-		if(!player.username.equals(username)) {
-			return;
-		}
-		execute(manager, player);
 	}
 
 }

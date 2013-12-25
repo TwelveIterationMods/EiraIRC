@@ -10,6 +10,8 @@ import blay09.mods.eirairc.client.screenshot.ScreenshotManager;
 import blay09.mods.eirairc.config.NotificationConfig;
 import blay09.mods.eirairc.util.NotificationType;
 import cpw.mods.fml.client.registry.KeyBindingRegistry;
+import cpw.mods.fml.common.registry.TickRegistry;
+import cpw.mods.fml.relauncher.Side;
 
 public class ClientProxy extends CommonProxy {
 
@@ -17,6 +19,7 @@ public class ClientProxy extends CommonProxy {
 	
 	@Override
 	public void setupClient() {
+		TickRegistry.registerTickHandler(new EiraTickHandler(), Side.CLIENT);
 		notificationGUI = new OverlayNotification();
 		ScreenshotManager.create();
 	}

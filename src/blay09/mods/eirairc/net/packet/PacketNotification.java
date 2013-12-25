@@ -6,40 +6,40 @@ import java.io.IOException;
 
 import blay09.mods.eirairc.EiraIRC;
 import blay09.mods.eirairc.net.EiraPlayerInfo;
+import blay09.mods.eirairc.util.NotificationType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import cpw.mods.fml.common.network.Player;
 
-public class PacketHello extends EiraPacket {
+public class PacketNotification extends EiraPacket {
 
-	private String version;
+	private int typeId;
+	private String text;
 	
-	public PacketHello() {
-		super(PacketType.Hello);
+	public PacketNotification() {
+		super(PacketType.Notification);
 	}
 	
-	public PacketHello(String version) {
+	public PacketNotification(NotificationType type, String text) {
 		this();
-		this.version = version;
+		this.typeId = type.ordinal();
+		this.text = text;
 	}
 	
 	@Override
 	public void read(DataInputStream in) throws IOException {
-		version = in.readUTF();
+		typeId = in.readByte();
+		text = in.readUTF();
 	}
 
 	@Override
 	public void write(DataOutputStream out) throws IOException {
-		out.writeUTF(version);
-	}
-
-	@Override
-	public void executeServer(INetworkManager manager, EntityPlayer player) {
-		EiraPlayerInfo playerInfo = EiraIRC.instance.getNetHandler().getPlayerInfo(player.username);
-		playerInfo.modVersion = version;
+		out.writeByte(typeId);
+		out.writeUTF(text);
 	}
 
 	@Override
 	public void executeClient(INetworkManager manager, EntityPlayer player) {
+		EiraIRC.proxy.publishNotification(NotificationType.fromId(typeId), text);
 	}
 }

@@ -5,6 +5,7 @@ import java.io.DataInputStream;
 import java.io.IOException;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import blay09.mods.eirairc.net.packet.EiraPacket;
@@ -12,7 +13,7 @@ import blay09.mods.eirairc.net.packet.PacketType;
 import cpw.mods.fml.common.network.IPacketHandler;
 import cpw.mods.fml.common.network.Player;
 
-public abstract class PacketHandler implements IPacketHandler {
+public class PacketHandler implements IPacketHandler {
 
 	@Override
 	public void onPacketData(INetworkManager manager, Packet250CustomPayload packet, Player player) {
@@ -33,5 +34,11 @@ public abstract class PacketHandler implements IPacketHandler {
 		}
 	}
 
-	public abstract void execute(EiraPacket packet, INetworkManager manager, Player player);
+	public void execute(EiraPacket packet, INetworkManager manager, Player player) {
+		if(player instanceof EntityPlayerMP) {
+			packet.executeServer(manager, (EntityPlayer) player);
+		} else {
+			packet.executeClient(manager, (EntityPlayer) player);
+		}
+	}
 }

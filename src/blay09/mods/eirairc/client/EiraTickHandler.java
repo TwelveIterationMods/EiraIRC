@@ -6,7 +6,9 @@ package blay09.mods.eirairc.client;
 import java.util.EnumSet;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.gui.GuiChat;
+import net.minecraft.network.packet.Packet;
 
 import org.lwjgl.input.Keyboard;
 
@@ -16,6 +18,8 @@ import blay09.mods.eirairc.client.gui.GuiSettings;
 import blay09.mods.eirairc.client.screenshot.ScreenshotManager;
 import blay09.mods.eirairc.config.KeyConfig;
 import blay09.mods.eirairc.config.ScreenshotConfig;
+import blay09.mods.eirairc.net.EiraPlayerInfo;
+import blay09.mods.eirairc.net.packet.PacketRecLiveState;
 import cpw.mods.fml.common.ITickHandler;
 import cpw.mods.fml.common.TickType;
 
@@ -47,6 +51,15 @@ public class EiraTickHandler implements ITickHandler {
 		if(isKeyPressed(KeyConfig.openMenu, KeyConfig.IDX_OPENSETTINGS)) {
 			if(Minecraft.getMinecraft().currentScreen == null) {
 				Minecraft.getMinecraft().displayGuiScreen(new GuiSettings());
+			}
+		}
+		if(isKeyPressed(KeyConfig.toggleRecording, KeyConfig.IDX_TOGGLERECORDING)) {
+			EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
+			EiraPlayerInfo playerInfo = EiraIRC.instance.getNetHandler().getPlayerInfo(player.username);
+			playerInfo.isRecording = !playerInfo.isRecording;
+			Packet packet = new PacketRecLiveState(player.username, playerInfo.isRecording, playerInfo.isLive).createPacket();
+			if(packet != null) {
+				player.sendQueue.addToSendQueue(packet);
 			}
 		}
 	}

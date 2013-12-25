@@ -28,9 +28,8 @@ import blay09.mods.eirairc.handler.IRCEventHandler;
 import blay09.mods.eirairc.handler.MCEventHandler;
 import blay09.mods.eirairc.irc.IIRCConnectionHandler;
 import blay09.mods.eirairc.irc.IRCConnection;
-import blay09.mods.eirairc.net.ClientPacketHandler;
-import blay09.mods.eirairc.net.ServerPacketHandler;
 import blay09.mods.eirairc.net.EiraNetHandler;
+import blay09.mods.eirairc.net.PacketHandler;
 import blay09.mods.eirairc.util.Globals;
 import blay09.mods.eirairc.util.Localization;
 import blay09.mods.eirairc.util.Utils;
@@ -44,14 +43,13 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
-import cpw.mods.fml.common.network.NetworkMod.SidedPacketHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
 
 @Mod(modid = Globals.MOD_ID, name = Globals.MOD_NAME, version = Globals.MOD_VERSION)
-@NetworkMod(channels = { Globals.MOD_ID }, clientPacketHandlerSpec = @SidedPacketHandler(channels = { Globals.MOD_ID }, packetHandler = ClientPacketHandler.class), serverPacketHandlerSpec = @SidedPacketHandler(channels = { Globals.MOD_ID }, packetHandler = ServerPacketHandler.class))
+@NetworkMod(channels = { Globals.MOD_ID }, packetHandler = PacketHandler.class)
 public class EiraIRC {
 
 	@Instance(Globals.MOD_ID)
@@ -85,8 +83,6 @@ public class EiraIRC {
 		GameRegistry.registerPlayerTracker(mcEventHandler);
 		NetworkRegistry.instance().registerConnectionHandler(mcEventHandler);
 		MinecraftForge.EVENT_BUS.register(mcEventHandler);
-		
-		TickRegistry.registerTickHandler(new EiraTickHandler(), Side.CLIENT);
 		
 		Localization.init();
 	}
