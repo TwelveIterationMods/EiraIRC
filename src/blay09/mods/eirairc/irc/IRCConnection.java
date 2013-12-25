@@ -128,6 +128,11 @@ public class IRCConnection implements Runnable {
 			String line = null;
 			while((line = reader.readLine()) != null) {
 				String[] cmd = line.split(" ");
+				for(int i = 0; i < cmd.length; i++) {
+					if(cmd[i].startsWith(":")) {
+						cmd[i] = cmd[i].substring(1);
+					}
+				}
 				if(handlePing(line, cmd)) {
 					continue;
 				}
@@ -271,8 +276,7 @@ public class IRCConnection implements Runnable {
 		IRCUser user = null;
 		switch(replyCode) {
 		case IRCReplyCodes.RPL_NAMREPLY:
-			String channelName = cmd[4];
-			channel = getChannel(channelName);
+			channel = getChannel(cmd[4]);
 			
 			String nameList = line.substring(line.lastIndexOf(":") + 1);
 			String[] names = nameList.split(" ");
@@ -301,6 +305,7 @@ public class IRCConnection implements Runnable {
 			connectionHandler.onConnected(this);
 			break;
 		case IRCReplyCodes.RPL_TOPIC:
+			
 			channel = getChannel(cmd[3]);
 			if(channel != null) {
 				int textIdx = line.indexOf(':', 1);
@@ -343,7 +348,7 @@ public class IRCConnection implements Runnable {
 	}
 	
 	private boolean handleMessage(String line, String[] cmd) {
-		String nick = Utils.getNickFromUser(cmd[0].substring(1));
+		String nick = Utils.getNickFromUser(cmd[0]);
 		String msg = cmd[1];
 		if(msg.equals("PRIVMSG")) {
 			IRCUser user = users.get(nick);

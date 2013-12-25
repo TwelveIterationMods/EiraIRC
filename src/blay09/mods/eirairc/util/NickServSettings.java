@@ -8,11 +8,19 @@ import java.util.Map;
 
 public class NickServSettings {
 
-	public static final Map<String, NickServSettings> settings = new HashMap<String, NickServSettings>();
+	private static final Map<String, NickServSettings> settingsMap = new HashMap<String, NickServSettings>();
+	private static final NickServSettings defaultSettings = new NickServSettings("NickServ", "IDENTIFY");
+	
+	public static final NickServSettings getSettings(String host) {
+		NickServSettings settings = settingsMap.get(host);
+		if(settings == null) {
+			return defaultSettings;
+		}
+		return settings;
+	}
 	
 	static {
-		settings.put("irc.esper.net", new NickServSettings("NickServ", "IDENTIFY"));
-//		settings.put("irc.quakenet.org", new NickServSettings("Q@CServe.quakenet.org", "AUTH"));
+		settingsMap.put("irc.quakenet.org", new NickServSettings("Q@CServe.quakenet.org", "AUTH"));
 	}
 	
 	private String bot;

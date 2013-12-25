@@ -334,7 +334,7 @@ public class Utils {
 	}
 	
 	public static void doNickServ(IRCConnection connection, ServerConfig config) {
-		NickServSettings settings = NickServSettings.settings.get(connection.getHost());
+		NickServSettings settings = NickServSettings.getSettings(connection.getHost());
 		if(settings == null) {
 			return;
 		}
