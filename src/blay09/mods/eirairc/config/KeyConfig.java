@@ -14,6 +14,6 @@ public class KeyConfig {
 	public static int toggleRecording = Keyboard.KEY_F9;
 	public static int toggleLive = -1;
 	public static int toggleTarget = Keyboard.KEY_TAB;
-	public static int openSettings = -1;
+	public static int openMenu = -1;
 	
 }

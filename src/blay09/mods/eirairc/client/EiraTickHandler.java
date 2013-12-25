@@ -44,7 +44,7 @@ public class EiraTickHandler implements ITickHandler {
 	}
 	
 	private void handleKeyInput() {
-		if(isKeyPressed(KeyConfig.openSettings, KeyConfig.IDX_OPENSETTINGS)) {
+		if(isKeyPressed(KeyConfig.openMenu, KeyConfig.IDX_OPENSETTINGS)) {
 			if(Minecraft.getMinecraft().currentScreen == null) {
 				Minecraft.getMinecraft().displayGuiScreen(new GuiSettings());
 			}

@@ -185,6 +185,14 @@ public class GlobalConfig {
 		 * ClientOnly Config
 		 */
 		GlobalConfig.persistentConnection = config.get(ConfigurationHandler.CATEGORY_CLIENTONLY, "persistentConnection", GlobalConfig.persistentConnection).getBoolean(GlobalConfig.persistentConnection);
+		KeyConfig.openMenu = config.get(ConfigurationHandler.CATEGORY_CLIENTONLY, "keyMenu", String.valueOf(KeyConfig.openMenu)).getInt();
+		KeyConfig.toggleTarget = config.get(ConfigurationHandler.CATEGORY_CLIENTONLY, "keyToggleTarget", String.valueOf(KeyConfig.toggleTarget)).getInt();
+		KeyConfig.toggleLive = config.get(ConfigurationHandler.CATEGORY_CLIENTONLY, "keyToggleLive", String.valueOf(KeyConfig.toggleLive)).getInt();
+		KeyConfig.toggleRecording = config.get(ConfigurationHandler.CATEGORY_CLIENTONLY, "keyToggleRecording", String.valueOf(KeyConfig.toggleRecording)).getInt();
+		KeyConfig.screenshotShare = config.get(ConfigurationHandler.CATEGORY_CLIENTONLY, "keyScreenshotShare", String.valueOf(KeyConfig.screenshotShare)).getInt();
+		ScreenshotConfig.manageScreenshots = config.get(ConfigurationHandler.CATEGORY_CLIENTONLY, "manageScreenshots", "true").getBoolean(true);
+		ScreenshotConfig.screenshotAction = config.get(ConfigurationHandler.CATEGORY_CLIENTONLY, "screenshotAction", "0").getInt();
+		config.get(ConfigurationHandler.CATEGORY_CLIENTONLY, "screenshotAction", "0").comment = "0: None / 1: Upload / 2: Upload & Share / 3: Upload & Clipboard";
 		config.getCategory(ConfigurationHandler.CATEGORY_CLIENTONLY).setComment("These options are only important in the client version as they either have no function on servers or aren't really intended to be server-side.");
 		
 		/*
@@ -246,6 +254,13 @@ public class GlobalConfig {
 		 * ClientOnly Config
 		 */
 		config.get(ConfigurationHandler.CATEGORY_CLIENTONLY, "persistentConnection", GlobalConfig.persistentConnection).set(GlobalConfig.persistentConnection);
+		config.get(ConfigurationHandler.CATEGORY_CLIENTONLY, "keyMenu", KeyConfig.openMenu).set(KeyConfig.openMenu);
+		config.get(ConfigurationHandler.CATEGORY_CLIENTONLY, "keyToggleTarget", KeyConfig.toggleTarget).set(KeyConfig.toggleTarget);
+		config.get(ConfigurationHandler.CATEGORY_CLIENTONLY, "keyToggleLive", KeyConfig.toggleLive).set(KeyConfig.toggleLive);
+		config.get(ConfigurationHandler.CATEGORY_CLIENTONLY, "keyToggleRecording", KeyConfig.toggleRecording).set(KeyConfig.toggleRecording);
+		config.get(ConfigurationHandler.CATEGORY_CLIENTONLY, "keyScreenshotShare", KeyConfig.screenshotShare).set(KeyConfig.screenshotShare);
+		config.get(ConfigurationHandler.CATEGORY_CLIENTONLY, "manageScreenshots", ScreenshotConfig.manageScreenshots).set(ScreenshotConfig.manageScreenshots);
+		config.get(ConfigurationHandler.CATEGORY_CLIENTONLY, "screenshotAction", ScreenshotConfig.screenshotAction).set(ScreenshotConfig.screenshotAction);
 		
 		/*
 		 * ServerOnly Config

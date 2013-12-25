@@ -85,6 +85,7 @@ public class GuiEiraChat extends GuiChat {
 					chatSession.setChatTarget(newTarget);
 				}
 			}
+			return;
 		}
 		super.keyTyped(unicode, keyCode);
 	}

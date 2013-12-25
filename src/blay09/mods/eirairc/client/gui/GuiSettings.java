@@ -19,6 +19,7 @@ public class GuiSettings extends GuiScreen {
 	private GuiButton btnFriendsList;
 	private GuiButton btnIgnoreList;
 	private GuiButton btnNotifications;
+	private GuiButton btnKeybinds;
 	private GuiButton btnClientServer;
 	private GuiButton btnBack;
 	
@@ -54,6 +55,9 @@ public class GuiSettings extends GuiScreen {
 		btnNotifications = new GuiButton(9, width / 2 + 2, height / 2 - 15, 150, 20, "Notifications");
 		buttonList.add(btnNotifications);
 		
+		btnKeybinds = new GuiButton(10, width / 2 - 152, height / 2 + 10, 150, 20, "Keybinds");
+		buttonList.add(btnKeybinds);
+		
 		btnClientServer = new GuiButton(1, 1, 1, 60, 20, "Client");
 		btnClientServer.enabled = false;
 		buttonList.add(btnClientServer);
@@ -74,6 +78,8 @@ public class GuiSettings extends GuiScreen {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiScreenshots());
 		} else if(button == btnNotifications) {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiNotifications());
+		} else if(button == btnKeybinds) {
+			Minecraft.getMinecraft().displayGuiScreen(new GuiKeybinds());
 		} else if(button == btnBack) {
 			Minecraft.getMinecraft().displayGuiScreen(null);
 		}
