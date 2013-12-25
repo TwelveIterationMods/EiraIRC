@@ -16,10 +16,10 @@ import blay09.mods.eirairc.client.screenshot.Screenshot;
 import blay09.mods.eirairc.client.screenshot.ScreenshotManager;
 import blay09.mods.eirairc.util.Globals;
 
-public class GuiIRCScreenshotList extends GuiScreen {
+public class GuiScreenshotList extends GuiScreen {
 
 	private final GuiScreen parentScreen;
-	private GuiIRCScreenshotSlot guiScreenshotSlot;
+	private GuiScreenshotSlot guiScreenshotSlot;
 	private GuiButton btnUpload;
 	private GuiButton btnClipboard;
 	private GuiButton btnRename;
@@ -29,13 +29,13 @@ public class GuiIRCScreenshotList extends GuiScreen {
 	private Screenshot[] screenshots;
 	private int selectedElement;
 	
-	public GuiIRCScreenshotList(GuiScreen parentScreen) {
+	public GuiScreenshotList(GuiScreen parentScreen) {
 		this.parentScreen = parentScreen;
 	}
 	
 	@Override
 	public void initGui() {
-		guiScreenshotSlot = new GuiIRCScreenshotSlot(this);
+		guiScreenshotSlot = new GuiScreenshotSlot(this);
 		
 		btnUpload = new GuiButton(1, width / 2 - 153, height - 50, 150, 20, "Upload");
 		btnUpload.enabled = false;

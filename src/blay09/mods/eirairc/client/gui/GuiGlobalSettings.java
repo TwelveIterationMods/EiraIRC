@@ -14,7 +14,7 @@ import blay09.mods.eirairc.config.DisplayFormatConfig;
 import blay09.mods.eirairc.config.GlobalConfig;
 import blay09.mods.eirairc.util.Globals;
 
-public class GuiIRCGlobalSettings extends GuiScreen {
+public class GuiGlobalSettings extends GuiScreen {
 	
 	private static final int BUTTON_WIDTH = 190;
 	private static final int BUTTON_HEIGHT = 20;
@@ -126,7 +126,7 @@ public class GuiIRCGlobalSettings extends GuiScreen {
 			updateMessageDisplayMode();
 		} else if(button == btnBack) {
 			ConfigurationHandler.save();
-			Minecraft.getMinecraft().displayGuiScreen(new GuiIRCSettings());
+			Minecraft.getMinecraft().displayGuiScreen(new GuiSettings());
 		}
 	}
 	

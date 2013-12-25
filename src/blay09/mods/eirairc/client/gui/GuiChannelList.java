@@ -16,10 +16,10 @@ import blay09.mods.eirairc.irc.IRCConnection;
 import blay09.mods.eirairc.util.Globals;
 import blay09.mods.eirairc.util.Utils;
 
-public class GuiIRCChannelList extends GuiScreen {
+public class GuiChannelList extends GuiScreen {
 
 	private final GuiScreen parentScreen;
-	private GuiIRCChannelSlot guiChannelSlot;
+	private GuiChannelSlot guiChannelSlot;
 	private GuiButton btnJoin;
 	private GuiButton btnAdd;
 	private GuiButton btnEdit;
@@ -30,14 +30,14 @@ public class GuiIRCChannelList extends GuiScreen {
 	private ChannelConfig[] configs;
 	private int selectedElement;
 	
-	public GuiIRCChannelList(GuiScreen parentScreen, ServerConfig parentConfig) {
+	public GuiChannelList(GuiScreen parentScreen, ServerConfig parentConfig) {
 		this.parentScreen = parentScreen;
 		this.parentConfig = parentConfig;
 	}
 	
 	@Override
 	public void initGui() {
-		guiChannelSlot = new GuiIRCChannelSlot(this);
+		guiChannelSlot = new GuiChannelSlot(this);
 		
 		btnJoin = new GuiButton(1, width / 2 - 153, height - 50, 150, 20, "Join");
 		btnJoin.enabled = false;
@@ -80,7 +80,7 @@ public class GuiIRCChannelList extends GuiScreen {
 		} else if(button == btnDelete) {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiYesNo(this, "Do you really want to remove this channel?", "This will delete it from the config file.", selectedElement));
 		} else if(button == btnAdd) {
-			Minecraft.getMinecraft().displayGuiScreen(new GuiIRCChannelConfig(parentScreen, parentConfig));
+			Minecraft.getMinecraft().displayGuiScreen(new GuiChannelConfig(parentScreen, parentConfig));
 		}
 	}
 	
@@ -119,7 +119,7 @@ public class GuiIRCChannelList extends GuiScreen {
 	}
 	
 	public void onElementClicked(int i) {
-		Minecraft.getMinecraft().displayGuiScreen(new GuiIRCChannelConfig(parentScreen, configs[i]));
+		Minecraft.getMinecraft().displayGuiScreen(new GuiChannelConfig(parentScreen, configs[i]));
 	}
 	
 	public void onElementSelected(int i) {

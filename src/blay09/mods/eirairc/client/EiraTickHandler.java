@@ -12,7 +12,7 @@ import org.lwjgl.input.Keyboard;
 
 import blay09.mods.eirairc.EiraIRC;
 import blay09.mods.eirairc.client.gui.GuiEiraChat;
-import blay09.mods.eirairc.client.gui.GuiIRCSettings;
+import blay09.mods.eirairc.client.gui.GuiSettings;
 import blay09.mods.eirairc.client.screenshot.ScreenshotManager;
 import blay09.mods.eirairc.config.KeyConfig;
 import blay09.mods.eirairc.config.ScreenshotConfig;
@@ -46,7 +46,7 @@ public class EiraTickHandler implements ITickHandler {
 	private void handleKeyInput() {
 		if(isKeyPressed(KeyConfig.openSettings, KeyConfig.IDX_OPENSETTINGS)) {
 			if(Minecraft.getMinecraft().currentScreen == null) {
-				Minecraft.getMinecraft().displayGuiScreen(new GuiIRCSettings());
+				Minecraft.getMinecraft().displayGuiScreen(new GuiSettings());
 			}
 		}
 	}

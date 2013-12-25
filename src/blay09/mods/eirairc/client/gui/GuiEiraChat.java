@@ -52,7 +52,7 @@ public class GuiEiraChat extends GuiChat {
 	public void actionPerformed(GuiButton button) {
 		super.actionPerformed(button);
 		if(button == btnOptions) {
-			Minecraft.getMinecraft().displayGuiScreen(new GuiIRCSettings());
+			Minecraft.getMinecraft().displayGuiScreen(new GuiSettings());
 		}
 	}
 	

@@ -15,9 +15,9 @@ import blay09.mods.eirairc.irc.IRCConnection;
 import blay09.mods.eirairc.util.Globals;
 import blay09.mods.eirairc.util.Utils;
 
-public class GuiIRCServerList extends GuiScreen {
+public class GuiServerList extends GuiScreen {
 
-	private GuiIRCServerSlot guiServerSlot;
+	private GuiServerSlot guiServerSlot;
 	private GuiButton btnConnect;
 	private GuiButton btnAdd;
 	private GuiButton btnEdit;
@@ -30,7 +30,7 @@ public class GuiIRCServerList extends GuiScreen {
 	
 	@Override
 	public void initGui() {
-		guiServerSlot = new GuiIRCServerSlot(this);
+		guiServerSlot = new GuiServerSlot(this);
 		
 		btnConnect = new GuiButton(1, width / 2 - 153, height - 50, 100, 20, "Connect");
 		btnConnect.enabled = false;
@@ -61,7 +61,7 @@ public class GuiIRCServerList extends GuiScreen {
 	@Override
 	public void actionPerformed(GuiButton button) {
 		if(button == btnBack) {
-			Minecraft.getMinecraft().displayGuiScreen(new GuiIRCSettings());
+			Minecraft.getMinecraft().displayGuiScreen(new GuiSettings());
 		} else if(button == btnConnect) {
 			IRCConnection connection = EiraIRC.instance.getConnection(configs[selectedElement].getHost());
 			if(connection != null) {
@@ -71,13 +71,13 @@ public class GuiIRCServerList extends GuiScreen {
 			}
 			onElementSelected(selectedElement);
 		} else if(button == btnEdit) {
-			Minecraft.getMinecraft().displayGuiScreen(new GuiIRCServerConfig(configs[selectedElement]));
+			Minecraft.getMinecraft().displayGuiScreen(new GuiServerConfig(configs[selectedElement]));
 		} else if(button == btnDelete) {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiYesNo(this, "Do you really want to remove this server?", "This will delete it from the config file.", selectedElement));
 		} else if(button == btnAdd) {
-			Minecraft.getMinecraft().displayGuiScreen(new GuiIRCServerConfig());
+			Minecraft.getMinecraft().displayGuiScreen(new GuiServerConfig());
 		} else if(button == btnChannels) {
-			Minecraft.getMinecraft().displayGuiScreen(new GuiIRCChannelList(this, configs[selectedElement]));
+			Minecraft.getMinecraft().displayGuiScreen(new GuiChannelList(this, configs[selectedElement]));
 		}
 	}
 	
@@ -117,9 +117,9 @@ public class GuiIRCServerList extends GuiScreen {
 	
 	public void onElementClicked(int i) {
 		if(EiraIRC.instance.isConnectedTo(configs[i].getHost())) {
-			Minecraft.getMinecraft().displayGuiScreen(new GuiIRCChannelList(this, configs[i]));
+			Minecraft.getMinecraft().displayGuiScreen(new GuiChannelList(this, configs[i]));
 		} else {
-			Minecraft.getMinecraft().displayGuiScreen(new GuiIRCServerConfig(configs[i]));
+			Minecraft.getMinecraft().displayGuiScreen(new GuiServerConfig(configs[i]));
 		}
 	}
 	

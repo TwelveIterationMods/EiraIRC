@@ -9,7 +9,7 @@ import net.minecraft.client.gui.GuiScreen;
 import blay09.mods.eirairc.config.ScreenshotConfig;
 import blay09.mods.eirairc.util.Globals;
 
-public class GuiIRCSettings extends GuiScreen {
+public class GuiSettings extends GuiScreen {
 
 	private GuiButton btnGlobalSettings;
 	private GuiButton btnServerList;
@@ -65,15 +65,15 @@ public class GuiIRCSettings extends GuiScreen {
 	@Override
 	public void actionPerformed(GuiButton button) {
 		if(button == btnTwitch) {
-			Minecraft.getMinecraft().displayGuiScreen(new GuiIRCTwitch(this));
+			Minecraft.getMinecraft().displayGuiScreen(new GuiTwitch(this));
 		} else if(button == btnServerList) {
-			Minecraft.getMinecraft().displayGuiScreen(new GuiIRCServerList());
+			Minecraft.getMinecraft().displayGuiScreen(new GuiServerList());
 		} else if(button == btnGlobalSettings) {
-			Minecraft.getMinecraft().displayGuiScreen(new GuiIRCGlobalSettings());
+			Minecraft.getMinecraft().displayGuiScreen(new GuiGlobalSettings());
 		} else if(button == btnScreenshots) {
-			Minecraft.getMinecraft().displayGuiScreen(new GuiIRCScreenshots());
+			Minecraft.getMinecraft().displayGuiScreen(new GuiScreenshots());
 		} else if(button == btnNotifications) {
-			Minecraft.getMinecraft().displayGuiScreen(new GuiIRCNotifications());
+			Minecraft.getMinecraft().displayGuiScreen(new GuiNotifications());
 		} else if(button == btnBack) {
 			Minecraft.getMinecraft().displayGuiScreen(null);
 		}

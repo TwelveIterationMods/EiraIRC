@@ -20,7 +20,7 @@ import blay09.mods.eirairc.irc.IRCConnection;
 import blay09.mods.eirairc.util.Globals;
 import blay09.mods.eirairc.util.Utils;
 
-public class GuiIRCTwitch extends GuiScreen {
+public class GuiTwitch extends GuiScreen {
 
 	private GuiScreen parentScreen;
 	private ServerConfig config;
@@ -30,7 +30,7 @@ public class GuiIRCTwitch extends GuiScreen {
 	private GuiButton btnConnectOnStartup;
 	private GuiButton btnBack;
 	
-	public GuiIRCTwitch(GuiScreen parentScreen) {
+	public GuiTwitch(GuiScreen parentScreen) {
 		this.parentScreen = parentScreen;
 		config = ConfigurationHandler.getServerConfig(Globals.TWITCH_SERVER);
 	}

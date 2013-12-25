@@ -13,7 +13,7 @@ import blay09.mods.eirairc.config.ConfigurationHandler;
 import blay09.mods.eirairc.config.ServerConfig;
 import blay09.mods.eirairc.util.Globals;
 
-public class GuiIRCChannelConfig extends GuiScreen {
+public class GuiChannelConfig extends GuiScreen {
 
 	private static final int BUTTON_WIDTH = 140;
 	private static final int BUTTON_HEIGHT = 20;
@@ -44,12 +44,12 @@ public class GuiIRCChannelConfig extends GuiScreen {
 	private boolean relayDeathMessages;
 	private boolean relayNickChanges;
 	
-	public GuiIRCChannelConfig(GuiScreen listParentScreen, ServerConfig serverConfig) {
+	public GuiChannelConfig(GuiScreen listParentScreen, ServerConfig serverConfig) {
 		this.listParentScreen = listParentScreen;
 		this.serverConfig = serverConfig;
 	}
 	
-	public GuiIRCChannelConfig(GuiScreen listParentScreen, ChannelConfig config) {
+	public GuiChannelConfig(GuiScreen listParentScreen, ChannelConfig config) {
 		this.listParentScreen = listParentScreen;
 		this.config = config;
 		serverConfig = config.getServerConfig();
@@ -156,9 +156,9 @@ public class GuiIRCChannelConfig extends GuiScreen {
 			if(autoJoin && EiraIRC.instance.isConnectedTo(serverConfig.getHost())) {
 				EiraIRC.instance.getConnection(serverConfig.getHost()).join(config.getName(), config.getPassword());
 			}
-			Minecraft.getMinecraft().displayGuiScreen(new GuiIRCChannelList(listParentScreen, serverConfig));
+			Minecraft.getMinecraft().displayGuiScreen(new GuiChannelList(listParentScreen, serverConfig));
 		} else if(button == btnCancel) {
-			Minecraft.getMinecraft().displayGuiScreen(new GuiIRCChannelList(listParentScreen, serverConfig));
+			Minecraft.getMinecraft().displayGuiScreen(new GuiChannelList(listParentScreen, serverConfig));
 		} else if(button == btnAutoJoin) {
 			autoJoin = !autoJoin;
 			updateButtons();

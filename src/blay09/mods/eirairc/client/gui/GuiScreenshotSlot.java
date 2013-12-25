@@ -17,12 +17,12 @@ import blay09.mods.eirairc.config.ChannelConfig;
 import blay09.mods.eirairc.config.ServerConfig;
 import blay09.mods.eirairc.util.Globals;
 
-public class GuiIRCScreenshotSlot extends GuiSlot {
+public class GuiScreenshotSlot extends GuiSlot {
 
-	private final GuiIRCScreenshotList parentGui;
+	private final GuiScreenshotList parentGui;
 	private final Minecraft mc;
 	
-	public GuiIRCScreenshotSlot(GuiIRCScreenshotList parentGui) {
+	public GuiScreenshotSlot(GuiScreenshotList parentGui) {
 		super(Minecraft.getMinecraft(), parentGui.width, parentGui.height, 32, parentGui.height - 64, 36);
 		mc = Minecraft.getMinecraft();
 		this.parentGui = parentGui;

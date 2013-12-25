@@ -13,7 +13,7 @@ import blay09.mods.eirairc.config.ServerConfig;
 import blay09.mods.eirairc.util.Globals;
 import blay09.mods.eirairc.util.Utils;
 
-public class GuiIRCServerConfig extends GuiScreen {
+public class GuiServerConfig extends GuiScreen {
 
 	private ServerConfig config;
 	private GuiButton btnChannels;
@@ -30,10 +30,10 @@ public class GuiIRCServerConfig extends GuiScreen {
 	private boolean autoConnect;
 	private boolean privateMessages;
 	
-	public GuiIRCServerConfig() {
+	public GuiServerConfig() {
 	}
 	
-	public GuiIRCServerConfig(ServerConfig config) {
+	public GuiServerConfig(ServerConfig config) {
 		this.config = config;
 	}
 	
@@ -145,9 +145,9 @@ public class GuiIRCServerConfig extends GuiScreen {
 			if(autoConnect && !EiraIRC.instance.isConnectedTo(config.getHost())) {
 				Utils.connectTo(config);
 			}
-			Minecraft.getMinecraft().displayGuiScreen(new GuiIRCServerList());
+			Minecraft.getMinecraft().displayGuiScreen(new GuiServerList());
 		} else if(button == btnCancel) {
-			Minecraft.getMinecraft().displayGuiScreen(new GuiIRCServerList());
+			Minecraft.getMinecraft().displayGuiScreen(new GuiServerList());
 		} else if(button == btnPrivateMessages) {
 			privateMessages = !privateMessages;
 			updateButtons();
@@ -156,7 +156,7 @@ public class GuiIRCServerConfig extends GuiScreen {
 			updateButtons();
 		} else if(button == btnChannels) {
 			saveToConfig();
-			Minecraft.getMinecraft().displayGuiScreen(new GuiIRCChannelList(this, config));
+			Minecraft.getMinecraft().displayGuiScreen(new GuiChannelList(this, config));
 		}
 	}
 	

@@ -19,7 +19,7 @@ import blay09.mods.eirairc.config.ScreenshotConfig;
 import blay09.mods.eirairc.util.Globals;
 import blay09.mods.eirairc.util.Utils;
 
-public class GuiIRCScreenshots extends GuiScreen {
+public class GuiScreenshots extends GuiScreen {
 	
 	private static final int BUTTON_WIDTH = 160;
 	private static final int BUTTON_HEIGHT = 20;
@@ -62,9 +62,9 @@ public class GuiIRCScreenshots extends GuiScreen {
 	@Override
 	public void actionPerformed(GuiButton button) {
 		if(button == btnScreenshotList) {
-			Minecraft.getMinecraft().displayGuiScreen(new GuiIRCScreenshotList(this));
+			Minecraft.getMinecraft().displayGuiScreen(new GuiScreenshotList(this));
 		} else if(button == btnBack) {
-			Minecraft.getMinecraft().displayGuiScreen(new GuiIRCSettings());
+			Minecraft.getMinecraft().displayGuiScreen(new GuiSettings());
 		} else if(button == btnUploadService) {
 			hosterIdx++;
 			if(hosterIdx >= UploadHoster.availableHosters.length) {

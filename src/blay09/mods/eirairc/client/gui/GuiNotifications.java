@@ -16,7 +16,7 @@ import blay09.mods.eirairc.config.NotificationConfig;
 import blay09.mods.eirairc.util.Globals;
 import blay09.mods.eirairc.util.Utils;
 
-public class GuiIRCNotifications extends GuiScreen {
+public class GuiNotifications extends GuiScreen {
 	
 	private static final int BUTTON_WIDTH = 190;
 	private static final int BUTTON_HEIGHT = 20;
@@ -54,7 +54,7 @@ public class GuiIRCNotifications extends GuiScreen {
 	@Override
 	public void actionPerformed(GuiButton button) {
 		if(button == btnBack) {
-			Minecraft.getMinecraft().displayGuiScreen(new GuiIRCSettings());
+			Minecraft.getMinecraft().displayGuiScreen(new GuiSettings());
 		} else if(button == btnFriendJoined) {
 			NotificationConfig.friendJoined = getNextValue(NotificationConfig.friendJoined);
 		} else if(button == btnNameMentioned) {
