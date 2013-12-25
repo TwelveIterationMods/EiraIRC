@@ -2,6 +2,7 @@ package blay09.mods.eirairc.handler;
 
 import blay09.mods.eirairc.EiraIRC;
 import blay09.mods.eirairc.config.ChannelConfig;
+import blay09.mods.eirairc.config.DisplayConfig;
 import blay09.mods.eirairc.config.GlobalConfig;
 import blay09.mods.eirairc.config.ServerConfig;
 import blay09.mods.eirairc.irc.IIRCConnectionHandler;
@@ -69,10 +70,18 @@ public class IRCConnectionHandler implements IIRCConnectionHandler {
 	@Override
 	public void onChannelJoined(IRCConnection connection, IRCChannel channel) {
 		EiraIRC.instance.getChatSessionHandler().addTargetChannel(channel);
+		if(connection.getChannels().size() > 1) {
+			DisplayConfig.originalDisplayMode = DisplayConfig.displayMode;
+			DisplayConfig.displayMode = "Classic";
+		}
 	}
 
 	@Override
 	public void onChannelLeft(IRCConnection connection, IRCChannel channel) {
 		EiraIRC.instance.getChatSessionHandler().removeTargetChannel(channel);
+		if(connection.getChannels().size() <= 1 && DisplayConfig.originalDisplayMode != null) {
+			DisplayConfig.displayMode = DisplayConfig.originalDisplayMode;
+			DisplayConfig.originalDisplayMode = null;
+		}
 	}
 }

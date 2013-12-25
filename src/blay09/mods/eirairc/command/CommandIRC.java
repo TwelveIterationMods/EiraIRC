@@ -3,13 +3,8 @@
 
 package blay09.mods.eirairc.command;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import blay09.mods.eirairc.EiraIRC;
-import blay09.mods.eirairc.config.GlobalConfig;
-import blay09.mods.eirairc.util.Globals;
-import blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
@@ -17,6 +12,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
+import blay09.mods.eirairc.EiraIRC;
+import blay09.mods.eirairc.config.DisplayConfig;
+import blay09.mods.eirairc.config.GlobalConfig;
+import blay09.mods.eirairc.util.Utils;
 
 public class CommandIRC implements ICommand {
 
@@ -60,7 +59,7 @@ public class CommandIRC implements ICommand {
 		if(cmd.equals("who")) {
 			IRCCommandHandler.processCommand(sender, args, true);
 		} else if(cmd.equals("color")) {
-			if(!GlobalConfig.enableNameColors) {
+			if(!DisplayConfig.enableNameColors) {
 				Utils.sendLocalizedMessage(sender, "irc.color.disabled");
 				return;
 			}
@@ -69,7 +68,7 @@ public class CommandIRC implements ICommand {
 			}
 			if(sender instanceof EntityPlayer) {
 				String colorName = args[1].toLowerCase();
-				if(!isOP(sender) && (GlobalConfig.colorBlackList.contains(colorName) || GlobalConfig.opColor.equals(colorName))) {
+				if(!isOP(sender) && (GlobalConfig.colorBlackList.contains(colorName) || DisplayConfig.opColor.equals(colorName))) {
 					Utils.sendLocalizedMessage(sender, "irc.color.blackList", colorName);
 					return;
 				}

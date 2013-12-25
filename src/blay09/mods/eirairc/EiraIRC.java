@@ -19,10 +19,10 @@ import blay09.mods.eirairc.command.CommandNick;
 import blay09.mods.eirairc.command.CommandPart;
 import blay09.mods.eirairc.command.CommandServIRC;
 import blay09.mods.eirairc.command.CommandWho;
-import blay09.mods.eirairc.config.ConfigurationHandler;
 import blay09.mods.eirairc.config.GlobalConfig;
 import blay09.mods.eirairc.config.ServerConfig;
 import blay09.mods.eirairc.handler.ChatSessionHandler;
+import blay09.mods.eirairc.handler.ConfigurationHandler;
 import blay09.mods.eirairc.handler.IRCConnectionHandler;
 import blay09.mods.eirairc.handler.IRCEventHandler;
 import blay09.mods.eirairc.handler.MCEventHandler;
@@ -81,6 +81,7 @@ public class EiraIRC {
 		mcEventHandler = new MCEventHandler();
 		netHandler = new EiraNetHandler();
 		GameRegistry.registerPlayerTracker(mcEventHandler);
+		GameRegistry.registerPlayerTracker(netHandler);
 		NetworkRegistry.instance().registerConnectionHandler(mcEventHandler);
 		MinecraftForge.EVENT_BUS.register(mcEventHandler);
 		

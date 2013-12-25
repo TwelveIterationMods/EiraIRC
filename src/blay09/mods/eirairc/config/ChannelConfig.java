@@ -8,6 +8,7 @@ import java.util.List;
 import net.minecraft.command.ICommandSender;
 import net.minecraftforge.common.ConfigCategory;
 import net.minecraftforge.common.Configuration;
+import blay09.mods.eirairc.handler.ConfigurationHandler;
 import blay09.mods.eirairc.util.Globals;
 import blay09.mods.eirairc.util.Utils;
 

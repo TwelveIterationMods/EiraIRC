@@ -9,10 +9,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
-import blay09.mods.eirairc.config.ConfigurationHandler;
 import blay09.mods.eirairc.config.DisplayFormatConfig;
 import blay09.mods.eirairc.config.GlobalConfig;
 import blay09.mods.eirairc.config.NotificationConfig;
+import blay09.mods.eirairc.handler.ConfigurationHandler;
 import blay09.mods.eirairc.util.Globals;
 import blay09.mods.eirairc.util.Utils;
 
@@ -45,7 +45,7 @@ public class GuiNotifications extends GuiScreen {
 		btnPrivateMessage = new GuiButton(4, rightX, height / 2 - 64, BUTTON_WIDTH, BUTTON_HEIGHT, "");
 		buttonList.add(btnPrivateMessage);
 		
-		btnBack = new GuiButton(0, width / 2 - BUTTON_WIDTH / 2, height / 2 + 36, BUTTON_WIDTH, BUTTON_HEIGHT, Utils.getLocalizedMessage("irc.gui.back"));
+		btnBack = new GuiButton(0, width / 2 - 100, height / 2 + 36, 200, BUTTON_HEIGHT, Utils.getLocalizedMessage("irc.gui.back"));
 		buttonList.add(btnBack);
 		
 		updateButtonText();

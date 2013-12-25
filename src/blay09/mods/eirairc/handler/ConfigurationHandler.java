@@ -1,7 +1,7 @@
 // Copyright (c) 2013, Christopher "blay09" Baker
 // All rights reserved.
 
-package blay09.mods.eirairc.config;
+package blay09.mods.eirairc.handler;
 
 import java.io.File;
 import java.util.Collection;
@@ -12,6 +12,13 @@ import java.util.Map;
 import net.minecraft.command.ICommandSender;
 import net.minecraftforge.common.ConfigCategory;
 import net.minecraftforge.common.Configuration;
+import blay09.mods.eirairc.config.ChannelConfig;
+import blay09.mods.eirairc.config.DisplayConfig;
+import blay09.mods.eirairc.config.GlobalConfig;
+import blay09.mods.eirairc.config.KeyConfig;
+import blay09.mods.eirairc.config.NotificationConfig;
+import blay09.mods.eirairc.config.ScreenshotConfig;
+import blay09.mods.eirairc.config.ServerConfig;
 import blay09.mods.eirairc.util.IRCTargetError;
 import blay09.mods.eirairc.util.Utils;
 
@@ -24,8 +31,8 @@ public class ConfigurationHandler {
 	public static final String CATEGORY_CLIENTONLY = "clientonly";
 	public static final String CATEGORY_SERVERS = "servers";
 	public static final String CATEGORY_CHANNELS = "channels";
-	public static final String CATEGORY_SERVER_PREFIX = "server";
-	public static final String CATEGORY_CHANNEL_PREFIX = "channel";
+	public static final String PREFIX_SERVER = "server";
+	public static final String PREFIX_CHANNEL = "channel";
 	
 	private static final Map<String, ServerConfig> serverConfigs = new HashMap<String, ServerConfig>();
 	private static Configuration config;
@@ -41,8 +48,20 @@ public class ConfigurationHandler {
 		config.removeCategory(config.getCategory(Configuration.CATEGORY_ITEM));
 		
 		GlobalConfig.load(config);
+		KeyConfig.load(config);
+		NotificationConfig.load(config);
+		ScreenshotConfig.load(config);
+		DisplayConfig.load(config);
 		
 		config.save();
+	}
+	
+	public static void save() {
+		GlobalConfig.save(config);
+		KeyConfig.save(config);
+		NotificationConfig.save(config);
+		ScreenshotConfig.save(config);
+		DisplayConfig.save(config);
 	}
 	
 	public static void resetConfig() {
@@ -80,7 +99,16 @@ public class ConfigurationHandler {
 
 	public static void handleConfigCommand(ICommandSender sender, String target, String key, String value) {
 		if(target.equals("global")) {
-			GlobalConfig.handleConfigCommand(sender, key, value);
+			boolean result = false;
+			result = GlobalConfig.handleConfigCommand(sender, key, value);
+			if(!result) result = ScreenshotConfig.handleConfigCommand(sender, key, value);
+			if(!result) result = DisplayConfig.handleConfigCommand(sender, key, value);
+			if(result) {
+				Utils.sendLocalizedMessage(sender, "irc.config.change", "Global", key, value);
+				ConfigurationHandler.save();
+			} else {
+				Utils.sendLocalizedMessage(sender, "irc.config.invalidOption", "Global", key);
+			}
 		} else {
 			Object rt = Utils.resolveIRCTarget(target, true, false, true, false, false, false);
 			if(rt instanceof IRCTargetError) {
@@ -103,22 +131,19 @@ public class ConfigurationHandler {
 			}
 		}
 	}
-
-	public static ServerConfig getDefaultServerConfig() {
-		Iterator<ServerConfig> it = serverConfigs.values().iterator();
-		if(it.hasNext()) {
-			return it.next();
-		}
-		return null;
-	}
-
-	public static void save() {
-		GlobalConfig.save(config);
-	}
-
+	
 	public static void handleConfigCommand(ICommandSender sender, String target, String key) {
 		if(target.equals("global")) {
-			GlobalConfig.handleConfigCommand(sender, key);
+			String result = null;
+			result = GlobalConfig.handleConfigCommand(sender, key);
+			if(result == null) result = NotificationConfig.handleConfigCommand(sender, key);
+			if(result == null) result = ScreenshotConfig.handleConfigCommand(sender, key);
+			if(result == null) result = DisplayConfig.handleConfigCommand(sender, key);
+			if(result != null) {
+				Utils.sendLocalizedMessage(sender, "irc.config.lookup", "Global", key, result);
+			} else {
+				Utils.sendLocalizedMessage(sender, "irc.config.invalidOption", "Global", key);
+			}
 		} else {
 			Object rt = Utils.resolveIRCTarget(target, true, false, true, false, false, false);
 			if(rt instanceof IRCTargetError) {
@@ -140,6 +165,14 @@ public class ConfigurationHandler {
 				((ChannelConfig) rt).handleConfigCommand(sender, key);
 			}
 		}
+	}
+
+	public static ServerConfig getDefaultServerConfig() {
+		Iterator<ServerConfig> it = serverConfigs.values().iterator();
+		if(it.hasNext()) {
+			return it.next();
+		}
+		return null;
 	}
 
 }

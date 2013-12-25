@@ -1,9 +1,13 @@
 package blay09.mods.eirairc.net;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public class EiraNetHandler {
+import net.minecraft.entity.player.EntityPlayer;
+import cpw.mods.fml.common.IPlayerTracker;
+
+public class EiraNetHandler implements IPlayerTracker {
 
 	private final Map<String, EiraPlayerInfo> playerInfoMap = new HashMap<String, EiraPlayerInfo>();
 	
@@ -14,6 +18,23 @@ public class EiraNetHandler {
 			playerInfoMap.put(username, playerInfo);
 		}
 		return playerInfo;
+	}
+
+	@Override
+	public void onPlayerLogin(EntityPlayer player) {
+	}
+
+	@Override
+	public void onPlayerLogout(EntityPlayer player) {
+		playerInfoMap.remove(player.username);
+	}
+
+	@Override
+	public void onPlayerChangedDimension(EntityPlayer player) {
+	}
+
+	@Override
+	public void onPlayerRespawn(EntityPlayer player) {
 	}
 	
 }

@@ -8,8 +8,8 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import blay09.mods.eirairc.EiraIRC;
-import blay09.mods.eirairc.config.ConfigurationHandler;
 import blay09.mods.eirairc.config.ServerConfig;
+import blay09.mods.eirairc.handler.ConfigurationHandler;
 import blay09.mods.eirairc.util.Globals;
 import blay09.mods.eirairc.util.Utils;
 

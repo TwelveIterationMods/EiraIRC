@@ -9,9 +9,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
-import blay09.mods.eirairc.config.ConfigurationHandler;
+import blay09.mods.eirairc.config.DisplayConfig;
 import blay09.mods.eirairc.config.DisplayFormatConfig;
 import blay09.mods.eirairc.config.GlobalConfig;
+import blay09.mods.eirairc.handler.ConfigurationHandler;
 import blay09.mods.eirairc.util.Globals;
 
 public class GuiGlobalSettings extends GuiScreen {
@@ -76,39 +77,39 @@ public class GuiGlobalSettings extends GuiScreen {
 	
 	public void loadFromConfig() {
 		txtNick.setText(GlobalConfig.nick);
-		btnDeathMessages.displayString = "Relay Death Messages: " + (GlobalConfig.relayDeathMessages ? "Yes" : "No");
-		btnMCJoinLeave.displayString = "Relay Minecraft Joins: " + (GlobalConfig.relayMinecraftJoinLeave ? "Yes" : "No");
-		btnIRCJoinLeave.displayString = "Relay IRC Joins: " + (GlobalConfig.relayIRCJoinLeave ? "Yes" : "No");
+		btnDeathMessages.displayString = "Relay Death Messages: " + (DisplayConfig.relayDeathMessages ? "Yes" : "No");
+		btnMCJoinLeave.displayString = "Relay Minecraft Joins: " + (DisplayConfig.relayMinecraftJoinLeave ? "Yes" : "No");
+		btnIRCJoinLeave.displayString = "Relay IRC Joins: " + (DisplayConfig.relayIRCJoinLeave ? "Yes" : "No");
 		btnPrivateMessages.displayString = "Allow Private Messages: " + (GlobalConfig.allowPrivateMessages ? "Yes" : "No");
-		btnNickChanges.displayString = "Relay Nick Changes: " + (GlobalConfig.relayNickChanges ? "Yes" : "No");
+		btnNickChanges.displayString = "Relay Nick Changes: " + (DisplayConfig.relayNickChanges ? "Yes" : "No");
 		btnLinkFilter.displayString = "Filter Links: " + (GlobalConfig.enableLinkFilter ? "Yes" : "No");
 		btnPersistentConnections.displayString = "Persistent Connections: " + (GlobalConfig.persistentConnection ? "Yes" : "No");
 		btnSaveCredentials.displayString = "Save Credentials: " + (GlobalConfig.saveCredentials ? "Yes" : "No");
-		displayFormatIterator = GlobalConfig.displayFormates.values().iterator();
+		displayFormatIterator = DisplayConfig.displayFormates.values().iterator();
 		updateMessageDisplayMode();
 	}
 	
 	public void updateMessageDisplayMode() {
-		btnMessageDisplayMode.displayString = "Message Display: " + GlobalConfig.displayMode;
+		btnMessageDisplayMode.displayString = "Message Display: " + DisplayConfig.displayMode;
 	}
 	
 	@Override
 	public void actionPerformed(GuiButton button) {
 		if(button == btnDeathMessages) {
-			GlobalConfig.relayDeathMessages = !GlobalConfig.relayDeathMessages;
-			btnDeathMessages.displayString = "Relay Death Messages: " + (GlobalConfig.relayDeathMessages ? "Yes" : "No");
+			DisplayConfig.relayDeathMessages = !DisplayConfig.relayDeathMessages;
+			btnDeathMessages.displayString = "Relay Death Messages: " + (DisplayConfig.relayDeathMessages ? "Yes" : "No");
 		} else if(button == btnMCJoinLeave) {
-			GlobalConfig.relayMinecraftJoinLeave = !GlobalConfig.relayMinecraftJoinLeave;
-			btnMCJoinLeave.displayString = "Relay Minecraft Joins: " + (GlobalConfig.relayMinecraftJoinLeave ? "Yes" : "No");
+			DisplayConfig.relayMinecraftJoinLeave = !DisplayConfig.relayMinecraftJoinLeave;
+			btnMCJoinLeave.displayString = "Relay Minecraft Joins: " + (DisplayConfig.relayMinecraftJoinLeave ? "Yes" : "No");
 		} else if(button == btnIRCJoinLeave) {
-			GlobalConfig.relayIRCJoinLeave = !GlobalConfig.relayIRCJoinLeave;
-			btnIRCJoinLeave.displayString = "Relay IRC Joins: " + (GlobalConfig.relayIRCJoinLeave ? "Yes" : "No");
+			DisplayConfig.relayIRCJoinLeave = !DisplayConfig.relayIRCJoinLeave;
+			btnIRCJoinLeave.displayString = "Relay IRC Joins: " + (DisplayConfig.relayIRCJoinLeave ? "Yes" : "No");
 		} else if(button == btnPrivateMessages) {
 			GlobalConfig.allowPrivateMessages = !GlobalConfig.allowPrivateMessages;
 			btnPrivateMessages.displayString = "Allow Private Messages: " + (GlobalConfig.allowPrivateMessages ? "Yes" : "No");
 		} else if(button == btnNickChanges) {
-			GlobalConfig.relayNickChanges = !GlobalConfig.relayNickChanges;
-			btnNickChanges.displayString = "Relay Nick Changes: " + (GlobalConfig.relayNickChanges ? "Yes" : "No");
+			DisplayConfig.relayNickChanges = !DisplayConfig.relayNickChanges;
+			btnNickChanges.displayString = "Relay Nick Changes: " + (DisplayConfig.relayNickChanges ? "Yes" : "No");
 		} else if(button == btnLinkFilter) {
 			GlobalConfig.enableLinkFilter = !GlobalConfig.enableLinkFilter;
 			btnLinkFilter.displayString = "Filter Links: " + (GlobalConfig.enableLinkFilter ? "Yes" : "No");
@@ -120,9 +121,9 @@ public class GuiGlobalSettings extends GuiScreen {
 			btnSaveCredentials.displayString = "Save Credentials: " + (GlobalConfig.saveCredentials ? "Yes" : "No");
 		} else if(button == btnMessageDisplayMode) {
 			if(!displayFormatIterator.hasNext()) {
-				displayFormatIterator = GlobalConfig.displayFormates.values().iterator();
+				displayFormatIterator = DisplayConfig.displayFormates.values().iterator();
 			}
-			GlobalConfig.displayMode = displayFormatIterator.next().getName();
+			DisplayConfig.displayMode = displayFormatIterator.next().getName();
 			updateMessageDisplayMode();
 		} else if(button == btnBack) {
 			ConfigurationHandler.save();

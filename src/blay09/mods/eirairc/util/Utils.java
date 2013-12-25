@@ -23,11 +23,10 @@ import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.StatCollector;
 import blay09.mods.eirairc.EiraIRC;
 import blay09.mods.eirairc.config.ChannelConfig;
-import blay09.mods.eirairc.config.ConfigHelper;
-import blay09.mods.eirairc.config.ConfigurationHandler;
+import blay09.mods.eirairc.config.DisplayConfig;
 import blay09.mods.eirairc.config.GlobalConfig;
-import blay09.mods.eirairc.config.NickServSettings;
 import blay09.mods.eirairc.config.ServerConfig;
+import blay09.mods.eirairc.handler.ConfigurationHandler;
 import blay09.mods.eirairc.irc.IRCChannel;
 import blay09.mods.eirairc.irc.IRCConnection;
 import blay09.mods.eirairc.irc.IRCUser;
@@ -82,7 +81,7 @@ public class Utils {
 	private static List<String> tmpStrings = new ArrayList<String>();
 	public static List<String> wrapString(String text, int maxLength) {
 		tmpStrings.clear();
-		if(text.length() <= maxLength) {
+		if(text== null || text.length() <= maxLength) {
 			tmpStrings.add(text);
 			return tmpStrings;
 		}
@@ -165,7 +164,7 @@ public class Utils {
 			alias = player.username;
 		}
 		boolean isOP = isOP(player);
-		if(!GlobalConfig.enableNameColors && !isOP) {
+		if(!DisplayConfig.enableNameColors && !isOP) {
 			return alias;
 		}
 		String colorName = tagCompound.getString("NameColor");
@@ -176,7 +175,7 @@ public class Utils {
 			}
 			return getColoredName(alias, colorCode);
 		} else if(isOP) {
-			if(!GlobalConfig.opColor.isEmpty()) {
+			if(!DisplayConfig.opColor.isEmpty()) {
 				char colorCode = getColorCode(colorName);
 				if(colorCode == INVALID_COLOR) {
 					return alias;
@@ -352,7 +351,7 @@ public class Utils {
 		if(serverConfig.getQuitMessage() != null && !serverConfig.getQuitMessage().isEmpty()) {
 			return serverConfig.getQuitMessage();
 		}
-		return GlobalConfig.quitMessage;
+		return DisplayConfig.quitMessage;
 	}
 	
 	public static void sendUserList(ICommandSender sender, IRCConnection connection, IRCChannel channel) {

@@ -14,12 +14,13 @@ import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import blay09.mods.eirairc.EiraIRC;
 import blay09.mods.eirairc.command.IRCCommandHandler;
 import blay09.mods.eirairc.config.ChannelConfig;
-import blay09.mods.eirairc.config.ConfigHelper;
+import blay09.mods.eirairc.config.DisplayConfig;
 import blay09.mods.eirairc.config.GlobalConfig;
 import blay09.mods.eirairc.config.ServerConfig;
 import blay09.mods.eirairc.irc.IRCChannel;
 import blay09.mods.eirairc.irc.IRCConnection;
 import blay09.mods.eirairc.irc.IRCUser;
+import blay09.mods.eirairc.util.ConfigHelper;
 import blay09.mods.eirairc.util.Utils;
 import cpw.mods.fml.common.IPlayerTracker;
 import cpw.mods.fml.common.network.IConnectionHandler;
@@ -57,7 +58,7 @@ public class MCEventHandler implements IPlayerTracker, IConnectionHandler {
 			ServerConfig serverConfig = Utils.getServerConfig(connection);
 			for(IRCChannel channel : connection.getChannels()) {
 				ChannelConfig channelConfig = serverConfig.getChannelConfig(channel);
-				if(GlobalConfig.relayMinecraftJoinLeave && !channelConfig.isReadOnly() && channelConfig.relayMinecraftJoinLeave) {
+				if(DisplayConfig.relayMinecraftJoinLeave && !channelConfig.isReadOnly() && channelConfig.relayMinecraftJoinLeave) {
 					connection.sendChannelMessage(channel, ircMessage);
 				}
 				if(channel.hasTopic()) {
@@ -93,7 +94,7 @@ public class MCEventHandler implements IPlayerTracker, IConnectionHandler {
 					return;
 				}
 				String alias = Utils.getAliasForPlayer((EntityPlayer) event.sender);
-				String mcMessage = (GlobalConfig.emoteColor != null ? "§" + Utils.getColorCode(GlobalConfig.emoteColor) : "") + "* " + alias + " " + emote;
+				String mcMessage = (DisplayConfig.emoteColor != null ? "§" + Utils.getColorCode(DisplayConfig.emoteColor) : "") + "* " + alias + " " + emote;
 				Utils.addMessageToChat(mcMessage);
 				if(!MinecraftServer.getServer().isSinglePlayer()) {
 					String ircMessage = Utils.formatMessage(ConfigHelper.getDisplayFormatConfig().ircChannelEmote, event.sender.getCommandSenderName(), alias, emote);
@@ -199,7 +200,7 @@ public class MCEventHandler implements IPlayerTracker, IConnectionHandler {
 	
 	@ForgeSubscribe
 	public void onPlayerDeath(LivingDeathEvent event) {
-		if(!GlobalConfig.relayDeathMessages) {
+		if(!DisplayConfig.relayDeathMessages) {
 			return;
 		}
 		if(event.entityLiving instanceof EntityPlayer) {
@@ -219,7 +220,7 @@ public class MCEventHandler implements IPlayerTracker, IConnectionHandler {
 	
 	@Override
 	public void onPlayerLogout(EntityPlayer player) {
-		if(!GlobalConfig.relayMinecraftJoinLeave) {
+		if(!DisplayConfig.relayMinecraftJoinLeave) {
 			return;
 		}
 		String name = Utils.getAliasForPlayer(player);

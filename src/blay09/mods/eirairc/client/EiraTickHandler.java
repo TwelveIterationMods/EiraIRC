@@ -14,7 +14,9 @@ import org.lwjgl.input.Keyboard;
 
 import blay09.mods.eirairc.EiraIRC;
 import blay09.mods.eirairc.client.gui.GuiEiraChat;
+import blay09.mods.eirairc.client.gui.GuiKeybinds;
 import blay09.mods.eirairc.client.gui.GuiSettings;
+import blay09.mods.eirairc.client.screenshot.Screenshot;
 import blay09.mods.eirairc.client.screenshot.ScreenshotManager;
 import blay09.mods.eirairc.config.KeyConfig;
 import blay09.mods.eirairc.config.ScreenshotConfig;
@@ -62,12 +64,28 @@ public class EiraTickHandler implements ITickHandler {
 				player.sendQueue.addToSendQueue(packet);
 			}
 		}
+		if(isKeyPressed(KeyConfig.toggleLive, KeyConfig.IDX_TOGGLELIVE)) {
+			EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
+			EiraPlayerInfo playerInfo = EiraIRC.instance.getNetHandler().getPlayerInfo(player.username);
+			playerInfo.isLive = !playerInfo.isLive;
+			Packet packet = new PacketRecLiveState(player.username, playerInfo.isRecording, playerInfo.isLive).createPacket();
+			if(packet != null) {
+				player.sendQueue.addToSendQueue(packet);
+			}
+		}
+		if(isKeyPressed(KeyConfig.screenshotShare, KeyConfig.IDX_SCREENSHOTSHARE)) {
+			if(Minecraft.getMinecraft().currentScreen instanceof GuiKeybinds) {
+				Screenshot screenshot = ScreenshotManager.getInstance().takeScreenshot();
+				ScreenshotManager.getInstance().uploadScreenshot(screenshot);
+				ScreenshotManager.getInstance().shareScreenshot(screenshot);
+			}
+		}
 	}
 	
 	@Override
 	public void tickEnd(EnumSet<TickType> type, Object... tickData) {
 		if(type.contains(TickType.CLIENT)) {
-			if(ScreenshotConfig.manageScreenshots && ScreenshotConfig.screenshotAction != ScreenshotConfig.SCREENSHOT_NONE) {
+			if(ScreenshotConfig.manageScreenshots && ScreenshotConfig.screenshotAction != ScreenshotConfig.VALUE_NONE) {
 				if(Keyboard.isKeyDown(Keyboard.KEY_F2)) {
 					screenshotCheck = 10;
 				} else if(screenshotCheck > 0) {

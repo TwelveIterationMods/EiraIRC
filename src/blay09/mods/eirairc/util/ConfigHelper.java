@@ -1,17 +1,24 @@
-package blay09.mods.eirairc.config;
+// Copyright (c) 2013, Christopher "blay09" Baker
+// All rights reserved.
+
+package blay09.mods.eirairc.util;
 
 import net.minecraftforge.common.ConfigCategory;
 import blay09.mods.eirairc.EiraIRC;
+import blay09.mods.eirairc.config.ChannelConfig;
+import blay09.mods.eirairc.config.DisplayConfig;
+import blay09.mods.eirairc.config.DisplayFormatConfig;
+import blay09.mods.eirairc.config.GlobalConfig;
+import blay09.mods.eirairc.config.ServerConfig;
 import blay09.mods.eirairc.irc.IRCConnection;
-import blay09.mods.eirairc.util.Utils;
 
 public class ConfigHelper {
 
 	public static DisplayFormatConfig getDisplayFormatConfig() {
-		DisplayFormatConfig dfc = GlobalConfig.displayFormates.get(GlobalConfig.displayMode);
+		DisplayFormatConfig dfc = DisplayConfig.displayFormates.get(DisplayConfig.displayMode);
 		if(dfc == null) {
-			GlobalConfig.displayMode = "S-Light";
-			dfc = GlobalConfig.displayFormates.get(GlobalConfig.displayMode);
+			DisplayConfig.displayMode = "S-Light";
+			dfc = DisplayConfig.displayFormates.get(DisplayConfig.displayMode);
 			if(dfc == null) {
 				return new DisplayFormatConfig(new ConfigCategory("unknown"));
 			}
@@ -27,7 +34,7 @@ public class ConfigHelper {
 		if(serverConfig.getEmoteColor() != null && !serverConfig.getEmoteColor().isEmpty()) {
 			return serverConfig.getEmoteColor();
 		}
-		return GlobalConfig.emoteColor;
+		return DisplayConfig.emoteColor;
 	}
 	
 	public static String getIRCColor(ChannelConfig channelConfig) {
@@ -38,7 +45,7 @@ public class ConfigHelper {
 		if(serverConfig.getIRCColor() != null && !serverConfig.getIRCColor().isEmpty()) {
 			return serverConfig.getIRCColor();
 		}
-		return GlobalConfig.ircColor;
+		return DisplayConfig.ircColor;
 	}
 	
 	public static String formatNick(String nickFormate) {

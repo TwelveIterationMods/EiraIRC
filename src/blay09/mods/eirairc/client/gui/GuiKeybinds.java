@@ -11,11 +11,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
-import blay09.mods.eirairc.config.ConfigurationHandler;
 import blay09.mods.eirairc.config.DisplayFormatConfig;
 import blay09.mods.eirairc.config.GlobalConfig;
 import blay09.mods.eirairc.config.KeyConfig;
 import blay09.mods.eirairc.config.NotificationConfig;
+import blay09.mods.eirairc.handler.ConfigurationHandler;
 import blay09.mods.eirairc.util.Globals;
 import blay09.mods.eirairc.util.Utils;
 
@@ -81,15 +81,14 @@ public class GuiKeybinds extends GuiScreen {
 	protected void keyTyped(char unicode, int keyCode) {
 		if(currentKeyIdx != -1) {
 			if(keyCode == Keyboard.KEY_ESCAPE) {
-				currentKeyIdx = -1;
-			} else {
-				switch(currentKeyIdx) {
+				keyCode = 0;
+			}
+			switch(currentKeyIdx) {
 				case KeyConfig.IDX_OPENSETTINGS: KeyConfig.openMenu = keyCode; break;
 				case KeyConfig.IDX_SCREENSHOTSHARE: KeyConfig.screenshotShare = keyCode; break;
 				case KeyConfig.IDX_TOGGLELIVE: KeyConfig.toggleLive = keyCode; break;
 				case KeyConfig.IDX_TOGGLERECORDING: KeyConfig.toggleRecording = keyCode; break;
 				case KeyConfig.IDX_TOGGLETARGET: KeyConfig.toggleTarget = keyCode; break;
-				}
 			}
 			currentKeyIdx = -1;
 			ConfigurationHandler.save();

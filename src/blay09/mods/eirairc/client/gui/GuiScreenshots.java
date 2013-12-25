@@ -11,11 +11,11 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import blay09.mods.eirairc.client.screenshot.ScreenshotManager;
 import blay09.mods.eirairc.client.upload.UploadHoster;
-import blay09.mods.eirairc.config.ConfigurationHandler;
 import blay09.mods.eirairc.config.DisplayFormatConfig;
 import blay09.mods.eirairc.config.GlobalConfig;
 import blay09.mods.eirairc.config.NotificationConfig;
 import blay09.mods.eirairc.config.ScreenshotConfig;
+import blay09.mods.eirairc.handler.ConfigurationHandler;
 import blay09.mods.eirairc.util.Globals;
 import blay09.mods.eirairc.util.Utils;
 
@@ -53,7 +53,7 @@ public class GuiScreenshots extends GuiScreen {
 		btnScreenshotAction = new GuiButton(4, leftX, height / 2 - 39, BUTTON_WIDTH, BUTTON_HEIGHT, "");
 		buttonList.add(btnScreenshotAction);
 		
-		btnBack = new GuiButton(0, leftX, height / 2, BUTTON_WIDTH, BUTTON_HEIGHT, Utils.getLocalizedMessage("irc.gui.back"));
+		btnBack = new GuiButton(0, width / 2 - 100, height / 2, 200, BUTTON_HEIGHT, Utils.getLocalizedMessage("irc.gui.back"));
 		buttonList.add(btnBack);
 		
 		updateButtonText();
@@ -76,11 +76,11 @@ public class GuiScreenshots extends GuiScreen {
 		} else if(button == btnScreenshotAction) {
 			int action = ScreenshotConfig.screenshotAction;
 			action++;
-			if(action > ScreenshotConfig.SCREENSHOT_UPLOADCLIPBOARD) {
-				action = ScreenshotConfig.SCREENSHOT_NONE;
+			if(action > ScreenshotConfig.VALUE_UPLOADCLIPBOARD) {
+				action = ScreenshotConfig.VALUE_NONE;
 			}
 			ScreenshotConfig.screenshotAction = action;
-			if(action != ScreenshotConfig.SCREENSHOT_NONE) {
+			if(action != ScreenshotConfig.VALUE_NONE) {
 				ScreenshotManager.getInstance().findNewScreenshots(false);
 			}
 			ConfigurationHandler.save();
@@ -98,9 +98,9 @@ public class GuiScreenshots extends GuiScreen {
 		}
 		String autoAction = null;
 		switch(ScreenshotConfig.screenshotAction) {
-			case ScreenshotConfig.SCREENSHOT_UPLOAD: autoAction = "Upload"; break;
-			case ScreenshotConfig.SCREENSHOT_UPLOADSHARE: autoAction = "Upload & Share"; break;
-			case ScreenshotConfig.SCREENSHOT_UPLOADCLIPBOARD: autoAction = "Upload & Clipboard"; break;
+			case ScreenshotConfig.VALUE_UPLOAD: autoAction = "Upload"; break;
+			case ScreenshotConfig.VALUE_UPLOADSHARE: autoAction = "Upload & Share"; break;
+			case ScreenshotConfig.VALUE_UPLOADCLIPBOARD: autoAction = "Upload & Clipboard"; break;
 			default: autoAction = "None"; break;
 		}
 		btnScreenshotAction.displayString = "Auto-Action: " + autoAction;

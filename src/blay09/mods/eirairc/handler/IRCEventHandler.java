@@ -10,14 +10,14 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import blay09.mods.eirairc.EiraIRC;
 import blay09.mods.eirairc.config.ChannelConfig;
-import blay09.mods.eirairc.config.ConfigHelper;
-import blay09.mods.eirairc.config.ConfigurationHandler;
+import blay09.mods.eirairc.config.DisplayConfig;
 import blay09.mods.eirairc.config.GlobalConfig;
 import blay09.mods.eirairc.config.ServerConfig;
 import blay09.mods.eirairc.irc.IIRCEventHandler;
 import blay09.mods.eirairc.irc.IRCChannel;
 import blay09.mods.eirairc.irc.IRCConnection;
 import blay09.mods.eirairc.irc.IRCUser;
+import blay09.mods.eirairc.util.ConfigHelper;
 import blay09.mods.eirairc.util.Globals;
 import blay09.mods.eirairc.util.NotificationType;
 import blay09.mods.eirairc.util.Utils;
@@ -26,7 +26,7 @@ public class IRCEventHandler implements IIRCEventHandler {
 
 	@Override
 	public void onNickChange(IRCConnection connection, IRCUser user, String nick) {
-		if(!GlobalConfig.relayNickChanges) {
+		if(!DisplayConfig.relayNickChanges) {
 			return;
 		}
 		String mcMessage = Utils.getLocalizedMessage("irc.display.irc.nickChange", connection.getHost(), user.getNick(), nick);
@@ -36,7 +36,7 @@ public class IRCEventHandler implements IIRCEventHandler {
 	@Override
 	public void onUserJoin(IRCConnection connection, IRCUser user, IRCChannel channel) {
 		ChannelConfig channelConfig = Utils.getServerConfig(connection).getChannelConfig(channel);
-		if(GlobalConfig.relayIRCJoinLeave && !channelConfig.isMuted() && channelConfig.relayIRCJoinLeave) {
+		if(DisplayConfig.relayIRCJoinLeave && !channelConfig.isMuted() && channelConfig.relayIRCJoinLeave) {
 			String mcMessage = Utils.getLocalizedMessage("irc.display.irc.joinMsg", channel.getName(), user.getNick());
 			Utils.addMessageToChat(mcMessage);
 		}
@@ -47,7 +47,7 @@ public class IRCEventHandler implements IIRCEventHandler {
 
 	@Override
 	public void onUserPart(IRCConnection connection, IRCUser user, IRCChannel channel, String quitMessage) {
-		if(!GlobalConfig.relayIRCJoinLeave) {
+		if(!DisplayConfig.relayIRCJoinLeave) {
 			return;
 		}
 		ChannelConfig channelConfig = Utils.getServerConfig(connection).getChannelConfig(channel);
@@ -59,7 +59,7 @@ public class IRCEventHandler implements IIRCEventHandler {
 
 	@Override
 	public void onUserQuit(IRCConnection connection, IRCUser user, String quitMessage) {
-		if(!GlobalConfig.relayIRCJoinLeave) {
+		if(!DisplayConfig.relayIRCJoinLeave) {
 			return;
 		}
 		ServerConfig serverConfig = Utils.getServerConfig(connection);
