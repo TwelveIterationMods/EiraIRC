@@ -71,6 +71,7 @@ public class GuiScreenshots extends GuiScreen {
 				hosterIdx = 0;
 			}
 			ScreenshotConfig.uploadHoster = UploadHoster.availableHosters[hosterIdx];
+			ConfigurationHandler.save();
 			updateButtonText();
 		} else if(button == btnScreenshotAction) {
 			int action = ScreenshotConfig.screenshotAction;
@@ -82,6 +83,7 @@ public class GuiScreenshots extends GuiScreen {
 			if(action != ScreenshotConfig.SCREENSHOT_NONE) {
 				ScreenshotManager.getInstance().findNewScreenshots(false);
 			}
+			ConfigurationHandler.save();
 			updateButtonText();
 		}
 	}

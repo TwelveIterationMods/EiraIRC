@@ -1,7 +1,7 @@
 // Copyright (c) 2013, Christopher "blay09" Baker
 // All rights reserved.
 
-package blay09.mods.eirairc;
+package blay09.mods.eirairc.handler;
 
 import java.util.List;
 
@@ -16,6 +16,7 @@ import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import blay09.mods.eirairc.EiraIRC;
 import blay09.mods.eirairc.client.gui.OverlayNotification;
 import blay09.mods.eirairc.command.IRCCommandHandler;
 import blay09.mods.eirairc.config.ChannelConfig;

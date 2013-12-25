@@ -1,4 +1,4 @@
-package blay09.mods.eirairc;
+package blay09.mods.eirairc.handler;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -11,6 +11,7 @@ import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import blay09.mods.eirairc.EiraIRC;
 import blay09.mods.eirairc.command.IRCCommandHandler;
 import blay09.mods.eirairc.config.ChannelConfig;
 import blay09.mods.eirairc.config.ConfigHelper;

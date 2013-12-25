@@ -1,5 +1,6 @@
-package blay09.mods.eirairc;
+package blay09.mods.eirairc.handler;
 
+import blay09.mods.eirairc.EiraIRC;
 import blay09.mods.eirairc.config.ChannelConfig;
 import blay09.mods.eirairc.config.GlobalConfig;
 import blay09.mods.eirairc.config.ServerConfig;

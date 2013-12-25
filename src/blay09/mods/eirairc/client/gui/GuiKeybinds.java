@@ -51,7 +51,7 @@ public class GuiKeybinds extends GuiScreen {
 		btnToggleRecording = new GuiButton(4, rightX, height / 2 - 64, BUTTON_WIDTH, BUTTON_HEIGHT, "");
 		buttonList.add(btnToggleRecording);
 		
-		btnToggleLive = new GuiButton(5, rightX, height / 2 - 64, BUTTON_WIDTH, BUTTON_HEIGHT, "");
+		btnToggleLive = new GuiButton(5, rightX, height / 2 - 39, BUTTON_WIDTH, BUTTON_HEIGHT, "");
 		buttonList.add(btnToggleLive);
 		
 		btnBack = new GuiButton(0, width / 2 - BUTTON_WIDTH / 2, height / 2 + 36, BUTTON_WIDTH, BUTTON_HEIGHT, Utils.getLocalizedMessage("irc.gui.back"));
@@ -66,6 +66,14 @@ public class GuiKeybinds extends GuiScreen {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiSettings());
 		} else if(button == btnOpenSettings) {
 			currentKeyIdx = KeyConfig.IDX_OPENSETTINGS;
+		} else if(button == btnToggleTarget) {
+			currentKeyIdx = KeyConfig.IDX_TOGGLETARGET;
+		} else if(button == btnScreenshotShare) {
+			currentKeyIdx = KeyConfig.IDX_SCREENSHOTSHARE;
+		} else if(button == btnToggleRecording) {
+			currentKeyIdx = KeyConfig.IDX_TOGGLERECORDING;
+		} else if(button == btnToggleLive) {
+			currentKeyIdx = KeyConfig.IDX_TOGGLELIVE;
 		}
 	}
 	
@@ -77,9 +85,14 @@ public class GuiKeybinds extends GuiScreen {
 			} else {
 				switch(currentKeyIdx) {
 				case KeyConfig.IDX_OPENSETTINGS: KeyConfig.openMenu = keyCode; break;
+				case KeyConfig.IDX_SCREENSHOTSHARE: KeyConfig.screenshotShare = keyCode; break;
+				case KeyConfig.IDX_TOGGLELIVE: KeyConfig.toggleLive = keyCode; break;
+				case KeyConfig.IDX_TOGGLERECORDING: KeyConfig.toggleRecording = keyCode; break;
+				case KeyConfig.IDX_TOGGLETARGET: KeyConfig.toggleTarget = keyCode; break;
 				}
 			}
 			currentKeyIdx = -1;
+			ConfigurationHandler.save();
 			updateButtonText();
 			return;
 		}
@@ -88,6 +101,10 @@ public class GuiKeybinds extends GuiScreen {
 	
 	public void updateButtonText() {
 		btnOpenSettings.displayString = "Menu: " + getKeyName(KeyConfig.openMenu);
+		btnScreenshotShare.displayString = "Screenshot & Share: " + getKeyName(KeyConfig.screenshotShare);
+		btnToggleLive.displayString = "Toggle Live: " + getKeyName(KeyConfig.toggleLive);
+		btnToggleRecording.displayString = "Toggle Recording: " + getKeyName(KeyConfig.toggleRecording);
+		btnToggleTarget.displayString = "Toggle Target: " + getKeyName(KeyConfig.toggleTarget);
 	}
 	
 	private String getKeyName(int keyCode) {

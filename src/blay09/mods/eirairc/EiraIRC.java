@@ -3,11 +3,9 @@
 
 package blay09.mods.eirairc;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import net.minecraft.server.MinecraftServer;
@@ -24,9 +22,15 @@ import blay09.mods.eirairc.command.CommandWho;
 import blay09.mods.eirairc.config.ConfigurationHandler;
 import blay09.mods.eirairc.config.GlobalConfig;
 import blay09.mods.eirairc.config.ServerConfig;
+import blay09.mods.eirairc.handler.ChatSessionHandler;
+import blay09.mods.eirairc.handler.IRCConnectionHandler;
+import blay09.mods.eirairc.handler.IRCEventHandler;
+import blay09.mods.eirairc.handler.MCEventHandler;
 import blay09.mods.eirairc.irc.IIRCConnectionHandler;
-import blay09.mods.eirairc.irc.IRCChannel;
 import blay09.mods.eirairc.irc.IRCConnection;
+import blay09.mods.eirairc.net.ClientPacketHandler;
+import blay09.mods.eirairc.net.ServerPacketHandler;
+import blay09.mods.eirairc.net.EiraNetHandler;
 import blay09.mods.eirairc.util.Globals;
 import blay09.mods.eirairc.util.Localization;
 import blay09.mods.eirairc.util.Utils;
@@ -40,13 +44,14 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
+import cpw.mods.fml.common.network.NetworkMod.SidedPacketHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
 
 @Mod(modid = Globals.MOD_ID, name = Globals.MOD_NAME, version = Globals.MOD_VERSION)
-@NetworkMod(channels = { Globals.MOD_ID }, packetHandler = PacketHandler.class)
+@NetworkMod(channels = { Globals.MOD_ID }, clientPacketHandlerSpec = @SidedPacketHandler(channels = { Globals.MOD_ID }, packetHandler = ClientPacketHandler.class), serverPacketHandlerSpec = @SidedPacketHandler(channels = { Globals.MOD_ID }, packetHandler = ServerPacketHandler.class))
 public class EiraIRC {
 
 	@Instance(Globals.MOD_ID)
@@ -59,6 +64,7 @@ public class EiraIRC {
 	private IRCConnectionHandler ircConnectionHandler;
 	private MCEventHandler mcEventHandler;
 	private ChatSessionHandler chatSessionHandler;
+	private EiraNetHandler netHandler;
 	private Map<String, IRCConnection> connections;
 	private boolean ircRunning;
 	
@@ -75,6 +81,7 @@ public class EiraIRC {
 		ircEventHandler = new IRCEventHandler();
 		ircConnectionHandler = new IRCConnectionHandler();
 		mcEventHandler = new MCEventHandler();
+		netHandler = new EiraNetHandler();
 		GameRegistry.registerPlayerTracker(mcEventHandler);
 		NetworkRegistry.instance().registerConnectionHandler(mcEventHandler);
 		MinecraftForge.EVENT_BUS.register(mcEventHandler);
@@ -185,5 +192,9 @@ public class EiraIRC {
 
 	public IIRCConnectionHandler getIRCConnectionHandler() {
 		return ircConnectionHandler;
+	}
+	
+	public EiraNetHandler getNetHandler() {
+		return netHandler;
 	}
 }

@@ -1,4 +1,4 @@
-package blay09.mods.eirairc;
+package blay09.mods.eirairc.handler;
 
 import java.util.ArrayList;
 import java.util.List;

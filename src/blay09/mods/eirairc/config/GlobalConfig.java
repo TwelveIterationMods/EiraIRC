@@ -193,6 +193,8 @@ public class GlobalConfig {
 		ScreenshotConfig.manageScreenshots = config.get(ConfigurationHandler.CATEGORY_CLIENTONLY, "manageScreenshots", "true").getBoolean(true);
 		ScreenshotConfig.screenshotAction = config.get(ConfigurationHandler.CATEGORY_CLIENTONLY, "screenshotAction", "0").getInt();
 		config.get(ConfigurationHandler.CATEGORY_CLIENTONLY, "screenshotAction", "0").comment = "0: None / 1: Upload / 2: Upload & Share / 3: Upload & Clipboard";
+		ScreenshotConfig.uploadHoster = config.get(ConfigurationHandler.CATEGORY_CLIENTONLY, "uploadHoster", ScreenshotConfig.uploadHoster).getString();
+		config.get(ConfigurationHandler.CATEGORY_CLIENTONLY, "uploadHoster", ScreenshotConfig.uploadHoster).comment = "Available Options: DirectUpload";
 		config.getCategory(ConfigurationHandler.CATEGORY_CLIENTONLY).setComment("These options are only important in the client version as they either have no function on servers or aren't really intended to be server-side.");
 		
 		/*
@@ -261,6 +263,7 @@ public class GlobalConfig {
 		config.get(ConfigurationHandler.CATEGORY_CLIENTONLY, "keyScreenshotShare", KeyConfig.screenshotShare).set(KeyConfig.screenshotShare);
 		config.get(ConfigurationHandler.CATEGORY_CLIENTONLY, "manageScreenshots", ScreenshotConfig.manageScreenshots).set(ScreenshotConfig.manageScreenshots);
 		config.get(ConfigurationHandler.CATEGORY_CLIENTONLY, "screenshotAction", ScreenshotConfig.screenshotAction).set(ScreenshotConfig.screenshotAction);
+		config.get(ConfigurationHandler.CATEGORY_CLIENTONLY, "uploadHoster", ScreenshotConfig.uploadHoster).set(ScreenshotConfig.uploadHoster);
 		
 		/*
 		 * ServerOnly Config
