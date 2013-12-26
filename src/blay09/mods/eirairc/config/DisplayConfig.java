@@ -1,3 +1,6 @@
+// Copyright (c) 2013, Christopher "blay09" Baker
+// All rights reserved.
+
 package blay09.mods.eirairc.config;
 
 import java.util.HashMap;
@@ -28,6 +31,7 @@ public class DisplayConfig {
 	public static boolean relayIRCJoinLeave = true;
 	public static boolean relayNickChanges = true;
 	public static boolean hudRecState = true;
+	public static String botProfile = "Custom";
 	
 	public static void load(Configuration config) {
 		displayMode = Utils.unquote(config.get(CATEGORY, "displayMode", displayMode).getString());

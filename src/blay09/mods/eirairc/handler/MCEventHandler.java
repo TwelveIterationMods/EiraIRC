@@ -1,3 +1,6 @@
+// Copyright (c) 2013, Christopher "blay09" Baker
+// All rights reserved.
+
 package blay09.mods.eirairc.handler;
 
 import net.minecraft.client.Minecraft;

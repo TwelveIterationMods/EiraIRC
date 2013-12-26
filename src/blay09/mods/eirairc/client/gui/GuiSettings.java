@@ -11,13 +11,16 @@ import blay09.mods.eirairc.util.Globals;
 
 public class GuiSettings extends GuiScreen {
 
+	private static final int BUTTON_WIDTH = 150;
+	private static final int BUTTON_HEIGHT = 20;
+	
 	private GuiButton btnGlobalSettings;
 	private GuiButton btnServerList;
 	private GuiButton btnTwitch;
+	private GuiButton btnDisplaySettings;
+	private GuiButton btnBotSettings;
 	private GuiButton btnScreenshots;
-	private GuiButton btnProfanityFilter;
-	private GuiButton btnFriendsList;
-	private GuiButton btnIgnoreList;
+	private GuiButton btnFriendIgnore;
 	private GuiButton btnNotifications;
 	private GuiButton btnKeybinds;
 	private GuiButton btnClientServer;
@@ -25,37 +28,38 @@ public class GuiSettings extends GuiScreen {
 	
 	@Override
 	public void initGui() {
-		btnGlobalSettings = new GuiButton(2, width / 2 - 152, height / 2 - 90, 150, 20, "Global Settings");
+		int leftX = width /  2 - 152;
+		int rightX = width / 2 + 2;
+		
+		btnGlobalSettings = new GuiButton(2, leftX, height / 2 - 90, BUTTON_WIDTH, BUTTON_HEIGHT, "Global Settings");
 		buttonList.add(btnGlobalSettings);
 		
-		btnServerList = new GuiButton(3, width / 2 - 152, height / 2 - 65, 150, 20, "Server List");
+		btnServerList = new GuiButton(3, leftX, height / 2 - 65, BUTTON_WIDTH, BUTTON_HEIGHT, "Server List");
 		buttonList.add(btnServerList);
 		
-		btnTwitch = new GuiButton(4, width / 2 - 152, height / 2 - 40, 150, 20, "Twitch Chat");
+		btnFriendIgnore = new GuiButton(4, leftX, height / 2 - 40, BUTTON_WIDTH, BUTTON_HEIGHT, "Friends / Ignore List");
+		btnFriendIgnore.enabled = false;
+		buttonList.add(btnFriendIgnore);
+		
+		btnTwitch = new GuiButton(5, leftX, height / 2 - 15, BUTTON_WIDTH, BUTTON_HEIGHT, "Twitch Chat");
 		buttonList.add(btnTwitch);
 		
-		btnScreenshots = new GuiButton(5, width / 2 + 2, height / 2 - 90, 150, 20, "Screenshots");
+		btnScreenshots = new GuiButton(6, leftX, height / 2 + 10, BUTTON_WIDTH, BUTTON_HEIGHT, "Screenshots");
 		if(!ScreenshotConfig.manageScreenshots) {
 			btnScreenshots.enabled = false;
 		}
 		buttonList.add(btnScreenshots);
 		
-		btnProfanityFilter = new GuiButton(6, width / 2 - 152, height / 2 - 15, 150, 20, "Profanity Filter");
-		btnProfanityFilter.enabled = false;
-		buttonList.add(btnProfanityFilter);
+		btnDisplaySettings = new GuiButton(7, rightX, height / 2 - 90, BUTTON_WIDTH, BUTTON_HEIGHT, "Display Settings");
+		buttonList.add(btnDisplaySettings);
 		
-		btnFriendsList = new GuiButton(7, width / 2 + 2, height / 2 - 65, 150, 20, "Friends List");
-		btnFriendsList.enabled = false;
-		buttonList.add(btnFriendsList);
+		btnBotSettings = new GuiButton(8, rightX, height / 2 - 65, BUTTON_WIDTH, BUTTON_HEIGHT, "Bot Settings");
+		buttonList.add(btnBotSettings);
 		
-		btnIgnoreList = new GuiButton(8, width / 2 + 2, height / 2 - 40, 150, 20, "Ignore List");
-		btnIgnoreList.enabled = false;
-		buttonList.add(btnIgnoreList);
-		
-		btnNotifications = new GuiButton(9, width / 2 + 2, height / 2 - 15, 150, 20, "Notifications");
+		btnNotifications = new GuiButton(9, rightX, height / 2 - 40, BUTTON_WIDTH, BUTTON_HEIGHT, "Notifications");
 		buttonList.add(btnNotifications);
 		
-		btnKeybinds = new GuiButton(10, width / 2 - 152, height / 2 + 10, 150, 20, "Keybinds");
+		btnKeybinds = new GuiButton(10, rightX, height / 2 - 15, BUTTON_WIDTH, BUTTON_HEIGHT, "Keybinds");
 		buttonList.add(btnKeybinds);
 		
 		btnClientServer = new GuiButton(1, 1, 1, 60, 20, "Client");
@@ -80,6 +84,10 @@ public class GuiSettings extends GuiScreen {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiNotifications());
 		} else if(button == btnKeybinds) {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiKeybinds());
+		} else if(button == btnDisplaySettings) {
+			Minecraft.getMinecraft().displayGuiScreen(new GuiDisplaySettings());
+		} else if(button == btnBotSettings) {
+			Minecraft.getMinecraft().displayGuiScreen(new GuiBotSettings());
 		} else if(button == btnBack) {
 			Minecraft.getMinecraft().displayGuiScreen(null);
 		}

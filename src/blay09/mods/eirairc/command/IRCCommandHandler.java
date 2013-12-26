@@ -31,7 +31,12 @@ public class IRCCommandHandler {
 			return false;
 		}
 		params[0] = params[0].substring(1);
-		return processCommand(sender, params, serverSide);
+		try {
+			return processCommand(sender, params, serverSide);
+		} catch (WrongUsageException e) {
+			sender.sendChatToPlayer(Utils.getLocalizedChatMessage("irc.general.usage", Utils.getLocalizedMessageNoPrefix(e.getMessage())));
+			return true;
+		}
 	}
 	
 	public static boolean processCommand(ICommandSender sender, String[] args, boolean serverSide) {
