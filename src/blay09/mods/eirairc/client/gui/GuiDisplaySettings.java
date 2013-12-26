@@ -10,8 +10,8 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import blay09.mods.eirairc.config.DisplayConfig;
 import blay09.mods.eirairc.config.DisplayFormatConfig;
-import blay09.mods.eirairc.config.ScreenshotConfig;
 import blay09.mods.eirairc.util.Globals;
+import blay09.mods.eirairc.util.Utils;
 
 public class GuiDisplaySettings extends GuiScreen {
 
@@ -35,7 +35,7 @@ public class GuiDisplaySettings extends GuiScreen {
 		btnRecordingHUD = new GuiButton(2, rightX, height / 2 - 90, BUTTON_WIDTH, BUTTON_HEIGHT, "");
 		buttonList.add(btnRecordingHUD);
 		
-		btnBack = new GuiButton(0, width / 2 - 100, height / 2 + 90, 200, 20, "Back");
+		btnBack = new GuiButton(0, width / 2 - 100, height / 2 + 90, 200, 20, Utils.getLocalizedMessage("irc.gui.back"));
 		buttonList.add(btnBack);
 		
 		displayFormatIterator = DisplayConfig.displayFormates.values().iterator();
@@ -43,8 +43,8 @@ public class GuiDisplaySettings extends GuiScreen {
 	}
 	
 	public void updateButtonText() {
-		btnRecordingHUD.displayString = "Show Recording HUD: " + (DisplayConfig.hudRecState ? "Yes" : "No");
-		btnMessageDisplayMode.displayString = "Message Display: " + DisplayConfig.displayMode;
+		btnRecordingHUD.displayString = Utils.getLocalizedMessage("irc.gui.displaySettings.recordingHud", Utils.getLocalizedMessage((DisplayConfig.hudRecState ? "irc.gui.yes" : "irc.gui.no")));
+		btnMessageDisplayMode.displayString = Utils.getLocalizedMessage("irc.gui.displaySettings.messageDisplay", DisplayConfig.displayMode);
 	}
 	
 	@Override
@@ -66,7 +66,7 @@ public class GuiDisplaySettings extends GuiScreen {
 	@Override
 	public void drawScreen(int par1, int par2, float par3) {
 		drawBackground(0);
-		this.drawCenteredString(fontRenderer, "EiraIRC - Display Settings", width / 2, height / 2 - 110, Globals.TEXT_COLOR);
+		this.drawCenteredString(fontRenderer, Utils.getLocalizedMessage("irc.gui.displaySettings"), width / 2, height / 2 - 110, Globals.TEXT_COLOR);
 		super.drawScreen(par1, par2, par3);
 	}
 }

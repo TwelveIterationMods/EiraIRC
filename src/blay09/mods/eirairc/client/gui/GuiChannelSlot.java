@@ -6,11 +6,11 @@ package blay09.mods.eirairc.client.gui;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiSlot;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.util.EnumChatFormatting;
 import blay09.mods.eirairc.EiraIRC;
 import blay09.mods.eirairc.config.ChannelConfig;
 import blay09.mods.eirairc.config.ServerConfig;
 import blay09.mods.eirairc.util.Globals;
+import blay09.mods.eirairc.util.Utils;
 
 public class GuiChannelSlot extends GuiSlot {
 
@@ -55,12 +55,12 @@ public class GuiChannelSlot extends GuiSlot {
 		String joinedString = null;
 		if(EiraIRC.instance.isConnectedTo(serverConfig.getHost())) {
 			if(EiraIRC.instance.getConnection(serverConfig.getHost()).getChannel(channelConfig.getName()) != null) {
-				joinedString = EnumChatFormatting.GREEN + "Joined";
+				joinedString = Utils.getLocalizedMessage("irc.gui.channelList.joined");
 			} else {
-				joinedString = EnumChatFormatting.RED + "Not Joined";
+				joinedString = Utils.getLocalizedMessage("irc.gui.channelList.notJoined");
 			}
 		} else {
-			joinedString = EnumChatFormatting.RED + "Not Connected";
+			joinedString = Utils.getLocalizedMessage("irc.gui.channelList.notConnected");
 		}
 		
 		parentGui.drawString(parentGui.getFontRenderer(), channelConfig.getName(), x + 2, y + 1, Globals.TEXT_COLOR);

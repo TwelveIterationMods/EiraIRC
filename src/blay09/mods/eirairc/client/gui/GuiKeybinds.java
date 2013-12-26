@@ -99,16 +99,16 @@ public class GuiKeybinds extends GuiScreen {
 	}
 	
 	public void updateButtonText() {
-		btnOpenSettings.displayString = "Menu: " + getKeyName(KeyConfig.openMenu);
-		btnScreenshotShare.displayString = "Screenshot & Share: " + getKeyName(KeyConfig.screenshotShare);
-		btnToggleLive.displayString = "Toggle Live: " + getKeyName(KeyConfig.toggleLive);
-		btnToggleRecording.displayString = "Toggle Recording: " + getKeyName(KeyConfig.toggleRecording);
-		btnToggleTarget.displayString = "Toggle Target: " + getKeyName(KeyConfig.toggleTarget);
+		btnOpenSettings.displayString = Utils.getLocalizedMessage("irc.gui.keybinds.menu", getKeyName(KeyConfig.openMenu));
+		btnScreenshotShare.displayString = Utils.getLocalizedMessage("irc.gui.keybinds.screenshotShare", getKeyName(KeyConfig.screenshotShare));
+		btnToggleLive.displayString = Utils.getLocalizedMessage("irc.gui.keybinds.toggleLive", getKeyName(KeyConfig.toggleLive));
+		btnToggleRecording.displayString = Utils.getLocalizedMessage("irc.gui.keybinds.toggleRecording", getKeyName(KeyConfig.toggleRecording));
+		btnToggleTarget.displayString = Utils.getLocalizedMessage("irc.gui.keybinds.toggleTarget", getKeyName(KeyConfig.toggleTarget));
 	}
 	
 	private String getKeyName(int keyCode) {
 		if(keyCode == -1) {
-			return "None";
+			return "irc.gui.none";
 		}
 		return Keyboard.getKeyName(keyCode);
 	}
@@ -120,7 +120,7 @@ public class GuiKeybinds extends GuiScreen {
 		super.drawScreen(par1, par2, par3);
 		if(currentKeyIdx != -1) {
 			drawRect(0, height / 2 - 20, width, height / 2 + 20, Integer.MIN_VALUE);
-			drawCenteredString(fontRenderer, "Press a key or ESC to continue...", width / 2, height / 2 - fontRenderer.FONT_HEIGHT / 2, Globals.TEXT_COLOR);
+			drawCenteredString(fontRenderer, "irc.gui.keybinds.selectKey", width / 2, height / 2 - fontRenderer.FONT_HEIGHT / 2, Globals.TEXT_COLOR);
 		}
 	}
 	

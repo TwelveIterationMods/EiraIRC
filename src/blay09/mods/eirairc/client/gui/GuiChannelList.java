@@ -39,22 +39,22 @@ public class GuiChannelList extends GuiScreen {
 	public void initGui() {
 		guiChannelSlot = new GuiChannelSlot(this);
 		
-		btnJoin = new GuiButton(1, width / 2 - 153, height - 50, 150, 20, "Join");
+		btnJoin = new GuiButton(1, width / 2 - 153, height - 50, 150, 20, Utils.getLocalizedMessage("irc.gui.channelList.join"));
 		btnJoin.enabled = false;
 		buttonList.add(btnJoin);
 		
-		btnAdd = new GuiButton(2, width / 2 + 3, height - 50, 150, 20, "Add Channel");
+		btnAdd = new GuiButton(2, width / 2 + 3, height - 50, 150, 20, Utils.getLocalizedMessage("irc.gui.add", "Channel"));
 		buttonList.add(btnAdd);
 		
-		btnEdit = new GuiButton(3, width / 2 - 126, height - 25, 80, 20, "Edit");
+		btnEdit = new GuiButton(3, width / 2 - 126, height - 25, 80, 20, Utils.getLocalizedMessage("irc.gui.edit"));
 		btnEdit.enabled = false;
 		buttonList.add(btnEdit);
 		
-		btnDelete = new GuiButton(4, width / 2 - 40, height - 25, 80, 20, "Delete");
+		btnDelete = new GuiButton(4, width / 2 - 40, height - 25, 80, 20, Utils.getLocalizedMessage("irc.gui.delete"));
 		btnDelete.enabled = false;
 		buttonList.add(btnDelete);
 		
-		btnBack = new GuiButton(0, width / 2 + 46, height - 25, 80, 20, "Back");
+		btnBack = new GuiButton(0, width / 2 + 46, height - 25, 80, 20, Utils.getLocalizedMessage("irc.gui.back"));
 		buttonList.add(btnBack);
 		
 		selectedElement = -1;
@@ -78,7 +78,7 @@ public class GuiChannelList extends GuiScreen {
 		} else if(button == btnEdit) {
 			onElementClicked(selectedElement);
 		} else if(button == btnDelete) {
-			Minecraft.getMinecraft().displayGuiScreen(new GuiYesNo(this, "Do you really want to remove this channel?", "This will delete it from the config file.", selectedElement));
+			Minecraft.getMinecraft().displayGuiScreen(new GuiYesNo(this, Utils.getLocalizedMessage("irc.gui.reallyRemove", "channel"), Utils.getLocalizedMessage("irc.gui.configDelete"), selectedElement));
 		} else if(button == btnAdd) {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiChannelConfig(parentScreen, parentConfig));
 		}
@@ -102,7 +102,7 @@ public class GuiChannelList extends GuiScreen {
 	@Override
 	public void drawScreen(int par1, int par2, float par3) {
 		guiChannelSlot.drawScreen(par1, par2, par3);
-		drawCenteredString(fontRenderer, "EiraIRC - Channel List", width / 2, 20, Globals.TEXT_COLOR);
+		drawCenteredString(fontRenderer, Utils.getLocalizedMessage("irc.gui.channelList"), width / 2, 20, Globals.TEXT_COLOR);
 		super.drawScreen(par1, par2, par3);
 	}
 
@@ -132,9 +132,9 @@ public class GuiChannelList extends GuiScreen {
 		if(EiraIRC.instance.isConnectedTo(parentConfig.getHost())) {
 			btnJoin.enabled = true;
 			if(EiraIRC.instance.getConnection(parentConfig.getHost()).getChannel(configs[i].getName()) != null) {
-				btnJoin.displayString = "Leave";
+				btnJoin.displayString = Utils.getLocalizedMessage("irc.gui.channelList.leave");
 			} else {
-				btnJoin.displayString = "Join";
+				btnJoin.displayString = Utils.getLocalizedMessage("irc.gui.channelList.join");
 			}
 		}
 	}

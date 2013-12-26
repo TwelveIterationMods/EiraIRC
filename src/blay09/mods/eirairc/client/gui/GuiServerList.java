@@ -36,7 +36,7 @@ public class GuiServerList extends GuiScreen {
 		btnConnect.enabled = false;
 		buttonList.add(btnConnect);
 		
-		btnAdd = new GuiButton(2, width / 2 + 53, height - 50, 100, 20, Utils.getLocalizedMessage("irc.gui.add"));
+		btnAdd = new GuiButton(2, width / 2 + 53, height - 50, 100, 20, Utils.getLocalizedMessage("irc.gui.add", "Server"));
 		buttonList.add(btnAdd);
 		
 		btnEdit = new GuiButton(3, width / 2 - 126, height - 25, 80, 20, Utils.getLocalizedMessage("irc.gui.edit"));

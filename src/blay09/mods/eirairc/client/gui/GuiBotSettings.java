@@ -52,19 +52,19 @@ public class GuiBotSettings extends GuiScreen {
 		btnInterOP = new GuiButton(6, leftX, height / 2 - 15, BUTTON_WIDTH, BUTTON_HEIGHT, "");
 		buttonList.add(btnInterOP);
 		
-		btnBack = new GuiButton(0, width / 2 - 100, height / 2 + 90, 200, 20, "Back");
+		btnBack = new GuiButton(0, width / 2 - 100, height / 2 + 90, 200, 20, Utils.getLocalizedMessage("irc.gui.back"));
 		buttonList.add(btnBack);
 		
 		updateButtonText();
 	}
 	
 	public void updateButtonText() {
-		btnProfile.displayString = "Profile: " + DisplayConfig.botProfile;
-		btnDeathMessages.displayString = "Relay Death Messages: " + (DisplayConfig.relayDeathMessages ? "Yes" : "No");
-		btnMCJoinLeave.displayString = "Relay Minecraft Joins: " + (DisplayConfig.relayMinecraftJoinLeave ? "Yes" : "No");
-		btnIRCJoinLeave.displayString = "Relay IRC Joins: " + (DisplayConfig.relayIRCJoinLeave ? "Yes" : "No");
-		btnNickChanges.displayString = "Relay Nick Changes: " + (DisplayConfig.relayNickChanges ? "Yes" : "No");
-		btnInterOP.displayString = "Enable InterOP: " + (GlobalConfig.interOp ? "Yes" : "No");
+		btnProfile.displayString = Utils.getLocalizedMessage("irc.gui.botSettings.profile", DisplayConfig.botProfile);
+		btnDeathMessages.displayString = Utils.getLocalizedMessage("irc.gui.config.relayDeathMessages", Utils.getLocalizedMessage((DisplayConfig.relayDeathMessages ? "irc.gui.yes" : "irc.gui.no")));
+		btnMCJoinLeave.displayString = Utils.getLocalizedMessage("irc.gui.config.relayMinecraftJoins", Utils.getLocalizedMessage((DisplayConfig.relayMinecraftJoinLeave ? "irc.gui.yes" : "irc.gui.no")));
+		btnIRCJoinLeave.displayString = Utils.getLocalizedMessage("irc.gui.config.relayIRCJoins", Utils.getLocalizedMessage((DisplayConfig.relayIRCJoinLeave ? "irc.gui.yes" : "irc.gui.no")));
+		btnNickChanges.displayString = Utils.getLocalizedMessage("irc.gui.config.relayNickChanges", Utils.getLocalizedMessage((DisplayConfig.relayNickChanges ? "irc.gui.yes" : "irc.gui.no")));
+		btnInterOP.displayString = Utils.getLocalizedMessage("irc.gui.botSettings.interOp", Utils.getLocalizedMessage((GlobalConfig.interOp ? "irc.gui.yes" : "irc.gui.no")));
 	}
 	
 	@Override
@@ -87,7 +87,7 @@ public class GuiBotSettings extends GuiScreen {
 	@Override
 	public void drawScreen(int par1, int par2, float par3) {
 		drawBackground(0);
-		this.drawCenteredString(fontRenderer, "EiraIRC - Bot Settings", width / 2, height / 2 - 110, Globals.TEXT_COLOR);
+		this.drawCenteredString(fontRenderer, Utils.getLocalizedMessage("irc.gui.botSettings"), width / 2, height / 2 - 110, Globals.TEXT_COLOR);
 		super.drawScreen(par1, par2, par3);
 	}
 }

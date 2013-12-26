@@ -14,6 +14,7 @@ import blay09.mods.eirairc.config.ChannelConfig;
 import blay09.mods.eirairc.config.ServerConfig;
 import blay09.mods.eirairc.handler.ConfigurationHandler;
 import blay09.mods.eirairc.util.Globals;
+import blay09.mods.eirairc.util.Utils;
 
 public class GuiChannelConfig extends GuiScreen {
 
@@ -63,34 +64,34 @@ public class GuiChannelConfig extends GuiScreen {
 		txtName = new GuiTextField(fontRenderer, width / 2 - 106, height / 2 - 85, 100, 15);
 		txtChannelPassword = new GuiPasswordTextField(fontRenderer, width / 2 + 6, height / 2 - 85, 100, 15);
 		
-		btnAutoJoin = new GuiButton(3, width / 2 + 3, height / 2 - 65, BUTTON_WIDTH, BUTTON_HEIGHT, "Join on Startup: ???");
+		btnAutoJoin = new GuiButton(3, width / 2 + 3, height / 2 - 65, BUTTON_WIDTH, BUTTON_HEIGHT, "");
 		buttonList.add(btnAutoJoin);
 		
-		btnReadOnly = new GuiButton(4, width / 2 + 3, height / 2 - 40, BUTTON_WIDTH, BUTTON_HEIGHT, "Read-Only: ???");
+		btnReadOnly = new GuiButton(4, width / 2 + 3, height / 2 - 40, BUTTON_WIDTH, BUTTON_HEIGHT, "");
 		buttonList.add(btnReadOnly);
 		
-		btnMuted = new GuiButton(5, width / 2 + 3, height / 2 - 15, BUTTON_WIDTH, BUTTON_HEIGHT, "Muted: ???");
+		btnMuted = new GuiButton(5, width / 2 + 3, height / 2 - 15, BUTTON_WIDTH, BUTTON_HEIGHT, "");
 		buttonList.add(btnMuted);
 		
-		btnRelayMinecraftJoinLeave = new GuiButton(6, width / 2 - BUTTON_WIDTH - 3, height / 2 - 64, BUTTON_WIDTH, BUTTON_HEIGHT, "Relay Minecraft Joins: ???");
+		btnRelayMinecraftJoinLeave = new GuiButton(6, width / 2 - BUTTON_WIDTH - 3, height / 2 - 64, BUTTON_WIDTH, BUTTON_HEIGHT, "");
 		buttonList.add(btnRelayMinecraftJoinLeave);
 		
-		btnRelayIRCJoinLeave = new GuiButton(7, width / 2 - BUTTON_WIDTH - 3, height / 2 - 40, BUTTON_WIDTH, BUTTON_HEIGHT, "Relay IRC Joins: ???");
+		btnRelayIRCJoinLeave = new GuiButton(7, width / 2 - BUTTON_WIDTH - 3, height / 2 - 40, BUTTON_WIDTH, BUTTON_HEIGHT, "");
 		buttonList.add(btnRelayIRCJoinLeave);
 
-		btnRelayDeathMessages = new GuiButton(8, width / 2 - BUTTON_WIDTH - 3, height / 2 - 15, BUTTON_WIDTH, BUTTON_HEIGHT, "Relay Death Messages: ???");
+		btnRelayDeathMessages = new GuiButton(8, width / 2 - BUTTON_WIDTH - 3, height / 2 - 15, BUTTON_WIDTH, BUTTON_HEIGHT, "");
 		buttonList.add(btnRelayDeathMessages);
 
-		btnRelayNickChanges = new GuiButton(9, width / 2 - BUTTON_WIDTH - 3, height / 2 + 10, BUTTON_WIDTH, BUTTON_HEIGHT, "Relay Nick Changes: ???");
+		btnRelayNickChanges = new GuiButton(9, width / 2 - BUTTON_WIDTH - 3, height / 2 + 10, BUTTON_WIDTH, BUTTON_HEIGHT, "");
 		buttonList.add(btnRelayNickChanges);
 		
-		btnAutoWho = new GuiButton(10, width / 2 + 3, height / 2 + 10, BUTTON_WIDTH, BUTTON_HEIGHT, "List users on Startup: ???");
+		btnAutoWho = new GuiButton(10, width / 2 + 3, height / 2 + 10, BUTTON_WIDTH, BUTTON_HEIGHT, "");
 		buttonList.add(btnAutoWho);
 		
-		btnSave = new GuiButton(1, width / 2 + 3, height / 2 + 65, 100, 20, "Save");
+		btnSave = new GuiButton(1, width / 2 + 3, height / 2 + 65, 100, 20, Utils.getLocalizedMessage("irc.gui.save"));
 		buttonList.add(btnSave);
 		
-		btnCancel = new GuiButton(0, width / 2 - 103, height / 2 + 65, 100, 20, "Cancel");
+		btnCancel = new GuiButton(0, width / 2 - 103, height / 2 + 65, 100, 20, Utils.getLocalizedMessage("irc.gui.cancel"));
 		buttonList.add(btnCancel);
 		
 		loadFromConfig();
@@ -110,10 +111,10 @@ public class GuiChannelConfig extends GuiScreen {
 	@Override
 	public void drawScreen(int par1, int par2, float par3) {
 		drawBackground(0);
-		drawCenteredString(fontRenderer, "EiraIRC - Edit Channel", width / 2, height / 2 - 115, Globals.TEXT_COLOR);
-		fontRenderer.drawString("Channel Name:", width / 2 - 106, height / 2 - 100, Globals.TEXT_COLOR);
+		drawCenteredString(fontRenderer, Utils.getLocalizedMessage("irc.gui.editChannel"), width / 2, height / 2 - 115, Globals.TEXT_COLOR);
+		fontRenderer.drawString(Utils.getLocalizedMessage("irc.gui.editChannel.name"), width / 2 - 106, height / 2 - 100, Globals.TEXT_COLOR);
 		txtName.drawTextBox();
-		fontRenderer.drawString("Channel Password:", width / 2 + 6, height / 2 - 100, Globals.TEXT_COLOR);
+		fontRenderer.drawString(Utils.getLocalizedMessage("irc.gui.editChannel.password"), width / 2 + 6, height / 2 - 100, Globals.TEXT_COLOR);
 		txtChannelPassword.drawTextBox();
 		super.drawScreen(par1, par2, par3);
 	}
@@ -147,14 +148,16 @@ public class GuiChannelConfig extends GuiScreen {
 		} else {
 			btnSave.enabled = false;
 		}
-		btnAutoJoin.displayString = "Join on Startup: " + (autoJoin ? "Yes" : "No");
-		btnMuted.displayString = "Muted: " + (muted ? "Yes" : "No");
-		btnReadOnly.displayString = "Read Only: " + (readOnly ? "Yes" : "No");
-		btnRelayMinecraftJoinLeave.displayString = "Relay Minecraft Joins: " + (relayMinecraftJoinLeave ? "Yes" : "No");
-		btnRelayIRCJoinLeave.displayString = "Relay IRC Joins: " + (relayIRCJoinLeave ? "Yes" : "No");
-		btnRelayDeathMessages.displayString = "Relay Death Messages: " + (relayDeathMessages ? "Yes" : "No");
-		btnRelayNickChanges.displayString = "Relay Nick Changes: " + (relayNickChanges ? "Yes" : "No");
-		btnAutoWho.displayString = "List users on Startup: " +  (autoWho ? "Yes" : "No");
+		final String yes = Utils.getLocalizedMessage("irc.gui.yes");
+		final String no = Utils.getLocalizedMessage("irc.gui.no");
+		btnAutoJoin.displayString = Utils.getLocalizedMessage("irc.gui.config.joinStartup", (autoJoin ? yes : no));
+		btnMuted.displayString = Utils.getLocalizedMessage("irc.gui.editChannel.muted", (muted ? yes : no));
+		btnReadOnly.displayString = Utils.getLocalizedMessage("irc.gui.editChannel.readOnly", (readOnly ? yes : no));
+		btnRelayMinecraftJoinLeave.displayString = Utils.getLocalizedMessage("irc.gui.config.relayMinecraftJoins", (relayMinecraftJoinLeave ? yes : no));
+		btnRelayIRCJoinLeave.displayString = Utils.getLocalizedMessage("irc.gui.config.relayIRCJoins", (relayIRCJoinLeave ? yes : no));
+		btnRelayDeathMessages.displayString = Utils.getLocalizedMessage("irc.gui.config.relayDeathMessages", (relayDeathMessages ? yes : no));
+		btnRelayNickChanges.displayString = Utils.getLocalizedMessage("irc.gui.config.relayNickChanges", (relayNickChanges ? yes : no));
+		btnAutoWho.displayString = Utils.getLocalizedMessage("irc.gui.editChannel.autoWho", (autoWho ? yes : no));
 	}
 	
 	@Override
