@@ -27,6 +27,7 @@ public class DisplayConfig {
 	public static boolean relayMinecraftJoinLeave = true;
 	public static boolean relayIRCJoinLeave = true;
 	public static boolean relayNickChanges = true;
+	public static boolean hudRecState = true;
 	
 	public static void load(Configuration config) {
 		displayMode = Utils.unquote(config.get(CATEGORY, "displayMode", displayMode).getString());
@@ -38,6 +39,7 @@ public class DisplayConfig {
 		relayNickChanges = config.get(CATEGORY, "relayNickChanges", relayNickChanges).getBoolean(relayNickChanges);
 		opColor = config.get(CATEGORY, "opColor", opColor).getString();
 		enableNameColors = config.get(CATEGORY, "enableNameColors", enableNameColors).getBoolean(enableNameColors);
+		hudRecState = config.get(CATEGORY, "hudRecState", hudRecState).getBoolean(hudRecState);
 		
 		ConfigCategory displayFormatCategory = config.getCategory(CATEGORY + Configuration.CATEGORY_SPLITTER + ConfigurationHandler.CATEGORY_FORMATS);
 		DisplayFormatConfig.defaultConfig(config, displayFormatCategory);
@@ -59,6 +61,7 @@ public class DisplayConfig {
 		config.get(CATEGORY, "relayNickChanges", relayNickChanges).set(relayNickChanges);
 		config.get(CATEGORY, "opColor", opColor).set(opColor);
 		config.get(CATEGORY, "enableNameColors", enableNameColors).set(enableNameColors);
+		config.get(CATEGORY, "hudRecState", hudRecState).set(hudRecState);
 	}
 	
 	public static void addOptionsToList(List<String> list) {

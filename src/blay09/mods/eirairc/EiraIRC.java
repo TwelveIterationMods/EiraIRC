@@ -73,13 +73,12 @@ public class EiraIRC {
 	
 	@EventHandler
 	public void load(FMLInitializationEvent event) {
-		proxy.setupClient();
-		
 		chatSessionHandler = new ChatSessionHandler();
 		ircEventHandler = new IRCEventHandler();
 		ircConnectionHandler = new IRCConnectionHandler();
 		mcEventHandler = new MCEventHandler();
 		netHandler = new EiraNetHandler();
+		proxy.setupClient();
 		GameRegistry.registerPlayerTracker(mcEventHandler);
 		GameRegistry.registerPlayerTracker(netHandler);
 		NetworkRegistry.instance().registerConnectionHandler(mcEventHandler);

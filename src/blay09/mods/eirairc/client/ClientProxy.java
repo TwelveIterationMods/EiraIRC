@@ -6,27 +6,30 @@ package blay09.mods.eirairc.client;
 import net.minecraft.client.Minecraft;
 import blay09.mods.eirairc.CommonProxy;
 import blay09.mods.eirairc.client.gui.OverlayNotification;
+import blay09.mods.eirairc.client.gui.OverlayRecLive;
 import blay09.mods.eirairc.client.screenshot.ScreenshotManager;
 import blay09.mods.eirairc.config.NotificationConfig;
 import blay09.mods.eirairc.util.NotificationType;
-import cpw.mods.fml.client.registry.KeyBindingRegistry;
 import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
 
 public class ClientProxy extends CommonProxy {
 
 	private OverlayNotification notificationGUI;
+	private OverlayRecLive recLiveGUI;
 	
 	@Override
 	public void setupClient() {
 		TickRegistry.registerTickHandler(new EiraTickHandler(), Side.CLIENT);
 		notificationGUI = new OverlayNotification();
+		recLiveGUI= new OverlayRecLive();
 		ScreenshotManager.create();
 	}
 
 	@Override
 	public void renderTick(float delta) {
 		notificationGUI.updateAndRender(delta);
+		recLiveGUI.updateAndRender(delta);
 	}
 	
 	@Override
@@ -49,7 +52,7 @@ public class ClientProxy extends CommonProxy {
 	
 	@Override
 	public String getUsername() {
-		return Minecraft.getMinecraft().thePlayer.username;
+		return Minecraft.getMinecraft().getSession().getUsername();
 	}
 	
 	@Override

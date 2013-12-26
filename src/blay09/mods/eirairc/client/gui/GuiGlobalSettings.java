@@ -31,6 +31,7 @@ public class GuiGlobalSettings extends GuiScreen {
 	private GuiButton btnPersistentConnections;
 	private GuiButton btnMessageDisplayMode;
 	private GuiButton btnSaveCredentials;
+	private GuiButton btnRecordingHUD;
 	private GuiButton btnBack;
 	
 	private Iterator<DisplayFormatConfig> displayFormatIterator;
@@ -69,6 +70,9 @@ public class GuiGlobalSettings extends GuiScreen {
 		btnSaveCredentials = new GuiButton(9, rightX, height / 2 + 35, BUTTON_WIDTH, BUTTON_HEIGHT, "Save Credentials: ???");
 		buttonList.add(btnSaveCredentials);
 		
+		btnRecordingHUD = new GuiButton(10, leftX, height / 2 + 35, BUTTON_WIDTH, BUTTON_HEIGHT, "Show Recording HUD: ???");
+		buttonList.add(btnRecordingHUD);
+		
 		btnBack = new GuiButton(0, width / 2 - 100, height / 2 + 65, "Back");
 		buttonList.add(btnBack);
 		
@@ -85,6 +89,7 @@ public class GuiGlobalSettings extends GuiScreen {
 		btnLinkFilter.displayString = "Filter Links: " + (GlobalConfig.enableLinkFilter ? "Yes" : "No");
 		btnPersistentConnections.displayString = "Persistent Connections: " + (GlobalConfig.persistentConnection ? "Yes" : "No");
 		btnSaveCredentials.displayString = "Save Credentials: " + (GlobalConfig.saveCredentials ? "Yes" : "No");
+		btnRecordingHUD.displayString = "Show Recording HUD: " + (DisplayConfig.hudRecState ? "Yes" : "No");
 		displayFormatIterator = DisplayConfig.displayFormates.values().iterator();
 		updateMessageDisplayMode();
 	}
@@ -119,6 +124,10 @@ public class GuiGlobalSettings extends GuiScreen {
 		} else if(button == btnSaveCredentials) {
 			GlobalConfig.saveCredentials = !GlobalConfig.saveCredentials;
 			btnSaveCredentials.displayString = "Save Credentials: " + (GlobalConfig.saveCredentials ? "Yes" : "No");
+		} else if(button == btnRecordingHUD) {
+			DisplayConfig.hudRecState = !DisplayConfig.hudRecState;
+			btnRecordingHUD.displayString = "Show Recording HUD: " + (DisplayConfig.hudRecState ? "Yes" : "No");
+			
 		} else if(button == btnMessageDisplayMode) {
 			if(!displayFormatIterator.hasNext()) {
 				displayFormatIterator = DisplayConfig.displayFormates.values().iterator();

@@ -9,6 +9,8 @@ import blay09.mods.eirairc.net.EiraPlayerInfo;
 import blay09.mods.eirairc.util.NotificationType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.server.MinecraftServer;
 import cpw.mods.fml.common.network.Player;
 
 public class PacketRecLiveState extends EiraPacket {
@@ -63,6 +65,10 @@ public class PacketRecLiveState extends EiraPacket {
 		}
 		playerInfo.isLive = liveState;
 		playerInfo.isRecording = recState;
+		Packet packet = createPacket();
+		if(packet != null) {
+			MinecraftServer.getServer().getConfigurationManager().sendPacketToAllPlayers(packet);
+		}
 	}
 
 }
