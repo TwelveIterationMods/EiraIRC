@@ -14,4 +14,8 @@ public class EiraPlayerInfo {
 	public boolean hasMod() {
 		return modVersion != null;
 	}
+
+	public String getUsername() {
+		return username;
+	}
 }
