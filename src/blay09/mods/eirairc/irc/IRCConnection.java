@@ -357,7 +357,7 @@ public class IRCConnection implements Runnable {
 				users.put(nick, user);
 			}
 			String target = cmd[2];
-			int messageIdx = cmd[0].length() + 9 + target.length() + 2;
+			int messageIdx = line.indexOf(":", 1) + 1;
 			String message = line.substring(messageIdx);
 			boolean isEmote = false;
 			if(message.contains("ACTION")) {
