@@ -20,24 +20,23 @@ import java.util.Map.Entry;
 public class DirectUpload extends UploadHoster {
 
 	public static final String API = "http://www.directupload.net/api/upload.php";
+	public static final String BOUNDARY = "---------------------------7d41b838504d8";
 	
 	private static final int BUFFER_SIZE = 1024;
 	
 	@Override
 	public String uploadFile(File file) {
 		try {
-			String boundary = Long.toHexString(System.currentTimeMillis());
-			boundary = "---------------------------7d41b838504d8";
 			URL apiURL = new URL(API);
 			HttpURLConnection con = (HttpURLConnection) apiURL.openConnection();
 			con.setDoOutput(true);
 			con.setRequestMethod("POST");
-			con.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
+			con.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + BOUNDARY);
 			con.setRequestProperty("Connection", "Keep-Alive");
 			con.setRequestProperty("Cache-Control", "no-cache");
 			
 			DataOutputStream out = new DataOutputStream(con.getOutputStream());
-			out.writeBytes("--" + boundary + "\r\n");
+			out.writeBytes("--" + BOUNDARY + "\r\n");
 			out.writeBytes("Content-Disposition: form-data; name=\"file\"; filename=\"" + file.getName() + "\"\r\n");
 			out.writeBytes("\r\n");
 			
@@ -50,7 +49,7 @@ public class DirectUpload extends UploadHoster {
 			fis.close();
 			
 			out.writeBytes("\r\n");
-			out.writeBytes("--" + boundary + "--\r\n");
+			out.writeBytes("--" + BOUNDARY + "--\r\n");
 			
 			out.flush();
 			out.close();

@@ -8,6 +8,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import blay09.mods.eirairc.config.ScreenshotConfig;
 import blay09.mods.eirairc.util.Globals;
+import blay09.mods.eirairc.util.Utils;
 
 public class GuiSettings extends GuiScreen {
 
@@ -31,42 +32,42 @@ public class GuiSettings extends GuiScreen {
 		int leftX = width /  2 - 152;
 		int rightX = width / 2 + 2;
 		
-		btnGlobalSettings = new GuiButton(2, leftX, height / 2 - 90, BUTTON_WIDTH, BUTTON_HEIGHT, "Global Settings");
+		btnGlobalSettings = new GuiButton(2, leftX, height / 2 - 90, BUTTON_WIDTH, BUTTON_HEIGHT, Utils.getLocalizedMessage("irc.gui.settings.global"));
 		buttonList.add(btnGlobalSettings);
 		
-		btnServerList = new GuiButton(3, leftX, height / 2 - 65, BUTTON_WIDTH, BUTTON_HEIGHT, "Server List");
+		btnServerList = new GuiButton(3, leftX, height / 2 - 65, BUTTON_WIDTH, BUTTON_HEIGHT, Utils.getLocalizedMessage("irc.gui.settings.serverList"));
 		buttonList.add(btnServerList);
 		
-		btnFriendIgnore = new GuiButton(4, leftX, height / 2 - 40, BUTTON_WIDTH, BUTTON_HEIGHT, "Friends / Ignore List");
+		btnFriendIgnore = new GuiButton(4, leftX, height / 2 - 40, BUTTON_WIDTH, BUTTON_HEIGHT, Utils.getLocalizedMessage("irc.gui.settings.friendsIgnoreList"));
 		btnFriendIgnore.enabled = false;
 		buttonList.add(btnFriendIgnore);
 		
-		btnTwitch = new GuiButton(5, leftX, height / 2 - 15, BUTTON_WIDTH, BUTTON_HEIGHT, "Twitch Chat");
+		btnTwitch = new GuiButton(5, leftX, height / 2 - 15, BUTTON_WIDTH, BUTTON_HEIGHT, Utils.getLocalizedMessage("irc.gui.settings.twitch"));
 		buttonList.add(btnTwitch);
 		
-		btnScreenshots = new GuiButton(6, leftX, height / 2 + 10, BUTTON_WIDTH, BUTTON_HEIGHT, "Screenshots");
+		btnScreenshots = new GuiButton(6, leftX, height / 2 + 10, BUTTON_WIDTH, BUTTON_HEIGHT, Utils.getLocalizedMessage("irc.gui.settings.screenshot"));
 		if(!ScreenshotConfig.manageScreenshots) {
 			btnScreenshots.enabled = false;
 		}
 		buttonList.add(btnScreenshots);
 		
-		btnDisplaySettings = new GuiButton(7, rightX, height / 2 - 90, BUTTON_WIDTH, BUTTON_HEIGHT, "Display Settings");
+		btnDisplaySettings = new GuiButton(7, rightX, height / 2 - 90, BUTTON_WIDTH, BUTTON_HEIGHT, Utils.getLocalizedMessage("irc.gui.settings.displaySettings"));
 		buttonList.add(btnDisplaySettings);
 		
-		btnBotSettings = new GuiButton(8, rightX, height / 2 - 65, BUTTON_WIDTH, BUTTON_HEIGHT, "Bot Settings");
+		btnBotSettings = new GuiButton(8, rightX, height / 2 - 65, BUTTON_WIDTH, BUTTON_HEIGHT, Utils.getLocalizedMessage("irc.gui.settings.botSettings"));
 		buttonList.add(btnBotSettings);
 		
-		btnNotifications = new GuiButton(9, rightX, height / 2 - 40, BUTTON_WIDTH, BUTTON_HEIGHT, "Notifications");
+		btnNotifications = new GuiButton(9, rightX, height / 2 - 40, BUTTON_WIDTH, BUTTON_HEIGHT, Utils.getLocalizedMessage("irc.gui.settings.notifications"));
 		buttonList.add(btnNotifications);
 		
-		btnKeybinds = new GuiButton(10, rightX, height / 2 - 15, BUTTON_WIDTH, BUTTON_HEIGHT, "Keybinds");
+		btnKeybinds = new GuiButton(10, rightX, height / 2 - 15, BUTTON_WIDTH, BUTTON_HEIGHT, Utils.getLocalizedMessage("irc.gui.settings.keybinds"));
 		buttonList.add(btnKeybinds);
 		
-		btnClientServer = new GuiButton(1, 1, 1, 60, 20, "Client");
+		btnClientServer = new GuiButton(1, 1, 1, 60, 20, Utils.getLocalizedMessage("irc.gui.settings.client"));
 		btnClientServer.enabled = false;
 		buttonList.add(btnClientServer);
 		
-		btnBack = new GuiButton(0, width / 2 - 100, height / 2 + 90, 200, 20, "Back");
+		btnBack = new GuiButton(0, width / 2 - 100, height / 2 + 90, 200, 20, Utils.getLocalizedMessage("irc.gui.back"));
 		buttonList.add(btnBack);
 	}
 	
@@ -96,7 +97,7 @@ public class GuiSettings extends GuiScreen {
 	@Override
 	public void drawScreen(int par1, int par2, float par3) {
 		drawBackground(0);
-		this.drawCenteredString(fontRenderer, "EiraIRC Settings", width / 2, height / 2 - 110, Globals.TEXT_COLOR);
+		this.drawCenteredString(fontRenderer, Utils.getLocalizedMessage("irc.gui.settings"), width / 2, height / 2 - 110, Globals.TEXT_COLOR);
 		super.drawScreen(par1, par2, par3);
 	}
 }

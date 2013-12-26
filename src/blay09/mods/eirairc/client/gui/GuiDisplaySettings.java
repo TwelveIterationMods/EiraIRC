@@ -50,7 +50,7 @@ public class GuiDisplaySettings extends GuiScreen {
 	@Override
 	public void actionPerformed(GuiButton button) {
 		if(button == btnBack) {
-			Minecraft.getMinecraft().displayGuiScreen(null);
+			Minecraft.getMinecraft().displayGuiScreen(new GuiSettings());
 		} else if(button == btnRecordingHUD) {
 			DisplayConfig.hudRecState = !DisplayConfig.hudRecState;
 			updateButtonText();

@@ -6,6 +6,7 @@ package blay09.mods.eirairc;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.server.MinecraftServer;
+import blay09.mods.eirairc.irc.IRCChannel;
 import blay09.mods.eirairc.net.packet.PacketNotification;
 import blay09.mods.eirairc.util.NotificationType;
 
@@ -37,6 +38,9 @@ public class CommonProxy {
 	}
 	
 	public void renderTick(float delta) {
+	}
+
+	public void onChannelJoined(IRCChannel channel) {
 	}
 
 	

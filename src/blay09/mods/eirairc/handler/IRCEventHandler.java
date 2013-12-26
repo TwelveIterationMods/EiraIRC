@@ -176,6 +176,10 @@ public class IRCEventHandler implements IIRCEventHandler {
 				connection.sendPrivateNotice(user, Utils.getLocalizedMessage("irc.bot.noPermission"));
 				return true;
 			}
+			if(message.length() < 4) {
+				connection.sendPrivateNotice(user, "Usage: !op <command>");
+				return true;
+			}
 			String cmd = message.substring(4);
 			String result = MinecraftServer.getServer().executeCommand(cmd);
 			connection.sendPrivateNotice(user, "> " + result);

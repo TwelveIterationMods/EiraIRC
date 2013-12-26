@@ -47,10 +47,10 @@ public class GuiTwitch extends GuiScreen {
 		btnOAuthHelp = new GuiButton(1, width / 2 + 54, height / 2 - 42, 20, 20, "?");
 		buttonList.add(btnOAuthHelp);
 		
-		btnConnectOnStartup = new GuiButton(0, width / 2 - 100, height / 2 - 15, "Connect on Startup: ???");
+		btnConnectOnStartup = new GuiButton(0, width / 2 - 100, height / 2 - 15, "");
 		buttonList.add(btnConnectOnStartup);
 		
-		btnBack = new GuiButton(2, width / 2 - 100, height / 2 + 30, "Back");
+		btnBack = new GuiButton(2, width / 2 - 100, height / 2 + 30, Utils.getLocalizedMessage("irc.gui.back"));
 		buttonList.add(btnBack);
 		
 		loadFromConfig();
@@ -64,7 +64,11 @@ public class GuiTwitch extends GuiScreen {
 	public void loadFromConfig() {
 		txtUsername.setText(config.getNick() != null ? config.getNick() : "");
 		txtPassword.setText(config.getServerPassword() != null ? config.getServerPassword() : "");
-		btnConnectOnStartup.displayString = "Connect on Startup: " + (config.isAutoConnect() ? "Yes" : "No");
+		updateButtonText();
+	}
+	
+	public void updateButtonText() {
+		btnConnectOnStartup.displayString = Utils.getLocalizedMessage("irc.gui.connectStartup", Utils.getLocalizedMessage(config.isAutoConnect() ? "irc.gui.yes" : "irc.gui.no"));
 	}
 	
 	@Override
@@ -87,16 +91,16 @@ public class GuiTwitch extends GuiScreen {
 			Minecraft.getMinecraft().displayGuiScreen(parentScreen);
 		} else if(button == btnConnectOnStartup) {
 			config.setAutoConnect(!config.isAutoConnect());
-			btnConnectOnStartup.displayString = "Connect on Startup: " + (config.isAutoConnect() ? "Yes" : "No");
+			updateButtonText();
 		} else if(button == btnOAuthHelp) {
-			Minecraft.getMinecraft().displayGuiScreen(new GuiConfirmOpenLink(this, "http://twitchapps.com/tmi/", 0, false));
+			Minecraft.getMinecraft().displayGuiScreen(new GuiConfirmOpenLink(this, Globals.TWITCH_OAUTH, 0, false));
 		}
 	}
 	
 	@Override
 	public void confirmClicked(boolean yup, int id) {
 		if(yup) {
-			Utils.openWebpage("http://twitchapps.com/tmi/");
+			Utils.openWebpage(Globals.TWITCH_OAUTH);
 		}
 		Minecraft.getMinecraft().displayGuiScreen(this);
 	}
@@ -131,9 +135,9 @@ public class GuiTwitch extends GuiScreen {
 	@Override
 	public void drawScreen(int par1, int par2, float par3) {
 		drawBackground(0);
-		drawCenteredString(fontRenderer, "EiraIRC - Twitch Settings", width / 2, height / 2 - 115, Globals.TEXT_COLOR);
-		drawCenteredString(fontRenderer, "Twitch Username:", width / 2, height / 2 - 95, Globals.TEXT_COLOR);
-		drawCenteredString(fontRenderer, "OAuth Token:", width / 2, height / 2 - 55, Globals.TEXT_COLOR);
+		drawCenteredString(fontRenderer, Utils.getLocalizedMessage("irc.gui.twitch"), width / 2, height / 2 - 115, Globals.TEXT_COLOR);
+		drawCenteredString(fontRenderer, Utils.getLocalizedMessage("irc.gui.twitch.username"), width / 2, height / 2 - 95, Globals.TEXT_COLOR);
+		drawCenteredString(fontRenderer, Utils.getLocalizedMessage("irc.gui.twitch.oauth"), width / 2, height / 2 - 55, Globals.TEXT_COLOR);
 		txtUsername.drawTextBox();
 		txtPassword.drawTextBox();
 		super.drawScreen(par1, par2, par3);

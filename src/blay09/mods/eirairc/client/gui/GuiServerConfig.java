@@ -3,6 +3,8 @@
 
 package blay09.mods.eirairc.client.gui;
 
+import org.lwjgl.input.Keyboard;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -39,28 +41,34 @@ public class GuiServerConfig extends GuiScreen {
 	
 	@Override
 	public void initGui() {
+		Keyboard.enableRepeatEvents(true);
 		txtHost = new GuiTextField(fontRenderer, width / 2 - 120, height / 2 - 85, 100, 15);
 		txtNick = new GuiTextField(fontRenderer, width / 2 - 120, height / 2 - 45, 100, 15);
 		txtServerPassword = new GuiPasswordTextField(fontRenderer, width / 2 + 5, height / 2 - 85, 100, 15);
 		txtNickServName = new GuiTextField(fontRenderer, width / 2 - 120, height / 2 - 5, 100, 15);
 		txtNickServPassword = new GuiPasswordTextField(fontRenderer, width / 2 - 120, height / 2 + 35, 100, 15);
 		
-		btnPrivateMessages = new GuiButton(2, width / 2 - 10, height / 2 - 65, 130, 20, "Private Messages: ???");
+		btnPrivateMessages = new GuiButton(2, width / 2 - 10, height / 2 - 65, 130, 20, "");
 		buttonList.add(btnPrivateMessages);
 		
-		btnAutoConnect = new GuiButton(3, width / 2 - 10, height / 2 - 40, 130, 20, "Connect on Startup: ???");
+		btnAutoConnect = new GuiButton(3, width / 2 - 10, height / 2 - 40, 130, 20, "");
 		buttonList.add(btnAutoConnect);
 		
-		btnChannels = new GuiButton(4, width / 2 - 10, height / 2 - 15, 130, 20, "Channels");
+		btnChannels = new GuiButton(4, width / 2 - 10, height / 2 - 15, 130, 20, Utils.getLocalizedMessage("irc.gui.serverList.channels"));
 		buttonList.add(btnChannels);
 		
-		btnSave = new GuiButton(1, width / 2 + 3, height / 2 + 65, 100, 20, "Save");
+		btnSave = new GuiButton(1, width / 2 + 3, height / 2 + 65, 100, 20, Utils.getLocalizedMessage("irc.gui.save"));
 		buttonList.add(btnSave);
 		
-		btnCancel = new GuiButton(0, width / 2 - 103, height / 2 + 65, 100, 20, "Cancel");
+		btnCancel = new GuiButton(0, width / 2 - 103, height / 2 + 65, 100, 20, Utils.getLocalizedMessage("irc.gui.cancel"));
 		buttonList.add(btnCancel);
 		
 		loadFromConfig();
+	}
+	
+	@Override
+	public void onGuiClosed() {
+		Keyboard.enableRepeatEvents(false);
 	}
 	
 	@Override
@@ -75,16 +83,16 @@ public class GuiServerConfig extends GuiScreen {
 	@Override
 	public void drawScreen(int par1, int par2, float par3) {
 		drawBackground(0);
-		drawCenteredString(fontRenderer, "EiraIRC - Edit Server", width / 2, height / 2 - 115, Globals.TEXT_COLOR);
-		fontRenderer.drawString("Server Address:", width / 2 - 125, height / 2 - 100, Globals.TEXT_COLOR);
+		drawCenteredString(fontRenderer, Utils.getLocalizedMessage("irc.gui.editServer"), width / 2, height / 2 - 115, Globals.TEXT_COLOR);
+		fontRenderer.drawString(Utils.getLocalizedMessage("irc.gui.editServer.serverAddress"), width / 2 - 125, height / 2 - 100, Globals.TEXT_COLOR);
 		txtHost.drawTextBox();
-		fontRenderer.drawString("Server Password:", width / 2, height / 2 - 100, Globals.TEXT_COLOR);
+		fontRenderer.drawString(Utils.getLocalizedMessage("irc.gui.editServer.serverPassword"), width / 2, height / 2 - 100, Globals.TEXT_COLOR);
 		txtServerPassword.drawTextBox();
-		fontRenderer.drawString("Nick:", width / 2 - 125, height / 2 - 60, Globals.TEXT_COLOR);
+		fontRenderer.drawString(Utils.getLocalizedMessage("irc.gui.editServer.nick"), width / 2 - 125, height / 2 - 60, Globals.TEXT_COLOR);
 		txtNick.drawTextBox();
-		fontRenderer.drawString("NickServ Username:", width / 2 - 125, height / 2 - 20, Globals.TEXT_COLOR);
+		fontRenderer.drawString(Utils.getLocalizedMessage("irc.gui.editServer.nickServUsername"), width / 2 - 125, height / 2 - 20, Globals.TEXT_COLOR);
 		txtNickServName.drawTextBox();
-		fontRenderer.drawString("NickServ Password:", width / 2 - 125, height / 2 + 20, Globals.TEXT_COLOR);
+		fontRenderer.drawString(Utils.getLocalizedMessage("irc.gui.editServer.nickServPassword"), width / 2 - 125, height / 2 + 20, Globals.TEXT_COLOR);
 		txtNickServPassword.drawTextBox();
 		super.drawScreen(par1, par2, par3);
 	}
@@ -134,8 +142,8 @@ public class GuiServerConfig extends GuiScreen {
 			btnSave.enabled = false;
 			btnChannels.enabled = false;
 		}
-		btnPrivateMessages.displayString = "Private Messages: " + (privateMessages ? "Yes" : "No");
-		btnAutoConnect.displayString = "Connect on Startup: " + (autoConnect ? "Yes" : "No");
+		btnPrivateMessages.displayString = Utils.getLocalizedMessage("irc.config.privateMessages", Utils.getLocalizedMessage(privateMessages ? "irc.gui.yet" : "irc.gui.no"));
+		btnAutoConnect.displayString = Utils.getLocalizedMessage("irc.config.connectStartup", Utils.getLocalizedMessage(autoConnect ? "irc.gui.yes" : "irc.gui.no"));
 	}
 	
 	@Override

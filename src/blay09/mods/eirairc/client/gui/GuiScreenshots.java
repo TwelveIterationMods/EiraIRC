@@ -40,7 +40,7 @@ public class GuiScreenshots extends GuiScreen {
 		int leftX = width / 2 - BUTTON_WIDTH - BUTTON_GAP;
 		int rightX = width / 2 + BUTTON_GAP;
 		
-		btnScreenshotList = new GuiButton(1, leftX, height / 2 - 64, BUTTON_WIDTH, BUTTON_HEIGHT, Utils.getLocalizedMessage("irc.gui.screenshotList"));
+		btnScreenshotList = new GuiButton(1, leftX, height / 2 - 64, BUTTON_WIDTH, BUTTON_HEIGHT, Utils.getLocalizedMessage("irc.gui.screenshots.archive"));
 		buttonList.add(btnScreenshotList);
 		
 		btnUploadService = new GuiButton(2, rightX, height / 2 - 64, BUTTON_WIDTH - BUTTON_HEIGHT - CUSTOM_GAP, BUTTON_HEIGHT, "");
@@ -89,7 +89,7 @@ public class GuiScreenshots extends GuiScreen {
 	}
 	
 	public void updateButtonText() {
-		btnUploadService.displayString = "Hoster: " + ScreenshotConfig.uploadHoster;
+		btnUploadService.displayString = Utils.getLocalizedMessage("irc.gui.screenshots.hoster", ScreenshotConfig.uploadHoster);
 		UploadHoster host = UploadHoster.getUploadHoster(ScreenshotConfig.uploadHoster);
 		if(host != null && host.isCustomizable()) {
 			btnCustomUpload.enabled = true;
@@ -98,12 +98,12 @@ public class GuiScreenshots extends GuiScreen {
 		}
 		String autoAction = null;
 		switch(ScreenshotConfig.screenshotAction) {
-			case ScreenshotConfig.VALUE_UPLOAD: autoAction = "Upload"; break;
-			case ScreenshotConfig.VALUE_UPLOADSHARE: autoAction = "Upload & Share"; break;
-			case ScreenshotConfig.VALUE_UPLOADCLIPBOARD: autoAction = "Upload & Clipboard"; break;
-			default: autoAction = "None"; break;
+			case ScreenshotConfig.VALUE_UPLOAD: autoAction = "irc.gui.screenshots.upload"; break;
+			case ScreenshotConfig.VALUE_UPLOADSHARE: autoAction = "irc.gui.screenshots.uploadShare"; break;
+			case ScreenshotConfig.VALUE_UPLOADCLIPBOARD: autoAction = "irc.gui.screenshots.uploadClipboard"; break;
+			default: autoAction = "irc.gui.screenshots.none"; break;
 		}
-		btnScreenshotAction.displayString = "Auto-Action: " + autoAction;
+		btnScreenshotAction.displayString = Utils.getLocalizedMessage("irc.gui.screenshots.autoAction", autoAction);
 	}
 	
 	@Override

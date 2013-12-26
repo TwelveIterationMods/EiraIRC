@@ -186,7 +186,7 @@ public class ScreenshotManager {
 	}
 	
 	public void shareScreenshot(Screenshot screenshot) {
-		String ircMessage = "just uploaded a screenshot: " + screenshot.getUploadURL();
+		String ircMessage = Utils.getLocalizedMessage("irc.display.shareScreenshot", screenshot.getUploadURL());
 		String mcMessage = "/me " + ircMessage;
 		Minecraft.getMinecraft().thePlayer.sendChatMessage(mcMessage);
 		for (IRCConnection connection : EiraIRC.instance.getConnections()) {
@@ -230,7 +230,6 @@ public class ScreenshotManager {
 					handleNewScreenshot(screenshot);
 				}
 				screenshots.add(screenshot);
-				System.out.println("Found new screenshot: " + screenshot.getName());
 			}
 		}
 		Collections.sort(screenshots, comparator);

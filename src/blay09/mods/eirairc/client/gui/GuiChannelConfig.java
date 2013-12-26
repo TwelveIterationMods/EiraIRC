@@ -3,6 +3,8 @@
 
 package blay09.mods.eirairc.client.gui;
 
+import org.lwjgl.input.Keyboard;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -57,6 +59,7 @@ public class GuiChannelConfig extends GuiScreen {
 	
 	@Override
 	public void initGui() {
+		Keyboard.enableRepeatEvents(true);
 		txtName = new GuiTextField(fontRenderer, width / 2 - 106, height / 2 - 85, 100, 15);
 		txtChannelPassword = new GuiPasswordTextField(fontRenderer, width / 2 + 6, height / 2 - 85, 100, 15);
 		
@@ -91,6 +94,11 @@ public class GuiChannelConfig extends GuiScreen {
 		buttonList.add(btnCancel);
 		
 		loadFromConfig();
+	}
+	
+	@Override
+	public void onGuiClosed() {
+		Keyboard.enableRepeatEvents(false);
 	}
 	
 	@Override

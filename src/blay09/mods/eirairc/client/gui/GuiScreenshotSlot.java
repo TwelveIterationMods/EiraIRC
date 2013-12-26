@@ -3,19 +3,16 @@
 
 package blay09.mods.eirairc.client.gui;
 
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiSlot;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.util.EnumChatFormatting;
-import blay09.mods.eirairc.EiraIRC;
+
+import org.lwjgl.opengl.GL11;
+
 import blay09.mods.eirairc.client.screenshot.Screenshot;
 import blay09.mods.eirairc.client.screenshot.ScreenshotThumbnail;
-import blay09.mods.eirairc.config.ChannelConfig;
-import blay09.mods.eirairc.config.ServerConfig;
 import blay09.mods.eirairc.util.Globals;
+import blay09.mods.eirairc.util.Utils;
 
 public class GuiScreenshotSlot extends GuiSlot {
 
@@ -71,9 +68,9 @@ public class GuiScreenshotSlot extends GuiSlot {
 		tess.addVertexWithUV(x, y, 0, 0, 0);
 		tess.draw();
 		parentGui.drawString(parentGui.getFontRenderer(), screenshot.getName(), x + thumbWidth + 6, y + 1, Globals.TEXT_COLOR);
-		String sharedString = "Local";
+		String sharedString = Utils.getLocalizedMessage("irc.gui.screenshots.local");
 		if(screenshot.isUploaded()) {
-			sharedString = "Uploaded";
+			sharedString = Utils.getLocalizedMessage("irc.gui.screenshots.uploaded");
 		}
 		parentGui.drawString(parentGui.getFontRenderer(), sharedString, x + thumbWidth + 8, y + 12, Globals.TEXT_COLOR);
 	}

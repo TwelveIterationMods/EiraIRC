@@ -4,12 +4,18 @@
 package blay09.mods.eirairc.client;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
 import blay09.mods.eirairc.CommonProxy;
 import blay09.mods.eirairc.client.gui.OverlayNotification;
 import blay09.mods.eirairc.client.gui.OverlayRecLive;
 import blay09.mods.eirairc.client.screenshot.ScreenshotManager;
+import blay09.mods.eirairc.config.ChannelConfig;
 import blay09.mods.eirairc.config.NotificationConfig;
+import blay09.mods.eirairc.config.ServerConfig;
+import blay09.mods.eirairc.handler.ConfigurationHandler;
+import blay09.mods.eirairc.irc.IRCChannel;
 import blay09.mods.eirairc.util.NotificationType;
+import blay09.mods.eirairc.util.Utils;
 import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
 
@@ -58,5 +64,18 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public boolean isIngame() {
 		return Minecraft.getMinecraft().theWorld != null;
+	}
+	
+	@Override
+	public void onChannelJoined(IRCChannel channel) {
+		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+		if(channel.hasTopic()) {
+			Utils.sendLocalizedMessage(player, "irc.display.irc.topic", channel.getName(), channel.getTopic());
+		}
+		ServerConfig serverConfig = ConfigurationHandler.getServerConfig(channel.getConnection().getHost());
+		ChannelConfig channelConfig = serverConfig.getChannelConfig(channel);
+		if(channelConfig.isAutoWho()) {
+			Utils.sendUserList(player, channel.getConnection(), channel);
+		}
 	}
 }

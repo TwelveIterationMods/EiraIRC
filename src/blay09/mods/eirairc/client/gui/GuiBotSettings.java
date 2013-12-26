@@ -13,6 +13,7 @@ import blay09.mods.eirairc.config.DisplayFormatConfig;
 import blay09.mods.eirairc.config.GlobalConfig;
 import blay09.mods.eirairc.config.ScreenshotConfig;
 import blay09.mods.eirairc.util.Globals;
+import blay09.mods.eirairc.util.Utils;
 
 public class GuiBotSettings extends GuiScreen {
 
@@ -24,6 +25,7 @@ public class GuiBotSettings extends GuiScreen {
 	private GuiButton btnMCJoinLeave;
 	private GuiButton btnIRCJoinLeave;
 	private GuiButton btnNickChanges;
+	private GuiButton btnInterOP;
 	private GuiButton btnBack;
 	
 	@Override
@@ -47,6 +49,9 @@ public class GuiBotSettings extends GuiScreen {
 		btnIRCJoinLeave = new GuiButton(5, rightX, height / 2 - 40, BUTTON_WIDTH, BUTTON_HEIGHT, "");
 		buttonList.add(btnIRCJoinLeave);
 		
+		btnInterOP = new GuiButton(6, leftX, height / 2 - 15, BUTTON_WIDTH, BUTTON_HEIGHT, "");
+		buttonList.add(btnInterOP);
+		
 		btnBack = new GuiButton(0, width / 2 - 100, height / 2 + 90, 200, 20, "Back");
 		buttonList.add(btnBack);
 		
@@ -59,12 +64,13 @@ public class GuiBotSettings extends GuiScreen {
 		btnMCJoinLeave.displayString = "Relay Minecraft Joins: " + (DisplayConfig.relayMinecraftJoinLeave ? "Yes" : "No");
 		btnIRCJoinLeave.displayString = "Relay IRC Joins: " + (DisplayConfig.relayIRCJoinLeave ? "Yes" : "No");
 		btnNickChanges.displayString = "Relay Nick Changes: " + (DisplayConfig.relayNickChanges ? "Yes" : "No");
+		btnInterOP.displayString = "Enable InterOP: " + (GlobalConfig.interOp ? "Yes" : "No");
 	}
 	
 	@Override
 	public void actionPerformed(GuiButton button) {
 		if(button == btnBack) {
-			Minecraft.getMinecraft().displayGuiScreen(null);
+			Minecraft.getMinecraft().displayGuiScreen(new GuiSettings());
 			return;
 		} else if(button == btnDeathMessages) {
 			DisplayConfig.relayDeathMessages = !DisplayConfig.relayDeathMessages;

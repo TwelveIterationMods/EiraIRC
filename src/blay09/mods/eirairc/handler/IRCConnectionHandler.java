@@ -80,6 +80,9 @@ public class IRCConnectionHandler implements IIRCConnectionHandler {
 			DisplayConfig.originalDisplayMode = DisplayConfig.displayMode;
 			DisplayConfig.displayMode = "Classic";
 		}
+		ServerConfig serverConfig = ConfigurationHandler.getServerConfig(connection.getHost());
+		ChannelConfig channelConfig = serverConfig.getChannelConfig(channel);
+		EiraIRC.proxy.onChannelJoined(channel);
 	}
 
 	@Override

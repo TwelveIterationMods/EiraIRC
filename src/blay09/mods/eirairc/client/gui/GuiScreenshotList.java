@@ -3,10 +3,6 @@
 
 package blay09.mods.eirairc.client.gui;
 
-import java.awt.Toolkit;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
@@ -15,6 +11,7 @@ import net.minecraft.client.gui.GuiYesNo;
 import blay09.mods.eirairc.client.screenshot.Screenshot;
 import blay09.mods.eirairc.client.screenshot.ScreenshotManager;
 import blay09.mods.eirairc.util.Globals;
+import blay09.mods.eirairc.util.Utils;
 
 public class GuiScreenshotList extends GuiScreen {
 
@@ -37,23 +34,23 @@ public class GuiScreenshotList extends GuiScreen {
 	public void initGui() {
 		guiScreenshotSlot = new GuiScreenshotSlot(this);
 		
-		btnUpload = new GuiButton(1, width / 2 - 153, height - 50, 150, 20, "Upload");
+		btnUpload = new GuiButton(1, width / 2 - 153, height - 50, 150, 20, Utils.getLocalizedMessage("irc.gui.screenshots.upload"));
 		btnUpload.enabled = false;
 		buttonList.add(btnUpload);
 		
-		btnClipboard = new GuiButton(2, width / 2 + 3, height - 50, 150, 20, "To Clipboard");
+		btnClipboard = new GuiButton(2, width / 2 + 3, height - 50, 150, 20, Utils.getLocalizedMessage("irc.gui.screenshots.toClipboard"));
 		btnClipboard.enabled = false;
 		buttonList.add(btnClipboard);
 		
-		btnRename = new GuiButton(3, width / 2 - 126, height - 25, 80, 20, "Rename");
+		btnRename = new GuiButton(3, width / 2 - 126, height - 25, 80, 20, Utils.getLocalizedMessage("irc.gui.rename"));
 		btnRename.enabled = false;
 		buttonList.add(btnRename);
 		
-		btnDelete = new GuiButton(4, width / 2 - 40, height - 25, 80, 20, "Delete");
+		btnDelete = new GuiButton(4, width / 2 - 40, height - 25, 80, 20, Utils.getLocalizedMessage("irc.gui.delete"));
 		btnDelete.enabled = false;
 		buttonList.add(btnDelete);
 		
-		btnBack = new GuiButton(0, width / 2 + 46, height - 25, 80, 20, "Back");
+		btnBack = new GuiButton(0, width / 2 + 46, height - 25, 80, 20, Utils.getLocalizedMessage("irc.gui.back"));
 		buttonList.add(btnBack);
 		
 		selectedElement = -1;
@@ -69,7 +66,7 @@ public class GuiScreenshotList extends GuiScreen {
 		} else if(button == btnRename) {
 			onElementClicked(selectedElement);
 		} else if(button == btnDelete) {
-			Minecraft.getMinecraft().displayGuiScreen(new GuiYesNo(this, "Do you really want to delete this screenshot?", "This action can't be undone.", selectedElement));
+			Minecraft.getMinecraft().displayGuiScreen(new GuiYesNo(this, Utils.getLocalizedMessage("irc.gui.reallyRemove", "screenshot"), Utils.getLocalizedMessage("irc.gui.noUndo"), selectedElement));
 		} else if(button == btnClipboard) {
 			this.setClipboardString(screenshots[selectedElement].getUploadURL());
 		}
@@ -86,7 +83,7 @@ public class GuiScreenshotList extends GuiScreen {
 	@Override
 	public void drawScreen(int par1, int par2, float par3) {
 		guiScreenshotSlot.drawScreen(par1, par2, par3);
-		drawCenteredString(fontRenderer, "EiraIRC - Screenshot List", width / 2, 20, Globals.TEXT_COLOR);
+		drawCenteredString(fontRenderer, "irc.gui.screenshotList", width / 2, 20, Globals.TEXT_COLOR);
 		super.drawScreen(par1, par2, par3);
 	}
 

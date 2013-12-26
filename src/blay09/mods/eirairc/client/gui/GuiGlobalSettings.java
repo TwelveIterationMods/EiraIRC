@@ -37,16 +37,16 @@ public class GuiGlobalSettings extends GuiScreen {
 		
 		txtNick = new GuiTextField(fontRenderer, width / 2 - 50, height / 2 - 85, 100, 15);
 		
-		btnPersistentConnections = new GuiButton(5, rightX, height / 2 - 65, BUTTON_WIDTH, BUTTON_HEIGHT, "Persistent Connections: ???");
+		btnPersistentConnections = new GuiButton(1, leftX, height / 2 - 65, BUTTON_WIDTH, BUTTON_HEIGHT, "Persistent Connections: ???");
 		buttonList.add(btnPersistentConnections);
 		
-		btnLinkFilter = new GuiButton(6, rightX, height / 2 - 40, BUTTON_WIDTH, BUTTON_HEIGHT, "Filter Links: ???");
+		btnLinkFilter = new GuiButton(2, leftX, height / 2 - 40, BUTTON_WIDTH, BUTTON_HEIGHT, "Filter Links: ???");
 		buttonList.add(btnLinkFilter);
 		
-		btnPrivateMessages = new GuiButton(7, rightX, height / 2 - 15, BUTTON_WIDTH, BUTTON_HEIGHT, "Allow Private Messages: ???");
+		btnPrivateMessages = new GuiButton(3, rightX, height / 2 - 65, BUTTON_WIDTH, BUTTON_HEIGHT, "Allow Private Messages: ???");
 		buttonList.add(btnPrivateMessages);
 		
-		btnSaveCredentials = new GuiButton(9, rightX, height / 2 + 35, BUTTON_WIDTH, BUTTON_HEIGHT, "Save Credentials: ???");
+		btnSaveCredentials = new GuiButton(4, rightX, height / 2 - 40, BUTTON_WIDTH, BUTTON_HEIGHT, "Save Credentials: ???");
 		buttonList.add(btnSaveCredentials);
 		
 		btnBack = new GuiButton(0, width / 2 - 100, height / 2 + 65, "Back");

@@ -19,6 +19,7 @@ import blay09.mods.eirairc.handler.ConfigurationHandler;
 import blay09.mods.eirairc.irc.IRCChannel;
 import blay09.mods.eirairc.irc.IRCConnection;
 import blay09.mods.eirairc.irc.IRCUser;
+import blay09.mods.eirairc.util.ConfigHelper;
 import blay09.mods.eirairc.util.Globals;
 import blay09.mods.eirairc.util.IRCTargetError;
 import blay09.mods.eirairc.util.Utils;
@@ -203,7 +204,7 @@ public class IRCCommandHandler {
 					if(serverConfig.getNick() == null || serverConfig.getNick().isEmpty()) {
 						IRCConnection connection = EiraIRC.instance.getConnection(serverConfig.getHost());
 						if(connection != null) {
-							connection.nick(nick);
+							connection.nick(ConfigHelper.formatNick(nick));
 						}
 					}
 				}
@@ -507,6 +508,7 @@ public class IRCCommandHandler {
 				}
 				targetChannel.getConnection().mode(targetChannel.getName(), args[3], targetUser.getUsername());
 			}
+			return true;
 		} else if(cmd.equals("topic") || cmd.equals("mode")) {
 			if(args.length <= 2) {
 				throw new WrongUsageException("EiraIRC:irc.commands.interop." + cmd);

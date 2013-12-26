@@ -59,5 +59,9 @@ public class ConfigHelper {
 		}
 		return GlobalConfig.nick;
 	}
+
+	public static String getFormattedNick(ServerConfig serverConfig) {
+		return formatNick(getNick(serverConfig));
+	}
 	
 }

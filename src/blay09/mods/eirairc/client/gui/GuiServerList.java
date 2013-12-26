@@ -32,26 +32,26 @@ public class GuiServerList extends GuiScreen {
 	public void initGui() {
 		guiServerSlot = new GuiServerSlot(this);
 		
-		btnConnect = new GuiButton(1, width / 2 - 153, height - 50, 100, 20, "Connect");
+		btnConnect = new GuiButton(1, width / 2 - 153, height - 50, 100, 20, Utils.getLocalizedMessage("irc.gui.serverList.connect"));
 		btnConnect.enabled = false;
 		buttonList.add(btnConnect);
 		
-		btnAdd = new GuiButton(2, width / 2 + 53, height - 50, 100, 20, "Add Server");
+		btnAdd = new GuiButton(2, width / 2 + 53, height - 50, 100, 20, Utils.getLocalizedMessage("irc.gui.add"));
 		buttonList.add(btnAdd);
 		
-		btnEdit = new GuiButton(3, width / 2 - 126, height - 25, 80, 20, "Edit");
+		btnEdit = new GuiButton(3, width / 2 - 126, height - 25, 80, 20, Utils.getLocalizedMessage("irc.gui.edit"));
 		btnEdit.enabled = false;
 		buttonList.add(btnEdit);
 		
-		btnDelete = new GuiButton(4, width / 2 - 40, height - 25, 80, 20, "Delete");
+		btnDelete = new GuiButton(4, width / 2 - 40, height - 25, 80, 20, Utils.getLocalizedMessage("irc.gui.delete"));
 		btnDelete.enabled = false;
 		buttonList.add(btnDelete);
 		
-		btnChannels = new GuiButton(5, width / 2 - 50, height - 50, 100, 20, "Channels");
+		btnChannels = new GuiButton(5, width / 2 - 50, height - 50, 100, 20, Utils.getLocalizedMessage("irc.gui.serverList.channels"));
 		btnChannels.enabled = false;
 		buttonList.add(btnChannels);
 		
-		btnBack = new GuiButton(0, width / 2 + 46, height - 25, 80, 20, "Back");
+		btnBack = new GuiButton(0, width / 2 + 46, height - 25, 80, 20, Utils.getLocalizedMessage("irc.gui.back"));
 		buttonList.add(btnBack);
 		
 		selectedElement = -1;
@@ -73,7 +73,7 @@ public class GuiServerList extends GuiScreen {
 		} else if(button == btnEdit) {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiServerConfig(configs[selectedElement]));
 		} else if(button == btnDelete) {
-			Minecraft.getMinecraft().displayGuiScreen(new GuiYesNo(this, "Do you really want to remove this server?", "This will delete it from the config file.", selectedElement));
+			Minecraft.getMinecraft().displayGuiScreen(new GuiYesNo(this, Utils.getLocalizedMessage("irc.gui.reallyRemove", "server"), Utils.getLocalizedMessage("irc.gui.configDelete"), selectedElement));
 		} else if(button == btnAdd) {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiServerConfig());
 		} else if(button == btnChannels) {
@@ -99,7 +99,7 @@ public class GuiServerList extends GuiScreen {
 	@Override
 	public void drawScreen(int par1, int par2, float par3) {
 		guiServerSlot.drawScreen(par1, par2, par3);
-		drawCenteredString(fontRenderer, "EiraIRC - Server List", width / 2, 20, Globals.TEXT_COLOR);
+		drawCenteredString(fontRenderer, Utils.getLocalizedMessage("irc.gui.serverList"), width / 2, 20, Globals.TEXT_COLOR);
 		super.drawScreen(par1, par2, par3);
 	}
 
@@ -133,9 +133,9 @@ public class GuiServerList extends GuiScreen {
 		btnDelete.enabled = true;
 		btnChannels.enabled = true;
 		if(EiraIRC.instance.isConnectedTo(configs[i].getHost())) {
-			btnConnect.displayString = "Disconnect";
+			btnConnect.displayString = Utils.getLocalizedMessage("irc.gui.serverList.disconnect");
 		} else {
-			btnConnect.displayString = "Connect";
+			btnConnect.displayString = Utils.getLocalizedMessage("irc.gui.serverList.connect");
 		}
 	}
 	

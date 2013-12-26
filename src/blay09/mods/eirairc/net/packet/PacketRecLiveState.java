@@ -10,6 +10,7 @@ import java.io.IOException;
 import blay09.mods.eirairc.EiraIRC;
 import blay09.mods.eirairc.net.EiraPlayerInfo;
 import blay09.mods.eirairc.util.NotificationType;
+import blay09.mods.eirairc.util.Utils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
@@ -61,10 +62,10 @@ public class PacketRecLiveState extends EiraPacket {
 		}
 		EiraPlayerInfo playerInfo = EiraIRC.instance.getNetHandler().getPlayerInfo(username);
 		if(playerInfo.isLive != liveState) {
-			EiraIRC.proxy.publishNotification(NotificationType.UserLive, username + (liveState ? " is now live." : " has stopped livestreaming."));
+			EiraIRC.proxy.publishNotification(NotificationType.UserLive, liveState ? Utils.getLocalizedMessage("irc.notify.liveTrue", username) : Utils.getLocalizedMessage("irc.notify.liveFalse", username));
 		}
 		if(playerInfo.isRecording != recState) {
-			EiraIRC.proxy.publishNotification(NotificationType.UserRecording, username + (recState ? " is now recording." : " has stopped recording."));
+			EiraIRC.proxy.publishNotification(NotificationType.UserRecording, liveState ? Utils.getLocalizedMessage("irc.notify.recordingTrue", username) : Utils.getLocalizedMessage("irc.notify.recordingFalse", username));
 		}
 		playerInfo.isLive = liveState;
 		playerInfo.isRecording = recState;

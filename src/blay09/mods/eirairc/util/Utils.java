@@ -323,7 +323,7 @@ public class Utils {
 	}
 
 	public static IRCConnection connectTo(ServerConfig config) {
-		IRCConnection connection = new IRCConnection(config.getHost(), IRCConnection.IRC_DEFAULT_PORT, config.getServerPassword(), ConfigHelper.getNick(config));
+		IRCConnection connection = new IRCConnection(config.getHost(), IRCConnection.IRC_DEFAULT_PORT, config.getServerPassword(), ConfigHelper.getFormattedNick(config));
 		connection.setCharset(GlobalConfig.charset);
 		connection.setEventHandler(EiraIRC.instance.getIRCEventHandler());
 		connection.setConnectionHandler(EiraIRC.instance.getIRCConnectionHandler());

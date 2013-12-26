@@ -410,7 +410,7 @@ public class IRCConnection implements Runnable {
 				eventHandler.onUserPart(this, user, channel, quitMessage);
 			}
 		} else if(msg.equals("NICK")) {
-			String newNick = cmd[2].substring(1);
+			String newNick = cmd[2];
 			IRCUser user = users.get(nick);
 			if(user == null) {
 				user = new IRCUser(this, nick);
