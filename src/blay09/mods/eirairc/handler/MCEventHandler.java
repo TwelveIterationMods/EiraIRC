@@ -98,7 +98,7 @@ public class MCEventHandler implements IPlayerTracker, IConnectionHandler {
 					return;
 				}
 				String alias = Utils.getAliasForPlayer((EntityPlayer) event.sender);
-				String mcMessage = (DisplayConfig.emoteColor != null ? "§" + Utils.getColorCode(DisplayConfig.emoteColor) : "") + "* " + alias + " " + emote;
+				String mcMessage = (DisplayConfig.emoteColor != null ? Globals.COLOR_CODE_PREFIX + Utils.getColorCode(DisplayConfig.emoteColor) : "") + "* " + alias + " " + emote;
 				Utils.addMessageToChat(mcMessage);
 				if(!MinecraftServer.getServer().isSinglePlayer()) {
 					String ircMessage = Utils.formatMessage(ConfigHelper.getDisplayFormatConfig().ircChannelEmote, event.sender.getCommandSenderName(), alias, emote);

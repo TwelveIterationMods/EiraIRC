@@ -11,8 +11,8 @@
 	</target>
 
 	<target name="increment_build_number">
-		<propertyfile file="public.properties">
-			<entry key="debug.build.number" type="int" operation="+" default="1" />
+		<propertyfile file="private.properties">
+			<entry key="private.build.number" type="int" operation="+" default="1" />
 		</propertyfile>
 	</target>
 
@@ -60,7 +60,7 @@
 
 		<!-- Build the jar -->
 		<mkdir dir="${private.dir.debug}\${public.release.minecraft.version}\${public.release.mod.version}" />
-		<jar destfile="${private.dir.debug}\${public.release.minecraft.version}\${public.release.mod.version}\EiraIRC-${public.release.mod.version}-${public.debug.build.number}.jar">
+		<jar destfile="${private.dir.debug}\${public.release.minecraft.version}\${public.release.mod.version}\EiraIRC-${public.release.mod.version}-${private.debug.build.number}.jar">
 			<fileset dir="${private.dir.mcp}\src\minecraft\" includes="mcmod.info" />
 			<fileset dir="${private.dir.mcp}\reobf\minecraft" />
 			<fileset dir="${private.dir.development}\resources" />
