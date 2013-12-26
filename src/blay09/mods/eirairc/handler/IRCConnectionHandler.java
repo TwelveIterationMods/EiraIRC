@@ -40,6 +40,9 @@ public class IRCConnectionHandler implements IIRCConnectionHandler {
 	public void onDisconnected(IRCConnection connection) {
 		String mcMessage = Utils.getLocalizedMessage("irc.basic.disconnected", connection.getHost());
 		Utils.addMessageToChat(mcMessage);
+		for(IRCChannel channel : connection.getChannels()) {
+			EiraIRC.instance.getChatSessionHandler().removeTargetChannel(channel);
+		}
 		EiraIRC.instance.removeConnection(connection);
 	}
 	

@@ -34,9 +34,11 @@ public class GuiNotifications extends GuiScreen {
 		int rightX = width / 2 + BUTTON_GAP;
 		
 		btnFriendJoined = new GuiButton(1, leftX, height / 2 - 64, BUTTON_WIDTH, BUTTON_HEIGHT, "");
+		btnFriendJoined.enabled = false;
 		buttonList.add(btnFriendJoined);
 		
 		btnNameMentioned = new GuiButton(2, leftX, height / 2 - 39, BUTTON_WIDTH, BUTTON_HEIGHT, "");
+		btnNameMentioned.enabled = false;
 		buttonList.add(btnNameMentioned);
 		
 		btnUserRecording = new GuiButton(3, leftX, height / 2 - 14, BUTTON_WIDTH, BUTTON_HEIGHT, "");

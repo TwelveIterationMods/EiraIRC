@@ -19,8 +19,8 @@ import blay09.mods.eirairc.util.Utils;
 public class IRCConnection implements Runnable {
 
 	public static final int IRC_DEFAULT_PORT = 6667;
-	public static final String EMOTE_START = "ACTION ";
-	public static final String EMOTE_END = "";
+	public static final String EMOTE_START = "\u0001ACTION ";
+	public static final String EMOTE_END = "\u0001";
 	private static final String DEFAULT_LOGIN = "EiraIRC";
 	private static final String DEFAULT_DESCRIPTION = "EiraIRC Bot";
 	
@@ -360,7 +360,7 @@ public class IRCConnection implements Runnable {
 			int messageIdx = line.indexOf(":", 1) + 1;
 			String message = line.substring(messageIdx);
 			boolean isEmote = false;
-			if(message.contains("ACTION")) {
+			if(message.contains(EMOTE_START)) {
 				message = line.substring(messageIdx + 8, line.length() - 1);
 				isEmote = true;
 			}
