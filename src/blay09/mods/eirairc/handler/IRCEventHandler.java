@@ -89,7 +89,7 @@ public class IRCEventHandler implements IIRCEventHandler {
 			}
 			message = Utils.filterCodes(message);
 			String emoteColor = ConfigHelper.getEmoteColor(serverConfig);
-			String mcMessage = (emoteColor != null ? "§" + Utils.getColorCode(emoteColor) : "") +Utils.formatMessage(ConfigHelper.getDisplayFormatConfig().mcPrivateEmote, connection, user.getIdentifier(), user.getNick(), message);
+			String mcMessage = (emoteColor != null ? Globals.COLOR_CODE_PREFIX + Utils.getColorCode(emoteColor) : "") + Utils.formatMessage(ConfigHelper.getDisplayFormatConfig().mcPrivateEmote, connection, user.getIdentifier(), user.getNick(), message);
 			Utils.addMessageToChat(mcMessage);
 		}
 	}
