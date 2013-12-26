@@ -50,6 +50,9 @@ public class EiraTickHandler implements ITickHandler {
 	}
 	
 	private void handleKeyInput() {
+		if(Minecraft.getMinecraft().currentScreen instanceof GuiKeybinds) {
+			return;
+		}
 		if(isKeyPressed(KeyConfig.openMenu, KeyConfig.IDX_OPENSETTINGS)) {
 			if(Minecraft.getMinecraft().currentScreen == null) {
 				Minecraft.getMinecraft().displayGuiScreen(new GuiSettings());
@@ -74,11 +77,9 @@ public class EiraTickHandler implements ITickHandler {
 			}
 		}
 		if(isKeyPressed(KeyConfig.screenshotShare, KeyConfig.IDX_SCREENSHOTSHARE)) {
-			if(Minecraft.getMinecraft().currentScreen instanceof GuiKeybinds) {
-				Screenshot screenshot = ScreenshotManager.getInstance().takeScreenshot();
-				ScreenshotManager.getInstance().uploadScreenshot(screenshot);
-				ScreenshotManager.getInstance().shareScreenshot(screenshot);
-			}
+			Screenshot screenshot = ScreenshotManager.getInstance().takeScreenshot();
+			ScreenshotManager.getInstance().uploadScreenshot(screenshot);
+			ScreenshotManager.getInstance().shareScreenshot(screenshot);
 		}
 	}
 	
