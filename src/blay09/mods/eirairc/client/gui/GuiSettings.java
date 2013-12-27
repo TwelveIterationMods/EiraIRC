@@ -45,7 +45,7 @@ public class GuiSettings extends GuiScreen {
 		btnTwitch = new GuiButton(5, leftX, height / 2 - 15, BUTTON_WIDTH, BUTTON_HEIGHT, Utils.getLocalizedMessage("irc.gui.settings.twitch"));
 		buttonList.add(btnTwitch);
 		
-		btnScreenshots = new GuiButton(6, leftX, height / 2 + 10, BUTTON_WIDTH, BUTTON_HEIGHT, Utils.getLocalizedMessage("irc.gui.settings.screenshot"));
+		btnScreenshots = new GuiButton(6, leftX, height / 2 + 10, BUTTON_WIDTH, BUTTON_HEIGHT, Utils.getLocalizedMessage("irc.gui.settings.screenshots"));
 		if(!ScreenshotConfig.manageScreenshots) {
 			btnScreenshots.enabled = false;
 		}

@@ -12,7 +12,7 @@
 
 	<target name="increment_build_number">
 		<propertyfile file="private.properties">
-			<entry key="private.build.number" type="int" operation="+" default="1" />
+			<entry key="debug.build.number" type="int" operation="+" default="1" />
 		</propertyfile>
 	</target>
 

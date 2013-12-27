@@ -68,7 +68,7 @@ public class GuiTwitch extends GuiScreen {
 	}
 	
 	public void updateButtonText() {
-		btnConnectOnStartup.displayString = Utils.getLocalizedMessage("irc.gui.connectStartup", Utils.getLocalizedMessage(config.isAutoConnect() ? "irc.gui.yes" : "irc.gui.no"));
+		btnConnectOnStartup.displayString = Utils.getLocalizedMessage("irc.gui.config.connectStartup", Utils.getLocalizedMessage(config.isAutoConnect() ? "irc.gui.yes" : "irc.gui.no"));
 	}
 	
 	@Override

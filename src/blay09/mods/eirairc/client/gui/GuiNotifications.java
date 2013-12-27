@@ -70,10 +70,10 @@ public class GuiNotifications extends GuiScreen {
 	}
 	
 	public void updateButtonText() {
-		btnFriendJoined.displayString = Utils.getLocalizedMessage("irc.gui.friendJoined", getTextForValue(NotificationConfig.friendJoined));
-		btnNameMentioned.displayString = Utils.getLocalizedMessage("irc.gui.nameMentioned", getTextForValue(NotificationConfig.nameMentioned));
-		btnUserRecording.displayString = Utils.getLocalizedMessage("irc.gui.userRecording", getTextForValue(NotificationConfig.userRecording));
-		btnPrivateMessage.displayString = Utils.getLocalizedMessage("irc.gui.privateMessage", getTextForValue(NotificationConfig.privateMessage));
+		btnFriendJoined.displayString = Utils.getLocalizedMessage("irc.gui.notifications.friendJoined", getTextForValue(NotificationConfig.friendJoined));
+		btnNameMentioned.displayString = Utils.getLocalizedMessage("irc.gui.notifications.nameMentioned", getTextForValue(NotificationConfig.nameMentioned));
+		btnUserRecording.displayString = Utils.getLocalizedMessage("irc.gui.notifications.userRecording", getTextForValue(NotificationConfig.userRecording));
+		btnPrivateMessage.displayString = Utils.getLocalizedMessage("irc.gui.notifications.privateMessage", getTextForValue(NotificationConfig.privateMessage));
 	}
 	
 	private int getNextValue(int value) {
@@ -86,9 +86,9 @@ public class GuiNotifications extends GuiScreen {
 	
 	private String getTextForValue(int configValue) {
 		switch(configValue) {
-			case NotificationConfig.VALUE_TEXTONLY: return Utils.getLocalizedMessage("irc.gui.textOnly");
-			case NotificationConfig.VALUE_SOUNDONLY: return Utils.getLocalizedMessage("irc.gui.soundOnly");
-			case NotificationConfig.VALUE_TEXTANDSOUND: return Utils.getLocalizedMessage("irc.gui.textAndSound");
+			case NotificationConfig.VALUE_TEXTONLY: return Utils.getLocalizedMessage("irc.gui.notifications.textOnly");
+			case NotificationConfig.VALUE_SOUNDONLY: return Utils.getLocalizedMessage("irc.gui.notifications.soundOnly");
+			case NotificationConfig.VALUE_TEXTANDSOUND: return Utils.getLocalizedMessage("irc.gui.notifications.textAndSound");
 			default: return Utils.getLocalizedMessage("irc.gui.none");
 		}
 	}

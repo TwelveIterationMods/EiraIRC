@@ -26,7 +26,7 @@ public class KeyConfig {
 	public static int toggleRecording = Keyboard.KEY_F9;
 	public static int toggleLive = -1;
 	public static int toggleTarget = Keyboard.KEY_TAB;
-	public static int openMenu = -1;
+	public static int openMenu = Keyboard.KEY_I;
 	
 	public static void load(Configuration config) {
 		openMenu = config.get(CATEGORY, "keyMenu", openMenu).getInt();

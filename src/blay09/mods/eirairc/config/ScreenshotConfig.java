@@ -26,7 +26,7 @@ public class ScreenshotConfig {
 	public static String uploadHoster = "DirectUpload";
 	
 	public static void load(Configuration config) {
-		manageScreenshots = config.get(CATEGORY, "manageScreenshots", "true").getBoolean(true);
+		manageScreenshots = config.get(CATEGORY, "manageScreenshots", true).getBoolean(true);
 		screenshotAction = config.get(CATEGORY, "screenshotAction", screenshotAction).getInt();
 		config.get(CATEGORY, "screenshotAction", screenshotAction).comment = "0: None / 1: Upload / 2: Upload & Share / 3: Upload & Clipboard";
 		uploadHoster = config.get(CATEGORY, "uploadHoster", uploadHoster).getString();

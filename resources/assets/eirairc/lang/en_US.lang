@@ -25,6 +25,12 @@ EiraIRC:irc.commands.interop.umode=/irc umode <channel> <user> <flags>
 EiraIRC:irc.commands.interop.mode=/irc mode <channel> <flags>
 EiraIRC:irc.commands.interop.topic=/irc topic <channel> <topic>
 
+# Command List
+EiraIRC:irc.cmdlist.general=§eGeneral Commands: §fconfig, help, list
+EiraIRC:irc.cmdlist.irc=§eIRC Commands: §fconnect, disconnect, join, leave, nick, msg, who
+EiraIRC:irc.cmdlist.interop=§eInterOp Commands: §fop, deop, voice, devoice, kick, ban, unban, umode, mode, topic
+EiraIRC:irc.cmdlist.special=§eSpecial Commands: §ftwitch, color, alias
+
 # GUI
 ## General
 EiraIRC:irc.gui.options=Options
@@ -55,6 +61,7 @@ EiraIRC:irc.gui.config.relayNickChanges=Relay Nick Changes: %s
 EiraIRC:irc.gui.editServer=EiraIRC - Edit Server
 EiraIRC:irc.gui.editServer.serverAddress=Server Address:
 EiraIRC:irc.gui.editServer.serverPassword=Server Password:
+EiraIRC:irc.gui.editServer.nick=Nick:
 EiraIRC:irc.gui.editServer.nickServName=NickServ Username:
 EiraIRC:irc.gui.editServer.nickServPassword=NickServ Password:
 ## Settings
@@ -63,7 +70,7 @@ EiraIRC:irc.gui.settings.client=Client
 EiraIRC:irc.gui.settings.server=Server
 EiraIRC:irc.gui.settings.global=Global Settings
 EiraIRC:irc.gui.settings.serverList=Server List
-EiraIRC:irc.gui.settings.friendIgnoreList=Friends / Ignore List
+EiraIRC:irc.gui.settings.friendsIgnoreList=Friends / Ignore List
 EiraIRC:irc.gui.settings.twitch=Twitch Chat
 EiraIRC:irc.gui.settings.screenshots=Screenshots
 EiraIRC:irc.gui.settings.displaySettings=Display Settings
@@ -81,7 +88,6 @@ EiraIRC:irc.gui.screenshots.local=Local
 EiraIRC:irc.gui.screenshots.uploaded=Uploaded
 EiraIRC:irc.gui.screenshots.hoster=Hoster: %s
 EiraIRC:irc.gui.screenshots.autoAction=Auto-Action: %s
-EiraIRC:irc.gui.screenshots.none=None
 EiraIRC:irc.gui.screenshots.upload=Upload
 EiraIRC:irc.gui.screenshots.uploadShare=Upload & Share
 EiraIRC:irc.gui.screenshots.uploadClipboard=Upload & Clipboard
@@ -89,14 +95,13 @@ EiraIRC:irc.gui.screenshots.toClipboard=To Clipboard
 EiraIRC:irc.gui.screenshotList=EiraIRC - Screenshot List
 ## Notification Config
 EiraIRC:irc.gui.notifications=EiraIRC - Notifications
-EiraIRC:irc.gui.none=None
-EiraIRC:irc.gui.textOnly=Text Only
-EiraIRC:irc.gui.soundOnly=Sound Only
-EiraIRC:irc.gui.textAndSound=Text and Sound
-EiraIRC:irc.gui.userRecording=User Recording: %s
-EiraIRC:irc.gui.nameMentioned=Name Mentioned: %s
-EiraIRC:irc.gui.friendJoined=Friend Joined: %s
-EiraIRC:irc.gui.privateMessage=Private Message: %s
+EiraIRC:irc.gui.notifications.textOnly=Text Only
+EiraIRC:irc.gui.notifications.soundOnly=Sound Only
+EiraIRC:irc.gui.notifications.textAndSound=Text and Sound
+EiraIRC:irc.gui.notifications.userRecording=User Recording: %s
+EiraIRC:irc.gui.notifications.nameMentioned=Name Mentioned: %s
+EiraIRC:irc.gui.notifications.friendJoined=Friend Joined: %s
+EiraIRC:irc.gui.notifications.privateMessage=Private Message: %s
 ## Keybinds Config
 EiraIRC:irc.gui.keybinds=EiraIRC - Keybinds
 EiraIRC:irc.gui.keybinds.selectKey=Press a key to continue or ESC to cancel...
@@ -149,13 +154,8 @@ EiraIRC:irc.notify.liveFalse=%s has stopped livestreaming.
 EiraIRC:irc.notify.recordingTrue=%s is now recording.
 EiraIRC:irc.notify.recordingFalse=%s has stopped recording.
 
-# Command List
-EiraIRC:irc.cmdlist.general=§eGeneral Commands: §fconfig, help, list
-EiraIRC:irc.cmdlist.irc=§eIRC Commands: §fconnect, disconnect, join, leave, nick, msg, who
-EiraIRC:irc.cmdlist.special=§eSpecial Commands: §ftwitch, color, alias
-
 # Bot
-EiraIRC:irc.bot.cmdlist=Channel Bot Commands: !who
+EiraIRC:irc.bot.cmdlist=Channel Bot Commands: !who, !op
 EiraIRC:irc.bot.unknownCommand=Unknown command. Type HELP to see a list of all available commands.
 EiraIRC:irc.bot.msgSent=Message sent to %s: %s
 EiraIRC:irc.bot.nickInUse=Nickname %s is already in use. Trying %s

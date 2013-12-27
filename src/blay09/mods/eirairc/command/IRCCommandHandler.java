@@ -643,6 +643,7 @@ public class IRCCommandHandler {
 		Utils.sendLocalizedMessage(sender, "irc.general.usage", Utils.getLocalizedMessage("irc.commands.irc"));
 		Utils.sendLocalizedMessage(sender, "irc.cmdlist.general");
 		Utils.sendLocalizedMessage(sender, "irc.cmdlist.irc");
+		Utils.sendLocalizedMessage(sender, "irc.cmdlist.interop");
 		Utils.sendLocalizedMessage(sender, "irc.cmdlist.special");
 	}
 }

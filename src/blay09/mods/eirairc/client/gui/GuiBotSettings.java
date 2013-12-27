@@ -25,7 +25,7 @@ public class GuiBotSettings extends GuiScreen {
 	private GuiButton btnMCJoinLeave;
 	private GuiButton btnIRCJoinLeave;
 	private GuiButton btnNickChanges;
-	private GuiButton btnInterOP;
+	private GuiButton btnInterOp;
 	private GuiButton btnBack;
 	
 	@Override
@@ -49,8 +49,9 @@ public class GuiBotSettings extends GuiScreen {
 		btnIRCJoinLeave = new GuiButton(5, rightX, height / 2 - 40, BUTTON_WIDTH, BUTTON_HEIGHT, "");
 		buttonList.add(btnIRCJoinLeave);
 		
-		btnInterOP = new GuiButton(6, leftX, height / 2 - 15, BUTTON_WIDTH, BUTTON_HEIGHT, "");
-		buttonList.add(btnInterOP);
+		btnInterOp = new GuiButton(6, leftX, height / 2 - 15, BUTTON_WIDTH, BUTTON_HEIGHT, "");
+		btnInterOp.enabled = false;
+		buttonList.add(btnInterOp);
 		
 		btnBack = new GuiButton(0, width / 2 - 100, height / 2 + 90, 200, 20, Utils.getLocalizedMessage("irc.gui.back"));
 		buttonList.add(btnBack);
@@ -64,7 +65,7 @@ public class GuiBotSettings extends GuiScreen {
 		btnMCJoinLeave.displayString = Utils.getLocalizedMessage("irc.gui.config.relayMinecraftJoins", Utils.getLocalizedMessage((DisplayConfig.relayMinecraftJoinLeave ? "irc.gui.yes" : "irc.gui.no")));
 		btnIRCJoinLeave.displayString = Utils.getLocalizedMessage("irc.gui.config.relayIRCJoins", Utils.getLocalizedMessage((DisplayConfig.relayIRCJoinLeave ? "irc.gui.yes" : "irc.gui.no")));
 		btnNickChanges.displayString = Utils.getLocalizedMessage("irc.gui.config.relayNickChanges", Utils.getLocalizedMessage((DisplayConfig.relayNickChanges ? "irc.gui.yes" : "irc.gui.no")));
-		btnInterOP.displayString = Utils.getLocalizedMessage("irc.gui.botSettings.interOp", Utils.getLocalizedMessage((GlobalConfig.interOp ? "irc.gui.yes" : "irc.gui.no")));
+		btnInterOp.displayString = Utils.getLocalizedMessage("irc.gui.botSettings.interOp", Utils.getLocalizedMessage((GlobalConfig.interOp ? "irc.gui.yes" : "irc.gui.no")));
 	}
 	
 	@Override

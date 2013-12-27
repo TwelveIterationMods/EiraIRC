@@ -108,7 +108,7 @@ public class GuiKeybinds extends GuiScreen {
 	
 	private String getKeyName(int keyCode) {
 		if(keyCode == -1) {
-			return "irc.gui.none";
+			return Utils.getLocalizedMessage("irc.gui.none");
 		}
 		return Keyboard.getKeyName(keyCode);
 	}
@@ -120,7 +120,7 @@ public class GuiKeybinds extends GuiScreen {
 		super.drawScreen(par1, par2, par3);
 		if(currentKeyIdx != -1) {
 			drawRect(0, height / 2 - 20, width, height / 2 + 20, Integer.MIN_VALUE);
-			drawCenteredString(fontRenderer, "irc.gui.keybinds.selectKey", width / 2, height / 2 - fontRenderer.FONT_HEIGHT / 2, Globals.TEXT_COLOR);
+			drawCenteredString(fontRenderer, Utils.getLocalizedMessage("irc.gui.keybinds.selectKey"), width / 2, height / 2 - fontRenderer.FONT_HEIGHT / 2, Globals.TEXT_COLOR);
 		}
 	}
 	

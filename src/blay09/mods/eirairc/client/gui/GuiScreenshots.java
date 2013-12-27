@@ -101,9 +101,9 @@ public class GuiScreenshots extends GuiScreen {
 			case ScreenshotConfig.VALUE_UPLOAD: autoAction = "irc.gui.screenshots.upload"; break;
 			case ScreenshotConfig.VALUE_UPLOADSHARE: autoAction = "irc.gui.screenshots.uploadShare"; break;
 			case ScreenshotConfig.VALUE_UPLOADCLIPBOARD: autoAction = "irc.gui.screenshots.uploadClipboard"; break;
-			default: autoAction = "irc.gui.screenshots.none"; break;
+			default: autoAction = "irc.gui.none"; break;
 		}
-		btnScreenshotAction.displayString = Utils.getLocalizedMessage("irc.gui.screenshots.autoAction", autoAction);
+		btnScreenshotAction.displayString = Utils.getLocalizedMessage("irc.gui.screenshots.autoAction", Utils.getLocalizedMessage(autoAction));
 	}
 	
 	@Override

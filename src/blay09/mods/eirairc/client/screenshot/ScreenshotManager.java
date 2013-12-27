@@ -67,8 +67,8 @@ public class ScreenshotManager {
 	};
 
 	public ScreenshotManager() {
-		managedDir.mkdir();
-		thumbnailDir.mkdir();
+		managedDir.mkdirs();
+		thumbnailDir.mkdirs();
 	}
 
 	public void load() {

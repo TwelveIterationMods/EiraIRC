@@ -90,7 +90,7 @@ public class GuiServerConfig extends GuiScreen {
 		txtServerPassword.drawTextBox();
 		fontRenderer.drawString(Utils.getLocalizedMessage("irc.gui.editServer.nick"), width / 2 - 125, height / 2 - 60, Globals.TEXT_COLOR);
 		txtNick.drawTextBox();
-		fontRenderer.drawString(Utils.getLocalizedMessage("irc.gui.editServer.nickServUsername"), width / 2 - 125, height / 2 - 20, Globals.TEXT_COLOR);
+		fontRenderer.drawString(Utils.getLocalizedMessage("irc.gui.editServer.nickServName"), width / 2 - 125, height / 2 - 20, Globals.TEXT_COLOR);
 		txtNickServName.drawTextBox();
 		fontRenderer.drawString(Utils.getLocalizedMessage("irc.gui.editServer.nickServPassword"), width / 2 - 125, height / 2 + 20, Globals.TEXT_COLOR);
 		txtNickServPassword.drawTextBox();
@@ -142,8 +142,8 @@ public class GuiServerConfig extends GuiScreen {
 			btnSave.enabled = false;
 			btnChannels.enabled = false;
 		}
-		btnPrivateMessages.displayString = Utils.getLocalizedMessage("irc.config.privateMessages", Utils.getLocalizedMessage(privateMessages ? "irc.gui.yet" : "irc.gui.no"));
-		btnAutoConnect.displayString = Utils.getLocalizedMessage("irc.config.connectStartup", Utils.getLocalizedMessage(autoConnect ? "irc.gui.yes" : "irc.gui.no"));
+		btnPrivateMessages.displayString = Utils.getLocalizedMessage("irc.gui.config.privateMessages", Utils.getLocalizedMessage(privateMessages ? "irc.gui.yes" : "irc.gui.no"));
+		btnAutoConnect.displayString = Utils.getLocalizedMessage("irc.gui.config.connectStartup", Utils.getLocalizedMessage(autoConnect ? "irc.gui.yes" : "irc.gui.no"));
 	}
 	
 	@Override
