@@ -7,24 +7,24 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class IRCUser {
+public class IRCUser implements IRCTarget {
 
 	private final IRCConnection connection;
 	private final Map<String, IRCChannel> channels = new HashMap<String, IRCChannel>();
-	private String nick;
+	private String name;
 	private String authLogin;
 	
-	public IRCUser(IRCConnection connection, String nick) {
+	public IRCUser(IRCConnection connection, String name) {
 		this.connection = connection;
-		this.nick = nick;
+		this.name = name;
 	}
 	
-	public void setNick(String nick) {
-		this.nick = nick;
+	public void setName(String name) {
+		this.name = name;
 	}
 	
-	public String getNick() {
-		return nick;
+	public String getName() {
+		return name;
 	}
 
 	public void addChannel(IRCChannel channel) {
@@ -40,12 +40,12 @@ public class IRCUser {
 	}
 
 	public String getIdentifier() {
-		return connection.getHost() + "/" + nick;
+		return connection.getHost() + "/" + name;
 	}
 	
 	public String getUsername() {
 		// TODO return IRC style username
-		return nick;
+		return name;
 	}
 
 	public IRCConnection getConnection() {

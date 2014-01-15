@@ -29,7 +29,7 @@ public class IRCEventHandler implements IIRCEventHandler {
 		if(!DisplayConfig.relayNickChanges) {
 			return;
 		}
-		String mcMessage = Utils.getLocalizedMessage("irc.display.irc.nickChange", connection.getHost(), user.getNick(), nick);
+		String mcMessage = Utils.getLocalizedMessage("irc.display.irc.nickChange", connection.getHost(), user.getName(), nick);
 		Utils.addMessageToChat(mcMessage);
 	}
 
@@ -37,7 +37,7 @@ public class IRCEventHandler implements IIRCEventHandler {
 	public void onUserJoin(IRCConnection connection, IRCUser user, IRCChannel channel) {
 		ChannelConfig channelConfig = Utils.getServerConfig(connection).getChannelConfig(channel);
 		if(DisplayConfig.relayIRCJoinLeave && !channelConfig.isMuted() && channelConfig.relayIRCJoinLeave) {
-			String mcMessage = Utils.getLocalizedMessage("irc.display.irc.joinMsg", channel.getName(), user.getNick());
+			String mcMessage = Utils.getLocalizedMessage("irc.display.irc.joinMsg", channel.getName(), user.getName());
 			Utils.addMessageToChat(mcMessage);
 		}
 		if(channelConfig.isAutoWho()) {
@@ -52,7 +52,7 @@ public class IRCEventHandler implements IIRCEventHandler {
 		}
 		ChannelConfig channelConfig = Utils.getServerConfig(connection).getChannelConfig(channel);
 		if(!channelConfig.isMuted() && channelConfig.relayIRCJoinLeave) {
-			String mcMessage = Utils.getLocalizedMessage("irc.display.irc.partMsg", channel.getName(), user.getNick());
+			String mcMessage = Utils.getLocalizedMessage("irc.display.irc.partMsg", channel.getName(), user.getName());
 			Utils.addMessageToChat(mcMessage);
 		}
 	}
@@ -72,7 +72,7 @@ public class IRCEventHandler implements IIRCEventHandler {
 			}
 		}
 		if(hasFlags) {
-			String mcMessage = Utils.getLocalizedMessage("irc.display.irc.quitMsg", connection.getHost(), user.getNick(), quitMessage);
+			String mcMessage = Utils.getLocalizedMessage("irc.display.irc.quitMsg", connection.getHost(), user.getName(), quitMessage);
 			Utils.addMessageToChat(mcMessage);
 		}
 	}
@@ -89,7 +89,7 @@ public class IRCEventHandler implements IIRCEventHandler {
 			}
 			message = Utils.filterCodes(message);
 			String emoteColor = ConfigHelper.getEmoteColor(serverConfig);
-			String mcMessage = (emoteColor != null ? Globals.COLOR_CODE_PREFIX + Utils.getColorCode(emoteColor) : "") + Utils.formatMessage(ConfigHelper.getDisplayFormatConfig().mcPrivateEmote, connection, user.getIdentifier(), user.getNick(), message);
+			String mcMessage = (emoteColor != null ? Globals.COLOR_CODE_PREFIX + Utils.getColorCode(emoteColor) : "") + Utils.formatMessage(ConfigHelper.getDisplayFormatConfig().mcPrivateEmote, connection, user.getIdentifier(), user.getName(), message);
 			Utils.addMessageToChat(mcMessage);
 		}
 	}
@@ -106,7 +106,7 @@ public class IRCEventHandler implements IIRCEventHandler {
 			return;
 		}
 		if(serverConfig.getHost().equals(Globals.TWITCH_SERVER)) {
-			if(user.getNick().equals("jtv")) {
+			if(user.getName().equals("jtv")) {
 				// Ignore messages from Twitch bot for now
 				return;
 			}
@@ -116,7 +116,7 @@ public class IRCEventHandler implements IIRCEventHandler {
 				message = Utils.filterLinks(message);
 			}
 			message = Utils.filterCodes(message);
-			String mcMessage = Utils.formatMessage(ConfigHelper.getDisplayFormatConfig().mcPrivateMessage, connection, user.getIdentifier(), Utils.getColoredName(user.getNick(), ConfigHelper.getIRCColor(serverConfig)), message);
+			String mcMessage = Utils.formatMessage(ConfigHelper.getDisplayFormatConfig().mcPrivateMessage, connection, user.getIdentifier(), Utils.getColoredName(user.getName(), ConfigHelper.getIRCColor(serverConfig)), message);
 			Utils.addMessageToChat(mcMessage);
 			String notifyMsg = mcMessage;
 			if(notifyMsg.length() > 42) {
@@ -138,7 +138,7 @@ public class IRCEventHandler implements IIRCEventHandler {
 			}
 			message = Utils.filterCodes(message);
 			String emoteColor = ConfigHelper.getEmoteColor(channelConfig);
-			String mcMessage = (emoteColor != null ? "§" + Utils.getColorCode(emoteColor) : "") + Utils.formatMessage(ConfigHelper.getDisplayFormatConfig().mcChannelEmote, connection.getHost(), channel.getName(), user.getIdentifier(), user.getNick(), message);
+			String mcMessage = (emoteColor != null ? "§" + Utils.getColorCode(emoteColor) : "") + Utils.formatMessage(ConfigHelper.getDisplayFormatConfig().mcChannelEmote, connection.getHost(), channel.getName(), user.getIdentifier(), user.getName(), message);
 			Utils.addMessageToChat(mcMessage);
 		}
 	}
@@ -154,7 +154,7 @@ public class IRCEventHandler implements IIRCEventHandler {
 				message = Utils.filterLinks(message);
 			}
 			message = Utils.filterCodes(message);
-			String mcMessage = Utils.formatMessage(ConfigHelper.getDisplayFormatConfig().mcChannelMessage, connection.getHost(), channel.getName(), user.getIdentifier(), Utils.getColoredName(user.getNick(), ConfigHelper.getIRCColor(channelConfig)), message);
+			String mcMessage = Utils.formatMessage(ConfigHelper.getDisplayFormatConfig().mcChannelMessage, connection.getHost(), channel.getName(), user.getIdentifier(), Utils.getColoredName(user.getName(), ConfigHelper.getIRCColor(channelConfig)), message);
 			Utils.addMessageToChat(mcMessage);
 		}
 	}
@@ -265,7 +265,7 @@ public class IRCEventHandler implements IIRCEventHandler {
 		}
 		message = Utils.filterCodes(message);
 		ServerConfig serverConfig = ConfigurationHandler.getServerConfig(connection.getHost());
-		String mcMessage = Utils.formatMessage(ConfigHelper.getDisplayFormatConfig().mcPrivateMessage, connection, user.getIdentifier(), Utils.getColoredName(user.getNick(), ConfigHelper.getIRCColor(serverConfig)), message);
+		String mcMessage = Utils.formatMessage(ConfigHelper.getDisplayFormatConfig().mcPrivateMessage, connection, user.getIdentifier(), Utils.getColoredName(user.getName(), ConfigHelper.getIRCColor(serverConfig)), message);
 		entityPlayer.sendChatToPlayer(Utils.getUnlocalizedChatMessage(mcMessage));
 		String notifyMsg = mcMessage;
 		if(notifyMsg.length() > 42) {

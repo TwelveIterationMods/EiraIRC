@@ -141,7 +141,7 @@ public class MCEventHandler implements IPlayerTracker, IConnectionHandler {
 				IRCUser targetUser = connection.getUser(target[1]);
 				if(targetUser != null) {
 					connection.sendPrivateMessage(targetUser, text);
-					mcMessage = Utils.formatMessage(ConfigHelper.getDisplayFormatConfig().mcSendPrivateMessage, connection.getHost(), targetUser.getNick(), targetUser.getIdentifier(), Utils.getColorAliasForPlayer(sender), text);
+					mcMessage = Utils.formatMessage(ConfigHelper.getDisplayFormatConfig().mcSendPrivateMessage, connection.getHost(), targetUser.getName(), targetUser.getIdentifier(), Utils.getColorAliasForPlayer(sender), text);
 				}
 			}
 			Utils.addMessageToChat(mcMessage);
@@ -174,7 +174,7 @@ public class MCEventHandler implements IPlayerTracker, IConnectionHandler {
 				IRCUser targetUser = connection.getUser(target[1]);
 				if(targetUser != null) {
 					connection.sendPrivateMessage(targetUser, IRCConnection.EMOTE_START + text + IRCConnection.EMOTE_END);
-					mcMessage = emoteColor + Utils.formatMessage(ConfigHelper.getDisplayFormatConfig().mcSendPrivateEmote, connection.getHost(), targetUser.getNick(), targetUser.getIdentifier(), Utils.getAliasForPlayer(sender), text);
+					mcMessage = emoteColor + Utils.formatMessage(ConfigHelper.getDisplayFormatConfig().mcSendPrivateEmote, connection.getHost(), targetUser.getName(), targetUser.getIdentifier(), Utils.getAliasForPlayer(sender), text);
 				}
 			}
 			Utils.addMessageToChat(mcMessage);

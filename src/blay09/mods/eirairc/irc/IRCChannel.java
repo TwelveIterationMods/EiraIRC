@@ -7,7 +7,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class IRCChannel {
+public class IRCChannel implements IRCTarget {
 
 	private IRCConnection connection;
 	private String name;
@@ -28,7 +28,7 @@ public class IRCChannel {
 	}
 	
 	public void addUser(IRCUser user) {
-		users.put(user.getNick(), user);
+		users.put(user.getName(), user);
 	}
 
 	public void removeUser(String nick) {

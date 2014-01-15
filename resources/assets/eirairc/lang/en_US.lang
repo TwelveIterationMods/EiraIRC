@@ -13,6 +13,7 @@ EiraIRC:irc.commands.twitch=/servirc twitch <username> <oauth>
 EiraIRC:irc.commands.nickserv=/servirc nickserv <username> <password>
 EiraIRC:irc.commands.color=/irc color <color>
 EiraIRC:irc.commands.alias=/irc alias <username> <alias> OR /irc alias <alias>
+EiraIRC:irc.commands.ghost=/irc ghost [server] <username>
 ## InterOP
 EiraIRC:irc.commands.interop.op=/irc op <channel> <user>
 EiraIRC:irc.commands.interop.deop=/irc deop <channel> <user>
@@ -173,6 +174,7 @@ EiraIRC:irc.general.notMultiplayer=§cThis is not a multiplayer. Use /irc instea
 EiraIRC:irc.general.serverOnlyCommand=§cThis command only works on the server side. Use the GUI (default: I) or the config file for the client settings.
 EiraIRC:irc.general.usage=§cUsage: %s
 EiraIRC:irc.general.linkRemoved=<link removed>
+EiraIRC:irc.general.notSupported=%s is not supported on this server.
 
 # Basic IRC
 EiraIRC:irc.basic.connecting=Connecting to %s

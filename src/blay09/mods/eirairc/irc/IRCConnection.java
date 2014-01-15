@@ -292,7 +292,7 @@ public class IRCConnection implements Runnable {
 				user = channel.getUser(name);
 				if(user == null) {
 					user = new IRCUser(this, name);
-					users.put(user.getNick(), user);
+					users.put(user.getName(), user);
 					user.addChannel(channel);
 					channel.addUser(user);
 				}
@@ -318,7 +318,7 @@ public class IRCConnection implements Runnable {
 			user = users.get(cmd[3]);
 			if(user == null) {
 				user = new IRCUser(this, cmd[3]);
-				users.put(user.getNick(), user);
+				users.put(user.getName(), user);
 			}
 			user.setAuthLogin(cmd[4]);
 			break;
@@ -416,9 +416,9 @@ public class IRCConnection implements Runnable {
 				user = new IRCUser(this, nick);
 			}
 			eventHandler.onNickChange(this, user, newNick);
-			users.remove(user.getNick());
-			user.setNick(newNick);
-			users.put(user.getNick(), user);
+			users.remove(user.getName());
+			user.setName(newNick);
+			users.put(user.getName(), user);
 		} else if(msg.equals("QUIT")) {
 			int quitMessageIdx = cmd[0].length() + 8;
 			String quitMessage = null;
@@ -449,7 +449,7 @@ public class IRCConnection implements Runnable {
 		if(user == null) {
 			return;
 		}
-		sendPrivateMessage(user.getNick(), message);
+		sendPrivateMessage(user.getName(), message);
 	}
 	
 	public void sendPrivateMessage(String nick, String message) {
@@ -476,7 +476,7 @@ public class IRCConnection implements Runnable {
 	}
 
 	public void sendPrivateNotice(IRCUser user, String message) {
-		sendPrivateNotice(user.getNick(), message);
+		sendPrivateNotice(user.getName(), message);
 	}
 	
 	public void sendPrivateNotice(String nick, String message) {

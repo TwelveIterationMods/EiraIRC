@@ -29,6 +29,7 @@ import blay09.mods.eirairc.config.ServerConfig;
 import blay09.mods.eirairc.handler.ConfigurationHandler;
 import blay09.mods.eirairc.irc.IRCChannel;
 import blay09.mods.eirairc.irc.IRCConnection;
+import blay09.mods.eirairc.irc.IRCTarget;
 import blay09.mods.eirairc.irc.IRCUser;
 
 public class Utils {
@@ -315,7 +316,7 @@ public class Utils {
 	}
 	
 	public static String filterCodes(String message) {
-		return message.replaceAll("\\§", "");
+		return message.replaceAll(Globals.COLOR_CODE_PREFIX, "");
 	}
 
 	public static ServerConfig getServerConfig(IRCConnection connection) {
@@ -343,7 +344,7 @@ public class Utils {
 		if(username == null || username.isEmpty() || password == null || password.isEmpty()) {
 			return;
 		}
-		connection.sendPrivateMessage(settings.getBotName(), settings.getCommand() + " " + username + " " + password);
+		connection.sendPrivateMessage(settings.getBotName(), settings.getIdentifyCommand() + " " + username + " " + password);
 	}
 
 	public static String getQuitMessage(IRCConnection connection) {
@@ -363,14 +364,14 @@ public class Utils {
 		sendLocalizedMessage(sender, "irc.who.usersOnline", connection.getHost(), userList.size(), channel.getName());
 		String s = " * ";
 		for(IRCUser user : userList) {
-			if(s.length() + user.getNick().length() > Globals.CHAT_MAX_LENGTH) {
+			if(s.length() + user.getName().length() > Globals.CHAT_MAX_LENGTH) {
 				sendUnlocalizedMessage(sender, s);
 				s = " * ";
 			}
 			if(s.length() > 3) {
 				s += ", ";
 			}
-			s += user.getNick();
+			s += user.getName();
 		}
 		if(s.length() > 3) {
 			sendUnlocalizedMessage(sender, s);
@@ -406,8 +407,11 @@ public class Utils {
 	}
 	
 	public static IRCConnection getSuggestedConnection() {
-		if(EiraIRC.instance.getChatSessionHandler().getSuggestedChannel() != null) {
-			return EiraIRC.instance.getChatSessionHandler().getSuggestedChannel().getConnection();
+		if(EiraIRC.instance.getChatSessionHandler().getIRCTarget() != null) {
+			IRCTarget activeTarget = EiraIRC.instance.getChatSessionHandler().getIRCTarget();
+			if(activeTarget != null) {
+				return activeTarget.getConnection();
+			}
 		}
 		if(EiraIRC.instance.getConnectionCount() == 1) {
 			return EiraIRC.instance.getDefaultConnection();
@@ -415,9 +419,20 @@ public class Utils {
 		return null;
 	}
 	
+	public static IRCTarget getSuggestedTarget() {
+		IRCTarget result = getSuggestedUser();
+		if(result == null) {
+			return getSuggestedChannel();
+		}
+		return result;
+	}
+	
 	public static IRCChannel getSuggestedChannel() {
-		if(EiraIRC.instance.getChatSessionHandler().getSuggestedChannel() != null) {
-			return EiraIRC.instance.getChatSessionHandler().getSuggestedChannel();
+		if(EiraIRC.instance.getChatSessionHandler().getIRCTarget() != null) {
+			IRCTarget activeTarget = EiraIRC.instance.getChatSessionHandler().getIRCTarget();
+			if(activeTarget instanceof IRCChannel) {
+				return (IRCChannel) activeTarget;
+			}
 		}
 		IRCConnection connection = getSuggestedConnection();
 		if(connection != null) {
@@ -425,6 +440,16 @@ public class Utils {
 				return connection.getDefaultChannel();
 			}
 			return null;
+		}
+		return null;
+	}
+	
+	public static IRCUser getSuggestedUser() {
+		if(EiraIRC.instance.getChatSessionHandler().getIRCTarget() != null) {
+			IRCTarget activeTarget = EiraIRC.instance.getChatSessionHandler().getIRCTarget();
+			if(activeTarget instanceof IRCUser) {
+				return (IRCUser) activeTarget;
+			}
 		}
 		return null;
 	}
