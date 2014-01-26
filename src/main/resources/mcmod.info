@@ -1,0 +1,16 @@
+[
+{
+  "modid": "eirairc",
+  "name": "EiraIRC",
+  "description": "An IRC Connector that works both on clients and servers independently, with some community-friendly extra features.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "http://blay09.net",
+  "updateUrl": "",
+  "authors": ["blay09"],
+  "credits": "Made by blay09, network code by sirgingalot",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]

@@ -1,6 +1,9 @@
-/releases
-/build_number.properties
-/build.properties
-/debug/private.properties
-/private.properties
-/debug
+/bin
+/eclipse
+/forge-1.7.2-10.12.0.1019-changelog.txt
+/MinecraftForge-Credits.txt
+/MinecraftForge-License.txt
+/README.txt
+/CREDITS-fml.txt
+/LICENSE-fml.txt
+/build
