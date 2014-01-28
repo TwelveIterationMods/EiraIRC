@@ -60,7 +60,7 @@
 
 		<!-- Build the jar -->
 		<mkdir dir="${private.dir.debug}\${public.release.minecraft.version}\${public.release.mod.version}" />
-		<jar destfile="${private.dir.debug}\${public.release.minecraft.version}\${public.release.mod.version}\EiraIRC-${build.release.minecraft.version}-${public.release.mod.version}-${private.debug.build.number}.jar">
+		<jar destfile="${private.dir.debug}\${public.release.minecraft.version}\${public.release.mod.version}\EiraIRC-${public.release.minecraft.version}-${public.release.mod.version}-${private.debug.build.number}.jar">
 			<fileset dir="${private.dir.mcp}\src\minecraft\" includes="mcmod.info" />
 			<fileset dir="${private.dir.mcp}\reobf\minecraft" />
 			<fileset dir="${private.dir.development}\resources" />
@@ -85,7 +85,7 @@
 
 		<!-- Build the jar -->
 		<mkdir dir="${private.dir.release}\${public.release.minecraft.version}\${public.release.mod.version}" />
-		<jar destfile="${private.dir.release}\${public.release.minecraft.version}\${public.release.mod.version}\EiraIRC-${build.release.minecraft.version}-${public.release.mod.version}.jar">
+		<jar destfile="${private.dir.release}\${public.release.minecraft.version}\${public.release.mod.version}\EiraIRC-${public.release.minecraft.version}-${public.release.mod.version}.jar">
 			<fileset dir="${private.dir.mcp}\src\minecraft\" includes="mcmod.info" />
 			<fileset dir="${private.dir.mcp}\reobf\minecraft" />
 			<fileset dir="${private.dir.development}\resources" />
