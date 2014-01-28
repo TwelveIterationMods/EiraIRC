@@ -156,13 +156,14 @@ EiraIRC:irc.notify.recordingTrue=%s is now recording.
 EiraIRC:irc.notify.recordingFalse=%s has stopped recording.
 
 # Bot
-EiraIRC:irc.bot.cmdlist=Channel Bot Commands: !who, !op
+EiraIRC:irc.bot.cmdlist=Channel Bot Commands: !who, !auth, !op
 EiraIRC:irc.bot.unknownCommand=Unknown command. Type HELP to see a list of all available commands.
 EiraIRC:irc.bot.msgSent=Message sent to %s: %s
 EiraIRC:irc.bot.nickInUse=Nickname %s is already in use. Trying %s
 EiraIRC:irc.bot.nickInvalid=%s is not a valid nickname.
 EiraIRC:irc.bot.playersOnline=%d players online:
 EiraIRC:irc.bot.noPlayersOnline=No players online.
+EiraIRC:irc.bot.noPermission=You do not have permission to use this command or you are not authenticated with EiraIRC.
 
 # General
 EiraIRC:irc.general.notConnected=§cYou are not connected to %s

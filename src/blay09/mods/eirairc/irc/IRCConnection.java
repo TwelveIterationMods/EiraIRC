@@ -296,7 +296,6 @@ public class IRCConnection implements Runnable {
 					user.addChannel(channel);
 					channel.addUser(user);
 				}
-				whois(name);
 			}
 			connectionHandler.onChannelJoined(this, channel);
 			break;
@@ -305,7 +304,6 @@ public class IRCConnection implements Runnable {
 			connectionHandler.onConnected(this);
 			break;
 		case IRCReplyCodes.RPL_TOPIC:
-			
 			channel = getChannel(cmd[3]);
 			if(channel != null) {
 				int textIdx = line.indexOf(':', 1);
@@ -389,7 +387,6 @@ public class IRCConnection implements Runnable {
 				channel = new IRCChannel(this, cmd[2]);
 				channels.put(cmd[2], channel);
 			}
-			whois(nick);
 			channel.addUser(user);
 			user.addChannel(channel);
 			eventHandler.onUserJoin(this, user, channel);
@@ -435,7 +432,7 @@ public class IRCConnection implements Runnable {
 		return false;
 	}
 
-	private void whois(String nick) {
+	public void whois(String nick) {
 		try {
 			writer.write("WHOIS " + nick + "\r\n");
 			writer.flush();
