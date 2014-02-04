@@ -114,14 +114,6 @@ public class Utils {
 		return "\"" + s + "\"";
 	}
 	
-	public static String getNickFromUser(String user) {
-		int i = user.indexOf("!");
-		if(i == -1) {
-			return user;
-		}
-		return user.substring(0, i);
-	}
-	
 	public static String getAliasForPlayer(EntityPlayer player) {
 		if(!GlobalConfig.enableAliases) {
 			return player.username;
@@ -150,7 +142,7 @@ public class Utils {
 		if(colorCode == INVALID_COLOR) {
 			return name;
 		}
-		return "§" + String.valueOf(colorCode) + name + "§f";
+		return Globals.COLOR_CODE_PREFIX + String.valueOf(colorCode) + name + Globals.COLOR_CODE_PREFIX + "f";
 	}
 	
 	public static String getColorAliasForPlayer(EntityPlayer player) {

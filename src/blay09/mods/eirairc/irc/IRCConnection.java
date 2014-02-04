@@ -270,7 +270,9 @@ public class IRCConnection implements Runnable {
 	private boolean handleMessage(IRCMessage msg) {
 		String nick = "derp";
 		String cmd = msg.getCommand();
-		if(cmd.equals("PRIVMSG")) {
+		if(cmd.equals("PING")) {
+			sendIRC("PONG " + msg.arg(0));
+		} else if(cmd.equals("PRIVMSG")) {
 			IRCUser user = getOrCreateUser(msg.getNick());
 			String target = msg.arg(0);
 			String message = msg.arg(1);
@@ -293,27 +295,27 @@ public class IRCConnection implements Runnable {
 					eventHandler.onPrivateMessage(this, user, message);
 				}
 			}
-		} else if(msg.equals("JOIN")) {
+		} else if(cmd.equals("JOIN")) {
 			IRCUser user = getOrCreateUser(msg.getNick());
 			IRCChannel channel = getOrCreateChannel(msg.arg(0));
 			channel.addUser(user);
 			user.addChannel(channel);
 			eventHandler.onUserJoin(this, user, channel);
-		} else if(msg.equals("PART")) {
+		} else if(cmd.equals("PART")) {
 			IRCUser user = getOrCreateUser(msg.getNick());
 			IRCChannel channel = getChannel(msg.arg(0));
 			if(channel != null) {
 				channel.removeUser(msg.getNick());
 				eventHandler.onUserPart(this, user, channel, msg.arg(1));
 			}
-		} else if(msg.equals("NICK")) {
+		} else if(cmd.equals("NICK")) {
 			String newNick = msg.arg(0);
 			IRCUser user = getOrCreateUser(msg.getNick());
 			eventHandler.onNickChange(this, user, newNick);
 			users.remove(user.getName());
 			user.setName(newNick);
 			users.put(user.getName(), user);
-		} else if(msg.equals("QUIT")) {
+		} else if(cmd.equals("QUIT")) {
 			IRCUser user = getOrCreateUser(nick);
 			eventHandler.onUserQuit(this, user, msg.arg(0));
 		}
