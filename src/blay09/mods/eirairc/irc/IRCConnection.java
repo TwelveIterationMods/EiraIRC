@@ -33,6 +33,7 @@ public class IRCConnection implements Runnable {
 	private String description;
 	private String charset;
 	private boolean connected;
+	private final IRCParser parser = new IRCParser();
 	private IIRCEventHandler eventHandler;
 	private IIRCConnectionHandler connectionHandler;
 	private final Map<String, IRCChannel> channels = new HashMap<String, IRCChannel>();
@@ -92,8 +93,26 @@ public class IRCConnection implements Runnable {
 		return channels.get(channelName);
 	}
 	
+	public IRCChannel getOrCreateChannel(String channelName) {
+		IRCChannel channel = channels.get(channelName);
+		if(channel == null) {
+			channel = new IRCChannel(this, channelName);
+			channels.put(channelName, channel);
+		}
+		return channel;
+	}
+	
 	public IRCUser getUser(String nick) {
 		return users.get(nick);
+	}
+	
+	public IRCUser getOrCreateUser(String nick) {
+		IRCUser user = users.get(nick);
+		if(user == null) {
+			user = new IRCUser(this, nick);
+			users.put(nick, user);
+		}
+		return user;
 	}
 
 	public String getHost() {
@@ -128,19 +147,10 @@ public class IRCConnection implements Runnable {
 			register();
 			String line = null;
 			while((line = reader.readLine()) != null) {
-				String[] cmd = line.split(" ");
-				for(int i = 0; i < cmd.length; i++) {
-					if(cmd[i].startsWith(":")) {
-						cmd[i] = cmd[i].substring(1);
-					}
-				}
-				if(handlePing(line, cmd)) {
+				IRCMessage msg = parser.parse(line);
+				if(handleNumericMessage(msg)) {
 					continue;
-				}
-				if(handleNumericReply(line, cmd)) {
-					continue;
-				}
-				if(handleMessage(line, cmd)) {
+				} else if(handleMessage(msg)) {
 					continue;
 				}
 			}
@@ -222,117 +232,51 @@ public class IRCConnection implements Runnable {
 		sendIRC("TOPIC " + channelName + " :" + topic);
 	}
 	
-	private boolean handlePing(String line, String[] cmd) throws IOException {
-		if(cmd[0].equals("PING")) {
-			writer.write("PONG " + line.substring(5) + "\r\n");
-			writer.flush();
-			return true;
+	private boolean handleNumericMessage(IRCMessage msg) {
+		int numeric = msg.getNumericCommand();
+		if(numeric == -1) {
+			return false;
 		}
-		return false;
-	}
-	
-	private boolean handleNumericReply(String line, String[] cmd) {
-		if(cmd.length > 1) {
-			String nr = cmd[1];
-			try {
-				int replyCode = Integer.parseInt(nr);
-				return handleNumericReply(replyCode, line, cmd);
-			} catch (NumberFormatException e) {
-				return false;
-			}
-		}
-		return false;
-	}
-	
-	private boolean handleNumericReply(int replyCode, String line, String[] cmd) {
-		IRCChannel channel = null;
-		IRCUser user = null;
-		switch(replyCode) {
-		case IRCReplyCodes.RPL_NAMREPLY:
-			channel = getChannel(cmd[4]);
-			
-			String nameList = line.substring(line.lastIndexOf(":") + 1);
-			String[] names = nameList.split(" ");
-			for(int i = 0; i < names.length; i++) {
-				String name = names[i];
-				if(name.startsWith("@")) {
-					// TODO mark user as op for channel
-					name = name.substring(1);
-				} else if(name.startsWith("+")) {
-					// TODO mark user as voiced for channel
+		if(numeric == IRCReplyCodes.RPL_NAMREPLY) {
+			IRCChannel channel = getChannel(msg.arg(2));
+			for(int i = 3; i < msg.argcount() - 1; i++) {
+				String name = msg.arg(i);
+				if(name.startsWith("@") || name.startsWith("+")) {
 					name = name.substring(1);
 				}
-				user = channel.getUser(name);
-				if(user == null) {
-					user = new IRCUser(this, name);
-					users.put(user.getName(), user);
-					user.addChannel(channel);
-					channel.addUser(user);
-				}
+				IRCUser user = getOrCreateUser(name);
+				user.addChannel(channel);
+				channel.addUser(user);
 			}
 			connectionHandler.onChannelJoined(this, channel);
-			break;
-		case IRCReplyCodes.RPL_ENDOFMOTD:
+		} else if(numeric == IRCReplyCodes.RPL_ENDOFMOTD) {
 			connected = true;
 			connectionHandler.onConnected(this);
-			break;
-		case IRCReplyCodes.RPL_TOPIC:
-			channel = getChannel(cmd[3]);
+		} else if(numeric == IRCReplyCodes.RPL_TOPIC) {
+			IRCChannel channel = getChannel(msg.arg(0));
 			if(channel != null) {
-				int textIdx = line.indexOf(':', 1);
-				String topic = line.substring(textIdx + 1);
-				channel.setTopic(topic);
-				eventHandler.onTopicChange(channel, topic);
+				channel.setTopic(msg.arg(1));
+				eventHandler.onTopicChange(channel, channel.getTopic());
 			}
-			break;
-		case IRCReplyCodes.RPL_WHOISLOGIN:
-			user = users.get(cmd[3]);
-			if(user == null) {
-				user = new IRCUser(this, cmd[3]);
-				users.put(user.getName(), user);
-			}
-			user.setAuthLogin(cmd[4]);
-			break;
-		case IRCReplyCodes.ERR_ERRONEUSNICKNAME:
-		case IRCReplyCodes.ERR_NICKNAMEINUSE:
-		case IRCReplyCodes.ERR_NICKCOLLISION:
-		case IRCReplyCodes.ERR_BANNEDFROMCHAN:
-		case IRCReplyCodes.ERR_INVITEONLYCHAN:
-		case IRCReplyCodes.ERR_BADCHANNELKEY:
-		case IRCReplyCodes.ERR_CHANNELISFULL:
-		case IRCReplyCodes.ERR_NOSUCHCHANNEL:
-		case IRCReplyCodes.ERR_BADCHANMASK:
-		case IRCReplyCodes.ERR_TOOMANYCHANNELS:
-		case IRCReplyCodes.ERR_NOTONCHANNEL:
-		case IRCReplyCodes.ERR_ALREADYREGISTRED:
-		case IRCReplyCodes.ERR_NEEDMOREPARAMS:
-		case IRCReplyCodes.ERR_CHANOPRIVSNEEDED:
-		case IRCReplyCodes.ERR_NOSUCHNICK:
-		case IRCReplyCodes.ERR_CANNOTSENDTOCHAN:
-			connectionHandler.onIRCError(this, replyCode, line, cmd);
-			break;
-		default:
-			System.out.println("Unhandled reply code: " + replyCode + " (" + line + ")");
-			break;
+		} else if(numeric == IRCReplyCodes.RPL_WHOISLOGIN) {
+			IRCUser user = getOrCreateUser(msg.arg(0));
+			user.setAuthLogin(msg.arg(1));
+		} else {
+			System.out.println("Unhandled message code: " + msg.getCommand() + " (" + msg.argcount() + " arguments)");
 		}
-		return false;
+		return true;
 	}
 	
-	private boolean handleMessage(String line, String[] cmd) {
-		String nick = Utils.getNickFromUser(cmd[0]);
-		String msg = cmd[1];
-		if(msg.equals("PRIVMSG")) {
-			IRCUser user = users.get(nick);
-			if(user == null) {
-				user = new IRCUser(this, nick);
-				users.put(nick, user);
-			}
-			String target = cmd[2];
-			int messageIdx = line.indexOf(":", 1) + 1;
-			String message = line.substring(messageIdx);
+	private boolean handleMessage(IRCMessage msg) {
+		String nick = "derp";
+		String cmd = msg.getCommand();
+		if(cmd.equals("PRIVMSG")) {
+			IRCUser user = getOrCreateUser(msg.getNick());
+			String target = msg.arg(0);
+			String message = msg.arg(1);
 			boolean isEmote = false;
-			if(message.contains(EMOTE_START)) {
-				message = line.substring(messageIdx + 8, line.length() - 1);
+			if(message.startsWith(EMOTE_START)) {
+				message = message.substring(EMOTE_START.length(), message.length() - EMOTE_END.length());
 				isEmote = true;
 			}
 			if(target.startsWith("#")) {
@@ -350,57 +294,28 @@ public class IRCConnection implements Runnable {
 				}
 			}
 		} else if(msg.equals("JOIN")) {
-			IRCUser user = users.get(nick);
-			if(user == null) {
-				user = new IRCUser(this, nick);
-				users.put(nick, user);
-			}
-			IRCChannel channel = getChannel(cmd[2]);
-			if(channel == null) {
-				channel = new IRCChannel(this, cmd[2]);
-				channels.put(cmd[2], channel);
-			}
+			IRCUser user = getOrCreateUser(msg.getNick());
+			IRCChannel channel = getOrCreateChannel(msg.arg(0));
 			channel.addUser(user);
 			user.addChannel(channel);
 			eventHandler.onUserJoin(this, user, channel);
 		} else if(msg.equals("PART")) {
-			IRCUser user = users.get(nick);
-			if(user == null) {
-				user = new IRCUser(this, nick);
-				users.put(nick, user);
-			}
-			IRCChannel channel = getChannel(cmd[2]);
+			IRCUser user = getOrCreateUser(msg.getNick());
+			IRCChannel channel = getChannel(msg.arg(0));
 			if(channel != null) {
-				channel.removeUser(nick);
-				int quitMessageIdx = cmd[0].length() + 6 + cmd[2].length() + 2;
-				String quitMessage = null;
-				if(line.length() >= quitMessageIdx) {
-					quitMessage = line.substring(quitMessageIdx);
-				}
-				eventHandler.onUserPart(this, user, channel, quitMessage);
+				channel.removeUser(msg.getNick());
+				eventHandler.onUserPart(this, user, channel, msg.arg(1));
 			}
 		} else if(msg.equals("NICK")) {
-			String newNick = cmd[2];
-			IRCUser user = users.get(nick);
-			if(user == null) {
-				user = new IRCUser(this, nick);
-			}
+			String newNick = msg.arg(0);
+			IRCUser user = getOrCreateUser(msg.getNick());
 			eventHandler.onNickChange(this, user, newNick);
 			users.remove(user.getName());
 			user.setName(newNick);
 			users.put(user.getName(), user);
 		} else if(msg.equals("QUIT")) {
-			int quitMessageIdx = cmd[0].length() + 8;
-			String quitMessage = null;
-			if(line.length() >= quitMessageIdx) {
-				quitMessage = line.substring(cmd[0].length() + 7);
-			}
-			IRCUser user = users.get(nick);
-			if(user == null) {
-				user = new IRCUser(this, nick);
-				users.put(nick, user);
-			}
-			eventHandler.onUserQuit(this, user, quitMessage);
+			IRCUser user = getOrCreateUser(nick);
+			eventHandler.onUserQuit(this, user, msg.arg(0));
 		}
 		return false;
 	}
