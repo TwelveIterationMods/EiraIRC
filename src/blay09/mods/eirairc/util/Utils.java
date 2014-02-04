@@ -344,7 +344,7 @@ public class Utils {
 		if(username == null || username.isEmpty() || password == null || password.isEmpty()) {
 			return;
 		}
-		connection.sendPrivateMessage(settings.getBotName(), settings.getIdentifyCommand() + " " + username + " " + password);
+		connection.sendMessage(settings.getBotName(), settings.getIdentifyCommand() + " " + username + " " + password);
 	}
 
 	public static String getQuitMessage(IRCConnection connection) {

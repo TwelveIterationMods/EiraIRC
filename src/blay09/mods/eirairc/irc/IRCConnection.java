@@ -23,6 +23,7 @@ public class IRCConnection implements Runnable {
 	public static final String EMOTE_END = "\u0001";
 	private static final String DEFAULT_LOGIN = "EiraIRC";
 	private static final String DEFAULT_DESCRIPTION = "EiraIRC Bot";
+	private static final String LINE_FEED = "\r\n";
 	
 	private final int port;
 	private final String host;
@@ -186,67 +187,39 @@ public class IRCConnection implements Runnable {
 	}
 	
 	public void nick(String nick) {
-		try {
-			writer.write("NICK " + nick + "\r\n");
-			writer.flush();
+		if(sendIRC("NICK " + nick)) {
 			this.nick = nick;
-		} catch (IOException e) {
-			e.printStackTrace();
-			tryReconnect();
 		}
 	}
 	
 	public void join(String channelName, String channelKey) {
-		try {
-			writer.write("JOIN " + channelName + " " + channelKey + "\r\n");
-			writer.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-			tryReconnect();
-		}
+		sendIRC("JOIN " + channelName + (channelKey != null ? (" " + channelKey) : ""));
 	}
 	
 	public void part(String channelName) {
-		try {
-			writer.write("PART " + channelName + "\r\n");
-			writer.flush();
+		if(sendIRC("PART " + channelName)) {
 			IRCChannel channel = getChannel(channelName);
 			if(channel != null) {
 				connectionHandler.onChannelLeft(this, channel);
 			}
 			channels.remove(channelName);
-		} catch (IOException e) {
-			e.printStackTrace();
-			tryReconnect();
 		}
 	}
 	
 	public void mode(String targetName, String flags) {
-		mode(targetName, flags, null);
+		sendIRC("MODE " + targetName + " " + flags);
 	}
 	
 	public void mode(String targetName, String flags, String nick) {
-		try {
-			writer.write("MODE " + targetName + " " + flags + (nick != null ? " " + nick : "") + "\r\n");
-			writer.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-			tryReconnect();
-		}
+		sendIRC("MODE " + targetName + " " + flags + " " + nick);
 	}
 	
 	public void topic(String channelName) {
-		topic(channelName, null);
+		sendIRC("TOPIC " + channelName);
 	}
 	
 	public void topic(String channelName, String topic) {
-		try {
-			writer.write("TOPIC " + channelName + (topic != null ? " :" + topic : "") + "\r\n");
-			writer.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-			tryReconnect();
-		}
+		sendIRC("TOPIC " + channelName + " :" + topic);
 	}
 	
 	private boolean handlePing(String line, String[] cmd) throws IOException {
@@ -433,76 +406,51 @@ public class IRCConnection implements Runnable {
 	}
 
 	public void whois(String nick) {
-		try {
-			writer.write("WHOIS " + nick + "\r\n");
-			writer.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-			tryReconnect();
-		}
+		sendIRC("WHOIS " + nick);
+	}
+	
+	public void sendMessage(String target, String message) {
+		sendIRC("PRIVMSG " + target + " :" + message);
 	}
 
 	public void sendPrivateMessage(IRCUser user, String message) {
-		if(user == null) {
-			return;
-		}
-		sendPrivateMessage(user.getName(), message);
-	}
-	
-	public void sendPrivateMessage(String nick, String message) {
-		try {
-			writer.write("PRIVMSG " + nick + " :" + message + "\r\n");
-			writer.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-			tryReconnect();
+		if(user != null) {
+			sendMessage(user.getName(), message);
 		}
 	}
 
 	public void sendChannelMessage(IRCChannel channel, String message) {
-		if(channel == null) {
-			return;
-		}
-		try {
-			writer.write("PRIVMSG " + channel.getName() + " :" + message + "\r\n");
-			writer.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-			tryReconnect();
+		if(channel != null) {
+			sendMessage(channel.getName(), message);
 		}
 	}
 
-	public void sendPrivateNotice(IRCUser user, String message) {
-		sendPrivateNotice(user.getName(), message);
+	public void sendNotice(String target, String message) {
+		sendIRC("NOTICE " + target + " :" + message);
 	}
 	
-	public void sendPrivateNotice(String nick, String message) {
-		try {
-			writer.write("NOTICE " + nick + " :" + message + "\r\n");
-			writer.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-			tryReconnect();
-		}
+	public void sendPrivateNotice(IRCUser user, String message) {
+		sendNotice(user.getName(), message);
 	}
 	
 	public void sendChannelNotice(IRCChannel channel, String message) {
-		try {
-			writer.write("NOTICE " + channel.getName() + " :" + message + "\r\n");
-			writer.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-			tryReconnect();
-		}
+		sendNotice(channel.getName(), message);
 	}
 
 	public void kick(String channelName, String nick, String reason) {
+		sendIRC("KICK " + channelName + " " + nick + (reason != null ? (" :" + reason) : ""));
+	}
+	
+	public boolean sendIRC(String message) {
 		try {
-			writer.write("KICK " + channelName + " " + nick + (reason != null ? " :" + reason : "") + "\r\n");
+			writer.write(message);
+			writer.write(LINE_FEED);
 			writer.flush();
+			return true;
 		} catch (IOException e) {
 			e.printStackTrace();
 			tryReconnect();
+			return false;
 		}
 	}
 
