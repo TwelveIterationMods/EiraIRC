@@ -8,6 +8,7 @@ import java.util.List;
 
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.config.ChannelConfig;
+import net.blay09.mods.eirairc.config.DisplayConfig;
 import net.blay09.mods.eirairc.config.GlobalConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
@@ -24,6 +25,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumChatFormatting;
 
 public class IRCCommandHandler {
@@ -55,7 +59,7 @@ public class IRCCommandHandler {
 				return true;
 			}
 			if(args.length <= 1) {
-				throw new WrongUsageException("EiraIRC:irc.commands.connect", commandName);
+				throw new WrongUsageException(Globals.MOD_ID + ":irc.commands.connect", commandName);
 			}
 			String host = args[1];
 			if(EiraIRC.instance.isConnectedTo(host)) {
@@ -96,7 +100,7 @@ public class IRCCommandHandler {
 					return true;
 				}
 				if(args.length <= 2 && !ConfigurationHandler.hasServerConfig(Globals.TWITCH_SERVER)) {
-					throw new WrongUsageException("EiraIRC:irc.commands.twitch", commandName);
+					throw new WrongUsageException(Globals.MOD_ID + ":irc.commands.twitch", commandName);
 				}
 				ServerConfig serverConfig = ConfigurationHandler.getServerConfig(Globals.TWITCH_SERVER);
 				if(args.length > 2) {
@@ -128,7 +132,7 @@ public class IRCCommandHandler {
 				return true;
 			} else {
 				if(args.length <= 2) {
-					throw new WrongUsageException("EiraIRC:irc.commands.nickserv", commandName);
+					throw new WrongUsageException(Globals.MOD_ID + ":irc.commands.nickserv", commandName);
 				}
 				IRCConnection connection = null;
 				String username = null;
@@ -136,7 +140,7 @@ public class IRCCommandHandler {
 				if(args.length <= 3) {
 					if(EiraIRC.instance.getConnectionCount() > 1) {
 						Utils.sendLocalizedMessage(sender, "irc.specifyServer");
-						throw new WrongUsageException("EiraIRC:irc.commands.nickserv", commandName);
+						throw new WrongUsageException(Globals.MOD_ID + ":irc.commands.nickserv", commandName);
 					} else {
 						connection = EiraIRC.instance.getDefaultConnection();
 						if(connection == null) {
@@ -196,7 +200,7 @@ public class IRCCommandHandler {
 				return true;
 			}
 			if(args.length <= 1) {
-				throw new WrongUsageException("EiraIRC:irc.commands.nick", commandName);
+				throw new WrongUsageException(Globals.MOD_ID + ":irc.commands.nick", commandName);
 			}
 			if(args.length <= 2) {
 				String nick = args[1];
@@ -240,7 +244,7 @@ public class IRCCommandHandler {
 				return true;
 			}
 			if(args.length <= 1) {
-				throw new WrongUsageException("EiraIRC:irc.commands.join", commandName);
+				throw new WrongUsageException(Globals.MOD_ID + ":irc.commands.join", commandName);
 			}
 			Object target = Utils.resolveIRCTarget(args[1], false, true, true, false, false, false);
 			if(target instanceof IRCTargetError) {
@@ -272,7 +276,7 @@ public class IRCCommandHandler {
 				return true;
 			}
 			if(args.length <= 1) {
-				throw new WrongUsageException("EiraIRC:irc.commands.who", commandName);
+				throw new WrongUsageException(Globals.MOD_ID + ":irc.commands.who", commandName);
 			}
 			Object target = Utils.resolveIRCTarget(args[1], false, false, true, true, false, false);
 			if(target instanceof IRCTargetError) {
@@ -344,7 +348,7 @@ public class IRCCommandHandler {
 				return true;
 			}
 			if(args.length <= 2) {
-				throw new WrongUsageException("EiraIRC:irc.commands.msg", commandName);
+				throw new WrongUsageException(Globals.MOD_ID + ":irc.commands.msg", commandName);
 			}
 			Object target = Utils.resolveIRCTarget(args[1], false, false, false, false, true, serverSide);
 			if(target instanceof IRCTargetError) {
@@ -371,7 +375,7 @@ public class IRCCommandHandler {
 			}
 			message = message.trim();
 			if(message.isEmpty()) {
-				throw new WrongUsageException("EiraIRC:irc.commands.msg", commandName);
+				throw new WrongUsageException(Globals.MOD_ID + ":irc.commands.msg", commandName);
 			}
 			targetUser.getConnection().sendPrivateMessage(targetUser, "<" + Utils.getAliasForPlayer((EntityPlayer) sender) + "> " + message);
 			String mcMessage = "[-> " + targetUser.getName() + "] <" + Utils.getColorAliasForPlayer((EntityPlayer) sender) + "> " + message;
@@ -379,7 +383,7 @@ public class IRCCommandHandler {
 			return true;
 		} else if(cmd.equals("config")) { // [serv]irc config global|<host> <option> [value]
 			if(args.length <= 2) {
-				throw new WrongUsageException("EiraIRC:irc.commands.config", commandName);
+				throw new WrongUsageException(Globals.MOD_ID + ":irc.commands.config", commandName);
 			}
 			String target = args[1];
 			String config = args[2];
@@ -446,7 +450,7 @@ public class IRCCommandHandler {
 			return true;
 		} else if(cmd.equals("op") || cmd.equals("deop") || cmd.equals("voice") || cmd.equals("devoice") || cmd.equals("kick") || cmd.equals("ban") || cmd.equals("unban") || cmd.equals("umode")) {
 			if(args.length <= 2) {
-				throw new WrongUsageException("EiraIRC:irc.commands.interop." + cmd);
+				throw new WrongUsageException(Globals.MOD_ID + ":irc.commands.interop." + cmd);
 			}
 			Object target = Utils.resolveIRCTarget(args[1], false, false, true, true, false, false);
 			IRCChannel targetChannel = null;
@@ -506,14 +510,14 @@ public class IRCCommandHandler {
 				targetChannel.getConnection().mode(targetChannel.getName(), "-v", targetUser.getName());
 			} else if(cmd.equals("umode")) {
 				if(args.length <= 3) {
-					throw new WrongUsageException("EiraIRC:irc.commands.interop.umode");
+					throw new WrongUsageException(Globals.MOD_ID + ":irc.commands.interop.umode");
 				}
 				targetChannel.getConnection().mode(targetChannel.getName(), args[3], targetUser.getUsername());
 			}
 			return true;
 		} else if(cmd.equals("topic") || cmd.equals("mode")) {
 			if(args.length <= 2) {
-				throw new WrongUsageException("EiraIRC:irc.commands.interop." + cmd);
+				throw new WrongUsageException(Globals.MOD_ID + ":irc.commands.interop." + cmd);
 			}
 			IRCChannel targetChannel = null;
 			Object target = Utils.resolveIRCTarget(args[1], false, false, true, true, false, false);
@@ -541,14 +545,14 @@ public class IRCCommandHandler {
 			return true;
 		} else if(cmd.equals("ghost")) {
 			if(args.length <= 1) {
-				throw new WrongUsageException("EiraIRC:irc.commands.ghost", commandName);
+				throw new WrongUsageException(Globals.MOD_ID + ":irc.commands.ghost", commandName);
 			}
 			IRCConnection connection = null;
 			String nick = null;
 			if(args.length <= 2) {
 				if(EiraIRC.instance.getConnectionCount() > 1) {
 					Utils.sendLocalizedMessage(sender, "irc.specifyServer");
-					throw new WrongUsageException("EiraIRC:irc.commands.ghost", commandName);
+					throw new WrongUsageException(Globals.MOD_ID + ":irc.commands.ghost", commandName);
 				} else {
 					connection = EiraIRC.instance.getDefaultConnection();
 					if(connection == null) {
@@ -574,9 +578,106 @@ public class IRCCommandHandler {
 				Utils.sendLocalizedMessage(sender, "irc.general.notSupported", "GHOST");
 			}
 			return true;
-		}/* else if(cmd.equals("sc")) {
+		} else if(cmd.equals("color")) {
+			if(!DisplayConfig.enableNameColors) {
+				Utils.sendLocalizedMessage(sender, "irc.color.disabled");
+				return true;
+			}
+			if(args.length < 2) {
+				throw new WrongUsageException(Utils.getLocalizedMessage("irc.commands.color"));
+			}
+			if(sender instanceof EntityPlayer) {
+				String colorName = args[1].toLowerCase();
+				if(!Utils.isOP(sender) && (GlobalConfig.colorBlackList.contains(colorName) || DisplayConfig.opColor.equals(colorName))) {
+					Utils.sendLocalizedMessage(sender, "irc.color.blackList", colorName);
+					return true;
+				}
+				if(!colorName.equals("none") && !Utils.isValidColor(colorName)) {
+					Utils.sendLocalizedMessage(sender, "irc.color.invalid", colorName);
+					return true;
+				}
+				EntityPlayer entityPlayer = (EntityPlayer) sender;
+				NBTTagCompound persistentTag = entityPlayer.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG);
+				NBTTagCompound tagCompound = persistentTag.getCompoundTag("EiraIRC");
+				if(colorName.equals("none")) {
+					tagCompound.removeTag("NameColor");
+				} else {
+					tagCompound.setString("NameColor", colorName);
+				}
+				persistentTag.setTag("EiraIRC", tagCompound);
+				entityPlayer.getEntityData().setTag(EntityPlayer.PERSISTED_NBT_TAG, persistentTag);
+				if(colorName.equals("none")) {
+					Utils.sendLocalizedMessage(sender, "irc.color.reset", colorName);
+				} else {
+					Utils.sendLocalizedMessage(sender, "irc.color.set", colorName);
+				}
+			}
+			return true;
+		} else if(cmd.equals("alias")) {
+			if(!GlobalConfig.enableAliases) {
+				Utils.sendLocalizedMessage(sender, "irc.alias.disabled");
+				return true;
+			}
+			if(args.length < 2) {
+				throw new WrongUsageException(Utils.getLocalizedMessage("irc.commands.alias"));
+			}
+			List<EntityPlayerMP> playerEntityList = MinecraftServer.getServer().getConfigurationManager().playerEntityList;
+			if(args.length < 3) {
+				String alias = args[1];
+				for(int i = 0; i < playerEntityList.size(); i++) {
+					EntityPlayerMP playerEntity = playerEntityList.get(i);
+					if(playerEntity.getEntityData().getCompoundTag("EiraIRC").getString("Alias").equals(alias)) {
+						Utils.sendLocalizedMessage(sender, "irc.alias.lookup", alias, playerEntity.getCommandSenderName());
+						return true;
+					}
+				}
+				Utils.sendLocalizedMessage(sender, "irc.alias.notFound", alias);
+			} else {
+				if(!Utils.isOP(sender)) {
+					Utils.sendLocalizedMessage(sender, "irc.gemeral.noPermission");
+					return true;
+				}
+				String username = args[1];
+				String alias = args[2];
+				EntityPlayerMP entityPlayer = MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(username);
+				if(entityPlayer == null) {
+					for(int i = 0; i < playerEntityList.size(); i++) {
+						EntityPlayerMP playerEntity = playerEntityList.get(i);
+						if(playerEntity.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getCompoundTag("EiraIRC").getString("Alias").equals(username)) {
+							entityPlayer = playerEntity;
+							break;
+						}
+					}
+					if(entityPlayer == null) {
+						Utils.sendLocalizedMessage(sender, "irc.general.noSuchPlayer");
+						return true;
+					}
+				}
+				NBTTagCompound persistentTag = entityPlayer.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG);
+				NBTTagCompound tagCompound = persistentTag.getCompoundTag("EiraIRC");
+				String oldAlias = username;
+				if(tagCompound.hasKey("Alias")) {
+					oldAlias = tagCompound.getString("Alias");
+				}
+				if(alias.equals("none")) {
+					tagCompound.removeTag("Alias");
+				} else {
+					tagCompound.setString("Alias", alias);
+				}
+				persistentTag.setTag("EiraIRC", tagCompound);
+				entityPlayer.getEntityData().setTag(EntityPlayer.PERSISTED_NBT_TAG, persistentTag);
+				if(alias.equals("none")) {
+					Utils.sendLocalizedMessage(sender, "irc.alias.reset", oldAlias, alias);
+				} else {
+					Utils.sendLocalizedMessage(sender, "irc.alias.set", oldAlias, alias);
+				}
+				EiraIRC.instance.getMCEventHandler().onPlayerNickChange(oldAlias, alias);
+			}
+			return true;
+		}
+		/* else if(cmd.equals("sc")) {
 			if(args.length <= 1) {
-				throw new WrongUsageException("EiraIRC:irc.commands.sc", commandName);
+				throw new WrongUsageException(Globals.MOD_ID + ":irc.commands.sc", commandName);
 			}
 			IRCConnection connection = null;
 			int idx = 0;
@@ -584,7 +685,7 @@ public class IRCCommandHandler {
 			if(args.length <= 2 || target == null) {
 				if(EiraIRC.instance.getConnectionCount() > 1) {
 					Utils.sendLocalizedMessage(sender, "irc.specifyServer");
-					throw new WrongUsageException("EiraIRC:irc.commands.sc", commandName);
+					throw new WrongUsageException(Globals.MOD_ID + ":irc.commands.sc", commandName);
 				} else {
 					connection = EiraIRC.instance.getDefaultConnection();
 					if(connection == null) {

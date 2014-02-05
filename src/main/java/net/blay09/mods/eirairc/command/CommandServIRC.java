@@ -25,7 +25,7 @@ public class CommandServIRC implements ICommand {
 	
 	@Override
 	public void processCommand(ICommandSender sender, String[] args) {
-		if(MinecraftServer.getServer().isSinglePlayer()) {
+		if(MinecraftServer.getServer() != null && MinecraftServer.getServer().isSinglePlayer()) {
 			Utils.sendLocalizedMessage(sender, "irc.general.notMultiplayer");
 			return;
 		}

@@ -3,9 +3,11 @@
 
 package net.blay09.mods.eirairc.util;
 
+import net.blay09.mods.eirairc.EiraIRC;
+
 public class Globals {
 
-	public static final String MOD_ID = "EiraIRC";
+	public static final String MOD_ID = EiraIRC.MOD_ID;
 	public static final String MOD_NAME = "EiraIRC";
 	public static final String MOD_VERSION = "@VERSION@";
 	public static final String TWITCH_SERVER = "irc.twitch.tv";

@@ -101,7 +101,7 @@ public class EiraIRC {
 	
 	@EventHandler
 	public void serverLoad(FMLServerStartingEvent event) {
-		registerCommands((CommandHandler) event.getServer().getCommandManager());
+		registerCommands((CommandHandler) event.getServer().getCommandManager(), true);
 		
 		if(!MinecraftServer.getServer().isSinglePlayer()) {
 			startIRC();
@@ -192,10 +192,13 @@ public class EiraIRC {
 		return netHandler;
 	}
 	
-	public void registerCommands(CommandHandler handler) {
-		handler.registerCommand(new CommandServIRC());
-		handler.registerCommand(new CommandIRC());
-		if(GlobalConfig.registerShortCommands) {
+	public void registerCommands(CommandHandler handler, boolean serverSide) {
+		if(serverSide) {
+			handler.registerCommand(new CommandServIRC());
+		} else {
+			handler.registerCommand(new CommandIRC());
+		}
+		if(!serverSide && GlobalConfig.registerShortCommands) {
 			handler.registerCommand(new CommandJoin());
 			handler.registerCommand(new CommandPart());
 			handler.registerCommand(new CommandConnect());

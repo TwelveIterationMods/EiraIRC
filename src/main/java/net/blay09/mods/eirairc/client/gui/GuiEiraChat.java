@@ -76,8 +76,9 @@ public class GuiEiraChat extends GuiChat {
 			}
 			return;
 		} else if(keyCode == 28 || keyCode == 156) {
-			System.out.println("KEYCODE: " + keyCode);
-			if(ClientChatHandler.handleClientChat(inputField.getText().trim())) {
+			String s = inputField.getText().trim();
+			if(ClientChatHandler.handleClientChat(s)) {
+				mc.ingameGUI.getChatGUI().addToSentMessages(s);
 				mc.displayGuiScreen(null);
 				return;
 			}

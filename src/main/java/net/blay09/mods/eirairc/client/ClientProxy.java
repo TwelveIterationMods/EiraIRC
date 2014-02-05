@@ -46,7 +46,7 @@ public class ClientProxy extends CommonProxy {
 		recLiveGUI= new OverlayRecLive();
 		ScreenshotManager.create();
 		
-		EiraIRC.instance.registerCommands(ClientCommandHandler.instance);
+//		EiraIRC.instance.registerCommands(ClientCommandHandler.instance, false);
 	}
 	
 	@Override
