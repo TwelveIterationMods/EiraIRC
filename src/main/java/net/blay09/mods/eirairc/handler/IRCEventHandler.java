@@ -163,6 +163,10 @@ public class IRCEventHandler implements IIRCEventHandler {
 		if(Utils.getServerConfig(connection).isClientSide()) {
 			return false;
 		}
+		if(message.equals("!auth")) {
+			connection.whois(user.getName());
+			return true;
+		}
 		if(message.equals("!who")) {
 			Utils.sendUserList(connection, user);
 			return true;
@@ -171,7 +175,7 @@ public class IRCEventHandler implements IIRCEventHandler {
 			connection.sendPrivateNotice(user, Utils.getLocalizedMessage("irc.bot.cmdlist"));
 			return true;
 		}
-		if(message.equals("!op")) {
+		if(message.startsWith("!op")) {
 			if(!GlobalConfig.interOpAuthList.contains(user.getAuthLogin())) {
 				connection.sendPrivateNotice(user, Utils.getLocalizedMessage("irc.bot.noPermission"));
 				return true;
@@ -205,6 +209,8 @@ public class IRCEventHandler implements IIRCEventHandler {
 			connection.sendPrivateNotice(user, "***** End of Help *****");
 		} else if(lmessage.equals("who")) {
 			Utils.sendUserList(connection, user);
+		} else if(lmessage.equals("auth")) {
+			connection.whois(user.getName());
 		} else if(lmessage.startsWith("alias")) {
 			if(!GlobalConfig.enableAliases) {
 				connection.sendPrivateNotice(user, Utils.getLocalizedMessage("irc.alias.disabled"));
@@ -248,6 +254,10 @@ public class IRCEventHandler implements IIRCEventHandler {
 		} else if(lmessage.startsWith("op")) {
 			if(!GlobalConfig.interOpAuthList.contains(user.getAuthLogin())) {
 				connection.sendPrivateNotice(user, Utils.getLocalizedMessage("irc.bot.noPermission"));
+				return;
+			}
+			if(message.length() < 3) {
+				connection.sendPrivateNotice(user, "Usage: OP <command>");
 				return;
 			}
 			String cmd = message.substring(3);

@@ -573,7 +573,7 @@ public class IRCCommandHandler {
 			ServerConfig serverConfig = ConfigurationHandler.getServerConfig(connection.getHost());
 			NickServSettings settings = NickServSettings.getSettings(connection.getHost());
 			if(settings.getGhostCommand() != null) {
-				connection.sendPrivateMessage(settings.getBotName(), settings.getGhostCommand() + " " + nick + " " + serverConfig.getNickServPassword());
+				connection.sendMessage(settings.getBotName(), settings.getGhostCommand() + " " + nick + " " + serverConfig.getNickServPassword());
 			} else {
 				Utils.sendLocalizedMessage(sender, "irc.general.notSupported", "GHOST");
 			}
