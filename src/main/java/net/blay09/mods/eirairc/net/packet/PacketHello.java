@@ -22,12 +22,12 @@ public class PacketHello extends AbstractPacket {
 
 	@Override
 	public void encodeInto(ChannelHandlerContext context, ByteBuf buffer) {
-		putString(buffer, version);
+//		putString(buffer, version);
 	}
 
 	@Override
 	public void decodeInto(ChannelHandlerContext context, ByteBuf buffer) {
-		version = getString(buffer);
+//		version = getString(buffer);
 	}
 
 	@Override

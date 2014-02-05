@@ -32,8 +32,10 @@ import net.blay09.mods.eirairc.net.packet.PacketNotification;
 import net.blay09.mods.eirairc.net.packet.PacketRecLiveState;
 import net.blay09.mods.eirairc.util.Localization;
 import net.blay09.mods.eirairc.util.Utils;
+import net.minecraft.command.CommandHandler;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -44,7 +46,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 
-@Mod(modid = EiraIRC.MOD_ID)
+@Mod(modid = EiraIRC.MOD_ID, version = "${version}")
 public class EiraIRC {
 
 	public static final String MOD_ID = "eirairc";
@@ -52,7 +54,7 @@ public class EiraIRC {
 	@Instance(MOD_ID)
 	public static EiraIRC instance;
 	
-	@SidedProxy(serverSide = "blay09.mods.eirairc.CommonProxy", clientSide = "blay09.mods.eirairc.client.ClientProxy")
+	@SidedProxy(serverSide = "net.blay09.mods.eirairc.CommonProxy", clientSide = "net.blay09.mods.eirairc.client.ClientProxy")
 	public static CommonProxy proxy;
 	
 	public PacketPipeline packetPipeline;
@@ -78,8 +80,10 @@ public class EiraIRC {
 		mcEventHandler = new MCEventHandler();
 		netHandler = new EiraNetHandler();
 		proxy.setupClient();
+		
+		FMLCommonHandler.instance().bus().register(mcEventHandler);
 		MinecraftForge.EVENT_BUS.register(mcEventHandler);
-		MinecraftForge.EVENT_BUS.register(netHandler);
+		FMLCommonHandler.instance().bus().register(netHandler);
 		
 		Localization.init();
 		packetPipeline = new PacketPipeline();
@@ -97,16 +101,7 @@ public class EiraIRC {
 	
 	@EventHandler
 	public void serverLoad(FMLServerStartingEvent event) {
-		event.registerServerCommand(new CommandServIRC());
-		event.registerServerCommand(new CommandIRC());
-		if(GlobalConfig.registerShortCommands) {
-			event.registerServerCommand(new CommandJoin());
-			event.registerServerCommand(new CommandPart());
-			event.registerServerCommand(new CommandConnect());
-			event.registerServerCommand(new CommandDisconnect());
-			event.registerServerCommand(new CommandNick());
-			event.registerServerCommand(new CommandWho());
-		}
+		registerCommands((CommandHandler) event.getServer().getCommandManager());
 		
 		if(!MinecraftServer.getServer().isSinglePlayer()) {
 			startIRC();
@@ -195,5 +190,18 @@ public class EiraIRC {
 	
 	public EiraNetHandler getNetHandler() {
 		return netHandler;
+	}
+	
+	public void registerCommands(CommandHandler handler) {
+		handler.registerCommand(new CommandServIRC());
+		handler.registerCommand(new CommandIRC());
+		if(GlobalConfig.registerShortCommands) {
+			handler.registerCommand(new CommandJoin());
+			handler.registerCommand(new CommandPart());
+			handler.registerCommand(new CommandConnect());
+			handler.registerCommand(new CommandDisconnect());
+			handler.registerCommand(new CommandNick());
+			handler.registerCommand(new CommandWho());
+		}
 	}
 }

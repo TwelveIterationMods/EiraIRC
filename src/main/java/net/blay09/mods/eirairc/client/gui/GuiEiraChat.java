@@ -12,6 +12,7 @@ import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiChat;
+import net.minecraft.client.gui.GuiScreen;
 
 import org.lwjgl.input.Keyboard;
 
@@ -74,6 +75,12 @@ public class GuiEiraChat extends GuiChat {
 				}
 			}
 			return;
+		} else if(keyCode == 28 || keyCode == 156) {
+			System.out.println("KEYCODE: " + keyCode);
+			if(ClientChatHandler.handleClientChat(inputField.getText().trim())) {
+				mc.displayGuiScreen(null);
+				return;
+			}
 		}
 		super.keyTyped(unicode, keyCode);
 	}

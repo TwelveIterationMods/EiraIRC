@@ -3,11 +3,22 @@
 
 package net.blay09.mods.eirairc.client;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import net.blay09.mods.eirairc.CommonProxy;
+import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.client.gui.OverlayNotification;
 import net.blay09.mods.eirairc.client.gui.OverlayRecLive;
 import net.blay09.mods.eirairc.client.screenshot.ScreenshotManager;
+import net.blay09.mods.eirairc.command.CommandConnect;
+import net.blay09.mods.eirairc.command.CommandDisconnect;
+import net.blay09.mods.eirairc.command.CommandIRC;
+import net.blay09.mods.eirairc.command.CommandJoin;
+import net.blay09.mods.eirairc.command.CommandNick;
+import net.blay09.mods.eirairc.command.CommandPart;
+import net.blay09.mods.eirairc.command.CommandServIRC;
+import net.blay09.mods.eirairc.command.CommandWho;
 import net.blay09.mods.eirairc.config.ChannelConfig;
+import net.blay09.mods.eirairc.config.GlobalConfig;
 import net.blay09.mods.eirairc.config.NotificationConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
@@ -20,6 +31,7 @@ import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.audio.SoundEventAccessorComposite;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.MinecraftForge;
 
 public class ClientProxy extends CommonProxy {
@@ -29,12 +41,14 @@ public class ClientProxy extends CommonProxy {
 	
 	@Override
 	public void setupClient() {
-		MinecraftForge.EVENT_BUS.register(new EiraTickHandler());
+		FMLCommonHandler.instance().bus().register(new EiraTickHandler());
 		notificationGUI = new OverlayNotification();
 		recLiveGUI= new OverlayRecLive();
 		ScreenshotManager.create();
+		
+		EiraIRC.instance.registerCommands(ClientCommandHandler.instance);
 	}
-
+	
 	@Override
 	public void renderTick(float delta) {
 		notificationGUI.updateAndRender(delta);
