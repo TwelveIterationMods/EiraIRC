@@ -283,10 +283,8 @@ public class IRCConnection implements Runnable {
 			for(int i = 0; i < names.length; i++) {
 				String name = names[i];
 				if(name.startsWith("@")) {
-					// TODO mark user as op for channel
 					name = name.substring(1);
 				} else if(name.startsWith("+")) {
-					// TODO mark user as voiced for channel
 					name = name.substring(1);
 				}
 				user = channel.getUser(name);

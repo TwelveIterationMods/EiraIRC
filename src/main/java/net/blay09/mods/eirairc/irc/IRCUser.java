@@ -44,7 +44,7 @@ public class IRCUser implements IRCTarget {
 	}
 	
 	public String getUsername() {
-		// TODO return IRC style username
+		// TODO return nick!username@hostname instead
 		return name;
 	}
 

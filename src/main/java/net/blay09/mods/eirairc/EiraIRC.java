@@ -78,11 +78,8 @@ public class EiraIRC {
 		mcEventHandler = new MCEventHandler();
 		netHandler = new EiraNetHandler();
 		proxy.setupClient();
-		// TODO fix this
-//		GameRegistry.registerPlayerTracker(mcEventHandler);
-//		GameRegistry.registerPlayerTracker(netHandler);
-//		NetworkRegistry.instance().registerConnectionHandler(mcEventHandler);
 		MinecraftForge.EVENT_BUS.register(mcEventHandler);
+		MinecraftForge.EVENT_BUS.register(netHandler);
 		
 		Localization.init();
 		packetPipeline = new PacketPipeline();

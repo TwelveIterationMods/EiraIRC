@@ -58,21 +58,13 @@ public class EiraTickHandler {
 			EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
 			EiraPlayerInfo playerInfo = EiraIRC.instance.getNetHandler().getPlayerInfo(player.getCommandSenderName());
 			playerInfo.isRecording = !playerInfo.isRecording;
-			// TODO fix this
-//			Packet packet = new PacketRecLiveState(player.getCommandSenderName(), playerInfo.isRecording, playerInfo.isLive).createPacket();
-//			if(packet != null) {
-//				player.sendQueue.addToSendQueue(packet);
-//			}
+			EiraIRC.instance.packetPipeline.sendToServer(new PacketRecLiveState(player.getCommandSenderName(), playerInfo.isRecording, playerInfo.isLive));
 		}
 		if(isKeyPressed(KeyConfig.toggleLive, KeyConfig.IDX_TOGGLELIVE)) {
 			EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
 			EiraPlayerInfo playerInfo = EiraIRC.instance.getNetHandler().getPlayerInfo(player.getCommandSenderName());
 			playerInfo.isLive = !playerInfo.isLive;
-			// TODO fix this
-//			Packet packet = new PacketRecLiveState(player.getCommandSenderName(), playerInfo.isRecording, playerInfo.isLive).createPacket();
-//			if(packet != null) {
-//				player.sendQueue.addToSendQueue(packet);
-//			}
+			EiraIRC.instance.packetPipeline.sendToServer(new PacketRecLiveState(player.getCommandSenderName(), playerInfo.isRecording, playerInfo.isLive));
 		}
 		if(isKeyPressed(KeyConfig.screenshotShare, KeyConfig.IDX_SCREENSHOTSHARE)) {
 			Screenshot screenshot = ScreenshotManager.getInstance().takeScreenshot();

@@ -15,8 +15,12 @@ import net.blay09.mods.eirairc.irc.IRCChannel;
 import net.blay09.mods.eirairc.util.NotificationType;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.ISound;
+import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.audio.SoundEventAccessorComposite;
 import net.minecraft.entity.player.EntityPlayer;
-import cpw.mods.fml.relauncher.Side;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.MinecraftForge;
 
 public class ClientProxy extends CommonProxy {
 
@@ -25,7 +29,7 @@ public class ClientProxy extends CommonProxy {
 	
 	@Override
 	public void setupClient() {
-//		TickRegistry.registerTickHandler(new EiraTickHandler(), Side.CLIENT);
+		MinecraftForge.EVENT_BUS.register(new EiraTickHandler());
 		notificationGUI = new OverlayNotification();
 		recLiveGUI= new OverlayRecLive();
 		ScreenshotManager.create();
@@ -51,8 +55,7 @@ public class ClientProxy extends CommonProxy {
 			notificationGUI.showNotification(type, text);
 		}
 		if(config == NotificationConfig.VALUE_TEXTANDSOUND || config == NotificationConfig.VALUE_SOUNDONLY) {
-			// TODO fix this
-//			Minecraft.getMinecraft().sndManager.playSoundFX(NotificationConfig.notificationSound, NotificationConfig.soundVolume, NotificationConfig.soundPitch);
+			Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation(NotificationConfig.notificationSound), NotificationConfig.soundVolume));
 		}
 	}
 	

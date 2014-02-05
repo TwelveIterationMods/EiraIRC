@@ -15,19 +15,11 @@ public class CommonProxy {
 	}
 
 	public void sendNotification(EntityPlayerMP entityPlayer, NotificationType type, String text) {
-		// TODO fix this
-//		Packet packet = new PacketNotification(type, text).createPacket();
-//		if(packet != null) {
-//			entityPlayer.playerNetServerHandler.sendPacketToPlayer(packet);
-//		}
+		EiraIRC.instance.packetPipeline.sendTo(new PacketNotification(type, text), entityPlayer);
 	}
 	
 	public void publishNotification(NotificationType type, String text) {
-		// TODO fix this
-//		Packet packet = new PacketNotification(type, text).createPacket();
-//		if(packet != null) {
-//			MinecraftServer.getServer().getConfigurationManager().sendPacketToAllPlayers(packet);
-//		}
+		EiraIRC.instance.packetPipeline.sendToAll(new PacketNotification(type, text));
 	}
 	
 	public String getUsername() {
