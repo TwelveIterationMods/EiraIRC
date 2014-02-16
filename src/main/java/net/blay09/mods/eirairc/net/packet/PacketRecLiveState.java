@@ -65,7 +65,7 @@ public class PacketRecLiveState extends AbstractPacket {
 			EiraIRC.proxy.publishNotification(NotificationType.UserLive, liveState ? Utils.getLocalizedMessage("irc.notify.liveTrue", username) : Utils.getLocalizedMessage("irc.notify.liveFalse", username));
 		}
 		if(playerInfo.isRecording != recState) {
-			EiraIRC.proxy.publishNotification(NotificationType.UserRecording, liveState ? Utils.getLocalizedMessage("irc.notify.recordingTrue", username) : Utils.getLocalizedMessage("irc.notify.recordingFalse", username));
+			EiraIRC.proxy.publishNotification(NotificationType.UserRecording, recState ? Utils.getLocalizedMessage("irc.notify.recordingTrue", username) : Utils.getLocalizedMessage("irc.notify.recordingFalse", username));
 		}
 		playerInfo.isLive = liveState;
 		playerInfo.isRecording = recState;
