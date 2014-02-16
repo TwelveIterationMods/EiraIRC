@@ -21,7 +21,7 @@ public abstract class AbstractPacket {
 		try {
 			byte[] b = s.getBytes(ENCODING);
 			buffer.writeShort(b.length);
-//			buffer.writeBytes(b);
+			buffer.writeBytes(b);
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
@@ -30,7 +30,7 @@ public abstract class AbstractPacket {
 	public String getString(ByteBuf buffer) {
 		short len = buffer.readShort();
 		byte[] b = new byte[len];
-//		buffer.writeBytes(b);
+		buffer.readBytes(b);
 		try {
 			return new String(b, ENCODING);
 		} catch (UnsupportedEncodingException e) {
