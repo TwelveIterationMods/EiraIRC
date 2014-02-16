@@ -72,7 +72,7 @@ public class OverlayRecLive extends Gui {
 		int liveWidth = theGame.fontRenderer.getStringWidth(LIVE);
 		ScoreObjective scoreobjective = theGame.theWorld.getScoreboard().func_96539_a(0);
 		NetHandlerPlayClient handler = theGame.thePlayer.sendQueue;
-		if (theGame.gameSettings.keyBindPlayerList.isPressed() && (!theGame.isIntegratedServerRunning() || handler.playerInfoList.size() > 1 || scoreobjective != null)) {
+		if (theGame.gameSettings.keyBindPlayerList.getIsKeyPressed() && (!theGame.isIntegratedServerRunning() || handler.playerInfoList.size() > 1 || scoreobjective != null)) {
 			List players = handler.playerInfoList;
 			int maxPlayers = handler.currentServerMaxPlayers;
 			int rows = maxPlayers;
@@ -97,6 +97,7 @@ public class OverlayRecLive extends Gui {
 						drawString(theGame.fontRenderer, LIVE, xPos + columnWidth - 12 - liveWidth - 2, yPos, Globals.TEXT_COLOR);
 					} else if(playerInfo.isRecording) {
 						theGame.getTextureManager().bindTexture(icons);
+						System.out.println(xPos + columnWidth - 12 - SMALL_WIDTH - liveWidth);
 						drawTexturedModalRect(xPos + columnWidth - 12 - SMALL_WIDTH - liveWidth, yPos, WIDTH, 0, SMALL_WIDTH, SMALL_HEIGHT);
 					}
 				}
