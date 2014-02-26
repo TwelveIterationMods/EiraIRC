@@ -7,6 +7,7 @@ import java.util.List;
 
 import net.blay09.mods.eirairc.client.upload.UploadHoster;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
+import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
 import net.minecraftforge.common.config.Configuration;
 
@@ -21,19 +22,20 @@ public class ScreenshotConfig {
 	
 	public static boolean manageScreenshots = true;
 	public static int screenshotAction = 0;
-	public static String uploadHoster = "DirectUpload";
+	public static String uploadHoster = UploadHoster.HOSTER_IMGUR;
+	public static int uploadBufferSize = 1024;
 	
 	public static void load(Configuration config) {
 		manageScreenshots = config.get(CATEGORY, "manageScreenshots", true).getBoolean(true);
 		screenshotAction = config.get(CATEGORY, "screenshotAction", screenshotAction).getInt();
 		config.get(CATEGORY, "screenshotAction", screenshotAction).comment = "0: None / 1: Upload / 2: Upload & Share / 3: Upload & Clipboard";
-		uploadHoster = config.get(CATEGORY, "uploadHoster", uploadHoster).getString();
-		config.get(CATEGORY, "uploadHoster", uploadHoster).comment = "Available Options: DirectUpload";
+		uploadHoster = Utils.unquote(config.get(CATEGORY, "uploadHoster", uploadHoster).getString());
+		config.get(CATEGORY, "uploadHoster", uploadHoster).comment = "Available Options: DirectUpload, imgur";
 	}
 	
 	public static void save(Configuration config) {
 		config.get(CATEGORY, "screenshotAction", screenshotAction).set(screenshotAction);
-		config.get(CATEGORY, "uploadHoster", uploadHoster).set(uploadHoster);
+		config.get(CATEGORY, "uploadHoster", uploadHoster).set(Utils.quote(uploadHoster));
 	}
 	
 	public static void addOptionsToList(List<String> list) {

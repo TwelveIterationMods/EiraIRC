@@ -7,8 +7,12 @@ import java.io.File;
 
 public abstract class UploadHoster {
 
+	public static final String HOSTER_DIRECTUPLOAD = "DirectUpload";
+	public static final String HOSTER_IMGUR = "imgur";
+	
 	public static final String[] availableHosters = new String[] {
-		"DirectUpload"
+		HOSTER_DIRECTUPLOAD,
+		HOSTER_IMGUR
 	};
 	
 	
@@ -22,14 +26,12 @@ public abstract class UploadHoster {
 			return cachedHoster;
 		}
 		try {
-			Class<?> clazz = Class.forName("blay09.mods.eirairc.client.upload." + name);
-			if(UploadHoster.class.isAssignableFrom(clazz)) {
+			Class<?> clazz = getUploadHosterClass(name);
+			if(clazz != null) {
 				cachedHoster = (UploadHoster) clazz.newInstance();
 				cachedHosterName = name;
 				return cachedHoster;
 			}
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
 		} catch (InstantiationException e) {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
@@ -38,4 +40,12 @@ public abstract class UploadHoster {
 		return null;
 	}
 	
+	private static Class<?> getUploadHosterClass(String name) {
+		if(name.equals(HOSTER_DIRECTUPLOAD)) {
+			return DirectUpload.class;
+		} else if(name.equals(HOSTER_IMGUR)) {
+			return Imgur.class;
+		}
+		return null;
+	}
 }
