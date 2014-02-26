@@ -14,15 +14,13 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.List;
-import java.util.Map.Entry;
+
+import blay09.mods.eirairc.config.ScreenshotConfig;
 
 public class DirectUpload extends UploadHoster {
 
 	public static final String API = "http://www.directupload.net/api/upload.php";
 	public static final String BOUNDARY = "---------------------------7d41b838504d8";
-	
-	private static final int BUFFER_SIZE = 1024;
 	
 	@Override
 	public String uploadFile(File file) {
@@ -41,7 +39,7 @@ public class DirectUpload extends UploadHoster {
 			out.writeBytes("\r\n");
 			
 			FileInputStream fis = new FileInputStream(file);
-			byte[] buffer = new byte[BUFFER_SIZE];
+			byte[] buffer = new byte[ScreenshotConfig.uploadBufferSize];
 			int len = 0;
 			while((len = fis.read(buffer)) != -1) {
 				out.write(buffer, 0, len);
