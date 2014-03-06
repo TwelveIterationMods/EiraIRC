@@ -6,11 +6,13 @@ package net.blay09.mods.eirairc.client;
 import java.util.EnumSet;
 
 import net.blay09.mods.eirairc.EiraIRC;
+import net.blay09.mods.eirairc.client.gui.GuiChatExtended;
 import net.blay09.mods.eirairc.client.gui.GuiEiraChat;
 import net.blay09.mods.eirairc.client.gui.GuiKeybinds;
 import net.blay09.mods.eirairc.client.gui.GuiSettings;
 import net.blay09.mods.eirairc.client.screenshot.Screenshot;
 import net.blay09.mods.eirairc.client.screenshot.ScreenshotManager;
+import net.blay09.mods.eirairc.config.DisplayConfig;
 import net.blay09.mods.eirairc.config.KeyConfig;
 import net.blay09.mods.eirairc.config.ScreenshotConfig;
 import net.blay09.mods.eirairc.net.EiraPlayerInfo;
@@ -87,7 +89,11 @@ public class EiraTickHandler {
 		}
 		handleKeyInput();
 		if(Minecraft.getMinecraft().currentScreen != null && Minecraft.getMinecraft().currentScreen.getClass() == GuiChat.class) {
-			Minecraft.getMinecraft().displayGuiScreen(new GuiEiraChat());
+			if(DisplayConfig.vanillaChat) {
+				Minecraft.getMinecraft().displayGuiScreen(new GuiChatExtended());
+			} else {
+				Minecraft.getMinecraft().displayGuiScreen(new GuiEiraChat());
+			}
 		}
 	}
 	
