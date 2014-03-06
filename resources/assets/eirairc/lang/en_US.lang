@@ -1,0 +1,242 @@
+# Commands
+EiraIRC:irc.commands.irc=/[serv]irc <command>
+EiraIRC:irc.commands.connect=/[serv]irc connect <server> [password]
+EiraIRC:irc.commands.disconnect=/[serv]irc disconnect [server]
+EiraIRC:irc.commands.join=/[serv]irc join [server/]<channel> (ex. irc.esper.net/#EiraIRC)
+EiraIRC:irc.commands.leave=/[serv]irc leave [server/]<channel> (ex. irc.esper.net/#EiraIRC)
+EiraIRC:irc.commands.who=/[serv]irc who [(<server>|<channel>)]
+EiraIRC:irc.commands.msg=/[serv]irc msg <nick> <message ...>
+EiraIRC:irc.commands.help=/[serv]irc help <topic>
+EiraIRC:irc.commands.nick=/[serv]irc nick [server] <nick>
+EiraIRC:irc.commands.config=/[serv]irc config (global|<server>|<channel>) <key> [value]
+EiraIRC:irc.commands.twitch=/servirc twitch <username> <oauth>
+EiraIRC:irc.commands.nickserv=/servirc nickserv <username> <password>
+EiraIRC:irc.commands.color=/irc color <color>
+EiraIRC:irc.commands.alias=/irc alias <username> <alias> OR /irc alias <alias>
+EiraIRC:irc.commands.ghost=/irc ghost [server] <username>
+## InterOP
+EiraIRC:irc.commands.interop.op=/irc op <channel> <user>
+EiraIRC:irc.commands.interop.deop=/irc deop <channel> <user>
+EiraIRC:irc.commands.interop.voice=/irc voice <channel> <user>
+EiraIRC:irc.commands.interop.devoice=/irc devoice <channel> <user>
+EiraIRC:irc.commands.interop.kick=/irc kick <channel> <user> [reason]
+EiraIRC:irc.commands.interop.ban=/irc ban <channel> <user> [reason]
+EiraIRC:irc.commands.interop.unban=/irc unban <channel> <user>
+EiraIRC:irc.commands.interop.umode=/irc umode <channel> <user> <flags>
+EiraIRC:irc.commands.interop.mode=/irc mode <channel> <flags>
+EiraIRC:irc.commands.interop.topic=/irc topic <channel> <topic>
+
+# Command List
+EiraIRC:irc.cmdlist.general=§eGeneral Commands: §fconfig, help, list
+EiraIRC:irc.cmdlist.irc=§eIRC Commands: §fconnect, disconnect, join, leave, nick, msg, who
+EiraIRC:irc.cmdlist.interop=§eInterOp Commands: §fop, deop, voice, devoice, kick, ban, unban, umode, mode, topic
+EiraIRC:irc.cmdlist.special=§eSpecial Commands: §ftwitch, color, alias
+
+# GUI
+## General
+EiraIRC:irc.gui.options=Options
+EiraIRC:irc.gui.chatTarget=Chatting to: %s
+EiraIRC:irc.gui.back=Back
+EiraIRC:irc.gui.yes=Yes
+EiraIRC:irc.gui.no=No
+EiraIRC:irc.gui.add=Add %s
+EiraIRC:irc.gui.edit=Edit
+EiraIRC:irc.gui.delete=Delete
+EiraIRC:irc.gui.save=Save
+EiraIRC:irc.gui.rename=Rename
+EiraIRC:irc.gui.cancel=Cancel
+EiraIRC:irc.gui.none=None
+EiraIRC:irc.gui.reallyRemove=Do you really want to remove this %s?
+EiraIRC:irc.gui.configDelete=This will delete it from the config file.
+EiraIRC:irc.gui.noUndo=This action can't be undone.
+## Common Config
+EiraIRC:irc.gui.config.connectStartup=Connect on Startup: %s
+EiraIRC:irc.gui.config.joinStartup=Join on Startup: %s
+EiraIRC:irc.gui.config.privateMessages=Private Messages: %s
+EiraIRC:irc.gui.config.nick=Nick:
+EiraIRC:irc.gui.config.relayDeathMessages=Relay Death Messages: %s
+EiraIRC:irc.gui.config.relayMinecraftJoins=Relay Minecraft Joins: %s
+EiraIRC:irc.gui.config.relayIRCJoins=Relay IRC Joins: %s
+EiraIRC:irc.gui.config.relayNickChanges=Relay Nick Changes: %s
+## Server Config
+EiraIRC:irc.gui.editServer=EiraIRC - Edit Server
+EiraIRC:irc.gui.editServer.serverAddress=Server Address:
+EiraIRC:irc.gui.editServer.serverPassword=Server Password:
+EiraIRC:irc.gui.editServer.nick=Nick:
+EiraIRC:irc.gui.editServer.nickServName=NickServ Username:
+EiraIRC:irc.gui.editServer.nickServPassword=NickServ Password:
+## Settings
+EiraIRC:irc.gui.settings=EiraIRC Settings
+EiraIRC:irc.gui.settings.client=Client
+EiraIRC:irc.gui.settings.server=Server
+EiraIRC:irc.gui.settings.global=Global Settings
+EiraIRC:irc.gui.settings.serverList=Server List
+EiraIRC:irc.gui.settings.friendsIgnoreList=Friends / Ignore List
+EiraIRC:irc.gui.settings.twitch=Twitch Chat
+EiraIRC:irc.gui.settings.screenshots=Screenshots
+EiraIRC:irc.gui.settings.displaySettings=Display Settings
+EiraIRC:irc.gui.settings.botSettings=Bot Settings
+EiraIRC:irc.gui.settings.notifications=Notifications
+EiraIRC:irc.gui.settings.keybinds=Keybinds
+## Twitch Config
+EiraIRC:irc.gui.twitch=EiraIRC - Twitch Chat
+EiraIRC:irc.gui.twitch.username=Twitch Username:
+EiraIRC:irc.gui.twitch.oauth=OAuth Token:
+## Screenshot Config
+EiraIRC:irc.gui.screenshots=EiraIRC - Screenshots
+EiraIRC:irc.gui.screenshots.archive=Archive
+EiraIRC:irc.gui.screenshots.local=Local
+EiraIRC:irc.gui.screenshots.uploaded=Uploaded
+EiraIRC:irc.gui.screenshots.hoster=Hoster: %s
+EiraIRC:irc.gui.screenshots.autoAction=Auto-Action: %s
+EiraIRC:irc.gui.screenshots.upload=Upload
+EiraIRC:irc.gui.screenshots.uploadShare=Upload & Share
+EiraIRC:irc.gui.screenshots.uploadClipboard=Upload & Clipboard
+EiraIRC:irc.gui.screenshots.toClipboard=To Clipboard
+EiraIRC:irc.gui.screenshotList=EiraIRC - Screenshot List
+## Notification Config
+EiraIRC:irc.gui.notifications=EiraIRC - Notifications
+EiraIRC:irc.gui.notifications.textOnly=Text Only
+EiraIRC:irc.gui.notifications.soundOnly=Sound Only
+EiraIRC:irc.gui.notifications.textAndSound=Text and Sound
+EiraIRC:irc.gui.notifications.userRecording=User Recording: %s
+EiraIRC:irc.gui.notifications.nameMentioned=Name Mentioned: %s
+EiraIRC:irc.gui.notifications.friendJoined=Friend Joined: %s
+EiraIRC:irc.gui.notifications.privateMessage=Private Message: %s
+## Keybinds Config
+EiraIRC:irc.gui.keybinds=EiraIRC - Keybinds
+EiraIRC:irc.gui.keybinds.selectKey=Press a key to continue or ESC to cancel...
+EiraIRC:irc.gui.keybinds.menu=Menu: %s
+EiraIRC:irc.gui.keybinds.screenshotShare=Screenshot & Share: %s
+EiraIRC:irc.gui.keybinds.toggleLive=Toggle Live: %s
+EiraIRC:irc.gui.keybinds.toggleRecording=Toggle Recording: %s
+EiraIRC:irc.gui.keybinds.toggleTarget=Toggle Target: %s
+## Server List
+EiraIRC:irc.gui.serverList=EiraIRC - Server List
+EiraIRC:irc.gui.serverList.connected=§aConnected
+EiraIRC:irc.gui.serverList.notConnected=§cNot Connected
+EiraIRC:irc.gui.serverList.connect=Connect
+EiraIRC:irc.gui.serverList.disconnect=Disconnect
+EiraIRC:irc.gui.serverList.channels=Channels
+## Channel List
+EiraIRC:irc.gui.channelList=EiraIRC - Channel List
+EiraIRC:irc.gui.channelList.join=Join
+EiraIRC:irc.gui.channelList.leave=Leave
+EiraIRC:irc.gui.channelList.joined=§aJoined
+EiraIRC:irc.gui.channelList.notJoined=§cNot Joined
+EiraIRC:irc.gui.channelList.notConnected=§cNot Connected
+## Display Settings
+EiraIRC:irc.gui.displaySettings=EiraIRC - Display Settings
+EiraIRC:irc.gui.displaySettings.recordingHud=Show Recording HUD: %s
+EiraIRC:irc.gui.displaySettings.messageDisplay=Message Display: %s
+## Bot Settings
+EiraIRC:irc.gui.botSettings=EiraIRC - Bot Settings
+EiraIRC:irc.gui.botSettings.profile=Profile: %s
+EiraIRC:irc.gui.botSettings.interOp=Enable InterOp: %s
+## Channel Config
+EiraIRC:irc.gui.editChannel=EiraIRC - Edit Channel
+EiraIRC:irc.gui.editChannel.name=Channel Name:
+EiraIRC:irc.gui.editChannel.password=Channel Password:
+EiraIRC:irc.gui.editChannel.muted=Muted: %s
+EiraIRC:irc.gui.editChannel.readOnly=Read Only: %s
+EiraIRC:irc.gui.editChannel.autoWho=List Users on Startup: %s
+EiraIRC:irc.gui.editChannel.autoWho=List Users on Startup: %s
+## Global Settings
+EiraIRC:irc.gui.globalSettings=EiraIRC - Global Settings
+EiraIRC:irc.gui.globalSettings.nickname=Nickname:
+EiraIRC:irc.gui.globalSettings.saveCredentials=Save Credentials: %s
+EiraIRC:irc.gui.globalSettings.persistentConnection=Persistent Connection: %s
+EiraIRC:irc.gui.globalSettings.linkFilter=Filter Links: %s
+
+# Notifications
+EiraIRC:irc.notify.privateMessage=%s: %s
+EiraIRC:irc.notify.liveTrue=%s is now live.
+EiraIRC:irc.notify.liveFalse=%s has stopped livestreaming.
+EiraIRC:irc.notify.recordingTrue=%s is now recording.
+EiraIRC:irc.notify.recordingFalse=%s has stopped recording.
+
+# Bot
+EiraIRC:irc.bot.cmdlist=Channel Bot Commands: !who, !auth, !op
+EiraIRC:irc.bot.unknownCommand=Unknown command. Type HELP to see a list of all available commands.
+EiraIRC:irc.bot.msgSent=Message sent to %s: %s
+EiraIRC:irc.bot.nickInUse=Nickname %s is already in use. Trying %s
+EiraIRC:irc.bot.nickInvalid=%s is not a valid nickname.
+EiraIRC:irc.bot.playersOnline=%d players online:
+EiraIRC:irc.bot.noPlayersOnline=No players online.
+EiraIRC:irc.bot.noPermission=You do not have permission to use this command or you are not authenticated with EiraIRC.
+
+# General
+EiraIRC:irc.general.notConnected=§cYou are not connected to %s
+EiraIRC:irc.general.alreadyConnected=§cYou are already connected to %s
+EiraIRC:irc.general.notOnChannel=§cYou are not on channel %s
+EiraIRC:irc.general.noPermission=§cYou do not have permission to use this command.
+EiraIRC:irc.general.noSuchPlayer=§cThat player cannot be found.
+EiraIRC:irc.general.notMultiplayer=§cThis is not a multiplayer. Use /irc instead.
+EiraIRC:irc.general.serverOnlyCommand=§cThis command only works on the server side. Use the GUI (default: I) or the config file for the client settings.
+EiraIRC:irc.general.usage=§cUsage: %s
+EiraIRC:irc.general.linkRemoved=<link removed>
+EiraIRC:irc.general.notSupported=%s is not supported on this server.
+
+# Basic IRC
+EiraIRC:irc.basic.connecting=Connecting to %s
+EiraIRC:irc.basic.connected=Connected to %s
+EiraIRC:irc.basic.disconnecting=Disconnecting from %s
+EiraIRC:irc.basic.disconnected=Disconnected from %s
+EiraIRC:irc.basic.joiningChannel=Joining channel %s on %s
+EiraIRC:irc.basic.leavingChannel=Leaving channel %s on %s
+EiraIRC:irc.basic.changingNick=[%s] Changing nick to %s
+EiraIRC:irc.basic.nickServUpdated=Updated nickserv information for %s
+
+# Command Specific
+## List
+EiraIRC:irc.list.activeConnections=§eEiraIRC is connected to:
+## Alias
+EiraIRC:irc.alias.set=Alias for %s set to '%s'.
+EiraIRC:irc.alias.reset=Alias removed for %s.
+EiraIRC:irc.alias.disabled=Aliases are disabled on this server.
+EiraIRC:irc.alias.lookup=The username for %s is '%s'.
+EiraIRC:irc.alias.notFound=The alias '%s' cannot be found.
+## Color
+EiraIRC:irc.color.set=Name color set to '%s'.
+EiraIRC:irc.color.reset=Name color reset.
+EiraIRC:irc.color.blacklist=The color '%s' is not allowed on this server.
+EiraIRC:irc.color.invalid='%s' is not a valid color. USe TAB to loop through valid options.
+## Who
+EiraIRC:irc.who.usersOnline=[%s] §b%d users §fonline in §e%s§f:
+EiraIRC:irc.who.noUsersOnline=[%s] No users online in %s.
+## Msg
+EiraIRC:irc.msg.disabled=Private messages are not enabled.
+## Config
+EiraIRC:irc.config.noAbuse=To prevent abuse, this setting can only be changed in the config file.
+EiraIRC:irc.config.change=[%s] Setting config option '%s' to '%s'
+EiraIRC:irc.config.lookup=[%s] Config option '%s' is set to '%s'
+EiraIRC:irc.config.invalidOption=[%s] Invalid config option '%s'. Use TAB to loop through valid options.
+EiraIRC:irc.config.requiresRestart=This config option requires a restart to take effect.
+EiraIRC:irc.config.invalidDisplayMode=Invalid display mode '%s'
+## Help
+EiraIRC:irc.help.validTopics=§eValid topics are:
+EiraIRC:irc.help.topicList=* color, alias, twitch, msg, commands, config
+EiraIRC:irc.help.invalidTopic=§cInvalid help topic '%s'. Valid topics are:
+## Connect
+EiraIRC:irc.connect.error=Could not connect to %s
+## InterOP
+EiraIRC:irc.interop.disabled=InterOP is not enabled.
+
+# Display Format
+EiraIRC:irc.display.irc.joinMsg=§e[%s] * %s joined the channel
+EiraIRC:irc.display.irc.partMsg=§e[%s] * %s left the channel
+EiraIRC:irc.display.irc.quitMsg=§e[%s] * %s disconnected from IRC (%s)
+EiraIRC:irc.display.irc.nickChange=§e[%s] * %s is now known as %s
+EiraIRC:irc.display.irc.topic=§eTopic for %s: §f%s
+EiraIRC:irc.display.mc.joinMsg=* %s joined the game
+EiraIRC:irc.display.mc.partMsg=* %s left the game
+EiraIRC:irc.display.mc.nickChange=* %s is now known as %s
+EiraIRC:irc.display.shareScreenshot=just uploaded a screenshot: %s
+
+# Target Errors
+EiraIRC:irc.target.specifyChannel=You have to specify a channel.
+EiraIRC:irc.target.specifyServer=You have to specify a server.
+EiraIRC:irc.target.serverNotFound=The server at %s cannot be found.
+EiraIRC:irc.target.invalidTarget=Invalid target. Expected %s.
+EiraIRC:irc.target.notConnected=You are not connected to the server at %s.
+EiraIRC:irc.target.notOnChannel=§cYou are not on channel %s

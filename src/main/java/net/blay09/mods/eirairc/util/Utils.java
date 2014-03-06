@@ -119,14 +119,6 @@ public class Utils {
 		return "\"" + s + "\"";
 	}
 	
-	public static String getNickFromUser(String user) {
-		int i = user.indexOf("!");
-		if(i == -1) {
-			return user;
-		}
-		return user.substring(0, i);
-	}
-	
 	public static String getAliasForPlayer(EntityPlayer player) {
 		if(!GlobalConfig.enableAliases) {
 			return player.getCommandSenderName();
