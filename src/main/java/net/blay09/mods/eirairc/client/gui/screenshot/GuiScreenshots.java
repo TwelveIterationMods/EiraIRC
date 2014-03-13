@@ -1,10 +1,11 @@
-// Copyright (c) 2013, Christopher "blay09" Baker
+// Copyright (c) 2014, Christopher "blay09" Baker
 // All rights reserved.
 
-package net.blay09.mods.eirairc.client.gui;
+package net.blay09.mods.eirairc.client.gui.screenshot;
 
 import java.util.Iterator;
 
+import net.blay09.mods.eirairc.client.gui.settings.GuiSettings;
 import net.blay09.mods.eirairc.client.screenshot.ScreenshotManager;
 import net.blay09.mods.eirairc.client.upload.UploadHoster;
 import net.blay09.mods.eirairc.config.DisplayFormatConfig;

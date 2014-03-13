@@ -1,10 +1,11 @@
-// Copyright (c) 2013, Christopher "blay09" Baker
+// Copyright (c) 2014, Christopher "blay09" Baker
 // All rights reserved.
 
-package net.blay09.mods.eirairc.client.gui;
+package net.blay09.mods.eirairc.client.gui.chat;
 
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.client.ClientChatHandler;
+import net.blay09.mods.eirairc.client.gui.settings.GuiSettings;
 import net.blay09.mods.eirairc.config.KeyConfig;
 import net.blay09.mods.eirairc.handler.ChatSessionHandler;
 import net.blay09.mods.eirairc.util.Globals;
@@ -31,11 +32,11 @@ public class GuiChatExtended extends GuiChat {
 	private long lastToggleTarget;
 	
 	public GuiChatExtended() {
-		chatSession = EiraIRC.instance.getChatSessionHandler();
-		defaultInputText = "";
+		this("");
 	}
 	
 	public GuiChatExtended(String defaultInputText) {
+		chatSession = EiraIRC.instance.getChatSessionHandler();
 		this.defaultInputText = defaultInputText;
 	}
 	

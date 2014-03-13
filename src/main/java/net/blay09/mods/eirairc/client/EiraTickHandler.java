@@ -1,4 +1,4 @@
-// Copyright (c) 2013, Christopher "blay09" Baker
+// Copyright (c) 2014, Christopher "blay09" Baker
 // All rights reserved.
 
 package net.blay09.mods.eirairc.client;
@@ -6,10 +6,11 @@ package net.blay09.mods.eirairc.client;
 import java.util.EnumSet;
 
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.client.gui.GuiChatExtended;
-import net.blay09.mods.eirairc.client.gui.GuiEiraChat;
-import net.blay09.mods.eirairc.client.gui.GuiKeybinds;
-import net.blay09.mods.eirairc.client.gui.GuiSettings;
+import net.blay09.mods.eirairc.client.gui.chat.GuiChatExtended;
+import net.blay09.mods.eirairc.client.gui.chat.GuiEiraChat;
+import net.blay09.mods.eirairc.client.gui.chat.GuiEiraChatInput;
+import net.blay09.mods.eirairc.client.gui.settings.GuiKeybinds;
+import net.blay09.mods.eirairc.client.gui.settings.GuiSettings;
 import net.blay09.mods.eirairc.client.screenshot.Screenshot;
 import net.blay09.mods.eirairc.client.screenshot.ScreenshotManager;
 import net.blay09.mods.eirairc.config.DisplayConfig;
@@ -29,8 +30,13 @@ import cpw.mods.fml.common.gameevent.TickEvent.RenderTickEvent;
 
 public class EiraTickHandler {
 
+	private GuiEiraChat eiraChat;
 	private int screenshotCheck;
 	private boolean[] keyState = new boolean[10];
+
+	public EiraTickHandler(GuiEiraChat eiraChat) {
+		this.eiraChat = eiraChat;
+	}
 
 	private boolean isKeyPressed(int keyCode, int keyIdx) {
 		if(keyCode == -1) {
@@ -92,7 +98,7 @@ public class EiraTickHandler {
 			if(DisplayConfig.vanillaChat) {
 				Minecraft.getMinecraft().displayGuiScreen(new GuiChatExtended());
 			} else {
-				Minecraft.getMinecraft().displayGuiScreen(new GuiEiraChat());
+				Minecraft.getMinecraft().displayGuiScreen(new GuiEiraChatInput(eiraChat));
 			}
 		}
 	}

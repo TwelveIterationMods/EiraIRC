@@ -1,9 +1,10 @@
-// Copyright (c) 2013, Christopher "blay09" Baker
+// Copyright (c) 2014, Christopher "blay09" Baker
 // All rights reserved.
 
-package net.blay09.mods.eirairc.client.gui;
+package net.blay09.mods.eirairc.client.gui.settings;
 
 import net.blay09.mods.eirairc.EiraIRC;
+import net.blay09.mods.eirairc.client.gui.GuiPasswordTextField;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.irc.IRCConnection;

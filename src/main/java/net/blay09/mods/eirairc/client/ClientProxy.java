@@ -1,24 +1,14 @@
-// Copyright (c) 2013, Christopher "blay09" Baker
+// Copyright (c) 2014, Christopher "blay09" Baker
 // All rights reserved.
 
 package net.blay09.mods.eirairc.client;
 
-import cpw.mods.fml.common.FMLCommonHandler;
 import net.blay09.mods.eirairc.CommonProxy;
-import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.client.gui.OverlayNotification;
-import net.blay09.mods.eirairc.client.gui.OverlayRecLive;
+import net.blay09.mods.eirairc.client.gui.chat.GuiEiraChat;
+import net.blay09.mods.eirairc.client.gui.overlay.OverlayNotification;
+import net.blay09.mods.eirairc.client.gui.overlay.OverlayRecLive;
 import net.blay09.mods.eirairc.client.screenshot.ScreenshotManager;
-import net.blay09.mods.eirairc.command.CommandConnect;
-import net.blay09.mods.eirairc.command.CommandDisconnect;
-import net.blay09.mods.eirairc.command.CommandIRC;
-import net.blay09.mods.eirairc.command.CommandJoin;
-import net.blay09.mods.eirairc.command.CommandNick;
-import net.blay09.mods.eirairc.command.CommandPart;
-import net.blay09.mods.eirairc.command.CommandServIRC;
-import net.blay09.mods.eirairc.command.CommandWho;
 import net.blay09.mods.eirairc.config.ChannelConfig;
-import net.blay09.mods.eirairc.config.GlobalConfig;
 import net.blay09.mods.eirairc.config.NotificationConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
@@ -26,22 +16,22 @@ import net.blay09.mods.eirairc.irc.IRCChannel;
 import net.blay09.mods.eirairc.util.NotificationType;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.ISound;
 import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.client.audio.SoundEventAccessorComposite;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.ClientCommandHandler;
-import net.minecraftforge.common.MinecraftForge;
+import cpw.mods.fml.common.FMLCommonHandler;
 
 public class ClientProxy extends CommonProxy {
 
+	private GuiEiraChat eiraChat;
 	private OverlayNotification notificationGUI;
 	private OverlayRecLive recLiveGUI;
 	
 	@Override
 	public void setupClient() {
-		FMLCommonHandler.instance().bus().register(new EiraTickHandler());
+		eiraChat = new GuiEiraChat();
+		
+		FMLCommonHandler.instance().bus().register(new EiraTickHandler(eiraChat));
 		notificationGUI = new OverlayNotification();
 		recLiveGUI= new OverlayRecLive();
 		ScreenshotManager.create();
