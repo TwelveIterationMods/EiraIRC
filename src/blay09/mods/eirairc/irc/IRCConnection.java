@@ -259,8 +259,8 @@ public class IRCConnection implements Runnable {
 				eventHandler.onTopicChange(channel, channel.getTopic());
 			}
 		} else if(numeric == IRCReplyCodes.RPL_WHOISLOGIN) {
-			IRCUser user = getOrCreateUser(msg.arg(0));
-			user.setAuthLogin(msg.arg(1));
+			IRCUser user = getOrCreateUser(msg.arg(1));
+			user.setAuthLogin(msg.arg(2));
 		} else {
 			System.out.println("Unhandled message code: " + msg.getCommand() + " (" + msg.argcount() + " arguments)");
 		}
@@ -268,7 +268,6 @@ public class IRCConnection implements Runnable {
 	}
 	
 	private boolean handleMessage(IRCMessage msg) {
-		String nick = "derp";
 		String cmd = msg.getCommand();
 		if(cmd.equals("PING")) {
 			sendIRC("PONG " + msg.arg(0));
@@ -316,7 +315,7 @@ public class IRCConnection implements Runnable {
 			user.setName(newNick);
 			users.put(user.getName(), user);
 		} else if(cmd.equals("QUIT")) {
-			IRCUser user = getOrCreateUser(nick);
+			IRCUser user = getOrCreateUser(msg.getNick());
 			eventHandler.onUserQuit(this, user, msg.arg(0));
 		}
 		return false;

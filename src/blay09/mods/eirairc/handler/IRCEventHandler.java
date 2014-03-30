@@ -165,6 +165,7 @@ public class IRCEventHandler implements IIRCEventHandler {
 		}
 		if(message.equals("!auth")) {
 			connection.whois(user.getName());
+			connection.sendPrivateNotice(user, Utils.getLocalizedMessage("irc.bot.auth"));
 			return true;
 		}
 		if(message.equals("!who")) {
@@ -211,6 +212,7 @@ public class IRCEventHandler implements IIRCEventHandler {
 			Utils.sendUserList(connection, user);
 		} else if(lmessage.equals("auth")) {
 			connection.whois(user.getName());
+			connection.sendPrivateNotice(user, Utils.getLocalizedMessage("irc.bot.auth"));
 		} else if(lmessage.startsWith("alias")) {
 			if(!GlobalConfig.enableAliases) {
 				connection.sendPrivateNotice(user, Utils.getLocalizedMessage("irc.alias.disabled"));
