@@ -32,7 +32,7 @@ public class DisplayConfig {
 	public static boolean relayNickChanges = true;
 	public static boolean hudRecState = true;
 	public static String botProfile = "Custom";
-	public static boolean vanillaChat = false;
+	public static boolean vanillaChat = true;
 	
 	public static void load(Configuration config) {
 		displayMode = Utils.unquote(config.get(CATEGORY, "displayMode", displayMode).getString());
