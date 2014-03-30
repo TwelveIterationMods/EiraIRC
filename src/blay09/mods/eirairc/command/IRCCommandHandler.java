@@ -542,8 +542,16 @@ public class IRCCommandHandler {
 				return true;
 			}
 			if(cmd.equals("topic")) {
-				targetChannel.getConnection().topic(targetChannel.getName(), args[2]);
-				Utils.sendLocalizedMessage(sender, "irc.interop.topic", targetChannel.getName(), args[2]);
+				String topic = "";
+				for(int i = 2; i < args.length; i++) {
+					topic += " " + args[i];
+				}
+				topic = topic.trim();
+				if(topic.isEmpty()) {
+					throw new WrongUsageException("EiraIRC:irc.commands.interop.topic");
+				}
+				targetChannel.getConnection().topic(targetChannel.getName(), topic);
+				Utils.sendLocalizedMessage(sender, "irc.interop.topic", targetChannel.getName(), topic);
 			} else if(cmd.equals("mode")) {
 				targetChannel.getConnection().mode(targetChannel.getName(), args[2]);
 				Utils.sendLocalizedMessage(sender, "irc.interop.mode", args[2], targetChannel.getName());
