@@ -156,6 +156,7 @@ eirairc:irc.notify.recordingTrue=%s is now recording.
 eirairc:irc.notify.recordingFalse=%s has stopped recording.
 
 # Bot
+eirairc:irc.bot.auth=Authenticating with EiraIRC...
 eirairc:irc.bot.cmdlist=Channel Bot Commands: !who, !auth, !op
 eirairc:irc.bot.unknownCommand=Unknown command. Type HELP to see a list of all available commands.
 eirairc:irc.bot.msgSent=Message sent to %s: %s
@@ -221,6 +222,16 @@ eirairc:irc.help.invalidTopic=§cInvalid help topic '%s'. Valid topics are:
 eirairc:irc.connect.error=Could not connect to %s
 ## InterOP
 eirairc:irc.interop.disabled=InterOP is not enabled.
+eirairc:irc.interop.kick=Kicking user %s from channel %s
+eirairc:irc.interop.ban=Banning user %s from channel %s
+eirairc:irc.interop.unban=Unbanning user %s from channel %s
+eirairc:irc.interop.op=Opping user %s from channel %s
+eirairc:irc.interop.deop=Deopping user %s from channel %s
+eirairc:irc.interop.voice=Voicing user %s from channel %s
+eirairc:irc.interop.devoice=Devoicing user %s from channel %s
+eirairc:irc.interop.umode=Mode %s for user %s in channel %s
+eirairc:irc.interop.mode=Mode %s for channel %s
+eirairc:irc.interop.topic=Topic for channel %s set to "%s"
 
 # Display Format
 eirairc:irc.display.irc.joinMsg=§e[%s] * %s joined the channel

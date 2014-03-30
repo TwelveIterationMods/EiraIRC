@@ -457,11 +457,11 @@ public class IRCCommandHandler {
 			IRCUser targetUser = null;
 			if(target instanceof IRCTargetError) {
 				switch((IRCTargetError) target) {
-					case ChannelNotFound: Utils.sendLocalizedMessage(sender, "irc.target.channelNotFound", args[2]); break;
+					case ChannelNotFound: Utils.sendLocalizedMessage(sender, "irc.target.channelNotFound", args[1]); break;
 					case InvalidTarget: Utils.sendLocalizedMessage(sender, "irc.target.invalidTarget"); break;
-					case NotConnected: Utils.sendLocalizedMessage(sender, "irc.target.notConnected", args[2]); break;
-					case NotOnChannel: Utils.sendLocalizedMessage(sender, "irc.target.notOnChannel", args[2]); break;
-					case ServerNotFound: Utils.sendLocalizedMessage(sender, "irc.target.serverNotFound", args[2]); break;
+					case NotConnected: Utils.sendLocalizedMessage(sender, "irc.target.notConnected", args[1]); break;
+					case NotOnChannel: Utils.sendLocalizedMessage(sender, "irc.target.notOnChannel", args[1]); break;
+					case ServerNotFound: Utils.sendLocalizedMessage(sender, "irc.target.serverNotFound", args[1]); break;
 					case SpecifyServer: Utils.sendLocalizedMessage(sender, "irc.target.specifyServer"); break;
 					default: Utils.sendLocalizedMessage(sender, "irc.target.unknown"); break;
 				}
@@ -491,6 +491,7 @@ public class IRCCommandHandler {
 					reason = args[3];
 				}
 				targetChannel.getConnection().kick(targetChannel.getName(), targetUser.getName(), reason);
+				Utils.sendLocalizedMessage(sender, "irc.interop.kick", targetUser.getName(), targetChannel.getName());
 			} else if(cmd.equals("ban")) {
 				String reason = null;
 				if(args.length > 3) {
@@ -498,21 +499,28 @@ public class IRCCommandHandler {
 				}
 				targetChannel.getConnection().mode(targetChannel.getName(), "+b", targetUser.getUsername());
 				targetChannel.getConnection().kick(targetChannel.getName(), targetUser.getName(), reason);
+				Utils.sendLocalizedMessage(sender, "irc.interop.ban", targetUser.getName(), targetChannel.getName());
 			} else if(cmd.equals("unban")) {
 				targetChannel.getConnection().mode(targetChannel.getName(), "-b", targetUser.getUsername());
+				Utils.sendLocalizedMessage(sender, "irc.interop.unban", targetUser.getName(), targetChannel.getName());
 			} else if(cmd.equals("op")) {
 				targetChannel.getConnection().mode(targetChannel.getName(), "+o", targetUser.getName());
+				Utils.sendLocalizedMessage(sender, "irc.interop.op", targetUser.getName(), targetChannel.getName());
 			} else if(cmd.equals("deop")) {
 				targetChannel.getConnection().mode(targetChannel.getName(), "-o", targetUser.getName());
+				Utils.sendLocalizedMessage(sender, "irc.interop.deop", targetUser.getName(), targetChannel.getName());
 			} else if(cmd.equals("voice")) {
 				targetChannel.getConnection().mode(targetChannel.getName(), "+v", targetUser.getName());
+				Utils.sendLocalizedMessage(sender, "irc.interop.voice", targetUser.getName(), targetChannel.getName());
 			} else if(cmd.equals("devoice")) {
 				targetChannel.getConnection().mode(targetChannel.getName(), "-v", targetUser.getName());
+				Utils.sendLocalizedMessage(sender, "irc.interop.devoice", targetUser.getName(), targetChannel.getName());
 			} else if(cmd.equals("umode")) {
 				if(args.length <= 3) {
 					throw new WrongUsageException(Globals.MOD_ID + ":irc.commands.interop.umode");
 				}
 				targetChannel.getConnection().mode(targetChannel.getName(), args[3], targetUser.getUsername());
+				Utils.sendLocalizedMessage(sender, "irc.interop.umode", args[3], targetUser.getName(), targetChannel.getName());
 			}
 			return true;
 		} else if(cmd.equals("topic") || cmd.equals("mode")) {
@@ -538,9 +546,19 @@ public class IRCCommandHandler {
 				return true;
 			}
 			if(cmd.equals("topic")) {
-				targetChannel.getConnection().topic(targetChannel.getName(), args[2]);
+				String topic = "";
+				for(int i = 2; i < args.length; i++) {
+					topic += " " + args[i];
+				}
+				topic = topic.trim();
+				if(topic.isEmpty()) {
+					throw new WrongUsageException("EiraIRC:irc.commands.interop.topic");
+				}
+				targetChannel.getConnection().topic(targetChannel.getName(), topic);
+				Utils.sendLocalizedMessage(sender, "irc.interop.topic", targetChannel.getName(), topic);
 			} else if(cmd.equals("mode")) {
 				targetChannel.getConnection().mode(targetChannel.getName(), args[2]);
+				Utils.sendLocalizedMessage(sender, "irc.interop.mode", args[2], targetChannel.getName());
 			}
 			return true;
 		} else if(cmd.equals("ghost")) {
