@@ -90,27 +90,27 @@ public class IRCConnection implements Runnable {
 	}
 	
 	public IRCChannel getChannel(String channelName) {
-		return channels.get(channelName);
+		return channels.get(channelName.toLowerCase());
 	}
 	
 	public IRCChannel getOrCreateChannel(String channelName) {
-		IRCChannel channel = channels.get(channelName);
+		IRCChannel channel = getChannel(channelName);
 		if(channel == null) {
 			channel = new IRCChannel(this, channelName);
-			channels.put(channelName, channel);
+			channels.put(channelName.toLowerCase(), channel);
 		}
 		return channel;
 	}
 	
 	public IRCUser getUser(String nick) {
-		return users.get(nick);
+		return users.get(nick.toLowerCase());
 	}
 	
 	public IRCUser getOrCreateUser(String nick) {
-		IRCUser user = users.get(nick);
+		IRCUser user = getUser(nick);
 		if(user == null) {
 			user = new IRCUser(this, nick);
-			users.put(nick, user);
+			users.put(nick.toLowerCase(), user);
 		}
 		return user;
 	}
@@ -212,7 +212,7 @@ public class IRCConnection implements Runnable {
 			if(channel != null) {
 				connectionHandler.onChannelLeft(this, channel);
 			}
-			channels.remove(channelName);
+			channels.remove(channelName.toLowerCase());
 		}
 	}
 	
@@ -311,7 +311,7 @@ public class IRCConnection implements Runnable {
 			String newNick = msg.arg(0);
 			IRCUser user = getOrCreateUser(msg.getNick());
 			eventHandler.onNickChange(this, user, newNick);
-			users.remove(user.getName());
+			users.remove(user.getName().toLowerCase());
 			user.setName(newNick);
 			users.put(user.getName(), user);
 		} else if(cmd.equals("QUIT")) {
