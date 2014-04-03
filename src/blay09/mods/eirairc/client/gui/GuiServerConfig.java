@@ -25,6 +25,8 @@ public class GuiServerConfig extends GuiScreen {
 	private GuiButton btnPrivateMessages;
 	private GuiTextField txtHost;
 	private GuiTextField txtNick;
+	private GuiDefaultTextField txtIdent;
+	private GuiDefaultTextField txtDescription;
 	private GuiTextField txtNickServName;
 	private GuiPasswordTextField txtNickServPassword;
 	private GuiPasswordTextField txtServerPassword;
@@ -47,20 +49,26 @@ public class GuiServerConfig extends GuiScreen {
 		txtServerPassword = new GuiPasswordTextField(fontRenderer, width / 2 + 5, height / 2 - 85, 100, 15);
 		txtNickServName = new GuiTextField(fontRenderer, width / 2 - 120, height / 2 - 5, 100, 15);
 		txtNickServPassword = new GuiPasswordTextField(fontRenderer, width / 2 - 120, height / 2 + 35, 100, 15);
+		txtIdent = new GuiDefaultTextField(fontRenderer, width / 2 + 5, height / 2 - 45, 100, 15);
+		txtIdent.setDefaultText(Globals.DEFAULT_IDENT);
+		txtDescription = new GuiDefaultTextField(fontRenderer, width / 2 - 120, height / 2 - 5, 100, 15);
+		txtDescription.setDefaultText(Globals.DEFAULT_DESCRIPTION);
+		txtNickServName = new GuiTextField(fontRenderer, width / 2 - 120, height / 2 + 35, 100, 15);
+		txtNickServPassword = new GuiPasswordTextField(fontRenderer, width / 2 - 120, height / 2 + 75, 100, 15);
 		
-		btnPrivateMessages = new GuiButton(2, width / 2 - 10, height / 2 - 65, 130, 20, "");
+		btnPrivateMessages = new GuiButton(2, width / 2 - 10, height / 2 - 20, 130, 20, "");
 		buttonList.add(btnPrivateMessages);
 		
-		btnAutoConnect = new GuiButton(3, width / 2 - 10, height / 2 - 40, 130, 20, "");
+		btnAutoConnect = new GuiButton(3, width / 2 - 10, height / 2 + 5, 130, 20, "");
 		buttonList.add(btnAutoConnect);
 		
-		btnChannels = new GuiButton(4, width / 2 - 10, height / 2 - 15, 130, 20, Utils.getLocalizedMessage("irc.gui.serverList.channels"));
+		btnChannels = new GuiButton(4, width / 2 - 10, height / 2 + 30, 130, 20, Utils.getLocalizedMessage("irc.gui.serverList.channels"));
 		buttonList.add(btnChannels);
 		
-		btnSave = new GuiButton(1, width / 2 + 3, height / 2 + 65, 100, 20, Utils.getLocalizedMessage("irc.gui.save"));
+		btnSave = new GuiButton(1, width / 2 + 3, height / 2 + 95, 100, 20, Utils.getLocalizedMessage("irc.gui.save"));
 		buttonList.add(btnSave);
 		
-		btnCancel = new GuiButton(0, width / 2 - 103, height / 2 + 65, 100, 20, Utils.getLocalizedMessage("irc.gui.cancel"));
+		btnCancel = new GuiButton(0, width / 2 - 103, height / 2 + 95, 100, 20, Utils.getLocalizedMessage("irc.gui.cancel"));
 		buttonList.add(btnCancel);
 		
 		loadFromConfig();
@@ -78,22 +86,37 @@ public class GuiServerConfig extends GuiScreen {
 		txtServerPassword.updateCursorCounter();
 		txtNickServName.updateCursorCounter();
 		txtNickServPassword.updateCursorCounter();
+		txtIdent.updateCursorCounter();
+		txtDescription.updateCursorCounter();
 	}
 	
 	@Override
 	public void drawScreen(int par1, int par2, float par3) {
 		drawBackground(0);
 		drawCenteredString(fontRenderer, Utils.getLocalizedMessage("irc.gui.editServer"), width / 2, height / 2 - 115, Globals.TEXT_COLOR);
+		
 		fontRenderer.drawString(Utils.getLocalizedMessage("irc.gui.editServer.serverAddress"), width / 2 - 125, height / 2 - 100, Globals.TEXT_COLOR);
 		txtHost.drawTextBox();
+		
 		fontRenderer.drawString(Utils.getLocalizedMessage("irc.gui.editServer.serverPassword"), width / 2, height / 2 - 100, Globals.TEXT_COLOR);
 		txtServerPassword.drawTextBox();
+		
 		fontRenderer.drawString(Utils.getLocalizedMessage("irc.gui.editServer.nick"), width / 2 - 125, height / 2 - 60, Globals.TEXT_COLOR);
 		txtNick.drawTextBox();
-		fontRenderer.drawString(Utils.getLocalizedMessage("irc.gui.editServer.nickServName"), width / 2 - 125, height / 2 - 20, Globals.TEXT_COLOR);
+		
+		fontRenderer.drawString(Utils.getLocalizedMessage("irc.gui.editServer.ident"), width / 2, height / 2 - 60, Globals.TEXT_COLOR);
+		txtIdent.drawTextBox();
+
+		fontRenderer.drawString(Utils.getLocalizedMessage("irc.gui.editServer.description"), width / 2 - 125, height / 2 - 20, Globals.TEXT_COLOR);
+		txtDescription.drawTextBox();
+		
+		fontRenderer.drawString(Utils.getLocalizedMessage("irc.gui.editServer.nickServName"), width / 2 - 125, height / 2 + 20, Globals.TEXT_COLOR);
 		txtNickServName.drawTextBox();
-		fontRenderer.drawString(Utils.getLocalizedMessage("irc.gui.editServer.nickServPassword"), width / 2 - 125, height / 2 + 20, Globals.TEXT_COLOR);
+		
+		fontRenderer.drawString(Utils.getLocalizedMessage("irc.gui.editServer.nickServPassword"), width / 2 - 125, height / 2 + 60, Globals.TEXT_COLOR);
 		txtNickServPassword.drawTextBox();
+		
+		
 		super.drawScreen(par1, par2, par3);
 	}
 	
@@ -122,6 +145,12 @@ public class GuiServerConfig extends GuiScreen {
 		if(txtServerPassword.textboxKeyTyped(unicode, keyCode)) {
 			return;
 		}
+		if(txtIdent.textboxKeyTyped(unicode, keyCode)) {
+			return;
+		}
+		if(txtDescription.textboxKeyTyped(unicode, keyCode)) {
+			return;
+		}
 	}
 	
 	@Override
@@ -132,6 +161,8 @@ public class GuiServerConfig extends GuiScreen {
 		txtNickServName.mouseClicked(par1, par2, par3);
 		txtNickServPassword.mouseClicked(par1, par2, par3);
 		txtServerPassword.mouseClicked(par1, par2, par3);
+		txtIdent.mouseClicked(par1, par2, par3);
+		txtDescription.mouseClicked(par1, par2, par3);
 	}
 	
 	private void updateButtons() {

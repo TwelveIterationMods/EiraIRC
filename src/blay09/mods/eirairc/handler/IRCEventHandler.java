@@ -8,6 +8,7 @@ import java.util.List;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ChatAllowedCharacters;
 import blay09.mods.eirairc.EiraIRC;
 import blay09.mods.eirairc.config.ChannelConfig;
 import blay09.mods.eirairc.config.DisplayConfig;
@@ -150,10 +151,11 @@ public class IRCEventHandler implements IIRCEventHandler {
 		}
 		ChannelConfig channelConfig = Utils.getServerConfig(connection).getChannelConfig(channel);
 		if(!channelConfig.isMuted()) {
+			message = Utils.filterCodes(message);
+			message = ChatAllowedCharacters.filerAllowedCharacters(message);
 			if(GlobalConfig.enableLinkFilter) {
 				message = Utils.filterLinks(message);
 			}
-			message = Utils.filterCodes(message);
 			String mcMessage = Utils.formatMessage(ConfigHelper.getDisplayFormatConfig().mcChannelMessage, connection.getHost(), channel.getName(), user.getIdentifier(), Utils.getColoredName(user.getName(), ConfigHelper.getIRCColor(channelConfig)), message);
 			Utils.addMessageToChat(mcMessage);
 		}

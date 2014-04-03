@@ -21,6 +21,8 @@ public class ServerConfig {
 	
 	private final String host;
 	private String nick;
+	private String ident = Globals.DEFAULT_IDENT;
+	private String description = Globals.DEFAULT_DESCRIPTION;
 	private String serverPassword;
 	private String nickServName;
 	private String nickServPassword;
@@ -43,6 +45,22 @@ public class ServerConfig {
 		} else {
 			serverSide = false;
 		}
+	}
+	
+	public void setIdent(String ident) {
+		this.ident = ident;
+	}
+	
+	public String getIdent() {
+		return ident;
+	}
+	
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	
+	public String getDescription() {
+		return description;
 	}
 	
 	public String getHost() {
@@ -142,6 +160,8 @@ public class ServerConfig {
 	public void load(Configuration config, ConfigCategory category) {
 		String categoryName = category.getQualifiedName();
 		nick = Utils.unquote(config.get(categoryName, "nick", "").getString());
+		ident = Utils.unquote(config.get(categoryName, "ident", Globals.DEFAULT_IDENT).getString());
+		description = Utils.unquote(config.get(categoryName, "description", Globals.DEFAULT_DESCRIPTION).getString());
 		ircColor = Utils.unquote(config.get(categoryName, "ircColor", "").getString());
 		emoteColor = Utils.unquote(config.get(categoryName, "emoteColor", "").getString());
 		quitMessage = Utils.unquote(config.get(categoryName, "quitMessage", "").getString());
@@ -164,6 +184,8 @@ public class ServerConfig {
 		String categoryName = category.getQualifiedName();
 		config.get(categoryName, "host", "").set(Utils.quote(host));
 		config.get(categoryName, "nick", "").set(Utils.quote(nick != null ? nick : ""));
+		config.get(categoryName, "ident", "").set(Utils.quote(ident != null ? nick : Globals.DEFAULT_IDENT));
+		config.get(categoryName, "description", "").set(Utils.quote(description != null ? description : Globals.DEFAULT_DESCRIPTION));
 		config.get(categoryName, "ircColor", "").set(Utils.quote(ircColor != null ? ircColor : ""));
 		config.get(categoryName, "emoteColor", "").set(Utils.quote(emoteColor != null ? emoteColor : ""));
 		config.get(categoryName, "quitMessage", "").set(Utils.quote(quitMessage != null ? quitMessage : ""));

@@ -11,6 +11,7 @@ import blay09.mods.eirairc.config.ServerConfig;
 import blay09.mods.eirairc.irc.IIRCConnectionHandler;
 import blay09.mods.eirairc.irc.IRCChannel;
 import blay09.mods.eirairc.irc.IRCConnection;
+import blay09.mods.eirairc.irc.IRCMessage;
 import blay09.mods.eirairc.irc.IRCReplyCodes;
 import blay09.mods.eirairc.util.Globals;
 import blay09.mods.eirairc.util.Utils;
@@ -50,16 +51,16 @@ public class IRCConnectionHandler implements IIRCConnectionHandler {
 	}
 	
 	@Override
-	public void onIRCError(IRCConnection connection, int errorCode, String line, String[] cmd) {
-		switch(errorCode) {
+	public void onIRCError(IRCConnection connection, IRCMessage msg) {
+		switch(msg.getNumericCommand()) {
 		case IRCReplyCodes.ERR_NICKNAMEINUSE:
-			String failNick = cmd[3];
+			String failNick = msg.arg(1);
 			String tryNick = failNick + "_";
 			Utils.addMessageToChat(Utils.getLocalizedMessage("irc.bot.nickInUse", failNick, tryNick));
 			connection.nick(tryNick);
 			break;
 		case IRCReplyCodes.ERR_ERRONEUSNICKNAME:
-			Utils.addMessageToChat(Utils.getLocalizedMessage("irc.bot.nickInvalid", cmd[3]));
+			Utils.addMessageToChat(Utils.getLocalizedMessage("irc.bot.nickInvalid", msg.arg(1)));
 			ServerConfig serverConfig = Utils.getServerConfig(connection);
 			if(serverConfig.getNick() != null) {
 				serverConfig.setNick(connection.getNick());
@@ -68,7 +69,7 @@ public class IRCConnectionHandler implements IIRCConnectionHandler {
 			}
 			break;
 		default:
-			System.out.println("Unhandled error code: " + errorCode + " (" + line + ")");
+			System.out.println("Unhandled error code: " + msg.getNumericCommand() + " (" + msg.argcount() + " arguments)");
 			break;
 		}
 	}

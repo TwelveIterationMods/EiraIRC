@@ -308,7 +308,9 @@ public class Utils {
 	}
 	
 	public static String filterCodes(String message) {
-		return message.replaceAll(Globals.COLOR_CODE_PREFIX, "");
+		message = message.replaceAll(Globals.COLOR_CODE_PREFIX, "");
+		message = message.replaceAll("\u0003[0-9][0-9]?[,]?[0-9]?[0-9]?", "");
+		return message;
 	}
 
 	public static ServerConfig getServerConfig(IRCConnection connection) {
@@ -316,7 +318,7 @@ public class Utils {
 	}
 
 	public static IRCConnection connectTo(ServerConfig config) {
-		IRCConnection connection = new IRCConnection(config.getHost(), IRCConnection.IRC_DEFAULT_PORT, config.getServerPassword(), ConfigHelper.getFormattedNick(config));
+		IRCConnection connection = new IRCConnection(config.getHost(), IRCConnection.IRC_DEFAULT_PORT, config.getServerPassword(), ConfigHelper.getFormattedNick(config), config.getIdent(), config.getDescription());
 		connection.setCharset(GlobalConfig.charset);
 		connection.setEventHandler(EiraIRC.instance.getIRCEventHandler());
 		connection.setConnectionHandler(EiraIRC.instance.getIRCConnectionHandler());

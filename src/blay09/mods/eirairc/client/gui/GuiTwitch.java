@@ -39,12 +39,12 @@ public class GuiTwitch extends GuiScreen {
 	public void initGui() {
 		Keyboard.enableRepeatEvents(true);
 		
-		txtUsername = new GuiTextField(fontRenderer, width / 2 - 50, height / 2 - 80, 100, 15);
+		txtUsername = new GuiTextField(fontRenderer, width / 2 - 90, height / 2 - 80, 180, 15);
 		txtUsername.setMaxStringLength(Integer.MAX_VALUE);
-		txtPassword = new GuiPasswordTextField(fontRenderer, width / 2 - 50, height / 2 - 40, 100, 15);
+		txtPassword = new GuiPasswordTextField(fontRenderer, width / 2 - 90, height / 2 - 40, 180, 15);
 		txtPassword.setMaxStringLength(Integer.MAX_VALUE);
 		
-		btnOAuthHelp = new GuiButton(1, width / 2 + 54, height / 2 - 42, 20, 20, "?");
+		btnOAuthHelp = new GuiButton(1, width / 2 + 94, height / 2 - 42, 20, 20, "?");
 		buttonList.add(btnOAuthHelp);
 		
 		btnConnectOnStartup = new GuiButton(0, width / 2 - 100, height / 2 - 15, "");

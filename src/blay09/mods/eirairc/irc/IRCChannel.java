@@ -24,15 +24,15 @@ public class IRCChannel implements IRCTarget {
 	}
 	
 	public IRCUser getUser(String nick) {
-		return users.get(nick);
+		return users.get(nick.toLowerCase());
 	}
 	
 	public void addUser(IRCUser user) {
-		users.put(user.getName(), user);
+		users.put(user.getName().toLowerCase(), user);
 	}
 
-	public void removeUser(String nick) {
-		users.remove(nick);
+	public void removeUser(IRCUser user) {
+		users.remove(user.getName().toLowerCase());
 	}
 
 	public String getName() {
@@ -56,7 +56,7 @@ public class IRCChannel implements IRCTarget {
 	}
 
 	public boolean hasUser(String nick) {
-		return users.containsKey(nick);
+		return users.containsKey(nick.toLowerCase());
 	}
 
 	public String getIdentifier() {

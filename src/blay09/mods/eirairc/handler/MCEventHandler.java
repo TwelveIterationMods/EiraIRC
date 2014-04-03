@@ -186,7 +186,7 @@ public class MCEventHandler implements IPlayerTracker, IConnectionHandler {
 	public void onServerChat(ServerChatEvent event) {
 		String ircNick = Utils.getAliasForPlayer(event.player);
 		String mcNick = Utils.getColorAliasForPlayer(event.player);
-		event.component = Utils.getUnlocalizedChatMessage("<" + mcNick + "> " + event.message);
+		event.component = Utils.getLocalizedChatMessageNoPrefix("chat.type.text", mcNick, event.message);
 		if(!MinecraftServer.getServer().isSinglePlayer()) {
 			String text = event.message;
 			if(IRCCommandHandler.onChatCommand(event.player, text, true)) {

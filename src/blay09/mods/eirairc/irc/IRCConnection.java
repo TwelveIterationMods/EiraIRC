@@ -14,22 +14,20 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import blay09.mods.eirairc.util.Utils;
+import blay09.mods.eirairc.util.Globals;
 
 public class IRCConnection implements Runnable {
 
 	public static final int IRC_DEFAULT_PORT = 6667;
 	public static final String EMOTE_START = "\u0001ACTION ";
 	public static final String EMOTE_END = "\u0001";
-	private static final String DEFAULT_LOGIN = "EiraIRC";
-	private static final String DEFAULT_DESCRIPTION = "EiraIRC Bot";
 	private static final String LINE_FEED = "\r\n";
 	
 	private final int port;
 	private final String host;
 	private final String password;
 	private String nick;
-	private String login;
+	private String ident;
 	private String description;
 	private String charset;
 	private boolean connected;
@@ -57,12 +55,16 @@ public class IRCConnection implements Runnable {
 	}
 	
 	public IRCConnection(String host, int port, String password, String nick) {
+		this(host, port, password, nick, Globals.DEFAULT_IDENT, Globals.DEFAULT_DESCRIPTION);
+	}
+	
+	public IRCConnection(String host, int port, String password, String nick, String ident, String description) {
 		this.host = host;
 		this.port = port;
 		this.password = password;
 		this.nick = nick;
-		this.login = DEFAULT_LOGIN;
-		this.description = DEFAULT_DESCRIPTION;
+		this.ident = ident;
+		this.description = description;
 	}
 	
 	public void setEventHandler(IIRCEventHandler eventHandler) {
@@ -71,14 +73,6 @@ public class IRCConnection implements Runnable {
 	
 	public void setConnectionHandler(IIRCConnectionHandler connectionHandler) {
 		this.connectionHandler = connectionHandler;
-	}
-	
-	public void setLogin(String login) {
-		this.login = login;
-	}
-	
-	public void setDescription(String description) {
-		this.description = description;
 	}
 	
 	public void setCharset(String charset) {
@@ -188,7 +182,7 @@ public class IRCConnection implements Runnable {
 				writer.write("PASS " + password + "\r\n");
 			}
 			writer.write("NICK " + nick + "\r\n");
-			writer.write("USER " + login + " \"\" \"\" :" + description + "\r\n");
+			writer.write("USER " + ident + " \"\" \"\" :" + description + "\r\n");
 			writer.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -239,8 +233,9 @@ public class IRCConnection implements Runnable {
 		}
 		if(numeric == IRCReplyCodes.RPL_NAMREPLY) {
 			IRCChannel channel = getChannel(msg.arg(2));
-			for(int i = 3; i < msg.argcount() - 1; i++) {
-				String name = msg.arg(i);
+			String[] names = msg.arg(3).split(" ");
+			for(int i = 0; i < names.length; i++) {
+				String name = names[i];
 				if(name.startsWith("@") || name.startsWith("+")) {
 					name = name.substring(1);
 				}
@@ -261,6 +256,12 @@ public class IRCConnection implements Runnable {
 		} else if(numeric == IRCReplyCodes.RPL_WHOISLOGIN) {
 			IRCUser user = getOrCreateUser(msg.arg(1));
 			user.setAuthLogin(msg.arg(2));
+		} else if(numeric == IRCReplyCodes.ERR_NICKNAMEINUSE || numeric == IRCReplyCodes.ERR_ERRONEUSNICKNAME) {
+			connectionHandler.onIRCError(this, msg);
+		} else if(numeric == IRCReplyCodes.RPL_MOTD) {
+			// ignore
+		} else if(numeric <= 5 || numeric == 251 || numeric == 252 || numeric == 254 || numeric == 255 || numeric == 265 || numeric == 266 || numeric == 250 || numeric == 375) {
+			// ignore for now
 		} else {
 			System.out.println("Unhandled message code: " + msg.getCommand() + " (" + msg.argcount() + " arguments)");
 		}
@@ -304,7 +305,8 @@ public class IRCConnection implements Runnable {
 			IRCUser user = getOrCreateUser(msg.getNick());
 			IRCChannel channel = getChannel(msg.arg(0));
 			if(channel != null) {
-				channel.removeUser(msg.getNick());
+				channel.removeUser(user);
+				user.removeChannel(channel);
 				eventHandler.onUserPart(this, user, channel, msg.arg(1));
 			}
 		} else if(cmd.equals("NICK")) {
@@ -313,10 +315,14 @@ public class IRCConnection implements Runnable {
 			eventHandler.onNickChange(this, user, newNick);
 			users.remove(user.getName().toLowerCase());
 			user.setName(newNick);
-			users.put(user.getName(), user);
+			users.put(user.getName().toLowerCase(), user);
 		} else if(cmd.equals("QUIT")) {
 			IRCUser user = getOrCreateUser(msg.getNick());
 			eventHandler.onUserQuit(this, user, msg.arg(0));
+			for(IRCChannel channel : user.getChannels()) {
+				channel.removeUser(user);
+			}
+			users.remove(user.getName().toLowerCase());
 		}
 		return false;
 	}

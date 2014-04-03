@@ -14,5 +14,7 @@ public class Globals {
 	public static final String[] DEFAULT_COLOR_BLACKLIST = new String[] { "black", "darkgray" };
 	public static final String COLOR_CODE_PREFIX = "\u00a7";
 	public static final String TWITCH_OAUTH = "http://twitchapps.com/tmi/";
+	public static final String DEFAULT_IDENT = "EiraIRC";
+	public static final String DEFAULT_DESCRIPTION = "EiraIRC Bot";
 
 }
