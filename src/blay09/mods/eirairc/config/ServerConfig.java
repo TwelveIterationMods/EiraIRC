@@ -184,7 +184,7 @@ public class ServerConfig {
 		String categoryName = category.getQualifiedName();
 		config.get(categoryName, "host", "").set(Utils.quote(host));
 		config.get(categoryName, "nick", "").set(Utils.quote(nick != null ? nick : ""));
-		config.get(categoryName, "ident", "").set(Utils.quote(ident != null ? nick : Globals.DEFAULT_IDENT));
+		config.get(categoryName, "ident", "").set(Utils.quote(ident != null ? ident : Globals.DEFAULT_IDENT));
 		config.get(categoryName, "description", "").set(Utils.quote(description != null ? description : Globals.DEFAULT_DESCRIPTION));
 		config.get(categoryName, "ircColor", "").set(Utils.quote(ircColor != null ? ircColor : ""));
 		config.get(categoryName, "emoteColor", "").set(Utils.quote(emoteColor != null ? emoteColor : ""));
