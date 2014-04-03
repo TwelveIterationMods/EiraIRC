@@ -21,7 +21,7 @@ public class IRCConnection implements Runnable {
 	public static final int IRC_DEFAULT_PORT = 6667;
 	public static final String EMOTE_START = "\u0001ACTION ";
 	public static final String EMOTE_END = "\u0001";
-	private static final String DEFAULT_LOGIN = "EiraIRC";
+	private static final String DEFAULT_IDENT = "EiraIRC";
 	private static final String DEFAULT_DESCRIPTION = "EiraIRC Bot";
 	private static final String LINE_FEED = "\r\n";
 	
@@ -29,7 +29,7 @@ public class IRCConnection implements Runnable {
 	private final String host;
 	private final String password;
 	private String nick;
-	private String login;
+	private String ident;
 	private String description;
 	private String charset;
 	private boolean connected;
@@ -57,12 +57,16 @@ public class IRCConnection implements Runnable {
 	}
 	
 	public IRCConnection(String host, int port, String password, String nick) {
+		this(host, port, password, nick, DEFAULT_IDENT, DEFAULT_DESCRIPTION);
+	}
+	
+	public IRCConnection(String host, int port, String password, String nick, String ident, String description) {
 		this.host = host;
 		this.port = port;
 		this.password = password;
 		this.nick = nick;
-		this.login = DEFAULT_LOGIN;
-		this.description = DEFAULT_DESCRIPTION;
+		this.ident = ident;
+		this.description = description;
 	}
 	
 	public void setEventHandler(IIRCEventHandler eventHandler) {
@@ -74,7 +78,7 @@ public class IRCConnection implements Runnable {
 	}
 	
 	public void setLogin(String login) {
-		this.login = login;
+		this.ident = login;
 	}
 	
 	public void setDescription(String description) {
@@ -90,27 +94,27 @@ public class IRCConnection implements Runnable {
 	}
 	
 	public IRCChannel getChannel(String channelName) {
-		return channels.get(channelName);
+		return channels.get(channelName.toLowerCase());
 	}
 	
 	public IRCChannel getOrCreateChannel(String channelName) {
-		IRCChannel channel = channels.get(channelName);
+		IRCChannel channel = getChannel(channelName);
 		if(channel == null) {
 			channel = new IRCChannel(this, channelName);
-			channels.put(channelName, channel);
+			channels.put(channelName.toLowerCase(), channel);
 		}
 		return channel;
 	}
 	
 	public IRCUser getUser(String nick) {
-		return users.get(nick);
+		return users.get(nick.toLowerCase());
 	}
 	
 	public IRCUser getOrCreateUser(String nick) {
-		IRCUser user = users.get(nick);
+		IRCUser user = getUser(nick);
 		if(user == null) {
 			user = new IRCUser(this, nick);
-			users.put(nick, user);
+			users.put(nick.toLowerCase(), user);
 		}
 		return user;
 	}
@@ -188,7 +192,7 @@ public class IRCConnection implements Runnable {
 				writer.write("PASS " + password + "\r\n");
 			}
 			writer.write("NICK " + nick + "\r\n");
-			writer.write("USER " + login + " \"\" \"\" :" + description + "\r\n");
+			writer.write("USER " + ident + " \"\" \"\" :" + description + "\r\n");
 			writer.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -212,7 +216,7 @@ public class IRCConnection implements Runnable {
 			if(channel != null) {
 				connectionHandler.onChannelLeft(this, channel);
 			}
-			channels.remove(channelName);
+			channels.remove(channelName.toLowerCase());
 		}
 	}
 	
@@ -308,19 +312,24 @@ public class IRCConnection implements Runnable {
 			IRCUser user = getOrCreateUser(msg.getNick());
 			IRCChannel channel = getChannel(msg.arg(0));
 			if(channel != null) {
-				channel.removeUser(msg.getNick());
+				channel.removeUser(user);
+				user.removeChannel(channel);
 				eventHandler.onUserPart(this, user, channel, msg.arg(1));
 			}
 		} else if(cmd.equals("NICK")) {
 			String newNick = msg.arg(0);
 			IRCUser user = getOrCreateUser(msg.getNick());
 			eventHandler.onNickChange(this, user, newNick);
-			users.remove(user.getName());
+			users.remove(user.getName().toLowerCase());
 			user.setName(newNick);
-			users.put(user.getName(), user);
+			users.put(user.getName().toLowerCase(), user);
 		} else if(cmd.equals("QUIT")) {
 			IRCUser user = getOrCreateUser(msg.getNick());
 			eventHandler.onUserQuit(this, user, msg.arg(0));
+			for(IRCChannel channel : user.getChannels()) {
+				channel.removeUser(user);
+			}
+			users.remove(user.getName().toLowerCase());
 		}
 		return false;
 	}

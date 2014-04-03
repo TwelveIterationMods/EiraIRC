@@ -65,6 +65,8 @@ eirairc:irc.gui.editServer.serverPassword=Server Password:
 eirairc:irc.gui.editServer.nick=Nick:
 eirairc:irc.gui.editServer.nickServName=NickServ Username:
 eirairc:irc.gui.editServer.nickServPassword=NickServ Password:
+eirairc:irc.gui.editServer.ident=Ident:
+eirairc:irc.gui.editServer.description=Description:
 ## Settings
 eirairc:irc.gui.settings=EiraIRC Settings
 eirairc:irc.gui.settings.client=Client

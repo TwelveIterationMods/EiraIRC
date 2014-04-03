@@ -531,11 +531,11 @@ public class IRCCommandHandler {
 			Object target = Utils.resolveIRCTarget(args[1], false, false, true, true, false, false);
 			if(target instanceof IRCTargetError) {
 				switch((IRCTargetError) target) {
-					case ChannelNotFound: Utils.sendLocalizedMessage(sender, "irc.target.channelNotFound", args[2]); break;
+					case ChannelNotFound: Utils.sendLocalizedMessage(sender, "irc.target.channelNotFound", args[1]); break;
 					case InvalidTarget: Utils.sendLocalizedMessage(sender, "irc.target.invalidTarget"); break;
-					case NotConnected: Utils.sendLocalizedMessage(sender, "irc.target.notConnected", args[2]); break;
-					case NotOnChannel: Utils.sendLocalizedMessage(sender, "irc.target.notOnChannel", args[2]); break;
-					case ServerNotFound: Utils.sendLocalizedMessage(sender, "irc.target.serverNotFound", args[2]); break;
+					case NotConnected: Utils.sendLocalizedMessage(sender, "irc.target.notConnected", args[1]); break;
+					case NotOnChannel: Utils.sendLocalizedMessage(sender, "irc.target.notOnChannel", args[1]); break;
+					case ServerNotFound: Utils.sendLocalizedMessage(sender, "irc.target.serverNotFound", args[1]); break;
 					case SpecifyServer: Utils.sendLocalizedMessage(sender, "irc.target.specifyServer"); break;
 					default: Utils.sendLocalizedMessage(sender, "irc.target.unknown"); break;
 				}
