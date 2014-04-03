@@ -243,8 +243,9 @@ public class IRCConnection implements Runnable {
 		}
 		if(numeric == IRCReplyCodes.RPL_NAMREPLY) {
 			IRCChannel channel = getChannel(msg.arg(2));
-			for(int i = 3; i < msg.argcount() - 1; i++) {
-				String name = msg.arg(i);
+			String[] names = msg.arg(3).split(" ");
+			for(int i = 0; i < names.length; i++) {
+				String name = names[i];
 				if(name.startsWith("@") || name.startsWith("+")) {
 					name = name.substring(1);
 				}
