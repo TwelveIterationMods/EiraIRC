@@ -205,6 +205,8 @@ public class GuiServerConfig extends GuiScreen {
 			txtServerPassword.setText(config.getServerPassword());
 			txtNickServName.setText(config.getNickServName());
 			txtNickServPassword.setText(config.getNickServPassword());
+			txtIdent.setText(config.getIdent());
+			txtDescription.setText(config.getDescription());
 			autoConnect = config.isAutoConnect();
 			privateMessages = config.allowsPrivateMessages();
 		} else {
@@ -226,6 +228,8 @@ public class GuiServerConfig extends GuiScreen {
 		config.setServerPassword(txtServerPassword.getText());
 		config.setAutoConnect(autoConnect);
 		config.setAllowPrivateMessages(privateMessages);
+		config.setIdent(!txtIdent.getText().isEmpty() ? txtIdent.getText() : Globals.DEFAULT_IDENT);
+		config.setDescription(!txtDescription.getText().isEmpty() ? txtDescription.getText() : Globals.DEFAULT_DESCRIPTION);
 		ConfigurationHandler.addServerConfig(config);
 		ConfigurationHandler.save();
 	}

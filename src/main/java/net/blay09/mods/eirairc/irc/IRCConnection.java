@@ -14,15 +14,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import net.blay09.mods.eirairc.util.Utils;
+import net.blay09.mods.eirairc.util.Globals;
 
 public class IRCConnection implements Runnable {
 
 	public static final int IRC_DEFAULT_PORT = 6667;
 	public static final String EMOTE_START = "\u0001ACTION ";
 	public static final String EMOTE_END = "\u0001";
-	private static final String DEFAULT_IDENT = "EiraIRC";
-	private static final String DEFAULT_DESCRIPTION = "EiraIRC Bot";
 	private static final String LINE_FEED = "\r\n";
 	
 	private final int port;
@@ -57,7 +55,7 @@ public class IRCConnection implements Runnable {
 	}
 	
 	public IRCConnection(String host, int port, String password, String nick) {
-		this(host, port, password, nick, DEFAULT_IDENT, DEFAULT_DESCRIPTION);
+		this(host, port, password, nick, Globals.DEFAULT_IDENT, Globals.DEFAULT_DESCRIPTION);
 	}
 	
 	public IRCConnection(String host, int port, String password, String nick, String ident, String description) {

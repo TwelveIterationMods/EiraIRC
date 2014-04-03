@@ -22,8 +22,8 @@ public class ServerConfig {
 	private final String host;
 	private String nick;
 	private String serverPassword;
-	private String ident = "EiraIRC";
-	private String description = "EiraIRC Bot";
+	private String ident = Globals.DEFAULT_IDENT;
+	private String description = Globals.DEFAULT_DESCRIPTION;
 	private String nickServName;
 	private String nickServPassword;
 	private final Map<String, ChannelConfig> channels = new HashMap<String, ChannelConfig>();
