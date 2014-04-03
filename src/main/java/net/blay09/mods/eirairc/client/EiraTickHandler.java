@@ -25,6 +25,7 @@ import net.minecraft.client.gui.GuiChat;
 import org.lwjgl.input.Keyboard;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.RenderTickEvent;
 
@@ -78,6 +79,13 @@ public class EiraTickHandler {
 			Screenshot screenshot = ScreenshotManager.getInstance().takeScreenshot();
 			ScreenshotManager.getInstance().uploadScreenshot(screenshot);
 			ScreenshotManager.getInstance().shareScreenshot(screenshot);
+		}
+	}
+	
+	@SubscribeEvent
+	public void worldJoined(PlayerLoggedInEvent event) {
+		if(!EiraIRC.instance.isIRCRunning()) {
+			EiraIRC.instance.startIRC();
 		}
 	}
 	
