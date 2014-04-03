@@ -27,6 +27,7 @@ import net.blay09.mods.eirairc.irc.IRCChannel;
 import net.blay09.mods.eirairc.irc.IRCConnection;
 import net.blay09.mods.eirairc.irc.IRCTarget;
 import net.blay09.mods.eirairc.irc.IRCUser;
+import net.blay09.mods.eirairc.net.EiraPlayerInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
@@ -45,7 +46,12 @@ public class Utils {
 	private static final String DEFAULT_USERNAME = "EiraBot";
 	
 	public static void sendLocalizedMessage(ICommandSender sender, String key, Object... args) {
-		sender.addChatMessage(getLocalizedChatMessage(key, args));
+		EiraPlayerInfo playerInfo = EiraIRC.instance.getNetHandler().getPlayerInfo(sender.getCommandSenderName());
+		if(playerInfo.modInstalled) {
+			sender.addChatMessage(getLocalizedChatMessage(key, args));
+		} else {
+			sendUnlocalizedMessage(sender, getLocalizedChatMessage(key, args).getUnformattedText());
+		}
 	}
 	
 	public static void sendUnlocalizedMessage(ICommandSender sender, String text) {

@@ -37,6 +37,7 @@ public class PacketHello extends AbstractPacket {
 	@Override
 	public void handleServerSide(EntityPlayer player) {
 		EiraPlayerInfo playerInfo = EiraIRC.instance.getNetHandler().getPlayerInfo(player.getCommandSenderName());
-		playerInfo.modVersion = version;		
+		playerInfo.modInstalled = true;
+		playerInfo.modVersion = version;
 	}
 }
