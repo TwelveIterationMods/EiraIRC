@@ -60,16 +60,16 @@ public class Utils {
 		return StatCollector.translateToLocalFormatted(EiraIRC.MOD_ID + ":" + key, args);
 	}
 	
-	public static IChatComponent getLocalizedChatMessage(String key, Object... args) {
+	public static ChatComponentTranslation getLocalizedChatMessage(String key, Object... args) {
 		return new ChatComponentTranslation(EiraIRC.MOD_ID + ":" + key, args);
 	}
 	
-	public static IChatComponent getLocalizedChatMessageNoPrefix(String key, Object... args) {
+	public static ChatComponentTranslation getLocalizedChatMessageNoPrefix(String key, Object... args) {
 		return new ChatComponentTranslation(key, args);
 	}
 	
-	public static ChatComponentTranslation getUnlocalizedChatMessage(String text) {
-		return new ChatComponentTranslation(text);
+	public static ChatComponentText getUnlocalizedChatMessage(String text) {
+		return new ChatComponentText(text);
 	}
 	
 	public static void addMessageToChat(String text) {
@@ -305,7 +305,9 @@ public class Utils {
 	}
 	
 	public static String filterCodes(String message) {
-		return message.replaceAll(Globals.COLOR_CODE_PREFIX, "");
+		message = message.replaceAll(Globals.COLOR_CODE_PREFIX, "");
+		message = message.replaceAll("\u0003[0-9][0-9]?[,]?[0-9]?[0-9]?", "");
+		return message;
 	}
 
 	public static ServerConfig getServerConfig(IRCConnection connection) {

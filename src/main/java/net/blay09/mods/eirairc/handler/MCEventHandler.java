@@ -18,6 +18,7 @@ import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -152,7 +153,7 @@ public class MCEventHandler {
 	public void onServerChat(ServerChatEvent event) {
 		String ircNick = Utils.getAliasForPlayer(event.player);
 		String mcNick = Utils.getColorAliasForPlayer(event.player);
-		event.component = Utils.getUnlocalizedChatMessage("<" + mcNick + "> " + event.message);
+		event.component = Utils.getLocalizedChatMessageNoPrefix("chat.type.text", mcNick, event.message);
 		if(!MinecraftServer.getServer().isSinglePlayer()) {
 			String text = event.message;
 			if(IRCCommandHandler.onChatCommand(event.player, text, true)) {
@@ -179,7 +180,7 @@ public class MCEventHandler {
 		}
 		if(event.entityLiving instanceof EntityPlayer) {
 			String name = Utils.getAliasForPlayer((EntityPlayer) event.entityLiving);
-			String ircMessage = event.entityLiving.func_110142_aN().func_151521_b().toString();
+			String ircMessage = event.entityLiving.func_110142_aN().func_151521_b().getUnformattedText();
 			for(IRCConnection connection : EiraIRC.instance.getConnections()) {
 				ServerConfig serverConfig = Utils.getServerConfig(connection);
 				for(IRCChannel channel : connection.getChannels()) {

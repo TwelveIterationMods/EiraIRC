@@ -261,6 +261,10 @@ public class IRCConnection implements Runnable {
 		} else if(numeric == IRCReplyCodes.RPL_WHOISLOGIN) {
 			IRCUser user = getOrCreateUser(msg.arg(1));
 			user.setAuthLogin(msg.arg(2));
+		} else if(numeric == IRCReplyCodes.RPL_MOTD) {
+			// ignore
+		} else if(numeric <= 5 || numeric == 251 || numeric == 252 || numeric == 254 || numeric == 255 || numeric == 265 || numeric == 266 || numeric == 250 || numeric == 375) {
+			// ignore for now
 		} else {
 			System.out.println("Unhandled message code: " + msg.getCommand() + " (" + msg.argcount() + " arguments)");
 		}

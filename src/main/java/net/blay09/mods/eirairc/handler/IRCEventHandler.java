@@ -21,6 +21,7 @@ import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ChatAllowedCharacters;
 
 public class IRCEventHandler implements IIRCEventHandler {
 
@@ -150,10 +151,11 @@ public class IRCEventHandler implements IIRCEventHandler {
 		}
 		ChannelConfig channelConfig = Utils.getServerConfig(connection).getChannelConfig(channel);
 		if(!channelConfig.isMuted()) {
+			message = Utils.filterCodes(message);
+			message = ChatAllowedCharacters.filerAllowedCharacters(message);
 			if(GlobalConfig.enableLinkFilter) {
 				message = Utils.filterLinks(message);
 			}
-			message = Utils.filterCodes(message);
 			String mcMessage = Utils.formatMessage(ConfigHelper.getDisplayFormatConfig().mcChannelMessage, connection.getHost(), channel.getName(), user.getIdentifier(), Utils.getColoredName(user.getName(), ConfigHelper.getIRCColor(channelConfig)), message);
 			Utils.addMessageToChat(mcMessage);
 		}
