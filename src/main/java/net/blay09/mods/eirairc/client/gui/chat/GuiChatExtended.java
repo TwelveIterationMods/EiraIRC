@@ -6,6 +6,7 @@ package net.blay09.mods.eirairc.client.gui.chat;
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.client.ClientChatHandler;
 import net.blay09.mods.eirairc.client.gui.settings.GuiSettings;
+import net.blay09.mods.eirairc.config.CompatibilityConfig;
 import net.blay09.mods.eirairc.config.KeyConfig;
 import net.blay09.mods.eirairc.handler.ChatSessionHandler;
 import net.blay09.mods.eirairc.util.Globals;
@@ -60,7 +61,7 @@ public class GuiChatExtended extends GuiChat {
 	
 	@Override
 	protected void keyTyped(char unicode, int keyCode) {
-		if(keyCode == KeyConfig.toggleTarget) {
+		if(keyCode == KeyConfig.toggleTarget && !CompatibilityConfig.disableChatToggle) {
 			if(Keyboard.isRepeatEvent()) {
 				if(System.currentTimeMillis() - lastToggleTarget >= 1000) {
 					chatSession.setChatTarget((String) null);
@@ -90,16 +91,18 @@ public class GuiChatExtended extends GuiChat {
 	@Override
 	public void drawScreen(int i, int j, float k) {
 		super.drawScreen(i, j, k);
-		String target = chatSession.getChatTarget();
-		if(target == null) {
-			target = "Minecraft";
-		} else {
-			int sepIdx = target.indexOf("/");
-			target = target.substring(sepIdx + 1) + " (" + target.substring(0, sepIdx) + ")";
+		if(!CompatibilityConfig.disableChatToggle) {
+			String target = chatSession.getChatTarget();
+			if(target == null) {
+				target = "Minecraft";
+			} else {
+				int sepIdx = target.indexOf("/");
+				target = target.substring(sepIdx + 1) + " (" + target.substring(0, sepIdx) + ")";
+			}
+			String text = Utils.getLocalizedMessage("irc.gui.chatTarget", target);
+			int rectWidth = Math.max(200, fontRendererObj.getStringWidth(text) + 10);
+			drawRect(0, 0, rectWidth, fontRendererObj.FONT_HEIGHT + 6, COLOR_BACKGROUND);
+			fontRendererObj.drawString(text, 5, 5, Globals.TEXT_COLOR);
 		}
-		String text = Utils.getLocalizedMessage("irc.gui.chatTarget", target);
-		int rectWidth = Math.max(200, fontRendererObj.getStringWidth(text) + 10);
-		drawRect(0, 0, rectWidth, fontRendererObj.FONT_HEIGHT + 6, COLOR_BACKGROUND);
-		fontRendererObj.drawString(text, 5, 5, Globals.TEXT_COLOR);
 	}
 }

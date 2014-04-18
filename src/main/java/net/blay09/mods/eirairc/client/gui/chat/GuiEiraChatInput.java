@@ -8,6 +8,7 @@ import org.lwjgl.input.Keyboard;
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.client.ClientChatHandler;
 import net.blay09.mods.eirairc.client.gui.settings.GuiSettings;
+import net.blay09.mods.eirairc.config.CompatibilityConfig;
 import net.blay09.mods.eirairc.config.KeyConfig;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
@@ -87,7 +88,7 @@ public class GuiEiraChatInput extends GuiScreen {
 	
 	@Override
 	protected void keyTyped(char unicode, int keyCode) {
-		if(keyCode == KeyConfig.toggleTarget) {
+		if(keyCode == KeyConfig.toggleTarget && !CompatibilityConfig.disableChatToggle) {
 			if(Keyboard.isRepeatEvent()) {
 				if(System.currentTimeMillis() - lastToggleTarget >= 1000) {
 					parentChat.getChatSession().setChatTarget((String) null);
@@ -139,7 +140,9 @@ public class GuiEiraChatInput extends GuiScreen {
 		drawRect(2, this.height - 14, this.width - 2, this.height - 2, Integer.MIN_VALUE);
 		txtInput.drawTextBox();
 		
-		drawTargetOverlay();
+		if(!CompatibilityConfig.disableChatToggle) {
+			drawTargetOverlay();
+		}
 	}
 	
 	private void drawTargetOverlay() {

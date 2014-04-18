@@ -350,7 +350,7 @@ public class IRCCommandHandler {
 			if(args.length <= 2) {
 				throw new WrongUsageException(Globals.MOD_ID + ":irc.commands.msg", commandName);
 			}
-			Object target = Utils.resolveIRCTarget(args[1], false, false, false, false, true, serverSide);
+			Object target = Utils.resolveIRCTarget(args[1], false, false, true, true, true, serverSide);
 			if(target instanceof IRCTargetError) {
 				switch((IRCTargetError) target) {
 				case NotConnected: Utils.sendLocalizedMessage(sender, "irc.target.notConnected", args[1]);
@@ -363,12 +363,16 @@ public class IRCCommandHandler {
 					break;
 				case UserNotFound: Utils.sendLocalizedMessage(sender, "irc.target.userNotFound", args[1]);
 					break;
+				case ChannelNotFound: Utils.sendLocalizedMessage(sender, "irc.target.channelNotFound", args[1]);
+					break;
+				case InvalidTarget: Utils.sendLocalizedMessage(sender, "irc.target.invalidTarget", args[1]);
+					break;
 				default:
 					break;
 				}
 				return true;
 			}
-			IRCUser targetUser = (IRCUser) target;
+			IRCTarget targetIRC = (IRCTarget) target;
 			String message = "";
 			for(int i = 2; i < args.length; i++) {
 				message += " " + args[i];
@@ -377,8 +381,12 @@ public class IRCCommandHandler {
 			if(message.isEmpty()) {
 				throw new WrongUsageException(Globals.MOD_ID + ":irc.commands.msg", commandName);
 			}
-			targetUser.getConnection().sendPrivateMessage(targetUser, "<" + Utils.getAliasForPlayer((EntityPlayer) sender) + "> " + message);
-			String mcMessage = "[-> " + targetUser.getName() + "] <" + Utils.getColorAliasForPlayer((EntityPlayer) sender) + "> " + message;
+			String ircMessage = message;
+			if(serverSide) {
+				ircMessage = "<" + Utils.getAliasForPlayer((EntityPlayer) sender) + "> " + ircMessage;
+			}
+			targetIRC.getConnection().sendMessage(targetIRC.getName(), ircMessage);
+			String mcMessage = "[-> " + targetIRC.getName() + "] <" + Utils.getColorAliasForPlayer((EntityPlayer) sender) + "> " + message;
 			Utils.sendUnlocalizedMessage(sender, mcMessage);
 			return true;
 		} else if(cmd.equals("config")) { // [serv]irc config global|<host> <option> [value]

@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import net.blay09.mods.eirairc.config.ChannelConfig;
+import net.blay09.mods.eirairc.config.CompatibilityConfig;
 import net.blay09.mods.eirairc.config.DisplayConfig;
 import net.blay09.mods.eirairc.config.GlobalConfig;
 import net.blay09.mods.eirairc.config.KeyConfig;
@@ -24,6 +25,8 @@ import net.minecraftforge.common.config.Configuration;
 
 public class ConfigurationHandler {
 
+	private static String CONFIG_VERSION = "2";
+	
 	public static final String CATEGORY_GLOBAL = "global";
 	public static final String CATEGORY_DISPLAY = "display";
 	public static final String CATEGORY_FORMATS = "formats";
@@ -31,6 +34,7 @@ public class ConfigurationHandler {
 	public static final String CATEGORY_CLIENTONLY = "clientonly";
 	public static final String CATEGORY_SERVERS = "servers";
 	public static final String CATEGORY_CHANNELS = "channels";
+	public static final String CATEGORY_COMPAT = "compatibility";
 	public static final String PREFIX_SERVER = "server";
 	public static final String PREFIX_CHANNEL = "channel";
 	
@@ -38,8 +42,11 @@ public class ConfigurationHandler {
 	private static Configuration config;
 	
 	public static void load(File configFile) {
+		boolean newConfigFile = !configFile.exists();
 		config = new Configuration(configFile);
-		if(!config.get(CATEGORY_GLOBAL, "isNewConfigFormat", false, "Do not change this, it'll reset your config file.").getBoolean(false)) {
+		if(newConfigFile) {
+			config.get(CATEGORY_GLOBAL, "isNewConfigFormat", true, "Do not change this, it'll reset your config file.").set(true);
+		} else if(!config.get(CATEGORY_GLOBAL, "isNewConfigFormat", false, "Do not change this, it'll reset your config file.").getBoolean(false)) {
 			resetConfig();
 			config.get(CATEGORY_GLOBAL, "isNewConfigFormat", true, "Do not change this, it'll reset your config file.").set(true);
 		}
@@ -50,6 +57,7 @@ public class ConfigurationHandler {
 		NotificationConfig.load(config);
 		ScreenshotConfig.load(config);
 		DisplayConfig.load(config);
+		CompatibilityConfig.load(config);
 		
 		config.save();
 	}
@@ -60,6 +68,7 @@ public class ConfigurationHandler {
 		NotificationConfig.save(config);
 		ScreenshotConfig.save(config);
 		DisplayConfig.save(config);
+		CompatibilityConfig.save(config);
 	}
 	
 	public static void resetConfig() {
@@ -101,6 +110,7 @@ public class ConfigurationHandler {
 			result = GlobalConfig.handleConfigCommand(sender, key, value);
 			if(!result) result = ScreenshotConfig.handleConfigCommand(sender, key, value);
 			if(!result) result = DisplayConfig.handleConfigCommand(sender, key, value);
+			if(!result) result = CompatibilityConfig.handleConfigCommand(sender, key, value);
 			if(result) {
 				Utils.sendLocalizedMessage(sender, "irc.config.change", "Global", key, value);
 				ConfigurationHandler.save();
@@ -137,6 +147,7 @@ public class ConfigurationHandler {
 			if(result == null) result = NotificationConfig.handleConfigCommand(sender, key);
 			if(result == null) result = ScreenshotConfig.handleConfigCommand(sender, key);
 			if(result == null) result = DisplayConfig.handleConfigCommand(sender, key);
+			if(result == null) result = CompatibilityConfig.handleConfigCommand(sender, key);
 			if(result != null) {
 				Utils.sendLocalizedMessage(sender, "irc.config.lookup", "Global", key, result);
 			} else {
