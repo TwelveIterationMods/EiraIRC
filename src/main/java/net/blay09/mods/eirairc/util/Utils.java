@@ -125,15 +125,19 @@ public class Utils {
 		return "\"" + s + "\"";
 	}
 	
+	public static String addPreSuffix(String name) {
+		return GlobalConfig.nickPrefix + name + GlobalConfig.nickSuffix;
+	}
+	
 	public static String getAliasForPlayer(EntityPlayer player) {
 		if(!GlobalConfig.enableAliases) {
-			return player.getCommandSenderName();
+			return addPreSuffix(player.getCommandSenderName());
 		}
 		String name = player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getCompoundTag("EiraIRC").getString("Alias");
 		if(name.isEmpty()) {
 			name = player.getCommandSenderName();
 		}
-		return name;
+		return addPreSuffix(name);
 	}
 	
 	public static boolean isOP(ICommandSender sender) {
@@ -158,15 +162,7 @@ public class Utils {
 	
 	public static String getColorAliasForPlayer(EntityPlayer player) {
 		NBTTagCompound tagCompound = player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getCompoundTag("EiraIRC");
-		String alias = null;
-		if(GlobalConfig.enableAliases) {
-			alias = tagCompound.getString("Alias");
-			if(alias.isEmpty()) {
-				alias = player.getCommandSenderName();
-			}
-		} else {
-			alias = player.getCommandSenderName();
-		}
+		String alias = getAliasForPlayer(player);
 		boolean isOP = isOP(player);
 		if(!DisplayConfig.enableNameColors && !isOP) {
 			return alias;
