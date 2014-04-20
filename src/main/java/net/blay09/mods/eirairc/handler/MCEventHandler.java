@@ -16,6 +16,8 @@ import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.command.server.CommandBroadcast;
+import net.minecraft.command.server.CommandEmote;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentTranslation;
@@ -54,7 +56,7 @@ public class MCEventHandler {
 
 	@SubscribeEvent
 	public void onCommand(CommandEvent event) {
-		if(event.command.getCommandName().equals("me")) {
+		if(event.command instanceof CommandEmote) {
 			if(event.sender instanceof EntityPlayer) {
 				String emote = "";
 				for(int i = 0; i < event.parameters.length; i++) {
@@ -80,6 +82,17 @@ public class MCEventHandler {
 					}
 				}
 				event.setCanceled(true);
+			}
+		} else if(event.command instanceof CommandBroadcast) {
+			String ircMessage = Utils.formatMessage(ConfigHelper.getDisplayFormatConfig().ircBroadcastMessage, "Server", "Server", event.parameters[0]);
+			for(IRCConnection connection : EiraIRC.instance.getConnections()) {
+				ServerConfig serverConfig = Utils.getServerConfig(connection);
+				for(IRCChannel channel : connection.getChannels()) {
+					ChannelConfig channelConfig = serverConfig.getChannelConfig(channel);
+					if(!channelConfig.isReadOnly() && channelConfig.relayBroadcasts) {
+						connection.sendChannelMessage(channel, ircMessage);
+					}
+				}
 			}
 		}
 	}

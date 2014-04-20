@@ -28,11 +28,8 @@ public class DisplayFormatConfig {
 		config.get(categoryName + Configuration.CATEGORY_SPLITTER + "classic", "ircChannelEmote", Utils.quote("* {NICK} {MESSAGE}"));
 		config.get(categoryName + Configuration.CATEGORY_SPLITTER + "classic", "ircPrivateMessage", Utils.quote("<{NICK}> {MESSAGE}"));
 		config.get(categoryName + Configuration.CATEGORY_SPLITTER + "classic", "ircPrivateEmote", Utils.quote("* {NICK} {MESSAGE}"));
-		config.get(categoryName + Configuration.CATEGORY_SPLITTER + "classic", "ircPlayerJoin", Utils.quote("* {MESSAGE}"));
-		config.get(categoryName + Configuration.CATEGORY_SPLITTER + "classic", "ircPlayerLeave", Utils.quote("* {MESSAGE}"));
-		config.get(categoryName + Configuration.CATEGORY_SPLITTER + "classic", "mcUserJoin", Utils.quote("[{CHANNEL}] * {MESSAGE}"));
-		config.get(categoryName + Configuration.CATEGORY_SPLITTER + "classic", "mcUserLeave", Utils.quote("[{CHANNEL}] * {MESSAGE}"));
-		config.get(categoryName + Configuration.CATEGORY_SPLITTER + "classic", "mcUserQuit", Utils.quote("[{CHANNEL}] * {MESSAGE}"));
+		config.get(categoryName + Configuration.CATEGORY_SPLITTER + "classic", "ircBroadcastMessage", Utils.quote("*** {MESSAGE} ***"));
+		
 		
 		/*
 		 * Light
@@ -50,11 +47,7 @@ public class DisplayFormatConfig {
 		config.get(categoryName + Configuration.CATEGORY_SPLITTER + "light", "ircChannelEmote", Utils.quote("* {NICK} {MESSAGE}"));
 		config.get(categoryName + Configuration.CATEGORY_SPLITTER + "light", "ircPrivateMessage", Utils.quote("<{NICK}> {MESSAGE}"));
 		config.get(categoryName + Configuration.CATEGORY_SPLITTER + "light", "ircPrivateEmote", Utils.quote("* {NICK} {MESSAGE}"));
-		config.get(categoryName + Configuration.CATEGORY_SPLITTER + "light", "ircPlayerJoin", Utils.quote("* {MESSAGE}"));
-		config.get(categoryName + Configuration.CATEGORY_SPLITTER + "light", "ircPlayerLeave", Utils.quote("* {MESSAGE}"));
-		config.get(categoryName + Configuration.CATEGORY_SPLITTER + "light", "mcUserJoin", Utils.quote("[{CHANNEL}] * {MESSAGE}"));
-		config.get(categoryName + Configuration.CATEGORY_SPLITTER + "light", "mcUserLeave", Utils.quote("[{CHANNEL}] * {MESSAGE}"));
-		config.get(categoryName + Configuration.CATEGORY_SPLITTER + "light", "mcUserQuit", Utils.quote("[{CHANNEL}] * {MESSAGE}"));
+		config.get(categoryName + Configuration.CATEGORY_SPLITTER + "light", "ircBroadcastMessage", Utils.quote("*** {MESSAGE} ***"));
 		
 		/*
 		 * S-Light
@@ -72,11 +65,7 @@ public class DisplayFormatConfig {
 		config.get(categoryName + Configuration.CATEGORY_SPLITTER + "slight", "ircChannelEmote", Utils.quote("* {NICK} {MESSAGE}"));
 		config.get(categoryName + Configuration.CATEGORY_SPLITTER + "slight", "ircPrivateMessage", Utils.quote("<{NICK}> {MESSAGE}"));
 		config.get(categoryName + Configuration.CATEGORY_SPLITTER + "slight", "ircPrivateEmote", Utils.quote("* {NICK} {MESSAGE}"));
-		config.get(categoryName + Configuration.CATEGORY_SPLITTER + "slight", "ircPlayerJoin", Utils.quote("* {MESSAGE}"));
-		config.get(categoryName + Configuration.CATEGORY_SPLITTER + "slight", "ircPlayerLeave", Utils.quote("* {MESSAGE}"));
-		config.get(categoryName + Configuration.CATEGORY_SPLITTER + "slight", "mcUserJoin", Utils.quote("[{CHANNEL}] * {MESSAGE}"));
-		config.get(categoryName + Configuration.CATEGORY_SPLITTER + "slight", "mcUserLeave", Utils.quote("[{CHANNEL}] * {MESSAGE}"));
-		config.get(categoryName + Configuration.CATEGORY_SPLITTER + "slight", "mcUserQuit", Utils.quote("[{CHANNEL}] * {MESSAGE}"));
+		config.get(categoryName + Configuration.CATEGORY_SPLITTER + "slight", "ircBroadcastMessage", Utils.quote("*** {MESSAGE} ***"));
 		
 		/*
 		 * Minecraft
@@ -94,11 +83,7 @@ public class DisplayFormatConfig {
 		config.get(categoryName + Configuration.CATEGORY_SPLITTER + "minecraft", "ircChannelEmote", Utils.quote("* {NICK} {MESSAGE}"));
 		config.get(categoryName + Configuration.CATEGORY_SPLITTER + "minecraft", "ircPrivateMessage", Utils.quote("<{NICK}> {MESSAGE}"));
 		config.get(categoryName + Configuration.CATEGORY_SPLITTER + "minecraft", "ircPrivateEmote", Utils.quote("* {NICK} {MESSAGE}"));
-		config.get(categoryName + Configuration.CATEGORY_SPLITTER + "minecraft", "ircPlayerJoin", Utils.quote("* {MESSAGE}"));
-		config.get(categoryName + Configuration.CATEGORY_SPLITTER + "minecraft", "ircPlayerLeave", Utils.quote("* {MESSAGE}"));
-		config.get(categoryName + Configuration.CATEGORY_SPLITTER + "minecraft", "mcUserJoin", Utils.quote("[{CHANNEL}] * {MESSAGE}"));
-		config.get(categoryName + Configuration.CATEGORY_SPLITTER + "minecraft", "mcUserLeave", Utils.quote("[{CHANNEL}] * {MESSAGE}"));
-		config.get(categoryName + Configuration.CATEGORY_SPLITTER + "minecraft", "mcUserQuit", Utils.quote("[{CHANNEL}] * {MESSAGE}"));
+		config.get(categoryName + Configuration.CATEGORY_SPLITTER + "minecraft", "ircBroadcastMessage", Utils.quote("[Server] {MESSAGE}"));
 		
 		/*
 		 * Detail
@@ -116,11 +101,7 @@ public class DisplayFormatConfig {
 		config.get(categoryName + Configuration.CATEGORY_SPLITTER + "detail", "ircChannelEmote", Utils.quote("* {NICK} {MESSAGE}"));
 		config.get(categoryName + Configuration.CATEGORY_SPLITTER + "detail", "ircPrivateMessage", Utils.quote("<{NICK}> {MESSAGE}"));
 		config.get(categoryName + Configuration.CATEGORY_SPLITTER + "detail", "ircPrivateEmote", Utils.quote("* {NICK} {MESSAGE}"));
-		config.get(categoryName + Configuration.CATEGORY_SPLITTER + "detail", "ircPlayerJoin", Utils.quote("* {MESSAGE}"));
-		config.get(categoryName + Configuration.CATEGORY_SPLITTER + "detail", "ircPlayerLeave", Utils.quote("* {MESSAGE}"));
-		config.get(categoryName + Configuration.CATEGORY_SPLITTER + "detail", "mcUserJoin", Utils.quote("[{CHANNEL}] * {MESSAGE}"));
-		config.get(categoryName + Configuration.CATEGORY_SPLITTER + "detail", "mcUserLeave", Utils.quote("[{CHANNEL}] * {MESSAGE}"));
-		config.get(categoryName + Configuration.CATEGORY_SPLITTER + "detail", "mcUserQuit", Utils.quote("[{CHANNEL}] * {MESSAGE}"));
+		config.get(categoryName + Configuration.CATEGORY_SPLITTER + "detail", "ircBroadcastMessage", Utils.quote("[{SERVER}] *** {MESSAGE} ***"));
 		
 		/*
 		 * CUSTOM
@@ -138,11 +119,7 @@ public class DisplayFormatConfig {
 		config.get(categoryName + Configuration.CATEGORY_SPLITTER + "custom", "ircChannelEmote", Utils.quote("* {NICK} {MESSAGE}"));
 		config.get(categoryName + Configuration.CATEGORY_SPLITTER + "custom", "ircPrivateMessage", Utils.quote("<{NICK}> {MESSAGE}"));
 		config.get(categoryName + Configuration.CATEGORY_SPLITTER + "custom", "ircPrivateEmote", Utils.quote("* {NICK} {MESSAGE}"));
-		config.get(categoryName + Configuration.CATEGORY_SPLITTER + "custom", "ircPlayerJoin", Utils.quote("* {MESSAGE}"));
-		config.get(categoryName + Configuration.CATEGORY_SPLITTER + "custom", "ircPlayerLeave", Utils.quote("* {MESSAGE}"));
-		config.get(categoryName + Configuration.CATEGORY_SPLITTER + "custom", "mcUserJoin", Utils.quote("[{CHANNEL}] * {MESSAGE}"));
-		config.get(categoryName + Configuration.CATEGORY_SPLITTER + "custom", "mcUserLeave", Utils.quote("[{CHANNEL}] * {MESSAGE}"));
-		config.get(categoryName + Configuration.CATEGORY_SPLITTER + "custom", "mcUserQuit", Utils.quote("[{CHANNEL}] * {MESSAGE}"));
+		config.get(categoryName + Configuration.CATEGORY_SPLITTER + "classic", "ircBroadcastMessage", Utils.quote("*** {MESSAGE} ***"));
 		config.getCategory(categoryName + Configuration.CATEGORY_SPLITTER + "custom").setComment("Use this one if you want to customize the way messages are displayed in minecraft / on IRC.");
 		
 	}
@@ -168,6 +145,7 @@ public class DisplayFormatConfig {
 	public String ircPlayerJoin;
 	public String ircPlayerLeave;
 	public String ircPlayerNickChange;
+	public String ircBroadcastMessage;
 	
 	public DisplayFormatConfig(ConfigCategory category) {
 		categoryName = category.getQualifiedName();
@@ -197,6 +175,8 @@ public class DisplayFormatConfig {
 		ircPlayerJoin = Utils.unquote(config.get(categoryName, "ircPlayerJoin", "").getString());
 		ircPlayerLeave = Utils.unquote(config.get(categoryName, "ircPlayerLeave", "").getString());
 		ircPlayerNickChange = Utils.unquote(config.get(categoryName, "ircPlayerNickChange", "").getString());
+		
+		ircBroadcastMessage = Utils.unquote(config.get(categoryName, "ircBroadcastMessage", "").getString());
 	}
 	
 	public String getName() {
