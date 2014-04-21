@@ -62,7 +62,14 @@ public class ScreenshotManager {
 	private final Comparator<Screenshot> comparator = new Comparator<Screenshot>() {
 		@Override
 		public int compare(Screenshot first, Screenshot second) {
-			return (int) (second.getFile().lastModified() - first.getFile().lastModified());
+			long flm = first.getFile().lastModified();
+			long slm = second.getFile().lastModified();
+			if (flm < slm) {
+				return 1;
+			} else if(flm > slm) {
+				return -1;
+			}
+			return 0;
 		}
 	};
 
