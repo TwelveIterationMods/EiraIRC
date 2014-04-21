@@ -76,9 +76,9 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void onChannelJoined(IRCChannel channel) {
 		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-		if(channel.hasTopic()) {
-			Utils.sendLocalizedMessage(player, "irc.display.irc.topic", channel.getName(), channel.getTopic());
-		}
+//		if(channel.hasTopic()) {
+//			Utils.sendLocalizedMessage(player, "irc.display.irc.topic", channel.getName(), channel.getTopic());
+//		}
 		ServerConfig serverConfig = ConfigurationHandler.getServerConfig(channel.getConnection().getHost());
 		ChannelConfig channelConfig = serverConfig.getChannelConfig(channel);
 		if(channelConfig.isAutoWho()) {

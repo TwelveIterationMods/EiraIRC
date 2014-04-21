@@ -256,9 +256,9 @@ public class IRCConnection implements Runnable {
 			connected = true;
 			connectionHandler.onConnected(this);
 		} else if(numeric == IRCReplyCodes.RPL_TOPIC) {
-			IRCChannel channel = getChannel(msg.arg(0));
+			IRCChannel channel = getChannel(msg.arg(1));
 			if(channel != null) {
-				channel.setTopic(msg.arg(1));
+				channel.setTopic(msg.arg(2));
 				eventHandler.onTopicChange(channel, channel.getTopic());
 			}
 		} else if(numeric == IRCReplyCodes.RPL_WHOISLOGIN) {
