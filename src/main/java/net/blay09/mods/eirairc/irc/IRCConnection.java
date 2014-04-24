@@ -26,6 +26,7 @@ public class IRCConnection implements Runnable {
 	private final int port;
 	private final String host;
 	private final String password;
+	private String serverType;
 	private String nick;
 	private String ident;
 	private String description;
@@ -303,6 +304,8 @@ public class IRCConnection implements Runnable {
 					eventHandler.onPrivateMessage(this, user, message);
 				}
 			}
+		} else if(cmd.equals("NOTICE")) {
+			System.out.println("(" + msg.getPrefix() + ") " + msg.arg(1));
 		} else if(cmd.equals("JOIN")) {
 			IRCUser user = getOrCreateUser(msg.getNick());
 			IRCChannel channel = getOrCreateChannel(msg.arg(0));
@@ -390,6 +393,10 @@ public class IRCConnection implements Runnable {
 			return it.next();
 		}
 		return null;
+	}
+
+	public String getServerType() {
+		return serverType;
 	}
 
 }

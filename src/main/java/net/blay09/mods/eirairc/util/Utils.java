@@ -21,6 +21,8 @@ import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.DisplayConfig;
 import net.blay09.mods.eirairc.config.GlobalConfig;
+import net.blay09.mods.eirairc.config.ServiceConfig;
+import net.blay09.mods.eirairc.config.ServiceSettings;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.irc.IRCChannel;
@@ -93,7 +95,11 @@ public class Utils {
 	private static List<String> tmpStrings = new ArrayList<String>();
 	public static List<String> wrapString(String text, int maxLength) {
 		tmpStrings.clear();
-		if(text== null || text.length() <= maxLength) {
+		if(text == null) {
+			return tmpStrings;
+		}
+		text = text.trim();
+		if(text.length() <= maxLength) {
 			tmpStrings.add(text);
 			return tmpStrings;
 		}
@@ -109,7 +115,7 @@ public class Utils {
 				i--;
 			}
 			tmpStrings.add(text.substring(0, i));
-			text = text.substring(i);
+			text = text.substring(i + 1).trim();
 		}
 		if(text.length() > 0) {
 			tmpStrings.add(text);
@@ -328,16 +334,13 @@ public class Utils {
 	}
 	
 	public static void doNickServ(IRCConnection connection, ServerConfig config) {
-		NickServSettings settings = NickServSettings.getSettings(connection.getHost());
-		if(settings == null) {
-			return;
-		}
+		ServiceSettings settings = ServiceConfig.getSettings(connection.getHost(), connection.getServerType());
 		String username = config.getNickServName();
 		String password = config.getNickServPassword();
 		if(username == null || username.isEmpty() || password == null || password.isEmpty()) {
 			return;
 		}
-		connection.sendMessage(settings.getBotName(), settings.getIdentifyCommand() + " " + username + " " + password);
+		connection.sendIRC(settings.getIdentifyCommand(username, password));
 	}
 
 	public static String getQuitMessage(IRCConnection connection) {

@@ -10,6 +10,8 @@ import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.DisplayConfig;
 import net.blay09.mods.eirairc.config.GlobalConfig;
+import net.blay09.mods.eirairc.config.ServiceConfig;
+import net.blay09.mods.eirairc.config.ServiceSettings;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.irc.IRCChannel;
@@ -19,7 +21,6 @@ import net.blay09.mods.eirairc.irc.IRCUser;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.IRCTargetError;
-import net.blay09.mods.eirairc.util.NickServSettings;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.ICommandSender;
@@ -597,9 +598,9 @@ public class IRCCommandHandler {
 				nick = args[2];
 			}
 			ServerConfig serverConfig = ConfigurationHandler.getServerConfig(connection.getHost());
-			NickServSettings settings = NickServSettings.getSettings(connection.getHost());
-			if(settings.getGhostCommand() != null) {
-				connection.sendMessage(settings.getBotName(), settings.getGhostCommand() + " " + nick + " " + serverConfig.getNickServPassword());
+			ServiceSettings settings = ServiceConfig.getSettings(connection.getHost(), connection.getServerType());
+			if(settings.hasGhostCommand()) {
+				connection.sendIRC(settings.getGhostCommand(nick, serverConfig.getNickServPassword()));
 			} else {
 				Utils.sendLocalizedMessage(sender, "irc.general.notSupported", "GHOST");
 			}
@@ -700,10 +701,9 @@ public class IRCCommandHandler {
 				EiraIRC.instance.getMCEventHandler().onPlayerNickChange(oldAlias, alias);
 			}
 			return true;
-		}
-		/* else if(cmd.equals("sc")) {
+		}/* else if(cmd.equals("quote")) {
 			if(args.length <= 1) {
-				throw new WrongUsageException(Globals.MOD_ID + ":irc.commands.sc", commandName);
+				throw new WrongUsageException(Globals.MOD_ID + ":irc.commands.quote", commandName);
 			}
 			IRCConnection connection = null;
 			int idx = 0;
@@ -711,7 +711,7 @@ public class IRCCommandHandler {
 			if(args.length <= 2 || target == null) {
 				if(EiraIRC.instance.getConnectionCount() > 1) {
 					Utils.sendLocalizedMessage(sender, "irc.specifyServer");
-					throw new WrongUsageException(Globals.MOD_ID + ":irc.commands.sc", commandName);
+					throw new WrongUsageException(Globals.MOD_ID + ":irc.commands.quote", commandName);
 				} else {
 					connection = EiraIRC.instance.getDefaultConnection();
 					if(connection == null) {
@@ -734,7 +734,7 @@ public class IRCCommandHandler {
 				Utils.sendLocalizedMessage(sender, "irc.target.invalidTarget");
 				return true;
 			}
-			StringBuilder sb = new StringBuilder("/");
+			StringBuilder sb = new StringBuilder();
 			for(int i = idx; i < args.length; i++) {
 				if(i > idx) {
 					sb.append(" ");

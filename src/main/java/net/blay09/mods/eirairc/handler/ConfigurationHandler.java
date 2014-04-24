@@ -14,6 +14,7 @@ import net.blay09.mods.eirairc.config.CompatibilityConfig;
 import net.blay09.mods.eirairc.config.DisplayConfig;
 import net.blay09.mods.eirairc.config.GlobalConfig;
 import net.blay09.mods.eirairc.config.KeyConfig;
+import net.blay09.mods.eirairc.config.ServiceConfig;
 import net.blay09.mods.eirairc.config.NotificationConfig;
 import net.blay09.mods.eirairc.config.ScreenshotConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
@@ -58,6 +59,7 @@ public class ConfigurationHandler {
 		ScreenshotConfig.load(config);
 		DisplayConfig.load(config);
 		CompatibilityConfig.load(config);
+		ServiceConfig.load(config);
 		
 		config.save();
 	}

@@ -13,6 +13,7 @@ import net.blay09.mods.eirairc.client.gui.settings.GuiKeybinds;
 import net.blay09.mods.eirairc.client.gui.settings.GuiSettings;
 import net.blay09.mods.eirairc.client.screenshot.Screenshot;
 import net.blay09.mods.eirairc.client.screenshot.ScreenshotManager;
+import net.blay09.mods.eirairc.config.CompatibilityConfig;
 import net.blay09.mods.eirairc.config.DisplayConfig;
 import net.blay09.mods.eirairc.config.KeyConfig;
 import net.blay09.mods.eirairc.config.ScreenshotConfig;
@@ -103,7 +104,7 @@ public class EiraTickHandler {
 		}
 		handleKeyInput();
 		if(Minecraft.getMinecraft().currentScreen != null && Minecraft.getMinecraft().currentScreen.getClass() == GuiChat.class) {
-			if(DisplayConfig.vanillaChat) {
+			if(CompatibilityConfig.vanillaChat) {
 				Minecraft.getMinecraft().displayGuiScreen(new GuiChatExtended());
 			} else {
 				Minecraft.getMinecraft().displayGuiScreen(new GuiEiraChatInput(eiraChat));

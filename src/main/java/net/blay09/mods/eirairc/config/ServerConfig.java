@@ -24,6 +24,7 @@ public class ServerConfig {
 	private String serverPassword;
 	private String ident = Globals.DEFAULT_IDENT;
 	private String description = Globals.DEFAULT_DESCRIPTION;
+	private String nickServSettings;
 	private String nickServName;
 	private String nickServPassword;
 	private final Map<String, ChannelConfig> channels = new HashMap<String, ChannelConfig>();
@@ -270,4 +271,5 @@ public class ServerConfig {
 			Utils.addBooleansToList(list);
 		}
 	}
+
 }
