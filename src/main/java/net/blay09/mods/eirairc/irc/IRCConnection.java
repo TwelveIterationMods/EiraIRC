@@ -260,7 +260,7 @@ public class IRCConnection implements Runnable {
 			IRCChannel channel = getChannel(msg.arg(1));
 			if(channel != null) {
 				channel.setTopic(msg.arg(2));
-				eventHandler.onTopicChange(channel, channel.getTopic());
+				eventHandler.onTopicChange(null, channel, channel.getTopic());
 			}
 		} else if(numeric == IRCReplyCodes.RPL_WHOISLOGIN) {
 			IRCUser user = getOrCreateUser(msg.arg(1));
@@ -319,6 +319,13 @@ public class IRCConnection implements Runnable {
 				channel.removeUser(user);
 				user.removeChannel(channel);
 				eventHandler.onUserPart(this, user, channel, msg.arg(1));
+			}
+		} else if(cmd.equals("TOPIC")) {
+			IRCUser user = getOrCreateUser(msg.getNick());
+			IRCChannel channel = getChannel(msg.arg(0));
+			if(channel != null) {
+				channel.setTopic(msg.arg(1));
+				eventHandler.onTopicChange(user, channel, msg.arg(1));
 			}
 		} else if(cmd.equals("NICK")) {
 			String newNick = msg.arg(0);
