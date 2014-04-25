@@ -3,18 +3,12 @@
 
 package net.blay09.mods.eirairc.client.gui.settings;
 
-import java.util.Iterator;
-
-import net.blay09.mods.eirairc.config.DisplayFormatConfig;
-import net.blay09.mods.eirairc.config.GlobalConfig;
 import net.blay09.mods.eirairc.config.NotificationConfig;
-import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiTextField;
 
 public class GuiNotifications extends GuiScreen {
 	

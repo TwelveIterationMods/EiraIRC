@@ -193,7 +193,9 @@ public class ChannelConfig {
 	}
 
 	public static void addValuesToList(List<String> list, String option) {
-		Utils.addBooleansToList(list);
+		if(option.startsWith("relay") || option.equals("readOnly") || option.equals("muted") || option.equals("autoJoin") || option.equals("autoWho")) {
+			Utils.addBooleansToList(list);
+		}
 	}
 	
 }

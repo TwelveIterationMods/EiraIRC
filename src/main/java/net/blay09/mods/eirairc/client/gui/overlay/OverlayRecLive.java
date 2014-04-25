@@ -5,8 +5,6 @@ package net.blay09.mods.eirairc.client.gui.overlay;
 
 import java.util.List;
 
-import org.lwjgl.opengl.GL11;
-
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.config.DisplayConfig;
 import net.blay09.mods.eirairc.net.EiraPlayerInfo;
@@ -17,11 +15,10 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiPlayerInfo;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.network.NetHandlerPlayClient;
-import net.minecraft.scoreboard.Score;
 import net.minecraft.scoreboard.ScoreObjective;
-import net.minecraft.scoreboard.ScorePlayerTeam;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
+
+import org.lwjgl.opengl.GL11;
 
 public class OverlayRecLive extends Gui {
 

@@ -113,6 +113,7 @@ public class ConfigurationHandler {
 		if(target.equals("global")) {
 			boolean result = false;
 			result = GlobalConfig.handleConfigCommand(sender, key, value);
+			if(!result) result = NotificationConfig.handleConfigCommand(sender, key, value);
 			if(!result) result = ScreenshotConfig.handleConfigCommand(sender, key, value);
 			if(!result) result = DisplayConfig.handleConfigCommand(sender, key, value);
 			if(!result) result = CompatibilityConfig.handleConfigCommand(sender, key, value);

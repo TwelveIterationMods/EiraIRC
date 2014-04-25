@@ -119,7 +119,7 @@ public class DisplayFormatConfig {
 		config.get(categoryName + Configuration.CATEGORY_SPLITTER + "custom", "ircChannelEmote", Utils.quote("* {NICK} {MESSAGE}"));
 		config.get(categoryName + Configuration.CATEGORY_SPLITTER + "custom", "ircPrivateMessage", Utils.quote("<{NICK}> {MESSAGE}"));
 		config.get(categoryName + Configuration.CATEGORY_SPLITTER + "custom", "ircPrivateEmote", Utils.quote("* {NICK} {MESSAGE}"));
-		config.get(categoryName + Configuration.CATEGORY_SPLITTER + "classic", "ircBroadcastMessage", Utils.quote("*** {MESSAGE} ***"));
+		config.get(categoryName + Configuration.CATEGORY_SPLITTER + "custom", "ircBroadcastMessage", Utils.quote("*** {MESSAGE} ***"));
 		config.getCategory(categoryName + Configuration.CATEGORY_SPLITTER + "custom").setComment("Use this one if you want to customize the way messages are displayed in minecraft / on IRC.");
 		
 	}

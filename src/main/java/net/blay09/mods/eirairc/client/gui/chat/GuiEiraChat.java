@@ -6,20 +6,7 @@ package net.blay09.mods.eirairc.client.gui.chat;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.lwjgl.input.Keyboard;
-
-import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.client.ClientChatHandler;
-import net.blay09.mods.eirairc.client.gui.settings.GuiSettings;
-import net.blay09.mods.eirairc.config.KeyConfig;
 import net.blay09.mods.eirairc.handler.ChatSessionHandler;
-import net.blay09.mods.eirairc.util.Globals;
-import net.blay09.mods.eirairc.util.Utils;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiTextField;
-import net.minecraftforge.client.ClientCommandHandler;
 
 public class GuiEiraChat {
 

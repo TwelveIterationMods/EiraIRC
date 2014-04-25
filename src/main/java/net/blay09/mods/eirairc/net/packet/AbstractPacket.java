@@ -7,7 +7,6 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 
 import java.io.UnsupportedEncodingException;
-import java.nio.ByteBuffer;
 
 import net.minecraft.entity.player.EntityPlayer;
 

@@ -3,8 +3,6 @@
 
 package net.blay09.mods.eirairc.client.gui.settings;
 
-import org.lwjgl.input.Keyboard;
-
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.client.gui.GuiPasswordTextField;
 import net.blay09.mods.eirairc.config.ChannelConfig;
@@ -16,6 +14,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
+
+import org.lwjgl.input.Keyboard;
 
 public class GuiChannelConfig extends GuiScreen {
 

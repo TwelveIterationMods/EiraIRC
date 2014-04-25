@@ -160,6 +160,8 @@ public class GlobalConfig {
 			for(String cs : Charset.availableCharsets().keySet()) {
 				list.add(cs);
 			}
+		} else if(option.equals("nickPrefix") || option.equals("nickSuffix")) {
+			list.add("none");
 		}
 	}
 }
