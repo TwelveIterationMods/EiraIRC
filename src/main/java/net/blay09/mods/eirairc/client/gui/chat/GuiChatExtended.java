@@ -61,12 +61,12 @@ public class GuiChatExtended extends GuiChat {
 	
 	@Override
 	protected void keyTyped(char unicode, int keyCode) {
-		if(keyCode == KeyConfig.toggleTarget && !CompatibilityConfig.disableChatToggle) {
+		if(keyCode == KeyConfig.toggleTarget && !CompatibilityConfig.disableChatToggle && !inputField.getText().startsWith("/")) {
 			if(Keyboard.isRepeatEvent()) {
 				if(System.currentTimeMillis() - lastToggleTarget >= 1000) {
 					chatSession.setChatTarget((String) null);
 				}
-			} else if(!inputField.getText().startsWith("/")) {
+			} else {
 				boolean users = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
 				String newTarget = chatSession.getNextTarget(users);
 				if(!users) {
