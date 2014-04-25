@@ -4,7 +4,6 @@
 package net.blay09.mods.eirairc.client;
 
 import net.blay09.mods.eirairc.CommonProxy;
-import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.client.gui.chat.GuiEiraChat;
 import net.blay09.mods.eirairc.client.gui.overlay.OverlayNotification;
 import net.blay09.mods.eirairc.client.gui.overlay.OverlayRecLive;

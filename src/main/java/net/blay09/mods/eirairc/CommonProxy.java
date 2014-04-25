@@ -3,19 +3,9 @@
 
 package net.blay09.mods.eirairc;
 
-import net.blay09.mods.eirairc.command.CommandConnect;
-import net.blay09.mods.eirairc.command.CommandDisconnect;
-import net.blay09.mods.eirairc.command.CommandIRC;
-import net.blay09.mods.eirairc.command.CommandJoin;
-import net.blay09.mods.eirairc.command.CommandNick;
-import net.blay09.mods.eirairc.command.CommandPart;
-import net.blay09.mods.eirairc.command.CommandServIRC;
-import net.blay09.mods.eirairc.command.CommandWho;
-import net.blay09.mods.eirairc.config.GlobalConfig;
 import net.blay09.mods.eirairc.irc.IRCChannel;
 import net.blay09.mods.eirairc.net.packet.PacketNotification;
 import net.blay09.mods.eirairc.util.NotificationType;
-import net.minecraft.command.CommandHandler;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 public class CommonProxy {

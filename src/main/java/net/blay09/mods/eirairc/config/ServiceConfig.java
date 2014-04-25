@@ -2,13 +2,10 @@ package net.blay09.mods.eirairc.config;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
-import sun.security.krb5.Config;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.common.config.Property;
 
 public class ServiceConfig {
 

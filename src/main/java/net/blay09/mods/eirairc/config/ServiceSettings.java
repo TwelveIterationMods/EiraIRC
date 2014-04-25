@@ -3,8 +3,6 @@
 
 package net.blay09.mods.eirairc.config;
 
-import java.util.HashMap;
-import java.util.Map;
 
 public class ServiceSettings {
 	

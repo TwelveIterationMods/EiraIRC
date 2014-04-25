@@ -7,10 +7,8 @@ import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.command.IRCCommandHandler;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.command.ICommand;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.client.ClientCommandHandler;
 
 public class ClientChatHandler {
 
