@@ -37,10 +37,12 @@ public class ConfigurationHandler {
 	public static final String CATEGORY_SERVERS = "servers";
 	public static final String CATEGORY_CHANNELS = "channels";
 	public static final String CATEGORY_COMPAT = "compatibility";
+	public static final String CATEGORY_NOTIFICATIONS = "notifications";
 	public static final String PREFIX_SERVER = "server";
 	public static final String PREFIX_CHANNEL = "channel";
 	
 	private static final Map<String, ServerConfig> serverConfigs = new HashMap<String, ServerConfig>();
+
 	private static Configuration config;
 	
 	public static void load(File configFile) {

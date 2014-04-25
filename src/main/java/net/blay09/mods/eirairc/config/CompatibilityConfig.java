@@ -48,7 +48,7 @@ public class CompatibilityConfig {
 	}
 
 	public static void addValuesToList(List<String> list, String option) {
-		if(option.equals("disableChatToggle")) {
+		if(option.equals("disableChatToggle") || option.equals("vanillaChat")) {
 			Utils.addBooleansToList(list);
 		}
 	}

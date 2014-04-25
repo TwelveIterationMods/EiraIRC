@@ -78,7 +78,6 @@ public class DisplayConfig {
 		list.add("relayNickChanges");
 		list.add("opColor");
 		list.add("enableNameColors");
-		list.add("vanillaChat");
 	}
 	
 	public static void addValuesToList(List<String> list, String option) {
@@ -88,8 +87,6 @@ public class DisplayConfig {
 			for(String dm : displayFormates.keySet()) {
 				list.add(dm);
 			}
-		} else if(option.equals("vanillaChat")) {
-			Utils.addBooleansToList(list);
 		} else if(option.startsWith("relay") || option.startsWith("enable")) {
 			Utils.addBooleansToList(list);
 		}
