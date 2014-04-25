@@ -1,13 +1,20 @@
 # Commands
-eirairc:irc.commands.irc=/[serv]irc <command>
+eirairc:irc.commands.irc=/irc <command>
+eirairc:irc.commands.servirc=/servirc <command>
 eirairc:irc.commands.connect=/[serv]irc connect <server> [password]
+eirairc:irc.commands.connect.short=/connect <server> [password]
 eirairc:irc.commands.disconnect=/[serv]irc disconnect [server]
+eirairc:irc.commands.disconnect.short=/disconnect [server]
 eirairc:irc.commands.join=/[serv]irc join [server/]<channel> (ex. irc.esper.net/#EiraIRC)
+eirairc:irc.commands.join.short=/join [server/]<channel> (ex. irc.esper.net/#EiraIRC)
 eirairc:irc.commands.leave=/[serv]irc leave [server/]<channel> (ex. irc.esper.net/#EiraIRC)
+eirairc:irc.commands.leave.short=/leave [server/]<channel> (ex. irc.esper.net/#EiraIRC)
 eirairc:irc.commands.who=/[serv]irc who [(<server>|<channel>)]
+eirairc:irc.commands.who.short=/who [(<server>|<channel>)]
 eirairc:irc.commands.msg=/[serv]irc msg <channel|nick> <message ...>
 eirairc:irc.commands.help=/[serv]irc help <topic>
 eirairc:irc.commands.nick=/[serv]irc nick [server] <nick>
+eirairc:irc.commands.nick.short=/nick [server] <nick>
 eirairc:irc.commands.config=/[serv]irc config (global|<server>|<channel>) <key> [value]
 eirairc:irc.commands.twitch=/servirc twitch <username> <oauth>
 eirairc:irc.commands.nickserv=/servirc nickserv <username> <password>

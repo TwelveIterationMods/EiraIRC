@@ -101,7 +101,7 @@ public class EiraIRC {
 	
 	@EventHandler
 	public void serverLoad(FMLServerStartingEvent event) {
-		registerCommands((CommandHandler) event.getServer().getCommandManager(), true);
+		registerCommands((CommandHandler) event.getServer().getCommandManager(), !event.getServer().isSinglePlayer());
 		
 		if(!MinecraftServer.getServer().isSinglePlayer()) {
 			startIRC();
