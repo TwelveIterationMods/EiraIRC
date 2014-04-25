@@ -49,12 +49,15 @@ public class GuiServerConfig extends GuiScreen {
 		txtHost = new GuiTextField(fontRendererObj, width / 2 - 120, height / 2 - 85, 100, 15);
 		txtNick = new GuiTextField(fontRendererObj, width / 2 - 120, height / 2 - 45, 100, 15);
 		txtServerPassword = new GuiPasswordTextField(fontRendererObj, width / 2 + 5, height / 2 - 85, 100, 15);
+		txtServerPassword.setMaxStringLength(Integer.MAX_VALUE);
 		txtIdent = new GuiDefaultTextField(fontRendererObj, width / 2 + 5, height / 2 - 45, 100, 15);
 		txtIdent.setDefaultText(Globals.DEFAULT_IDENT);
 		txtDescription = new GuiDefaultTextField(fontRendererObj, width / 2 - 120, height / 2 - 5, 100, 15);
 		txtDescription.setDefaultText(Globals.DEFAULT_DESCRIPTION);
 		txtNickServName = new GuiTextField(fontRendererObj, width / 2 - 120, height / 2 + 35, 100, 15);
+		txtNickServName.setMaxStringLength(Integer.MAX_VALUE);
 		txtNickServPassword = new GuiPasswordTextField(fontRendererObj, width / 2 - 120, height / 2 + 75, 100, 15);
+		txtNickServPassword.setMaxStringLength(Integer.MAX_VALUE);
 		
 		btnPrivateMessages = new GuiButton(2, width / 2 - 10, height / 2 - 20, 130, 20, "");
 		buttonList.add(btnPrivateMessages);
