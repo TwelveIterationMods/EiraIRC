@@ -60,11 +60,6 @@
 			<fileset dir="${private.dir.mcp}\src\minecraft\" includes="mcmod.info" />
 			<fileset dir="${private.dir.mcp}\reobf\minecraft" />
 			<fileset dir="${private.dir.development}\resources" />
-			
-			<manifest>
-			    <attribute name="FMLCorePlugin" value="blay09.mods.eirairc.asm.IRCLoadingPlugin" />
-				<attribute name="FMLCorePluginContainsFMLMod" value="true" />
-			</manifest>
 		</jar>
 
 		<!-- Clean up the MCP source now that we are done -->
@@ -85,11 +80,6 @@
 			<fileset dir="${private.dir.mcp}\src\minecraft\" includes="mcmod.info" />
 			<fileset dir="${private.dir.mcp}\reobf\minecraft" />
 			<fileset dir="${private.dir.development}\resources" />
-			
-			<manifest>
-			    <attribute name="FMLCorePlugin" value="blay09.mods.eirairc.asm.IRCLoadingPlugin" />
-			    <attribute name="FMLCorePluginContainsFMLMod" value="true" />
-			</manifest>
 		</jar>
 
 		<!-- Clean up the MCP source now that we are done -->
