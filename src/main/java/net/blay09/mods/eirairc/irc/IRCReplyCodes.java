@@ -58,6 +58,7 @@ public class IRCReplyCodes {
 	public static final int RPL_ISON = 303;
 	public static final int RPL_UNAWAY = 305;
 	public static final int RPL_NOWAWAY = 306;
+	public static final int RPL_IDENTIFIED = 307;
 	public static final int RPL_WHOISSERVER = 312;
 	public static final int RPL_WHOISOPERATOR = 313;
 	public static final int RPL_WHOISLOGIN = 330;

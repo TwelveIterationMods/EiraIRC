@@ -265,6 +265,9 @@ public class IRCConnection implements Runnable {
 		} else if(numeric == IRCReplyCodes.RPL_WHOISLOGIN) {
 			IRCUser user = getOrCreateUser(msg.arg(1));
 			user.setAuthLogin(msg.arg(2));
+		} else if(numeric == IRCReplyCodes.RPL_IDENTIFIED) {
+			IRCUser user = getOrCreateUser(msg.arg(1));
+			user.setAuthLogin(msg.arg(1));
 		} else if(numeric == IRCReplyCodes.ERR_NICKNAMEINUSE || numeric == IRCReplyCodes.ERR_ERRONEUSNICKNAME) {
 			connectionHandler.onIRCError(this, msg);
 		} else if(numeric == IRCReplyCodes.RPL_MOTD) {
