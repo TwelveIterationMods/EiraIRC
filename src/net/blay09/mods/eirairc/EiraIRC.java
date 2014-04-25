@@ -52,7 +52,7 @@ public class EiraIRC {
 	@Instance(Globals.MOD_ID)
 	public static EiraIRC instance;
 	
-	@SidedProxy(serverSide = "blay09.mods.eirairc.CommonProxy", clientSide = "blay09.mods.eirairc.client.ClientProxy")
+	@SidedProxy(serverSide = "net.blay09.mods.eirairc.CommonProxy", clientSide = "net.blay09.mods.eirairc.client.ClientProxy")
 	public static CommonProxy proxy;
 	
 	private IRCEventHandler ircEventHandler;
