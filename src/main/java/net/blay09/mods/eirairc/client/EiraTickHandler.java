@@ -22,10 +22,12 @@ import net.blay09.mods.eirairc.net.packet.PacketRecLiveState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.gui.GuiChat;
+import net.minecraft.client.gui.GuiScreen;
 
 import org.lwjgl.input.Keyboard;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.RenderTickEvent;
@@ -35,9 +37,13 @@ public class EiraTickHandler {
 	private GuiEiraChat eiraChat;
 	private int screenshotCheck;
 	private boolean[] keyState = new boolean[10];
+	private final int keyChat;
+	private final int keyCommand;
 
 	public EiraTickHandler(GuiEiraChat eiraChat) {
 		this.eiraChat = eiraChat;
+		keyChat = Minecraft.getMinecraft().gameSettings.keyBindChat.getKeyCode();
+		keyCommand = Minecraft.getMinecraft().gameSettings.keyBindCommand.getKeyCode();
 	}
 
 	private boolean isKeyPressed(int keyCode, int keyIdx) {
@@ -84,6 +90,30 @@ public class EiraTickHandler {
 	}
 	
 	@SubscribeEvent
+	public void keyInput(KeyInputEvent event) {
+		if(Keyboard.getEventKeyState()) {
+			GuiScreen currentScreen = Minecraft.getMinecraft().currentScreen;
+			if(currentScreen == null || currentScreen.getClass() == GuiChat.class) {
+				if(Keyboard.getEventKey() == keyChat) {
+					Minecraft.getMinecraft().gameSettings.keyBindChat.isPressed();
+					if(CompatibilityConfig.vanillaChat) {
+						Minecraft.getMinecraft().displayGuiScreen(new GuiChatExtended());
+					} else {
+						Minecraft.getMinecraft().displayGuiScreen(new GuiEiraChatInput(eiraChat));
+					}
+				} else if(Keyboard.getEventKey() == keyChat) {
+					Minecraft.getMinecraft().gameSettings.keyBindChat.isPressed();
+					if(CompatibilityConfig.vanillaChat) {
+						Minecraft.getMinecraft().displayGuiScreen(new GuiChatExtended("/"));
+					} else {
+						Minecraft.getMinecraft().displayGuiScreen(new GuiEiraChatInput(eiraChat, "/"));
+					}
+				}
+			}
+		}
+	}
+	
+	@SubscribeEvent
 	public void worldJoined(PlayerLoggedInEvent event) {
 		if(!EiraIRC.instance.isIRCRunning()) {
 			EiraIRC.instance.startIRC();
@@ -103,13 +133,6 @@ public class EiraTickHandler {
 			}
 		}
 		handleKeyInput();
-		if(Minecraft.getMinecraft().currentScreen != null && Minecraft.getMinecraft().currentScreen.getClass() == GuiChat.class) {
-			if(CompatibilityConfig.vanillaChat) {
-				Minecraft.getMinecraft().displayGuiScreen(new GuiChatExtended());
-			} else {
-				Minecraft.getMinecraft().displayGuiScreen(new GuiEiraChatInput(eiraChat));
-			}
-		}
 	}
 	
 	@SubscribeEvent

@@ -22,7 +22,7 @@ public class GlobalConfig {
 	public static boolean enableAliases = false;
 	public static boolean allowPrivateMessages = true;
 	public static boolean persistentConnection = true;
-	public static boolean saveCredentials = false;
+	public static boolean saveCredentials = true;
 	public static boolean enableLinkFilter = false;
 	public static String charset = "UTF-8";
 	public static final List<String> colorBlackList = new ArrayList<String>();

@@ -40,7 +40,7 @@ public class GuiChatExtended extends GuiChat {
 		chatSession = EiraIRC.instance.getChatSessionHandler();
 		this.defaultInputText = defaultInputText;
 	}
-	
+
 	@Override
 	public void initGui() {
 		super.initGui();
