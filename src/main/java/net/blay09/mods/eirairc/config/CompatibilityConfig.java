@@ -1,6 +1,9 @@
 package net.blay09.mods.eirairc.config;
 
+import java.util.List;
+
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
+import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
 import net.minecraftforge.common.config.Configuration;
 
@@ -39,4 +42,14 @@ public class CompatibilityConfig {
 		return true;
 	}
 	
+	public static void addOptionsToList(List<String> list) {
+		list.add("disableChatToggle");
+//		list.add("vanillaChat");
+	}
+
+	public static void addValuesToList(List<String> list, String option) {
+		if(option.equals("disableChatToggle")) {
+			Utils.addBooleansToList(list);
+		}
+	}
 }

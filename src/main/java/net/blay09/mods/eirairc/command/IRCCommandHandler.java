@@ -8,6 +8,7 @@ import java.util.List;
 
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.config.ChannelConfig;
+import net.blay09.mods.eirairc.config.CompatibilityConfig;
 import net.blay09.mods.eirairc.config.DisplayConfig;
 import net.blay09.mods.eirairc.config.GlobalConfig;
 import net.blay09.mods.eirairc.config.ServiceConfig;
@@ -817,7 +818,7 @@ public class IRCCommandHandler {
 		} else if(args.length == 3) {
 			if(args[0].equals("config")) {
 				if(args[1].equals("global")) {
-					GlobalConfig.addOptionsToList(list);
+					ConfigurationHandler.addOptionsToList(list);
 				} else if(args[1].contains("#")) {
 					ChannelConfig.addOptionsToList(list);
 				} else {
@@ -829,7 +830,7 @@ public class IRCCommandHandler {
 		} else if(args.length == 4) {
 			if(args[0].equals("config")) {
 				if(args[1].equals("global")) {
-					GlobalConfig.addValuesToList(list, args[2]);
+					ConfigurationHandler.addValuesToList(list, args[2]);
 				} else if(args[1].contains("#")) {
 					ChannelConfig.addValuesToList(list, args[2]);
 				} else {

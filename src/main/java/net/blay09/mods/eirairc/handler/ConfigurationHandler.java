@@ -7,6 +7,7 @@ import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import net.blay09.mods.eirairc.config.ChannelConfig;
@@ -184,6 +185,22 @@ public class ConfigurationHandler {
 			return it.next();
 		}
 		return null;
+	}
+
+	public static void addOptionsToList(List<String> list) {
+		GlobalConfig.addOptionsToList(list);
+		DisplayConfig.addOptionsToList(list);
+		NotificationConfig.addOptionsToList(list);
+		ScreenshotConfig.addOptionsToList(list);
+		CompatibilityConfig.addOptionsToList(list);
+	}
+
+	public static void addValuesToList(List<String> list, String option) {
+		GlobalConfig.addValuesToList(list, option);
+		DisplayConfig.addValuesToList(list, option);
+		NotificationConfig.addValuesToList(list, option);
+		ScreenshotConfig.addValuesToList(list, option);
+		CompatibilityConfig.addValuesToList(list, option);
 	}
 
 }
