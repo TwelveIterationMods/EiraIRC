@@ -115,10 +115,10 @@ public class ConfigurationHandler {
 		if(target.equals("global")) {
 			boolean result = false;
 			result = GlobalConfig.handleConfigCommand(sender, key, value);
+			if(!result) result = NotificationConfig.handleConfigCommand(sender, key, value);
 			if(!result) result = ScreenshotConfig.handleConfigCommand(sender, key, value);
 			if(!result) result = DisplayConfig.handleConfigCommand(sender, key, value);
 			if(!result) result = CompatibilityConfig.handleConfigCommand(sender, key, value);
-			if(!result) result = NotificationConfig.handleConfigCommand(sender, key, value);
 			if(result) {
 				Utils.sendLocalizedMessage(sender, "irc.config.change", "Global", key, value);
 				ConfigurationHandler.save();
@@ -156,7 +156,6 @@ public class ConfigurationHandler {
 			if(result == null) result = ScreenshotConfig.handleConfigCommand(sender, key);
 			if(result == null) result = DisplayConfig.handleConfigCommand(sender, key);
 			if(result == null) result = CompatibilityConfig.handleConfigCommand(sender, key);
-			if(result == null) result = NotificationConfig.handleConfigCommand(sender, key);
 			
 			if(result != null) {
 				Utils.sendLocalizedMessage(sender, "irc.config.lookup", "Global", key, result);
