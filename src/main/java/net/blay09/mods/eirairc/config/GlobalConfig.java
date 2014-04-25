@@ -103,8 +103,14 @@ public class GlobalConfig {
 		} else if(key.equals("allowPrivateMessages")) {
 			allowPrivateMessages = Boolean.parseBoolean(value);
 		} else if(key.equals("nickPrefix")) {
+			if(value.equals("none")) {
+				value = "";
+			}
 			nickPrefix = value;
 		} else if(key.equals("nickSuffix")) {
+			if(value.equals("none")) {
+				value = "";
+			}
 			nickSuffix = value;
 		} else {
 			return false;
