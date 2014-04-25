@@ -289,9 +289,14 @@ public class IRCEventHandler implements IIRCEventHandler {
 	}
 
 	@Override
-	public void onTopicChange(IRCChannel channel, String topic) {
-		String mcMessage = Utils.getLocalizedMessage("irc.display.irc.topic", channel.getName(), channel.getTopic());
-		Utils.addMessageToChat(mcMessage);
+	public void onTopicChange(IRCUser user, IRCChannel channel, String topic) {
+		if(user == null) {
+			String mcMessage = Utils.getLocalizedMessage("irc.display.irc.topic", channel.getName(), channel.getTopic());
+			Utils.addMessageToChat(mcMessage);
+		} else {
+			String mcMessage = Utils.getLocalizedMessage("irc.display.irc.topicChange", user.getName(), channel.getName(), channel.getTopic());
+			Utils.addMessageToChat(mcMessage);
+		}
 	}
 
 }

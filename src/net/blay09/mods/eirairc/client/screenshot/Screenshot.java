@@ -3,14 +3,9 @@
 
 package net.blay09.mods.eirairc.client.screenshot;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ThreadDownloadImageData;
-import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.client.renderer.texture.TextureObject;
-import net.minecraft.util.ResourceLocation;
 
 public class Screenshot {
 

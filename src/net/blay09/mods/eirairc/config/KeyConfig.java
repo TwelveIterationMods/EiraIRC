@@ -3,10 +3,7 @@
 
 package net.blay09.mods.eirairc.config;
 
-import java.util.List;
-
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
-import net.minecraft.command.ICommandSender;
 import net.minecraftforge.common.Configuration;
 
 import org.lwjgl.input.Keyboard;

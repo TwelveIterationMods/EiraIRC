@@ -26,6 +26,7 @@ public class ChannelConfig {
 	public boolean relayDeathMessages;
 	public boolean relayIRCJoinLeave;
 	public boolean relayNickChanges;
+	public boolean relayBroadcasts;
 	
 	public ChannelConfig(ServerConfig serverConfig, String name) {
 		this.serverConfig = serverConfig;
@@ -69,6 +70,7 @@ public class ChannelConfig {
 		relayDeathMessages = true;
 		relayIRCJoinLeave = true;
 		relayNickChanges = true;
+		relayBroadcasts = true;
 		autoWho = true;
 	}
 	
@@ -91,6 +93,7 @@ public class ChannelConfig {
 		relayDeathMessages = config.get(categoryName, "relayDeathMessages", relayDeathMessages).getBoolean(relayDeathMessages);
 		relayIRCJoinLeave = config.get(categoryName, "relayIRCJoinLeave", relayIRCJoinLeave).getBoolean(relayIRCJoinLeave);
 		relayNickChanges = config.get(categoryName, "relayIRCNickChange", relayNickChanges).getBoolean(relayNickChanges);
+		relayBroadcasts = config.get(categoryName, "relayBroadcasts", relayBroadcasts).getBoolean(relayBroadcasts);
 	}
 
 	public void save(Configuration config, ConfigCategory category) {
@@ -105,6 +108,7 @@ public class ChannelConfig {
 		config.get(categoryName, "relayDeathMessages", relayDeathMessages).set(relayDeathMessages);
 		config.get(categoryName, "relayIRCJoinLeave", relayIRCJoinLeave).set(relayIRCJoinLeave);
 		config.get(categoryName, "relayNickChanges", relayNickChanges).set(relayNickChanges);
+		config.get(categoryName, "relayBroadcasts", relayBroadcasts).set(relayBroadcasts);
 	}
 
 	public void handleConfigCommand(ICommandSender sender, String key) {
@@ -116,6 +120,7 @@ public class ChannelConfig {
 		else if(key.equals("relayDeathMessages")) value = String.valueOf(relayDeathMessages);
 		else if(key.equals("relayIRCJoinLeave")) value = String.valueOf(relayIRCJoinLeave);
 		else if(key.equals("relayNickChanges")) value = String.valueOf(relayNickChanges);
+		else if(key.equals("relayBroadcasts")) value = String.valueOf(relayBroadcasts);
 		else if(key.equals("autoWho")) value = String.valueOf(autoWho);
 		if(value != null) {
 			Utils.sendLocalizedMessage(sender, "irc.config.lookup", name, key, value);
@@ -139,6 +144,8 @@ public class ChannelConfig {
 			relayIRCJoinLeave = Boolean.parseBoolean(value);
 		} else if(key.equals("relayNickChanges")) {
 			relayNickChanges = Boolean.parseBoolean(value);
+		} else if(key.equals("relayBroadcasts")) {
+			relayBroadcasts = Boolean.parseBoolean(value);
 		} else if(key.equals("autoWho")) {
 			autoWho = Boolean.parseBoolean(value);
 		} else {
@@ -157,6 +164,7 @@ public class ChannelConfig {
 		list.add("relayDeathMessages");
 		list.add("relayIRCJoinLeave");
 		list.add("relayNickChanges");
+		list.add("relayBroadcasts");
 		list.add("autoWho");
 	}
 	
@@ -185,7 +193,9 @@ public class ChannelConfig {
 	}
 
 	public static void addValuesToList(List<String> list, String option) {
-		Utils.addBooleansToList(list);
+		if(option.startsWith("relay") || option.equals("readOnly") || option.equals("muted") || option.equals("autoJoin") || option.equals("autoWho")) {
+			Utils.addBooleansToList(list);
+		}
 	}
 	
 }

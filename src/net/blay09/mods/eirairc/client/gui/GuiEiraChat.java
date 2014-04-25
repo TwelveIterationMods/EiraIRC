@@ -5,6 +5,7 @@ package net.blay09.mods.eirairc.client.gui;
 
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.client.ClientChatHandler;
+import net.blay09.mods.eirairc.config.CompatibilityConfig;
 import net.blay09.mods.eirairc.config.KeyConfig;
 import net.blay09.mods.eirairc.handler.ChatSessionHandler;
 import net.blay09.mods.eirairc.util.Globals;
@@ -70,12 +71,12 @@ public class GuiEiraChat extends GuiChat {
 			}
 			this.mc.displayGuiScreen(null);
 			return;
-		} else if(keyCode == KeyConfig.toggleTarget) {
+		} else if(keyCode == KeyConfig.toggleTarget && !CompatibilityConfig.disableChatToggle && !inputField.getText().startsWith("/")) {
 			if(Keyboard.isRepeatEvent()) {
 				if(System.currentTimeMillis() - lastToggleTarget >= 1000) {
 					chatSession.setChatTarget((String) null);
 				}
-			} else if(!inputField.getText().startsWith("/")) {
+			} else {
 				boolean users = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
 				String newTarget = chatSession.getNextTarget(users);
 				if(!users) {
@@ -93,16 +94,18 @@ public class GuiEiraChat extends GuiChat {
 	@Override
 	public void drawScreen(int i, int j, float k) {
 		super.drawScreen(i, j, k);
-		String target = chatSession.getChatTarget();
-		if(target == null) {
-			target = "Minecraft";
-		} else {
-			int sepIdx = target.indexOf("/");
-			target = target.substring(sepIdx + 1) + " (" + target.substring(0, sepIdx) + ")";
+		if(!CompatibilityConfig.disableChatToggle) {
+			String target = chatSession.getChatTarget();
+			if(target == null) {
+				target = "Minecraft";
+			} else {
+				int sepIdx = target.indexOf("/");
+				target = target.substring(sepIdx + 1) + " (" + target.substring(0, sepIdx) + ")";
+			}
+			String text = Utils.getLocalizedMessage("irc.gui.chatTarget", target);
+			int rectWidth = Math.max(200, fontRenderer.getStringWidth(text) + 10);
+			drawRect(0, 0, rectWidth, fontRenderer.FONT_HEIGHT + 6, COLOR_BACKGROUND);
+			fontRenderer.drawString(text, 5, 5, Globals.TEXT_COLOR);
 		}
-		String text = Utils.getLocalizedMessage("irc.gui.chatTarget", target);
-		int rectWidth = Math.max(200, fontRenderer.getStringWidth(text) + 10);
-		drawRect(0, 0, rectWidth, fontRenderer.FONT_HEIGHT + 6, COLOR_BACKGROUND);
-		fontRenderer.drawString(text, 5, 5, Globals.TEXT_COLOR);
 	}
 }

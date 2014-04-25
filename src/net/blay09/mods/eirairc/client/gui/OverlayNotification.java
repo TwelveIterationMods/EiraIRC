@@ -3,16 +3,14 @@
 
 package net.blay09.mods.eirairc.client.gui;
 
-import java.util.Queue;
-
-import org.lwjgl.opengl.GL11;
-
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.NotificationType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.util.ResourceLocation;
+
+import org.lwjgl.opengl.GL11;
 
 public class OverlayNotification extends Gui {
 

@@ -16,6 +16,8 @@ import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.command.CommandServerEmote;
+import net.minecraft.command.CommandServerSay;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.NetLoginHandler;
@@ -87,7 +89,7 @@ public class MCEventHandler implements IPlayerTracker, IConnectionHandler {
 
 	@ForgeSubscribe
 	public void onCommand(CommandEvent event) {
-		if(event.command.getCommandName().equals("me")) {
+		if(event.command instanceof CommandServerEmote) {
 			if(event.sender instanceof EntityPlayer) {
 				String emote = "";
 				for(int i = 0; i < event.parameters.length; i++) {
@@ -113,6 +115,17 @@ public class MCEventHandler implements IPlayerTracker, IConnectionHandler {
 					}
 				}
 				event.setCanceled(true);
+			}
+		} else if(event.command instanceof CommandServerSay) {
+			String ircMessage = Utils.formatMessage(ConfigHelper.getDisplayFormatConfig().ircBroadcastMessage, "Server", "Server", event.parameters[0]);
+			for(IRCConnection connection : EiraIRC.instance.getConnections()) {
+				ServerConfig serverConfig = Utils.getServerConfig(connection);
+				for(IRCChannel channel : connection.getChannels()) {
+					ChannelConfig channelConfig = serverConfig.getChannelConfig(channel);
+					if(!channelConfig.isReadOnly() && channelConfig.relayBroadcasts) {
+						connection.sendChannelMessage(channel, ircMessage);
+					}
+				}
 			}
 		}
 	}
@@ -214,6 +227,7 @@ public class MCEventHandler implements IPlayerTracker, IConnectionHandler {
 		if(event.entityLiving instanceof EntityPlayer) {
 			String name = Utils.getAliasForPlayer((EntityPlayer) event.entityLiving);
 			String ircMessage = event.entityLiving.func_110142_aN().func_94546_b().toString();
+			ircMessage = ircMessage.replaceAll(event.entityLiving.getEntityName(), name);
 			for(IRCConnection connection : EiraIRC.instance.getConnections()) {
 				ServerConfig serverConfig = Utils.getServerConfig(connection);
 				for(IRCChannel channel : connection.getChannels()) {

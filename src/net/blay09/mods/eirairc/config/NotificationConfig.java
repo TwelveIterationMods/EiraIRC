@@ -1,19 +1,34 @@
-// Copyright (c) 2013, Christopher "blay09" Baker
+// Copyright (c) 2014, Christopher "blay09" Baker
 // All rights reserved.
 
 package net.blay09.mods.eirairc.config;
 
 import java.util.List;
 
-import net.blay09.mods.eirairc.client.upload.UploadHoster;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
-import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
 import net.minecraftforge.common.Configuration;
 
 public class NotificationConfig {
 
-	private static final String CATEGORY = ConfigurationHandler.CATEGORY_CLIENTONLY;
+	private static final String CATEGORY = ConfigurationHandler.CATEGORY_NOTIFICATIONS;
+	
+	private static final String PREFIX_OPTION = "notify";
+	private static final String OPTION_FRIENDJOIN = "notifyFriendJoined";
+	private static final String OPTION_MENTIONED = "notifyNameMentioned";
+	private static final String OPTION_RECORDING = "notifyUserRecording";
+	private static final String OPTION_PRIVATEMESSAGE = "notifyPrivateMessage";
+	
+	private static final String OPTION_SOUNDNAME = "sound";
+	private static final String OPTION_SOUNDVOLUME = "soundVolume";
+	private static final String OPTION_SOUNDPITCH = "soundPitch";
+	
+	private static final String SVALUE_NONE = "none";
+	private static final String SVALUE_SOUNDONLY = "soundonly";
+	private static final String SVALUE_TEXTONLY = "textonly";
+	private static final String SVALUE_TEXTSOUND = "textsound";
+	
+	private static final String DEFAULT_SOUNDNAME = "note.harp";
 	
 	public static final int VALUE_NONE = 0;
 	public static final int VALUE_TEXTONLY = 1;
@@ -25,102 +40,102 @@ public class NotificationConfig {
 	public static int userRecording = VALUE_TEXTANDSOUND;
 	public static int privateMessage = VALUE_TEXTONLY;
 	
-	public static String notificationSound = "note.harp";
+	public static String notificationSound = DEFAULT_SOUNDNAME;
 	public static float soundVolume = 1f;
 	public static float soundPitch = 1f;
 	
 	public static void load(Configuration config) {
-		friendJoined = config.get(CATEGORY, "friendJoined", friendJoined).getInt();
-		nameMentioned = config.get(CATEGORY, "nameMentioned", nameMentioned).getInt();
-		userRecording = config.get(CATEGORY, "userRecording", userRecording).getInt();
-		privateMessage = config.get(CATEGORY, "privateMessage", privateMessage).getInt();
-		notificationSound = config.get(CATEGORY, "notificationSound", notificationSound).getString();
-		soundVolume = (float) config.get(CATEGORY, "soundVolume", soundVolume).getDouble(soundVolume);
-		soundPitch = (float) config.get(CATEGORY, "soundPitch", soundPitch).getDouble(soundPitch);
+		friendJoined = config.get(CATEGORY, OPTION_FRIENDJOIN, friendJoined).getInt();
+		nameMentioned = config.get(CATEGORY, OPTION_MENTIONED, nameMentioned).getInt();
+		userRecording = config.get(CATEGORY, OPTION_RECORDING, userRecording).getInt();
+		privateMessage = config.get(CATEGORY, OPTION_PRIVATEMESSAGE, privateMessage).getInt();
+		notificationSound = config.get(CATEGORY, OPTION_SOUNDNAME, notificationSound).getString();
+		soundVolume = (float) config.get(CATEGORY, OPTION_SOUNDVOLUME, soundVolume).getDouble(soundVolume);
+		soundPitch = (float) config.get(CATEGORY, OPTION_SOUNDPITCH, soundPitch).getDouble(soundPitch);
 	}
 
 	public static void save(Configuration config) {
-		config.get(CATEGORY, "friendJoined", friendJoined).set(friendJoined);
-		config.get(CATEGORY, "nameMentioned", nameMentioned).set(nameMentioned);
-		config.get(CATEGORY, "userRecording", userRecording).set(userRecording);
-		config.get(CATEGORY, "privateMessage", privateMessage).set(privateMessage);
-		config.get(CATEGORY, "notificationSound", notificationSound).set(notificationSound);
-		config.get(CATEGORY, "soundVolume", soundVolume).set(soundVolume);
-		config.get(CATEGORY, "soundPitch", soundPitch).set(soundPitch);
+		config.get(CATEGORY, OPTION_FRIENDJOIN, friendJoined).set(friendJoined);
+		config.get(CATEGORY, OPTION_MENTIONED, nameMentioned).set(nameMentioned);
+		config.get(CATEGORY, OPTION_RECORDING, userRecording).set(userRecording);
+		config.get(CATEGORY, OPTION_PRIVATEMESSAGE, privateMessage).set(privateMessage);
+		config.get(CATEGORY, OPTION_SOUNDNAME, notificationSound).set(notificationSound);
+		config.get(CATEGORY, OPTION_SOUNDVOLUME, soundVolume).set(soundVolume);
+		config.get(CATEGORY, OPTION_SOUNDPITCH, soundPitch).set(soundPitch);
 	}
 	
 	public static void addOptionsToList(List<String> list) {
-		list.add("friendJoined");
-		list.add("nameMentioned");
-		list.add("userRecording");
-		list.add("privateMessage");
-		list.add("notificationSound");
-		list.add("soundVolume");
-		list.add("soundPitch");
+		list.add(OPTION_FRIENDJOIN);
+		list.add(OPTION_MENTIONED);
+		list.add(OPTION_RECORDING);
+		list.add(OPTION_PRIVATEMESSAGE);
+		list.add(OPTION_SOUNDNAME);
+		list.add(OPTION_SOUNDVOLUME);
+		list.add(OPTION_SOUNDPITCH);
 	}
 	
 	public static void addValuesToList(List<String> list, String option) {
-		if(option.equals("notificationSound")) {
-			list.add("note.harp");
-		} else if(option.equals("soundVolume") || option.equals("soundPitch")) {
+		if(option.equals(OPTION_SOUNDNAME)) {
+			list.add(DEFAULT_SOUNDNAME);
+		} else if(option.equals(OPTION_SOUNDVOLUME) || option.equals(OPTION_SOUNDPITCH)) {
 			list.add("1.0");
-		} else {
-			list.add("none");
-			list.add("textonly");
-			list.add("soundonly");
-			list.add("textsound");
+		} else if(option.startsWith(PREFIX_OPTION)) {
+			list.add(SVALUE_NONE);
+			list.add(SVALUE_TEXTONLY);
+			list.add(SVALUE_SOUNDONLY);
+			list.add(SVALUE_TEXTSOUND);
 		}
 	}
 	
 	public static String handleConfigCommand(ICommandSender sender, String key) {
 		String value = null;
-		if(key.equals("notificationSound")) value = notificationSound;
-		else if(key.equals("soundVolume")) value = String.valueOf(soundVolume);
-		else if(key.equals("soundPitch")) value = String.valueOf(soundPitch);
+		if(key.equals(OPTION_SOUNDNAME)) value = notificationSound;
+		else if(key.equals(OPTION_SOUNDVOLUME)) value = String.valueOf(soundVolume);
+		else if(key.equals(OPTION_SOUNDPITCH)) value = String.valueOf(soundPitch);
 		else {
 			int action = 0;
-			if(key.equals("friendJoined")) {
+			if(key.equals(OPTION_FRIENDJOIN)) {
 				action = friendJoined;
-			} else if(key.equals("nameMentioned")) {
+			} else if(key.equals(OPTION_MENTIONED)) {
 				action = nameMentioned;
-			} else if(key.equals("userRecording")) {
+			} else if(key.equals(OPTION_RECORDING)) {
 				action = userRecording;
-			} else if(key.equals("privateMessage")) {
+			} else if(key.equals(OPTION_PRIVATEMESSAGE)) {
 				action = privateMessage;
 			}
 			switch(action) {
-			case VALUE_NONE: value = "none"; break;
-			case VALUE_TEXTONLY: value = "textonly"; break;
-			case VALUE_SOUNDONLY: value = "soundonly"; break;
-			case VALUE_TEXTANDSOUND: value = "textsound"; break;
+			case VALUE_NONE: value = SVALUE_NONE; break;
+			case VALUE_TEXTONLY: value = SVALUE_TEXTONLY; break;
+			case VALUE_SOUNDONLY: value = SVALUE_SOUNDONLY; break;
+			case VALUE_TEXTANDSOUND: value = SVALUE_TEXTSOUND; break;
 			}
 		}
 		return value;
 	}
 	
 	public static boolean handleConfigCommand(ICommandSender sender, String key, String value) {
-		if(key.equals("notificationSound")) {
+		if(key.equals(OPTION_SOUNDNAME)) {
 			notificationSound = value;
-		} else if(key.equals("soundVolume")) {
+		} else if(key.equals(OPTION_SOUNDVOLUME)) {
 			soundVolume = Float.parseFloat(value);
-		} else if(key.equals("soundPitch")) {
+		} else if(key.equals(OPTION_SOUNDPITCH)) {
 			soundPitch = Float.parseFloat(value);
 		} else {
 			int action = 0;
-			if(value.equals("textonly")) {
+			if(value.equals(SVALUE_TEXTONLY)) {
 				action = VALUE_TEXTONLY;
-			} else if(value.equals("soundonly")) {
+			} else if(value.equals(SVALUE_SOUNDONLY)) {
 				action = VALUE_SOUNDONLY;
-			} else if(value.equals("textsound")) {
+			} else if(value.equals(SVALUE_TEXTSOUND)) {
 				action = VALUE_TEXTANDSOUND;
 			}
-			if(key.equals("friendJoined")) {
+			if(key.equals(OPTION_FRIENDJOIN)) {
 				friendJoined = action;
-			} else if(key.equals("nameMentioned")) {
+			} else if(key.equals(OPTION_MENTIONED)) {
 				nameMentioned = action;
-			} else if(key.equals("userRecording")) {
+			} else if(key.equals(OPTION_RECORDING)) {
 				userRecording = action;
-			} else if(key.equals("privateMessage")) {
+			} else if(key.equals(OPTION_PRIVATEMESSAGE)) {
 				privateMessage = action;
 			} else {
 				return false;

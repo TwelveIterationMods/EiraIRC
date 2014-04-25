@@ -11,7 +11,6 @@ import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.net.EiraPlayerInfo;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
-import cpw.mods.fml.common.network.Player;
 
 public class PacketHello extends EiraPacket {
 

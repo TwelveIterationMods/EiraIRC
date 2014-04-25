@@ -7,15 +7,18 @@ import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import net.blay09.mods.eirairc.config.ChannelConfig;
+import net.blay09.mods.eirairc.config.CompatibilityConfig;
 import net.blay09.mods.eirairc.config.DisplayConfig;
 import net.blay09.mods.eirairc.config.GlobalConfig;
 import net.blay09.mods.eirairc.config.KeyConfig;
 import net.blay09.mods.eirairc.config.NotificationConfig;
 import net.blay09.mods.eirairc.config.ScreenshotConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
+import net.blay09.mods.eirairc.config.ServiceConfig;
 import net.blay09.mods.eirairc.util.IRCTargetError;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
@@ -24,6 +27,8 @@ import net.minecraftforge.common.Configuration;
 
 public class ConfigurationHandler {
 
+	private static final String CONFIG_VERSION = "2";
+	
 	public static final String CATEGORY_GLOBAL = "global";
 	public static final String CATEGORY_DISPLAY = "display";
 	public static final String CATEGORY_FORMATS = "formats";
@@ -31,15 +36,21 @@ public class ConfigurationHandler {
 	public static final String CATEGORY_CLIENTONLY = "clientonly";
 	public static final String CATEGORY_SERVERS = "servers";
 	public static final String CATEGORY_CHANNELS = "channels";
+	public static final String CATEGORY_COMPAT = "compatibility";
+	public static final String CATEGORY_NOTIFICATIONS = "notifications";
 	public static final String PREFIX_SERVER = "server";
 	public static final String PREFIX_CHANNEL = "channel";
 	
 	private static final Map<String, ServerConfig> serverConfigs = new HashMap<String, ServerConfig>();
+
 	private static Configuration config;
 	
 	public static void load(File configFile) {
+		boolean newConfigFile = !configFile.exists();
 		config = new Configuration(configFile);
-		if(!config.get(CATEGORY_GLOBAL, "isNewConfigFormat", false, "Do not change this, it'll reset your config file.").getBoolean(false)) {
+		if(newConfigFile) {
+			config.get(CATEGORY_GLOBAL, "isNewConfigFormat", true, "Do not change this, it'll reset your config file.").set(true);
+		} else if(!config.get(CATEGORY_GLOBAL, "isNewConfigFormat", false, "Do not change this, it'll reset your config file.").getBoolean(false)) {
 			resetConfig();
 			config.get(CATEGORY_GLOBAL, "isNewConfigFormat", true, "Do not change this, it'll reset your config file.").set(true);
 		}
@@ -52,6 +63,8 @@ public class ConfigurationHandler {
 		NotificationConfig.load(config);
 		ScreenshotConfig.load(config);
 		DisplayConfig.load(config);
+		CompatibilityConfig.load(config);
+		ServiceConfig.load(config);
 		
 		config.save();
 	}
@@ -62,6 +75,7 @@ public class ConfigurationHandler {
 		NotificationConfig.save(config);
 		ScreenshotConfig.save(config);
 		DisplayConfig.save(config);
+		CompatibilityConfig.save(config);
 	}
 	
 	public static void resetConfig() {
@@ -103,6 +117,8 @@ public class ConfigurationHandler {
 			result = GlobalConfig.handleConfigCommand(sender, key, value);
 			if(!result) result = ScreenshotConfig.handleConfigCommand(sender, key, value);
 			if(!result) result = DisplayConfig.handleConfigCommand(sender, key, value);
+			if(!result) result = CompatibilityConfig.handleConfigCommand(sender, key, value);
+			if(!result) result = NotificationConfig.handleConfigCommand(sender, key, value);
 			if(result) {
 				Utils.sendLocalizedMessage(sender, "irc.config.change", "Global", key, value);
 				ConfigurationHandler.save();
@@ -139,6 +155,9 @@ public class ConfigurationHandler {
 			if(result == null) result = NotificationConfig.handleConfigCommand(sender, key);
 			if(result == null) result = ScreenshotConfig.handleConfigCommand(sender, key);
 			if(result == null) result = DisplayConfig.handleConfigCommand(sender, key);
+			if(result == null) result = CompatibilityConfig.handleConfigCommand(sender, key);
+			if(result == null) result = NotificationConfig.handleConfigCommand(sender, key);
+			
 			if(result != null) {
 				Utils.sendLocalizedMessage(sender, "irc.config.lookup", "Global", key, result);
 			} else {
@@ -173,6 +192,22 @@ public class ConfigurationHandler {
 			return it.next();
 		}
 		return null;
+	}
+
+	public static void addOptionsToList(List<String> list) {
+		GlobalConfig.addOptionsToList(list);
+		DisplayConfig.addOptionsToList(list);
+		NotificationConfig.addOptionsToList(list);
+		ScreenshotConfig.addOptionsToList(list);
+		CompatibilityConfig.addOptionsToList(list);
+	}
+
+	public static void addValuesToList(List<String> list, String option) {
+		GlobalConfig.addValuesToList(list, option);
+		DisplayConfig.addValuesToList(list, option);
+		NotificationConfig.addValuesToList(list, option);
+		ScreenshotConfig.addValuesToList(list, option);
+		CompatibilityConfig.addValuesToList(list, option);
 	}
 
 }

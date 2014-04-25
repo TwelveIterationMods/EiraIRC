@@ -5,9 +5,7 @@ package net.blay09.mods.eirairc.config;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.Globals;
@@ -19,10 +17,12 @@ import net.minecraftforge.common.Configuration;
 public class GlobalConfig {
 
 	public static String nick = "%USERNAME%";
+	public static String nickPrefix = "";
+	public static String nickSuffix = "";
 	public static boolean enableAliases = false;
 	public static boolean allowPrivateMessages = true;
 	public static boolean persistentConnection = true;
-	public static boolean saveCredentials = false;
+	public static boolean saveCredentials = true;
 	public static boolean enableLinkFilter = false;
 	public static String charset = "UTF-8";
 	public static final List<String> colorBlackList = new ArrayList<String>();
@@ -52,6 +52,8 @@ public class GlobalConfig {
 		for(int i = 0; i < interOpAuthListArray.length; i++) {
 			interOpAuthList.add(interOpAuthListArray[i]);
 		}
+		nickPrefix = Utils.unquote(config.get(ConfigurationHandler.CATEGORY_SERVERONLY, "nickPrefix", nickPrefix).getString());
+		nickSuffix = Utils.unquote(config.get(ConfigurationHandler.CATEGORY_SERVERONLY, "nickSuffix", nickSuffix).getString());
 		config.getCategory(ConfigurationHandler.CATEGORY_SERVERONLY).setComment("These options are only important in the server version as they either have no function on clients or aren't really intended to be client-side.");
 		
 		ConfigCategory serverCategory = config.getCategory(ConfigurationHandler.CATEGORY_SERVERS);
@@ -76,16 +78,14 @@ public class GlobalConfig {
 		else if(key.equals("interOp")) value = String.valueOf(interOp);
 		else if(key.equals("enableAliases")) value = String.valueOf(enableAliases);
 		else if(key.equals("charset")) value = charset;
+		else if(key.equals("allowPrivateMessage")) value = String.valueOf(allowPrivateMessages);
+		else if(key.equals("nickPrefix")) value = nickPrefix;
+		else if(key.equals("nickSuffix")) value = nickSuffix;
 		return value;
 	}
 	
 	public static boolean handleConfigCommand(ICommandSender sender, String key, String value) {
-		if(key.equals("charset")) {
-			charset = value;
-			Utils.sendLocalizedMessage(sender, "irc.config.requiresRestart");
-		} else if(key.equals("allowPrivateMessages")){
-			allowPrivateMessages = Boolean.parseBoolean(value);
-		} else if(key.equals("persistentConnection")){
+		if(key.equals("persistentConnection")){
 			persistentConnection = Boolean.parseBoolean(value);
 		} else if(key.equals("saveCredentials")){
 			saveCredentials = Boolean.parseBoolean(value);
@@ -97,6 +97,21 @@ public class GlobalConfig {
 		} else if(key.equals("interOp") || key.equals("enableAliases")) {
 			Utils.sendLocalizedMessage(sender, "irc.config.noAbuse");
 			return false;
+		} else if(key.equals("charset")) {
+			charset = value;
+			Utils.sendLocalizedMessage(sender, "irc.config.requiresRestart");
+		} else if(key.equals("allowPrivateMessages")){
+			allowPrivateMessages = Boolean.parseBoolean(value);
+		} else if(key.equals("nickPrefix")) {
+			if(value.equals("none")) {
+				value = "";
+			}
+			nickPrefix = value;
+		} else if(key.equals("nickSuffix")) {
+			if(value.equals("none")) {
+				value = "";
+			}
+			nickSuffix = value;
 		} else {
 			return false;
 		}
@@ -104,12 +119,14 @@ public class GlobalConfig {
 	}
 	
 	public static void addOptionsToList(List<String> list) {
-		list.add("allowPrivateMessages");
 		list.add("persistentConnection");
 		list.add("saveCredentials");
 		list.add("enableLinkFilter");
 		list.add("registerShortCommands");
 		list.add("charset");
+		list.add("allowPrivateMessages");
+		list.add("nickPrefix");
+		list.add("nickSuffix");
 	}
 	
 	public static void save(Configuration config) {
@@ -123,6 +140,8 @@ public class GlobalConfig {
 
 		config.get(ConfigurationHandler.CATEGORY_SERVERONLY, "enableAliases", enableAliases).set(enableAliases);
 		config.get(ConfigurationHandler.CATEGORY_SERVERONLY, "colorBlackList", new String[0]).set(colorBlackList.toArray(new String[colorBlackList.size()]));
+		config.get(ConfigurationHandler.CATEGORY_SERVERONLY, "nickPrefix", "").set(nickPrefix);
+		config.get(ConfigurationHandler.CATEGORY_SERVERONLY, "nickSuffix", "").set(nickSuffix);
 		
 		config.removeCategory(config.getCategory(ConfigurationHandler.CATEGORY_SERVERS));
 		int c = 0;
@@ -142,6 +161,8 @@ public class GlobalConfig {
 			for(String cs : Charset.availableCharsets().keySet()) {
 				list.add(cs);
 			}
+		} else if(option.equals("nickPrefix") || option.equals("nickSuffix")) {
+			list.add("none");
 		}
 	}
 }

@@ -5,6 +5,7 @@ package net.blay09.mods.eirairc.command;
 
 import java.util.List;
 
+import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
@@ -20,7 +21,7 @@ public class CommandServIRC implements ICommand {
 	
 	@Override
 	public String getCommandUsage(ICommandSender sender) {
-		return "irc.commands.irc";
+		return Globals.MOD_ID + ":irc.commands.servirc";
 	}
 	
 	public boolean isOP(ICommandSender sender) {

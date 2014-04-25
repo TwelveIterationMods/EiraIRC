@@ -3,7 +3,6 @@
 
 package net.blay09.mods.eirairc.config;
 
-import java.nio.charset.Charset;
 import java.util.List;
 
 import net.blay09.mods.eirairc.client.upload.UploadHoster;

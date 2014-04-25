@@ -3,11 +3,6 @@
 
 package net.blay09.mods.eirairc.client.gui;
 
-import java.net.URI;
-import java.net.URL;
-
-import org.lwjgl.input.Keyboard;
-
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
@@ -19,6 +14,8 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiConfirmOpenLink;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
+
+import org.lwjgl.input.Keyboard;
 
 public class GuiTwitch extends GuiScreen {
 

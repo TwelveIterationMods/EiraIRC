@@ -3,12 +3,8 @@
 
 package net.blay09.mods.eirairc.client.gui;
 
-import java.util.Iterator;
-
 import net.blay09.mods.eirairc.config.DisplayConfig;
-import net.blay09.mods.eirairc.config.DisplayFormatConfig;
 import net.blay09.mods.eirairc.config.GlobalConfig;
-import net.blay09.mods.eirairc.config.ScreenshotConfig;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;

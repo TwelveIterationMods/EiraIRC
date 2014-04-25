@@ -3,8 +3,6 @@
 
 package net.blay09.mods.eirairc.client.gui;
 
-import org.lwjgl.input.Keyboard;
-
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
@@ -14,6 +12,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
+
+import org.lwjgl.input.Keyboard;
 
 public class GuiServerConfig extends GuiScreen {
 
@@ -47,6 +47,7 @@ public class GuiServerConfig extends GuiScreen {
 		txtHost = new GuiTextField(fontRenderer, width / 2 - 120, height / 2 - 85, 100, 15);
 		txtNick = new GuiTextField(fontRenderer, width / 2 - 120, height / 2 - 45, 100, 15);
 		txtServerPassword = new GuiPasswordTextField(fontRenderer, width / 2 + 5, height / 2 - 85, 100, 15);
+		txtServerPassword.setMaxStringLength(Integer.MAX_VALUE);
 		txtNickServName = new GuiTextField(fontRenderer, width / 2 - 120, height / 2 - 5, 100, 15);
 		txtNickServPassword = new GuiPasswordTextField(fontRenderer, width / 2 - 120, height / 2 + 35, 100, 15);
 		txtIdent = new GuiDefaultTextField(fontRenderer, width / 2 + 5, height / 2 - 45, 100, 15);
@@ -54,7 +55,9 @@ public class GuiServerConfig extends GuiScreen {
 		txtDescription = new GuiDefaultTextField(fontRenderer, width / 2 - 120, height / 2 - 5, 100, 15);
 		txtDescription.setDefaultText(Globals.DEFAULT_DESCRIPTION);
 		txtNickServName = new GuiTextField(fontRenderer, width / 2 - 120, height / 2 + 35, 100, 15);
+		txtNickServName.setMaxStringLength(Integer.MAX_VALUE);
 		txtNickServPassword = new GuiPasswordTextField(fontRenderer, width / 2 - 120, height / 2 + 75, 100, 15);
+		txtNickServPassword.setMaxStringLength(Integer.MAX_VALUE);
 		
 		btnPrivateMessages = new GuiButton(2, width / 2 - 10, height / 2 - 20, 130, 20, "");
 		buttonList.add(btnPrivateMessages);

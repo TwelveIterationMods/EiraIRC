@@ -19,6 +19,8 @@ import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.DisplayConfig;
 import net.blay09.mods.eirairc.config.GlobalConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
+import net.blay09.mods.eirairc.config.ServiceConfig;
+import net.blay09.mods.eirairc.config.ServiceSettings;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.irc.IRCChannel;
 import net.blay09.mods.eirairc.irc.IRCConnection;
@@ -82,7 +84,11 @@ public class Utils {
 	private static List<String> tmpStrings = new ArrayList<String>();
 	public static List<String> wrapString(String text, int maxLength) {
 		tmpStrings.clear();
-		if(text== null || text.length() <= maxLength) {
+		if(text == null) {
+			return tmpStrings;
+		}
+		text = text.trim();
+		if(text.length() <= maxLength) {
 			tmpStrings.add(text);
 			return tmpStrings;
 		}
@@ -98,7 +104,7 @@ public class Utils {
 				i--;
 			}
 			tmpStrings.add(text.substring(0, i));
-			text = text.substring(i);
+			text = text.substring(i + 1).trim();
 		}
 		if(text.length() > 0) {
 			tmpStrings.add(text);
@@ -114,48 +120,24 @@ public class Utils {
 		return "\"" + s + "\"";
 	}
 	
+	public static String addPreSuffix(String name) {
+		return GlobalConfig.nickPrefix + name + GlobalConfig.nickSuffix;
+	}
+	
 	public static String getAliasForPlayer(EntityPlayer player) {
 		if(!GlobalConfig.enableAliases) {
-			return player.username;
+			return addPreSuffix(player.username);
 		}
 		String name = player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getCompoundTag("EiraIRC").getString("Alias");
 		if(name.isEmpty()) {
 			name = player.username;
 		}
-		return name;
-	}
-	
-	public static boolean isOP(ICommandSender sender) {
-		if(MinecraftServer.getServer() == null) {
-			return false;
-		}
-		if(MinecraftServer.getServer().isSinglePlayer()) {
-			return true;
-		}
-		if(sender instanceof EntityPlayer) {
-			return MinecraftServer.getServerConfigurationManager(MinecraftServer.getServer()).getOps().contains(((EntityPlayer)sender).username.toLowerCase().trim());
-		}
-		return true;
-	}
-	
-	public static String getColoredName(String name, char colorCode) {
-		if(colorCode == INVALID_COLOR) {
-			return name;
-		}
-		return Globals.COLOR_CODE_PREFIX + String.valueOf(colorCode) + name + Globals.COLOR_CODE_PREFIX + "f";
+		return addPreSuffix(name);
 	}
 	
 	public static String getColorAliasForPlayer(EntityPlayer player) {
 		NBTTagCompound tagCompound = player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getCompoundTag("EiraIRC");
-		String alias = null;
-		if(GlobalConfig.enableAliases) {
-			alias = tagCompound.getString("Alias");
-			if(alias.isEmpty()) {
-				alias = player.username;
-			}
-		} else {
-			alias = player.username;
-		}
+		String alias = getAliasForPlayer(player);
 		boolean isOP = isOP(player);
 		if(!DisplayConfig.enableNameColors && !isOP) {
 			return alias;
@@ -177,6 +159,26 @@ public class Utils {
 			}
 		}
 		return alias;
+	}
+	
+	public static boolean isOP(ICommandSender sender) {
+		if(MinecraftServer.getServer() == null) {
+			return false;
+		}
+		if(MinecraftServer.getServer().isSinglePlayer()) {
+			return true;
+		}
+		if(sender instanceof EntityPlayer) {
+			return MinecraftServer.getServerConfigurationManager(MinecraftServer.getServer()).getOps().contains(((EntityPlayer)sender).username.toLowerCase().trim());
+		}
+		return true;
+	}
+	
+	public static String getColoredName(String name, char colorCode) {
+		if(colorCode == INVALID_COLOR) {
+			return name;
+		}
+		return Globals.COLOR_CODE_PREFIX + String.valueOf(colorCode) + name + Globals.COLOR_CODE_PREFIX + "f";
 	}
 	
 	public static boolean isValidColor(String colorName) {
@@ -329,7 +331,7 @@ public class Utils {
 	}
 	
 	public static void doNickServ(IRCConnection connection, ServerConfig config) {
-		NickServSettings settings = NickServSettings.getSettings(connection.getHost());
+		ServiceSettings settings = ServiceConfig.getSettings(connection.getHost(), connection.getServerType());
 		if(settings == null) {
 			return;
 		}
@@ -338,7 +340,7 @@ public class Utils {
 		if(username == null || username.isEmpty() || password == null || password.isEmpty()) {
 			return;
 		}
-		connection.sendMessage(settings.getBotName(), settings.getIdentifyCommand() + " " + username + " " + password);
+		connection.sendIRC(settings.getIdentifyCommand(username, password));
 	}
 
 	public static String getQuitMessage(IRCConnection connection) {

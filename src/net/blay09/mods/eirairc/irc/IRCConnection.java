@@ -26,6 +26,7 @@ public class IRCConnection implements Runnable {
 	private final int port;
 	private final String host;
 	private final String password;
+	private String serverType;
 	private String nick;
 	private String ident;
 	private String description;
@@ -248,10 +249,10 @@ public class IRCConnection implements Runnable {
 			connected = true;
 			connectionHandler.onConnected(this);
 		} else if(numeric == IRCReplyCodes.RPL_TOPIC) {
-			IRCChannel channel = getChannel(msg.arg(0));
+			IRCChannel channel = getChannel(msg.arg(1));
 			if(channel != null) {
-				channel.setTopic(msg.arg(1));
-				eventHandler.onTopicChange(channel, channel.getTopic());
+				channel.setTopic(msg.arg(2));
+				eventHandler.onTopicChange(null, channel, channel.getTopic());
 			}
 		} else if(numeric == IRCReplyCodes.RPL_WHOISLOGIN) {
 			IRCUser user = getOrCreateUser(msg.arg(1));
@@ -295,6 +296,8 @@ public class IRCConnection implements Runnable {
 					eventHandler.onPrivateMessage(this, user, message);
 				}
 			}
+		} else if(cmd.equals("NOTICE")) {
+			System.out.println("(" + msg.getPrefix() + ")" + msg.arg(1));
 		} else if(cmd.equals("JOIN")) {
 			IRCUser user = getOrCreateUser(msg.getNick());
 			IRCChannel channel = getOrCreateChannel(msg.arg(0));
@@ -308,6 +311,13 @@ public class IRCConnection implements Runnable {
 				channel.removeUser(user);
 				user.removeChannel(channel);
 				eventHandler.onUserPart(this, user, channel, msg.arg(1));
+			}
+		} else if(cmd.equals("TOPIC")) {
+			IRCUser user = getOrCreateUser(msg.getNick());
+			IRCChannel channel = getChannel(msg.arg(0));
+			if(channel != null) {
+				channel.setTopic(msg.arg(1));
+				eventHandler.onTopicChange(user, channel, msg.arg(1));
 			}
 		} else if(cmd.equals("NICK")) {
 			String newNick = msg.arg(0);
@@ -382,6 +392,10 @@ public class IRCConnection implements Runnable {
 			return it.next();
 		}
 		return null;
+	}
+
+	public String getServerType() {
+		return serverType;
 	}
 
 }

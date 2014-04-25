@@ -6,6 +6,7 @@ package net.blay09.mods.eirairc.command;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.blay09.mods.eirairc.util.Globals;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 
@@ -23,7 +24,7 @@ public class CommandPart implements ICommand {
 
 	@Override
 	public String getCommandUsage(ICommandSender icommandsender) {
-		return "irc.commands.leave";
+		return Globals.MOD_ID + ":irc.commands.leave.short";
 	}
 
 	@Override

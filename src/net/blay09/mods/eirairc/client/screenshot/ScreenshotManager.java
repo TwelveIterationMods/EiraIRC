@@ -22,10 +22,6 @@ import java.util.Properties;
 
 import javax.imageio.ImageIO;
 
-import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
-
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.client.upload.UploadHoster;
 import net.blay09.mods.eirairc.config.ChannelConfig;
@@ -36,6 +32,10 @@ import net.blay09.mods.eirairc.irc.IRCConnection;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+
+import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 
 public class ScreenshotManager {
 
@@ -62,7 +62,14 @@ public class ScreenshotManager {
 	private final Comparator<Screenshot> comparator = new Comparator<Screenshot>() {
 		@Override
 		public int compare(Screenshot first, Screenshot second) {
-			return (int) (second.getFile().lastModified() - first.getFile().lastModified());
+			long flm = first.getFile().lastModified();
+			long slm = second.getFile().lastModified();
+			if (flm < slm) {
+				return 1;
+			} else if(flm > slm) {
+				return -1;
+			}
+			return 0;
 		}
 	};
 

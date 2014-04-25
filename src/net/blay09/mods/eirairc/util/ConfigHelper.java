@@ -3,13 +3,11 @@
 
 package net.blay09.mods.eirairc.util;
 
-import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.DisplayConfig;
 import net.blay09.mods.eirairc.config.DisplayFormatConfig;
 import net.blay09.mods.eirairc.config.GlobalConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
-import net.blay09.mods.eirairc.irc.IRCConnection;
 import net.minecraftforge.common.ConfigCategory;
 
 public class ConfigHelper {

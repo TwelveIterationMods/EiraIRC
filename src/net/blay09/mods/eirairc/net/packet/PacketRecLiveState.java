@@ -15,7 +15,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.server.MinecraftServer;
-import cpw.mods.fml.common.network.Player;
 
 public class PacketRecLiveState extends EiraPacket {
 
