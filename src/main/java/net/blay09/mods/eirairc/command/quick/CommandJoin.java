@@ -1,15 +1,16 @@
 // Copyright (c) 2014, Christopher "blay09" Baker
 // All rights reserved.
 
-package net.blay09.mods.eirairc.command;
+package net.blay09.mods.eirairc.command.quick;
 
 import java.util.List;
 
+import net.blay09.mods.eirairc.command.base.IRCCommandHandler;
 import net.blay09.mods.eirairc.util.Globals;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 
-public class CommandNick implements ICommand {
+public class CommandJoin implements ICommand {
 
 	@Override
 	public int compareTo(Object arg0) {
@@ -18,12 +19,12 @@ public class CommandNick implements ICommand {
 
 	@Override
 	public String getCommandName() {
-		return "nick";
+		return "join";
 	}
 
 	@Override
 	public String getCommandUsage(ICommandSender icommandsender) {
-		return Globals.MOD_ID + ":irc.commands.nick.short";
+		return Globals.MOD_ID + ":irc.commands.join.short";
 	}
 
 	@Override

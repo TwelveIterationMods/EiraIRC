@@ -1,15 +1,16 @@
 // Copyright (c) 2014, Christopher "blay09" Baker
 // All rights reserved.
 
-package net.blay09.mods.eirairc.command;
+package net.blay09.mods.eirairc.command.quick;
 
 import java.util.List;
 
+import net.blay09.mods.eirairc.command.base.IRCCommandHandler;
 import net.blay09.mods.eirairc.util.Globals;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 
-public class CommandIRC implements ICommand {
+public class CommandDisconnect implements ICommand {
 
 	@Override
 	public int compareTo(Object arg0) {
@@ -18,37 +19,32 @@ public class CommandIRC implements ICommand {
 
 	@Override
 	public String getCommandName() {
-		return "irc";
+		return "disconnect";
 	}
 
 	@Override
 	public String getCommandUsage(ICommandSender icommandsender) {
-		return Globals.MOD_ID + ":irc.commands.irc";
+		return Globals.MOD_ID + ":irc.commands.disconnect.short";
 	}
 
 	@Override
 	public List getCommandAliases() {
 		return null;
 	}
-	
+
 	@Override
 	public void processCommand(ICommandSender sender, String[] args) {
-		if(args.length < 1) {
-			IRCCommandHandler.sendIRCUsage(sender);
-			return;
-		}
-		String cmd = args[0];
-		IRCCommandHandler.processCommand(sender, args, true);
+		IRCCommandHandler.processCommand(sender, IRCCommandHandler.getShiftedArgs(args, getCommandName()), true);
 	}
 
 	@Override
-	public boolean canCommandSenderUseCommand(ICommandSender icommandsender) {
+	public boolean canCommandSenderUseCommand(ICommandSender sender) {
 		return true;
 	}
 
 	@Override
 	public List addTabCompletionOptions(ICommandSender sender, String[] args) {
-		return IRCCommandHandler.addTabCompletionOptions(getCommandName(), sender, args);
+		return IRCCommandHandler.addTabCompletionOptions(getCommandName(), sender, IRCCommandHandler.getShiftedArgs(args, getCommandName()));
 	}
 
 	@Override

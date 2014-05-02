@@ -1,15 +1,16 @@
 // Copyright (c) 2014, Christopher "blay09" Baker
 // All rights reserved.
 
-package net.blay09.mods.eirairc.command;
+package net.blay09.mods.eirairc.command.quick;
 
 import java.util.List;
 
+import net.blay09.mods.eirairc.command.base.IRCCommandHandler;
 import net.blay09.mods.eirairc.util.Globals;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 
-public class CommandDisconnect implements ICommand {
+public class CommandConnect implements ICommand {
 
 	@Override
 	public int compareTo(Object arg0) {
@@ -18,12 +19,12 @@ public class CommandDisconnect implements ICommand {
 
 	@Override
 	public String getCommandName() {
-		return "disconnect";
+		return "connect";
 	}
 
 	@Override
 	public String getCommandUsage(ICommandSender icommandsender) {
-		return Globals.MOD_ID + ":irc.commands.disconnect.short";
+		return Globals.MOD_ID + ":irc.commands.connect.short";
 	}
 
 	@Override

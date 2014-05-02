@@ -4,7 +4,7 @@
 package net.blay09.mods.eirairc.client;
 
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.command.IRCCommandHandler;
+import net.blay09.mods.eirairc.command.base.IRCCommandHandler;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.WrongUsageException;

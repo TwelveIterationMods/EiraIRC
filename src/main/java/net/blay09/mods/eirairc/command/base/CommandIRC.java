@@ -1,49 +1,44 @@
 // Copyright (c) 2014, Christopher "blay09" Baker
 // All rights reserved.
 
-package net.blay09.mods.eirairc.command;
+package net.blay09.mods.eirairc.command.base;
 
 import java.util.List;
 
 import net.blay09.mods.eirairc.util.Globals;
-import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.server.MinecraftServer;
 
-public class CommandServIRC implements ICommand {
+public class CommandIRC implements ICommand {
+
+	@Override
+	public int compareTo(Object arg0) {
+		return 0;
+	}
 
 	@Override
 	public String getCommandName() {
-		return "servirc";
-	}
-	
-	@Override
-	public String getCommandUsage(ICommandSender sender) {
-		return Globals.MOD_ID + ":irc.commands.servirc";
-	}
-	
-	@Override
-	public void processCommand(ICommandSender sender, String[] args) {
-		if(MinecraftServer.getServer() != null && MinecraftServer.getServer().isSinglePlayer()) {
-			Utils.sendLocalizedMessage(sender, "irc.general.notMultiplayer");
-			return;
-		}
-		if(args.length < 1) {
-			IRCCommandHandler.sendIRCUsage(sender);
-			return;	
-		}
-		IRCCommandHandler.processCommand(sender, args, true);
+		return "irc";
 	}
 
 	@Override
-	public int compareTo(Object o) {
-		return 0;
+	public String getCommandUsage(ICommandSender icommandsender) {
+		return Globals.MOD_ID + ":irc.commands.irc";
 	}
 
 	@Override
 	public List getCommandAliases() {
 		return null;
+	}
+	
+	@Override
+	public void processCommand(ICommandSender sender, String[] args) {
+		if(args.length < 1) {
+			IRCCommandHandler.sendIRCUsage(sender);
+			return;
+		}
+		String cmd = args[0];
+		IRCCommandHandler.processCommand(sender, args, true);
 	}
 
 	@Override
@@ -58,6 +53,7 @@ public class CommandServIRC implements ICommand {
 
 	@Override
 	public boolean isUsernameIndex(String[] args, int i) {
-		return IRCCommandHandler.isUsernameIndex(args, i);
+		return IRCCommandHandler.isUsernameIndex(IRCCommandHandler.getShiftedArgs(args, getCommandName()), i);
 	}
+
 }

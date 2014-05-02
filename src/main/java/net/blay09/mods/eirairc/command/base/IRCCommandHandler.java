@@ -1,7 +1,7 @@
 // Copyright (c) 2014, Christopher "blay09" Baker
 // All rights reserved.
 
-package net.blay09.mods.eirairc.command;
+package net.blay09.mods.eirairc.command.base;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -702,25 +702,21 @@ public class IRCCommandHandler {
 				EiraIRC.instance.getMCEventHandler().onPlayerNickChange(oldAlias, alias);
 			}
 			return true;
-		}/* else if(cmd.equals("quote")) {
+		} else if(cmd.equals("quote")) {
+			if(!Utils.isOP(sender)) {
+				Utils.sendLocalizedMessage(sender, "irc.general.noPermission");
+				return true;
+			}
 			if(args.length <= 1) {
 				throw new WrongUsageException(Globals.MOD_ID + ":irc.commands.quote", commandName);
 			}
-			IRCConnection connection = null;
-			int idx = 0;
-			IRCTarget target = Utils.getSuggestedTarget();
-			if(args.length <= 2 || target == null) {
-				if(EiraIRC.instance.getConnectionCount() > 1) {
-					Utils.sendLocalizedMessage(sender, "irc.specifyServer");
-					throw new WrongUsageException(Globals.MOD_ID + ":irc.commands.quote", commandName);
-				} else {
-					connection = EiraIRC.instance.getDefaultConnection();
-					if(connection == null) {
-						Utils.sendLocalizedMessage(sender, "irc.general.notConnected", "IRC");
-						return true;
-					}
+			IRCConnection connection = Utils.getSuggestedConnection();
+			int idx = 1;
+			if(args.length <= 2) {
+				if(connection == null) {
+					Utils.sendLocalizedMessage(sender, "irc.general.notConnected", "IRC");
 				}
-				idx = 1;
+				return true;
 			} else {
 				String host = args[1];
 				connection = EiraIRC.instance.getConnection(host);
@@ -728,12 +724,7 @@ public class IRCCommandHandler {
 					Utils.sendLocalizedMessage(sender, "irc.general.notConnected", host);
 					return true;
 				}
-				target =connection.getDefaultChannel();
 				idx = 2;
-			}
-			if(target == null) {
-				Utils.sendLocalizedMessage(sender, "irc.target.invalidTarget");
-				return true;
 			}
 			StringBuilder sb = new StringBuilder();
 			for(int i = idx; i < args.length; i++) {
@@ -743,13 +734,9 @@ public class IRCCommandHandler {
 				sb.append(args[i]);
 			}
 			String scmd = sb.toString();
-			if(target instanceof IRCUser) {
-				connection.sendPrivateMessage((IRCUser) target, scmd);
-			} else if(target instanceof IRCChannel) {
-				connection.sendChannelMessage((IRCChannel) target, scmd);
-			}
+			connection.sendIRC(scmd);
 			return true;
-		}*/
+		}
 		return false;
 	}
 	
