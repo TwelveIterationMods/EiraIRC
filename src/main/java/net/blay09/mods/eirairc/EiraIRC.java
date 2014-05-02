@@ -12,6 +12,7 @@ import net.blay09.mods.eirairc.command.CommandConnect;
 import net.blay09.mods.eirairc.command.base.CommandIRC;
 import net.blay09.mods.eirairc.command.base.CommandServIRC;
 import net.blay09.mods.eirairc.command.base.IRCCommandHandler;
+import net.blay09.mods.eirairc.command.base.IgnoreCommand;
 import net.blay09.mods.eirairc.config.GlobalConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.handler.ChatSessionHandler;
@@ -97,7 +98,7 @@ public class EiraIRC {
 	
 	@EventHandler
 	public void serverLoad(FMLServerStartingEvent event) {
-		registerCommands((CommandHandler) event.getServer().getCommandManager(), !event.getServer().isSinglePlayer());
+		registerCommands((CommandHandler) event.getServer().getCommandManager(), true);
 		
 		if(!MinecraftServer.getServer().isSinglePlayer()) {
 			startIRC();
@@ -191,8 +192,10 @@ public class EiraIRC {
 	public void registerCommands(CommandHandler handler, boolean serverSide) {
 		if(serverSide) {
 			handler.registerCommand(new CommandServIRC());
+			handler.registerCommand(new IgnoreCommand("irc"));
 		} else {
 			handler.registerCommand(new CommandIRC());
+//			handler.registerCommand(new IgnoreCommand("servirc"));
 		}
 		IRCCommandHandler.registerCommands();
 		if(GlobalConfig.registerShortCommands) {

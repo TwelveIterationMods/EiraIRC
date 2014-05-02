@@ -3,6 +3,7 @@ package net.blay09.mods.eirairc.command.base;
 import java.util.List;
 
 import net.blay09.mods.eirairc.util.Globals;
+import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
@@ -32,7 +33,8 @@ public class CommandIRC implements ICommand {
 	@Override
 	public void processCommand(ICommandSender sender, String[] args) {
 		if(args.length == 0) {
-			throw new WrongUsageException(getCommandUsage(sender));
+			IRCCommandHandler.sendUsageHelp(sender);
+			return;
 		}
 		IRCCommandHandler.processCommand(sender, args, false);
 	}

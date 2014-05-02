@@ -31,9 +31,9 @@ public class ClientChatHandler {
 				if(i == -1) {
 					i = text.length();
 				}
-				if(processCommand(Minecraft.getMinecraft().thePlayer, text.substring(1, i), i < text.length() ? text.substring(i + 1).split(" ") : new String[0])) {
-					return true;
-				}
+//				if(processCommand(Minecraft.getMinecraft().thePlayer, text.substring(1, i), i < text.length() ? text.substring(i + 1).split(" ") : new String[0])) {
+//					return true;
+//				}
 			}
 		}
 		return false;

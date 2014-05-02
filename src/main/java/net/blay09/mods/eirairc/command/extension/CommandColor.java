@@ -50,7 +50,7 @@ public class CommandColor extends SubCommand {
 		if(args.length < 1) {
 			throw new WrongUsageException(Utils.getLocalizedMessage("irc.commands.color"));
 		}
-		String colorName = args[1].toLowerCase();
+		String colorName = args[0].toLowerCase();
 		if(!Utils.isOP(sender) && (GlobalConfig.colorBlackList.contains(colorName) || DisplayConfig.opColor.equals(colorName))) {
 			Utils.sendLocalizedMessage(sender, "irc.color.blackList", colorName);
 			return true;

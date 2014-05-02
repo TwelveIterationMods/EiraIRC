@@ -16,6 +16,9 @@ import net.blay09.mods.eirairc.command.CommandNick;
 import net.blay09.mods.eirairc.command.CommandQuote;
 import net.blay09.mods.eirairc.command.CommandWho;
 import net.blay09.mods.eirairc.command.SubCommand;
+import net.blay09.mods.eirairc.command.extension.CommandAlias;
+import net.blay09.mods.eirairc.command.extension.CommandColor;
+import net.blay09.mods.eirairc.command.extension.CommandGhost;
 import net.blay09.mods.eirairc.command.extension.CommandNickServ;
 import net.blay09.mods.eirairc.command.extension.CommandTwitch;
 import net.blay09.mods.eirairc.command.interop.InterOpCommandKick;
@@ -48,6 +51,9 @@ public class IRCCommandHandler {
 		registerCommand(new CommandQuote());
 		registerCommand(new CommandTwitch());
 		registerCommand(new CommandWho());
+		registerCommand(new CommandColor());
+		registerCommand(new CommandGhost());
+		registerCommand(new CommandAlias());
 		
 		if(GlobalConfig.interOp) {
 			registerCommand(new InterOpCommandKick());
@@ -119,11 +125,13 @@ public class IRCCommandHandler {
 		return cmd.processCommand(sender, Utils.getSuggestedTarget(), shiftedArgs, serverSide);
 	}
 	
-	private static void sendUsageHelp(ICommandSender sender) {
+	public static void sendUsageHelp(ICommandSender sender) {
 		Utils.sendLocalizedMessage(sender, "irc.general.usage", Utils.getLocalizedMessage("irc.commands.irc"));
 		Utils.sendLocalizedMessage(sender, "irc.cmdlist.general");
 		Utils.sendLocalizedMessage(sender, "irc.cmdlist.irc");
-		Utils.sendLocalizedMessage(sender, "irc.cmdlist.interop");
+		if(GlobalConfig.interOp) {
+			Utils.sendLocalizedMessage(sender, "irc.cmdlist.interop");
+		}
 		Utils.sendLocalizedMessage(sender, "irc.cmdlist.special");
 	}
 

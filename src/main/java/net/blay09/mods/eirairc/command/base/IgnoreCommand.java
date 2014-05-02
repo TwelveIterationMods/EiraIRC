@@ -7,10 +7,15 @@ import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
-import net.minecraft.server.MinecraftServer;
 
-public class CommandServIRC implements ICommand {
+public class IgnoreCommand implements ICommand {
 
+	private String name;
+	
+	public IgnoreCommand(String name) {
+		this.name = name;
+	}
+	
 	@Override
 	public int compareTo(Object o) {
 		return 0;
@@ -18,12 +23,12 @@ public class CommandServIRC implements ICommand {
 
 	@Override
 	public String getCommandName() {
-		return "servrc";
+		return name;
 	}
 
 	@Override
 	public String getCommandUsage(ICommandSender sender) {
-		return Globals.MOD_ID + ":irc.commands.servirc";
+		return "";
 	}
 
 	@Override
@@ -33,15 +38,7 @@ public class CommandServIRC implements ICommand {
 
 	@Override
 	public void processCommand(ICommandSender sender, String[] args) {
-		if(args.length == 0) {
-			IRCCommandHandler.sendUsageHelp(sender);
-			return;
-		}
-		if(MinecraftServer.getServer() != null && MinecraftServer.getServer().isSinglePlayer()) {
-			Utils.sendLocalizedMessage(sender, "irc.general.notMultiplayer");
-			return;
-		}
-		IRCCommandHandler.processCommand(sender, args, false);
+		System.out.println("Ignoring command " + name + " with " + args.length + " arguments");
 	}
 
 	@Override
@@ -51,12 +48,12 @@ public class CommandServIRC implements ICommand {
 
 	@Override
 	public List addTabCompletionOptions(ICommandSender sender, String[] args) {
-		return IRCCommandHandler.addTabCompletionOptions(sender, args);
+		return null;
 	}
 
 	@Override
 	public boolean isUsernameIndex(String[] sender, int args) {
-		return IRCCommandHandler.isUsernameIndex(sender, args);
+		return false;
 	}
 
 }
