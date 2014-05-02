@@ -343,10 +343,6 @@ public class IRCCommandHandler {
 			}
 			return true;
 		} else if(cmd.equals("msg")) { // [serv]irc msg <target> <text>
-			if(!GlobalConfig.allowPrivateMessages) {
-				Utils.sendLocalizedMessage(sender, "irc.msg.disabled");
-				return true;
-			}
 			if(args.length <= 2) {
 				throw new WrongUsageException(Globals.MOD_ID + ":irc.commands.msg", commandName);
 			}
@@ -373,6 +369,12 @@ public class IRCCommandHandler {
 				return true;
 			}
 			IRCTarget targetIRC = (IRCTarget) target;
+			if(targetIRC instanceof IRCUser) {
+				if(!GlobalConfig.allowPrivateMessages) {
+					Utils.sendLocalizedMessage(sender, "irc.msg.disabled");
+					return true;
+				}
+			}
 			String message = "";
 			for(int i = 2; i < args.length; i++) {
 				message += " " + args[i];
