@@ -75,7 +75,7 @@ public class GuiKeybinds extends GuiScreen {
 	protected void keyTyped(char unicode, int keyCode) {
 		if(currentKeyIdx != -1) {
 			if(keyCode == Keyboard.KEY_ESCAPE) {
-				keyCode = 0;
+				keyCode = -1;
 			}
 			switch(currentKeyIdx) {
 				case KeyConfig.IDX_OPENSETTINGS: KeyConfig.openMenu = keyCode; break;
