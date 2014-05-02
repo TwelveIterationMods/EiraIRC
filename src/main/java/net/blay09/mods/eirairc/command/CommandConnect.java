@@ -12,7 +12,7 @@ import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 
-public class SubCommandConnect implements ISubCommand {
+public class CommandConnect extends SubCommand {
 
 	@Override
 	public String getCommandName() {
@@ -20,29 +20,29 @@ public class SubCommandConnect implements ISubCommand {
 	}
 
 	@Override
-	public String getCommandUsage(ICommandSender sender) {
-		return Globals.MOD_ID + ":irc.commands.connect";
+	public String getUsageString(ICommandSender sender) {
+		return "irc.commands.connect";
 	}
 
 	@Override
-	public List getCommandAliases() {
+	public String[] getAliases() {
 		return null;
 	}
 
 	@Override
 	public boolean processCommand(ICommandSender sender, IRCTarget context, String[] args, boolean serverSide) {
-		if(args.length <= 1) {
+		if(args.length < 1) {
 			throw new WrongUsageException(getCommandUsage(sender));
 		}
-		String host = args[1];
+		String host = args[0];
 		if(EiraIRC.instance.isConnectedTo(host)) {
 			Utils.sendLocalizedMessage(sender, "irc.general.alreadyConnected", host);
 			return true;
 		}
 		Utils.sendLocalizedMessage(sender, "irc.basic.connecting", host);
 		ServerConfig serverConfig = ConfigurationHandler.getServerConfig(host);
-		if(args.length > 2) {
-			serverConfig.setServerPassword(args[2]);
+		if(args.length >= 2) {
+			serverConfig.setServerPassword(args[1]);
 		}
 		if(Utils.connectTo(serverConfig) != null) {
 			ConfigurationHandler.addServerConfig(serverConfig);
@@ -59,13 +59,22 @@ public class SubCommandConnect implements ISubCommand {
 	}
 
 	@Override
-	public List<String> addTabCompletionOptions(ICommandSender sender, String[] args) {
-		return null;
+	public void addTabCompletionOptions(List<String> list, ICommandSender sender, String[] args) {
+		if(args.length == 0) {
+			for(ServerConfig serverConfig : ConfigurationHandler.getServerConfigs()) {
+				list.add(serverConfig.getHost());
+			}
+		}
 	}
 
 	@Override
 	public boolean isUsernameIndex(String[] args, int idx) {
 		return false;
+	}
+
+	@Override
+	public boolean hasQuickCommand() {
+		return true;
 	}
 
 }

@@ -3,15 +3,37 @@
 
 package net.blay09.mods.eirairc.util;
 
-public enum IRCTargetError {
+import net.blay09.mods.eirairc.irc.IRCConnection;
+import net.blay09.mods.eirairc.irc.IRCTarget;
 
-	SpecifyServer,
-	ServerNotFound,
-	ChannelNotFound,
-	UserNotFound, 
-	InvalidTarget, 
-	TargetNotFound, 
-	NotConnected, 
-	NotOnChannel
+public enum IRCTargetError implements IRCTarget {
+	SpecifyServer("irc.target.specifyServer"),
+	ServerNotFound("irc.target.serverNotFound"),
+	ChannelNotFound("irc.target.channelNotFound"),
+	UserNotFound("irc.target.userNotFound"), 
+	InvalidTarget("irc.target.invalidTarget"), 
+	TargetNotFound("irc.target.targetNotFound"), 
+	NotConnected("irc.target.notConnected"), 
+	NotOnChannel("irc.target.notOnChannel");
+
+	private String errorString;
 	
+	private IRCTargetError(String errorString) {
+		this.errorString = errorString;
+	}
+	
+	@Override
+	public String getName() {
+		return errorString;
+	}
+
+	@Override
+	public String getIdentifier() {
+		return toString();
+	}
+
+	@Override
+	public IRCConnection getConnection() {
+		return null;
+	}
 }

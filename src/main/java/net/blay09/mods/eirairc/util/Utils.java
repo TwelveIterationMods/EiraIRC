@@ -619,5 +619,9 @@ public class Utils {
 		Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 		clipboard.setContents(selection, selection);
 	}
+
+	public static boolean isServerSide() {
+		return MinecraftServer.getServer() != null && !MinecraftServer.getServer().isSinglePlayer();
+	}
 	
 }

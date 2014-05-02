@@ -8,14 +8,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import net.blay09.mods.eirairc.command.CommandConnect;
 import net.blay09.mods.eirairc.command.base.CommandIRC;
 import net.blay09.mods.eirairc.command.base.CommandServIRC;
-import net.blay09.mods.eirairc.command.quick.CommandConnect;
-import net.blay09.mods.eirairc.command.quick.CommandDisconnect;
-import net.blay09.mods.eirairc.command.quick.CommandJoin;
-import net.blay09.mods.eirairc.command.quick.CommandNick;
-import net.blay09.mods.eirairc.command.quick.CommandPart;
-import net.blay09.mods.eirairc.command.quick.CommandWho;
+import net.blay09.mods.eirairc.command.base.IRCCommandHandler;
 import net.blay09.mods.eirairc.config.GlobalConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.handler.ChatSessionHandler;
@@ -198,13 +194,9 @@ public class EiraIRC {
 		} else {
 			handler.registerCommand(new CommandIRC());
 		}
-		if(!serverSide && GlobalConfig.registerShortCommands) {
-			handler.registerCommand(new CommandJoin());
-			handler.registerCommand(new CommandPart());
-			handler.registerCommand(new CommandConnect());
-			handler.registerCommand(new CommandDisconnect());
-			handler.registerCommand(new CommandNick());
-			handler.registerCommand(new CommandWho());
+		IRCCommandHandler.registerCommands();
+		if(GlobalConfig.registerShortCommands) {
+			IRCCommandHandler.registerQuickCommands(handler);
 		}
 	}
 }

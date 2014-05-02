@@ -18,5 +18,9 @@ public class Globals {
 	public static final String TWITCH_OAUTH = "http://twitchapps.com/tmi/";
 	public static final String DEFAULT_IDENT = "EiraIRC";
 	public static final String DEFAULT_DESCRIPTION = "EiraIRC Bot";
-
+	
+	public static final String NBT_EIRAIRC = "EiraIRC";
+	public static final String NBT_NAMECOLOR = "NameColor";
+	public static final String NBT_ALIAS = "Alias";
+	
 }
