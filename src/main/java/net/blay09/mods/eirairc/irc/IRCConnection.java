@@ -14,9 +14,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import net.blay09.mods.eirairc.api.IIRCConnection;
 import net.blay09.mods.eirairc.util.Globals;
 
-public class IRCConnection implements Runnable {
+public class IRCConnection implements Runnable, IIRCConnection {
 
 	public static final int IRC_DEFAULT_PORT = 6667;
 	public static final String EMOTE_START = "\u0001ACTION ";
@@ -118,6 +119,7 @@ public class IRCConnection implements Runnable {
 		return user;
 	}
 
+	@Override
 	public String getHost() {
 		return host;
 	}

@@ -53,7 +53,7 @@ public class CommandQuote extends SubCommand {
 		} else {
 			connection = context.getConnection();
 		}
-		String msg = joinArgs(args, msgIdx);
+		String msg = Utils.joinArgs(args, msgIdx);
 		connection.sendIRC(msg);
 		return true;
 	}

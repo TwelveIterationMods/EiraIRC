@@ -58,7 +58,7 @@ public class CommandMessage extends SubCommand {
 				return true;
 			}
 		}
-		String message = joinArgs(args, 1).trim();
+		String message = Utils.joinArgs(args, 1).trim();
 		if(message.isEmpty()) {
 			throw new WrongUsageException(getCommandUsage(sender));
 		}

@@ -54,7 +54,7 @@ public class InterOpCommandTopic extends SubCommand {
 			Utils.sendLocalizedMessage(sender, targetChannel.getName(), args[0]);
 			return true;
 		}
-		String topic = joinArgs(args, 1).trim();
+		String topic = Utils.joinArgs(args, 1).trim();
 		if(topic.isEmpty()) {
 			throw new WrongUsageException(getCommandUsage(sender));
 		}

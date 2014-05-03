@@ -68,11 +68,4 @@ public abstract class SubCommand implements ICommand {
 		return 0;
 	}
 	
-	public static String joinArgs(String[] args, int startIdx) {
-		StringBuilder sb = new StringBuilder();
-		for(int i = startIdx; i < args.length; i++) {
-			sb.append(args[i]);
-		}
-		return sb.toString();
-	}
 }

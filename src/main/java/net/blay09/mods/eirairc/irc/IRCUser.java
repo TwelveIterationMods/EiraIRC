@@ -7,7 +7,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class IRCUser implements IRCTarget {
+import net.blay09.mods.eirairc.api.IIRCUser;
+
+public class IRCUser implements IRCTarget, IIRCUser {
 
 	private final IRCConnection connection;
 	private final Map<String, IRCChannel> channels = new HashMap<String, IRCChannel>();
@@ -58,6 +60,16 @@ public class IRCUser implements IRCTarget {
 	
 	public String getAuthLogin() {
 		return authLogin;
+	}
+
+	@Override
+	public void whois() {
+		connection.whois(name);
+	}
+
+	@Override
+	public void notice(String message) {
+		connection.sendNotice(name, message);
 	}
 
 }

@@ -18,6 +18,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.blay09.mods.eirairc.EiraIRC;
+import net.blay09.mods.eirairc.api.IIRCUser;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.DisplayConfig;
 import net.blay09.mods.eirairc.config.GlobalConfig;
@@ -373,22 +374,22 @@ public class Utils {
 		}
 	}
 
-	public static void sendUserList(IRCConnection connection, IRCUser user) {
+	public static void sendUserList(IIRCUser user) {
 		if(MinecraftServer.getServer() == null || MinecraftServer.getServer().isSinglePlayer()) {
 			return;
 		}
 		List<EntityPlayer> userList = MinecraftServer.getServer().getConfigurationManager().playerEntityList;
 		if(userList.size() == 0) {
-			connection.sendPrivateNotice(user, getLocalizedMessage("irc.bot.noPlayersOnline"));
+			user.notice(getLocalizedMessage("irc.bot.noPlayersOnline"));
 			return;
 		}
-		connection.sendPrivateNotice(user, getLocalizedMessage("irc.bot.playersOnline", userList.size()));
+		user.notice(getLocalizedMessage("irc.bot.playersOnline", userList.size()));
 		String s = " * ";
 		for(int i = 0; i < userList.size(); i++) {
 			EntityPlayer entityPlayer = userList.get(i);
 			String alias = Utils.getAliasForPlayer(entityPlayer, true);
 			if(s.length() + alias.length() > Globals.CHAT_MAX_LENGTH) {
-				connection.sendPrivateNotice(user, s);
+				user.notice(s);
 				s = " * ";
 			}
 			if(s.length() > 3) {
@@ -397,7 +398,7 @@ public class Utils {
 			s += alias;
 		}
 		if(s.length() > 3) {
-			connection.sendPrivateNotice(user, s);
+			user.notice(s);
 		}
 	}
 	
@@ -486,6 +487,22 @@ public class Utils {
 
 	public static boolean isServerSide() {
 		return MinecraftServer.getServer() != null && !MinecraftServer.getServer().isSinglePlayer();
+	}
+	
+	public static String[] shiftArgs(String[] args, int offset) {
+		String[] shiftedArgs = new String[args.length - offset];
+		for(int i = offset; i < args.length; i++) {
+			shiftedArgs[i - offset] = args[i];
+		}
+		return shiftedArgs;
+	}
+	
+	public static String joinArgs(String[] args, int startIdx) {
+		StringBuilder sb = new StringBuilder();
+		for(int i = startIdx; i < args.length; i++) {
+			sb.append(args[i]);
+		}
+		return sb.toString();
 	}
 	
 }

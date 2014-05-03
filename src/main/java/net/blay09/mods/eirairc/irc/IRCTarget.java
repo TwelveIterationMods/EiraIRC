@@ -3,6 +3,7 @@
 
 package net.blay09.mods.eirairc.irc;
 
+
 public interface IRCTarget {
 
 	public String getName();

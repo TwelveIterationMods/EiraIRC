@@ -92,7 +92,7 @@ public class IRCCommandHandler {
 	public static boolean isUsernameIndex(String[] args, int idx) {
 		SubCommand cmd = commands.get(args[0]);
 		if(cmd != null) {
-			String[] shiftedArgs = shiftArgs(args, 1);
+			String[] shiftedArgs = Utils.shiftArgs(args, 1);
 			return cmd.isUsernameIndex(shiftedArgs, idx - 1);
 		}
 		return false;
@@ -106,7 +106,7 @@ public class IRCCommandHandler {
 		}
 		SubCommand cmd = commands.get(args[0]);
 		if(cmd != null) {
-			String[] shiftedArgs = shiftArgs(args, 1);
+			String[] shiftedArgs = Utils.shiftArgs(args, 1);
 			return cmd.addTabCompletionOptions(sender, shiftedArgs);
 		}
 		return null;
@@ -124,7 +124,7 @@ public class IRCCommandHandler {
             sender.addChatMessage(chatComponent);
             return true;
 		}
-		String[] shiftedArgs = shiftArgs(args, 1);
+		String[] shiftedArgs = Utils.shiftArgs(args, 1);
 		return cmd.processCommand(sender, Utils.getSuggestedTarget(), shiftedArgs, serverSide);
 	}
 	
@@ -138,14 +138,6 @@ public class IRCCommandHandler {
 		Utils.sendLocalizedMessage(sender, "irc.cmdlist.special");
 	}
 
-	private static String[] shiftArgs(String[] args, int offset) {
-		String[] shiftedArgs = new String[args.length - offset];
-		for(int i = offset; i < args.length; i++) {
-			shiftedArgs[i - offset] = args[i];
-		}
-		return shiftedArgs;
-	}
-	
 	public static boolean onChatCommand(EntityPlayer sender, String text, boolean serverSide) {
 		if(!text.startsWith("!")) {
 			return false;

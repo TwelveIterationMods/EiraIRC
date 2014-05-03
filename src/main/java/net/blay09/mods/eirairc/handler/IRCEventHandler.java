@@ -6,6 +6,8 @@ package net.blay09.mods.eirairc.handler;
 import java.util.List;
 
 import net.blay09.mods.eirairc.EiraIRC;
+import net.blay09.mods.eirairc.api.IIRCConnection;
+import net.blay09.mods.eirairc.api.IIRCUser;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.DisplayConfig;
 import net.blay09.mods.eirairc.config.GlobalConfig;
@@ -42,7 +44,7 @@ public class IRCEventHandler implements IIRCEventHandler {
 			Utils.addMessageToChat(mcMessage);
 		}
 		if(channelConfig.isAutoWho()) {
-			Utils.sendUserList(connection, user);
+			Utils.sendUserList(user);
 		}
 	}
 
@@ -171,7 +173,7 @@ public class IRCEventHandler implements IIRCEventHandler {
 			return true;
 		}
 		if(message.equals("!who")) {
-			Utils.sendUserList(connection, user);
+			Utils.sendUserList(user);
 			return true;
 		}
 		if(message.equals("!help")) {
@@ -211,7 +213,7 @@ public class IRCEventHandler implements IIRCEventHandler {
 			connection.sendPrivateNotice(user, "OP            Perform an OP-command on the server (requires permissions)");
 			connection.sendPrivateNotice(user, "***** End of Help *****");
 		} else if(lmessage.equals("who")) {
-			Utils.sendUserList(connection, user);
+			Utils.sendUserList(user);
 		} else if(lmessage.equals("auth")) {
 			connection.whois(user.getName());
 			connection.sendPrivateNotice(user, Utils.getLocalizedMessage("irc.bot.auth"));
@@ -273,13 +275,13 @@ public class IRCEventHandler implements IIRCEventHandler {
 		}
 	}
 	
-	private void onIRCPrivateMessageToPlayer(IRCConnection connection, IRCUser user, EntityPlayer entityPlayer, String message) {
+	public void onIRCPrivateMessageToPlayer(IIRCConnection connection, IIRCUser user, EntityPlayer entityPlayer, String message) {
 		if(GlobalConfig.enableLinkFilter) {
 			message = Utils.filterLinks(message);
 		}
 		message = Utils.filterCodes(message);
 		ServerConfig serverConfig = ConfigurationHandler.getServerConfig(connection.getHost());
-		String mcMessage = Utils.formatMessage(ConfigHelper.getDisplayFormatConfig().mcPrivateMessage, connection, user.getIdentifier(), Utils.getColoredName(user.getName(), ConfigHelper.getIRCColor(serverConfig)), message);
+		String mcMessage = Utils.formatMessage(ConfigHelper.getDisplayFormatConfig().mcPrivateMessage, connection.getHost(), "", user.getIdentifier(), Utils.getColoredName(user.getName(), ConfigHelper.getIRCColor(serverConfig)), message);
 		entityPlayer.addChatMessage(Utils.getUnlocalizedChatMessage(mcMessage));
 		String notifyMsg = mcMessage;
 		if(notifyMsg.length() > 42) {
