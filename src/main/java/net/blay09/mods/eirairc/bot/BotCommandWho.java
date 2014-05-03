@@ -29,7 +29,7 @@ public class BotCommandWho implements IBotCommand {
 
 	@Override
 	public void processCommand(IIRCBot bot, IIRCChannel channel, IIRCUser user, String[] args) {
-		Utils.sendUserList(user);
+		Utils.sendPlayerList(user);
 	}
 	
 }

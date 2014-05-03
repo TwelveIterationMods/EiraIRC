@@ -385,7 +385,7 @@ public class IRCConnection implements Runnable, IIRCConnection {
 
 	@Override
 	public String getIdentifier() {
-		return host + ":" + port;
+		return host + (port != DEFAULT_PORT ? ":" + port : "");
 	}
 
 	@Override

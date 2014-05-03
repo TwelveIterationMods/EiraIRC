@@ -83,7 +83,7 @@ public class IRCConnectionHandler {
 	public void onChannelJoined(IRCChannelJoinedEvent event) {
 		EiraIRC.instance.getChatSessionHandler().addTargetChannel(event.channel);
 		if(event.bot.getBoolean(event.channel, "autoWho", false)) {
-			Utils.broadcastUserList(event.connection, event.channel);
+			Utils.sendUserList(null, event.connection, event.channel);
 		}
 	}
 

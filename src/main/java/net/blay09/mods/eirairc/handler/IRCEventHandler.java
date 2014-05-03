@@ -53,7 +53,7 @@ public class IRCEventHandler {
 			Utils.addMessageToChat(mcMessage);
 		}
 		if(event.bot.getBoolean(event.channel, IBotProfile.KEY_AUTOWHO, false)) {
-			Utils.sendUserList(event.user);
+			Utils.sendPlayerList(event.user);
 		}
 	}
 

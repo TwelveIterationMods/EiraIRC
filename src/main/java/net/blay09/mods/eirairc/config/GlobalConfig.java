@@ -20,7 +20,6 @@ public class GlobalConfig {
 	public static String nickPrefix = "";
 	public static String nickSuffix = "";
 	public static boolean enableAliases = false;
-	public static boolean allowPrivateMessages = true;
 	public static boolean persistentConnection = true;
 	public static boolean saveCredentials = true;
 	public static boolean enableLinkFilter = false;
@@ -32,7 +31,6 @@ public class GlobalConfig {
 	
 	public static void load(Configuration config) {
 		nick = Utils.unquote(config.get(ConfigurationHandler.CATEGORY_GLOBAL, "nick", nick).getString());
-		allowPrivateMessages = config.get(ConfigurationHandler.CATEGORY_GLOBAL, "allowPrivateMessages", allowPrivateMessages).getBoolean(allowPrivateMessages);
 		enableLinkFilter = config.get(ConfigurationHandler.CATEGORY_GLOBAL, "enableLinkFilter", enableLinkFilter).getBoolean(enableLinkFilter);
 		saveCredentials = config.get(ConfigurationHandler.CATEGORY_GLOBAL, "saveCredentials", saveCredentials).getBoolean(saveCredentials);
 		registerShortCommands = config.get(ConfigurationHandler.CATEGORY_GLOBAL, "registerShortCommands", registerShortCommands).getBoolean(registerShortCommands);
@@ -78,7 +76,6 @@ public class GlobalConfig {
 		else if(key.equals("interOp")) value = String.valueOf(interOp);
 		else if(key.equals("enableAliases")) value = String.valueOf(enableAliases);
 		else if(key.equals("charset")) value = charset;
-		else if(key.equals("allowPrivateMessage")) value = String.valueOf(allowPrivateMessages);
 		else if(key.equals("nickPrefix")) value = nickPrefix;
 		else if(key.equals("nickSuffix")) value = nickSuffix;
 		return value;
@@ -100,8 +97,6 @@ public class GlobalConfig {
 		} else if(key.equals("charset")) {
 			charset = value;
 			Utils.sendLocalizedMessage(sender, "irc.config.requiresRestart");
-		} else if(key.equals("allowPrivateMessages")) {
-			allowPrivateMessages = Boolean.parseBoolean(value);
 		} else if(key.equals("nickPrefix")) {
 			if(value.equals("none")) {
 				value = "";
@@ -124,14 +119,12 @@ public class GlobalConfig {
 		list.add("enableLinkFilter");
 		list.add("registerShortCommands");
 		list.add("charset");
-		list.add("allowPrivateMessages");
 		list.add("nickPrefix");
 		list.add("nickSuffix");
 	}
 	
 	public static void save(Configuration config) {
 		config.get(ConfigurationHandler.CATEGORY_GLOBAL, "nick", "").set(Utils.quote(nick));
-		config.get(ConfigurationHandler.CATEGORY_GLOBAL, "allowPrivateMessages", allowPrivateMessages).set(allowPrivateMessages);
 		config.get(ConfigurationHandler.CATEGORY_GLOBAL, "enableLinkFilter", enableLinkFilter).set(enableLinkFilter);
 		config.get(ConfigurationHandler.CATEGORY_GLOBAL, "saveCredentials", saveCredentials).set(saveCredentials);
 		config.get(ConfigurationHandler.CATEGORY_GLOBAL, "charset", "").set(Utils.quote(charset));

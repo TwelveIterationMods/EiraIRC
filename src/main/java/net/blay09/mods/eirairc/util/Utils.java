@@ -290,10 +290,6 @@ public class Utils {
 	public static String formatMessage(String format, String user, String nick, String message) {
 		return formatMessage(format, getCurrentServerName(), "", user, nick, message);
 	}
-	
-	public static String formatMessage(String format, IRCConnection connection, String user, String nick, String message) {
-		return formatMessage(format, connection.getHost(), "", user, nick, message);
-	}
 
 	public static String formatMessage(String format, String server, String channel, String user, String nick, String message) {
 		String result = format;
@@ -340,74 +336,59 @@ public class Utils {
 		}
 		connection.irc(settings.getIdentifyCommand(username, password));
 	}
-
-	public static String getQuitMessage(IRCConnection connection) {
-		ServerConfig serverConfig = ConfigurationHandler.getServerConfig(connection.getHost());
-		if(serverConfig.getQuitMessage() != null && !serverConfig.getQuitMessage().isEmpty()) {
-			return serverConfig.getQuitMessage();
-		}
-		return DisplayConfig.quitMessage;
-	}
 	
-	public static void broadcastUserList(IIRCConnection connection, IIRCChannel channel) {
+	public static void sendUserList(ICommandSender player, IIRCConnection connection, IIRCChannel channel) {
 		Collection<IIRCUser> userList = channel.getUserList();
 		if(userList.size() == 0) {
-			addMessageToChat(Utils.getLocalizedMessage("irc.who.noUsersOnline", connection.getHost(), channel.getName()));
+			if(player == null) {
+				addMessageToChat(Utils.getLocalizedMessage("irc.who.noUsersOnline", connection.getHost(), channel.getName()));
+			} else {
+				sendLocalizedMessage(player, "irc.who.noUsersOnline", connection.getHost(), channel.getName());
+			}
 			return;
 		}
-		addMessageToChat(Utils.getLocalizedMessage("irc.who.usersOnline", connection.getHost(), userList.size(), channel.getName()));
+		if(player == null) {
+			addMessageToChat(Utils.getLocalizedMessage("irc.who.usersOnline", connection.getHost(), userList.size(), channel.getName()));
+		} else {
+			sendLocalizedMessage(player, "irc.who.usersOnline", connection.getHost(), userList.size(), channel.getName());
+		}
 		String s = " * ";
 		for(IIRCUser user : userList) {
 			if(s.length() + user.getName().length() > Globals.CHAT_MAX_LENGTH) {
+				if(player == null) {
+					addMessageToChat(s);
+				} else {
+					sendUnlocalizedMessage(player, s);
+				}
+				s = " * ";
+			}
+			if(s.length() > 3) {
+				s += ", ";
+			}
+			s += user.getName();
+		}
+		if(s.length() > 3) {
+			if(player == null) {
 				addMessageToChat(s);
-				s = " * ";
+			} else {
+				sendUnlocalizedMessage(player, s);
 			}
-			if(s.length() > 3) {
-				s += ", ";
-			}
-			s += user.getName();
-		}
-		if(s.length() > 3) {
-			addMessageToChat(s);
 		}
 	}
 	
-	public static void sendUserList(ICommandSender sender, IIRCConnection connection, IIRCChannel channel) {
-		Collection<IIRCUser> userList = channel.getUserList();
-		if(userList.size() == 0) {
-			sendLocalizedMessage(sender, "irc.who.noUsersOnline", connection.getHost(), channel.getName());
-			return;
-		}
-		sendLocalizedMessage(sender, "irc.who.usersOnline", connection.getHost(), userList.size(), channel.getName());
-		String s = " * ";
-		for(IIRCUser user : userList) {
-			if(s.length() + user.getName().length() > Globals.CHAT_MAX_LENGTH) {
-				sendUnlocalizedMessage(sender, s);
-				s = " * ";
-			}
-			if(s.length() > 3) {
-				s += ", ";
-			}
-			s += user.getName();
-		}
-		if(s.length() > 3) {
-			sendUnlocalizedMessage(sender, s);
-		}
-	}
-	
-	public static void sendUserList(IIRCUser user) {
+	public static void sendPlayerList(IIRCUser user) {
 		if(MinecraftServer.getServer() == null || MinecraftServer.getServer().isSinglePlayer()) {
 			return;
 		}
-		List<EntityPlayer> userList = MinecraftServer.getServer().getConfigurationManager().playerEntityList;
-		if(userList.size() == 0) {
+		List<EntityPlayer> playerList = MinecraftServer.getServer().getConfigurationManager().playerEntityList;
+		if(playerList.size() == 0) {
 			user.notice(getLocalizedMessage("irc.bot.noPlayersOnline"));
 			return;
 		}
-		user.notice(getLocalizedMessage("irc.bot.playersOnline", userList.size()));
+		user.notice(getLocalizedMessage("irc.bot.playersOnline", playerList.size()));
 		String s = " * ";
-		for(int i = 0; i < userList.size(); i++) {
-			EntityPlayer entityPlayer = userList.get(i);
+		for(int i = 0; i < playerList.size(); i++) {
+			EntityPlayer entityPlayer = playerList.get(i);
 			String alias = Utils.getAliasForPlayer(entityPlayer, true);
 			if(s.length() + alias.length() > Globals.CHAT_MAX_LENGTH) {
 				user.notice(s);
@@ -423,52 +404,19 @@ public class Utils {
 		}
 	}
 	
-	public static IIRCConnection getSuggestedConnection() {
-		if(EiraIRC.instance.getChatSessionHandler().getIRCTarget() != null) {
-			IIRCContext activeTarget = EiraIRC.instance.getChatSessionHandler().getIRCTarget();
-			if(activeTarget != null) {
-				return activeTarget.getConnection();
-			}
-		}
-		if(EiraIRC.instance.getConnectionCount() == 1) {
-			return EiraIRC.instance.getDefaultConnection();
-		}
-		return null;
-	}
-	
 	public static IIRCContext getSuggestedTarget() {
-		IIRCContext result = getSuggestedUser();
+		IIRCContext result = EiraIRC.instance.getChatSessionHandler().getIRCTarget();
 		if(result == null) {
-			return getSuggestedChannel();
-		}
-		return result;
-	}
-	
-	public static IIRCChannel getSuggestedChannel() {
-		if(EiraIRC.instance.getChatSessionHandler().getIRCTarget() != null) {
-			IIRCContext activeTarget = EiraIRC.instance.getChatSessionHandler().getIRCTarget();
-			if(activeTarget instanceof IRCChannel) {
-				return (IRCChannel) activeTarget;
-			}
-		}
-		IIRCConnection connection = getSuggestedConnection();
-		if(connection != null) {
-			if(connection.getChannels().size() == 1) {
-				return connection.getChannels().iterator().next();
+			IIRCConnection connection = EiraIRC.instance.getDefaultConnection();
+			if(connection != null) {
+				if(connection.getChannels().size() == 1) {
+					return connection.getChannels().iterator().next();
+				}
+				return null;
 			}
 			return null;
 		}
-		return null;
-	}
-	
-	public static IRCUser getSuggestedUser() {
-		if(EiraIRC.instance.getChatSessionHandler().getIRCTarget() != null) {
-			IIRCContext activeTarget = EiraIRC.instance.getChatSessionHandler().getIRCTarget();
-			if(activeTarget instanceof IRCUser) {
-				return (IRCUser) activeTarget;
-			}
-		}
-		return null;
+		return result;
 	}
 	
 	public static String getUsername() {

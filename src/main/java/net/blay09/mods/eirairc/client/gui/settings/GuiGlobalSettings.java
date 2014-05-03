@@ -24,7 +24,6 @@ public class GuiGlobalSettings extends GuiScreen {
 	private GuiTextField txtNick;
 	private GuiButton btnLinkFilter;
 	private GuiButton btnPersistentConnections;
-	private GuiButton btnPrivateMessages;
 	private GuiButton btnSaveCredentials;
 	private GuiButton btnBack;
 	
@@ -43,9 +42,6 @@ public class GuiGlobalSettings extends GuiScreen {
 		btnLinkFilter = new GuiButton(2, leftX, height / 2 - 40, BUTTON_WIDTH, BUTTON_HEIGHT, "");
 		buttonList.add(btnLinkFilter);
 		
-		btnPrivateMessages = new GuiButton(3, rightX, height / 2 - 65, BUTTON_WIDTH, BUTTON_HEIGHT, "");
-		buttonList.add(btnPrivateMessages);
-		
 		btnSaveCredentials = new GuiButton(4, rightX, height / 2 - 40, BUTTON_WIDTH, BUTTON_HEIGHT, "");
 		buttonList.add(btnSaveCredentials);
 		
@@ -63,7 +59,6 @@ public class GuiGlobalSettings extends GuiScreen {
 	public void updateButtonText() {
 		String yes = Utils.getLocalizedMessage("irc.gui.yes");
 		String no = Utils.getLocalizedMessage("irc.gui.no");
-		btnPrivateMessages.displayString = Utils.getLocalizedMessage("irc.gui.config.privateMessages", (GlobalConfig.allowPrivateMessages ? yes : no));
 		btnLinkFilter.displayString = Utils.getLocalizedMessage("irc.gui.globalSettings.linkFilter", (GlobalConfig.enableLinkFilter ? yes : no));
 		btnPersistentConnections.displayString = Utils.getLocalizedMessage("irc.gui.globalSettings.persistentConnection", (GlobalConfig.persistentConnection ? yes : no));
 		btnSaveCredentials.displayString = Utils.getLocalizedMessage("irc.gui.globalSettings.saveCredentials", (GlobalConfig.saveCredentials ? yes : no));
@@ -77,8 +72,6 @@ public class GuiGlobalSettings extends GuiScreen {
 			GlobalConfig.persistentConnection = !GlobalConfig.persistentConnection;
 		} else if(button == btnSaveCredentials) {
 			GlobalConfig.saveCredentials = !GlobalConfig.saveCredentials;
-		} else if(button == btnPrivateMessages) {
-			GlobalConfig.allowPrivateMessages = !GlobalConfig.allowPrivateMessages;
 		} else if(button == btnBack) {
 			ConfigurationHandler.save();
 			Minecraft.getMinecraft().displayGuiScreen(new GuiSettings());

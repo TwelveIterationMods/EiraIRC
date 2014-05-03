@@ -33,7 +33,4 @@ public class CommonProxy {
 	public void renderTick(float delta) {
 	}
 
-	public void onChannelJoined(IRCChannel channel) {
-	}
-
 }

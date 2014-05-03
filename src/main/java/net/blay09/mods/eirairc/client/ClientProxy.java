@@ -5,20 +5,17 @@ package net.blay09.mods.eirairc.client;
 
 import net.blay09.mods.eirairc.CommonProxy;
 import net.blay09.mods.eirairc.EiraIRC;
+import net.blay09.mods.eirairc.api.upload.UploadManager;
 import net.blay09.mods.eirairc.client.gui.chat.GuiEiraChat;
 import net.blay09.mods.eirairc.client.gui.overlay.OverlayNotification;
 import net.blay09.mods.eirairc.client.gui.overlay.OverlayRecLive;
 import net.blay09.mods.eirairc.client.screenshot.ScreenshotManager;
-import net.blay09.mods.eirairc.config.ChannelConfig;
+import net.blay09.mods.eirairc.client.upload.DirectUploadHoster;
+import net.blay09.mods.eirairc.client.upload.ImgurHoster;
 import net.blay09.mods.eirairc.config.NotificationConfig;
-import net.blay09.mods.eirairc.config.ServerConfig;
-import net.blay09.mods.eirairc.handler.ConfigurationHandler;
-import net.blay09.mods.eirairc.irc.IRCChannel;
 import net.blay09.mods.eirairc.util.NotificationType;
-import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.ClientCommandHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -37,6 +34,9 @@ public class ClientProxy extends CommonProxy {
 		notificationGUI = new OverlayNotification();
 		recLiveGUI= new OverlayRecLive();
 		ScreenshotManager.create();
+		
+		UploadManager.registerUploadHoster(new DirectUploadHoster());
+		UploadManager.registerUploadHoster(new ImgurHoster());
 		
 		EiraIRC.instance.registerCommands(ClientCommandHandler.instance, false);
 	}
@@ -75,16 +75,4 @@ public class ClientProxy extends CommonProxy {
 		return Minecraft.getMinecraft().theWorld != null;
 	}
 	
-	@Override
-	public void onChannelJoined(IRCChannel channel) {
-		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-//		if(channel.hasTopic()) {
-//			Utils.sendLocalizedMessage(player, "irc.display.irc.topic", channel.getName(), channel.getTopic());
-//		}
-		ServerConfig serverConfig = ConfigurationHandler.getServerConfig(channel.getConnection().getHost());
-		ChannelConfig channelConfig = serverConfig.getChannelConfig(channel);
-		if(channelConfig.isAutoWho()) {
-			Utils.sendUserList(player, channel.getConnection(), channel);
-		}
-	}
 }

@@ -12,12 +12,14 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Scanner;
 
+import net.blay09.mods.eirairc.api.upload.IUploadHoster;
+import net.blay09.mods.eirairc.api.upload.UploadedFile;
 import net.blay09.mods.eirairc.config.ScreenshotConfig;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-public class Imgur extends UploadHoster {
+public class ImgurHoster implements IUploadHoster {
 
 	private static final String API = "https://api.imgur.com/3/image.json";
 	private static final String IMAGE_BASE_URL = "http://imgur.com/";
@@ -26,7 +28,7 @@ public class Imgur extends UploadHoster {
 	private static final int BUFFER_SIZE = 1024;
 	
 	@Override
-	public String uploadFile(File file) {
+	public UploadedFile uploadFile(File file) {
 		if(!file.exists()) {
 			return null;
 		}
@@ -53,7 +55,7 @@ public class Imgur extends UploadHoster {
 				handleError(con.getErrorStream());
 			}
 			con.disconnect();
-			return result;
+			return new UploadedFile(result, null);
 		} catch (IOException e) {
 			e.printStackTrace();
 			return null;
@@ -64,7 +66,7 @@ public class Imgur extends UploadHoster {
 	public boolean isCustomizable() {
 		return false;
 	}
-
+	
 	private String handleResponse(InputStream in) {
 		StringBuilder sb = new StringBuilder();
 		Scanner scanner = new Scanner(in);
@@ -90,6 +92,11 @@ public class Imgur extends UploadHoster {
 		}
 		scanner.close();
 		System.out.println("Failed to upload to imgur: " + sb.toString());
+	}
+
+	@Override
+	public String getName() {
+		return "imgur";
 	}
 	
 }

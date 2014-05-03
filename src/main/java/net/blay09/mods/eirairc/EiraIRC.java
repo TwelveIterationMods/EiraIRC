@@ -156,16 +156,16 @@ public class EiraIRC {
 		return null;
 	}
 
-	public IIRCConnection getConnection(String host) {
-		return connections.get(host);
+	public IIRCConnection getConnection(String identifier) {
+		return connections.get(identifier);
 	}
 	
 	public void removeConnection(IIRCConnection connection) {
 		connections.remove(connection.getHost());
 	}
 
-	public boolean isConnectedTo(String host) {
-		return connections.containsKey(host);
+	public boolean isConnectedTo(String identifier) {
+		return connections.containsKey(identifier);
 	}
 
 	public void clearConnections() {

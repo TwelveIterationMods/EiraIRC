@@ -15,15 +15,17 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import net.blay09.mods.eirairc.api.upload.IUploadHoster;
+import net.blay09.mods.eirairc.api.upload.UploadedFile;
 import net.blay09.mods.eirairc.config.ScreenshotConfig;
 
-public class DirectUpload extends UploadHoster {
+public class DirectUploadHoster implements IUploadHoster {
 
 	public static final String API = "http://www.directupload.net/api/upload.php";
 	public static final String BOUNDARY = "---------------------------7d41b838504d8";
 	
 	@Override
-	public String uploadFile(File file) {
+	public UploadedFile uploadFile(File file) {
 		try {
 			URL apiURL = new URL(API);
 			HttpURLConnection con = (HttpURLConnection) apiURL.openConnection();
@@ -63,7 +65,7 @@ public class DirectUpload extends UploadHoster {
 			reader.close();
 			in.close();
 			con.disconnect();
-			return stringBuilder.toString();
+			return new UploadedFile(stringBuilder.toString(), null);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -75,6 +77,11 @@ public class DirectUpload extends UploadHoster {
 	@Override
 	public boolean isCustomizable() {
 		return false;
+	}
+
+	@Override
+	public String getName() {
+		return "DirectUpload";
 	}
 	
 }

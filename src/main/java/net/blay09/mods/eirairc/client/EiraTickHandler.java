@@ -7,6 +7,7 @@ import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.client.gui.chat.GuiChatExtended;
 import net.blay09.mods.eirairc.client.gui.chat.GuiEiraChat;
 import net.blay09.mods.eirairc.client.gui.chat.GuiEiraChatInput;
+import net.blay09.mods.eirairc.client.gui.screenshot.GuiScreenshotList;
 import net.blay09.mods.eirairc.client.gui.settings.GuiKeybinds;
 import net.blay09.mods.eirairc.client.gui.settings.GuiSettings;
 import net.blay09.mods.eirairc.client.screenshot.Screenshot;
@@ -81,8 +82,12 @@ public class EiraTickHandler {
 		}
 		if(isKeyPressed(KeyConfig.screenshotShare, KeyConfig.IDX_SCREENSHOTSHARE)) {
 			Screenshot screenshot = ScreenshotManager.getInstance().takeScreenshot();
-			ScreenshotManager.getInstance().uploadScreenshot(screenshot);
-			ScreenshotManager.getInstance().shareScreenshot(screenshot);
+			ScreenshotManager.getInstance().uploadScreenshot(screenshot, ScreenshotConfig.VALUE_UPLOADSHARE);
+		}
+		if(isKeyPressed(KeyConfig.openScreenshots, KeyConfig.IDX_OPENSCREENSHOTS)) {
+			if(Minecraft.getMinecraft().currentScreen == null) {
+				Minecraft.getMinecraft().displayGuiScreen(new GuiScreenshotList(null));
+			}
 		}
 	}
 	
@@ -119,16 +124,15 @@ public class EiraTickHandler {
 	
 	@SubscribeEvent
 	public void clientTick(ClientTickEvent event) {
-		if(ScreenshotConfig.manageScreenshots && ScreenshotConfig.screenshotAction != ScreenshotConfig.VALUE_NONE) {
-			if(Keyboard.isKeyDown(Keyboard.KEY_F2)) {
-				screenshotCheck = 10;
-			} else if(screenshotCheck > 0) {
-				screenshotCheck--;
-				if(screenshotCheck == 0) {
-					ScreenshotManager.getInstance().findNewScreenshots(true);
-				}
+		if(Keyboard.isKeyDown(Keyboard.KEY_F2)) {
+			screenshotCheck = 10;
+		} else if(screenshotCheck > 0) {
+			screenshotCheck--;
+			if(screenshotCheck == 0) {
+				ScreenshotManager.getInstance().findNewScreenshots(true);
 			}
 		}
+		ScreenshotManager.getInstance().clientTick(event);
 		handleKeyInput();
 	}
 	
