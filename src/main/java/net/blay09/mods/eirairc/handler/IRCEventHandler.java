@@ -224,7 +224,7 @@ public class IRCEventHandler implements IIRCEventHandler {
 			String alias = message.substring(7);
 			List<EntityPlayer> playerEntityList = MinecraftServer.getServer().getConfigurationManager().playerEntityList;
 			for(EntityPlayer entity : playerEntityList) {
-				if(Utils.getAliasForPlayer(entity).equals(alias)) {
+				if(Utils.getAliasForPlayer(entity, false).equals(alias) || Utils.getAliasForPlayer(entity, true).equals(alias)) {
 					connection.sendPrivateNotice(user, Utils.getLocalizedMessage("irc.alias.lookup", alias, entity.getCommandSenderName()));
 					return;
 				}
@@ -242,7 +242,7 @@ public class IRCEventHandler implements IIRCEventHandler {
 			if(entityPlayer == null) {
 				List<EntityPlayer> playerEntityList = MinecraftServer.getServer().getConfigurationManager().playerEntityList;
 				for(EntityPlayer entity : playerEntityList) {
-					if(Utils.getAliasForPlayer(entity).equals(playerName)) {
+					if(Utils.getAliasForPlayer(entity, false).equals(playerName) || Utils.getAliasForPlayer(entity, true).equals(playerName)) {
 						entityPlayer = entity;
 					}
 				}

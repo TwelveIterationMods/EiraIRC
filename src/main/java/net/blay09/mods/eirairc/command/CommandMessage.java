@@ -64,7 +64,7 @@ public class CommandMessage extends SubCommand {
 		}
 		String ircMessage = message;
 		if(serverSide) {
-			ircMessage = "<" + Utils.getAliasForPlayer((EntityPlayer) sender) + "> " + ircMessage;
+			ircMessage = "<" + Utils.getAliasForPlayer((EntityPlayer) sender, true) + "> " + ircMessage;
 		}
 		target.getConnection().sendMessage(target.getName(), ircMessage);
 		String mcMessage = "[-> " + target.getName() + "] <" + Utils.getColorAliasForPlayer((EntityPlayer) sender) + "> " + message;

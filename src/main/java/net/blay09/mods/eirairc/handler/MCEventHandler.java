@@ -32,7 +32,7 @@ public class MCEventHandler {
 
 	@SubscribeEvent
 	public void onPlayerLogin(PlayerLoggedInEvent event) {
-		String name = Utils.getAliasForPlayer(event.player);
+		String name = Utils.getAliasForPlayer(event.player, true);
 		String ircMessage = Utils.getLocalizedMessage("irc.display.mc.joinMsg", name);
 		for(IRCConnection connection : EiraIRC.instance.getConnections()) {
 			ServerConfig serverConfig = Utils.getServerConfig(connection);
@@ -64,11 +64,12 @@ public class MCEventHandler {
 				if(emote.length() == 0) {
 					return;
 				}
-				String alias = Utils.getAliasForPlayer((EntityPlayer) event.sender);
-				String mcMessage = (DisplayConfig.emoteColor != null ? Globals.COLOR_CODE_PREFIX + Utils.getColorCode(DisplayConfig.emoteColor) : "") + "* " + alias + " " + emote;
+				String mcAlias = Utils.getAliasForPlayer((EntityPlayer) event.sender, false);
+				String ircAlias = Utils.getAliasForPlayer((EntityPlayer) event.sender, true);
+				String mcMessage = (DisplayConfig.emoteColor != null ? Globals.COLOR_CODE_PREFIX + Utils.getColorCode(DisplayConfig.emoteColor) : "") + "* " + mcAlias + " " + emote;
 				Utils.addMessageToChat(mcMessage);
 				if(!MinecraftServer.getServer().isSinglePlayer()) {
-					String ircMessage = Utils.formatMessage(ConfigHelper.getDisplayFormatConfig().ircChannelEmote, event.sender.getCommandSenderName(), alias, emote);
+					String ircMessage = Utils.formatMessage(ConfigHelper.getDisplayFormatConfig().ircChannelEmote, event.sender.getCommandSenderName(), ircAlias, emote);
 					for(IRCConnection connection : EiraIRC.instance.getConnections()) {
 						ServerConfig serverConfig = Utils.getServerConfig(connection);
 						for(IRCChannel channel : connection.getChannels()) {
@@ -163,13 +164,13 @@ public class MCEventHandler {
 					ChannelConfig channelConfig = serverConfig.getChannelConfig(targetChannel);
 					emoteColor = Globals.COLOR_CODE_PREFIX + Utils.getColorCode(ConfigHelper.getEmoteColor(channelConfig));
 					connection.sendChannelMessage(targetChannel, IRCConnection.EMOTE_START + text + IRCConnection.EMOTE_END);
-					mcMessage = emoteColor + Utils.formatMessage(ConfigHelper.getDisplayFormatConfig().mcSendChannelEmote, connection.getHost(), targetChannel.getName(), null, Utils.getAliasForPlayer(sender), text);
+					mcMessage = emoteColor + Utils.formatMessage(ConfigHelper.getDisplayFormatConfig().mcSendChannelEmote, connection.getHost(), targetChannel.getName(), null, Utils.getAliasForPlayer(sender, false), text);
 				}
 			} else {
 				IRCUser targetUser = connection.getUser(target[1]);
 				if(targetUser != null) {
 					connection.sendPrivateMessage(targetUser, IRCConnection.EMOTE_START + text + IRCConnection.EMOTE_END);
-					mcMessage = emoteColor + Utils.formatMessage(ConfigHelper.getDisplayFormatConfig().mcSendPrivateEmote, connection.getHost(), targetUser.getName(), targetUser.getIdentifier(), Utils.getAliasForPlayer(sender), text);
+					mcMessage = emoteColor + Utils.formatMessage(ConfigHelper.getDisplayFormatConfig().mcSendPrivateEmote, connection.getHost(), targetUser.getName(), targetUser.getIdentifier(), Utils.getAliasForPlayer(sender, false), text);
 				}
 			}
 			Utils.addMessageToChat(mcMessage);
@@ -179,7 +180,7 @@ public class MCEventHandler {
 	
 	@SubscribeEvent
 	public void onServerChat(ServerChatEvent event) {
-		String ircNick = Utils.getAliasForPlayer(event.player);
+		String ircNick = Utils.getAliasForPlayer(event.player, true);
 		String mcNick = Utils.getColorAliasForPlayer(event.player);
 		event.component = Utils.getLocalizedChatMessageNoPrefix("chat.type.text", mcNick, event.message);
 		if(!MinecraftServer.getServer().isSinglePlayer()) {
@@ -207,7 +208,7 @@ public class MCEventHandler {
 			return;
 		}
 		if(event.entityLiving instanceof EntityPlayer) {
-			String name = Utils.getAliasForPlayer((EntityPlayer) event.entityLiving);
+			String name = Utils.getAliasForPlayer((EntityPlayer) event.entityLiving, true);
 			String ircMessage = event.entityLiving.func_110142_aN().func_151521_b().getUnformattedText();
 			ircMessage = ircMessage.replaceAll(event.entityLiving.getCommandSenderName(), name);
 			for(IRCConnection connection : EiraIRC.instance.getConnections()) {
@@ -227,7 +228,7 @@ public class MCEventHandler {
 		if(!DisplayConfig.relayMinecraftJoinLeave) {
 			return;
 		}
-		String name = Utils.getAliasForPlayer(event.player);
+		String name = Utils.getAliasForPlayer(event.player, true);
 		String ircMessage = Utils.getLocalizedMessage("irc.display.mc.partMsg", name);
 		for(IRCConnection connection : EiraIRC.instance.getConnections()) {
 			ServerConfig serverConfig = Utils.getServerConfig(connection);

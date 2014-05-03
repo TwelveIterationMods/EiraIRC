@@ -134,7 +134,7 @@ public class Utils {
 		return GlobalConfig.nickPrefix + name + GlobalConfig.nickSuffix;
 	}
 	
-	public static String getAliasForPlayer(EntityPlayer player) {
+	public static String getAliasForPlayer(EntityPlayer player, boolean irc) {
 		if(!GlobalConfig.enableAliases) {
 			return addPreSuffix(player.getCommandSenderName());
 		}
@@ -142,7 +142,7 @@ public class Utils {
 		if(name.isEmpty()) {
 			name = player.getCommandSenderName();
 		}
-		return addPreSuffix(name);
+		return irc ? addPreSuffix(name) : name;
 	}
 	
 	public static boolean isOP(ICommandSender sender) {
@@ -167,7 +167,7 @@ public class Utils {
 	
 	public static String getColorAliasForPlayer(EntityPlayer player) {
 		NBTTagCompound tagCompound = player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getCompoundTag("EiraIRC");
-		String alias = getAliasForPlayer(player);
+		String alias = getAliasForPlayer(player, false);
 		boolean isOP = isOP(player);
 		if(!DisplayConfig.enableNameColors && !isOP) {
 			return alias;
@@ -386,7 +386,7 @@ public class Utils {
 		String s = " * ";
 		for(int i = 0; i < userList.size(); i++) {
 			EntityPlayer entityPlayer = userList.get(i);
-			String alias = Utils.getAliasForPlayer(entityPlayer);
+			String alias = Utils.getAliasForPlayer(entityPlayer, true);
 			if(s.length() + alias.length() > Globals.CHAT_MAX_LENGTH) {
 				connection.sendPrivateNotice(user, s);
 				s = " * ";
