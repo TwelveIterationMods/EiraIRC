@@ -13,6 +13,7 @@ import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiChat;
+import net.minecraftforge.client.ClientCommandHandler;
 
 import org.lwjgl.input.Keyboard;
 
@@ -78,10 +79,13 @@ public class GuiChatExtended extends GuiChat {
 		} else if(keyCode == 28 || keyCode == 156) {
 			String s = inputField.getText().trim();
 			if(!EiraIRC.instance.getMCEventHandler().onClientChat(s)) {
-				mc.ingameGUI.getChatGUI().addToSentMessages(s);
-				mc.displayGuiScreen(null);
-				return;
+				if(ClientCommandHandler.instance.executeCommand(mc.thePlayer, s) != 1) {
+					this.mc.thePlayer.sendChatMessage(s);
+				}
 			}
+			mc.ingameGUI.getChatGUI().addToSentMessages(s);
+			mc.displayGuiScreen(null);
+			return;
 		}
 		super.keyTyped(unicode, keyCode);
 	}

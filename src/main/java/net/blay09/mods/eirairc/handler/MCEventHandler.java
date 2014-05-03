@@ -111,6 +111,9 @@ public class MCEventHandler {
 	
 	@SideOnly(Side.CLIENT)
 	public boolean onClientChat(String text) {
+		if(text.startsWith("/")) {
+			return false;
+		}
 		EntityPlayer sender = Minecraft.getMinecraft().thePlayer;
 		if(EiraIRC.instance.getConnectionCount() > 0 && IRCCommandHandler.onChatCommand(sender, text, false)) {
 			return true;
