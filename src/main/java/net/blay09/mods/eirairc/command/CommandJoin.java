@@ -5,17 +5,14 @@ package net.blay09.mods.eirairc.command;
 
 import java.util.List;
 
-import net.blay09.mods.eirairc.EiraIRC;
+import net.blay09.mods.eirairc.api.IIRCConnection;
+import net.blay09.mods.eirairc.api.IIRCContext;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
-import net.blay09.mods.eirairc.irc.IRCConnection;
-import net.blay09.mods.eirairc.irc.IRCTarget;
-import net.blay09.mods.eirairc.util.Globals;
+import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.IRCResolver;
-import net.blay09.mods.eirairc.util.IRCTargetError;
 import net.blay09.mods.eirairc.util.Utils;
-import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 
@@ -37,11 +34,11 @@ public class CommandJoin extends SubCommand {
 	}
 
 	@Override
-	public boolean processCommand(ICommandSender sender, IRCTarget context, String[] args, boolean serverSide) {
+	public boolean processCommand(ICommandSender sender, IIRCContext context, String[] args, boolean serverSide) {
 		if(args.length < 1) {
 			throw new WrongUsageException(getCommandUsage(sender));
 		}
-		IRCConnection connection = null;
+		IIRCConnection connection = null;
 		if(IRCResolver.hasServerPrefix(args[0])) {
 			connection = IRCResolver.resolveConnection(args[0], IRCResolver.FLAGS_NONE);
 			if(connection == null) {
@@ -55,7 +52,7 @@ public class CommandJoin extends SubCommand {
 			}
 			connection = context.getConnection();
 		}
-		ServerConfig serverConfig = Utils.getServerConfig(connection);
+		ServerConfig serverConfig = ConfigHelper.getServerConfig(connection);
 		String channelName = IRCResolver.stripPath(args[0]);
 		ChannelConfig channelConfig = serverConfig.getChannelConfig(channelName);
 		channelConfig.setAutoJoin(true);

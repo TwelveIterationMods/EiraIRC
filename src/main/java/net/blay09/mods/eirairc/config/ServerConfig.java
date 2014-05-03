@@ -8,8 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.blay09.mods.eirairc.api.IIRCChannel;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
-import net.blay09.mods.eirairc.irc.IRCChannel;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
@@ -120,7 +120,7 @@ public class ServerConfig {
 		return channelConfig;
 	}
 	
-	public ChannelConfig getChannelConfig(IRCChannel channel) {
+	public ChannelConfig getChannelConfig(IIRCChannel channel) {
 		return getChannelConfig(channel.getName());
 	}
 

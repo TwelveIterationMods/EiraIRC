@@ -3,6 +3,7 @@
 
 package net.blay09.mods.eirairc;
 
+import net.blay09.mods.eirairc.api.IIRCChannel;
 import net.blay09.mods.eirairc.irc.IRCChannel;
 import net.blay09.mods.eirairc.net.packet.PacketNotification;
 import net.blay09.mods.eirairc.util.NotificationType;

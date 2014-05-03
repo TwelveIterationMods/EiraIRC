@@ -1,7 +1,7 @@
 package net.blay09.mods.eirairc.api.bot;
 
-import net.blay09.mods.eirairc.api.base.IIRCChannel;
-import net.blay09.mods.eirairc.api.base.IIRCUser;
+import net.blay09.mods.eirairc.api.IIRCChannel;
+import net.blay09.mods.eirairc.api.IIRCUser;
 
 public interface IBotCommand {
 

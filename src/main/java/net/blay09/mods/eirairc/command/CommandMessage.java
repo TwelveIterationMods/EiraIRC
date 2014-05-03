@@ -5,13 +5,13 @@ package net.blay09.mods.eirairc.command;
 
 import java.util.List;
 
+import net.blay09.mods.eirairc.api.IIRCContext;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.GlobalConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
-import net.blay09.mods.eirairc.irc.IRCTarget;
 import net.blay09.mods.eirairc.irc.IRCUser;
-import net.blay09.mods.eirairc.util.Globals;
+import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.IRCResolver;
 import net.blay09.mods.eirairc.util.IRCTargetError;
 import net.blay09.mods.eirairc.util.Utils;
@@ -37,7 +37,7 @@ public class CommandMessage extends SubCommand {
 	}
 
 	@Override
-	public boolean processCommand(ICommandSender sender, IRCTarget context, String[] args, boolean serverSide) {
+	public boolean processCommand(ICommandSender sender, IIRCContext context, String[] args, boolean serverSide) {
 		if(args.length < 2) {
 			throw new WrongUsageException(getCommandUsage(sender));
 		}
@@ -45,7 +45,7 @@ public class CommandMessage extends SubCommand {
 		if(serverSide && !Utils.isOP(sender)) {
 			flags += IRCResolver.FLAG_USERONCHANNEL;
 		}
-		IRCTarget target = IRCResolver.resolveTarget(args[0], flags);
+		IIRCContext target = IRCResolver.resolveTarget(args[0], flags);
 		if(target instanceof IRCTargetError) {
 			if(target instanceof IRCTargetError) {
 				Utils.sendLocalizedMessage(sender, target.getName(), args[0]);
@@ -53,7 +53,7 @@ public class CommandMessage extends SubCommand {
 			}
 			return true;
 		} else if(target instanceof IRCUser) {
-			if(!GlobalConfig.allowPrivateMessages || !Utils.getServerConfig(target.getConnection()).allowsPrivateMessages()) {
+			if(!GlobalConfig.allowPrivateMessages || !ConfigHelper.getServerConfig(target.getConnection()).allowsPrivateMessages()) {
 				Utils.sendLocalizedMessage(sender, "irc.msg.disabled");
 				return true;
 			}
@@ -66,7 +66,7 @@ public class CommandMessage extends SubCommand {
 		if(serverSide) {
 			ircMessage = "<" + Utils.getAliasForPlayer((EntityPlayer) sender, true) + "> " + ircMessage;
 		}
-		target.getConnection().sendMessage(target.getName(), ircMessage);
+		target.message(ircMessage);
 		String mcMessage = "[-> " + target.getName() + "] <" + Utils.getColorAliasForPlayer((EntityPlayer) sender) + "> " + message;
 		Utils.sendUnlocalizedMessage(sender, mcMessage);
 		return true;

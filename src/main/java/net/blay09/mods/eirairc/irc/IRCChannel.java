@@ -7,25 +7,26 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.blay09.mods.eirairc.api.base.IIRCChannel;
+import net.blay09.mods.eirairc.api.IIRCChannel;
+import net.blay09.mods.eirairc.api.IIRCUser;
 
-public class IRCChannel implements IRCTarget, IIRCChannel {
+public class IRCChannel implements IIRCChannel {
 
 	private IRCConnection connection;
 	private String name;
 	private String topic;
-	private Map<String, IRCUser> users = new HashMap<String, IRCUser>();
+	private Map<String, IIRCUser> users = new HashMap<String, IIRCUser>();
 	
 	public IRCChannel(IRCConnection connection, String name) {
 		this.connection = connection;
 		this.name = name;
 	}
 	
-	public Collection<IRCUser> getUserList() {
+	public Collection<IIRCUser> getUserList() {
 		return users.values();
 	}
 	
-	public IRCUser getUser(String nick) {
+	public IIRCUser getUser(String nick) {
 		return users.get(nick.toLowerCase());
 	}
 	
@@ -33,10 +34,20 @@ public class IRCChannel implements IRCTarget, IIRCChannel {
 		users.put(user.getName().toLowerCase(), user);
 	}
 
-	public void removeUser(IRCUser user) {
+	public void removeUser(IIRCUser user) {
 		users.remove(user.getName().toLowerCase());
 	}
 
+	@Override
+	public void message(String message) {
+		connection.message(name, message);
+	}
+	
+	@Override
+	public void notice(String message) {
+		connection.notice(name, message);
+	}
+	
 	public String getName() {
 		return name;
 	}
@@ -62,6 +73,7 @@ public class IRCChannel implements IRCTarget, IIRCChannel {
 	}
 
 	public String getIdentifier() {
-		return connection.getHost() + "/" + name;
+		return connection.getIdentifier() + "/" + name;
 	}
+
 }

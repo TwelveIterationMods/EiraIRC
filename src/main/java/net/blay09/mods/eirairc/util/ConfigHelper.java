@@ -3,8 +3,8 @@
 
 package net.blay09.mods.eirairc.util;
 
-import net.blay09.mods.eirairc.api.base.IIRCChannel;
-import net.blay09.mods.eirairc.api.base.IIRCConnection;
+import net.blay09.mods.eirairc.api.IIRCChannel;
+import net.blay09.mods.eirairc.api.IIRCConnection;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.DisplayConfig;
 import net.blay09.mods.eirairc.config.DisplayFormatConfig;
@@ -71,6 +71,18 @@ public class ConfigHelper {
 
 	public static String getFormattedNick(ServerConfig serverConfig) {
 		return formatNick(getNick(serverConfig));
+	}
+
+	public static String getQuitMessage(IIRCConnection connection) {
+		ServerConfig serverConfig = ConfigurationHandler.getServerConfig(connection.getHost());
+		if(serverConfig.getQuitMessage() != null && !serverConfig.getQuitMessage().isEmpty()) {
+			return serverConfig.getQuitMessage();
+		}
+		return DisplayConfig.quitMessage;
+	}
+
+	public static ServerConfig getServerConfig(IIRCConnection connection) {
+		return ConfigurationHandler.getServerConfig(connection.getHost());
 	}
 
 }

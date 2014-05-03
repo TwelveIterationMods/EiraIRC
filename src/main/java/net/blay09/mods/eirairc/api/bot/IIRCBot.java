@@ -1,9 +1,9 @@
 package net.blay09.mods.eirairc.api.bot;
 
-import net.blay09.mods.eirairc.api.base.IIRCChannel;
-import net.blay09.mods.eirairc.api.base.IIRCConnection;
-import net.blay09.mods.eirairc.api.base.IIRCContext;
-import net.blay09.mods.eirairc.api.base.IIRCUser;
+import net.blay09.mods.eirairc.api.IIRCChannel;
+import net.blay09.mods.eirairc.api.IIRCConnection;
+import net.blay09.mods.eirairc.api.IIRCContext;
+import net.blay09.mods.eirairc.api.IIRCUser;
 import net.minecraft.command.ICommandSender;
 
 public interface IIRCBot extends ICommandSender {

@@ -7,11 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.api.base.IIRCChannel;
-import net.blay09.mods.eirairc.api.base.IIRCUser;
+import net.blay09.mods.eirairc.api.IIRCChannel;
+import net.blay09.mods.eirairc.api.IIRCConnection;
+import net.blay09.mods.eirairc.api.IIRCContext;
+import net.blay09.mods.eirairc.api.IIRCUser;
 import net.blay09.mods.eirairc.irc.IRCChannel;
-import net.blay09.mods.eirairc.irc.IRCConnection;
-import net.blay09.mods.eirairc.irc.IRCTarget;
 import net.blay09.mods.eirairc.irc.IRCUser;
 
 public class ChatSessionHandler {
@@ -91,13 +91,13 @@ public class ChatSessionHandler {
 		}
 	}
 
-	public IRCTarget getIRCTarget() {
+	public IIRCContext getIRCTarget() {
 		if(chatTarget == null) {
 			return null;
 		}
 		int sepIdx = chatTarget.indexOf('/');
 		String targetHost = chatTarget.substring(0, sepIdx);
-		IRCConnection connection = EiraIRC.instance.getConnection(targetHost);
+		IIRCConnection connection = EiraIRC.instance.getConnection(targetHost);
 		if(connection == null) {
 			return null;
 		}

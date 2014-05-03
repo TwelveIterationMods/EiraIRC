@@ -3,10 +3,10 @@
 
 package net.blay09.mods.eirairc.util;
 
+import net.blay09.mods.eirairc.api.IIRCContext;
 import net.blay09.mods.eirairc.irc.IRCConnection;
-import net.blay09.mods.eirairc.irc.IRCTarget;
 
-public enum IRCTargetError implements IRCTarget {
+public enum IRCTargetError implements IIRCContext {
 	SpecifyServer("irc.target.specifyServer"),
 	ServerNotFound("irc.target.serverNotFound"),
 	ChannelNotFound("irc.target.channelNotFound"),
@@ -35,5 +35,13 @@ public enum IRCTargetError implements IRCTarget {
 	@Override
 	public IRCConnection getConnection() {
 		return null;
+	}
+
+	@Override
+	public void message(String message) {
+	}
+	
+	@Override
+	public void notice(String message) {
 	}
 }

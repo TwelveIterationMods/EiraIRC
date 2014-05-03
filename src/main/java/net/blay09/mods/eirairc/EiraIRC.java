@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import net.blay09.mods.eirairc.command.CommandConnect;
+import net.blay09.mods.eirairc.api.IIRCConnection;
 import net.blay09.mods.eirairc.command.base.CommandIRC;
 import net.blay09.mods.eirairc.command.base.CommandServIRC;
 import net.blay09.mods.eirairc.command.base.IRCCommandHandler;
@@ -20,13 +20,12 @@ import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.handler.IRCConnectionHandler;
 import net.blay09.mods.eirairc.handler.IRCEventHandler;
 import net.blay09.mods.eirairc.handler.MCEventHandler;
-import net.blay09.mods.eirairc.irc.IIRCConnectionHandler;
-import net.blay09.mods.eirairc.irc.IRCConnection;
 import net.blay09.mods.eirairc.net.EiraNetHandler;
 import net.blay09.mods.eirairc.net.PacketPipeline;
 import net.blay09.mods.eirairc.net.packet.PacketHello;
 import net.blay09.mods.eirairc.net.packet.PacketNotification;
 import net.blay09.mods.eirairc.net.packet.PacketRecLiveState;
+import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Localization;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.CommandHandler;
@@ -61,7 +60,7 @@ public class EiraIRC {
 	private MCEventHandler mcEventHandler;
 	private ChatSessionHandler chatSessionHandler;
 	private EiraNetHandler netHandler;
-	private Map<String, IRCConnection> connections;
+	private Map<String, IIRCConnection> connections;
 	private boolean ircRunning;
 	
 	@EventHandler
@@ -81,6 +80,7 @@ public class EiraIRC {
 		FMLCommonHandler.instance().bus().register(mcEventHandler);
 		MinecraftForge.EVENT_BUS.register(mcEventHandler);
 		MinecraftForge.EVENT_BUS.register(ircEventHandler);
+		MinecraftForge.EVENT_BUS.register(ircConnectionHandler);
 		FMLCommonHandler.instance().bus().register(netHandler);
 		
 		Localization.init();
@@ -94,7 +94,7 @@ public class EiraIRC {
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
 		packetPipeline.postInitialize();
-		connections = new HashMap<String, IRCConnection>();
+		connections = new HashMap<String, IIRCConnection>();
 	}
 	
 	@EventHandler
@@ -123,8 +123,8 @@ public class EiraIRC {
 	}
 	
 	public void stopIRC() {
-		for(IRCConnection connection : connections.values()) {
-			connection.disconnect(Utils.getQuitMessage(connection));
+		for(IIRCConnection connection : connections.values()) {
+			connection.disconnect(ConfigHelper.getQuitMessage(connection));
 		}
 		connections.clear();
 		ircRunning = false;
@@ -134,31 +134,31 @@ public class EiraIRC {
 		return ircRunning;
 	}
 	
-	public Collection<IRCConnection> getConnections() {
+	public Collection<IIRCConnection> getConnections() {
 		return connections.values();
 	}
 	
-	public void addConnection(IRCConnection connection) {
-		connections.put(connection.getHost(), connection);
+	public void addConnection(IIRCConnection connection) {
+		connections.put(connection.getIdentifier(), connection);
 	}
 
 	public int getConnectionCount() {
 		return connections.size();
 	}
 	
-	public IRCConnection getDefaultConnection() {
-		Iterator<IRCConnection> it = connections.values().iterator();
+	public IIRCConnection getDefaultConnection() {
+		Iterator<IIRCConnection> it = connections.values().iterator();
 		if(it.hasNext()) {
 			return it.next();
 		}
 		return null;
 	}
 
-	public IRCConnection getConnection(String host) {
+	public IIRCConnection getConnection(String host) {
 		return connections.get(host);
 	}
 	
-	public void removeConnection(IRCConnection connection) {
+	public void removeConnection(IIRCConnection connection) {
 		connections.remove(connection.getHost());
 	}
 
@@ -182,10 +182,6 @@ public class EiraIRC {
 		return chatSessionHandler;
 	}
 
-	public IIRCConnectionHandler getIRCConnectionHandler() {
-		return ircConnectionHandler;
-	}
-	
 	public EiraNetHandler getNetHandler() {
 		return netHandler;
 	}
@@ -196,7 +192,6 @@ public class EiraIRC {
 			handler.registerCommand(new IgnoreCommand("irc"));
 		} else {
 			handler.registerCommand(new CommandIRC());
-//			handler.registerCommand(new IgnoreCommand("servirc"));
 		}
 		IRCCommandHandler.registerCommands();
 		if(GlobalConfig.registerShortCommands) {

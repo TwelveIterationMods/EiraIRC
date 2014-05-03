@@ -7,12 +7,13 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.blay09.mods.eirairc.api.base.IIRCUser;
+import net.blay09.mods.eirairc.api.IIRCChannel;
+import net.blay09.mods.eirairc.api.IIRCUser;
 
-public class IRCUser implements IRCTarget, IIRCUser {
+public class IRCUser implements IIRCUser {
 
 	private final IRCConnection connection;
-	private final Map<String, IRCChannel> channels = new HashMap<String, IRCChannel>();
+	private final Map<String, IIRCChannel> channels = new HashMap<String, IIRCChannel>();
 	private String name;
 	private String authLogin;
 	
@@ -37,12 +38,12 @@ public class IRCUser implements IRCTarget, IIRCUser {
 		channels.remove(channel.getName());
 	}
 	
-	public Collection<IRCChannel> getChannels() {
+	public Collection<IIRCChannel> getChannels() {
 		return channels.values();
 	}
 
 	public String getIdentifier() {
-		return connection.getHost() + "/" + name;
+		return connection.getIdentifier() + "/" + name;
 	}
 	
 	public String getUsername() {
@@ -69,7 +70,12 @@ public class IRCUser implements IRCTarget, IIRCUser {
 
 	@Override
 	public void notice(String message) {
-		connection.sendNotice(name, message);
+		connection.notice(name, message);
+	}
+
+	@Override
+	public void message(String message) {
+		connection.message(name, message);
 	}
 
 }

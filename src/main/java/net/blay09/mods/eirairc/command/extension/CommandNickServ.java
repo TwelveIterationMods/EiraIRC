@@ -5,12 +5,11 @@ package net.blay09.mods.eirairc.command.extension;
 
 import java.util.List;
 
-import net.blay09.mods.eirairc.EiraIRC;
+import net.blay09.mods.eirairc.api.IIRCConnection;
+import net.blay09.mods.eirairc.api.IIRCContext;
 import net.blay09.mods.eirairc.command.SubCommand;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
-import net.blay09.mods.eirairc.irc.IRCConnection;
-import net.blay09.mods.eirairc.irc.IRCTarget;
 import net.blay09.mods.eirairc.util.IRCResolver;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
@@ -34,7 +33,7 @@ public class CommandNickServ extends SubCommand {
 	}
 
 	@Override
-	public boolean processCommand(ICommandSender sender, IRCTarget context, String[] args, boolean serverSide) {
+	public boolean processCommand(ICommandSender sender, IIRCContext context, String[] args, boolean serverSide) {
 		if(!serverSide) {
 			Utils.sendLocalizedMessage(sender, "irc.general.serverOnlyCommand");
 			return true;
@@ -42,7 +41,7 @@ public class CommandNickServ extends SubCommand {
 		if(args.length < 2) {
 			throw new WrongUsageException(getCommandUsage(sender));
 		}
-		IRCConnection connection = null;
+		IIRCConnection connection = null;
 		int argidx = 0;
 		if(args.length >= 3) {
 			connection = IRCResolver.resolveConnection(args[0], IRCResolver.FLAGS_NONE);

@@ -4,6 +4,7 @@
 package net.blay09.mods.eirairc.client.gui.settings;
 
 import net.blay09.mods.eirairc.EiraIRC;
+import net.blay09.mods.eirairc.api.IIRCConnection;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
@@ -66,7 +67,7 @@ public class GuiChannelList extends GuiScreen {
 		if(button == btnBack) {
 			Minecraft.getMinecraft().displayGuiScreen(parentScreen);
 		} else if(button == btnJoin) {
-			IRCConnection connection = EiraIRC.instance.getConnection(parentConfig.getHost());
+			IIRCConnection connection = EiraIRC.instance.getConnection(parentConfig.getHost());
 			if(connection != null) {
 				if(EiraIRC.instance.getConnection(parentConfig.getHost()).getChannel(configs[selectedElement].getName()) == null) {
 					connection.join(configs[selectedElement].getName(), configs[selectedElement].getPassword());
@@ -90,7 +91,7 @@ public class GuiChannelList extends GuiScreen {
 			Minecraft.getMinecraft().displayGuiScreen(this);
 			return;
 		}
-		IRCConnection connection = EiraIRC.instance.getConnection(parentConfig.getHost());
+		IIRCConnection connection = EiraIRC.instance.getConnection(parentConfig.getHost());
 		if(connection != null) {
 			connection.part(configs[channelIdx].getName());
 		}

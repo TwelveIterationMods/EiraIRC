@@ -3,10 +3,10 @@ package net.blay09.mods.eirairc.bot;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.blay09.mods.eirairc.api.base.IIRCChannel;
-import net.blay09.mods.eirairc.api.base.IIRCConnection;
-import net.blay09.mods.eirairc.api.base.IIRCContext;
-import net.blay09.mods.eirairc.api.base.IIRCUser;
+import net.blay09.mods.eirairc.api.IIRCChannel;
+import net.blay09.mods.eirairc.api.IIRCConnection;
+import net.blay09.mods.eirairc.api.IIRCContext;
+import net.blay09.mods.eirairc.api.IIRCUser;
 import net.blay09.mods.eirairc.api.bot.IBotCommand;
 import net.blay09.mods.eirairc.api.bot.IBotProfile;
 import net.blay09.mods.eirairc.api.bot.IIRCBot;

@@ -1,6 +1,6 @@
 package net.blay09.mods.eirairc.api.event;
 
-import net.blay09.mods.eirairc.api.base.IIRCConnection;
+import net.blay09.mods.eirairc.api.IIRCConnection;
 import net.blay09.mods.eirairc.api.bot.IIRCBot;
 import cpw.mods.fml.common.eventhandler.Event;
 

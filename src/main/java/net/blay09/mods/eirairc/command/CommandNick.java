@@ -6,19 +6,16 @@ package net.blay09.mods.eirairc.command;
 import java.util.List;
 
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.config.ChannelConfig;
+import net.blay09.mods.eirairc.api.IIRCConnection;
+import net.blay09.mods.eirairc.api.IIRCContext;
 import net.blay09.mods.eirairc.config.GlobalConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
-import net.blay09.mods.eirairc.irc.IRCChannel;
 import net.blay09.mods.eirairc.irc.IRCConnection;
-import net.blay09.mods.eirairc.irc.IRCTarget;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.IRCResolver;
-import net.blay09.mods.eirairc.util.IRCTargetError;
 import net.blay09.mods.eirairc.util.Utils;
-import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 
@@ -40,7 +37,7 @@ public class CommandNick extends SubCommand {
 	}
 
 	@Override
-	public boolean processCommand(ICommandSender sender, IRCTarget context, String[] args, boolean serverSide) {
+	public boolean processCommand(ICommandSender sender, IIRCContext context, String[] args, boolean serverSide) {
 		if(args.length < 1) {
 			throw new WrongUsageException(getCommandUsage(sender));
 		}
@@ -53,7 +50,7 @@ public class CommandNick extends SubCommand {
 			String nick = args[0];
 			Utils.sendLocalizedMessage(sender, "irc.basic.changingNick", serverConfig.getHost(), nick);
 			serverConfig.setNick(nick);
-			IRCConnection connection = EiraIRC.instance.getConnection(serverConfig.getHost());
+			IIRCConnection connection = EiraIRC.instance.getConnection(serverConfig.getHost());
 			if(connection != null) {
 				connection.nick(nick);
 			}
@@ -67,19 +64,19 @@ public class CommandNick extends SubCommand {
 						continue;
 					}
 					if(serverConfig.getNick() == null || serverConfig.getNick().isEmpty()) {
-						IRCConnection connection = EiraIRC.instance.getConnection(serverConfig.getHost());
+						IIRCConnection connection = EiraIRC.instance.getConnection(serverConfig.getHost());
 						if(connection != null) {
 							connection.nick(ConfigHelper.formatNick(nick));
 						}
 					}
 				}
 			} else {
-				IRCConnection connection = context.getConnection();
+				IIRCConnection connection = context.getConnection();
 				if(connection.getHost().equals(Globals.TWITCH_SERVER)) {
 					return true;
 				}
 				connection.nick(ConfigHelper.formatNick(nick));
-				ServerConfig serverConfig = Utils.getServerConfig(connection);
+				ServerConfig serverConfig = ConfigHelper.getServerConfig(connection);
 				serverConfig.setNick(nick);
 			}
 		}
