@@ -52,7 +52,8 @@ public class MCEventHandler {
 	}
 
 	@SubscribeEvent
-	public void onCommand(CommandEvent event) {
+	@SideOnly(Side.SERVER)
+	public void onServerCommand(CommandEvent event) {
 		if(event.command instanceof CommandEmote) {
 			if(event.sender instanceof EntityPlayer) {
 				String emote = "";
@@ -94,15 +95,29 @@ public class MCEventHandler {
 		}
 	}
 
+	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
+	public void onClientCommand(CommandEvent event) {
+		if(event.command instanceof CommandEmote) {
+			StringBuilder sb = new StringBuilder();
+			for(int i = 0; i < event.parameters.length; i++) {
+				sb.append(event.parameters[i]);
+			}
+			if(onClientEmote(sb.toString())) {
+				event.setCanceled(true);
+			}
+		}
+	}
+	
 	@SideOnly(Side.CLIENT)
 	public boolean onClientChat(String text) {
 		EntityPlayer sender = Minecraft.getMinecraft().thePlayer;
 		if(EiraIRC.instance.getConnectionCount() > 0 && IRCCommandHandler.onChatCommand(sender, text, false)) {
-			return false;
+			return true;
 		}
 		String chatTarget = EiraIRC.instance.getChatSessionHandler().getChatTarget();
 		if(chatTarget == null) {
-			return true;
+			return false;
 		}
 		String[] target = chatTarget.split("/");
 		IRCConnection connection = EiraIRC.instance.getConnection(target[0]);
@@ -123,7 +138,7 @@ public class MCEventHandler {
 			}
 			Utils.addMessageToChat(mcMessage);
 		}
-		return false;
+		return true;
 	}
 	
 	@SideOnly(Side.CLIENT)
@@ -131,7 +146,7 @@ public class MCEventHandler {
 		EntityPlayer sender = Minecraft.getMinecraft().thePlayer;
 		String chatTarget = EiraIRC.instance.getChatSessionHandler().getChatTarget();
 		if(chatTarget == null) {
-			return true;
+			return false;
 		}
 		String[] target = chatTarget.split("/");
 		IRCConnection connection = EiraIRC.instance.getConnection(target[0]);
@@ -156,7 +171,7 @@ public class MCEventHandler {
 			}
 			Utils.addMessageToChat(mcMessage);
 		}
-		return false;
+		return true;
 	}
 	
 	@SubscribeEvent

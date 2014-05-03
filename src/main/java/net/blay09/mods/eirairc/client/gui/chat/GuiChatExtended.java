@@ -4,7 +4,6 @@
 package net.blay09.mods.eirairc.client.gui.chat;
 
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.client.ClientChatHandler;
 import net.blay09.mods.eirairc.client.gui.settings.GuiSettings;
 import net.blay09.mods.eirairc.config.CompatibilityConfig;
 import net.blay09.mods.eirairc.config.KeyConfig;
@@ -78,7 +77,7 @@ public class GuiChatExtended extends GuiChat {
 			return;
 		} else if(keyCode == 28 || keyCode == 156) {
 			String s = inputField.getText().trim();
-			if(ClientChatHandler.handleClientChat(s)) {
+			if(!EiraIRC.instance.getMCEventHandler().onClientChat(s)) {
 				mc.ingameGUI.getChatGUI().addToSentMessages(s);
 				mc.displayGuiScreen(null);
 				return;

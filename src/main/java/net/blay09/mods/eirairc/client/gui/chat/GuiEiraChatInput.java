@@ -3,7 +3,7 @@
 
 package net.blay09.mods.eirairc.client.gui.chat;
 
-import net.blay09.mods.eirairc.client.ClientChatHandler;
+import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.client.gui.settings.GuiSettings;
 import net.blay09.mods.eirairc.config.CompatibilityConfig;
 import net.blay09.mods.eirairc.config.KeyConfig;
@@ -107,7 +107,7 @@ public class GuiEiraChatInput extends GuiScreen {
 			String s = txtInput.getText().trim();
 			if(s.length() > 0) {
 				parentChat.addToSentMessages(s);
-				if(!ClientChatHandler.handleClientChat(s)) {
+				if(!EiraIRC.instance.getMCEventHandler().onClientChat(s)) {
 					if(ClientCommandHandler.instance.executeCommand(mc.thePlayer, s) != 1) {
 						this.mc.thePlayer.sendChatMessage(s);
 					}
