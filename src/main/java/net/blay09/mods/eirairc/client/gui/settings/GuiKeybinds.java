@@ -24,6 +24,7 @@ public class GuiKeybinds extends GuiScreen {
 	private GuiButton btnToggleLive;
 	private GuiButton btnToggleTarget;
 	private GuiButton btnScreenshotShare;
+	private GuiButton btnOpenScreenshots;
 	private GuiButton btnBack;
 	
 	private int currentKeyIdx = -1;
@@ -48,6 +49,9 @@ public class GuiKeybinds extends GuiScreen {
 		btnToggleLive = new GuiButton(5, rightX, height / 2 - 39, BUTTON_WIDTH, BUTTON_HEIGHT, "");
 		buttonList.add(btnToggleLive);
 		
+		btnOpenScreenshots = new GuiButton(6, rightX, height / 2 - 14, BUTTON_WIDTH, BUTTON_HEIGHT, "");
+		buttonList.add(btnOpenScreenshots);
+		
 		btnBack = new GuiButton(0, width / 2 - BUTTON_WIDTH / 2, height / 2 + 36, BUTTON_WIDTH, BUTTON_HEIGHT, Utils.getLocalizedMessage("irc.gui.back"));
 		buttonList.add(btnBack);
 		
@@ -68,6 +72,8 @@ public class GuiKeybinds extends GuiScreen {
 			currentKeyIdx = KeyConfig.IDX_TOGGLERECORDING;
 		} else if(button == btnToggleLive) {
 			currentKeyIdx = KeyConfig.IDX_TOGGLELIVE;
+		} else if(button == btnOpenScreenshots) {
+			currentKeyIdx = KeyConfig.IDX_OPENSCREENSHOTS;
 		}
 	}
 	
@@ -83,6 +89,7 @@ public class GuiKeybinds extends GuiScreen {
 				case KeyConfig.IDX_TOGGLELIVE: KeyConfig.toggleLive = keyCode; break;
 				case KeyConfig.IDX_TOGGLERECORDING: KeyConfig.toggleRecording = keyCode; break;
 				case KeyConfig.IDX_TOGGLETARGET: KeyConfig.toggleTarget = keyCode; break;
+				case KeyConfig.IDX_OPENSCREENSHOTS: KeyConfig.openScreenshots = keyCode; break;
 			}
 			currentKeyIdx = -1;
 			ConfigurationHandler.save();
@@ -98,6 +105,7 @@ public class GuiKeybinds extends GuiScreen {
 		btnToggleLive.displayString = Utils.getLocalizedMessage("irc.gui.keybinds.toggleLive", getKeyName(KeyConfig.toggleLive));
 		btnToggleRecording.displayString = Utils.getLocalizedMessage("irc.gui.keybinds.toggleRecording", getKeyName(KeyConfig.toggleRecording));
 		btnToggleTarget.displayString = Utils.getLocalizedMessage("irc.gui.keybinds.toggleTarget", getKeyName(KeyConfig.toggleTarget));
+		btnOpenScreenshots.displayString = Utils.getLocalizedMessage("irc.gui.keybinds.openScreenshots", getKeyName(KeyConfig.openScreenshots));
 	}
 	
 	private String getKeyName(int keyCode) {

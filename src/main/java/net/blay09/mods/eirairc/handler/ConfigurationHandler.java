@@ -19,6 +19,7 @@ import net.blay09.mods.eirairc.config.NotificationConfig;
 import net.blay09.mods.eirairc.config.ScreenshotConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.ServiceConfig;
+import net.blay09.mods.eirairc.util.IRCResolver;
 import net.blay09.mods.eirairc.util.IRCTargetError;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
@@ -124,24 +125,16 @@ public class ConfigurationHandler {
 				Utils.sendLocalizedMessage(sender, "irc.config.invalidOption", "Global", key);
 			}
 		} else {
-			Object rt = Utils.resolveIRCTarget(target, true, false, true, false, false, false);
-			if(rt instanceof IRCTargetError) {
-				switch((IRCTargetError) rt) {
-				case ChannelNotFound: Utils.sendLocalizedMessage(sender, "irc.target.channelNotFound", target);
-					break;
-				case InvalidTarget: Utils.sendLocalizedMessage(sender, "irc.target.invalid");
-					break;
-				case ServerNotFound: Utils.sendLocalizedMessage(sender, "irc.target.serverNotFound", target);
-					break;
-				case SpecifyServer: Utils.sendLocalizedMessage(sender, "irc.target.unknown");
-					break;
-				default: Utils.sendLocalizedMessage(sender, "irc.target.unknown");
-					break;
+			ChannelConfig channelConfig = IRCResolver.resolveChannelConfig(target, IRCResolver.FLAGS_NONE);
+			if(channelConfig != null) {
+				channelConfig.handleConfigCommand(sender, key, value);
+			} else {
+				ServerConfig serverConfig = IRCResolver.resolveServerConfig(target, IRCResolver.FLAGS_NONE);
+				if(serverConfig != null) {
+					serverConfig.handleConfigCommand(sender, key, value);
+				} else {
+					Utils.sendLocalizedMessage(sender, "irc.target.targetNotFound", target);
 				}
-			} else if(rt instanceof ServerConfig) {
-				((ServerConfig) rt).handleConfigCommand(sender, key, value);
-			} else if(rt instanceof ChannelConfig) {
-				((ChannelConfig) rt).handleConfigCommand(sender, key, value);
 			}
 		}
 	}
@@ -160,24 +153,16 @@ public class ConfigurationHandler {
 				Utils.sendLocalizedMessage(sender, "irc.config.invalidOption", "Global", key);
 			}
 		} else {
-			Object rt = Utils.resolveIRCTarget(target, true, false, true, false, false, false);
-			if(rt instanceof IRCTargetError) {
-				switch((IRCTargetError) rt) {
-				case ChannelNotFound: Utils.sendLocalizedMessage(sender, "irc.target.channelNotFound", target);
-					break;
-				case InvalidTarget: Utils.sendLocalizedMessage(sender, "irc.target.invalid");
-					break;
-				case ServerNotFound: Utils.sendLocalizedMessage(sender, "irc.target.serverNotFound", target);
-					break;
-				case SpecifyServer: Utils.sendLocalizedMessage(sender, "irc.target.unknown");
-					break;
-				default: Utils.sendLocalizedMessage(sender, "irc.target.unknown");
-					break;
+			ChannelConfig channelConfig = IRCResolver.resolveChannelConfig(target, IRCResolver.FLAGS_NONE);
+			if(channelConfig != null) {
+				channelConfig.handleConfigCommand(sender, key);
+			} else {
+				ServerConfig serverConfig = IRCResolver.resolveServerConfig(target, IRCResolver.FLAGS_NONE);
+				if(serverConfig != null) {
+					serverConfig.handleConfigCommand(sender, key);
+				} else {
+					Utils.sendLocalizedMessage(sender, "irc.target.targetNotFound", target);
 				}
-			} else if(rt instanceof ServerConfig) {
-				((ServerConfig) rt).handleConfigCommand(sender, key);
-			} else if(rt instanceof ChannelConfig) {
-				((ChannelConfig) rt).handleConfigCommand(sender, key);
 			}
 		}
 	}

@@ -1,3 +1,6 @@
+// Copyright (c) 2014, Christopher "blay09" Baker
+// All rights reserved.
+
 package net.blay09.mods.eirairc.command.base;
 
 import java.util.List;

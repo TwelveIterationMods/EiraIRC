@@ -17,8 +17,10 @@ public class KeyConfig {
 	public static final int IDX_SCREENSHOTSHARE = 2;
 	public static final int IDX_TOGGLERECORDING = 3;
 	public static final int IDX_TOGGLELIVE = 4;
+	public static final int IDX_OPENSCREENSHOTS = 5;
 	
 	public static int screenshotShare = -1;
+	public static int openScreenshots = -1;
 	public static int toggleRecording = Keyboard.KEY_F9;
 	public static int toggleLive = -1;
 	public static int toggleTarget = Keyboard.KEY_TAB;
@@ -30,6 +32,7 @@ public class KeyConfig {
 		toggleLive = config.get(CATEGORY, "keyToggleLive", toggleLive).getInt();
 		toggleRecording = config.get(CATEGORY, "keyToggleRecording", toggleRecording).getInt();
 		screenshotShare = config.get(CATEGORY, "keyScreenshotShare", screenshotShare).getInt();
+		openScreenshots = config.get(CATEGORY, "keyOpenScreenshots", openScreenshots).getInt();
 	}
 
 	public static void save(Configuration config) {
@@ -38,6 +41,7 @@ public class KeyConfig {
 		config.get(CATEGORY, "keyToggleLive", toggleLive).set(toggleLive);
 		config.get(CATEGORY, "keyToggleRecording", toggleRecording).set(toggleRecording);
 		config.get(CATEGORY, "keyScreenshotShare", screenshotShare).set(screenshotShare);
+		config.get(CATEGORY, "keyOpenScreenshots", openScreenshots).set(openScreenshots);
 	}
 	
 }
