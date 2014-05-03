@@ -22,6 +22,7 @@ public interface IIRCConnection {
 	public IIRCUser getUser(String name);
 	public IIRCUser getOrCreateUser(String name);
 	public String getHost();
+	public int getPort();
 	public IIRCBot getBot();
 	public String getIdentifier();
 	public String getNick();

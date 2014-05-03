@@ -37,7 +37,7 @@ import net.minecraftforge.common.MinecraftForge;
 
 public class IRCConnection implements Runnable, IIRCConnection {
 
-	public static final int IRC_DEFAULT_PORT = 6667;
+	public static final int DEFAULT_PORT = 6667;
 	public static final String EMOTE_START = "\u0001ACTION ";
 	public static final String EMOTE_END = "\u0001";
 	private static final String LINE_FEED = "\r\n";
@@ -61,25 +61,15 @@ public class IRCConnection implements Runnable, IIRCConnection {
 	private BufferedWriter writer;
 	private BufferedReader reader;
 	
-	public IRCConnection(String host, String nick) {
-		this(host, IRC_DEFAULT_PORT, nick);
-	}
-	
-	public IRCConnection(String host, int port, String nick) {
-		this(host, port, null, nick);
-	}
-	
-	public IRCConnection(String host, String password, String nick) {
-		this(host, IRC_DEFAULT_PORT, password, nick);
-	}
-	
-	public IRCConnection(String host, int port, String password, String nick) {
-		this(host, port, password, nick, Globals.DEFAULT_IDENT, Globals.DEFAULT_DESCRIPTION);
-	}
-	
-	public IRCConnection(String host, int port, String password, String nick, String ident, String description) {
-		this.host = host;
-		this.port = port;
+	public IRCConnection(String host, String password, String nick, String ident, String description) {
+		int portIdx = host.indexOf(':');
+		if(portIdx != -1) {
+			this.host = host.substring(0, portIdx);
+			this.port = Integer.parseInt(host.substring(portIdx + 1));
+		} else {
+			this.host = host;
+			this.port = DEFAULT_PORT;
+		}
 		this.password = password;
 		this.nick = nick;
 		this.ident = ident;
@@ -396,6 +386,11 @@ public class IRCConnection implements Runnable, IIRCConnection {
 	@Override
 	public String getIdentifier() {
 		return host + ":" + port;
+	}
+
+	@Override
+	public int getPort() {
+		return port;
 	}
 
 }
