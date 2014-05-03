@@ -18,8 +18,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.api.IIRCUser;
-import net.blay09.mods.eirairc.config.ChannelConfig;
+import net.blay09.mods.eirairc.api.base.IIRCChannel;
+import net.blay09.mods.eirairc.api.base.IIRCConnection;
+import net.blay09.mods.eirairc.api.base.IIRCUser;
+import net.blay09.mods.eirairc.bot.EiraIRCBot;
+import net.blay09.mods.eirairc.config.BotProfile;
 import net.blay09.mods.eirairc.config.DisplayConfig;
 import net.blay09.mods.eirairc.config.GlobalConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
@@ -325,8 +328,8 @@ public class Utils {
 	public static IRCConnection connectTo(ServerConfig config) {
 		IRCConnection connection = new IRCConnection(config.getHost(), IRCConnection.IRC_DEFAULT_PORT, config.getServerPassword(), ConfigHelper.getFormattedNick(config), config.getIdent(), config.getDescription());
 		connection.setCharset(GlobalConfig.charset);
-		connection.setEventHandler(EiraIRC.instance.getIRCEventHandler());
 		connection.setConnectionHandler(EiraIRC.instance.getIRCConnectionHandler());
+		connection.setBot(new EiraIRCBot(connection, new BotProfile("default")));
 		if(connection.connect()) {
 			return connection;
 		}
@@ -503,6 +506,20 @@ public class Utils {
 			sb.append(args[i]);
 		}
 		return sb.toString();
+	}
+
+	public static String formatMessageNew(String format, IIRCConnection connection, IIRCChannel channel, IIRCUser user, String message) {
+		String result = format;
+		result = result.replaceAll("\\{SERVER\\}", connection.getIdentifier());
+		if(channel != null) {
+			result = result.replaceAll("\\{CHANNEL\\}", channel.getName());
+		}
+		if(user != null) {
+			result = result.replaceAll("\\{USER\\}", user.getIdentifier());
+			result = result.replaceAll("\\{NICK\\}", user.getName());
+		}
+		result = result.replaceAll("\\{MESSAGE\\}", Matcher.quoteReplacement(message)).replaceAll("\\\\$", "\\$");
+		return result;
 	}
 	
 }

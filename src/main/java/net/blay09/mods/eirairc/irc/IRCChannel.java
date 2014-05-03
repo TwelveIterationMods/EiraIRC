@@ -7,7 +7,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.blay09.mods.eirairc.api.IIRCChannel;
+import net.blay09.mods.eirairc.api.base.IIRCChannel;
 
 public class IRCChannel implements IRCTarget, IIRCChannel {
 

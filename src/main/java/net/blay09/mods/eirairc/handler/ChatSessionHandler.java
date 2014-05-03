@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.blay09.mods.eirairc.EiraIRC;
+import net.blay09.mods.eirairc.api.base.IIRCChannel;
+import net.blay09.mods.eirairc.api.base.IIRCUser;
 import net.blay09.mods.eirairc.irc.IRCChannel;
 import net.blay09.mods.eirairc.irc.IRCConnection;
 import net.blay09.mods.eirairc.irc.IRCTarget;
@@ -15,8 +17,8 @@ import net.blay09.mods.eirairc.irc.IRCUser;
 public class ChatSessionHandler {
 
 	private String chatTarget = null;
-	private final List<IRCChannel> validTargetChannels = new ArrayList<IRCChannel>();
-	private final List<IRCUser> validTargetUsers = new ArrayList<IRCUser>();
+	private final List<IIRCChannel> validTargetChannels = new ArrayList<IIRCChannel>();
+	private final List<IIRCUser> validTargetUsers = new ArrayList<IIRCUser>();
 	private int targetChannelIdx = 0;
 	private int targetUserIdx = -1;
 	
@@ -24,23 +26,23 @@ public class ChatSessionHandler {
 		return chatTarget;
 	}
 	
-	public void addTargetUser(IRCUser user) {
+	public void addTargetUser(IIRCUser user) {
 		if(!validTargetUsers.contains(user)) {
 			validTargetUsers.add(user);
 		}
 	}
 	
-	public void addTargetChannel(IRCChannel channel) {
+	public void addTargetChannel(IIRCChannel channel) {
 		if(!validTargetChannels.contains(channel)) {
 			validTargetChannels.add(channel);
 		}
 	}
 	
-	public void removeTargetUser(IRCUser user) {
+	public void removeTargetUser(IIRCUser user) {
 		validTargetUsers.remove(user);
 	}
 	
-	public void removeTargetChannel(IRCChannel channel) {
+	public void removeTargetChannel(IIRCChannel channel) {
 		validTargetChannels.remove(channel);
 	}
 	
@@ -106,4 +108,5 @@ public class ChatSessionHandler {
 			return connection.getUser(target);
 		}
 	}
+
 }

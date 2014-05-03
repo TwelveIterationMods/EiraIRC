@@ -3,11 +3,14 @@
 
 package net.blay09.mods.eirairc.util;
 
+import net.blay09.mods.eirairc.api.base.IIRCChannel;
+import net.blay09.mods.eirairc.api.base.IIRCConnection;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.DisplayConfig;
 import net.blay09.mods.eirairc.config.DisplayFormatConfig;
 import net.blay09.mods.eirairc.config.GlobalConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
+import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.minecraftforge.common.config.ConfigCategory;
 
 public class ConfigHelper {
@@ -24,6 +27,10 @@ public class ConfigHelper {
 		return dfc;
 	}
 	
+	public static String getEmoteColor(IIRCChannel channel) {
+		return null;
+	}
+	
 	public static String getEmoteColor(ChannelConfig channelConfig) {
 		return getEmoteColor(channelConfig.getServerConfig());
 	}
@@ -33,6 +40,10 @@ public class ConfigHelper {
 			return serverConfig.getEmoteColor();
 		}
 		return DisplayConfig.emoteColor;
+	}
+	
+	public static String getIRCColor(IIRCConnection connection) {
+		return getIRCColor(ConfigurationHandler.getServerConfig(connection.getHost()));
 	}
 	
 	public static String getIRCColor(ChannelConfig channelConfig) {
@@ -61,5 +72,5 @@ public class ConfigHelper {
 	public static String getFormattedNick(ServerConfig serverConfig) {
 		return formatNick(getNick(serverConfig));
 	}
-	
+
 }

@@ -14,8 +14,15 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import net.blay09.mods.eirairc.api.IIRCConnection;
+import net.blay09.mods.eirairc.api.base.IIRCConnection;
+import net.blay09.mods.eirairc.api.bot.IIRCBot;
 import net.blay09.mods.eirairc.api.event.IRCChannelChatEvent;
+import net.blay09.mods.eirairc.api.event.IRCChannelTopicEvent;
+import net.blay09.mods.eirairc.api.event.IRCPrivateChatEvent;
+import net.blay09.mods.eirairc.api.event.IRCUserJoinEvent;
+import net.blay09.mods.eirairc.api.event.IRCUserLeaveEvent;
+import net.blay09.mods.eirairc.api.event.IRCUserNickChangeEvent;
+import net.blay09.mods.eirairc.api.event.IRCUserQuitEvent;
 import net.blay09.mods.eirairc.bot.EiraIRCBot;
 import net.blay09.mods.eirairc.util.Globals;
 import net.minecraftforge.common.MinecraftForge;
@@ -37,7 +44,6 @@ public class IRCConnection implements Runnable, IIRCConnection {
 	private String charset;
 	private boolean connected;
 	private final IRCParser parser = new IRCParser();
-	private IIRCEventHandler eventHandler;
 	private IIRCConnectionHandler connectionHandler;
 	private EiraIRCBot bot;
 	private final Map<String, IRCChannel> channels = new HashMap<String, IRCChannel>();
@@ -75,10 +81,6 @@ public class IRCConnection implements Runnable, IIRCConnection {
 	
 	public void setBot(EiraIRCBot bot) {
 		this.bot = bot;
-	}
-	
-	public void setEventHandler(IIRCEventHandler eventHandler) {
-		this.eventHandler = eventHandler;
 	}
 	
 	public void setConnectionHandler(IIRCConnectionHandler connectionHandler) {
@@ -270,7 +272,7 @@ public class IRCConnection implements Runnable, IIRCConnection {
 			IRCChannel channel = getChannel(msg.arg(1));
 			if(channel != null) {
 				channel.setTopic(msg.arg(2));
-				eventHandler.onTopicChange(null, channel, channel.getTopic());
+				MinecraftForge.EVENT_BUS.post(new IRCChannelTopicEvent(this, channel, null, channel.getTopic()));
 			}
 		} else if(numeric == IRCReplyCodes.RPL_WHOISLOGIN) {
 			IRCUser user = getOrCreateUser(msg.arg(1));
@@ -305,17 +307,9 @@ public class IRCConnection implements Runnable, IIRCConnection {
 			}
 			if(target.startsWith("#")) {
 				IRCChannel channel = getChannel(target);
-				if(isEmote) {
-					eventHandler.onChannelEmote(this, channel, user, message);
-				} else {
-					eventHandler.onChannelMessage(this, channel, user, message);
-				}
+				MinecraftForge.EVENT_BUS.post(new IRCChannelChatEvent(this, channel, user, message, isEmote));
 			} else if(target.equals(this.nick)) {
-				if(isEmote) {
-					eventHandler.onPrivateEmote(this, user, message);
-				} else {
-					eventHandler.onPrivateMessage(this, user, message);
-				}
+				MinecraftForge.EVENT_BUS.post(new IRCPrivateChatEvent(this, user, message, isEmote));
 			}
 		} else if(cmd.equals("NOTICE")) {
 			System.out.println("(" + msg.getPrefix() + ") " + msg.arg(1));
@@ -324,32 +318,33 @@ public class IRCConnection implements Runnable, IIRCConnection {
 			IRCChannel channel = getOrCreateChannel(msg.arg(0));
 			channel.addUser(user);
 			user.addChannel(channel);
-			eventHandler.onUserJoin(this, user, channel);
+			MinecraftForge.EVENT_BUS.post(new IRCUserJoinEvent(this, channel, user));
 		} else if(cmd.equals("PART")) {
 			IRCUser user = getOrCreateUser(msg.getNick());
 			IRCChannel channel = getChannel(msg.arg(0));
 			if(channel != null) {
 				channel.removeUser(user);
 				user.removeChannel(channel);
-				eventHandler.onUserPart(this, user, channel, msg.arg(1));
+				MinecraftForge.EVENT_BUS.post(new IRCUserLeaveEvent(this, channel, user, msg.arg(1)));
 			}
 		} else if(cmd.equals("TOPIC")) {
 			IRCUser user = getOrCreateUser(msg.getNick());
 			IRCChannel channel = getChannel(msg.arg(0));
 			if(channel != null) {
 				channel.setTopic(msg.arg(1));
-				eventHandler.onTopicChange(user, channel, msg.arg(1));
+				MinecraftForge.EVENT_BUS.post(new IRCChannelTopicEvent(this, channel, user, channel.getTopic()));
 			}
 		} else if(cmd.equals("NICK")) {
 			String newNick = msg.arg(0);
 			IRCUser user = getOrCreateUser(msg.getNick());
-			eventHandler.onNickChange(this, user, newNick);
 			users.remove(user.getName().toLowerCase());
+			String oldNick = user.getName();
 			user.setName(newNick);
 			users.put(user.getName().toLowerCase(), user);
+			MinecraftForge.EVENT_BUS.post(new IRCUserNickChangeEvent(this, user, oldNick, newNick));
 		} else if(cmd.equals("QUIT")) {
 			IRCUser user = getOrCreateUser(msg.getNick());
-			eventHandler.onUserQuit(this, user, msg.arg(0));
+			MinecraftForge.EVENT_BUS.post(new IRCUserQuitEvent(this, user, msg.arg(0)));
 			for(IRCChannel channel : user.getChannels()) {
 				channel.removeUser(user);
 			}
@@ -386,10 +381,6 @@ public class IRCConnection implements Runnable, IIRCConnection {
 		sendNotice(user.getName(), message);
 	}
 	
-	public void sendChannelNotice(IRCChannel channel, String message) {
-		sendNotice(channel.getName(), message);
-	}
-
 	public void kick(String channelName, String nick, String reason) {
 		sendIRC("KICK " + channelName + " " + nick + (reason != null ? (" :" + reason) : ""));
 	}
@@ -417,6 +408,16 @@ public class IRCConnection implements Runnable, IIRCConnection {
 
 	public String getServerType() {
 		return serverType;
+	}
+
+	@Override
+	public IIRCBot getBot() {
+		return bot;
+	}
+
+	@Override
+	public String getIdentifier() {
+		return host + ":" + port;
 	}
 
 }

@@ -1,9 +1,9 @@
 package net.blay09.mods.eirairc.bot;
 
-import net.blay09.mods.eirairc.api.IBot;
-import net.blay09.mods.eirairc.api.IBotCommand;
-import net.blay09.mods.eirairc.api.IIRCChannel;
-import net.blay09.mods.eirairc.api.IIRCUser;
+import net.blay09.mods.eirairc.api.base.IIRCChannel;
+import net.blay09.mods.eirairc.api.base.IIRCUser;
+import net.blay09.mods.eirairc.api.bot.IIRCBot;
+import net.blay09.mods.eirairc.api.bot.IBotCommand;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.server.MinecraftServer;
 
@@ -34,7 +34,7 @@ public class BotCommandCustom implements IBotCommand {
 	}
 
 	@Override
-	public void processCommand(IBot bot, IIRCChannel channel, IIRCUser user, String[] args) {
+	public void processCommand(IIRCBot bot, IIRCChannel channel, IIRCUser user, String[] args) {
 		String message = Utils.joinArgs(args, 0).trim();
 		bot.resetLog();
 		MinecraftServer.getServer().getCommandManager().executeCommand(bot, message);

@@ -78,12 +78,14 @@ public class GuiChatExtended extends GuiChat {
 			return;
 		} else if(keyCode == 28 || keyCode == 156) {
 			String s = inputField.getText().trim();
-			if(!EiraIRC.instance.getMCEventHandler().onClientChat(s)) {
-				if(ClientCommandHandler.instance.executeCommand(mc.thePlayer, s) != 1) {
-					this.mc.thePlayer.sendChatMessage(s);
+			if(s.length() > 0) {
+				if(!EiraIRC.instance.getMCEventHandler().onClientChat(s)) {
+					if(ClientCommandHandler.instance.executeCommand(mc.thePlayer, s) != 1) {
+						this.mc.thePlayer.sendChatMessage(s);
+					}
 				}
+				mc.ingameGUI.getChatGUI().addToSentMessages(s);
 			}
-			mc.ingameGUI.getChatGUI().addToSentMessages(s);
 			mc.displayGuiScreen(null);
 			return;
 		}

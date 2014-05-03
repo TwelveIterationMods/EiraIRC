@@ -80,6 +80,7 @@ public class EiraIRC {
 		
 		FMLCommonHandler.instance().bus().register(mcEventHandler);
 		MinecraftForge.EVENT_BUS.register(mcEventHandler);
+		MinecraftForge.EVENT_BUS.register(ircEventHandler);
 		FMLCommonHandler.instance().bus().register(netHandler);
 		
 		Localization.init();

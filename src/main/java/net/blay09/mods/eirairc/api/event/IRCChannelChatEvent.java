@@ -1,22 +1,23 @@
 package net.blay09.mods.eirairc.api.event;
 
-import net.blay09.mods.eirairc.api.IBot;
-import net.blay09.mods.eirairc.api.IIRCChannel;
-import net.blay09.mods.eirairc.api.IIRCConnection;
-import net.blay09.mods.eirairc.api.IIRCUser;
+import net.blay09.mods.eirairc.api.base.IIRCChannel;
+import net.blay09.mods.eirairc.api.base.IIRCConnection;
+import net.blay09.mods.eirairc.api.base.IIRCUser;
+import net.blay09.mods.eirairc.api.bot.IIRCBot;
 import cpw.mods.fml.common.eventhandler.Event;
 
-public class IRCChannelChatEvent extends Event {
+public class IRCChannelChatEvent extends IRCEvent {
 
-	public final IBot bot;
 	public final IIRCChannel channel;
 	public final IIRCUser sender;
 	public final String message;
+	public final boolean isEmote;
 	
-	public IRCChannelChatEvent(IBot bot, IIRCChannel channel, IIRCUser sender, String message) {
-		this.bot = bot;
+	public IRCChannelChatEvent(IIRCConnection connection, IIRCChannel channel, IIRCUser sender, String message, boolean isEmote) {
+		super(connection);
 		this.channel = channel;
 		this.sender = sender;
 		this.message = message;
+		this.isEmote = isEmote;
 	}
 }
