@@ -61,24 +61,28 @@ public class ConfigurationHandler {
 		});
 		for(int i = 0; i < files.length; i++) {
 			BotProfile botProfile = new BotProfile(files[i]);
+			botProfile.loadCommands();
 			botProfiles.put(botProfile.getName(), botProfile);
 		}
 		if(!botProfiles.containsKey(BotProfile.DEFAULT_CLIENT)) {
 			BotProfile botProfile = new BotProfile(new File(profileDir, BotProfile.DEFAULT_CLIENT + ".cfg"));
 			botProfile.defaultClient();
 			botProfile.save();
+			botProfile.loadCommands();
 			botProfiles.put(botProfile.getName(), botProfile);
 		}
 		if(!botProfiles.containsKey(BotProfile.DEFAULT_SERVER)) {
 			BotProfile botProfile = new BotProfile(new File(profileDir, BotProfile.DEFAULT_SERVER + ".cfg"));
 			botProfile.defaultServer();
 			botProfile.save();
+			botProfile.loadCommands();
 			botProfiles.put(botProfile.getName(), botProfile);
 		}
 		if(!botProfiles.containsKey(BotProfile.DEFAULT_TWITCH)) {
 			BotProfile botProfile = new BotProfile(new File(profileDir, BotProfile.DEFAULT_TWITCH + ".cfg"));
 			botProfile.defaultTwitch();
 			botProfile.save();
+			botProfile.loadCommands();
 			botProfiles.put(botProfile.getName(), botProfile);
 		}
 		defaultBotProfile = botProfiles.get(BotProfile.DEFAULT_CLIENT);

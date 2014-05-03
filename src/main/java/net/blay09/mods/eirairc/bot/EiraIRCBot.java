@@ -27,8 +27,8 @@ public class EiraIRCBot implements IIRCBot {
 	private final IRCConnection connection;
 	private final BotProfile mainProfile;
 	private final Map<String, BotProfile> profiles = new HashMap<String, BotProfile>();
-	private final Map<String, IBotCommand> botCommands = new HashMap<String, IBotCommand>();
 	private final StringBuffer logBuffer = new StringBuffer();
+	private boolean opEnabled;
 	
 	public EiraIRCBot(IRCConnection connection, BotProfile defaultProfile) {
 		this.connection = connection;
@@ -74,11 +74,7 @@ public class EiraIRCBot implements IIRCBot {
 
 	@Override
 	public boolean canCommandSenderUseCommand(int level, String commandName) {
-		IBotCommand command = botCommands.get(commandName);
-		if(command instanceof BotCommandCustom) {
-			return ((BotCommandCustom) command).runAsOp();
-		}
-		return true;
+		return opEnabled;
 	}
 
 	@Override
@@ -106,12 +102,28 @@ public class EiraIRCBot implements IIRCBot {
 		return logBuffer.toString();
 	}
 
+	public void setOpEnabled(boolean opEnabled) {
+		this.opEnabled = opEnabled;
+	}
+	
 	@Override
 	public boolean processCommand(IIRCChannel channel, IIRCUser sender, String message) {
 		String[] args = message.split(" ");
-		IBotCommand botCommand = botCommands.get(args[0]);
+		IBotCommand botCommand = null;
+		IBotProfile botProfile = getProfile(channel);
+		if(botProfile != null) {
+			botCommand = botProfile.getCommand(args[0]);
+			if(botCommand == null) {
+				botProfile = mainProfile;
+			}
+		} else {
+			botProfile = mainProfile;
+		}
 		if(botCommand == null) {
-			return false;
+			botCommand = botProfile.getCommand(args[0]);
+			if(botCommand == null) {
+				return false;
+			}
 		}
 		if(channel != null && !botCommand.isChannelCommand()) {
 			return false;

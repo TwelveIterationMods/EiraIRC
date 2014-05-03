@@ -14,11 +14,15 @@ public class BotCommandCustom implements IBotCommand {
 
 	private String name;
 	private String command;
+	private boolean allowArgs;
 	private boolean runAsOp;
+	private boolean broadcastResult;
 	
-	public BotCommandCustom(String name, String command, boolean runAsOp) {
+	public BotCommandCustom(String name, String command, boolean allowArgs, boolean broadcastResult, boolean runAsOp) {
 		this.name = name;
 		this.command = command;
+		this.allowArgs = allowArgs;
+		this.broadcastResult = broadcastResult;
 		this.runAsOp = runAsOp;
 	}
 	
@@ -38,10 +42,19 @@ public class BotCommandCustom implements IBotCommand {
 
 	@Override
 	public void processCommand(IIRCBot bot, IIRCChannel channel, IIRCUser user, String[] args) {
-		String message = Utils.joinArgs(args, 0).trim();
+		String message = command;
+		if(allowArgs) {
+			message += " " + Utils.joinArgs(args, 0).trim();
+		}
 		bot.resetLog();
+		bot.setOpEnabled(runAsOp);
 		MinecraftServer.getServer().getCommandManager().executeCommand(bot, message);
-		user.notice("> " + bot.getLogContents());
+		bot.setOpEnabled(false);
+		if(broadcastResult) {
+			channel.message("> " + bot.getLogContents());
+		} else {
+			user.notice("> " + bot.getLogContents());
+		}
 	}
 
 }

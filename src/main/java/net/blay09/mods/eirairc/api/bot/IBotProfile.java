@@ -14,6 +14,7 @@ public interface IBotProfile {
 	public static final String KEY_RELAYBROADCASTS = "relayBroadcasts";
 
 	public boolean getBoolean(String key, boolean defaultVal);
+	public IBotCommand getCommand(String commandName);
 	public boolean isMuted();
 	public boolean isReadOnly();
 	

@@ -81,9 +81,13 @@ public class IRCEventHandler {
 	
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void onPrivateChat(IRCPrivateChatEvent event) {
-		if(event.bot.isServerSide()) {
-			event.bot.processCommand(null, event.sender, event.message);
+		if(event.bot.processCommand(null, event.sender, event.message)) {
 			return;
+		} else {
+			if(event.bot.isServerSide()) {
+				event.sender.notice(Utils.getLocalizedMessage("irc.bot.unknownCommand"));
+				return;
+			}
 		}
 		if(event.bot.isMuted(event.sender)) {
 			return;
@@ -116,7 +120,7 @@ public class IRCEventHandler {
 	
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void onChannelChat(IRCChannelChatEvent event) {
-		if(event.bot.isServerSide() && event.message.startsWith("!") && event.bot.processCommand(event.channel, event.sender, event.message)) {
+		if(event.message.startsWith("!") && event.bot.processCommand(event.channel, event.sender, event.message.substring(1))) {
 			return;
 		}
 		if(event.bot.isMuted(event.channel)) {

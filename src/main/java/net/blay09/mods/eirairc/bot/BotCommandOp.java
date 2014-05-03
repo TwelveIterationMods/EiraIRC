@@ -27,6 +27,7 @@ public class BotCommandOp implements IBotCommand {
 	public void processCommand(IIRCBot bot, IIRCChannel channel, IIRCUser user, String[] args) {
 		if(!GlobalConfig.interOpAuthList.contains(user.getAuthLogin())) {
 			user.notice(Utils.getLocalizedMessage("irc.bot.noPermission"));
+			return;
 		}
 		String message = Utils.joinArgs(args, 0).trim();
 		if(message.isEmpty()) {
@@ -34,7 +35,9 @@ public class BotCommandOp implements IBotCommand {
 			return;
 		}
 		bot.resetLog();
+		bot.setOpEnabled(true);
 		MinecraftServer.getServer().getCommandManager().executeCommand(bot, message);
+		bot.setOpEnabled(false);
 		user.notice("> " + bot.getLogContents());
 	}
 	

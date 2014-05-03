@@ -21,5 +21,6 @@ public interface IIRCBot extends ICommandSender {
 	public boolean isMuted(IIRCContext context);
 	public boolean isReadOnly(IIRCContext context);
 	public boolean isServerSide();
+	public void setOpEnabled(boolean opEnabled);
 	
 }

@@ -67,7 +67,7 @@ public class EiraIRC {
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		ConfigurationHandler.load(event.getSuggestedConfigurationFile());
-		ConfigurationHandler.loadBotProfiles(new File(event.getModConfigurationDirectory(), "bots"));
+		ConfigurationHandler.loadBotProfiles(new File(event.getModConfigurationDirectory(), "eirairc/bots"));
 	}
 	
 	@EventHandler

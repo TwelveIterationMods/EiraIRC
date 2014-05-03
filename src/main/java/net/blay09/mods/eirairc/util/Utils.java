@@ -521,6 +521,9 @@ public class Utils {
 	public static String joinArgs(String[] args, int startIdx) {
 		StringBuilder sb = new StringBuilder();
 		for(int i = startIdx; i < args.length; i++) {
+			if(i > startIdx) {
+				sb.append(" ");
+			}
 			sb.append(args[i]);
 		}
 		return sb.toString();
