@@ -5,7 +5,9 @@ import java.util.Map;
 
 import net.blay09.mods.eirairc.api.IBot;
 import net.blay09.mods.eirairc.api.IBotCommand;
+import net.blay09.mods.eirairc.api.IIRCChannel;
 import net.blay09.mods.eirairc.api.IIRCConnection;
+import net.blay09.mods.eirairc.api.IIRCUser;
 import net.blay09.mods.eirairc.config.BotProfile;
 import net.blay09.mods.eirairc.irc.IRCConnection;
 import net.minecraft.server.MinecraftServer;
@@ -79,6 +81,11 @@ public class EiraIRCBot implements IBot {
 	@Override
 	public String getLogContents() {
 		return logBuffer.toString();
+	}
+
+	@Override
+	public boolean processCommand(IIRCChannel channel, IIRCUser sender, String message) {
+		return false;
 	}
 	
 }

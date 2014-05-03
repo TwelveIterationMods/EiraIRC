@@ -15,7 +15,10 @@ import java.util.Iterator;
 import java.util.Map;
 
 import net.blay09.mods.eirairc.api.IIRCConnection;
+import net.blay09.mods.eirairc.api.event.IRCChannelChatEvent;
+import net.blay09.mods.eirairc.bot.EiraIRCBot;
 import net.blay09.mods.eirairc.util.Globals;
+import net.minecraftforge.common.MinecraftForge;
 
 public class IRCConnection implements Runnable, IIRCConnection {
 
@@ -36,6 +39,7 @@ public class IRCConnection implements Runnable, IIRCConnection {
 	private final IRCParser parser = new IRCParser();
 	private IIRCEventHandler eventHandler;
 	private IIRCConnectionHandler connectionHandler;
+	private EiraIRCBot bot;
 	private final Map<String, IRCChannel> channels = new HashMap<String, IRCChannel>();
 	private final Map<String, IRCUser> users = new HashMap<String, IRCUser>();
 	
@@ -67,6 +71,10 @@ public class IRCConnection implements Runnable, IIRCConnection {
 		this.nick = nick;
 		this.ident = ident;
 		this.description = description;
+	}
+	
+	public void setBot(EiraIRCBot bot) {
+		this.bot = bot;
 	}
 	
 	public void setEventHandler(IIRCEventHandler eventHandler) {

@@ -10,5 +10,6 @@ public interface IBot extends ICommandSender {
 
 	public void resetLog();
 	public String getLogContents();
+	public boolean processCommand(IIRCChannel channel, IIRCUser sender, String message);
 
 }
