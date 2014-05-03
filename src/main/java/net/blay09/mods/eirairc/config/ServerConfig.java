@@ -22,13 +22,13 @@ public class ServerConfig {
 	private final String host;
 	private String nick;
 	private String serverPassword;
+	private String botProfile;
 	private String ident = Globals.DEFAULT_IDENT;
 	private String description = Globals.DEFAULT_DESCRIPTION;
 	private String nickServName;
 	private String nickServPassword;
 	private final Map<String, ChannelConfig> channels = new HashMap<String, ChannelConfig>();
 	private boolean serverSide;
-	private boolean allowPrivateMessages = true;
 	private boolean autoConnect = true;
 	private String quitMessage;
 	private String ircColor;
@@ -99,21 +99,10 @@ public class ServerConfig {
 		return autoConnect;
 	}
 	
-	public boolean allowsPrivateMessages() {
-		return allowPrivateMessages;
-	}
-	
 	public ChannelConfig getChannelConfig(String channelName) {
 		ChannelConfig channelConfig = channels.get(channelName.toLowerCase());
 		if(channelConfig == null) {
 			channelConfig = new ChannelConfig(this, channelName);
-			if(host.equals(Globals.TWITCH_SERVER)) {
-				channelConfig.defaultTwitch();
-			} else if(serverSide) {
-				channelConfig.defaultServer();
-			} else {
-				channelConfig.defaultClient();
-			}
 			channels.put(channelConfig.getName().toLowerCase(), channelConfig);
 			ConfigurationHandler.save();
 		}
@@ -131,10 +120,6 @@ public class ServerConfig {
 
 	public void setAutoConnect(boolean autoConnect) {
 		this.autoConnect = autoConnect;
-	}
-
-	public void setAllowPrivateMessages(boolean allowPrivateMessages) {
-		this.allowPrivateMessages = allowPrivateMessages;
 	}
 
 	public void addChannelConfig(ChannelConfig channelConfig) {
@@ -168,7 +153,6 @@ public class ServerConfig {
 		nickServName = Utils.unquote(config.get(categoryName, "nickServName", "").getString());
 		nickServPassword = Utils.unquote(config.get(categoryName, "nickServPassword", "").getString());
 		serverPassword = Utils.unquote(config.get(categoryName, "serverPassword", "").getString());
-		allowPrivateMessages = config.get(categoryName, "allowPrivateMessages", allowPrivateMessages).getBoolean(allowPrivateMessages);
 		autoConnect = config.get(categoryName, "autoConnect", autoConnect).getBoolean(autoConnect);
 		
 		String channelsCategoryName = categoryName + Configuration.CATEGORY_SPLITTER + ConfigurationHandler.CATEGORY_CHANNELS;
@@ -192,7 +176,6 @@ public class ServerConfig {
 		config.get(categoryName, "nickServName", "").set(Utils.quote(GlobalConfig.saveCredentials && nickServName != null ? nickServName : ""));
 		config.get(categoryName, "nickServPassword", "").set(Utils.quote(GlobalConfig.saveCredentials && nickServPassword != null ? nickServPassword : ""));
 		config.get(categoryName, "serverPassword", "").set(Utils.quote(GlobalConfig.saveCredentials && serverPassword != null ? serverPassword : ""));
-		config.get(categoryName, "allowPrivateMessages", allowPrivateMessages).set(allowPrivateMessages);
 		config.get(categoryName, "autoConnect", autoConnect).set(autoConnect);
 		
 		String channelsCategoryName = categoryName + Configuration.CATEGORY_SPLITTER + ConfigurationHandler.CATEGORY_CHANNELS;
@@ -217,7 +200,6 @@ public class ServerConfig {
 		if(key.equals("ircColor")) value = ircColor;
 		else if(key.equals("emoteColor")) value = emoteColor;
 		else if(key.equals("quitMessage")) value = quitMessage;
-		else if(key.equals("allowPrivateMessages")) value = String.valueOf(allowPrivateMessages);
 		else if(key.equals("autoConnect")) value = String.valueOf(autoConnect);
 		if(value != null) {
 			Utils.sendLocalizedMessage(sender, "irc.config.lookup", host, key, value);
@@ -243,8 +225,6 @@ public class ServerConfig {
 			}
 		} else if(key.equals("quitMessage")) {
 			quitMessage = value;
-		} else if(key.equals("allowPrivateMessages")) {
-			allowPrivateMessages = Boolean.parseBoolean(value);
 		} else if(key.equals("autoConnect")) {
 			autoConnect = Boolean.parseBoolean(value);
 		} else {
@@ -259,16 +239,19 @@ public class ServerConfig {
 		list.add("ircColor");
 		list.add("emoteColor");
 		list.add("quitMessage");
-		list.add("allowPrivateMessages");
 		list.add("autoConnect");
 	}
 
 	public static void addValuesToList(List<String> list, String option) {
 		if(option.equals("ircColor") || option.equals("emoteColor")) {
 			Utils.addValidColorsToList(list);
-		} else if(option.equals("allowPrivateMessages") || option.equals("autoConnect")) {
+		} else if(option.equals("autoConnect")) {
 			Utils.addBooleansToList(list);
 		}
+	}
+
+	public String getBotProfile() {
+		return botProfile;
 	}
 
 }

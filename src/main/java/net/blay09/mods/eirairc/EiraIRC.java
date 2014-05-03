@@ -3,6 +3,7 @@
 
 package net.blay09.mods.eirairc;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -66,6 +67,7 @@ public class EiraIRC {
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		ConfigurationHandler.load(event.getSuggestedConfigurationFile());
+		ConfigurationHandler.loadBotProfiles(new File(event.getModConfigurationDirectory(), "bots"));
 	}
 	
 	@EventHandler

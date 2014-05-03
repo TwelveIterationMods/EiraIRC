@@ -56,12 +56,12 @@ public class GuiBotSettings extends GuiScreen {
 	}
 	
 	public void updateButtonText() {
-		btnProfile.displayString = Utils.getLocalizedMessage("irc.gui.botSettings.profile", DisplayConfig.botProfile);
-		btnDeathMessages.displayString = Utils.getLocalizedMessage("irc.gui.config.relayDeathMessages", Utils.getLocalizedMessage((DisplayConfig.relayDeathMessages ? "irc.gui.yes" : "irc.gui.no")));
-		btnMCJoinLeave.displayString = Utils.getLocalizedMessage("irc.gui.config.relayMinecraftJoins", Utils.getLocalizedMessage((DisplayConfig.relayMinecraftJoinLeave ? "irc.gui.yes" : "irc.gui.no")));
-		btnIRCJoinLeave.displayString = Utils.getLocalizedMessage("irc.gui.config.relayIRCJoins", Utils.getLocalizedMessage((DisplayConfig.relayIRCJoinLeave ? "irc.gui.yes" : "irc.gui.no")));
-		btnNickChanges.displayString = Utils.getLocalizedMessage("irc.gui.config.relayNickChanges", Utils.getLocalizedMessage((DisplayConfig.relayNickChanges ? "irc.gui.yes" : "irc.gui.no")));
-		btnInterOp.displayString = Utils.getLocalizedMessage("irc.gui.botSettings.interOp", Utils.getLocalizedMessage((GlobalConfig.interOp ? "irc.gui.yes" : "irc.gui.no")));
+//		btnProfile.displayString = Utils.getLocalizedMessage("irc.gui.botSettings.profile", DisplayConfig.botProfile);
+//		btnDeathMessages.displayString = Utils.getLocalizedMessage("irc.gui.config.relayDeathMessages", Utils.getLocalizedMessage((DisplayConfig.relayDeathMessages ? "irc.gui.yes" : "irc.gui.no")));
+//		btnMCJoinLeave.displayString = Utils.getLocalizedMessage("irc.gui.config.relayMinecraftJoins", Utils.getLocalizedMessage((DisplayConfig.relayMinecraftJoinLeave ? "irc.gui.yes" : "irc.gui.no")));
+//		btnIRCJoinLeave.displayString = Utils.getLocalizedMessage("irc.gui.config.relayIRCJoins", Utils.getLocalizedMessage((DisplayConfig.relayIRCJoinLeave ? "irc.gui.yes" : "irc.gui.no")));
+//		btnNickChanges.displayString = Utils.getLocalizedMessage("irc.gui.config.relayNickChanges", Utils.getLocalizedMessage((DisplayConfig.relayNickChanges ? "irc.gui.yes" : "irc.gui.no")));
+//		btnInterOp.displayString = Utils.getLocalizedMessage("irc.gui.botSettings.interOp", Utils.getLocalizedMessage((GlobalConfig.interOp ? "irc.gui.yes" : "irc.gui.no")));
 	}
 	
 	@Override
@@ -70,13 +70,9 @@ public class GuiBotSettings extends GuiScreen {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiSettings());
 			return;
 		} else if(button == btnDeathMessages) {
-			DisplayConfig.relayDeathMessages = !DisplayConfig.relayDeathMessages;
 		} else if(button == btnMCJoinLeave) {
-			DisplayConfig.relayMinecraftJoinLeave = !DisplayConfig.relayMinecraftJoinLeave;
 		} else if(button == btnIRCJoinLeave) {
-			DisplayConfig.relayIRCJoinLeave = !DisplayConfig.relayIRCJoinLeave;
 		} else if(button == btnNickChanges) {
-			DisplayConfig.relayNickChanges = !DisplayConfig.relayNickChanges;
 		}
 		updateButtonText();
 	}

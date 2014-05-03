@@ -24,7 +24,6 @@ public class GuiServerConfig extends GuiScreen {
 	private GuiButton btnCancel;
 	private GuiButton btnSave;
 	private GuiButton btnAutoConnect;
-	private GuiButton btnPrivateMessages;
 	private GuiTextField txtHost;
 	private GuiTextField txtNick;
 	private GuiDefaultTextField txtIdent;
@@ -34,7 +33,6 @@ public class GuiServerConfig extends GuiScreen {
 	private GuiPasswordTextField txtServerPassword;
 	
 	private boolean autoConnect;
-	private boolean privateMessages;
 	
 	public GuiServerConfig() {
 	}
@@ -58,9 +56,6 @@ public class GuiServerConfig extends GuiScreen {
 		txtNickServName.setMaxStringLength(Integer.MAX_VALUE);
 		txtNickServPassword = new GuiPasswordTextField(fontRendererObj, width / 2 - 120, height / 2 + 75, 100, 15);
 		txtNickServPassword.setMaxStringLength(Integer.MAX_VALUE);
-		
-		btnPrivateMessages = new GuiButton(2, width / 2 - 10, height / 2 - 20, 130, 20, "");
-		buttonList.add(btnPrivateMessages);
 		
 		btnAutoConnect = new GuiButton(3, width / 2 - 10, height / 2 + 5, 130, 20, "");
 		buttonList.add(btnAutoConnect);
@@ -175,7 +170,6 @@ public class GuiServerConfig extends GuiScreen {
 			btnSave.enabled = false;
 			btnChannels.enabled = false;
 		}
-		btnPrivateMessages.displayString = Utils.getLocalizedMessage("irc.gui.config.privateMessages", Utils.getLocalizedMessage(privateMessages ? "irc.gui.yes" : "irc.gui.no"));
 		btnAutoConnect.displayString = Utils.getLocalizedMessage("irc.gui.config.connectStartup", Utils.getLocalizedMessage(autoConnect ? "irc.gui.yes" : "irc.gui.no"));
 	}
 	
@@ -189,9 +183,6 @@ public class GuiServerConfig extends GuiScreen {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiServerList());
 		} else if(button == btnCancel) {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiServerList());
-		} else if(button == btnPrivateMessages) {
-			privateMessages = !privateMessages;
-			updateButtons();
 		} else if(button == btnAutoConnect) {
 			autoConnect = !autoConnect;
 			updateButtons();
@@ -211,10 +202,8 @@ public class GuiServerConfig extends GuiScreen {
 			txtIdent.setText(config.getIdent());
 			txtDescription.setText(config.getDescription());
 			autoConnect = config.isAutoConnect();
-			privateMessages = config.allowsPrivateMessages();
 		} else {
 			autoConnect = true;
-			privateMessages = true;
 		}
 		updateButtons();
 	}
@@ -230,7 +219,6 @@ public class GuiServerConfig extends GuiScreen {
 		config.setNickServ(txtNickServName.getText(), txtNickServPassword.getText());
 		config.setServerPassword(txtServerPassword.getText());
 		config.setAutoConnect(autoConnect);
-		config.setAllowPrivateMessages(privateMessages);
 		config.setIdent(!txtIdent.getText().isEmpty() ? txtIdent.getText() : Globals.DEFAULT_IDENT);
 		config.setDescription(!txtDescription.getText().isEmpty() ? txtDescription.getText() : Globals.DEFAULT_DESCRIPTION);
 		ConfigurationHandler.addServerConfig(config);

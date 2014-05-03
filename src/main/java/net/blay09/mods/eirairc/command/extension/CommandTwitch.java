@@ -63,7 +63,6 @@ public class CommandTwitch extends SubCommand {
 			String userChannel = "#" + args[0];
 			if(!serverConfig.hasChannelConfig(userChannel)) {
 				ChannelConfig channelConfig = new ChannelConfig(serverConfig, userChannel);
-				channelConfig.defaultTwitch();
 				serverConfig.addChannelConfig(channelConfig);
 			}
 			ConfigurationHandler.addServerConfig(serverConfig);

@@ -7,13 +7,13 @@ import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.IIRCChannel;
 import net.blay09.mods.eirairc.api.IIRCConnection;
 import net.blay09.mods.eirairc.api.IIRCUser;
+import net.blay09.mods.eirairc.api.bot.IBotProfile;
+import net.blay09.mods.eirairc.api.bot.IIRCBot;
 import net.blay09.mods.eirairc.command.base.IRCCommandHandler;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.DisplayConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
-import net.blay09.mods.eirairc.irc.IRCChannel;
 import net.blay09.mods.eirairc.irc.IRCConnection;
-import net.blay09.mods.eirairc.irc.IRCUser;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
@@ -38,15 +38,16 @@ public class MCEventHandler {
 		String name = Utils.getAliasForPlayer(event.player, true);
 		String ircMessage = Utils.getLocalizedMessage("irc.display.mc.joinMsg", name);
 		for(IIRCConnection connection : EiraIRC.instance.getConnections()) {
+			IIRCBot bot = connection.getBot();
 			ServerConfig serverConfig = ConfigHelper.getServerConfig(connection);
 			for(IIRCChannel channel : connection.getChannels()) {
-				ChannelConfig channelConfig = serverConfig.getChannelConfig(channel);
-				if(DisplayConfig.relayMinecraftJoinLeave && !channelConfig.isReadOnly() && channelConfig.relayMinecraftJoinLeave) {
+				if(!bot.isReadOnly(channel) && bot.getBoolean(channel, IBotProfile.KEY_RELAYMCJOINLEAVE, false)) {
 					channel.message(ircMessage);
 				}
 				if(channel.getTopic() != null) {
 					Utils.sendLocalizedMessage(event.player, "irc.display.irc.topic", channel.getName(), channel.getTopic());
 				}
+				ChannelConfig channelConfig = serverConfig.getChannelConfig(channel);
 				if(channelConfig.isAutoWho()) {
 					Utils.sendUserList(event.player, connection, channel);
 				}
@@ -74,10 +75,9 @@ public class MCEventHandler {
 				if(!MinecraftServer.getServer().isSinglePlayer()) {
 					String ircMessage = Utils.formatMessage(ConfigHelper.getDisplayFormatConfig().ircChannelEmote, event.sender.getCommandSenderName(), ircAlias, emote);
 					for(IIRCConnection connection : EiraIRC.instance.getConnections()) {
-						ServerConfig serverConfig = ConfigHelper.getServerConfig(connection);
+						IIRCBot bot = connection.getBot();
 						for(IIRCChannel channel : connection.getChannels()) {
-							ChannelConfig channelConfig = serverConfig.getChannelConfig(channel);
-							if(!channelConfig.isReadOnly()) {
+							if(!bot.isReadOnly(channel)) {
 								channel.message(ircMessage);
 							}
 						}
@@ -88,10 +88,9 @@ public class MCEventHandler {
 		} else if(event.command instanceof CommandBroadcast) {
 			String ircMessage = Utils.formatMessage(ConfigHelper.getDisplayFormatConfig().ircBroadcastMessage, "Server", "Server", event.parameters[0]);
 			for(IIRCConnection connection : EiraIRC.instance.getConnections()) {
-				ServerConfig serverConfig = ConfigHelper.getServerConfig(connection);
+				IIRCBot bot = connection.getBot();
 				for(IIRCChannel channel : connection.getChannels()) {
-					ChannelConfig channelConfig = serverConfig.getChannelConfig(channel);
-					if(!channelConfig.isReadOnly() && channelConfig.relayBroadcasts) {
+					if(!bot.isReadOnly(channel) && bot.getBoolean(channel, IBotProfile.KEY_RELAYBROADCASTS, true)) {
 						channel.message(ircMessage);
 					}
 				}
@@ -194,10 +193,9 @@ public class MCEventHandler {
 			}
 			String ircMessage = Utils.formatMessage(ConfigHelper.getDisplayFormatConfig().ircChannelMessage, event.player.getCommandSenderName(), ircNick, event.message);
 			for(IIRCConnection connection : EiraIRC.instance.getConnections()) {
-				ServerConfig serverConfig = ConfigHelper.getServerConfig(connection);
+				IIRCBot bot = connection.getBot();
 				for(IIRCChannel channel : connection.getChannels()) {
-					ChannelConfig channelConfig = serverConfig.getChannelConfig(channel);
-					if(!channelConfig.isReadOnly()) {
+					if(!bot.isReadOnly(channel)) {
 						channel.message(ircMessage);
 					}
 				}
@@ -207,18 +205,14 @@ public class MCEventHandler {
 	
 	@SubscribeEvent
 	public void onPlayerDeath(LivingDeathEvent event) {
-		if(!DisplayConfig.relayDeathMessages) {
-			return;
-		}
 		if(event.entityLiving instanceof EntityPlayer) {
 			String name = Utils.getAliasForPlayer((EntityPlayer) event.entityLiving, true);
 			String ircMessage = event.entityLiving.func_110142_aN().func_151521_b().getUnformattedText();
 			ircMessage = ircMessage.replaceAll(event.entityLiving.getCommandSenderName(), name);
 			for(IIRCConnection connection : EiraIRC.instance.getConnections()) {
-				ServerConfig serverConfig = ConfigHelper.getServerConfig(connection);
+				IIRCBot bot = connection.getBot();
 				for(IIRCChannel channel : connection.getChannels()) {
-					ChannelConfig channelConfig = serverConfig.getChannelConfig(channel);
-					if(!channelConfig.isReadOnly() && channelConfig.relayDeathMessages) {
+					if(!bot.isReadOnly(channel) && bot.getBoolean(channel, IBotProfile.KEY_RELAYDEATHMESSAGES, false)) {
 						channel.message(ircMessage);
 					}
 				}
@@ -228,16 +222,12 @@ public class MCEventHandler {
 	
 	@SubscribeEvent
 	public void onPlayerLogout(PlayerLoggedOutEvent event) {
-		if(!DisplayConfig.relayMinecraftJoinLeave) {
-			return;
-		}
 		String name = Utils.getAliasForPlayer(event.player, true);
 		String ircMessage = Utils.getLocalizedMessage("irc.display.mc.partMsg", name);
 		for(IIRCConnection connection : EiraIRC.instance.getConnections()) {
-			ServerConfig serverConfig = ConfigHelper.getServerConfig(connection);
+			IIRCBot bot = connection.getBot();
 			for(IIRCChannel channel : connection.getChannels()) {
-				ChannelConfig channelConfig = serverConfig.getChannelConfig(channel);
-				if(!channelConfig.isReadOnly() && channelConfig.relayMinecraftJoinLeave) {
+				if(!bot.isReadOnly(channel) && bot.getBoolean(channel, IBotProfile.KEY_RELAYMCJOINLEAVE, false)) {
 					channel.message(ircMessage);
 				}
 			}
@@ -248,10 +238,9 @@ public class MCEventHandler {
 		String message = Utils.getLocalizedMessage("irc.display.mc.nickChange", oldNick, newNick);
 		Utils.addMessageToChat(message);
 		for(IIRCConnection connection : EiraIRC.instance.getConnections()) {
-			ServerConfig serverConfig = ConfigHelper.getServerConfig(connection);
+			IIRCBot bot = connection.getBot();
 			for(IIRCChannel channel : connection.getChannels()) {
-				ChannelConfig channelConfig = serverConfig.getChannelConfig(channel);
-				if(!channelConfig.isReadOnly()) {
+				if(!bot.isReadOnly(channel)) {
 					channel.message(message);
 				}
 			}

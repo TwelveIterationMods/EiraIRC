@@ -26,12 +26,10 @@ import javax.imageio.ImageIO;
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.IIRCChannel;
 import net.blay09.mods.eirairc.api.IIRCConnection;
+import net.blay09.mods.eirairc.api.bot.IIRCBot;
 import net.blay09.mods.eirairc.client.upload.UploadHoster;
-import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.ScreenshotConfig;
-import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.irc.IRCConnection;
-import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
 
@@ -200,10 +198,9 @@ public class ScreenshotManager {
 		String mcMessage = "/me " + ircMessage;
 		Minecraft.getMinecraft().thePlayer.sendChatMessage(mcMessage);
 		for(IIRCConnection connection : EiraIRC.instance.getConnections()) {
-			ServerConfig serverConfig = ConfigHelper.getServerConfig(connection);
+			IIRCBot bot = connection.getBot();
 			for(IIRCChannel channel : connection.getChannels()) {
-				ChannelConfig channelConfig = serverConfig.getChannelConfig(channel);
-				if(!channelConfig.isReadOnly()) {
+				if(!bot.isReadOnly(channel)) {
 					channel.message(IRCConnection.EMOTE_START + ircMessage + IRCConnection.EMOTE_END);
 				}
 			}

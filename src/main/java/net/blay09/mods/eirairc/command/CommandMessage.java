@@ -6,6 +6,8 @@ package net.blay09.mods.eirairc.command;
 import java.util.List;
 
 import net.blay09.mods.eirairc.api.IIRCContext;
+import net.blay09.mods.eirairc.api.bot.IBotProfile;
+import net.blay09.mods.eirairc.api.bot.IIRCBot;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.GlobalConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
@@ -53,7 +55,8 @@ public class CommandMessage extends SubCommand {
 			}
 			return true;
 		} else if(target instanceof IRCUser) {
-			if(!GlobalConfig.allowPrivateMessages || !ConfigHelper.getServerConfig(target.getConnection()).allowsPrivateMessages()) {
+			IIRCBot bot = target.getConnection().getBot();
+			if(bot.getBoolean(target, IBotProfile.KEY_ALLOWPRIVMSG, true)) {
 				Utils.sendLocalizedMessage(sender, "irc.msg.disabled");
 				return true;
 			}

@@ -29,24 +29,12 @@ public class GuiChannelConfig extends GuiScreen {
 	private GuiButton btnSave;
 	private GuiButton btnAutoJoin;
 	private GuiButton btnAutoWho;
-	private GuiButton btnReadOnly;
-	private GuiButton btnMuted;
-	private GuiButton btnRelayMinecraftJoinLeave;
-	private GuiButton btnRelayIRCJoinLeave;
-	private GuiButton btnRelayDeathMessages;
-	private GuiButton btnRelayNickChanges;
 	
 	private GuiTextField txtName;
 	private GuiPasswordTextField txtChannelPassword;
 	
 	private boolean autoJoin;
 	private boolean autoWho;
-	private boolean readOnly;
-	private boolean muted;
-	private boolean relayMinecraftJoinLeave;
-	private boolean relayIRCJoinLeave;
-	private boolean relayDeathMessages;
-	private boolean relayNickChanges;
 	
 	public GuiChannelConfig(GuiScreen listParentScreen, ServerConfig serverConfig) {
 		this.listParentScreen = listParentScreen;
@@ -67,24 +55,6 @@ public class GuiChannelConfig extends GuiScreen {
 		
 		btnAutoJoin = new GuiButton(3, width / 2 + 3, height / 2 - 65, BUTTON_WIDTH, BUTTON_HEIGHT, "");
 		buttonList.add(btnAutoJoin);
-		
-		btnReadOnly = new GuiButton(4, width / 2 + 3, height / 2 - 40, BUTTON_WIDTH, BUTTON_HEIGHT, "");
-		buttonList.add(btnReadOnly);
-		
-		btnMuted = new GuiButton(5, width / 2 + 3, height / 2 - 15, BUTTON_WIDTH, BUTTON_HEIGHT, "");
-		buttonList.add(btnMuted);
-		
-		btnRelayMinecraftJoinLeave = new GuiButton(6, width / 2 - BUTTON_WIDTH - 3, height / 2 - 64, BUTTON_WIDTH, BUTTON_HEIGHT, "");
-		buttonList.add(btnRelayMinecraftJoinLeave);
-		
-		btnRelayIRCJoinLeave = new GuiButton(7, width / 2 - BUTTON_WIDTH - 3, height / 2 - 40, BUTTON_WIDTH, BUTTON_HEIGHT, "");
-		buttonList.add(btnRelayIRCJoinLeave);
-
-		btnRelayDeathMessages = new GuiButton(8, width / 2 - BUTTON_WIDTH - 3, height / 2 - 15, BUTTON_WIDTH, BUTTON_HEIGHT, "");
-		buttonList.add(btnRelayDeathMessages);
-
-		btnRelayNickChanges = new GuiButton(9, width / 2 - BUTTON_WIDTH - 3, height / 2 + 10, BUTTON_WIDTH, BUTTON_HEIGHT, "");
-		buttonList.add(btnRelayNickChanges);
 		
 		btnAutoWho = new GuiButton(10, width / 2 + 3, height / 2 + 10, BUTTON_WIDTH, BUTTON_HEIGHT, "");
 		buttonList.add(btnAutoWho);
@@ -152,12 +122,6 @@ public class GuiChannelConfig extends GuiScreen {
 		final String yes = Utils.getLocalizedMessage("irc.gui.yes");
 		final String no = Utils.getLocalizedMessage("irc.gui.no");
 		btnAutoJoin.displayString = Utils.getLocalizedMessage("irc.gui.config.joinStartup", (autoJoin ? yes : no));
-		btnMuted.displayString = Utils.getLocalizedMessage("irc.gui.editChannel.muted", (muted ? yes : no));
-		btnReadOnly.displayString = Utils.getLocalizedMessage("irc.gui.editChannel.readOnly", (readOnly ? yes : no));
-		btnRelayMinecraftJoinLeave.displayString = Utils.getLocalizedMessage("irc.gui.config.relayMinecraftJoins", (relayMinecraftJoinLeave ? yes : no));
-		btnRelayIRCJoinLeave.displayString = Utils.getLocalizedMessage("irc.gui.config.relayIRCJoins", (relayIRCJoinLeave ? yes : no));
-		btnRelayDeathMessages.displayString = Utils.getLocalizedMessage("irc.gui.config.relayDeathMessages", (relayDeathMessages ? yes : no));
-		btnRelayNickChanges.displayString = Utils.getLocalizedMessage("irc.gui.config.relayNickChanges", (relayNickChanges ? yes : no));
 		btnAutoWho.displayString = Utils.getLocalizedMessage("irc.gui.editChannel.autoWho", (autoWho ? yes : no));
 	}
 	
@@ -174,24 +138,6 @@ public class GuiChannelConfig extends GuiScreen {
 		} else if(button == btnAutoJoin) {
 			autoJoin = !autoJoin;
 			updateButtons();
-		} else if(button == btnMuted) {
-			muted = !muted;
-			updateButtons();
-		} else if(button == btnReadOnly) {
-			readOnly = !readOnly;
-			updateButtons();
-		} else if(button == btnRelayMinecraftJoinLeave) {
-			relayMinecraftJoinLeave = !relayMinecraftJoinLeave;
-			updateButtons();
-		} else if(button == btnRelayIRCJoinLeave) {
-			relayIRCJoinLeave = !relayIRCJoinLeave;
-			updateButtons();
-		} else if(button == btnRelayDeathMessages) {
-			relayDeathMessages = !relayDeathMessages;
-			updateButtons();
-		} else if(button == btnRelayNickChanges) {
-			relayNickChanges = !relayNickChanges;
-			updateButtons();
 		} else if(button == btnAutoWho) {
 			autoWho = !autoWho;
 			updateButtons();
@@ -203,25 +149,10 @@ public class GuiChannelConfig extends GuiScreen {
 			txtName.setText(config.getName());
 			txtChannelPassword.setText(config.getPassword() != null ? config.getPassword() : "");
 			autoJoin = config.isAutoJoin();
-			muted = config.isMuted();
-			readOnly = config.isReadOnly();
-			relayMinecraftJoinLeave = config.relayMinecraftJoinLeave;
-			relayIRCJoinLeave = config.relayIRCJoinLeave;
-			relayDeathMessages= config.relayDeathMessages;
-			relayNickChanges = config.relayNickChanges;
 			autoWho = config.isAutoWho();
 		} else {
 			autoJoin = true;
-			if(serverConfig.isClientSide()) {
-				relayIRCJoinLeave = true;
-				relayNickChanges = true;
-			} else {
-				relayMinecraftJoinLeave = true;
-				relayIRCJoinLeave = true;
-				relayDeathMessages = true;
-				relayNickChanges = true;
-				autoWho = true;
-			}
+			autoWho = false;
 		}
 		updateButtons();
 	}
@@ -236,12 +167,6 @@ public class GuiChannelConfig extends GuiScreen {
 		config.setPassword(txtChannelPassword.getText());
 		config.setAutoJoin(autoJoin);
 		config.setAutoWho(autoWho);
-		config.setMuted(muted);
-		config.setReadOnly(readOnly);
-		config.relayMinecraftJoinLeave = relayMinecraftJoinLeave;
-		config.relayIRCJoinLeave = relayIRCJoinLeave;
-		config.relayDeathMessages = relayDeathMessages;
-		config.relayNickChanges = relayNickChanges;
 		serverConfig.addChannelConfig(config);
 		ConfigurationHandler.save();
 	}

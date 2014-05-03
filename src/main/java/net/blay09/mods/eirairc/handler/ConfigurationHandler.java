@@ -4,12 +4,14 @@
 package net.blay09.mods.eirairc.handler;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import net.blay09.mods.eirairc.config.BotProfile;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.CompatibilityConfig;
 import net.blay09.mods.eirairc.config.DisplayConfig;
@@ -20,7 +22,6 @@ import net.blay09.mods.eirairc.config.ScreenshotConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.ServiceConfig;
 import net.blay09.mods.eirairc.util.IRCResolver;
-import net.blay09.mods.eirairc.util.IRCTargetError;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
 import net.minecraftforge.common.config.ConfigCategory;
@@ -45,6 +46,43 @@ public class ConfigurationHandler {
 	private static final Map<String, ServerConfig> serverConfigs = new HashMap<String, ServerConfig>();
 
 	private static Configuration config;
+	private static Map<String, BotProfile> botProfiles = new HashMap<String, BotProfile>();
+	private static BotProfile defaultBotProfile;
+	
+	public static void loadBotProfiles(File profileDir) {
+		if(!profileDir.exists()) {
+			profileDir.mkdirs();
+		}
+		File[] files = profileDir.listFiles(new FilenameFilter() {
+			@Override
+			public boolean accept(File file, String name) {
+				return name.endsWith(".cfg");
+			}
+		});
+		for(int i = 0; i < files.length; i++) {
+			BotProfile botProfile = new BotProfile(files[i]);
+			botProfiles.put(botProfile.getName(), botProfile);
+		}
+		if(!botProfiles.containsKey(BotProfile.DEFAULT_CLIENT)) {
+			BotProfile botProfile = new BotProfile(new File(profileDir, BotProfile.DEFAULT_CLIENT + ".cfg"));
+			botProfile.defaultClient();
+			botProfile.save();
+			botProfiles.put(botProfile.getName(), botProfile);
+		}
+		if(!botProfiles.containsKey(BotProfile.DEFAULT_SERVER)) {
+			BotProfile botProfile = new BotProfile(new File(profileDir, BotProfile.DEFAULT_SERVER + ".cfg"));
+			botProfile.defaultServer();
+			botProfile.save();
+			botProfiles.put(botProfile.getName(), botProfile);
+		}
+		if(!botProfiles.containsKey(BotProfile.DEFAULT_TWITCH)) {
+			BotProfile botProfile = new BotProfile(new File(profileDir, BotProfile.DEFAULT_TWITCH + ".cfg"));
+			botProfile.defaultTwitch();
+			botProfile.save();
+			botProfiles.put(botProfile.getName(), botProfile);
+		}
+		defaultBotProfile = botProfiles.get(BotProfile.DEFAULT_CLIENT);
+	}
 	
 	public static void load(File configFile) {
 		boolean newConfigFile = !configFile.exists();
@@ -189,6 +227,14 @@ public class ConfigurationHandler {
 		NotificationConfig.addValuesToList(list, option);
 		ScreenshotConfig.addValuesToList(list, option);
 		CompatibilityConfig.addValuesToList(list, option);
+	}
+
+	public static BotProfile getBotProfile(String name) {
+		BotProfile botProfile = botProfiles.get(name);
+		if(botProfile == null) {
+			return defaultBotProfile;
+		}
+		return botProfile;
 	}
 
 }

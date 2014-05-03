@@ -26,21 +26,12 @@ public class DisplayConfig {
 	public static String quitMessage = "Leaving.";
 	public static String displayMode = "S-Light";
 	public static String originalDisplayMode;
-	public static boolean relayDeathMessages = true;
-	public static boolean relayMinecraftJoinLeave = true;
-	public static boolean relayIRCJoinLeave = true;
-	public static boolean relayNickChanges = true;
 	public static boolean hudRecState = true;
-	public static String botProfile = "Custom";
 	
 	public static void load(Configuration config) {
 		displayMode = Utils.unquote(config.get(CATEGORY, "displayMode", displayMode).getString());
 		ircColor = config.get(CATEGORY, "ircColor", ircColor).getString();
 		emoteColor = config.get(CATEGORY, "emoteColor", emoteColor).getString();
-		relayDeathMessages = config.get(CATEGORY, "relayDeathMessages", relayDeathMessages).getBoolean(relayDeathMessages);
-		relayMinecraftJoinLeave = config.get(CATEGORY, "relayMinecraftJoinLeave", relayMinecraftJoinLeave).getBoolean(relayMinecraftJoinLeave);
-		relayIRCJoinLeave = config.get(CATEGORY, "relayIRCJoinLeave", relayIRCJoinLeave).getBoolean(relayIRCJoinLeave);
-		relayNickChanges = config.get(CATEGORY, "relayNickChanges", relayNickChanges).getBoolean(relayNickChanges);
 		opColor = config.get(CATEGORY, "opColor", opColor).getString();
 		enableNameColors = config.get(CATEGORY, "enableNameColors", enableNameColors).getBoolean(enableNameColors);
 		hudRecState = config.get(CATEGORY, "hudRecState", hudRecState).getBoolean(hudRecState);
@@ -59,10 +50,6 @@ public class DisplayConfig {
 		config.get(CATEGORY, "displayMode", "").set(Utils.quote(displayMode));
 		config.get(CATEGORY, "ircColor", ircColor).set(ircColor);
 		config.get(CATEGORY, "emoteColor", emoteColor).set(emoteColor);
-		config.get(CATEGORY, "relayDeathMessages", relayDeathMessages).set(relayDeathMessages);
-		config.get(CATEGORY, "relayMinecraftJoinLeave", relayMinecraftJoinLeave).set(relayMinecraftJoinLeave);
-		config.get(CATEGORY, "relayIRCJoinLeave", relayIRCJoinLeave).set(relayIRCJoinLeave);
-		config.get(CATEGORY, "relayNickChanges", relayNickChanges).set(relayNickChanges);
 		config.get(CATEGORY, "opColor", opColor).set(opColor);
 		config.get(CATEGORY, "enableNameColors", enableNameColors).set(enableNameColors);
 		config.get(CATEGORY, "hudRecState", hudRecState).set(hudRecState);
@@ -72,10 +59,6 @@ public class DisplayConfig {
 		list.add("displayMode");
 		list.add("ircColor");
 		list.add("emoteColor");
-		list.add("relayDeathMessages");
-		list.add("relayMinecraftJoinLeave");
-		list.add("relayIRCJoinLeave");
-		list.add("relayNickChanges");
 		list.add("opColor");
 		list.add("enableNameColors");
 	}
@@ -100,10 +83,6 @@ public class DisplayConfig {
 		else if(key.equals("emoteColor")) value = emoteColor;
 		else if(key.equals("quitMessage")) value = quitMessage;
 		else if(key.equals("displayMode")) value = displayMode;
-		else if(key.equals("relayMinecraftJoinLeave")) value = String.valueOf(relayMinecraftJoinLeave);
-		else if(key.equals("relayIRCJoinLeave")) value = String.valueOf(relayIRCJoinLeave);
-		else if(key.equals("relayDeathMessages")) value = String.valueOf(relayDeathMessages);
-		else if(key.equals("relayNickChanges")) value = String.valueOf(relayNickChanges);
 		return value;
 	}
 	
@@ -130,14 +109,6 @@ public class DisplayConfig {
 			quitMessage = value;
 		} else if(key.equals("enableNameColors")){
 			enableNameColors = Boolean.parseBoolean(value);
-		} else if(key.equals("relayDeathMessages")){
-			relayDeathMessages = Boolean.parseBoolean(value);
-		} else if(key.equals("relayMinecraftJoinLeave")){
-			relayMinecraftJoinLeave = Boolean.parseBoolean(value);
-		} else if(key.equals("relayIRCJoinLeave")){
-			relayIRCJoinLeave = Boolean.parseBoolean(value);
-		} else if(key.equals("relayNickChanges")){
-			relayNickChanges = Boolean.parseBoolean(value);
 		} else {
 			return false;
 		}
