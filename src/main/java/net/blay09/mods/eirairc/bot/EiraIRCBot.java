@@ -6,20 +6,26 @@ import java.util.Map;
 import net.blay09.mods.eirairc.api.IBot;
 import net.blay09.mods.eirairc.api.IBotCommand;
 import net.blay09.mods.eirairc.api.IIRCConnection;
+import net.blay09.mods.eirairc.config.BotProfile;
 import net.blay09.mods.eirairc.irc.IRCConnection;
-import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.world.World;
 
-public class EiraIRCBot implements IBot{
+public class EiraIRCBot implements IBot {
 
 	private Map<String, IBotCommand> botCommands = new HashMap<String, IBotCommand>();
 
-	private IRCConnection connection;
-	private StringBuffer logBuffer;
+	private final IRCConnection connection;
+	private final BotProfile profile;
+	private final StringBuffer logBuffer = new StringBuffer();
+	
+	public EiraIRCBot(IRCConnection connection, BotProfile profile) {
+		this.connection = connection;
+		this.profile = profile;
+	}
 	
 	@Override
 	public String getCommandSenderName() {
@@ -56,8 +62,8 @@ public class EiraIRCBot implements IBot{
 	}
 
 	@Override
-	public boolean getBoolean(String key) {
-		return false;
+	public boolean getBoolean(String key, boolean defaultVal) {
+		return profile.getBoolean(key, defaultVal);
 	}
 
 	@Override

@@ -26,7 +26,7 @@ public class BotCommandMessage implements IBotCommand {
 
 	@Override
 	public void processCommand(IBot bot, IIRCChannel channel, IIRCUser user, String[] args) {
-		if(!GlobalConfig.allowPrivateMessages || !bot.getBoolean("allowPrivateMessages")) {
+		if(!GlobalConfig.allowPrivateMessages || !bot.getBoolean("allowPrivateMessages", false)) {
 			user.notice(Utils.getLocalizedMessage("irc.msg.disabled"));
 		}
 		String playerName = args[0];

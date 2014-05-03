@@ -4,7 +4,7 @@ import net.minecraft.command.ICommandSender;
 
 public interface IBot extends ICommandSender {
 
-	public boolean getBoolean(String key);
+	public boolean getBoolean(String key, boolean defaultVal);
 
 	public IIRCConnection getConnection();
 
