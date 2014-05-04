@@ -28,6 +28,7 @@ public class GuiBotSettings extends GuiScreen {
 	private GuiButton btnNextProfile;
 	private GuiButton btnNewProfile;
 	private GuiButton btnDeleteProfile;
+	private GuiButton btnCopyProfile;
 	
 	private GuiButton btnRelayDeathMessages;
 	private GuiButton btnRelayMCJoinLeave;
@@ -79,7 +80,13 @@ public class GuiBotSettings extends GuiScreen {
 	}
 	
 	@Override
+	public void onGuiClosed() {
+		Keyboard.enableRepeatEvents(false);
+	}
+	
+	@Override
 	public void initGui() {
+		Keyboard.enableRepeatEvents(true);
 		int leftX = width /  2 - 172;
 		int rightX = width / 2 + 2;
 		int topY = height / 2 - 60;
@@ -107,38 +114,41 @@ public class GuiBotSettings extends GuiScreen {
 		btnDeleteProfile = new GuiButton(5, width / 2 - 94, height / 2 - 90, 20, BUTTON_HEIGHT, "-");
 		buttonList.add(btnDeleteProfile);
 		
+		btnCopyProfile = new GuiButton(6, width / 2 + 96, height / 2 - 90, 20, BUTTON_HEIGHT, "*");
+		buttonList.add(btnCopyProfile);
+		
 		// Relay Options
 		
-		btnRelayDeathMessages = new GuiButton(6, leftX, topY, BUTTON_WIDTH, BUTTON_HEIGHT, "Death Messages: ???");
+		btnRelayDeathMessages = new GuiButton(7, leftX, topY, BUTTON_WIDTH, BUTTON_HEIGHT, "Death Messages: ???");
 		buttonList.add(btnRelayDeathMessages);
 		
-		btnRelayMCJoinLeave = new GuiButton(7, leftX, topY + 25, BUTTON_WIDTH, BUTTON_HEIGHT, "Minecraft Join/Leave: ???");
+		btnRelayMCJoinLeave = new GuiButton(8, leftX, topY + 25, BUTTON_WIDTH, BUTTON_HEIGHT, "Minecraft Join/Leave: ???");
 		buttonList.add(btnRelayMCJoinLeave);
 		
-		btnRelayBroadcasts = new GuiButton(8, leftX, topY + 50, BUTTON_WIDTH, BUTTON_HEIGHT, "Server Broadcasts: ???");
+		btnRelayBroadcasts = new GuiButton(9, leftX, topY + 50, BUTTON_WIDTH, BUTTON_HEIGHT, "Server Broadcasts: ???");
 		buttonList.add(btnRelayBroadcasts);
 		
-		btnRelayIRCJoinLeave = new GuiButton(9, leftX, topY + 75, BUTTON_WIDTH, BUTTON_HEIGHT, "IRC Join/Leave: ???");
+		btnRelayIRCJoinLeave = new GuiButton(10, leftX, topY + 75, BUTTON_WIDTH, BUTTON_HEIGHT, "IRC Join/Leave: ???");
 		buttonList.add(btnRelayIRCJoinLeave);
 		
-		btnRelayNickChanges = new GuiButton(10, leftX, topY + 100, BUTTON_WIDTH, BUTTON_HEIGHT, "IRC Nick Changes: ???");
+		btnRelayNickChanges = new GuiButton(11, leftX, topY + 100, BUTTON_WIDTH, BUTTON_HEIGHT, "IRC Nick Changes: ???");
 		buttonList.add(btnRelayNickChanges);
 		
 		// Other Options
 		
-		btnLinkFilter = new GuiButton(11, rightX, topY, BUTTON_WIDTH, BUTTON_HEIGHT, "Filter Links: ???");
+		btnLinkFilter = new GuiButton(12, rightX, topY, BUTTON_WIDTH, BUTTON_HEIGHT, "Filter Links: ???");
 		buttonList.add(btnLinkFilter);
 		
-		btnAutoWho = new GuiButton(12, rightX, topY + 25, BUTTON_WIDTH, BUTTON_HEIGHT, "Auto-Who: ???");
+		btnAutoWho = new GuiButton(13, rightX, topY + 25, BUTTON_WIDTH, BUTTON_HEIGHT, "Auto-Who: ???");
 		buttonList.add(btnAutoWho);
 		
-		btnAllowPrivateMessages = new GuiButton(13, rightX, topY + 50, BUTTON_WIDTH, BUTTON_HEIGHT, "Private Messages: ???");
+		btnAllowPrivateMessages = new GuiButton(14, rightX, topY + 50, BUTTON_WIDTH, BUTTON_HEIGHT, "Private Messages: ???");
 		buttonList.add(btnAllowPrivateMessages);
 		
-		btnDisplayFormat = new GuiButton(14, rightX, topY + 75, BUTTON_WIDTH, BUTTON_HEIGHT, "Display Format: ???");
+		btnDisplayFormat = new GuiButton(15, rightX, topY + 75, BUTTON_WIDTH, BUTTON_HEIGHT, "Display Format: ???");
 		buttonList.add(btnDisplayFormat);
 		
-		btnCommands = new GuiButton(15, rightX, topY + 100, BUTTON_WIDTH, BUTTON_HEIGHT, "Commands");
+		btnCommands = new GuiButton(16, rightX, topY + 100, BUTTON_WIDTH, BUTTON_HEIGHT, "Configure Commands...");
 		buttonList.add(btnCommands);
 		
 		btnBack = new GuiButton(0, width / 2 - 100, topY + 150, 200, 20, Utils.getLocalizedMessage("irc.gui.back"));
@@ -193,6 +203,11 @@ public class GuiBotSettings extends GuiScreen {
 			ConfigurationHandler.removeBotProfile(currentProfile);
 			nextProfile(-1);
 			return;
+		} else if(button == btnCopyProfile) {
+			currentIdx = profileList.size();
+			currentProfile = new BotProfile(currentProfile, currentProfile.getName() + "_copy");
+			ConfigurationHandler.addBotProfile(currentProfile);
+			loadFromProfile(currentProfile);
 		} else if(currentProfile != null && currentProfile.isDefaultProfile() && button != btnDisplayFormat) {
 			currentIdx = profileList.size();
 			currentProfile = new BotProfile(currentProfile, currentProfile.getName() + "_copy");
@@ -285,11 +300,11 @@ public class GuiBotSettings extends GuiScreen {
 	
 	@Override
 	public void mouseClicked(int par1, int par2, int par3) {
-		super.mouseClicked(par1, par2, par3);
 		txtCurrentProfile.mouseClicked(par1, par2, par3);
 		if(txtCurrentProfile.isEnabled() && !txtCurrentProfile.isFocused()) {
 			enableNameEdit(false);
 		}
+		super.mouseClicked(par1, par2, par3);
 	}
 	
 	@Override

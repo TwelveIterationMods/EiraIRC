@@ -36,6 +36,13 @@ public class BotCommandOp implements IBotCommand {
 			user.notice("Usage: !op <command>");
 			return;
 		}
+		String[] commandBlacklist = bot.getProfile(channel).getInterOpBlacklist();
+		for(int i = 0; i < commandBlacklist.length; i++) {
+			if(message.contains(commandBlacklist[i])) {
+				user.notice(Utils.getLocalizedMessage("irc.bot.interOpBlacklist"));
+				return;
+			}
+		}
 		bot.resetLog();
 		bot.setOpEnabled(true);
 		MinecraftServer.getServer().getCommandManager().executeCommand(bot, message);

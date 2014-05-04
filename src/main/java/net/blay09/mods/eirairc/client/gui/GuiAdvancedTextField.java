@@ -14,6 +14,7 @@ public class GuiAdvancedTextField extends GuiTextField {
 	
     private final FontRenderer fontRenderer;
 	private String defaultText;
+	private boolean defaultTextDisplayOnly;
 	private char passwordChar = 0;
 	private boolean textCentered;
 	private int textOffsetX;
@@ -46,7 +47,7 @@ public class GuiAdvancedTextField extends GuiTextField {
 	@Override
 	public void setFocused(boolean focused) {
 		super.setFocused(focused);
-		if(defaultText != null) {
+		if(defaultText != null && !defaultTextDisplayOnly) {
 			if(!focused) {
 				if(getText().isEmpty() || getText().equals(defaultText)) {
 					setText(defaultText);
@@ -70,10 +71,14 @@ public class GuiAdvancedTextField extends GuiTextField {
 				sb.append(passwordChar);
 			}
 			setText(sb.toString());
+		} else if(oldText.isEmpty() && defaultTextDisplayOnly && !isFocused()) {
+			setText(defaultText);
+			setTextColor(COLOR_DISABLED);
 		}
 		super.drawTextBox();
-		if(passwordChar > 0) {
-			setText(oldText);
+		setText(oldText);
+		if(oldText.isEmpty() && defaultTextDisplayOnly && !isFocused()) {
+			setTextColor(COLOR_ENABLED);
 		}
 	}
 	
@@ -89,9 +94,10 @@ public class GuiAdvancedTextField extends GuiTextField {
 		return textCentered;
 	}
 	
-	public void setDefaultText(String defaultText) {
+	public void setDefaultText(String defaultText, boolean displayOnly) {
 		this.defaultText = defaultText;
-		if(getText().isEmpty()) {
+		this.defaultTextDisplayOnly = displayOnly;
+		if(!displayOnly && getText().isEmpty()) {
 			setText(defaultText);
 			setTextColor(COLOR_DISABLED);
 		}

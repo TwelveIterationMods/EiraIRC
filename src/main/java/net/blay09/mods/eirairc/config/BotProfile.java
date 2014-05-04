@@ -46,6 +46,7 @@ public class BotProfile implements IBotProfile {
 	private boolean readOnly;
 	private String displayFormat;
 	private String[] disabledNativeCommands;
+	private String[] disabledInterOpCommands;
 	private boolean interOp;
 	private boolean isDefaultProfile;
 	
@@ -85,6 +86,7 @@ public class BotProfile implements IBotProfile {
 		displayFormat = Utils.unquote(config.get(CATEGORY_SETTINGS, "displayFormat", "S-Light").getString());
 		
 		disabledNativeCommands = config.get(CATEGORY_COMMANDS, "disabledNativeCommands", new String[0]).getStringList();
+		disabledInterOpCommands = config.get(CATEGORY_COMMANDS, "disabledInterOpCommands", new String[0]).getStringList();
 		
 		interOp = config.get(CATEGORY_COMMANDS, "interOp", false).getBoolean(false);
 		String[] interOpAuthListArray = config.get(CATEGORY_COMMANDS, "interOpAuthList", new String[0]).getStringList();
@@ -246,6 +248,10 @@ public class BotProfile implements IBotProfile {
 	public void setDisplayFormat(String displayFormat) {
 		this.displayFormat = displayFormat;
 		config.get(CATEGORY_SETTINGS, "displayFormat", "").set(displayFormat);
+	}
+	
+	public String[] getInterOpBlacklist() {
+		return disabledInterOpCommands;
 	}
 	
 	public File getFile() {

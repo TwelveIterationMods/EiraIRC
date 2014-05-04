@@ -69,6 +69,7 @@ eirairc:irc.gui.config.relayBroadcasts=Relay Broadcasts: %s
 eirairc:irc.gui.config.linkFilter=Filter Links: %s
 eirairc:irc.gui.config.autoWho=List Players on Join: %s
 eirairc:irc.gui.config.messageDisplay=Message Display: %s
+eirairc:irc.gui.config.interOp=Enable InterOp: %s
 ## Server Config
 eirairc:irc.gui.editServer=EiraIRC - Edit Server
 eirairc:irc.gui.editServer.serverAddress=Server Address:
@@ -144,7 +145,7 @@ eirairc:irc.gui.displaySettings=EiraIRC - Display Settings
 eirairc:irc.gui.displaySettings.recordingHud=Show Recording HUD: %s
 ## Bot Settings
 eirairc:irc.gui.botSettings=EiraIRC - Profile Editor
-eirairc:irc.gui.botSettings.interOp=Enable InterOp: %s
+eirairc:irc.gui.botCommands=EiraIRC - Bot Commands
 ## Channel Config
 eirairc:irc.gui.editChannel=EiraIRC - Edit Channel
 eirairc:irc.gui.editChannel.name=Channel Name:
@@ -175,6 +176,7 @@ eirairc:irc.bot.nickInvalid=%s is not a valid nickname.
 eirairc:irc.bot.playersOnline=%d players online:
 eirairc:irc.bot.noPlayersOnline=No players online.
 eirairc:irc.bot.noPermission=You do not have permission to use this command or you are not authenticated with EiraIRC.
+eirairc:irc.bot.interOpBlacklist=This command has been blacklisted from InterOp.
 
 # General
 eirairc:irc.general.notConnected=§cYou are not connected to %s
