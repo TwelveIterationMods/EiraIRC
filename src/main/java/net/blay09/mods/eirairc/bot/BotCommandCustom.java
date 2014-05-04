@@ -12,12 +12,15 @@ import net.minecraft.server.MinecraftServer;
 
 public class BotCommandCustom implements IBotCommand {
 
-	private String name;
-	private String command;
+	private String name = "";
+	private String command = "";
 	private boolean allowArgs;
 	private boolean runAsOp;
 	private boolean requireAuth;
 	private boolean broadcastResult;
+	
+	public BotCommandCustom() {
+	}
 	
 	public BotCommandCustom(String name, String command, boolean allowArgs, boolean broadcastResult, boolean runAsOp, boolean requireAuth) {
 		this.name = name;
@@ -61,6 +64,26 @@ public class BotCommandCustom implements IBotCommand {
 		} else {
 			user.notice("> " + bot.getLogContents());
 		}
+	}
+
+	public boolean allowsArgs() {
+		return allowArgs;
+	}
+
+	public boolean isRunAsOp() {
+		return runAsOp;
+	}
+	
+	public boolean requiresAuth() {
+		return requireAuth;
+	}
+	
+	public boolean isBroadcastResult() {
+		return broadcastResult;
+	}
+
+	public String getMinecraftCommand() {
+		return command;
 	}
 
 }

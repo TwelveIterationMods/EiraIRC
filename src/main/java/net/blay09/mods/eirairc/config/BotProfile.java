@@ -6,11 +6,10 @@ package net.blay09.mods.eirairc.config;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.google.common.io.Files;
 
 import net.blay09.mods.eirairc.api.bot.IBotCommand;
 import net.blay09.mods.eirairc.api.bot.IBotProfile;
@@ -21,10 +20,11 @@ import net.blay09.mods.eirairc.bot.BotCommandHelp;
 import net.blay09.mods.eirairc.bot.BotCommandMessage;
 import net.blay09.mods.eirairc.bot.BotCommandOp;
 import net.blay09.mods.eirairc.bot.BotCommandWho;
-import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
+
+import com.google.common.io.Files;
 
 public class BotProfile implements IBotProfile {
 
@@ -266,6 +266,10 @@ public class BotProfile implements IBotProfile {
 			file = new File(dir, name + "_" + i + ".cfg");
 		}
 		return file;
+	}
+
+	public Collection<IBotCommand> getCommands() {
+		return commands.values();
 	}
 
 }
