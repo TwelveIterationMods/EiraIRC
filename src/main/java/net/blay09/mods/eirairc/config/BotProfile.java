@@ -4,7 +4,9 @@
 package net.blay09.mods.eirairc.config;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import net.blay09.mods.eirairc.api.bot.IBotCommand;
@@ -16,6 +18,7 @@ import net.blay09.mods.eirairc.bot.BotCommandHelp;
 import net.blay09.mods.eirairc.bot.BotCommandMessage;
 import net.blay09.mods.eirairc.bot.BotCommandOp;
 import net.blay09.mods.eirairc.bot.BotCommandWho;
+import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
@@ -31,6 +34,7 @@ public class BotProfile implements IBotProfile {
 	public static final String DEFAULT_TWITCH = "default_twitch";
 	
 	private final Map<String, IBotCommand> commands = new HashMap<String, IBotCommand>();
+	public final List<String> interOpAuthList = new ArrayList<String>();
 	private final Configuration config;
 	
 	private String name;
@@ -38,7 +42,7 @@ public class BotProfile implements IBotProfile {
 	private boolean readOnly;
 	private String displayFormat;
 	private String[] disabledNativeCommands;
-	
+	public boolean interOp;
 	
 	public BotProfile(File file) {
 		config = new Configuration(file);
@@ -48,6 +52,12 @@ public class BotProfile implements IBotProfile {
 		displayFormat = Utils.unquote(config.get(CATEGORY_SETTINGS, "displayFormat", "S-Light").getString());
 		
 		disabledNativeCommands = config.get(CATEGORY_COMMANDS, "disabledNativeCommands", new String[0]).getStringList();
+		
+		interOp = config.get(CATEGORY_COMMANDS, "interOp", false).getBoolean(false);
+		String[] interOpAuthListArray = config.get(CATEGORY_COMMANDS, "interOpAuthList", new String[0]).getStringList();
+		for(int i = 0; i < interOpAuthListArray.length; i++) {
+			interOpAuthList.add(interOpAuthListArray[i]);
+		}
 	}
 
 	public void registerCommand(IBotCommand command) {
@@ -58,11 +68,13 @@ public class BotProfile implements IBotProfile {
 		registerCommand(new BotCommandAlias());
 		registerCommand(new BotCommandAuth());
 		registerCommand(new BotCommandHelp());
-		registerCommand(new BotCommandOp());
 		registerCommand(new BotCommandHelp());
 		registerCommand(new BotCommandMessage());
 		registerCommand(new BotCommandWho("who"));
 		registerCommand(new BotCommandWho("players"));
+		if(!interOp) {
+			registerCommand(new BotCommandOp());
+		}
 		
 		for(int i = 0; i < disabledNativeCommands.length; i++) {
 			if(Utils.unquote(disabledNativeCommands[i]).equals("*")) {
@@ -166,5 +178,15 @@ public class BotProfile implements IBotProfile {
 	@Override
 	public String getDisplayFormat() {
 		return displayFormat;
+	}
+
+	@Override
+	public boolean isInterOp(String authName) {
+		return interOp && interOpAuthList.contains(authName);
+	}
+
+	@Override
+	public boolean isInterOp() {
+		return interOp;
 	}
 }

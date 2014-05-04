@@ -18,5 +18,7 @@ public interface IBotProfile {
 	public boolean isMuted();
 	public boolean isReadOnly();
 	public String getDisplayFormat();
+	public boolean isInterOp();
+	public boolean isInterOp(String authName);
 	
 }

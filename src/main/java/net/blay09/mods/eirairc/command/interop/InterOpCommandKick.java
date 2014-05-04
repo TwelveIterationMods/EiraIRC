@@ -6,6 +6,7 @@ package net.blay09.mods.eirairc.command.interop;
 import java.util.List;
 
 import net.blay09.mods.eirairc.api.IIRCContext;
+import net.blay09.mods.eirairc.api.bot.IIRCBot;
 import net.blay09.mods.eirairc.command.SubCommand;
 import net.blay09.mods.eirairc.config.GlobalConfig;
 import net.blay09.mods.eirairc.util.IRCResolver;
@@ -33,16 +34,16 @@ public class InterOpCommandKick extends SubCommand {
 	
 	@Override
 	public boolean processCommand(ICommandSender sender, IIRCContext context, String[] args, boolean serverSide) {
-		if(GlobalConfig.interOp) {
-			Utils.sendLocalizedMessage(sender, "irc.interop.disabled");
-			return true;
-		}
 		if(args.length < 2) {
 			throw new WrongUsageException(getCommandUsage(sender));
 		}
 		IIRCContext targetChannel = IRCResolver.resolveTarget(args[0], (short) (IRCResolver.FLAG_CHANNEL + IRCResolver.FLAG_ONCHANNEL));
 		if(targetChannel instanceof IRCTargetError) {
 			Utils.sendLocalizedMessage(sender, targetChannel.getName(), args[0]);
+			return true;
+		}
+		if(!targetChannel.getConnection().getBot().getProfile(targetChannel).isInterOp()) {
+			Utils.sendLocalizedMessage(sender, "irc.interop.disabled");
 			return true;
 		}
 		IIRCContext targetUser = IRCResolver.resolveTarget(args[1], (short) (IRCResolver.FLAG_USER + IRCResolver.FLAG_USERONCHANNEL));

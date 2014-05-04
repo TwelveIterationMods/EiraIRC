@@ -71,12 +71,12 @@ public class ConfigurationHandler {
 		defaultBotProfile = botProfiles.get(BotProfile.DEFAULT_CLIENT);
 	}
 	
-	public static void loadDisplayFormats(File displayDir) {
-		if(!displayDir.exists()) {
-			displayDir.mkdirs();
+	public static void loadDisplayFormats(File formatDir) {
+		if(!formatDir.exists()) {
+			formatDir.mkdirs();
 		}
-		DisplayFormatConfig.setupDefaultFormats(displayDir);
-		File[] files = displayDir.listFiles(new FilenameFilter() {
+		DisplayFormatConfig.setupDefaultFormats(formatDir);
+		File[] files = formatDir.listFiles(new FilenameFilter() {
 			@Override
 			public boolean accept(File file, String name) {
 				return name.endsWith(".cfg");
@@ -93,13 +93,6 @@ public class ConfigurationHandler {
 	public static void load(File configFile) {
 		boolean newConfigFile = !configFile.exists();
 		config = new Configuration(configFile);
-		if(newConfigFile) {
-			config.get(CATEGORY_GLOBAL, "isNewConfigFormat", true, "Do not change this, it'll reset your config file.").set(true);
-		} else if(!config.get(CATEGORY_GLOBAL, "isNewConfigFormat", false, "Do not change this, it'll reset your config file.").getBoolean(false)) {
-			resetConfig();
-			config.get(CATEGORY_GLOBAL, "isNewConfigFormat", true, "Do not change this, it'll reset your config file.").set(true);
-		}
-		config.removeCategory(config.getCategory(Configuration.CATEGORY_GENERAL));
 		
 		GlobalConfig.load(config);
 		KeyConfig.load(config);

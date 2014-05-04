@@ -58,17 +58,15 @@ public class IRCCommandHandler {
 		registerCommand(new CommandGhost());
 		registerCommand(new CommandAlias());
 		
-		if(GlobalConfig.interOp) {
-			registerCommand(new InterOpCommandKick());
-			registerCommand(new InterOpCommandMode());
-			registerCommand(new InterOpCommandTopic());
-			registerCommand(new InterOpCommandUserModeBase("op", "+o"));
-			registerCommand(new InterOpCommandUserModeBase("deop", "-o"));
-			registerCommand(new InterOpCommandUserModeBase("voice", "+v"));
-			registerCommand(new InterOpCommandUserModeBase("devoice", "-v"));
-			registerCommand(new InterOpCommandUserModeBase("ban", "+b"));
-			registerCommand(new InterOpCommandUserModeBase("unban", "-b"));
-		}
+		registerCommand(new InterOpCommandKick());
+		registerCommand(new InterOpCommandMode());
+		registerCommand(new InterOpCommandTopic());
+		registerCommand(new InterOpCommandUserModeBase("op", "+o"));
+		registerCommand(new InterOpCommandUserModeBase("deop", "-o"));
+		registerCommand(new InterOpCommandUserModeBase("voice", "+v"));
+		registerCommand(new InterOpCommandUserModeBase("devoice", "-v"));
+		registerCommand(new InterOpCommandUserModeBase("ban", "+b"));
+		registerCommand(new InterOpCommandUserModeBase("unban", "-b"));
 	}
 	
 	public static void registerCommand(SubCommand command) {
@@ -132,9 +130,7 @@ public class IRCCommandHandler {
 		Utils.sendLocalizedMessage(sender, "irc.general.usage", Utils.getLocalizedMessage("irc.commands.irc"));
 		Utils.sendLocalizedMessage(sender, "irc.cmdlist.general");
 		Utils.sendLocalizedMessage(sender, "irc.cmdlist.irc");
-		if(GlobalConfig.interOp) {
-			Utils.sendLocalizedMessage(sender, "irc.cmdlist.interop");
-		}
+		Utils.sendLocalizedMessage(sender, "irc.cmdlist.interop");
 		Utils.sendLocalizedMessage(sender, "irc.cmdlist.special");
 	}
 

@@ -26,8 +26,6 @@ public class GlobalConfig {
 	public static String charset = "UTF-8";
 	public static final List<String> colorBlackList = new ArrayList<String>();
 	public static boolean registerShortCommands = true;
-	public static boolean interOp = false;
-	public static List<String> interOpAuthList = new ArrayList<String>();
 	
 	public static void load(Configuration config) {
 		nick = Utils.unquote(config.get(ConfigurationHandler.CATEGORY_GLOBAL, "nick", nick).getString());
@@ -44,11 +42,6 @@ public class GlobalConfig {
 		String[] colorBlackListArray = config.get(ConfigurationHandler.CATEGORY_SERVERONLY, "colorBlackList", Globals.DEFAULT_COLOR_BLACKLIST).getStringList();
 		for(int i = 0; i < colorBlackListArray.length; i++) {
 			colorBlackList.add(colorBlackListArray[i]);
-		}
-		interOp = config.get(ConfigurationHandler.CATEGORY_SERVERONLY, "interOp", GlobalConfig.interOp).getBoolean(GlobalConfig.interOp);
-		String[] interOpAuthListArray = config.get(ConfigurationHandler.CATEGORY_SERVERONLY, "interOpAuthList", new String[0]).getStringList();
-		for(int i = 0; i < interOpAuthListArray.length; i++) {
-			interOpAuthList.add(interOpAuthListArray[i]);
 		}
 		nickPrefix = Utils.unquote(config.get(ConfigurationHandler.CATEGORY_SERVERONLY, "nickPrefix", nickPrefix).getString());
 		nickSuffix = Utils.unquote(config.get(ConfigurationHandler.CATEGORY_SERVERONLY, "nickSuffix", nickSuffix).getString());
@@ -73,7 +66,6 @@ public class GlobalConfig {
 		else if(key.equals("saveCredentials")) value = String.valueOf(saveCredentials);
 		else if(key.equals("enableLinkFilter")) value = String.valueOf(enableLinkFilter);
 		else if(key.equals("registerShortCommands")) value = String.valueOf(registerShortCommands);
-		else if(key.equals("interOp")) value = String.valueOf(interOp);
 		else if(key.equals("enableAliases")) value = String.valueOf(enableAliases);
 		else if(key.equals("charset")) value = charset;
 		else if(key.equals("nickPrefix")) value = nickPrefix;

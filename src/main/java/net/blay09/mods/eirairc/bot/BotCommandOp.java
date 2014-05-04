@@ -5,8 +5,9 @@ package net.blay09.mods.eirairc.bot;
 
 import net.blay09.mods.eirairc.api.IIRCChannel;
 import net.blay09.mods.eirairc.api.IIRCUser;
-import net.blay09.mods.eirairc.api.bot.IIRCBot;
 import net.blay09.mods.eirairc.api.bot.IBotCommand;
+import net.blay09.mods.eirairc.api.bot.IBotProfile;
+import net.blay09.mods.eirairc.api.bot.IIRCBot;
 import net.blay09.mods.eirairc.config.GlobalConfig;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.server.MinecraftServer;
@@ -25,7 +26,8 @@ public class BotCommandOp implements IBotCommand {
 
 	@Override
 	public void processCommand(IIRCBot bot, IIRCChannel channel, IIRCUser user, String[] args) {
-		if(!GlobalConfig.interOpAuthList.contains(user.getAuthLogin())) {
+		IBotProfile botProfile = bot.getMainProfile();
+		if(!botProfile.isInterOp(user.getAuthLogin()) && !bot.getProfile(channel).isInterOp(user.getAuthLogin())) {
 			user.notice(Utils.getLocalizedMessage("irc.bot.noPermission"));
 			return;
 		}

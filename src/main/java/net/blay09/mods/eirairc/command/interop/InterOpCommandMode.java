@@ -33,16 +33,16 @@ public class InterOpCommandMode extends SubCommand {
 	
 	@Override
 	public boolean processCommand(ICommandSender sender, IIRCContext context, String[] args, boolean serverSide) {
-		if(GlobalConfig.interOp) {
-			Utils.sendLocalizedMessage(sender, "irc.interop.disabled");
-			return true;
-		}
 		if(args.length < 2) {
 			throw new WrongUsageException(getCommandUsage(sender));
 		}
 		IIRCContext targetChannel = IRCResolver.resolveTarget(args[0], (short) (IRCResolver.FLAG_CHANNEL + IRCResolver.FLAG_ONCHANNEL));
 		if(targetChannel instanceof IRCTargetError) {
 			Utils.sendLocalizedMessage(sender, targetChannel.getName(), args[0]);
+			return true;
+		}
+		if(!targetChannel.getConnection().getBot().getProfile(targetChannel).isInterOp()) {
+			Utils.sendLocalizedMessage(sender, "irc.interop.disabled");
 			return true;
 		}
 		IIRCContext targetUser = null;
