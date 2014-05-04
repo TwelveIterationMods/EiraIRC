@@ -36,6 +36,7 @@ public class BotProfile implements IBotProfile {
 	private String name;
 	private boolean muted;
 	private boolean readOnly;
+	private String displayFormat;
 	private String[] disabledNativeCommands;
 	
 	
@@ -44,6 +45,7 @@ public class BotProfile implements IBotProfile {
 		name = Utils.unquote(config.get(CATEGORY_SETTINGS, "name", file.getName().substring(0, file.getName().length() - 4)).getString());
 		muted = config.get(CATEGORY_SETTINGS, "muted", false).getBoolean(false);
 		readOnly = config.get(CATEGORY_SETTINGS, "readOnly", false).getBoolean(false);
+		displayFormat = Utils.unquote(config.get(CATEGORY_SETTINGS, "displayFormat", "S-Light").getString());
 		
 		disabledNativeCommands = config.get(CATEGORY_COMMANDS, "disabledNativeCommands", new String[0]).getStringList();
 	}
@@ -135,5 +137,34 @@ public class BotProfile implements IBotProfile {
 
 	public IBotCommand getCommand(String commandName) {
 		return commands.get(commandName);
+	}
+
+	public static void setupDefaultProfiles(File profileDir) {
+		File file = new File(profileDir, BotProfile.DEFAULT_CLIENT + ".cfg");
+		if(!file.exists()) {
+			BotProfile botProfile = new BotProfile(file);
+			botProfile.defaultClient();
+			botProfile.save();
+			botProfile.loadCommands();
+		}
+		file = new File(profileDir, BotProfile.DEFAULT_SERVER + ".cfg");
+		if(!file.exists()) {
+			BotProfile botProfile = new BotProfile(file);
+			botProfile.defaultServer();
+			botProfile.save();
+			botProfile.loadCommands();
+		}
+		file = new File(profileDir, BotProfile.DEFAULT_TWITCH + ".cfg");
+		if(!file.exists()) {
+			BotProfile botProfile = new BotProfile(file);
+			botProfile.defaultTwitch();
+			botProfile.save();
+			botProfile.loadCommands();
+		}
+	}
+
+	@Override
+	public String getDisplayFormat() {
+		return displayFormat;
 	}
 }

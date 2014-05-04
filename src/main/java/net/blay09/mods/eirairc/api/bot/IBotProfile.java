@@ -17,5 +17,6 @@ public interface IBotProfile {
 	public IBotCommand getCommand(String commandName);
 	public boolean isMuted();
 	public boolean isReadOnly();
+	public String getDisplayFormat();
 	
 }

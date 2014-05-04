@@ -104,9 +104,9 @@ public class IRCEventHandler {
 		message = ChatAllowedCharacters.filerAllowedCharacters(message);
 		String mcMessage = null;
 		if(event.isEmote) {
-			mcMessage = ConfigHelper.getDisplayFormatConfig().mcPrivateEmote;
+			mcMessage = ConfigHelper.getDisplayFormat(event.bot.getDisplayFormat(event.sender)).mcPrivateEmote;
 		} else {
-			mcMessage = ConfigHelper.getDisplayFormatConfig().mcPrivateMessage;
+			mcMessage = ConfigHelper.getDisplayFormat(event.bot.getDisplayFormat(event.sender)).mcPrivateMessage;
 		}
 		mcMessage = Utils.formatMessageNew(mcMessage, event.connection, null, event.sender, message);
 		String notifyMsg = mcMessage;
@@ -136,9 +136,9 @@ public class IRCEventHandler {
 		String mcMessage = null;
 		if(event.isEmote) {
 			mcMessage = (emoteColor != null ? Globals.COLOR_CODE_PREFIX + Utils.getColorCode(emoteColor) : "");
-			mcMessage += ConfigHelper.getDisplayFormatConfig().mcChannelEmote;
+			mcMessage += ConfigHelper.getDisplayFormat(event.bot.getDisplayFormat(event.channel)).mcChannelEmote;
 		} else {
-			mcMessage = ConfigHelper.getDisplayFormatConfig().mcChannelMessage;
+			mcMessage = ConfigHelper.getDisplayFormat(event.bot.getDisplayFormat(event.channel)).mcChannelMessage;
 		}
 		mcMessage = Utils.formatMessageNew(mcMessage, event.connection, event.channel, event.sender, message);
 		Utils.addMessageToChat(mcMessage);

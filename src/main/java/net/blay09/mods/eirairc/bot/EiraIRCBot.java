@@ -153,4 +153,9 @@ public class EiraIRCBot implements IIRCBot {
 		return false;
 	}
 
+	@Override
+	public String getDisplayFormat(IIRCContext context) {
+		return context != null ? getProfile(context).getDisplayFormat() : mainProfile.getDisplayFormat();
+	}
+
 }

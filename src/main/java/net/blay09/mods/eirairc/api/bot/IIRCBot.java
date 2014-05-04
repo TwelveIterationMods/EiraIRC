@@ -16,7 +16,8 @@ public interface IIRCBot extends ICommandSender {
 	public String getLogContents();
 	public boolean processCommand(IIRCChannel channel, IIRCUser sender, String message);
 	public IBotProfile getMainProfile();
-	public IBotProfile getProfile(IIRCContext channel);
+	public IBotProfile getProfile(IIRCContext context);
+	public String getDisplayFormat(IIRCContext context);
 	public boolean getBoolean(IIRCContext context,String string, boolean defaultVal);
 	public boolean isMuted(IIRCContext context);
 	public boolean isReadOnly(IIRCContext context);

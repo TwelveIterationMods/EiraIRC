@@ -59,7 +59,7 @@ public class BotCommandMessage implements IBotCommand {
 		}
 		message = Utils.filterCodes(message);
 		message = ChatAllowedCharacters.filerAllowedCharacters(message);
-		String mcMessage = Utils.formatMessageNew(ConfigHelper.getDisplayFormatConfig().mcPrivateMessage, bot.getConnection(), null, user, message);
+		String mcMessage = Utils.formatMessageNew(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(user)).mcPrivateMessage, bot.getConnection(), null, user, message);
 		String notifyMsg = mcMessage;
 		if(notifyMsg.length() > 42) {
 			notifyMsg = notifyMsg.substring(0, 42) + "...";

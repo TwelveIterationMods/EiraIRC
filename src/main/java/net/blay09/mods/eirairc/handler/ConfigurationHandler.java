@@ -15,6 +15,7 @@ import net.blay09.mods.eirairc.config.BotProfile;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.CompatibilityConfig;
 import net.blay09.mods.eirairc.config.DisplayConfig;
+import net.blay09.mods.eirairc.config.DisplayFormatConfig;
 import net.blay09.mods.eirairc.config.GlobalConfig;
 import net.blay09.mods.eirairc.config.KeyConfig;
 import net.blay09.mods.eirairc.config.NotificationConfig;
@@ -48,11 +49,14 @@ public class ConfigurationHandler {
 	private static Configuration config;
 	private static Map<String, BotProfile> botProfiles = new HashMap<String, BotProfile>();
 	private static BotProfile defaultBotProfile;
+	private static final Map<String, DisplayFormatConfig> displayFormats = new HashMap<String, DisplayFormatConfig>();
+	private static DisplayFormatConfig defaultDisplayFormat;
 	
 	public static void loadBotProfiles(File profileDir) {
 		if(!profileDir.exists()) {
 			profileDir.mkdirs();
 		}
+		BotProfile.setupDefaultProfiles(profileDir);
 		File[] files = profileDir.listFiles(new FilenameFilter() {
 			@Override
 			public boolean accept(File file, String name) {
@@ -64,28 +68,26 @@ public class ConfigurationHandler {
 			botProfile.loadCommands();
 			botProfiles.put(botProfile.getName(), botProfile);
 		}
-		if(!botProfiles.containsKey(BotProfile.DEFAULT_CLIENT)) {
-			BotProfile botProfile = new BotProfile(new File(profileDir, BotProfile.DEFAULT_CLIENT + ".cfg"));
-			botProfile.defaultClient();
-			botProfile.save();
-			botProfile.loadCommands();
-			botProfiles.put(botProfile.getName(), botProfile);
-		}
-		if(!botProfiles.containsKey(BotProfile.DEFAULT_SERVER)) {
-			BotProfile botProfile = new BotProfile(new File(profileDir, BotProfile.DEFAULT_SERVER + ".cfg"));
-			botProfile.defaultServer();
-			botProfile.save();
-			botProfile.loadCommands();
-			botProfiles.put(botProfile.getName(), botProfile);
-		}
-		if(!botProfiles.containsKey(BotProfile.DEFAULT_TWITCH)) {
-			BotProfile botProfile = new BotProfile(new File(profileDir, BotProfile.DEFAULT_TWITCH + ".cfg"));
-			botProfile.defaultTwitch();
-			botProfile.save();
-			botProfile.loadCommands();
-			botProfiles.put(botProfile.getName(), botProfile);
-		}
 		defaultBotProfile = botProfiles.get(BotProfile.DEFAULT_CLIENT);
+	}
+	
+	public static void loadDisplayFormats(File displayDir) {
+		if(!displayDir.exists()) {
+			displayDir.mkdirs();
+		}
+		DisplayFormatConfig.setupDefaultFormats(displayDir);
+		File[] files = displayDir.listFiles(new FilenameFilter() {
+			@Override
+			public boolean accept(File file, String name) {
+				return name.endsWith(".cfg");
+			}
+		});
+		for(int i = 0; i < files.length; i++) {
+			DisplayFormatConfig dfc = new DisplayFormatConfig(files[i]);
+			dfc.loadFormats();
+			displayFormats.put(dfc.getName(), dfc);
+		}
+		defaultDisplayFormat = displayFormats.get(DisplayFormatConfig.DEFAULT_FORMAT);
 	}
 	
 	public static void load(File configFile) {
@@ -239,6 +241,18 @@ public class ConfigurationHandler {
 			return defaultBotProfile;
 		}
 		return botProfile;
+	}
+
+	public static DisplayFormatConfig getDisplayFormat(String displayMode) {
+		DisplayFormatConfig displayFormat = displayFormats.get(displayMode);
+		if(displayFormat == null) {
+			return defaultDisplayFormat;
+		}
+		return displayFormat;
+	}
+
+	public static Collection<DisplayFormatConfig> getDisplayFormats() {
+		return displayFormats.values();
 	}
 
 }

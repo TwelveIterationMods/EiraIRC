@@ -5,6 +5,7 @@ package net.blay09.mods.eirairc.util;
 
 import net.blay09.mods.eirairc.api.IIRCChannel;
 import net.blay09.mods.eirairc.api.IIRCConnection;
+import net.blay09.mods.eirairc.api.bot.IBotProfile;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.DisplayConfig;
 import net.blay09.mods.eirairc.config.DisplayFormatConfig;
@@ -15,18 +16,6 @@ import net.minecraftforge.common.config.ConfigCategory;
 
 public class ConfigHelper {
 
-	public static DisplayFormatConfig getDisplayFormatConfig() {
-		DisplayFormatConfig dfc = DisplayConfig.displayFormates.get(DisplayConfig.displayMode);
-		if(dfc == null) {
-			DisplayConfig.displayMode = "S-Light";
-			dfc = DisplayConfig.displayFormates.get(DisplayConfig.displayMode);
-			if(dfc == null) {
-				return new DisplayFormatConfig(new ConfigCategory("unknown"));
-			}
-		}
-		return dfc;
-	}
-	
 	public static String getEmoteColor(IIRCChannel channel) {
 		return null;
 	}
@@ -83,6 +72,10 @@ public class ConfigHelper {
 
 	public static ServerConfig getServerConfig(IIRCConnection connection) {
 		return ConfigurationHandler.getServerConfig(connection.getHost());
+	}
+
+	public static DisplayFormatConfig getDisplayFormat(String displayFormat) {
+		return ConfigurationHandler.getDisplayFormat(displayFormat);
 	}
 
 }

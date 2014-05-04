@@ -17,37 +17,23 @@ public class DisplayConfig {
 
 	private static final String CATEGORY = ConfigurationHandler.CATEGORY_DISPLAY;
 	
-	public static final Map<String, DisplayFormatConfig> displayFormates = new HashMap<String, DisplayFormatConfig>();
 	
 	public static boolean enableNameColors = true;
 	public static String opColor = "red";
 	public static String ircColor = "gray";
 	public static String emoteColor = "gold";
 	public static String quitMessage = "Leaving.";
-	public static String displayMode = "S-Light";
-	public static String originalDisplayMode;
 	public static boolean hudRecState = true;
 	
 	public static void load(Configuration config) {
-		displayMode = Utils.unquote(config.get(CATEGORY, "displayMode", displayMode).getString());
 		ircColor = config.get(CATEGORY, "ircColor", ircColor).getString();
 		emoteColor = config.get(CATEGORY, "emoteColor", emoteColor).getString();
 		opColor = config.get(CATEGORY, "opColor", opColor).getString();
 		enableNameColors = config.get(CATEGORY, "enableNameColors", enableNameColors).getBoolean(enableNameColors);
 		hudRecState = config.get(CATEGORY, "hudRecState", hudRecState).getBoolean(hudRecState);
-		
-		ConfigCategory displayFormatCategory = config.getCategory(CATEGORY + Configuration.CATEGORY_SPLITTER + ConfigurationHandler.CATEGORY_FORMATS);
-		DisplayFormatConfig.defaultConfig(config, displayFormatCategory);
-		for(ConfigCategory category : displayFormatCategory.getChildren()) {
-			DisplayFormatConfig dfc = new DisplayFormatConfig(category);
-			dfc.load(config);
-			displayFormates.put(dfc.getName(), dfc);
-		}
-		config.getCategory(ConfigurationHandler.CATEGORY_DISPLAY).setComment("These options determine how the chat is displayed and what is sent / received to and from IRC.");
 	}
 	
 	public static void save(Configuration config) {
-		config.get(CATEGORY, "displayMode", "").set(Utils.quote(displayMode));
 		config.get(CATEGORY, "ircColor", ircColor).set(ircColor);
 		config.get(CATEGORY, "emoteColor", emoteColor).set(emoteColor);
 		config.get(CATEGORY, "opColor", opColor).set(opColor);
@@ -56,7 +42,6 @@ public class DisplayConfig {
 	}
 	
 	public static void addOptionsToList(List<String> list) {
-		list.add("displayMode");
 		list.add("ircColor");
 		list.add("emoteColor");
 		list.add("opColor");
@@ -66,10 +51,6 @@ public class DisplayConfig {
 	public static void addValuesToList(List<String> list, String option) {
 		if(option.endsWith("Color")) {
 			Utils.addValidColorsToList(list);
-		} else if(option.equals("displayMode")) {
-			for(String dm : displayFormates.keySet()) {
-				list.add(dm);
-			}
 		} else if(option.startsWith("relay") || option.startsWith("enable")) {
 			Utils.addBooleansToList(list);
 		}
@@ -82,7 +63,6 @@ public class DisplayConfig {
 		else if(key.equals("ircColor")) value = ircColor;
 		else if(key.equals("emoteColor")) value = emoteColor;
 		else if(key.equals("quitMessage")) value = quitMessage;
-		else if(key.equals("displayMode")) value = displayMode;
 		return value;
 	}
 	
@@ -99,12 +79,6 @@ public class DisplayConfig {
 			ircColor = value;
 		} else if(key.equals("emoteColor")) {
 			emoteColor = value;
-		} else if(key.equals("displayMode")) {
-			if(displayFormates.containsKey(value)) {
-				Utils.sendLocalizedMessage(sender, "irc.config.invalidDisplayMode", value);
-				return false;
-			}
-			displayMode = value;
 		} else if(key.equals("quitMessage")) {
 			quitMessage = value;
 		} else if(key.equals("enableNameColors")){
