@@ -12,6 +12,7 @@ public interface IBotProfile {
 	public static final String KEY_RELAYDEATHMESSAGES = "relayDeathMessages";
 	public static final String KEY_RELAYNICKCHANGES = "relayNickChanges";
 	public static final String KEY_RELAYBROADCASTS = "relayBroadcasts";
+	public static final String KEY_LINKFILTER = "enableLinkFilter";
 
 	public boolean getBoolean(String key, boolean defaultVal);
 	public IBotCommand getCommand(String commandName);

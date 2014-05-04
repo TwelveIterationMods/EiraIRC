@@ -97,7 +97,7 @@ public class IRCEventHandler {
 			return;
 		}
 		String message = event.message;
-		if(GlobalConfig.enableLinkFilter) {
+		if(event.bot.getBoolean(event.sender, IBotProfile.KEY_LINKFILTER, false)) {
 			message = Utils.filterLinks(message);
 		}
 		message = Utils.filterCodes(message);
@@ -127,7 +127,7 @@ public class IRCEventHandler {
 			return;
 		}
 		String message = event.message;
-		if(GlobalConfig.enableLinkFilter) {
+		if(event.bot.getBoolean(event.sender, IBotProfile.KEY_LINKFILTER, false)) {
 			message = Utils.filterLinks(message);
 		}
 		message = Utils.filterCodes(message);

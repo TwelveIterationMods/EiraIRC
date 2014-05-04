@@ -28,7 +28,7 @@ public class GuiDisplaySettings extends GuiScreen {
 		int leftX = width /  2 - 152;
 		int rightX = width / 2 + 2;
 		
-		btnRecordingHUD = new GuiButton(2, rightX, height / 2 - 90, BUTTON_WIDTH, BUTTON_HEIGHT, "");
+		btnRecordingHUD = new GuiButton(2, leftX, height / 2 - 90, BUTTON_WIDTH, BUTTON_HEIGHT, "");
 		buttonList.add(btnRecordingHUD);
 		
 		btnBack = new GuiButton(0, width / 2 - 100, height / 2 + 90, 200, 20, Utils.getLocalizedMessage("irc.gui.back"));

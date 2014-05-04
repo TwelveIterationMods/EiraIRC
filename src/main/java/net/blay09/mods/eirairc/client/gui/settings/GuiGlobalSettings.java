@@ -22,7 +22,6 @@ public class GuiGlobalSettings extends GuiScreen {
 	private static final int BUTTON_GAP = 5;
 	
 	private GuiTextField txtNick;
-	private GuiButton btnLinkFilter;
 	private GuiButton btnPersistentConnections;
 	private GuiButton btnSaveCredentials;
 	private GuiButton btnBack;
@@ -39,10 +38,7 @@ public class GuiGlobalSettings extends GuiScreen {
 		btnPersistentConnections = new GuiButton(1, leftX, height / 2 - 65, BUTTON_WIDTH, BUTTON_HEIGHT, "");
 		buttonList.add(btnPersistentConnections);
 		
-		btnLinkFilter = new GuiButton(2, leftX, height / 2 - 40, BUTTON_WIDTH, BUTTON_HEIGHT, "");
-		buttonList.add(btnLinkFilter);
-		
-		btnSaveCredentials = new GuiButton(4, rightX, height / 2 - 40, BUTTON_WIDTH, BUTTON_HEIGHT, "");
+		btnSaveCredentials = new GuiButton(4, rightX, height / 2 - 65, BUTTON_WIDTH, BUTTON_HEIGHT, "");
 		buttonList.add(btnSaveCredentials);
 		
 		btnBack = new GuiButton(0, width / 2 - 100, height / 2 + 65, Utils.getLocalizedMessage("irc.gui.back"));
@@ -59,16 +55,13 @@ public class GuiGlobalSettings extends GuiScreen {
 	public void updateButtonText() {
 		String yes = Utils.getLocalizedMessage("irc.gui.yes");
 		String no = Utils.getLocalizedMessage("irc.gui.no");
-		btnLinkFilter.displayString = Utils.getLocalizedMessage("irc.gui.globalSettings.linkFilter", (GlobalConfig.enableLinkFilter ? yes : no));
 		btnPersistentConnections.displayString = Utils.getLocalizedMessage("irc.gui.globalSettings.persistentConnection", (GlobalConfig.persistentConnection ? yes : no));
 		btnSaveCredentials.displayString = Utils.getLocalizedMessage("irc.gui.globalSettings.saveCredentials", (GlobalConfig.saveCredentials ? yes : no));
 	}
 	
 	@Override
 	public void actionPerformed(GuiButton button) {
-		if(button == btnLinkFilter) {
-			GlobalConfig.enableLinkFilter = !GlobalConfig.enableLinkFilter;
-		} else if(button == btnPersistentConnections) {
+		if(button == btnPersistentConnections) {
 			GlobalConfig.persistentConnection = !GlobalConfig.persistentConnection;
 		} else if(button == btnSaveCredentials) {
 			GlobalConfig.saveCredentials = !GlobalConfig.saveCredentials;

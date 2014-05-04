@@ -120,6 +120,7 @@ eirairc:irc.gui.keybinds.screenshotShare=Screenshot & Share: %s
 eirairc:irc.gui.keybinds.toggleLive=Toggle Live: %s
 eirairc:irc.gui.keybinds.toggleRecording=Toggle Recording: %s
 eirairc:irc.gui.keybinds.toggleTarget=Toggle Target: %s
+eirairc:irc.gui.keybinds.openScreenshots=Screenshot Archive: %s
 ## Server List
 eirairc:irc.gui.serverList=EiraIRC - Server List
 eirairc:irc.gui.serverList.connected=§aConnected

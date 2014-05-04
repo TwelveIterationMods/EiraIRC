@@ -22,14 +22,12 @@ public class GlobalConfig {
 	public static boolean enableAliases = false;
 	public static boolean persistentConnection = true;
 	public static boolean saveCredentials = true;
-	public static boolean enableLinkFilter = false;
 	public static String charset = "UTF-8";
 	public static final List<String> colorBlackList = new ArrayList<String>();
 	public static boolean registerShortCommands = true;
 	
 	public static void load(Configuration config) {
 		nick = Utils.unquote(config.get(ConfigurationHandler.CATEGORY_GLOBAL, "nick", nick).getString());
-		enableLinkFilter = config.get(ConfigurationHandler.CATEGORY_GLOBAL, "enableLinkFilter", enableLinkFilter).getBoolean(enableLinkFilter);
 		saveCredentials = config.get(ConfigurationHandler.CATEGORY_GLOBAL, "saveCredentials", saveCredentials).getBoolean(saveCredentials);
 		registerShortCommands = config.get(ConfigurationHandler.CATEGORY_GLOBAL, "registerShortCommands", registerShortCommands).getBoolean(registerShortCommands);
 		charset = Utils.unquote(config.get(ConfigurationHandler.CATEGORY_GLOBAL, "charset", charset).getString());
@@ -64,7 +62,6 @@ public class GlobalConfig {
 		String value = null;
 		if(key.equals("persistentConnection")) value = String.valueOf(persistentConnection);
 		else if(key.equals("saveCredentials")) value = String.valueOf(saveCredentials);
-		else if(key.equals("enableLinkFilter")) value = String.valueOf(enableLinkFilter);
 		else if(key.equals("registerShortCommands")) value = String.valueOf(registerShortCommands);
 		else if(key.equals("enableAliases")) value = String.valueOf(enableAliases);
 		else if(key.equals("charset")) value = charset;
@@ -78,8 +75,6 @@ public class GlobalConfig {
 			persistentConnection = Boolean.parseBoolean(value);
 		} else if(key.equals("saveCredentials")){
 			saveCredentials = Boolean.parseBoolean(value);
-		} else if(key.equals("enableLinkFilter")){
-			enableLinkFilter = Boolean.parseBoolean(value);
 		} else if(key.equals("registerShortCommands")){
 			registerShortCommands = Boolean.parseBoolean(value);
 			Utils.sendLocalizedMessage(sender, "irc.config.requiresRestart");
@@ -117,7 +112,6 @@ public class GlobalConfig {
 	
 	public static void save(Configuration config) {
 		config.get(ConfigurationHandler.CATEGORY_GLOBAL, "nick", "").set(Utils.quote(nick));
-		config.get(ConfigurationHandler.CATEGORY_GLOBAL, "enableLinkFilter", enableLinkFilter).set(enableLinkFilter);
 		config.get(ConfigurationHandler.CATEGORY_GLOBAL, "saveCredentials", saveCredentials).set(saveCredentials);
 		config.get(ConfigurationHandler.CATEGORY_GLOBAL, "charset", "").set(Utils.quote(charset));
 

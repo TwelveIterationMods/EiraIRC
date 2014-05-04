@@ -84,7 +84,7 @@ public class GuiScreenshotList extends GuiScreen {
 	@Override
 	public void drawScreen(int par1, int par2, float par3) {
 		guiScreenshotSlot.drawScreen(par1, par2, par3);
-		drawCenteredString(fontRendererObj, "irc.gui.screenshotList", width / 2, 20, Globals.TEXT_COLOR);
+		drawCenteredString(fontRendererObj, Utils.getLocalizedMessage("irc.gui.screenshotList"), width / 2, 20, Globals.TEXT_COLOR);
 		super.drawScreen(par1, par2, par3);
 	}
 

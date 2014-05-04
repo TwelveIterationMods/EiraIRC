@@ -54,7 +54,7 @@ public class BotCommandMessage implements IBotCommand {
 			}
 		}
 		String message = Utils.joinArgs(args, 1);
-		if(GlobalConfig.enableLinkFilter) {
+		if(bot.getBoolean(user, IBotProfile.KEY_LINKFILTER, false)) {
 			message = Utils.filterLinks(message);
 		}
 		message = Utils.filterCodes(message);
