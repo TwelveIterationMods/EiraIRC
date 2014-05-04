@@ -4,7 +4,7 @@
 package net.blay09.mods.eirairc.client.gui.settings;
 
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.client.gui.GuiPasswordTextField;
+import net.blay09.mods.eirairc.client.gui.GuiAdvancedTextField;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
@@ -31,7 +31,7 @@ public class GuiChannelConfig extends GuiScreen {
 	private GuiButton btnAutoWho;
 	
 	private GuiTextField txtName;
-	private GuiPasswordTextField txtChannelPassword;
+	private GuiAdvancedTextField txtChannelPassword;
 	
 	private boolean autoJoin;
 	private boolean autoWho;
@@ -51,7 +51,8 @@ public class GuiChannelConfig extends GuiScreen {
 	public void initGui() {
 		Keyboard.enableRepeatEvents(true);
 		txtName = new GuiTextField(fontRendererObj, width / 2 - 106, height / 2 - 85, 100, 15);
-		txtChannelPassword = new GuiPasswordTextField(fontRendererObj, width / 2 + 6, height / 2 - 85, 100, 15);
+		txtChannelPassword = new GuiAdvancedTextField(fontRendererObj, width / 2 + 6, height / 2 - 85, 100, 15);
+		txtChannelPassword.setDefaultPasswordChar();
 		
 		btnAutoJoin = new GuiButton(3, width / 2 + 3, height / 2 - 65, BUTTON_WIDTH, BUTTON_HEIGHT, "");
 		buttonList.add(btnAutoJoin);

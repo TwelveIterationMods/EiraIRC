@@ -39,7 +39,7 @@ public class GuiBotCommands extends GuiScreen {
 		int rightX = width / 2 + 2;
 		int topY = height / 2 - 60;
 		
-		btnInterOp = new GuiButton(1, leftX, topY, BUTTON_WIDTH, BUTTON_HEIGHT, "InterOp: ???");
+		btnInterOp = new GuiButton(1, leftX, topY - 6, BUTTON_WIDTH, BUTTON_HEIGHT, "InterOp: ???");
 		btnInterOp.enabled = false;
 		buttonList.add(btnInterOp);
 
@@ -107,7 +107,8 @@ public class GuiBotCommands extends GuiScreen {
 		txtDisabledInterOpCommands.drawTextBox();
 		drawString(fontRendererObj, "Disabled Bot Commands:", width / 2, height / 2 - 34, Globals.TEXT_COLOR);
 		txtDisabledCommands.drawTextBox();
-		drawString(fontRendererObj, "An asterisk ('*') will disable all commands.", width / 2, height / 2 + 6, Globals.TEXT_COLOR);
+		drawString(fontRendererObj, "Custom Bot Commands:", width / 2 - 170, height / 2 - 34, Globals.TEXT_COLOR);
+		drawString(fontRendererObj, "An asterisk ('*') disables all commands.", width / 2, height / 2 + 6, Globals.TEXT_COLOR);
 		super.drawScreen(par1, par2, par3);
 	}
 }

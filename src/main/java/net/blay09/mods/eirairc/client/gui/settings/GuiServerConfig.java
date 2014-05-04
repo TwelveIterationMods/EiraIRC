@@ -4,8 +4,7 @@
 package net.blay09.mods.eirairc.client.gui.settings;
 
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.client.gui.GuiDefaultTextField;
-import net.blay09.mods.eirairc.client.gui.GuiPasswordTextField;
+import net.blay09.mods.eirairc.client.gui.GuiAdvancedTextField;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.Globals;
@@ -26,11 +25,11 @@ public class GuiServerConfig extends GuiScreen {
 	private GuiButton btnAutoConnect;
 	private GuiTextField txtHost;
 	private GuiTextField txtNick;
-	private GuiDefaultTextField txtIdent;
-	private GuiDefaultTextField txtDescription;
+	private GuiAdvancedTextField txtIdent;
+	private GuiAdvancedTextField txtDescription;
 	private GuiTextField txtNickServName;
-	private GuiPasswordTextField txtNickServPassword;
-	private GuiPasswordTextField txtServerPassword;
+	private GuiAdvancedTextField txtNickServPassword;
+	private GuiAdvancedTextField txtServerPassword;
 	
 	private boolean autoConnect;
 	
@@ -46,16 +45,18 @@ public class GuiServerConfig extends GuiScreen {
 		Keyboard.enableRepeatEvents(true);
 		txtHost = new GuiTextField(fontRendererObj, width / 2 - 120, height / 2 - 85, 100, 15);
 		txtNick = new GuiTextField(fontRendererObj, width / 2 - 120, height / 2 - 45, 100, 15);
-		txtServerPassword = new GuiPasswordTextField(fontRendererObj, width / 2 + 5, height / 2 - 85, 100, 15);
+		txtServerPassword = new GuiAdvancedTextField(fontRendererObj, width / 2 + 5, height / 2 - 85, 100, 15);
 		txtServerPassword.setMaxStringLength(Integer.MAX_VALUE);
-		txtIdent = new GuiDefaultTextField(fontRendererObj, width / 2 + 5, height / 2 - 45, 100, 15);
-		txtIdent.setDefaultText(Globals.DEFAULT_IDENT);
-		txtDescription = new GuiDefaultTextField(fontRendererObj, width / 2 - 120, height / 2 - 5, 100, 15);
-		txtDescription.setDefaultText(Globals.DEFAULT_DESCRIPTION);
+		txtServerPassword.setDefaultPasswordChar();
+		txtIdent = new GuiAdvancedTextField(fontRendererObj, width / 2 + 5, height / 2 - 45, 100, 15);
+		txtIdent.setDefaultText(Globals.DEFAULT_IDENT, false);
+		txtDescription = new GuiAdvancedTextField(fontRendererObj, width / 2 - 120, height / 2 - 5, 100, 15);
+		txtDescription.setDefaultText(Globals.DEFAULT_DESCRIPTION, false);
 		txtNickServName = new GuiTextField(fontRendererObj, width / 2 - 120, height / 2 + 35, 100, 15);
 		txtNickServName.setMaxStringLength(Integer.MAX_VALUE);
-		txtNickServPassword = new GuiPasswordTextField(fontRendererObj, width / 2 - 120, height / 2 + 75, 100, 15);
+		txtNickServPassword = new GuiAdvancedTextField(fontRendererObj, width / 2 - 120, height / 2 + 75, 100, 15);
 		txtNickServPassword.setMaxStringLength(Integer.MAX_VALUE);
+		txtNickServPassword.setDefaultPasswordChar();
 		
 		btnAutoConnect = new GuiButton(3, width / 2 - 10, height / 2 + 5, 130, 20, "");
 		buttonList.add(btnAutoConnect);

@@ -5,7 +5,7 @@ package net.blay09.mods.eirairc.client.gui.settings;
 
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.IIRCConnection;
-import net.blay09.mods.eirairc.client.gui.GuiPasswordTextField;
+import net.blay09.mods.eirairc.client.gui.GuiAdvancedTextField;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.ConfigHelper;
@@ -24,7 +24,7 @@ public class GuiTwitch extends GuiScreen {
 	private GuiScreen parentScreen;
 	private ServerConfig config;
 	private GuiTextField txtUsername;
-	private GuiTextField txtPassword;
+	private GuiAdvancedTextField txtPassword;
 	private GuiButton btnOAuthHelp;
 	private GuiButton btnConnectOnStartup;
 	private GuiButton btnBack;
@@ -40,8 +40,9 @@ public class GuiTwitch extends GuiScreen {
 		
 		txtUsername = new GuiTextField(fontRendererObj, width / 2 - 90, height / 2 - 80, 180, 15);
 		txtUsername.setMaxStringLength(Integer.MAX_VALUE);
-		txtPassword = new GuiPasswordTextField(fontRendererObj, width / 2 - 90, height / 2 - 40, 180, 15);
+		txtPassword = new GuiAdvancedTextField(fontRendererObj, width / 2 - 90, height / 2 - 40, 180, 15);
 		txtPassword.setMaxStringLength(Integer.MAX_VALUE);
+		txtPassword.setDefaultPasswordChar();
 		
 		btnOAuthHelp = new GuiButton(1, width / 2 + 94, height / 2 - 42, 20, 20, "?");
 		buttonList.add(btnOAuthHelp);

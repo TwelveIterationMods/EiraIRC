@@ -8,7 +8,7 @@ import net.minecraft.client.gui.GuiTextField;
 
 public class GuiAdvancedTextField extends GuiTextField {
 	
-	private static final char DEFAULT_PASSWORD_CHAR = '*';
+	public static final char DEFAULT_PASSWORD_CHAR = '*';
 	private static final int COLOR_ENABLED = 14737632;
     private static final int COLOR_DISABLED = 7368816;
 	
@@ -122,5 +122,9 @@ public class GuiAdvancedTextField extends GuiTextField {
 	
 	public boolean isEnabled() {
 		return enabled;
+	}
+
+	public void setDefaultPasswordChar() {
+		setPasswordChar(DEFAULT_PASSWORD_CHAR);
 	}
 }
