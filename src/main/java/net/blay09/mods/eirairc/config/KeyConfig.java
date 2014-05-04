@@ -10,7 +10,7 @@ import org.lwjgl.input.Keyboard;
 
 public class KeyConfig {
 	
-	private static final String CATEGORY = ConfigurationHandler.CATEGORY_CLIENTONLY;
+	private static final String CATEGORY = ConfigurationHandler.CATEGORY_KEYBINDS;
 
 	public static final int IDX_OPENSETTINGS = 0;
 	public static final int IDX_TOGGLETARGET = 1;

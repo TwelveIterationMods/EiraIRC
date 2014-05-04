@@ -22,6 +22,7 @@ import net.blay09.mods.eirairc.config.NotificationConfig;
 import net.blay09.mods.eirairc.config.ScreenshotConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.ServiceConfig;
+import net.blay09.mods.eirairc.config.ServiceSettings;
 import net.blay09.mods.eirairc.util.IRCResolver;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
@@ -37,6 +38,7 @@ public class ConfigurationHandler {
 	public static final String CATEGORY_FORMATS = "formats";
 	public static final String CATEGORY_SERVERONLY = "serveronly";
 	public static final String CATEGORY_CLIENTONLY = "clientonly";
+	public static final String CATEGORY_KEYBINDS = "keybinds";
 	public static final String CATEGORY_SERVERS = "servers";
 	public static final String CATEGORY_CHANNELS = "channels";
 	public static final String CATEGORY_COMPAT = "compatibility";
@@ -90,6 +92,15 @@ public class ConfigurationHandler {
 		defaultDisplayFormat = displayFormats.get(DisplayFormatConfig.DEFAULT_FORMAT);
 	}
 	
+	public static void loadServices(File configDir) {
+		if(!configDir.exists()) {
+			configDir.mkdirs();
+		}
+		Configuration serviceConfig = new Configuration(new File(configDir, "services.cfg"));
+		ServiceConfig.setupDefaultServices(serviceConfig);
+		ServiceConfig.load(serviceConfig);
+	}
+	
 	public static void load(File configFile) {
 		boolean newConfigFile = !configFile.exists();
 		config = new Configuration(configFile);
@@ -100,7 +111,6 @@ public class ConfigurationHandler {
 		ScreenshotConfig.load(config);
 		DisplayConfig.load(config);
 		CompatibilityConfig.load(config);
-		ServiceConfig.load(config);
 		
 		config.save();
 	}
