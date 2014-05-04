@@ -65,6 +65,10 @@ eirairc:irc.gui.config.relayDeathMessages=Relay Death Messages: %s
 eirairc:irc.gui.config.relayMinecraftJoins=Relay Minecraft Joins: %s
 eirairc:irc.gui.config.relayIRCJoins=Relay IRC Joins: %s
 eirairc:irc.gui.config.relayNickChanges=Relay Nick Changes: %s
+eirairc:irc.gui.config.relayBroadcasts=Relay Broadcasts: %s
+eirairc:irc.gui.config.linkFilter=Filter Links: %s
+eirairc:irc.gui.config.autoWho=List Players on Join: %s
+eirairc:irc.gui.config.messageDisplay=Message Display: %s
 ## Server Config
 eirairc:irc.gui.editServer=EiraIRC - Edit Server
 eirairc:irc.gui.editServer.serverAddress=Server Address:
@@ -84,7 +88,7 @@ eirairc:irc.gui.settings.friendsIgnoreList=Friends / Ignore List
 eirairc:irc.gui.settings.twitch=Twitch Chat
 eirairc:irc.gui.settings.screenshots=Screenshots
 eirairc:irc.gui.settings.displaySettings=Display Settings
-eirairc:irc.gui.settings.botSettings=Bot Settings
+eirairc:irc.gui.settings.botSettings=Bot Profiles
 eirairc:irc.gui.settings.notifications=Notifications
 eirairc:irc.gui.settings.keybinds=Keybinds
 ## Twitch Config
@@ -138,10 +142,8 @@ eirairc:irc.gui.channelList.notConnected=§cNot Connected
 ## Display Settings
 eirairc:irc.gui.displaySettings=EiraIRC - Display Settings
 eirairc:irc.gui.displaySettings.recordingHud=Show Recording HUD: %s
-eirairc:irc.gui.displaySettings.messageDisplay=Message Display: %s
 ## Bot Settings
-eirairc:irc.gui.botSettings=EiraIRC - Bot Settings
-eirairc:irc.gui.botSettings.profile=Profile: %s
+eirairc:irc.gui.botSettings=EiraIRC - Profile Editor
 eirairc:irc.gui.botSettings.interOp=Enable InterOp: %s
 ## Channel Config
 eirairc:irc.gui.editChannel=EiraIRC - Edit Channel
@@ -150,13 +152,11 @@ eirairc:irc.gui.editChannel.password=Channel Password:
 eirairc:irc.gui.editChannel.muted=Muted: %s
 eirairc:irc.gui.editChannel.readOnly=Read Only: %s
 eirairc:irc.gui.editChannel.autoWho=List Users on Startup: %s
-eirairc:irc.gui.editChannel.autoWho=List Users on Startup: %s
 ## Global Settings
 eirairc:irc.gui.globalSettings=EiraIRC - Global Settings
 eirairc:irc.gui.globalSettings.nickname=Nickname:
 eirairc:irc.gui.globalSettings.saveCredentials=Save Credentials: %s
 eirairc:irc.gui.globalSettings.persistentConnection=Persistent Connection: %s
-eirairc:irc.gui.globalSettings.linkFilter=Filter Links: %s
 
 # Notifications
 eirairc:irc.notify.privateMessage=%s: %s

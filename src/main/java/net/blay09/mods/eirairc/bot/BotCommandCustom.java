@@ -16,14 +16,16 @@ public class BotCommandCustom implements IBotCommand {
 	private String command;
 	private boolean allowArgs;
 	private boolean runAsOp;
+	private boolean requireAuth;
 	private boolean broadcastResult;
 	
-	public BotCommandCustom(String name, String command, boolean allowArgs, boolean broadcastResult, boolean runAsOp) {
+	public BotCommandCustom(String name, String command, boolean allowArgs, boolean broadcastResult, boolean runAsOp, boolean requireAuth) {
 		this.name = name;
 		this.command = command;
 		this.allowArgs = allowArgs;
 		this.broadcastResult = broadcastResult;
 		this.runAsOp = runAsOp;
+		this.requireAuth = requireAuth;
 	}
 	
 	@Override
@@ -39,9 +41,13 @@ public class BotCommandCustom implements IBotCommand {
 	public boolean runAsOp() {
 		return runAsOp;
 	}
-
+	
 	@Override
 	public void processCommand(IIRCBot bot, IIRCChannel channel, IIRCUser user, String[] args) {
+		if(requireAuth && !bot.getProfile(channel).isInterOp(user.getAuthLogin())) {
+			user.notice(Utils.getLocalizedMessage("irc.bot.noPermission"));
+			return;
+		}
 		String message = command;
 		if(allowArgs) {
 			message += " " + Utils.joinArgs(args, 0).trim();

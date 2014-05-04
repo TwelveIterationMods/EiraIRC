@@ -5,6 +5,7 @@ package net.blay09.mods.eirairc.handler;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -22,7 +23,6 @@ import net.blay09.mods.eirairc.config.NotificationConfig;
 import net.blay09.mods.eirairc.config.ScreenshotConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.ServiceConfig;
-import net.blay09.mods.eirairc.config.ServiceSettings;
 import net.blay09.mods.eirairc.util.IRCResolver;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
@@ -50,14 +50,18 @@ public class ConfigurationHandler {
 
 	private static Configuration config;
 	private static Map<String, BotProfile> botProfiles = new HashMap<String, BotProfile>();
+	private static List<BotProfile> botProfileList = new ArrayList<BotProfile>();
 	private static BotProfile defaultBotProfile;
+	private static File botProfileDir;
 	private static final Map<String, DisplayFormatConfig> displayFormats = new HashMap<String, DisplayFormatConfig>();
+	private static List<DisplayFormatConfig> displayFormatList = new ArrayList<DisplayFormatConfig>();
 	private static DisplayFormatConfig defaultDisplayFormat;
 	
 	public static void loadBotProfiles(File profileDir) {
 		if(!profileDir.exists()) {
 			profileDir.mkdirs();
 		}
+		botProfileDir = profileDir;
 		BotProfile.setupDefaultProfiles(profileDir);
 		File[] files = profileDir.listFiles(new FilenameFilter() {
 			@Override
@@ -69,6 +73,7 @@ public class ConfigurationHandler {
 			BotProfile botProfile = new BotProfile(files[i]);
 			botProfile.loadCommands();
 			botProfiles.put(botProfile.getName(), botProfile);
+			botProfileList.add(botProfile);
 		}
 		defaultBotProfile = botProfiles.get(BotProfile.DEFAULT_CLIENT);
 	}
@@ -88,6 +93,7 @@ public class ConfigurationHandler {
 			DisplayFormatConfig dfc = new DisplayFormatConfig(files[i]);
 			dfc.loadFormats();
 			displayFormats.put(dfc.getName(), dfc);
+			displayFormatList.add(dfc);
 		}
 		defaultDisplayFormat = displayFormats.get(DisplayFormatConfig.DEFAULT_FORMAT);
 	}
@@ -245,6 +251,10 @@ public class ConfigurationHandler {
 		}
 		return botProfile;
 	}
+	
+	public static List<BotProfile> getBotProfiles() {
+		return botProfileList;
+	}
 
 	public static DisplayFormatConfig getDisplayFormat(String displayMode) {
 		DisplayFormatConfig displayFormat = displayFormats.get(displayMode);
@@ -254,8 +264,29 @@ public class ConfigurationHandler {
 		return displayFormat;
 	}
 
-	public static Collection<DisplayFormatConfig> getDisplayFormats() {
-		return displayFormats.values();
+	public static File getBotProfileDir() {
+		return botProfileDir;
+	}
+	
+	public static List<DisplayFormatConfig> getDisplayFormats() {
+		return displayFormatList;
+	}
+
+	public static void addBotProfile(BotProfile botProfile) {
+		botProfiles.put(botProfile.getName(), botProfile);
+		botProfileList.add(botProfile);
+	}
+	
+	public static void renameBotProfile(BotProfile botProfile, String newName) {
+		botProfiles.remove(botProfile.getName());
+		botProfile.setName(newName);
+		botProfiles.put(botProfile.getName(), botProfile);
+	}
+
+	public static void removeBotProfile(BotProfile botProfile) {
+		botProfiles.remove(botProfile.getName());
+		botProfileList.remove(botProfile);
+		botProfile.getFile().delete();
 	}
 
 }
