@@ -53,7 +53,7 @@ public class BotCommandCustom implements IBotCommand {
 	
 	@Override
 	public void processCommand(IIRCBot bot, IIRCChannel channel, IIRCUser user, String[] args) {
-		if(requireAuth && !bot.getProfile(channel).isInterOp(user.getAuthLogin())) {
+		if(requireAuth && (!bot.getProfile(channel).isInterOpAuth(user.getAuthLogin()))) {
 			user.notice(Utils.getLocalizedMessage("irc.bot.noPermission"));
 			return;
 		}

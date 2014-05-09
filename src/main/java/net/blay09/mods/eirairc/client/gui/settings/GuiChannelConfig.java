@@ -77,10 +77,10 @@ public class GuiChannelConfig extends GuiScreen {
 		btnProfilePrev = new GuiButton(4, leftX, topY + 25, 18, 20, "<");
 		buttonList.add(btnProfilePrev);
 		
-		btnProfile = new GuiButton(5, leftX + 22, topY + 25, 100, 20, "");
+		btnProfile = new GuiButton(5, leftX + 20, topY + 25, 100, 20, "");
 		buttonList.add(btnProfile);
 		
-		btnProfileNext = new GuiButton(6, leftX + 124, topY + 25, 18, 20, ">");
+		btnProfileNext = new GuiButton(6, leftX + 122, topY + 25, 18, 20, ">");
 		buttonList.add(btnProfileNext);
 		
 		btnSave = new GuiButton(1, rightX, topY + 160, 100, BUTTON_HEIGHT, Utils.getLocalizedMessage("irc.gui.save"));

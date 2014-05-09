@@ -106,7 +106,6 @@ public class BotProfile implements IBotProfile {
 	public void loadCommands() {
 		commands.clear();
 		registerCommand(new BotCommandAlias());
-		registerCommand(new BotCommandAuth());
 		registerCommand(new BotCommandHelp());
 		registerCommand(new BotCommandHelp());
 		registerCommand(new BotCommandMessage());
@@ -123,6 +122,8 @@ public class BotProfile implements IBotProfile {
 			}
 			commands.remove(Utils.unquote(disabledNativeCommands[i]));
 		}
+		
+		registerCommand(new BotCommandAuth());
 		
 		ConfigCategory configCategory = config.getCategory(CATEGORY_COMMANDS);
 		for(ConfigCategory subCategory : configCategory.getChildren()) {
@@ -235,8 +236,8 @@ public class BotProfile implements IBotProfile {
 	}
 
 	@Override
-	public boolean isInterOp(String authName) {
-		return interOp && interOpAuthList.contains(authName);
+	public boolean isInterOpAuth(String authName) {
+		return interOpAuthList.contains(authName);
 	}
 
 	@Override

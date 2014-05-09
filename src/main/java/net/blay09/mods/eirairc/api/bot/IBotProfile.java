@@ -20,7 +20,7 @@ public interface IBotProfile {
 	public boolean isReadOnly();
 	public String getDisplayFormat();
 	public boolean isInterOp();
-	public boolean isInterOp(String authName);
+	public boolean isInterOpAuth(String authName);
 	public String[] getInterOpBlacklist();
 	
 }
