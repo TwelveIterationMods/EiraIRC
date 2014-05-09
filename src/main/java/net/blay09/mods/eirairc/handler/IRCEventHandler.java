@@ -52,7 +52,7 @@ public class IRCEventHandler {
 			String mcMessage = Utils.getLocalizedMessage("irc.display.irc.joinMsg", event.channel.getName(), event.user.getName());
 			Utils.addMessageToChat(mcMessage);
 		}
-		if(event.bot.getBoolean(event.channel, IBotProfile.KEY_AUTOWHO, false)) {
+		if(event.bot.getBoolean(event.channel, IBotProfile.KEY_AUTOPLAYERS, false)) {
 			Utils.sendPlayerList(event.user);
 		}
 	}
@@ -108,7 +108,7 @@ public class IRCEventHandler {
 		} else {
 			mcMessage = ConfigHelper.getDisplayFormat(event.bot.getDisplayFormat(event.sender)).mcPrivateMessage;
 		}
-		mcMessage = Utils.formatMessageNew(mcMessage, event.connection, null, event.sender, message);
+		mcMessage = Utils.formatMessageNew(mcMessage, event.connection, null, event.sender, message, !event.isEmote);
 		String notifyMsg = mcMessage;
 		if(notifyMsg.length() > 42) {
 			notifyMsg = notifyMsg.substring(0, 42) + "...";
@@ -140,7 +140,7 @@ public class IRCEventHandler {
 		} else {
 			mcMessage = ConfigHelper.getDisplayFormat(event.bot.getDisplayFormat(event.channel)).mcChannelMessage;
 		}
-		mcMessage = Utils.formatMessageNew(mcMessage, event.connection, event.channel, event.sender, message);
+		mcMessage = Utils.formatMessageNew(mcMessage, event.connection, event.channel, event.sender, message, !event.isEmote);
 		Utils.addMessageToChat(mcMessage);
 	}
 

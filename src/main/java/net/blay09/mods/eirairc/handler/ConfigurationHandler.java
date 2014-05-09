@@ -75,7 +75,23 @@ public class ConfigurationHandler {
 			botProfiles.put(botProfile.getName(), botProfile);
 			botProfileList.add(botProfile);
 		}
-		defaultBotProfile = botProfiles.get(BotProfile.DEFAULT_CLIENT);
+		findDefaultBotProfile();
+	}
+	
+	public static void findDefaultBotProfile() {
+		defaultBotProfile = botProfiles.get("Client");
+		if(defaultBotProfile == null) {
+			for(BotProfile botProfile : botProfiles.values()) {
+				if(botProfile.isDefaultProfile()) {
+					defaultBotProfile = botProfile;
+					return;
+				}
+			}
+			if(defaultBotProfile == null) {
+				Iterator<BotProfile> it = botProfiles.values().iterator();
+				defaultBotProfile = it.next();
+			}
+		}
 	}
 	
 	public static void loadDisplayFormats(File formatDir) {
@@ -287,6 +303,10 @@ public class ConfigurationHandler {
 		botProfiles.remove(botProfile.getName());
 		botProfileList.remove(botProfile);
 		botProfile.getFile().delete();
+	}
+
+	public static BotProfile getDefaultBotProfile() {
+		return defaultBotProfile;
 	}
 
 }

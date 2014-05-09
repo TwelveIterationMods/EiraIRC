@@ -67,9 +67,13 @@ eirairc:irc.gui.config.relayIRCJoins=Relay IRC Joins: %s
 eirairc:irc.gui.config.relayNickChanges=Relay Nick Changes: %s
 eirairc:irc.gui.config.relayBroadcasts=Relay Broadcasts: %s
 eirairc:irc.gui.config.linkFilter=Filter Links: %s
-eirairc:irc.gui.config.autoWho=List Players on Join: %s
+eirairc:irc.gui.config.autoPlayers=Send Players on Join: %s
 eirairc:irc.gui.config.messageDisplay=Message Display: %s
 eirairc:irc.gui.config.interOp=Enable InterOp: %s
+eirairc:irc.gui.config.profile=Profile
+eirairc:irc.gui.config.autoWho=List Users on Startup: %s
+eirairc:irc.gui.config.muted=Muted: %s
+eirairc:irc.gui.config.readOnly=Read Only: %s
 ## Server Config
 eirairc:irc.gui.editServer=EiraIRC - Edit Server
 eirairc:irc.gui.editServer.serverAddress=Server Address:
@@ -145,14 +149,18 @@ eirairc:irc.gui.displaySettings=EiraIRC - Display Settings
 eirairc:irc.gui.displaySettings.recordingHud=Show Recording HUD: %s
 ## Bot Settings
 eirairc:irc.gui.botSettings=EiraIRC - Profile Editor
+## Bot Commands
 eirairc:irc.gui.botCommands=EiraIRC - Bot Commands
+## Bot Command
+eirairc:irc.gui.botCommand=EiraIRC - Edit Custom Command
+eirairc:irc.gui.botCommand.allowArgs=Allow Arguments: %s
+eirairc:irc.gui.botCommand.runAsOp=Run as OP: %s
+eirairc:irc.gui.botCommand.requireAuth=Require Authentication: %s
+eirairc:irc.gui.botCommand.broadcastResult=Broadcast Result: %s
 ## Channel Config
 eirairc:irc.gui.editChannel=EiraIRC - Edit Channel
 eirairc:irc.gui.editChannel.name=Channel Name:
 eirairc:irc.gui.editChannel.password=Channel Password:
-eirairc:irc.gui.editChannel.muted=Muted: %s
-eirairc:irc.gui.editChannel.readOnly=Read Only: %s
-eirairc:irc.gui.editChannel.autoWho=List Users on Startup: %s
 ## Global Settings
 eirairc:irc.gui.globalSettings=EiraIRC - Global Settings
 eirairc:irc.gui.globalSettings.nickname=Nickname:

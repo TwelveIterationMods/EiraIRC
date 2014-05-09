@@ -104,6 +104,7 @@ public class BotProfile implements IBotProfile {
 	}
 	
 	public void loadCommands() {
+		commands.clear();
 		registerCommand(new BotCommandAlias());
 		registerCommand(new BotCommandAuth());
 		registerCommand(new BotCommandHelp());
@@ -131,7 +132,7 @@ public class BotProfile implements IBotProfile {
 			boolean runAsOp = config.get(subCategory.getQualifiedName(), "runAsOp", false).getBoolean(false);
 			boolean broadcastResult = config.get(subCategory.getQualifiedName(), "broadcastResult", false).getBoolean(false);
 			boolean requireAuth = config.get(subCategory.getQualifiedName(), "requireAuth", runAsOp).getBoolean(runAsOp);
-			registerCommand(new BotCommandCustom(commandName, command, allowArgs, broadcastResult, runAsOp, requireAuth));
+			registerCommand(new BotCommandCustom(subCategory.getQualifiedName(), commandName, command, allowArgs, broadcastResult, runAsOp, requireAuth));
 		}
 	}
 	
@@ -166,7 +167,7 @@ public class BotProfile implements IBotProfile {
 		config.get(CATEGORY_SETTINGS, "name", "").set("Client");
 		config.get(CATEGORY_SETTINGS, "isDefaultProfile", true).set(true);
 		config.get(CATEGORY_SETTINGS, KEY_ALLOWPRIVMSG, true).set(true);
-		config.get(CATEGORY_SETTINGS, KEY_AUTOWHO, false).set(false);
+		config.get(CATEGORY_SETTINGS, KEY_AUTOPLAYERS, false).set(false);
 		config.get(CATEGORY_SETTINGS, KEY_RELAYIRCJOINLEAVE, true).set(true);
 		config.get(CATEGORY_SETTINGS, KEY_RELAYNICKCHANGES, true).set(true);
 		
@@ -179,16 +180,19 @@ public class BotProfile implements IBotProfile {
 		config.get(CATEGORY_SETTINGS, "name", "").set("Server");
 		config.get(CATEGORY_SETTINGS, "isDefaultProfile", true).set(true);
 		config.get(CATEGORY_SETTINGS, KEY_ALLOWPRIVMSG, false).set(false);
-		config.get(CATEGORY_SETTINGS, KEY_AUTOWHO, true).set(true);
+		config.get(CATEGORY_SETTINGS, KEY_AUTOPLAYERS, true).set(true);
 		config.get(CATEGORY_SETTINGS, KEY_RELAYIRCJOINLEAVE, true).set(true);
 		config.get(CATEGORY_SETTINGS, KEY_RELAYNICKCHANGES, true).set(true);
+		config.get(CATEGORY_SETTINGS, KEY_RELAYBROADCASTS, true).set(true);
+		config.get(CATEGORY_SETTINGS, KEY_RELAYDEATHMESSAGES, true).set(true);
+		config.get(CATEGORY_SETTINGS, KEY_RELAYMCJOINLEAVE, true).set(true);
 	}
 	
 	public void defaultTwitch() {
 		config.get(CATEGORY_SETTINGS, "name", "").set("Twitch");
 		config.get(CATEGORY_SETTINGS, "isDefaultProfile", true).set(true);
 		config.get(CATEGORY_SETTINGS, KEY_ALLOWPRIVMSG, false).set(false);
-		config.get(CATEGORY_SETTINGS, KEY_AUTOWHO, false).set(false);
+		config.get(CATEGORY_SETTINGS, KEY_AUTOPLAYERS, false).set(false);
 		config.get(CATEGORY_SETTINGS, KEY_RELAYIRCJOINLEAVE, false).set(false);
 		config.get(CATEGORY_SETTINGS, KEY_RELAYNICKCHANGES, false).set(false);
 		
@@ -270,6 +274,46 @@ public class BotProfile implements IBotProfile {
 
 	public Collection<IBotCommand> getCommands() {
 		return commands.values();
+	}
+
+	public void deleteCustomCommand(BotCommandCustom botCommand) {
+		commands.remove(botCommand.getCommandName());
+		if(botCommand.getCategoryName() != null) {
+			config.removeCategory(config.getCategory(botCommand.getCategoryName()));
+		}
+		save();
+	}
+
+	public void addCustomCommand(BotCommandCustom botCommand) {
+		String categoryName = botCommand.getCategoryName();
+		if(categoryName == null) {
+			categoryName = CATEGORY_COMMANDS + Configuration.CATEGORY_SPLITTER + Configuration.allowedProperties.retainFrom(botCommand.getCommandName()).replace('.', '_');
+		}
+		config.get(categoryName, "name", "").set(botCommand.getCommandName());
+		config.get(categoryName, "command", "").set(botCommand.getMinecraftCommand());
+		config.get(categoryName, "allowArgs", "").set(botCommand.allowsArgs());
+		config.get(categoryName, "runAsOp", "").set(botCommand.isRunAsOp());
+		config.get(categoryName, "broadcastResult", "").set(botCommand.isBroadcastResult());
+		config.get(categoryName, "requireAuth", "").set(botCommand.requiresAuth());
+		registerCommand(botCommand);
+		save();
+	}
+
+	public void setDisabledNativeCommands(String[] disabledCommands) {
+		this.disabledNativeCommands = disabledCommands;
+		config.get(CATEGORY_COMMANDS, "disabledNativeCommands", new String[0]).set(disabledCommands);
+	}
+
+	public String[] getDisabledNativeCommands() {
+		return disabledNativeCommands;
+	}
+
+	public void setMuted(boolean muted) {
+		this.muted = muted;
+	}
+	
+	public void setReadOnly(boolean readOnly) {
+		this.readOnly = readOnly;
 	}
 
 }

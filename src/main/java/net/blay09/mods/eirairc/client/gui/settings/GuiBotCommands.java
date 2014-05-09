@@ -12,9 +12,11 @@ import net.blay09.mods.eirairc.config.BotProfile;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.input.Keyboard;
 
@@ -30,6 +32,7 @@ public class GuiBotCommands extends GuiScreen {
 	private GuiAdvancedTextField txtDisabledInterOpCommands;
 	private GuiAdvancedTextField txtDisabledCommands;
 	private GuiList listCommands;
+	private GuiButton btnSave;
 	private GuiButton btnBack;
 	
 	public GuiBotCommands(GuiScreen parentScreen, BotProfile botProfile) {
@@ -44,7 +47,7 @@ public class GuiBotCommands extends GuiScreen {
 		int rightX = width / 2 + 2;
 		int topY = height / 2 - 60;
 		
-		btnInterOp = new GuiButton(1, leftX, topY - 6, BUTTON_WIDTH, BUTTON_HEIGHT, "InterOp: ???");
+		btnInterOp = new GuiButton(2, leftX, topY - 1, BUTTON_WIDTH, BUTTON_HEIGHT, "InterOp: ???");
 		btnInterOp.enabled = false;
 		buttonList.add(btnInterOp);
 
@@ -55,8 +58,11 @@ public class GuiBotCommands extends GuiScreen {
 		
 		listCommands = new GuiList(leftX, topY + 40, BUTTON_WIDTH, 100, 18);
 		
-		btnBack = new GuiButton(0, width / 2 - 100, topY + 150, 200, 20, Utils.getLocalizedMessage("irc.gui.back"));
+		btnBack = new GuiButton(0, width / 2 - 102, topY + 150, 100, BUTTON_HEIGHT, Utils.getLocalizedMessage("irc.gui.back"));
 		buttonList.add(btnBack);
+		
+		btnSave = new GuiButton(1, width / 2 + 2, topY + 150, 100, BUTTON_HEIGHT, Utils.getLocalizedMessage("irc.gui.save"));
+		buttonList.add(btnSave);
 
 		loadFromProfile();
 	}
@@ -71,12 +77,15 @@ public class GuiBotCommands extends GuiScreen {
 		if(!botProfile.isInterOp()) {
 			txtDisabledInterOpCommands.setDefaultText("InterOp is not enabled.", true);
 		}
+		txtDisabledCommands.setText(Utils.joinStrings(botProfile.getDisabledNativeCommands(), ", "));
 		for(IBotCommand command : botProfile.getCommands()) {
 			if(command instanceof BotCommandCustom) {
+				final BotCommandCustom customCommand = (BotCommandCustom) command;
 				listCommands.addEntry(new GuiListTextEntry(fontRendererObj, command.getCommandName(), listCommands.getEntryHeight(), Globals.TEXT_COLOR) {
 					@Override
 					public void setSelected(boolean selected) {
-						
+						Minecraft.getMinecraft().displayGuiScreen(new GuiBotCommand(GuiBotCommands.this, botProfile, customCommand));
+						Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0f));
 					}
 				});
 			}
@@ -85,6 +94,7 @@ public class GuiBotCommands extends GuiScreen {
 			@Override
 			public void setSelected(boolean selected) {
 				Minecraft.getMinecraft().displayGuiScreen(new GuiBotCommand(GuiBotCommands.this, botProfile, new BotCommandCustom()));
+				Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0f));
 			}
 		});
 	}
@@ -93,7 +103,15 @@ public class GuiBotCommands extends GuiScreen {
 	public void actionPerformed(GuiButton button) {
 		if(button == btnBack) {
 			Minecraft.getMinecraft().displayGuiScreen(parentScreen);
-			return;
+		} else if(button == btnSave) {
+			Minecraft.getMinecraft().displayGuiScreen(parentScreen);
+			String[] disabledCommands = txtDisabledCommands.getText().split(",");
+			for(int i = 0; i < disabledCommands.length; i++) {
+				disabledCommands[i] = disabledCommands[i].trim();
+			}
+			botProfile.setDisabledNativeCommands(disabledCommands);
+			botProfile.loadCommands();
+			botProfile.save();
 		}
 	}
 	

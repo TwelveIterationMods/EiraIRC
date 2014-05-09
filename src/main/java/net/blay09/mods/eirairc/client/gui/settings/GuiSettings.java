@@ -86,7 +86,7 @@ public class GuiSettings extends GuiScreen {
 		} else if(button == btnDisplaySettings) {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiDisplaySettings());
 		} else if(button == btnBotSettings) {
-			Minecraft.getMinecraft().displayGuiScreen(new GuiBotSettings(this));
+			Minecraft.getMinecraft().displayGuiScreen(new GuiBotProfiles(this));
 		} else if(button == btnBack) {
 			Minecraft.getMinecraft().displayGuiScreen(null);
 		}

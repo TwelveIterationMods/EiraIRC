@@ -35,7 +35,7 @@ public class BotCommandAlias implements IBotCommand {
 		String alias = args[0];
 		List<EntityPlayer> playerEntityList = MinecraftServer.getServer().getConfigurationManager().playerEntityList;
 		for(EntityPlayer entity : playerEntityList) {
-			if(Utils.getAliasForPlayer(entity, false).equals(alias) || Utils.getAliasForPlayer(entity, true).equals(alias)) {
+			if(Utils.getNickGame(entity, false).equals(alias) || Utils.getNickIRC(entity).equals(alias)) {
 				user.notice(Utils.getLocalizedMessage("irc.alias.lookup", alias, entity.getCommandSenderName()));
 				return;
 			}

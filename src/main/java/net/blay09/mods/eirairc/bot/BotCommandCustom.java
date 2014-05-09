@@ -12,6 +12,7 @@ import net.minecraft.server.MinecraftServer;
 
 public class BotCommandCustom implements IBotCommand {
 
+	private String catName;
 	private String name = "";
 	private String command = "";
 	private boolean allowArgs;
@@ -22,13 +23,18 @@ public class BotCommandCustom implements IBotCommand {
 	public BotCommandCustom() {
 	}
 	
-	public BotCommandCustom(String name, String command, boolean allowArgs, boolean broadcastResult, boolean runAsOp, boolean requireAuth) {
+	public BotCommandCustom(String catName, String name, String command, boolean allowArgs, boolean broadcastResult, boolean runAsOp, boolean requireAuth) {
+		this.catName = catName;
 		this.name = name;
 		this.command = command;
 		this.allowArgs = allowArgs;
 		this.broadcastResult = broadcastResult;
 		this.runAsOp = runAsOp;
 		this.requireAuth = requireAuth;
+	}
+	
+	public String getCategoryName() {
+		return catName;
 	}
 	
 	@Override
@@ -53,7 +59,7 @@ public class BotCommandCustom implements IBotCommand {
 		}
 		String message = command;
 		if(allowArgs) {
-			message += " " + Utils.joinArgs(args, 0).trim();
+			message += " " + Utils.joinStrings(args, " ", 0).trim();
 		}
 		bot.resetLog();
 		bot.setOpEnabled(runAsOp);
@@ -84,6 +90,30 @@ public class BotCommandCustom implements IBotCommand {
 
 	public String getMinecraftCommand() {
 		return command;
+	}
+
+	public void setRequireAuth(boolean requireAuth) {
+		this.requireAuth = requireAuth;
+	}
+	
+	public void setAllowArgs(boolean allowArgs) {
+		this.allowArgs = allowArgs;
+	}
+	
+	public void setRunAsOp(boolean runAsOp) {
+		this.runAsOp = runAsOp;
+	}
+	
+	public void setBroadcastResult(boolean broadcastResult) {
+		this.broadcastResult = broadcastResult;
+	}
+
+	public void setCommandName(String name) {
+		this.name = name;
+	}
+	
+	public void setMinecraftCommand(String command) {
+		this.command = command;
 	}
 
 }

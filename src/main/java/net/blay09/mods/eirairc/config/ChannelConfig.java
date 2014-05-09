@@ -19,6 +19,7 @@ public class ChannelConfig {
 	private String password;
 	private boolean autoWho;
 	private boolean autoJoin = true;
+	private String botProfile;
 	
 	public ChannelConfig(ServerConfig serverConfig, String name) {
 		this.serverConfig = serverConfig;
@@ -50,6 +51,7 @@ public class ChannelConfig {
 		password = Utils.unquote(config.get(categoryName, "password", "").getString());
 		autoJoin = config.get(categoryName, "autoJoin", autoJoin).getBoolean(autoJoin);
 		autoWho = config.get(categoryName, "autoWho", autoWho).getBoolean(autoWho);
+		botProfile = Utils.unquote(config.get(categoryName, "botProfile", "").getString());
 	}
 
 	public void save(Configuration config, ConfigCategory category) {
@@ -58,6 +60,7 @@ public class ChannelConfig {
 		config.get(categoryName, "password", "").set(Utils.quote(GlobalConfig.saveCredentials && password != null ? password : ""));
 		config.get(categoryName, "autoJoin", autoJoin).set(autoJoin);
 		config.get(categoryName, "autoWho", autoWho).set(autoWho);
+		config.get(categoryName, "botProfile", "").set(Utils.quote(botProfile));
 	}
 
 	public void handleConfigCommand(ICommandSender sender, String key) {
@@ -109,6 +112,14 @@ public class ChannelConfig {
 		if(option.equals("autoJoin") || option.equals("autoWho")) {
 			Utils.addBooleansToList(list);
 		}
+	}
+
+	public String getBotProfile() {
+		return botProfile;
+	}
+
+	public void setBotProfile(String botProfile) {
+		this.botProfile = botProfile;
 	}
 	
 }

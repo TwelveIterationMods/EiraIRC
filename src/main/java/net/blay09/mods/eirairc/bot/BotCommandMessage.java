@@ -44,7 +44,7 @@ public class BotCommandMessage implements IBotCommand {
 		if(entityPlayer == null) {
 			List<EntityPlayer> playerEntityList = MinecraftServer.getServer().getConfigurationManager().playerEntityList;
 			for(EntityPlayer entity : playerEntityList) {
-				if(Utils.getAliasForPlayer(entity, false).equals(playerName) || Utils.getAliasForPlayer(entity, true).equals(playerName)) {
+				if(Utils.getNickGame(entity, false).equals(playerName) || Utils.getNickIRC(entity).equals(playerName)) {
 					entityPlayer = entity;
 				}
 			}
@@ -53,13 +53,13 @@ public class BotCommandMessage implements IBotCommand {
 				return;
 			}
 		}
-		String message = Utils.joinArgs(args, 1);
+		String message = Utils.joinStrings(args, " ", 1);
 		if(bot.getBoolean(user, IBotProfile.KEY_LINKFILTER, false)) {
 			message = Utils.filterLinks(message);
 		}
 		message = Utils.filterCodes(message);
 		message = ChatAllowedCharacters.filerAllowedCharacters(message);
-		String mcMessage = Utils.formatMessageNew(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(user)).mcPrivateMessage, bot.getConnection(), null, user, message);
+		String mcMessage = Utils.formatMessageNew(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(user)).mcPrivateMessage, bot.getConnection(), null, user, message, true);
 		String notifyMsg = mcMessage;
 		if(notifyMsg.length() > 42) {
 			notifyMsg = notifyMsg.substring(0, 42) + "...";

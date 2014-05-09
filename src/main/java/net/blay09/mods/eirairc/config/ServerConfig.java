@@ -154,6 +154,7 @@ public class ServerConfig {
 		nickServPassword = Utils.unquote(config.get(categoryName, "nickServPassword", "").getString());
 		serverPassword = Utils.unquote(config.get(categoryName, "serverPassword", "").getString());
 		autoConnect = config.get(categoryName, "autoConnect", autoConnect).getBoolean(autoConnect);
+		botProfile = Utils.unquote(config.get(categoryName, "botProfile", "").getString());
 		
 		String channelsCategoryName = categoryName + Configuration.CATEGORY_SPLITTER + ConfigurationHandler.CATEGORY_CHANNELS;
 		ConfigCategory channelsCategory = config.getCategory(channelsCategoryName);
@@ -177,6 +178,7 @@ public class ServerConfig {
 		config.get(categoryName, "nickServPassword", "").set(Utils.quote(GlobalConfig.saveCredentials && nickServPassword != null ? nickServPassword : ""));
 		config.get(categoryName, "serverPassword", "").set(Utils.quote(GlobalConfig.saveCredentials && serverPassword != null ? serverPassword : ""));
 		config.get(categoryName, "autoConnect", autoConnect).set(autoConnect);
+		config.get(categoryName, "botProfile", "").set(Utils.quote(botProfile != null ? botProfile : ""));
 		
 		String channelsCategoryName = categoryName + Configuration.CATEGORY_SPLITTER + ConfigurationHandler.CATEGORY_CHANNELS;
 		int c = 0;
@@ -252,6 +254,10 @@ public class ServerConfig {
 
 	public String getBotProfile() {
 		return botProfile;
+	}
+
+	public void setBotProfile(String botProfile) {
+		this.botProfile = botProfile;
 	}
 
 }

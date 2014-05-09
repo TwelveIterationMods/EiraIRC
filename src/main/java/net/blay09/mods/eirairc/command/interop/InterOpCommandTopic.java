@@ -45,7 +45,7 @@ public class InterOpCommandTopic extends SubCommand {
 			Utils.sendLocalizedMessage(sender, "irc.interop.disabled");
 			return true;
 		}
-		String topic = Utils.joinArgs(args, 1).trim();
+		String topic = Utils.joinStrings(args, " ", 1).trim();
 		if(topic.isEmpty()) {
 			throw new WrongUsageException(getCommandUsage(sender));
 		}

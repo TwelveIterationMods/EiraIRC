@@ -3,8 +3,12 @@
 
 package net.blay09.mods.eirairc.client.gui.settings;
 
+import java.util.List;
+
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.client.gui.GuiAdvancedTextField;
+import net.blay09.mods.eirairc.client.gui.GuiToggleButton;
+import net.blay09.mods.eirairc.config.BotProfile;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
@@ -27,43 +31,62 @@ public class GuiChannelConfig extends GuiScreen {
 	private ChannelConfig config;
 	private GuiButton btnCancel;
 	private GuiButton btnSave;
-	private GuiButton btnAutoJoin;
-	private GuiButton btnAutoWho;
+	private GuiButton btnProfilePrev;
+	private GuiButton btnProfile;
+	private GuiButton btnProfileNext;
+	private GuiToggleButton btnAutoJoin;
+	private GuiToggleButton btnAutoWho;
 	
 	private GuiTextField txtName;
 	private GuiAdvancedTextField txtChannelPassword;
 	
-	private boolean autoJoin;
-	private boolean autoWho;
+	private List<BotProfile> profileList;
+	private int currentProfileIdx;
+	private String currentProfile;
 	
 	public GuiChannelConfig(GuiScreen listParentScreen, ServerConfig serverConfig) {
 		this.listParentScreen = listParentScreen;
 		this.serverConfig = serverConfig;
+		profileList = ConfigurationHandler.getBotProfiles();
 	}
 	
 	public GuiChannelConfig(GuiScreen listParentScreen, ChannelConfig config) {
 		this.listParentScreen = listParentScreen;
 		this.config = config;
 		serverConfig = config.getServerConfig();
+		profileList = ConfigurationHandler.getBotProfiles();
 	}
 	
 	@Override
 	public void initGui() {
+		int leftX = width / 2 - 146;
+		int rightX = width / 2 + 3;
+		int topY = height / 2 - 85;
+		
 		Keyboard.enableRepeatEvents(true);
-		txtName = new GuiTextField(fontRendererObj, width / 2 - 106, height / 2 - 85, 100, 15);
-		txtChannelPassword = new GuiAdvancedTextField(fontRendererObj, width / 2 + 6, height / 2 - 85, 100, 15);
+		txtName = new GuiTextField(fontRendererObj, leftX, topY, 140, 15);
+		txtChannelPassword = new GuiAdvancedTextField(fontRendererObj, rightX, topY, 140, 15);
 		txtChannelPassword.setDefaultPasswordChar();
 		
-		btnAutoJoin = new GuiButton(3, width / 2 + 3, height / 2 - 65, BUTTON_WIDTH, BUTTON_HEIGHT, "");
+		btnAutoJoin = new GuiToggleButton(2, rightX, topY + 25, BUTTON_WIDTH, BUTTON_HEIGHT, "irc.gui.config.joinStartup");
 		buttonList.add(btnAutoJoin);
 		
-		btnAutoWho = new GuiButton(10, width / 2 + 3, height / 2 + 10, BUTTON_WIDTH, BUTTON_HEIGHT, "");
+		btnAutoWho = new GuiToggleButton(3, rightX, topY + 50, BUTTON_WIDTH, BUTTON_HEIGHT, "irc.gui.config.autoWho");
 		buttonList.add(btnAutoWho);
 		
-		btnSave = new GuiButton(1, width / 2 + 3, height / 2 + 65, 100, 20, Utils.getLocalizedMessage("irc.gui.save"));
+		btnProfilePrev = new GuiButton(4, leftX, topY + 25, 18, 20, "<");
+		buttonList.add(btnProfilePrev);
+		
+		btnProfile = new GuiButton(5, leftX + 22, topY + 25, 100, 20, "");
+		buttonList.add(btnProfile);
+		
+		btnProfileNext = new GuiButton(6, leftX + 124, topY + 25, 18, 20, ">");
+		buttonList.add(btnProfileNext);
+		
+		btnSave = new GuiButton(1, rightX, topY + 160, 100, BUTTON_HEIGHT, Utils.getLocalizedMessage("irc.gui.save"));
 		buttonList.add(btnSave);
 		
-		btnCancel = new GuiButton(0, width / 2 - 103, height / 2 + 65, 100, 20, Utils.getLocalizedMessage("irc.gui.cancel"));
+		btnCancel = new GuiButton(0, leftX + 40, topY + 160, 100, BUTTON_HEIGHT, Utils.getLocalizedMessage("irc.gui.cancel"));
 		buttonList.add(btnCancel);
 		
 		loadFromConfig();
@@ -76,15 +99,27 @@ public class GuiChannelConfig extends GuiScreen {
 	
 	@Override
 	public void updateScreen() {
+		super.updateScreen();
 		txtName.updateCursorCounter();
 		txtChannelPassword.updateCursorCounter();
+	}
+	
+	private void nextProfile(int dir) {
+		currentProfileIdx += dir;
+		if(currentProfileIdx >= profileList.size()) {
+			currentProfileIdx = 0;
+		} else if(currentProfileIdx < 0) {
+			currentProfileIdx = profileList.size() - 1;
+		}
+		currentProfile = profileList.get(currentProfileIdx).getName();
+		updateButtons();
 	}
 	
 	@Override
 	public void drawScreen(int par1, int par2, float par3) {
 		drawBackground(0);
 		drawCenteredString(fontRendererObj, Utils.getLocalizedMessage("irc.gui.editChannel"), width / 2, height / 2 - 115, Globals.TEXT_COLOR);
-		fontRendererObj.drawString(Utils.getLocalizedMessage("irc.gui.editChannel.name"), width / 2 - 106, height / 2 - 100, Globals.TEXT_COLOR);
+		fontRendererObj.drawString(Utils.getLocalizedMessage("irc.gui.editChannel.name"), width / 2 - 146, height / 2 - 100, Globals.TEXT_COLOR);
 		txtName.drawTextBox();
 		fontRendererObj.drawString(Utils.getLocalizedMessage("irc.gui.editChannel.password"), width / 2 + 6, height / 2 - 100, Globals.TEXT_COLOR);
 		txtChannelPassword.drawTextBox();
@@ -120,28 +155,26 @@ public class GuiChannelConfig extends GuiScreen {
 		} else {
 			btnSave.enabled = false;
 		}
-		final String yes = Utils.getLocalizedMessage("irc.gui.yes");
-		final String no = Utils.getLocalizedMessage("irc.gui.no");
-		btnAutoJoin.displayString = Utils.getLocalizedMessage("irc.gui.config.joinStartup", (autoJoin ? yes : no));
-		btnAutoWho.displayString = Utils.getLocalizedMessage("irc.gui.editChannel.autoWho", (autoWho ? yes : no));
+		btnProfile.displayString = currentProfile;
 	}
 	
 	@Override
 	public void actionPerformed(GuiButton button) {
 		if(button == btnSave) {
 			saveToConfig();
-			if(autoJoin && EiraIRC.instance.isConnectedTo(serverConfig.getHost())) {
+			if(btnAutoJoin.getState() && EiraIRC.instance.isConnectedTo(serverConfig.getHost())) {
 				EiraIRC.instance.getConnection(serverConfig.getHost()).join(config.getName(), config.getPassword());
 			}
 			Minecraft.getMinecraft().displayGuiScreen(new GuiChannelList(listParentScreen, serverConfig));
 		} else if(button == btnCancel) {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiChannelList(listParentScreen, serverConfig));
-		} else if(button == btnAutoJoin) {
-			autoJoin = !autoJoin;
-			updateButtons();
-		} else if(button == btnAutoWho) {
-			autoWho = !autoWho;
-			updateButtons();
+		} else if(button == btnProfilePrev) {
+			nextProfile(-1);
+		} else if(button == btnProfileNext) {
+			nextProfile(1);
+		} else if(button == btnProfile) {
+			saveToConfig();
+			Minecraft.getMinecraft().displayGuiScreen(new GuiBotProfiles(this, txtName.getText().isEmpty() ? config.getName() : txtName.getText(), ConfigurationHandler.getBotProfile(currentProfile)));
 		}
 	}
 	
@@ -149,11 +182,19 @@ public class GuiChannelConfig extends GuiScreen {
 		if(config != null) {
 			txtName.setText(config.getName());
 			txtChannelPassword.setText(config.getPassword() != null ? config.getPassword() : "");
-			autoJoin = config.isAutoJoin();
-			autoWho = config.isAutoWho();
+			btnAutoJoin.setState(config.isAutoJoin());
+			btnAutoWho.setState(config.isAutoWho());
+			currentProfile = config.getBotProfile();
 		} else {
-			autoJoin = true;
-			autoWho = false;
+			btnAutoJoin.setState(true);
+			btnAutoWho.setState(false);
+			currentProfile = serverConfig.getBotProfile();
+		}
+		for(int i = 0; i < profileList.size(); i++) {
+			if(profileList.get(i).getName().equals(currentProfile)) {
+				currentProfileIdx = i;
+				break;
+			}
 		}
 		updateButtons();
 	}
@@ -166,8 +207,9 @@ public class GuiChannelConfig extends GuiScreen {
 			config = serverConfig.getChannelConfig(txtName.getText());
 		}
 		config.setPassword(txtChannelPassword.getText());
-		config.setAutoJoin(autoJoin);
-		config.setAutoWho(autoWho);
+		config.setAutoJoin(btnAutoJoin.getState());
+		config.setAutoWho(btnAutoWho.getState());
+		config.setBotProfile(currentProfile);
 		serverConfig.addChannelConfig(config);
 		ConfigurationHandler.save();
 	}

@@ -23,16 +23,13 @@ import net.blay09.mods.eirairc.api.IIRCConnection;
 import net.blay09.mods.eirairc.api.IIRCContext;
 import net.blay09.mods.eirairc.api.IIRCUser;
 import net.blay09.mods.eirairc.bot.EiraIRCBot;
-import net.blay09.mods.eirairc.config.BotProfile;
 import net.blay09.mods.eirairc.config.DisplayConfig;
 import net.blay09.mods.eirairc.config.GlobalConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.ServiceConfig;
 import net.blay09.mods.eirairc.config.ServiceSettings;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
-import net.blay09.mods.eirairc.irc.IRCChannel;
 import net.blay09.mods.eirairc.irc.IRCConnection;
-import net.blay09.mods.eirairc.irc.IRCUser;
 import net.blay09.mods.eirairc.net.EiraPlayerInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.ICommandSender;
@@ -134,19 +131,63 @@ public class Utils {
 		return "\"" + s + "\"";
 	}
 	
-	public static String addPreSuffix(String name) {
+	private static String addPreSuffix(String name) {
 		return GlobalConfig.nickPrefix + name + GlobalConfig.nickSuffix;
 	}
 	
-	public static String getAliasForPlayer(EntityPlayer player, boolean irc) {
+	private static String addColorCodes(String name, char colorCode) {
+		if(colorCode == INVALID_COLOR) {
+			return name;
+		}
+		return Globals.COLOR_CODE_PREFIX + String.valueOf(colorCode) + name + Globals.COLOR_CODE_PREFIX + "f";
+	}
+
+	public static String getNickIRC(EntityPlayer player) {
+		return addPreSuffix(getAliasForPlayer(player));
+	}
+	
+	public static String getNickGame(EntityPlayer player, boolean color) {
+		if(color) {
+			return addColorCodes(getAliasForPlayer(player), getColorCodeForPlayer(player));
+		} else {
+			return getAliasForPlayer(player);
+		}
+	}
+	
+	public static String getNickGame(IIRCUser user, boolean color) {
+		if(color) {
+			return addColorCodes(user.getName(), getColorCode(DisplayConfig.ircColor));
+		} else {
+			return user.getName();
+		}
+	}
+	
+	public static char getColorCodeForPlayer(EntityPlayer player) {
+		NBTTagCompound tagCompound = player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getCompoundTag("EiraIRC");
+		boolean isOP = isOP(player);
+		if(!DisplayConfig.enableNameColors && !isOP) {
+			return INVALID_COLOR;
+		}
+		String colorName = tagCompound.getString("NameColor");
+		if(!colorName.isEmpty()) {
+			return getColorCode(colorName);
+		} else if(isOP) {
+			if(!DisplayConfig.opColor.isEmpty()) {
+				return getColorCode(DisplayConfig.opColor);
+			}
+		}
+		return INVALID_COLOR;
+	}
+	
+	public static String getAliasForPlayer(EntityPlayer player) {
 		if(!GlobalConfig.enableAliases) {
-			return addPreSuffix(player.getCommandSenderName());
+			return player.getCommandSenderName();
 		}
 		String name = player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getCompoundTag("EiraIRC").getString("Alias");
 		if(name.isEmpty()) {
 			name = player.getCommandSenderName();
 		}
-		return irc ? addPreSuffix(name) : name;
+		return name;
 	}
 	
 	public static boolean isOP(ICommandSender sender) {
@@ -160,39 +201,6 @@ public class Utils {
 			return MinecraftServer.getServer().getConfigurationManager().isPlayerOpped(sender.getCommandSenderName().toLowerCase());
 		}
 		return true;
-	}
-	
-	public static String getColoredName(String name, char colorCode) {
-		if(colorCode == INVALID_COLOR) {
-			return name;
-		}
-		return Globals.COLOR_CODE_PREFIX + String.valueOf(colorCode) + name + Globals.COLOR_CODE_PREFIX + "f";
-	}
-	
-	public static String getColorAliasForPlayer(EntityPlayer player) {
-		NBTTagCompound tagCompound = player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getCompoundTag("EiraIRC");
-		String alias = getAliasForPlayer(player, false);
-		boolean isOP = isOP(player);
-		if(!DisplayConfig.enableNameColors && !isOP) {
-			return alias;
-		}
-		String colorName = tagCompound.getString("NameColor");
-		if(!colorName.isEmpty()) {
-			char colorCode = getColorCode(colorName);
-			if(colorCode == INVALID_COLOR) {
-				return alias;
-			}
-			return getColoredName(alias, colorCode);
-		} else if(isOP) {
-			if(!DisplayConfig.opColor.isEmpty()) {
-				char colorCode = getColorCode(colorName);
-				if(colorCode == INVALID_COLOR) {
-					return alias;
-				}
-				return getColoredName(alias, colorCode);
-			}
-		}
-		return alias;
 	}
 	
 	public static boolean isValidColor(String colorName) {
@@ -239,10 +247,6 @@ public class Utils {
 			colorCode = 'f';
 		}
 		return colorCode;
-	}
-
-	public static String getColoredName(String nick, String colorName) {
-		return getColoredName(nick, getColorCode(colorName));
 	}
 
 	public static void addValidColorsToList(List<String> list) {
@@ -389,7 +393,7 @@ public class Utils {
 		String s = " * ";
 		for(int i = 0; i < playerList.size(); i++) {
 			EntityPlayer entityPlayer = playerList.get(i);
-			String alias = Utils.getAliasForPlayer(entityPlayer, true);
+			String alias = getNickIRC(entityPlayer);
 			if(s.length() + alias.length() > Globals.CHAT_MAX_LENGTH) {
 				user.notice(s);
 				s = " * ";
@@ -466,18 +470,22 @@ public class Utils {
 		return shiftedArgs;
 	}
 	
-	public static String joinArgs(String[] args, int startIdx) {
+	public static String joinStrings(String[] arr, String delimiter) {
+		return joinStrings(arr, delimiter, 0);
+	}
+	
+	public static String joinStrings(String[] args, String delimiter, int startIdx) {
 		StringBuilder sb = new StringBuilder();
 		for(int i = startIdx; i < args.length; i++) {
 			if(i > startIdx) {
-				sb.append(" ");
+				sb.append(delimiter);
 			}
 			sb.append(args[i]);
 		}
 		return sb.toString();
 	}
 
-	public static String formatMessageNew(String format, IIRCConnection connection, IIRCChannel channel, IIRCUser user, String message) {
+	public static String formatMessageNew(String format, IIRCConnection connection, IIRCChannel channel, IIRCUser user, String message, boolean colorName) {
 		String result = format;
 		result = result.replaceAll("\\{SERVER\\}", connection.getIdentifier());
 		if(channel != null) {
@@ -485,7 +493,7 @@ public class Utils {
 		}
 		if(user != null) {
 			result = result.replaceAll("\\{USER\\}", user.getIdentifier());
-			result = result.replaceAll("\\{NICK\\}", user.getName());
+			result = result.replaceAll("\\{NICK\\}", getNickGame(user, colorName));
 		}
 		result = result.replaceAll("\\{MESSAGE\\}", Matcher.quoteReplacement(message)).replaceAll("\\\\$", "\\$");
 		return result;

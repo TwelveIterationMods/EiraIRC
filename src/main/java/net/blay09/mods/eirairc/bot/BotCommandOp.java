@@ -31,7 +31,7 @@ public class BotCommandOp implements IBotCommand {
 			user.notice(Utils.getLocalizedMessage("irc.bot.noPermission"));
 			return;
 		}
-		String message = Utils.joinArgs(args, 0).trim();
+		String message = Utils.joinStrings(args, " ", 0).trim();
 		if(message.isEmpty()) {
 			user.notice("Usage: !op <command>");
 			return;

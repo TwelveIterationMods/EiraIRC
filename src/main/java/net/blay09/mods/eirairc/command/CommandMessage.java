@@ -61,16 +61,16 @@ public class CommandMessage extends SubCommand {
 				return true;
 			}
 		}
-		String message = Utils.joinArgs(args, 1).trim();
+		String message = Utils.joinStrings(args, " ", 1).trim();
 		if(message.isEmpty()) {
 			throw new WrongUsageException(getCommandUsage(sender));
 		}
 		String ircMessage = message;
 		if(serverSide) {
-			ircMessage = "<" + Utils.getAliasForPlayer((EntityPlayer) sender, true) + "> " + ircMessage;
+			ircMessage = "<" + Utils.getNickIRC((EntityPlayer) sender) + "> " + ircMessage;
 		}
 		target.message(ircMessage);
-		String mcMessage = "[-> " + target.getName() + "] <" + Utils.getColorAliasForPlayer((EntityPlayer) sender) + "> " + message;
+		String mcMessage = "[-> " + target.getName() + "] <" + Utils.getNickGame((EntityPlayer) sender, true) + "> " + message;
 		Utils.sendUnlocalizedMessage(sender, mcMessage);
 		return true;
 	}

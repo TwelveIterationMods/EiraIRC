@@ -6,7 +6,7 @@ package net.blay09.mods.eirairc.api.bot;
 public interface IBotProfile {
 
 	public static final String KEY_ALLOWPRIVMSG = "allowPrivateMessages";
-	public static final String KEY_AUTOWHO = "autoWho";
+	public static final String KEY_AUTOPLAYERS = "autoWho";
 	public static final String KEY_RELAYIRCJOINLEAVE = "relayIRCJoinLeave";
 	public static final String KEY_RELAYMCJOINLEAVE = "relayMinecraftJoinLeave";
 	public static final String KEY_RELAYDEATHMESSAGES = "relayDeathMessages";
