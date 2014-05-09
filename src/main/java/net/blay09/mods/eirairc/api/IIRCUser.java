@@ -10,5 +10,7 @@ public interface IIRCUser extends IIRCContext {
 	public void whois();
 	public String getAuthLogin();
 	public Collection<IIRCChannel> getChannels();
+	public boolean isOperator(IIRCChannel channel);
+	public boolean hasVoice(IIRCChannel channel);
 
 }

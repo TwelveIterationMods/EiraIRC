@@ -3,8 +3,10 @@
 
 package net.blay09.mods.eirairc.irc;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import net.blay09.mods.eirairc.api.IIRCChannel;
@@ -14,6 +16,8 @@ public class IRCUser implements IIRCUser {
 
 	private final IRCConnection connection;
 	private final Map<String, IIRCChannel> channels = new HashMap<String, IIRCChannel>();
+	private final List<IIRCChannel> opChannels = new ArrayList<IIRCChannel>();
+	private final List<IIRCChannel> voiceChannels = new ArrayList<IIRCChannel>();
 	private String name;
 	private String authLogin;
 	
@@ -30,6 +34,32 @@ public class IRCUser implements IIRCUser {
 		return name;
 	}
 
+	@Override
+	public boolean isOperator(IIRCChannel channel) {
+		return opChannels.contains(channel);
+	}
+	
+	@Override
+	public boolean hasVoice(IIRCChannel channel) {
+		return opChannels.contains(channel) || voiceChannels.contains(channel);
+	}
+	
+	public void setOperator(IRCChannel channel, boolean opFlag) {
+		if(opFlag && !opChannels.contains(channel)) {
+			opChannels.add(channel);
+		} else {
+			opChannels.remove(channel);
+		}
+	}
+	
+	public void setVoice(IRCChannel channel, boolean voiceFlag) {
+		if(voiceFlag && !voiceChannels.contains(channel)) {
+			voiceChannels.add(channel);
+		} else {
+			voiceChannels.remove(channel);
+		}
+	}
+	
 	public void addChannel(IRCChannel channel) {
 		channels.put(channel.getName(), channel);
 	}

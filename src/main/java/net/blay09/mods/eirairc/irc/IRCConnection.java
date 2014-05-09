@@ -9,9 +9,10 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import net.blay09.mods.eirairc.api.IIRCChannel;
@@ -32,7 +33,6 @@ import net.blay09.mods.eirairc.api.event.IRCUserLeaveEvent;
 import net.blay09.mods.eirairc.api.event.IRCUserNickChangeEvent;
 import net.blay09.mods.eirairc.api.event.IRCUserQuitEvent;
 import net.blay09.mods.eirairc.bot.EiraIRCBot;
-import net.blay09.mods.eirairc.util.Globals;
 import net.minecraftforge.common.MinecraftForge;
 
 public class IRCConnection implements Runnable, IIRCConnection {
@@ -250,10 +250,19 @@ public class IRCConnection implements Runnable, IIRCConnection {
 			String[] names = msg.arg(3).split(" ");
 			for(int i = 0; i < names.length; i++) {
 				String name = names[i];
-				if(name.startsWith("@") || name.startsWith("+")) {
+				boolean isOp = false;
+				boolean isVoice = false;
+				if(name.startsWith("@")) {
+					isOp = true;
+				} else if(name.startsWith("+")) {
+					isVoice = true;
+				}
+				if(isOp || isVoice) {
 					name = name.substring(1);
 				}
 				IRCUser user = (IRCUser) getOrCreateUser(name);
+				user.setVoice(channel, isVoice);
+				user.setOperator(channel, isOp);
 				user.addChannel(channel);
 				channel.addUser(user);
 			}
@@ -334,6 +343,48 @@ public class IRCConnection implements Runnable, IIRCConnection {
 			user.setName(newNick);
 			users.put(user.getName().toLowerCase(), user);
 			MinecraftForge.EVENT_BUS.post(new IRCUserNickChangeEvent(this, user, oldNick, newNick));
+		} else if(cmd.equals("MODE")) {
+			IRCChannel channel = (IRCChannel) getOrCreateChannel(msg.arg(0));
+			String mode = msg.arg(1);
+			String param = null;
+			if(msg.argcount() > 2) {
+				param = msg.arg(2);
+			}
+			boolean set = false;
+			List<Character> setList = new ArrayList<Character>();
+			List<Character> unsetList = new ArrayList<Character>();
+			for(int i = 0; i < mode.length(); i++) {
+				char c = mode.charAt(i);
+				if(c == '+') {
+					set = true;
+				} else if(c == '-') {
+					set = false;
+				} else if(set) {
+					setList.add(c);
+				} else {
+					unsetList.add(c);
+				}
+			}
+			for(int i = 0; i < setList.size(); i++) {
+				char c = setList.get(i);
+				if(c == 'o') {
+					IRCUser user = (IRCUser) getOrCreateUser(param);
+					user.setOperator(channel, true);
+				} else if(c == 'v') {
+					IRCUser user = (IRCUser) getOrCreateUser(param);
+					user.setVoice(channel, true);
+				}
+			}
+			for(int i = 0; i < unsetList.size(); i++) {
+				char c = unsetList.get(i);
+				if(c == 'o') {
+					IRCUser user = (IRCUser) getOrCreateUser(param);
+					user.setOperator(channel, true);
+				} else if(c == 'v') {
+					IRCUser user = (IRCUser) getOrCreateUser(param);
+					user.setVoice(channel, true);
+				}
+			}
 		} else if(cmd.equals("QUIT")) {
 			IIRCUser user = getOrCreateUser(msg.getNick());
 			MinecraftForge.EVENT_BUS.post(new IRCUserQuitEvent(this, user, msg.arg(0)));

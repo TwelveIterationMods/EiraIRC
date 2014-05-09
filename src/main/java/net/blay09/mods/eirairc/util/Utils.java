@@ -154,17 +154,33 @@ public class Utils {
 		}
 	}
 	
-	public static String getNickGame(IIRCUser user, boolean color) {
+	public static String getNickGame(IIRCChannel channel, IIRCUser user, boolean color) {
 		if(color) {
-			return addColorCodes(user.getName(), getColorCode(DisplayConfig.ircColor));
+			return addColorCodes(user.getName(), getColorCodeForUser(channel, user));
 		} else {
 			return user.getName();
 		}
 	}
 	
+	public static char getColorCodeForUser(IIRCChannel channel, IIRCUser user) {
+		if(channel == null) {
+			return getColorCode(DisplayConfig.ircPrivateColor);
+		}
+		if(user.isOperator(channel)) {
+			if(!DisplayConfig.ircOpColor.isEmpty()) {
+				return getColorCode(DisplayConfig.ircOpColor);
+			}
+		} else if(user.hasVoice(channel)) {
+			if(!DisplayConfig.ircVoiceColor.isEmpty()) {
+				return getColorCode(DisplayConfig.ircVoiceColor);
+			}
+		}
+		return getColorCode(DisplayConfig.ircColor);
+	}
+	
 	public static char getColorCodeForPlayer(EntityPlayer player) {
 		NBTTagCompound tagCompound = player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getCompoundTag("EiraIRC");
-		boolean isOP = isOP(player);
+		boolean isOP = Utils.isServerSide() && isOP(player);
 		if(!DisplayConfig.enableNameColors && !isOP) {
 			return INVALID_COLOR;
 		}
@@ -172,11 +188,11 @@ public class Utils {
 		if(!colorName.isEmpty()) {
 			return getColorCode(colorName);
 		} else if(isOP) {
-			if(!DisplayConfig.opColor.isEmpty()) {
-				return getColorCode(DisplayConfig.opColor);
+			if(!DisplayConfig.mcOpColor.isEmpty()) {
+				return getColorCode(DisplayConfig.mcOpColor);
 			}
 		}
-		return INVALID_COLOR;
+		return getColorCode(DisplayConfig.mcColor);
 	}
 	
 	public static String getAliasForPlayer(EntityPlayer player) {
@@ -493,7 +509,7 @@ public class Utils {
 		}
 		if(user != null) {
 			result = result.replaceAll("\\{USER\\}", user.getIdentifier());
-			result = result.replaceAll("\\{NICK\\}", getNickGame(user, colorName));
+			result = result.replaceAll("\\{NICK\\}", getNickGame(channel, user, colorName));
 		}
 		result = result.replaceAll("\\{MESSAGE\\}", Matcher.quoteReplacement(message)).replaceAll("\\\\$", "\\$");
 		return result;

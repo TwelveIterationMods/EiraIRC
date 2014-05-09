@@ -17,41 +17,57 @@ public class DisplayConfig {
 
 	private static final String CATEGORY = ConfigurationHandler.CATEGORY_DISPLAY;
 	
-	
 	public static boolean enableNameColors = true;
-	public static String opColor = "red";
+	public static String mcColor = "white";
+	public static String mcOpColor = "red";
+	public static String ircOpColor = "darkred";
+	public static String ircVoiceColor = "lightgray";
 	public static String ircColor = "gray";
+	public static String ircPrivateColor = "gray";
 	public static String emoteColor = "gold";
 	public static String quitMessage = "Leaving.";
 	public static boolean hudRecState = true;
+
 	
 	public static void load(Configuration config) {
-		ircColor = config.get(CATEGORY, "ircColor", ircColor).getString();
 		emoteColor = config.get(CATEGORY, "emoteColor", emoteColor).getString();
-		opColor = config.get(CATEGORY, "opColor", opColor).getString();
+		mcColor = config.get(CATEGORY, "defaultColor", mcColor).getString();
+		mcOpColor = config.get(CATEGORY, "opColor", mcOpColor).getString();
+		ircColor = config.get(CATEGORY, "ircColor", ircColor).getString();
+		ircPrivateColor = config.get(CATEGORY, "ircPrivateColor", ircPrivateColor).getString();
+		ircVoiceColor = config.get(CATEGORY, "ircVoiceColor", ircVoiceColor).getString();
+		ircOpColor = config.get(CATEGORY, "ircOpColor", ircOpColor).getString();
 		enableNameColors = config.get(CATEGORY, "enableNameColors", enableNameColors).getBoolean(enableNameColors);
 		hudRecState = config.get(CATEGORY, "hudRecState", hudRecState).getBoolean(hudRecState);
 	}
 	
 	public static void save(Configuration config) {
-		config.get(CATEGORY, "ircColor", ircColor).set(ircColor);
 		config.get(CATEGORY, "emoteColor", emoteColor).set(emoteColor);
-		config.get(CATEGORY, "opColor", opColor).set(opColor);
+		config.get(CATEGORY, "defaultColor", mcColor).set(mcColor);
+		config.get(CATEGORY, "opColor", mcOpColor).set(mcOpColor);
+		config.get(CATEGORY, "ircColor", ircColor).set(ircColor);
+		config.get(CATEGORY, "ircPrivateColor", ircPrivateColor).set(ircPrivateColor);
+		config.get(CATEGORY, "ircVoiceColor", ircVoiceColor).set(ircVoiceColor);
+		config.get(CATEGORY, "ircOpColor", ircOpColor).set(ircOpColor);
 		config.get(CATEGORY, "enableNameColors", enableNameColors).set(enableNameColors);
 		config.get(CATEGORY, "hudRecState", hudRecState).set(hudRecState);
 	}
 	
 	public static void addOptionsToList(List<String> list) {
-		list.add("ircColor");
 		list.add("emoteColor");
+		list.add("defaultColor");
 		list.add("opColor");
+		list.add("ircColor");
+		list.add("ircPrivateColor");
+		list.add("ircVoiceColor");
+		list.add("ircOpColor");
 		list.add("enableNameColors");
 	}
 	
 	public static void addValuesToList(List<String> list, String option) {
 		if(option.endsWith("Color")) {
 			Utils.addValidColorsToList(list);
-		} else if(option.startsWith("relay") || option.startsWith("enable")) {
+		} else if(option.startsWith("enable")) {
 			Utils.addBooleansToList(list);
 		}
 	}
@@ -59,8 +75,12 @@ public class DisplayConfig {
 	public static String handleConfigCommand(ICommandSender sender, String key) {
 		String value = null;
 		if(key.equals("enableNameColors")) value = String.valueOf(enableNameColors);
-		else if(key.equals("opColor")) value = opColor;
+		else if(key.equals("defaultColor")) value = mcColor;
+		else if(key.equals("opColor")) value = mcOpColor;
 		else if(key.equals("ircColor")) value = ircColor;
+		else if(key.equals("ircPrivateColor")) value = ircPrivateColor;
+		else if(key.equals("ircVoiceColor")) value = ircVoiceColor;
+		else if(key.equals("ircOpColor")) value = ircOpColor;
 		else if(key.equals("emoteColor")) value = emoteColor;
 		else if(key.equals("quitMessage")) value = quitMessage;
 		return value;
@@ -73,10 +93,18 @@ public class DisplayConfig {
 				return false;
 			}
 		}
-		if(key.equals("opColor")) {
-			opColor = value;
+		if(key.equals("defaultColor")) {
+			mcColor = value;
+		} else if(key.equals("opColor")) {
+			mcOpColor = value;
 		} else if(key.equals("ircColor")) {
 			ircColor = value;
+		} else if(key.equals("ircPrivateColor")) {
+			ircPrivateColor = value;
+		} else if(key.equals("ircVoiceColor")) {
+			ircVoiceColor = value;
+		} else if(key.equals("ircOpColor")) {
+			ircOpColor = value;
 		} else if(key.equals("emoteColor")) {
 			emoteColor = value;
 		} else if(key.equals("quitMessage")) {
