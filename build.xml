@@ -23,9 +23,9 @@
 	</target>
 
 	<target name="replace_tokens">
-		<replace dir="${private.dir.mcp}\src\minecraft" includes="mcmod.info net\blay09" token="@VERSION@" value="${public.release.mod.version}" />
-		<replace dir="${private.dir.mcp}\src\minecraft" includes="mcmod.info net\blay09" token="@MCVERSION@" value="${public.release.minecraft.version}" />
-		<replace dir="${private.dir.mcp}\src\minecraft" includes="mcmod.info net\blay09" token="@BUILD_NUMBER@" value="${public.debug.build.number}" />
+		<replace dir="${private.dir.mcp}\src\minecraft" includes="mcmod.info" token="@VERSION@" value="${public.release.mod.version}" />
+		<replace dir="${private.dir.mcp}\src\minecraft" includes="mcmod.info" token="@MCVERSION@" value="${public.release.minecraft.version}" />
+		<replace dir="${private.dir.mcp}\src\minecraft" includes="mcmod.info" token="@BUILD_NUMBER@" value="${public.debug.build.number}" />
 	</target>
 
 	<target name="recompile">
