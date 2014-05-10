@@ -65,7 +65,7 @@ public class BotCommandMessage implements IBotCommand {
 			notifyMsg = notifyMsg.substring(0, 42) + "...";
 		}
 		EiraIRC.proxy.sendNotification((EntityPlayerMP) entityPlayer, NotificationType.PrivateMessage, notifyMsg);
-		entityPlayer.addChatMessage(Utils.getUnlocalizedChatMessage(mcMessage));
+		entityPlayer.sendChatToPlayer(Utils.getUnlocalizedChatMessage(mcMessage));
 		user.notice(Utils.getLocalizedMessage("irc.bot.msgSent", playerName, message));
 	}
 	

@@ -1,8 +1,9 @@
-// Copyright (c) 2013, Christopher "blay09" Baker
+// Copyright (c) 2014, Christopher "blay09" Baker
 // All rights reserved.
 
 package net.blay09.mods.eirairc;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -20,11 +21,8 @@ import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.handler.IRCConnectionHandler;
 import net.blay09.mods.eirairc.handler.IRCEventHandler;
 import net.blay09.mods.eirairc.handler.MCEventHandler;
-import net.blay09.mods.eirairc.irc.IRCConnection;
 import net.blay09.mods.eirairc.net.EiraNetHandler;
-import net.blay09.mods.eirairc.net.PacketHandler;
 import net.blay09.mods.eirairc.util.ConfigHelper;
-import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Localization;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.CommandHandler;
@@ -39,15 +37,15 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
-import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-@Mod(modid = Globals.MOD_ID, name = Globals.MOD_NAME, version = Globals.MOD_VERSION)
-@NetworkMod(channels = { Globals.MOD_ID }, packetHandler = PacketHandler.class)
+@Mod(modid = EiraIRC.MOD_ID)
 public class EiraIRC {
 
-	@Instance(Globals.MOD_ID)
+	public static final String MOD_ID = "eirairc";
+	
+	@Instance(MOD_ID)
 	public static EiraIRC instance;
 	
 	@SidedProxy(serverSide = "net.blay09.mods.eirairc.CommonProxy", clientSide = "net.blay09.mods.eirairc.client.ClientProxy")
@@ -63,27 +61,33 @@ public class EiraIRC {
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
+		ConfigurationHandler.loadServices(new File(event.getModConfigurationDirectory(), "eirairc"));
 		ConfigurationHandler.load(event.getSuggestedConfigurationFile());
+		ConfigurationHandler.loadDisplayFormats(new File(event.getModConfigurationDirectory(), "eirairc/formats"));
+		ConfigurationHandler.loadBotProfiles(new File(event.getModConfigurationDirectory(), "eirairc/bots"));
 	}
 	
 	@EventHandler
-	public void load(FMLInitializationEvent event) {
+	public void init(FMLInitializationEvent event) {
 		chatSessionHandler = new ChatSessionHandler();
 		ircEventHandler = new IRCEventHandler();
 		ircConnectionHandler = new IRCConnectionHandler();
 		mcEventHandler = new MCEventHandler();
 		netHandler = new EiraNetHandler();
 		proxy.setupClient();
+		
 		GameRegistry.registerPlayerTracker(mcEventHandler);
 		GameRegistry.registerPlayerTracker(netHandler);
 		NetworkRegistry.instance().registerConnectionHandler(mcEventHandler);
 		MinecraftForge.EVENT_BUS.register(mcEventHandler);
+		MinecraftForge.EVENT_BUS.register(ircConnectionHandler);
+		MinecraftForge.EVENT_BUS.register(ircEventHandler);
 		
 		Localization.init();
 	}
 	
 	@EventHandler
-	public void modsLoaded(FMLPostInitializationEvent event) {
+	public void postInit(FMLPostInitializationEvent event) {
 		connections = new HashMap<String, IIRCConnection>();
 	}
 	
@@ -129,7 +133,7 @@ public class EiraIRC {
 	}
 	
 	public void addConnection(IIRCConnection connection) {
-		connections.put(connection.getHost(), connection);
+		connections.put(connection.getIdentifier(), connection);
 	}
 
 	public int getConnectionCount() {
@@ -144,16 +148,16 @@ public class EiraIRC {
 		return null;
 	}
 
-	public IIRCConnection getConnection(String host) {
-		return connections.get(host);
+	public IIRCConnection getConnection(String identifier) {
+		return connections.get(identifier);
 	}
 	
 	public void removeConnection(IIRCConnection connection) {
 		connections.remove(connection.getHost());
 	}
 
-	public boolean isConnectedTo(String host) {
-		return connections.containsKey(host);
+	public boolean isConnectedTo(String identifier) {
+		return connections.containsKey(identifier);
 	}
 
 	public void clearConnections() {
@@ -172,10 +176,6 @@ public class EiraIRC {
 		return chatSessionHandler;
 	}
 
-	public IRCConnectionHandler getIRCConnectionHandler() {
-		return ircConnectionHandler;
-	}
-	
 	public EiraNetHandler getNetHandler() {
 		return netHandler;
 	}
@@ -186,7 +186,6 @@ public class EiraIRC {
 			handler.registerCommand(new IgnoreCommand("irc"));
 		} else {
 			handler.registerCommand(new CommandIRC());
-//			handler.registerCommand(new IgnoreCommand("servirc"));
 		}
 		IRCCommandHandler.registerCommands();
 		if(GlobalConfig.registerShortCommands) {

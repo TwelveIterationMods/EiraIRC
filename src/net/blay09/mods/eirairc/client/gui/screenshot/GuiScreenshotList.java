@@ -1,10 +1,11 @@
-// Copyright (c) 2013, Christopher "blay09" Baker
+// Copyright (c) 2014, Christopher "blay09" Baker
 // All rights reserved.
 
-package net.blay09.mods.eirairc.client.gui;
+package net.blay09.mods.eirairc.client.gui.screenshot;
 
 import net.blay09.mods.eirairc.client.screenshot.Screenshot;
 import net.blay09.mods.eirairc.client.screenshot.ScreenshotManager;
+import net.blay09.mods.eirairc.config.ScreenshotConfig;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
@@ -62,13 +63,13 @@ public class GuiScreenshotList extends GuiScreen {
 		if(button == btnBack) {
 			Minecraft.getMinecraft().displayGuiScreen(parentScreen);
 		} else if(button == btnUpload) {
-			ScreenshotManager.getInstance().uploadScreenshot(screenshots[selectedElement]);
+			ScreenshotManager.getInstance().uploadScreenshot(screenshots[selectedElement], ScreenshotConfig.VALUE_NONE);
 		} else if(button == btnRename) {
 			onElementClicked(selectedElement);
 		} else if(button == btnDelete) {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiYesNo(this, Utils.getLocalizedMessage("irc.gui.reallyRemove", "screenshot"), Utils.getLocalizedMessage("irc.gui.noUndo"), selectedElement));
 		} else if(button == btnClipboard) {
-			this.setClipboardString(screenshots[selectedElement].getUploadURL());
+			Utils.setClipboardString(screenshots[selectedElement].getUploadURL());
 		}
 	}
 	
@@ -83,7 +84,7 @@ public class GuiScreenshotList extends GuiScreen {
 	@Override
 	public void drawScreen(int par1, int par2, float par3) {
 		guiScreenshotSlot.drawScreen(par1, par2, par3);
-		drawCenteredString(fontRenderer, "irc.gui.screenshotList", width / 2, 20, Globals.TEXT_COLOR);
+		drawCenteredString(fontRenderer, Utils.getLocalizedMessage("irc.gui.screenshotList"), width / 2, 20, Globals.TEXT_COLOR);
 		super.drawScreen(par1, par2, par3);
 	}
 

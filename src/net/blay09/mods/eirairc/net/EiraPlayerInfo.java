@@ -9,13 +9,14 @@ public class EiraPlayerInfo {
 	public String modVersion;
 	public boolean isLive;
 	public boolean isRecording;
+	public boolean modInstalled;
 	
 	public EiraPlayerInfo(String username) {
 		this.username = username;
 	}
 	
 	public boolean hasMod() {
-		return modVersion != null;
+		return modInstalled;
 	}
 
 	public String getUsername() {

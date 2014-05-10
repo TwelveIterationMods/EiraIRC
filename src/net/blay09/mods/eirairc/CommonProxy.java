@@ -1,9 +1,8 @@
-// Copyright (c) 2013, Christopher "blay09" Baker
+// Copyright (c) 2014, Christopher "blay09" Baker
 // All rights reserved.
 
 package net.blay09.mods.eirairc;
 
-import net.blay09.mods.eirairc.irc.IRCChannel;
 import net.blay09.mods.eirairc.net.packet.PacketNotification;
 import net.blay09.mods.eirairc.util.NotificationType;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -40,8 +39,4 @@ public class CommonProxy {
 	public void renderTick(float delta) {
 	}
 
-	public void onChannelJoined(IRCChannel channel) {
-	}
-
-	
 }

@@ -1,9 +1,12 @@
-// Copyright (c) 2013, Christopher "blay09" Baker
+// Copyright (c) 2014, Christopher "blay09" Baker
 // All rights reserved.
 
 package net.blay09.mods.eirairc.util;
 
 import java.awt.Desktop;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -26,9 +29,8 @@ import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.ServiceConfig;
 import net.blay09.mods.eirairc.config.ServiceSettings;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
-import net.blay09.mods.eirairc.irc.IRCChannel;
 import net.blay09.mods.eirairc.irc.IRCConnection;
-import net.blay09.mods.eirairc.irc.IRCUser;
+import net.blay09.mods.eirairc.net.EiraPlayerInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
@@ -45,7 +47,12 @@ public class Utils {
 	private static final String DEFAULT_USERNAME = "EiraBot";
 	
 	public static void sendLocalizedMessage(ICommandSender sender, String key, Object... args) {
-		sender.sendChatToPlayer(getUnlocalizedChatMessage(getLocalizedMessage(key, args)));
+		EiraPlayerInfo playerInfo = EiraIRC.instance.getNetHandler().getPlayerInfo(sender.getCommandSenderName());
+		if(playerInfo.modInstalled) {
+			sender.sendChatToPlayer(getLocalizedChatMessage(key, args));
+		} else {
+			sendUnlocalizedMessage(sender, getLocalizedChatMessage(key, args).toString());
+		}
 	}
 	
 	public static void sendUnlocalizedMessage(ICommandSender sender, String text) {
@@ -57,11 +64,11 @@ public class Utils {
 	}
 	
 	public static String getLocalizedMessage(String key, Object... args) {
-		return StatCollector.translateToLocalFormatted(Globals.MOD_ID + ":" + key, args);
+		return StatCollector.translateToLocalFormatted(EiraIRC.MOD_ID + ":" + key, args);
 	}
 	
 	public static ChatMessageComponent getLocalizedChatMessage(String key, Object... args) {
-		return ChatMessageComponent.createFromTranslationWithSubstitutions(Globals.MOD_ID + ":" + key, args);
+		return ChatMessageComponent.createFromTranslationWithSubstitutions(EiraIRC.MOD_ID + ":" + key, args);
 	}
 	
 	public static ChatMessageComponent getLocalizedChatMessageNoPrefix(String key, Object... args) {
@@ -78,7 +85,7 @@ public class Utils {
 				MinecraftServer.getServer().getConfigurationManager().sendChatMsg(Utils.getUnlocalizedChatMessage(string));
 			} else {
 				if(Minecraft.getMinecraft().thePlayer != null) {
-					Minecraft.getMinecraft().thePlayer.addChatMessage(string);
+					Minecraft.getMinecraft().thePlayer.sendChatToPlayer(Utils.getUnlocalizedChatMessage(string));
 				}
 			}
 		}
@@ -206,16 +213,9 @@ public class Utils {
 			return true;
 		}
 		if(sender instanceof EntityPlayer) {
-			return MinecraftServer.getServerConfigurationManager(MinecraftServer.getServer()).getOps().contains(((EntityPlayer)sender).username.toLowerCase().trim());
+			return MinecraftServer.getServer().getConfigurationManager().isPlayerOpped(sender.getCommandSenderName().toLowerCase());
 		}
 		return true;
-	}
-	
-	public static String getColoredName(String name, char colorCode) {
-		if(colorCode == INVALID_COLOR) {
-			return name;
-		}
-		return Globals.COLOR_CODE_PREFIX + String.valueOf(colorCode) + name + Globals.COLOR_CODE_PREFIX + "f";
 	}
 	
 	public static boolean isValidColor(String colorName) {
@@ -264,10 +264,6 @@ public class Utils {
 		return colorCode;
 	}
 
-	public static String getColoredName(String nick, String colorName) {
-		return getColoredName(nick, getColorCode(colorName));
-	}
-
 	public static void addValidColorsToList(List<String> list) {
 		list.add("black");
 		list.add("darkblue");
@@ -307,23 +303,11 @@ public class Utils {
 			}
 		} else {
 			return "Multiplayer";
-//			A variable that could be useful? Let's make it private and remove all getters for it!
-//			TODO Find out if there's another way to get this information...later
-//			ServerData serverData = Minecraft.getMinecraft().getServerData();
-//			if(serverData.isHidingAddress()) {
-//				return serverData.serverName;
-//			} else {
-//				return serverData.serverIP;
-//			}
 		}
 	}
 	
 	public static String formatMessage(String format, String user, String nick, String message) {
 		return formatMessage(format, getCurrentServerName(), "", user, nick, message);
-	}
-	
-	public static String formatMessage(String format, IRCConnection connection, String user, String nick, String message) {
-		return formatMessage(format, connection.getHost(), "", user, nick, message);
 	}
 
 	public static String formatMessage(String format, String server, String channel, String user, String nick, String message) {
@@ -352,10 +336,6 @@ public class Utils {
 		return message;
 	}
 
-	public static ServerConfig getServerConfig(IRCConnection connection) {
-		return ConfigurationHandler.getServerConfig(connection.getHost());
-	}
-
 	public static IRCConnection connectTo(ServerConfig config) {
 		IRCConnection connection = new IRCConnection(config.getHost(), config.getServerPassword(), ConfigHelper.getFormattedNick(config), config.getIdent(), config.getDescription());
 		connection.setCharset(GlobalConfig.charset);
@@ -368,9 +348,6 @@ public class Utils {
 	
 	public static void doNickServ(IIRCConnection connection, ServerConfig config) {
 		ServiceSettings settings = ServiceConfig.getSettings(connection.getHost(), connection.getServerType());
-		if(settings == null) {
-			return;
-		}
 		String username = config.getNickServName();
 		String password = config.getNickServPassword();
 		if(username == null || username.isEmpty() || password == null || password.isEmpty()) {
@@ -378,7 +355,7 @@ public class Utils {
 		}
 		connection.irc(settings.getIdentifyCommand(username, password));
 	}
-
+	
 	public static void sendUserList(ICommandSender player, IIRCConnection connection, IIRCChannel channel) {
 		Collection<IIRCUser> userList = channel.getUserList();
 		if(userList.size() == 0) {
@@ -489,7 +466,13 @@ public class Utils {
 			}
 		}
 	}
-	
+
+	public static void setClipboardString(String s) {
+		StringSelection selection = new StringSelection(s);
+		Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+		clipboard.setContents(selection, selection);
+	}
+
 	public static boolean isServerSide() {
 		return MinecraftServer.getServer() != null && !MinecraftServer.getServer().isSinglePlayer();
 	}
@@ -530,4 +513,5 @@ public class Utils {
 		result = result.replaceAll("\\{MESSAGE\\}", Matcher.quoteReplacement(message)).replaceAll("\\\\$", "\\$");
 		return result;
 	}
+
 }

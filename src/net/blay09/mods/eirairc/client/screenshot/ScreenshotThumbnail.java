@@ -1,4 +1,4 @@
-// Copyright (c) 2013, Christopher "blay09" Baker
+// Copyright (c) 2014, Christopher "blay09" Baker
 // All rights reserved.
 
 package net.blay09.mods.eirairc.client.screenshot;
@@ -41,11 +41,15 @@ public class ScreenshotThumbnail extends AbstractTexture {
 	}
 
 	@Override
-	public void loadTexture(ResourceManager resourceManager) throws IOException {
-		FileInputStream fis = new FileInputStream(thumbnailFile);
-		bufferedImage = ImageIO.read(fis);
-		fis.close();
-		TextureUtil.uploadTextureImage(getGlTextureId(), this.bufferedImage);
+	public void loadTexture(ResourceManager resourceManager) {
+		try {
+			FileInputStream fis = new FileInputStream(thumbnailFile);
+			bufferedImage = ImageIO.read(fis);
+			fis.close();
+			TextureUtil.uploadTextureImage(getGlTextureId(), this.bufferedImage);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public ResourceLocation getResourceLocation() {

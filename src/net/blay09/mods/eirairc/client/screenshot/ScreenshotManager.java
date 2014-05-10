@@ -1,11 +1,13 @@
-// Copyright (c) 2013, Christopher "blay09" Baker
+// Copyright (c) 2014, Christopher "blay09" Baker
 // All rights reserved.
 
 package net.blay09.mods.eirairc.client.screenshot;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -23,15 +25,15 @@ import java.util.Properties;
 import javax.imageio.ImageIO;
 
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.client.upload.UploadHoster;
-import net.blay09.mods.eirairc.config.ChannelConfig;
+import net.blay09.mods.eirairc.api.IIRCChannel;
+import net.blay09.mods.eirairc.api.IIRCConnection;
+import net.blay09.mods.eirairc.api.bot.IIRCBot;
+import net.blay09.mods.eirairc.api.upload.IUploadHoster;
+import net.blay09.mods.eirairc.api.upload.UploadManager;
 import net.blay09.mods.eirairc.config.ScreenshotConfig;
-import net.blay09.mods.eirairc.config.ServerConfig;
-import net.blay09.mods.eirairc.irc.IRCChannel;
 import net.blay09.mods.eirairc.irc.IRCConnection;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
@@ -44,7 +46,6 @@ public class ScreenshotManager {
 	public static void create() {
 		instance = new ScreenshotManager();
 		instance.load();
-		instance.findNewScreenshots(false);
 	}
 
 	public static ScreenshotManager getInstance() {
@@ -52,11 +53,11 @@ public class ScreenshotManager {
 	}
 
 	private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss");
+	private static final String PROPERTY_DELETE_URL = "_delete";
 	private static IntBuffer intBuffer;
 	private static int[] buffer;
-
+	
 	private final File screenshotDir = new File(Minecraft.getMinecraft().mcDataDir, "screenshots");
-	private final File managedDir = new File(screenshotDir, "managed");
 	private final File thumbnailDir = new File(screenshotDir, "thumbnails");
 	private final List<Screenshot> screenshots = new ArrayList<Screenshot>();
 	private final Comparator<Screenshot> comparator = new Comparator<Screenshot>() {
@@ -73,8 +74,10 @@ public class ScreenshotManager {
 		}
 	};
 
+	private final List<AsyncUploadScreenshot> uploadTasks = new ArrayList<AsyncUploadScreenshot>();
+	private long lastScreenshotScan;
+	
 	public ScreenshotManager() {
-		managedDir.mkdirs();
 		thumbnailDir.mkdirs();
 	}
 
@@ -84,10 +87,11 @@ public class ScreenshotManager {
 			FileInputStream in = new FileInputStream(new File(screenshotDir, "eirairc.properties"));
 			prop.load(in);
 			in.close();
+		} catch (FileNotFoundException e) {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		File[] screenshotFiles = managedDir.listFiles(new FilenameFilter() {
+		File[] screenshotFiles = screenshotDir.listFiles(new FilenameFilter() {
 			@Override
 			public boolean accept(File file, String fileName) {
 				return fileName.endsWith(".png");
@@ -97,9 +101,11 @@ public class ScreenshotManager {
 			for (int i = 0; i < screenshotFiles.length; i++) {
 				Screenshot screenshot = new Screenshot(screenshotFiles[i]);
 				screenshot.setURL(prop.getProperty(screenshot.getName()));
+				screenshot.setDeleteURL(prop.getProperty(screenshot.getName() + PROPERTY_DELETE_URL));
 				screenshots.add(screenshot);
 			}
 		}
+		lastScreenshotScan = System.currentTimeMillis();
 		Collections.sort(screenshots, comparator);
 	}
 
@@ -109,6 +115,7 @@ public class ScreenshotManager {
 			Screenshot screenshot = screenshots.get(i);
 			if (screenshot.isUploaded()) {
 				prop.setProperty(screenshot.getName(), screenshot.getUploadURL());
+				prop.setProperty(screenshot.getName() + PROPERTY_DELETE_URL, screenshot.getDeleteURL() != null ? screenshot.getDeleteURL() : "");
 			}
 		}
 		try {
@@ -133,10 +140,10 @@ public class ScreenshotManager {
 			intBuffer.clear();
 			GL11.glReadPixels(0, 0, width, height, GL12.GL_BGRA, GL12.GL_UNSIGNED_INT_8_8_8_8_REV, intBuffer);
 			intBuffer.get(buffer);
-			func_74289_a(buffer, width, height);
+			doSomeCrazyMagic(buffer, width, height);
 			BufferedImage bufferedImage = new BufferedImage(width, height, 1);
 			bufferedImage.setRGB(0, 0, width, height, buffer, 0, width);
-			File screenshotFile = new File(managedDir, getScreenshotName(managedDir));
+			File screenshotFile = new File(screenshotDir, getScreenshotName(screenshotDir));
 			ImageIO.write(bufferedImage, "png", screenshotFile);
 			Screenshot screenshot = new Screenshot(screenshotFile);
 			screenshots.add(screenshot);
@@ -148,7 +155,7 @@ public class ScreenshotManager {
 		}
 	}
 
-	private static void func_74289_a(int[] buffer, int width, int height) {
+	private static void doSomeCrazyMagic(int[] buffer, int width, int height) {
 		int[] aint1 = new int[width];
 		int k = height / 2;
 
@@ -181,27 +188,38 @@ public class ScreenshotManager {
 		screenshots.remove(screenshot);
 	}
 
-	public String uploadScreenshot(Screenshot screenshot) {
-		UploadHoster host = UploadHoster.getUploadHoster(ScreenshotConfig.uploadHoster);
-		if (host != null) {
-			String uploadURL = host.uploadFile(screenshot.getFile());
-			screenshot.setURL(uploadURL);
+	public void uploadScreenshot(Screenshot screenshot, int followUpAction) {
+		IUploadHoster hoster = UploadManager.getUploadHoster(ScreenshotConfig.uploadHoster);
+		if (hoster != null) {
+			uploadTasks.add(new AsyncUploadScreenshot(hoster, screenshot, followUpAction));
 			save();
-			return uploadURL;
 		}
-		return null;
+	}
+	
+	public void clientTick() {
+		for(int i = uploadTasks.size() - 1; i >= 0; i--) {
+			if(uploadTasks.get(i).isComplete()) {
+				AsyncUploadScreenshot task = uploadTasks.remove(i);
+				int action = task.getFollowUpAction();
+				if (action == ScreenshotConfig.VALUE_UPLOADCLIPBOARD) {
+					Utils.setClipboardString(task.getScreenshot().getUploadURL());
+				} else if (action == ScreenshotConfig.VALUE_UPLOADSHARE) {
+					shareScreenshot(task.getScreenshot());
+				}
+				save();
+			}
+		}
 	}
 	
 	public void shareScreenshot(Screenshot screenshot) {
 		String ircMessage = Utils.getLocalizedMessage("irc.display.shareScreenshot", screenshot.getUploadURL());
 		String mcMessage = "/me " + ircMessage;
 		Minecraft.getMinecraft().thePlayer.sendChatMessage(mcMessage);
-		for (IRCConnection connection : EiraIRC.instance.getConnections()) {
-			ServerConfig serverConfig = Utils.getServerConfig(connection);
-			for (IRCChannel channel : connection.getChannels()) {
-				ChannelConfig channelConfig = serverConfig.getChannelConfig(channel);
-				if (!channelConfig.isReadOnly()) {
-					connection.sendChannelMessage(channel, IRCConnection.EMOTE_START + ircMessage + IRCConnection.EMOTE_END);
+		for(IIRCConnection connection : EiraIRC.instance.getConnections()) {
+			IIRCBot bot = connection.getBot();
+			for(IIRCChannel channel : connection.getChannels()) {
+				if(!bot.isReadOnly(channel)) {
+					channel.message(IRCConnection.EMOTE_START + ircMessage + IRCConnection.EMOTE_END);
 				}
 			}
 		}
@@ -210,29 +228,28 @@ public class ScreenshotManager {
 	public void handleNewScreenshot(Screenshot screenshot) {
 		if (EiraIRC.proxy.isIngame()) {
 			int action = ScreenshotConfig.screenshotAction;
-			if (action != ScreenshotConfig.VALUE_NONE) {
-				uploadScreenshot(screenshot);
-				if (action == ScreenshotConfig.VALUE_UPLOADCLIPBOARD) {
-					GuiScreen.setClipboardString(screenshot.getUploadURL());
-				} else if (action == ScreenshotConfig.VALUE_UPLOADSHARE) {
-					shareScreenshot(screenshot);
-				}
+			if (action == ScreenshotConfig.VALUE_UPLOADCLIPBOARD || action == ScreenshotConfig.VALUE_UPLOADSHARE) {
+				uploadScreenshot(screenshot, action);
 			}
 		}
 	}
 
 	public void findNewScreenshots(boolean autoAction) {
-		File[] screenshotFiles = screenshotDir.listFiles(new FilenameFilter() {
+		File[] screenshotFiles = screenshotDir.listFiles(new FileFilter() {
 			@Override
-			public boolean accept(File file, String fileName) {
-				return fileName.endsWith(".png");
+			public boolean accept(File file) {
+				if(!file.getName().endsWith(".png")) {
+					return false;
+				}
+				if(file.lastModified() > lastScreenshotScan) {
+					return true;
+				}
+				return false;
 			}
 		});
 		if (screenshotFiles != null) {
 			for (int i = 0; i < screenshotFiles.length; i++) {
-				File newFile = new File(managedDir, screenshotFiles[i].getName());
-				screenshotFiles[i].renameTo(newFile);
-				Screenshot screenshot = new Screenshot(newFile);
+				Screenshot screenshot = new Screenshot(screenshotFiles[i]);
 				if (autoAction) {
 					handleNewScreenshot(screenshot);
 				}
@@ -240,9 +257,11 @@ public class ScreenshotManager {
 			}
 		}
 		Collections.sort(screenshots, comparator);
+		lastScreenshotScan = System.currentTimeMillis();
 	}
 
 	public File getThumbnailDir() {
 		return thumbnailDir;
 	}
+
 }

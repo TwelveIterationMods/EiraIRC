@@ -33,6 +33,7 @@ import net.minecraft.command.CommandHandler;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.EnumChatFormatting;
 
 public class IRCCommandHandler {
@@ -115,9 +116,9 @@ public class IRCCommandHandler {
 			return false;
 		}
 		if(!cmd.canCommandSenderUseCommand(sender)) {
-			ChatComponentTranslation chatComponent = new ChatComponentTranslation("commands.generic.permission");
-			chatComponent.getChatStyle().setColor(EnumChatFormatting.RED);
-            sender.addChatMessage(chatComponent);
+			ChatMessageComponent chatComponent = ChatMessageComponent.createFromTranslationKey("commands.generic.permission");
+			chatComponent.setColor(EnumChatFormatting.RED);
+            sender.sendChatToPlayer(chatComponent);
             return true;
 		}
 		String[] shiftedArgs = Utils.shiftArgs(args, 1);
@@ -140,7 +141,7 @@ public class IRCCommandHandler {
 		try {
 			return processCommand(sender, params, serverSide);
 		} catch (WrongUsageException e) {
-			sender.addChatMessage(Utils.getLocalizedChatMessage("irc.general.usage", Utils.getLocalizedMessageNoPrefix(e.getMessage())));
+			sender.sendChatToPlayer(Utils.getLocalizedChatMessage("irc.general.usage", Utils.getLocalizedMessageNoPrefix(e.getMessage())));
 			return true;
 		}
 	}

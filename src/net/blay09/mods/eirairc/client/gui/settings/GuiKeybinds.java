@@ -1,7 +1,7 @@
-// Copyright (c) 2013, Christopher "blay09" Baker
+// Copyright (c) 2014, Christopher "blay09" Baker
 // All rights reserved.
 
-package net.blay09.mods.eirairc.client.gui;
+package net.blay09.mods.eirairc.client.gui.settings;
 
 import net.blay09.mods.eirairc.config.KeyConfig;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
@@ -81,7 +81,7 @@ public class GuiKeybinds extends GuiScreen {
 	protected void keyTyped(char unicode, int keyCode) {
 		if(currentKeyIdx != -1) {
 			if(keyCode == Keyboard.KEY_ESCAPE) {
-				keyCode = -1;
+				keyCode = 0;
 			}
 			switch(currentKeyIdx) {
 				case KeyConfig.IDX_OPENSETTINGS: KeyConfig.openMenu = keyCode; break;

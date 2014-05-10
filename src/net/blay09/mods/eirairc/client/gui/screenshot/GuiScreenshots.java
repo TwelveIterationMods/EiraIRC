@@ -1,10 +1,12 @@
-// Copyright (c) 2013, Christopher "blay09" Baker
+// Copyright (c) 2014, Christopher "blay09" Baker
 // All rights reserved.
 
-package net.blay09.mods.eirairc.client.gui;
+package net.blay09.mods.eirairc.client.gui.screenshot;
 
+import net.blay09.mods.eirairc.api.upload.IUploadHoster;
+import net.blay09.mods.eirairc.api.upload.UploadManager;
+import net.blay09.mods.eirairc.client.gui.settings.GuiSettings;
 import net.blay09.mods.eirairc.client.screenshot.ScreenshotManager;
-import net.blay09.mods.eirairc.client.upload.UploadHoster;
 import net.blay09.mods.eirairc.config.ScreenshotConfig;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.Globals;
@@ -61,10 +63,10 @@ public class GuiScreenshots extends GuiScreen {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiSettings());
 		} else if(button == btnUploadService) {
 			hosterIdx++;
-			if(hosterIdx >= UploadHoster.availableHosters.length) {
+			if(hosterIdx >= UploadManager.getAvailableHosters().length) {
 				hosterIdx = 0;
 			}
-			ScreenshotConfig.uploadHoster = UploadHoster.availableHosters[hosterIdx];
+			ScreenshotConfig.uploadHoster = UploadManager.getAvailableHosters()[hosterIdx];
 			ConfigurationHandler.save();
 			updateButtonText();
 		} else if(button == btnScreenshotAction) {
@@ -84,8 +86,8 @@ public class GuiScreenshots extends GuiScreen {
 	
 	public void updateButtonText() {
 		btnUploadService.displayString = Utils.getLocalizedMessage("irc.gui.screenshots.hoster", ScreenshotConfig.uploadHoster);
-		UploadHoster host = UploadHoster.getUploadHoster(ScreenshotConfig.uploadHoster);
-		if(host != null && host.isCustomizable()) {
+		IUploadHoster hoster = UploadManager.getUploadHoster(ScreenshotConfig.uploadHoster);
+		if(hoster != null && hoster.isCustomizable()) {
 			btnCustomUpload.enabled = true;
 		} else {
 			btnCustomUpload.enabled = false;

@@ -17,7 +17,7 @@ public class DisplayConfig {
 	public static boolean enableNameColors = true;
 	public static String mcColor = "white";
 	public static String mcOpColor = "red";
-	public static String ircOpColor = "darkred";
+	public static String ircOpColor = "gold";
 	public static String ircVoiceColor = "lightgray";
 	public static String ircColor = "gray";
 	public static String ircPrivateColor = "gray";

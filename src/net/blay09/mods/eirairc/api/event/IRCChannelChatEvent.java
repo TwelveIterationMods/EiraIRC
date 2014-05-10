@@ -6,7 +6,6 @@ package net.blay09.mods.eirairc.api.event;
 import net.blay09.mods.eirairc.api.IIRCChannel;
 import net.blay09.mods.eirairc.api.IIRCConnection;
 import net.blay09.mods.eirairc.api.IIRCUser;
-import net.blay09.mods.eirairc.api.bot.IIRCBot;
 
 public class IRCChannelChatEvent extends IRCEvent {
 

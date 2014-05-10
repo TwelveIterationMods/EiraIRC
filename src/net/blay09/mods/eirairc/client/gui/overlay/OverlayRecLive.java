@@ -1,7 +1,7 @@
-// Copyright (c) 2013, Christopher "blay09" Baker
+// Copyright (c) 2014, Christopher "blay09" Baker
 // All rights reserved.
 
-package net.blay09.mods.eirairc.client.gui;
+package net.blay09.mods.eirairc.client.gui.overlay;
 
 import java.util.List;
 
@@ -94,6 +94,7 @@ public class OverlayRecLive extends Gui {
 						drawString(theGame.fontRenderer, LIVE, xPos + columnWidth - 12 - liveWidth - 2, yPos, Globals.TEXT_COLOR);
 					} else if(playerInfo.isRecording) {
 						theGame.getTextureManager().bindTexture(icons);
+						System.out.println(xPos + columnWidth - 12 - SMALL_WIDTH - liveWidth);
 						drawTexturedModalRect(xPos + columnWidth - 12 - SMALL_WIDTH - liveWidth, yPos, WIDTH, 0, SMALL_WIDTH, SMALL_HEIGHT);
 					}
 				}

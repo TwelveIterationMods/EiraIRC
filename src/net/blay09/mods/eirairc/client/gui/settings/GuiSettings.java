@@ -1,8 +1,9 @@
-// Copyright (c) 2013, Christopher "blay09" Baker
+// Copyright (c) 2014, Christopher "blay09" Baker
 // All rights reserved.
 
-package net.blay09.mods.eirairc.client.gui;
+package net.blay09.mods.eirairc.client.gui.settings;
 
+import net.blay09.mods.eirairc.client.gui.screenshot.GuiScreenshots;
 import net.blay09.mods.eirairc.config.ScreenshotConfig;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
@@ -46,9 +47,6 @@ public class GuiSettings extends GuiScreen {
 		buttonList.add(btnTwitch);
 		
 		btnScreenshots = new GuiButton(6, leftX, height / 2 + 10, BUTTON_WIDTH, BUTTON_HEIGHT, Utils.getLocalizedMessage("irc.gui.settings.screenshots"));
-		if(!ScreenshotConfig.manageScreenshots) {
-			btnScreenshots.enabled = false;
-		}
 		buttonList.add(btnScreenshots);
 		
 		btnDisplaySettings = new GuiButton(7, rightX, height / 2 - 90, BUTTON_WIDTH, BUTTON_HEIGHT, Utils.getLocalizedMessage("irc.gui.settings.displaySettings"));
@@ -88,7 +86,7 @@ public class GuiSettings extends GuiScreen {
 		} else if(button == btnDisplaySettings) {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiDisplaySettings());
 		} else if(button == btnBotSettings) {
-			Minecraft.getMinecraft().displayGuiScreen(new GuiBotSettings());
+			Minecraft.getMinecraft().displayGuiScreen(new GuiBotProfiles(this));
 		} else if(button == btnBack) {
 			Minecraft.getMinecraft().displayGuiScreen(null);
 		}

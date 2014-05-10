@@ -17,9 +17,8 @@ import net.blay09.mods.eirairc.config.BotProfile;
 import net.blay09.mods.eirairc.irc.IRCConnection;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.ChunkCoordinates;
-import net.minecraft.util.IChatComponent;
 import net.minecraft.world.World;
 
 public class EiraIRCBot implements IIRCBot {
@@ -66,13 +65,8 @@ public class EiraIRCBot implements IIRCBot {
 	}
 
 	@Override
-	public IChatComponent func_145748_c_() {
-		return new ChatComponentText(this.getCommandSenderName());
-	}
-
-	@Override
-	public void addChatMessage(IChatComponent chatComponent) {
-		logBuffer.append(chatComponent.getUnformattedText());
+	public void sendChatToPlayer(ChatMessageComponent chatComponent) {
+		logBuffer.append(chatComponent.toString());
 	}
 
 	@Override

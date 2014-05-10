@@ -1,10 +1,10 @@
-// Copyright (c) 2013, Christopher "blay09" Baker
+// Copyright (c) 2014, Christopher "blay09" Baker
 // All rights reserved.
 
-package net.blay09.mods.eirairc.client.gui;
+package net.blay09.mods.eirairc.client.gui.chat;
 
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.client.ClientChatHandler;
+import net.blay09.mods.eirairc.client.gui.settings.GuiSettings;
 import net.blay09.mods.eirairc.config.CompatibilityConfig;
 import net.blay09.mods.eirairc.config.KeyConfig;
 import net.blay09.mods.eirairc.handler.ChatSessionHandler;
@@ -13,6 +13,7 @@ import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiChat;
+import net.minecraftforge.client.ClientCommandHandler;
 
 import org.lwjgl.input.Keyboard;
 
@@ -20,7 +21,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GuiEiraChat extends GuiChat {
+public class GuiChatExtended extends GuiChat {
 
 	public static final int COLOR_BACKGROUND = Integer.MIN_VALUE;
 	
@@ -30,15 +31,15 @@ public class GuiEiraChat extends GuiChat {
 	
 	private long lastToggleTarget;
 	
-	public GuiEiraChat() {
-		chatSession = EiraIRC.instance.getChatSessionHandler();
-		defaultInputText = "";
+	public GuiChatExtended() {
+		this("");
 	}
 	
-	public GuiEiraChat(String defaultInputText) {
+	public GuiChatExtended(String defaultInputText) {
+		chatSession = EiraIRC.instance.getChatSessionHandler();
 		this.defaultInputText = defaultInputText;
 	}
-	
+
 	@Override
 	public void initGui() {
 		super.initGui();
@@ -59,19 +60,7 @@ public class GuiEiraChat extends GuiChat {
 	
 	@Override
 	protected void keyTyped(char unicode, int keyCode) {
-		if(keyCode == Keyboard.KEY_RETURN) {
-			String text = this.inputField.getText().trim();
-			if(text.length() > 0) {
-				this.mc.ingameGUI.getChatGUI().addToSentMessages(text);
-				if(!ClientChatHandler.handleClientChat(text)) {
-					if(!this.mc.handleClientCommand(text)) {
-						this.mc.thePlayer.sendChatMessage(text);
-					}
-				}
-			}
-			this.mc.displayGuiScreen(null);
-			return;
-		} else if(keyCode == KeyConfig.toggleTarget && !CompatibilityConfig.disableChatToggle && !inputField.getText().startsWith("/")) {
+		if(keyCode == KeyConfig.toggleTarget && !CompatibilityConfig.disableChatToggle && !inputField.getText().startsWith("/")) {
 			if(Keyboard.isRepeatEvent()) {
 				if(System.currentTimeMillis() - lastToggleTarget >= 1000) {
 					chatSession.setChatTarget((String) null);
@@ -86,6 +75,18 @@ public class GuiEiraChat extends GuiChat {
 					chatSession.setChatTarget(newTarget);
 				}
 			}
+			return;
+		} else if(keyCode == 28 || keyCode == 156) {
+			String s = inputField.getText().trim();
+			if(s.length() > 0) {
+				if(!EiraIRC.instance.getMCEventHandler().onClientChat(s)) {
+					if(ClientCommandHandler.instance.executeCommand(mc.thePlayer, s) != 1) {
+						this.mc.thePlayer.sendChatMessage(s);
+					}
+				}
+				mc.ingameGUI.getChatGUI().addToSentMessages(s);
+			}
+			mc.displayGuiScreen(null);
 			return;
 		}
 		super.keyTyped(unicode, keyCode);
