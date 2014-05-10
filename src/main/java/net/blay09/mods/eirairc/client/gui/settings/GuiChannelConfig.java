@@ -6,6 +6,8 @@ package net.blay09.mods.eirairc.client.gui.settings;
 import java.util.List;
 
 import net.blay09.mods.eirairc.EiraIRC;
+import net.blay09.mods.eirairc.api.IIRCConnection;
+import net.blay09.mods.eirairc.bot.EiraIRCBot;
 import net.blay09.mods.eirairc.client.gui.GuiAdvancedTextField;
 import net.blay09.mods.eirairc.client.gui.GuiToggleButton;
 import net.blay09.mods.eirairc.config.BotProfile;
@@ -210,6 +212,11 @@ public class GuiChannelConfig extends GuiScreen {
 		config.setAutoJoin(btnAutoJoin.getState());
 		config.setAutoWho(btnAutoWho.getState());
 		config.setBotProfile(currentProfile);
+		IIRCConnection connection = EiraIRC.instance.getConnection(serverConfig.getHost());
+		if(connection != null) {
+			EiraIRCBot bot = (EiraIRCBot) connection.getBot();
+			bot.updateProfiles();
+		}
 		serverConfig.addChannelConfig(config);
 		ConfigurationHandler.save();
 	}

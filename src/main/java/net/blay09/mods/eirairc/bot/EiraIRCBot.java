@@ -14,7 +14,11 @@ import net.blay09.mods.eirairc.api.bot.IBotCommand;
 import net.blay09.mods.eirairc.api.bot.IBotProfile;
 import net.blay09.mods.eirairc.api.bot.IIRCBot;
 import net.blay09.mods.eirairc.config.BotProfile;
+import net.blay09.mods.eirairc.config.ChannelConfig;
+import net.blay09.mods.eirairc.config.ServerConfig;
+import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.irc.IRCConnection;
+import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
@@ -25,18 +29,14 @@ import net.minecraft.world.World;
 public class EiraIRCBot implements IIRCBot {
 
 	private final IRCConnection connection;
-	private final BotProfile mainProfile;
 	private final Map<String, BotProfile> profiles = new HashMap<String, BotProfile>();
 	private final StringBuffer logBuffer = new StringBuffer();
+	private BotProfile mainProfile;
 	private boolean opEnabled;
 	
-	public EiraIRCBot(IRCConnection connection, BotProfile defaultProfile) {
+	public EiraIRCBot(IRCConnection connection) {
 		this.connection = connection;
-		this.mainProfile = defaultProfile;
-	}
-	
-	public void setProfile(String channelName, BotProfile profile) {
-		profiles.put(channelName.toLowerCase(), profile);
+		updateProfiles();
 	}
 	
 	public BotProfile getProfile(String channelName) {
@@ -138,17 +138,17 @@ public class EiraIRCBot implements IIRCBot {
 
 	@Override
 	public boolean getBoolean(IIRCContext context, String key, boolean defaultVal) {
-		return mainProfile.getBoolean(key, defaultVal) && context != null ? getProfile(context).getBoolean(key, defaultVal) : true;
+		return mainProfile.getBoolean(key, defaultVal) && (context != null ? getProfile(context).getBoolean(key, defaultVal) : true);
 	}
 
 	@Override
 	public boolean isMuted(IIRCContext context) {
-		return mainProfile.isMuted() || context != null ? getProfile(context).isMuted() : false;
+		return mainProfile.isMuted() || (context != null ? getProfile(context).isMuted() : false);
 	}
 
 	@Override
 	public boolean isReadOnly(IIRCContext context) {
-		return mainProfile.isReadOnly() || context != null ? getProfile(context).isReadOnly() : false;
+		return mainProfile.isReadOnly() || (context != null ? getProfile(context).isReadOnly() : false);
 	}
 
 	@Override
@@ -158,7 +158,18 @@ public class EiraIRCBot implements IIRCBot {
 
 	@Override
 	public String getDisplayFormat(IIRCContext context) {
-		return context != null ? getProfile(context).getDisplayFormat() : mainProfile.getDisplayFormat();
+		return (context != null ? getProfile(context).getDisplayFormat() : mainProfile.getDisplayFormat());
+	}
+
+	public void updateProfiles() {
+		ServerConfig serverConfig = ConfigHelper.getServerConfig(connection);
+		mainProfile = ConfigurationHandler.getBotProfile(serverConfig.getBotProfile());
+		profiles.clear();
+		for(ChannelConfig channelConfig : serverConfig.getChannelConfigs()) {
+			if(!channelConfig.getBotProfile().equals(mainProfile.getName())) {
+				profiles.put(channelConfig.getName().toLowerCase(), ConfigurationHandler.getBotProfile(channelConfig.getBotProfile()));
+			}
+		}
 	}
 
 }

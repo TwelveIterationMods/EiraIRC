@@ -344,6 +344,9 @@ public class IRCConnection implements Runnable, IIRCConnection {
 			users.put(user.getName().toLowerCase(), user);
 			MinecraftForge.EVENT_BUS.post(new IRCUserNickChangeEvent(this, user, oldNick, newNick));
 		} else if(cmd.equals("MODE")) {
+			if(!msg.arg(0).startsWith("#")) {
+				return false;
+			}
 			IRCChannel channel = (IRCChannel) getOrCreateChannel(msg.arg(0));
 			String mode = msg.arg(1);
 			String param = null;

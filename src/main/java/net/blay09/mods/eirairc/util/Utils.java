@@ -340,7 +340,7 @@ public class Utils {
 	public static IRCConnection connectTo(ServerConfig config) {
 		IRCConnection connection = new IRCConnection(config.getHost(), config.getServerPassword(), ConfigHelper.getFormattedNick(config), config.getIdent(), config.getDescription());
 		connection.setCharset(GlobalConfig.charset);
-		connection.setBot(new EiraIRCBot(connection, ConfigurationHandler.getBotProfile(config.getBotProfile())));
+		connection.setBot(new EiraIRCBot(connection));
 		if(connection.connect()) {
 			return connection;
 		}
