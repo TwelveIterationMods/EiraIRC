@@ -215,14 +215,14 @@ public class ScreenshotManager {
 		String ircMessage = Utils.getLocalizedMessage("irc.display.shareScreenshot", screenshot.getUploadURL());
 		String mcMessage = "/me " + ircMessage;
 		Minecraft.getMinecraft().thePlayer.sendChatMessage(mcMessage);
-		for(IIRCConnection connection : EiraIRC.instance.getConnections()) {
-			IIRCBot bot = connection.getBot();
-			for(IIRCChannel channel : connection.getChannels()) {
-				if(!bot.isReadOnly(channel)) {
-					channel.message(IRCConnection.EMOTE_START + ircMessage + IRCConnection.EMOTE_END);
-				}
-			}
-		}
+//		for(IIRCConnection connection : EiraIRC.instance.getConnections()) {
+//			IIRCBot bot = connection.getBot();
+//			for(IIRCChannel channel : connection.getChannels()) {
+//				if(!bot.isReadOnly(channel)) {
+//					channel.message(IRCConnection.EMOTE_START + ircMessage + IRCConnection.EMOTE_END);
+//				}
+//			}
+//		}
 	}
 
 	public void handleNewScreenshot(Screenshot screenshot) {

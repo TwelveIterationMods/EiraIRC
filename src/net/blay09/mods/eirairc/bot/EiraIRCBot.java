@@ -132,17 +132,17 @@ public class EiraIRCBot implements IIRCBot {
 
 	@Override
 	public boolean getBoolean(IIRCContext context, String key, boolean defaultVal) {
-		return mainProfile.getBoolean(key, defaultVal) && context != null ? getProfile(context).getBoolean(key, defaultVal) : true;
+		return mainProfile.getBoolean(key, defaultVal) && (context != null ? getProfile(context).getBoolean(key, defaultVal) : true);
 	}
 
 	@Override
 	public boolean isMuted(IIRCContext context) {
-		return mainProfile.isMuted() || context != null ? getProfile(context).isMuted() : false;
+		return mainProfile.isMuted() || (context != null ? getProfile(context).isMuted() : false);
 	}
 
 	@Override
 	public boolean isReadOnly(IIRCContext context) {
-		return mainProfile.isReadOnly() || context != null ? getProfile(context).isReadOnly() : false;
+		return mainProfile.isReadOnly() || (context != null ? getProfile(context).isReadOnly() : false);
 	}
 
 	@Override
@@ -152,7 +152,7 @@ public class EiraIRCBot implements IIRCBot {
 
 	@Override
 	public String getDisplayFormat(IIRCContext context) {
-		return context != null ? getProfile(context).getDisplayFormat() : mainProfile.getDisplayFormat();
+		return (context != null ? getProfile(context).getDisplayFormat() : mainProfile.getDisplayFormat());
 	}
 
 }

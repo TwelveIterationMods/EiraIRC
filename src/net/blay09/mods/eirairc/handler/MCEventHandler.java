@@ -66,11 +66,7 @@ public class MCEventHandler implements IPlayerTracker, IConnectionHandler {
 	public void onServerCommand(CommandEvent event) {
 		if(event.command instanceof CommandServerEmote) {
 			if(event.sender instanceof EntityPlayer) {
-				String emote = "";
-				for(int i = 0; i < event.parameters.length; i++) {
-					emote += " " + event.parameters[i];
-				}
-				emote = emote.trim();
+				String emote = Utils.joinStrings(event.parameters, " ").trim();
 				if(emote.length() == 0) {
 					return;
 				}
@@ -108,11 +104,11 @@ public class MCEventHandler implements IPlayerTracker, IConnectionHandler {
 	@SideOnly(Side.CLIENT)
 	public void onClientCommand(CommandEvent event) {
 		if(event.command instanceof CommandServerEmote) {
-			StringBuilder sb = new StringBuilder();
-			for(int i = 0; i < event.parameters.length; i++) {
-				sb.append(event.parameters[i]);
+			String emote = Utils.joinStrings(event.parameters, " ").trim();
+			if(emote.length() == 0) {
+				return;
 			}
-			if(onClientEmote(sb.toString())) {
+			if(onClientEmote(emote)) {
 				event.setCanceled(true);
 			}
 		}
