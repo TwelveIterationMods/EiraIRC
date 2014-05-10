@@ -29,7 +29,7 @@ public class ServiceConfig {
 		return settings;
 	}
 	
-	public static void initDefaults(Configuration config) {
+	public static void setupDefaultServices(Configuration config) {
 		config.get(CATEGORY + Configuration.CATEGORY_SPLITTER + "atheme", "cmdIdentify", "PRIVMSG NickServ :IDENTIFY {USER} {PASS}");
 		config.get(CATEGORY + Configuration.CATEGORY_SPLITTER + "atheme", "cmdGhost", "PRIVMSG NickServ :GHOST {NICK} {PASS}");
 		config.get(CATEGORY + Configuration.CATEGORY_SPLITTER + "atheme", "serverList", new String[] { Utils.quote("irc.esper.net") });
@@ -39,11 +39,10 @@ public class ServiceConfig {
 		
 		config.get(CATEGORY + Configuration.CATEGORY_SPLITTER + "qbot", "cmdIdentify", "AUTH {USER} {PASS}");
 		config.get(CATEGORY + Configuration.CATEGORY_SPLITTER + "qbot", "serverList", new String[] { Utils.quote("irc.quakenet.org") });
+		config.save();
 	}
 	
 	public static void load(Configuration config) {
-		initDefaults(config);
-		
 		for(ConfigCategory category : config.getCategory(CATEGORY).getChildren()) {
 			String qname = category.getQualifiedName();
 			String cmdIdentify = Utils.unquote(config.get(qname, "cmdIdentify", "").getString());
@@ -55,4 +54,5 @@ public class ServiceConfig {
 			}
 		}
 	}
+
 }

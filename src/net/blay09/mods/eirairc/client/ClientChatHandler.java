@@ -4,7 +4,7 @@
 package net.blay09.mods.eirairc.client;
 
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.command.IRCCommandHandler;
+import net.blay09.mods.eirairc.command.base.IRCCommandHandler;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.WrongUsageException;
@@ -23,9 +23,9 @@ public class ClientChatHandler {
 		if(i == -1) {
 			i = text.length();
 		}
-		if(processCommand(Minecraft.getMinecraft().thePlayer, text.substring(1, i), i < text.length() ? text.substring(i + 1).split(" ") : new String[0])) {
-			return true;
-		}
+//		if(processCommand(Minecraft.getMinecraft().thePlayer, text.substring(1, i), i < text.length() ? text.substring(i + 1).split(" ") : new String[0])) {
+//			return true;
+//		}
 		return false;
 	}
 	

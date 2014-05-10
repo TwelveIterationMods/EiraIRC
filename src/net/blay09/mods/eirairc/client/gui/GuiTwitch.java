@@ -4,9 +4,10 @@
 package net.blay09.mods.eirairc.client.gui;
 
 import net.blay09.mods.eirairc.EiraIRC;
+import net.blay09.mods.eirairc.api.IIRCConnection;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
-import net.blay09.mods.eirairc.irc.IRCConnection;
+import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
@@ -72,9 +73,9 @@ public class GuiTwitch extends GuiScreen {
 	public void actionPerformed(GuiButton button) {
 		if(button == btnBack) {
 			if(config.isAutoConnect() || EiraIRC.instance.isConnectedTo(Globals.TWITCH_SERVER)) {
-				IRCConnection connection = EiraIRC.instance.getConnection(Globals.TWITCH_SERVER);
+				IIRCConnection connection = EiraIRC.instance.getConnection(Globals.TWITCH_SERVER);
 				if(connection != null) {
-					connection.disconnect(Utils.getQuitMessage(connection));
+					connection.disconnect(ConfigHelper.getQuitMessage(connection));
 				}
 				if(config.getNick() != null && !config.getNick().isEmpty() && config.getServerPassword() != null && !config.getServerPassword().isEmpty()) {
 					Utils.connectTo(config);

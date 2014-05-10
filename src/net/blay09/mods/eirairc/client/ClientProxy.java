@@ -4,6 +4,7 @@
 package net.blay09.mods.eirairc.client;
 
 import net.blay09.mods.eirairc.CommonProxy;
+import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.client.gui.OverlayNotification;
 import net.blay09.mods.eirairc.client.gui.OverlayRecLive;
 import net.blay09.mods.eirairc.client.screenshot.ScreenshotManager;
@@ -16,6 +17,7 @@ import net.blay09.mods.eirairc.util.NotificationType;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.client.ClientCommandHandler;
 import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
 
@@ -30,6 +32,8 @@ public class ClientProxy extends CommonProxy {
 		notificationGUI = new OverlayNotification();
 		recLiveGUI= new OverlayRecLive();
 		ScreenshotManager.create();
+		
+		EiraIRC.instance.registerCommands(ClientCommandHandler.instance, false);
 	}
 
 	@Override

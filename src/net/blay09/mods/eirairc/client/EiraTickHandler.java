@@ -86,7 +86,7 @@ public class EiraTickHandler implements ITickHandler {
 	@Override
 	public void tickEnd(EnumSet<TickType> type, Object... tickData) {
 		if(type.contains(TickType.CLIENT)) {
-			if(ScreenshotConfig.manageScreenshots && ScreenshotConfig.screenshotAction != ScreenshotConfig.VALUE_NONE) {
+			if(ScreenshotConfig.screenshotAction != ScreenshotConfig.VALUE_NONE) {
 				if(Keyboard.isKeyDown(Keyboard.KEY_F2)) {
 					screenshotCheck = 10;
 				} else if(screenshotCheck > 0) {

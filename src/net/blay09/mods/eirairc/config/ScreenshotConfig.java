@@ -1,11 +1,11 @@
-// Copyright (c) 2013, Christopher "blay09" Baker
+// Copyright (c) 2014, Christopher "blay09" Baker
 // All rights reserved.
 
 package net.blay09.mods.eirairc.config;
 
 import java.util.List;
 
-import net.blay09.mods.eirairc.client.upload.UploadHoster;
+import net.blay09.mods.eirairc.api.upload.UploadManager;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
@@ -20,13 +20,11 @@ public class ScreenshotConfig {
 	public static final int VALUE_UPLOADSHARE = 2;
 	public static final int VALUE_UPLOADCLIPBOARD = 3;
 	
-	public static boolean manageScreenshots = true;
 	public static int screenshotAction = 0;
-	public static String uploadHoster = UploadHoster.HOSTER_IMGUR;
+	public static String uploadHoster = "imgur";
 	public static int uploadBufferSize = 1024;
 	
 	public static void load(Configuration config) {
-		manageScreenshots = config.get(CATEGORY, "manageScreenshots", true).getBoolean(true);
 		screenshotAction = config.get(CATEGORY, "screenshotAction", screenshotAction).getInt();
 		config.get(CATEGORY, "screenshotAction", screenshotAction).comment = "0: None / 1: Upload / 2: Upload & Share / 3: Upload & Clipboard";
 		uploadHoster = Utils.unquote(config.get(CATEGORY, "uploadHoster", uploadHoster).getString());
@@ -45,8 +43,8 @@ public class ScreenshotConfig {
 	
 	public static void addValuesToList(List<String> list, String option) {
 		if(option.equals("uploadHoster")) {
-			for(int i = 0; i < UploadHoster.availableHosters.length; i++) {
-				list.add(UploadHoster.availableHosters[i]);
+			for(int i = 0; i < UploadManager.getAvailableHosters().length; i++) {
+				list.add(UploadManager.getAvailableHosters()[i]);
 			}
 		} else if(option.equals("screenshotAction")) {
 			list.add("none");

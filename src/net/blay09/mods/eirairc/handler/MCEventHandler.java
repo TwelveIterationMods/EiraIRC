@@ -4,7 +4,9 @@
 package net.blay09.mods.eirairc.handler;
 
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.command.IRCCommandHandler;
+import net.blay09.mods.eirairc.api.IIRCChannel;
+import net.blay09.mods.eirairc.api.IIRCConnection;
+import net.blay09.mods.eirairc.command.base.IRCCommandHandler;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.DisplayConfig;
 import net.blay09.mods.eirairc.config.GlobalConfig;
@@ -60,9 +62,9 @@ public class MCEventHandler implements IPlayerTracker, IConnectionHandler {
 	public void onPlayerLogin(EntityPlayer player) {
 		String name = Utils.getAliasForPlayer(player);
 		String ircMessage = Utils.getLocalizedMessage("irc.display.mc.joinMsg", name);
-		for(IRCConnection connection : EiraIRC.instance.getConnections()) {
+		for(IIRCConnection connection : EiraIRC.instance.getConnections()) {
 			ServerConfig serverConfig = Utils.getServerConfig(connection);
-			for(IRCChannel channel : connection.getChannels()) {
+			for(IIRCChannel channel : connection.getChannels()) {
 				ChannelConfig channelConfig = serverConfig.getChannelConfig(channel);
 				if(DisplayConfig.relayMinecraftJoinLeave && !channelConfig.isReadOnly() && channelConfig.relayMinecraftJoinLeave) {
 					connection.sendChannelMessage(channel, ircMessage);

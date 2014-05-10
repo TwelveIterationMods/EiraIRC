@@ -3,6 +3,7 @@
 
 package net.blay09.mods.eirairc.config;
 
+import java.io.File;
 
 public class ServiceSettings {
 	
@@ -25,4 +26,5 @@ public class ServiceSettings {
 	public boolean hasGhostCommand() {
 		return ghostCMD != null || ghostCMD.isEmpty();
 	}
+
 }

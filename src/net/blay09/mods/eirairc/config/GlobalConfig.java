@@ -1,4 +1,4 @@
-// Copyright (c) 2013, Christopher "blay09" Baker
+// Copyright (c) 2014, Christopher "blay09" Baker
 // All rights reserved.
 
 package net.blay09.mods.eirairc.config;
@@ -20,20 +20,14 @@ public class GlobalConfig {
 	public static String nickPrefix = "";
 	public static String nickSuffix = "";
 	public static boolean enableAliases = false;
-	public static boolean allowPrivateMessages = true;
 	public static boolean persistentConnection = true;
 	public static boolean saveCredentials = true;
-	public static boolean enableLinkFilter = false;
 	public static String charset = "UTF-8";
 	public static final List<String> colorBlackList = new ArrayList<String>();
 	public static boolean registerShortCommands = true;
-	public static boolean interOp = false;
-	public static List<String> interOpAuthList = new ArrayList<String>();
 	
 	public static void load(Configuration config) {
 		nick = Utils.unquote(config.get(ConfigurationHandler.CATEGORY_GLOBAL, "nick", nick).getString());
-		allowPrivateMessages = config.get(ConfigurationHandler.CATEGORY_GLOBAL, "allowPrivateMessages", allowPrivateMessages).getBoolean(allowPrivateMessages);
-		enableLinkFilter = config.get(ConfigurationHandler.CATEGORY_GLOBAL, "enableLinkFilter", enableLinkFilter).getBoolean(enableLinkFilter);
 		saveCredentials = config.get(ConfigurationHandler.CATEGORY_GLOBAL, "saveCredentials", saveCredentials).getBoolean(saveCredentials);
 		registerShortCommands = config.get(ConfigurationHandler.CATEGORY_GLOBAL, "registerShortCommands", registerShortCommands).getBoolean(registerShortCommands);
 		charset = Utils.unquote(config.get(ConfigurationHandler.CATEGORY_GLOBAL, "charset", charset).getString());
@@ -46,11 +40,6 @@ public class GlobalConfig {
 		String[] colorBlackListArray = config.get(ConfigurationHandler.CATEGORY_SERVERONLY, "colorBlackList", Globals.DEFAULT_COLOR_BLACKLIST).getStringList();
 		for(int i = 0; i < colorBlackListArray.length; i++) {
 			colorBlackList.add(colorBlackListArray[i]);
-		}
-		interOp = config.get(ConfigurationHandler.CATEGORY_SERVERONLY, "interOp", GlobalConfig.interOp).getBoolean(GlobalConfig.interOp);
-		String[] interOpAuthListArray = config.get(ConfigurationHandler.CATEGORY_SERVERONLY, "interOpAuthList", new String[0]).getStringList();
-		for(int i = 0; i < interOpAuthListArray.length; i++) {
-			interOpAuthList.add(interOpAuthListArray[i]);
 		}
 		nickPrefix = Utils.unquote(config.get(ConfigurationHandler.CATEGORY_SERVERONLY, "nickPrefix", nickPrefix).getString());
 		nickSuffix = Utils.unquote(config.get(ConfigurationHandler.CATEGORY_SERVERONLY, "nickSuffix", nickSuffix).getString());
@@ -73,12 +62,9 @@ public class GlobalConfig {
 		String value = null;
 		if(key.equals("persistentConnection")) value = String.valueOf(persistentConnection);
 		else if(key.equals("saveCredentials")) value = String.valueOf(saveCredentials);
-		else if(key.equals("enableLinkFilter")) value = String.valueOf(enableLinkFilter);
 		else if(key.equals("registerShortCommands")) value = String.valueOf(registerShortCommands);
-		else if(key.equals("interOp")) value = String.valueOf(interOp);
 		else if(key.equals("enableAliases")) value = String.valueOf(enableAliases);
 		else if(key.equals("charset")) value = charset;
-		else if(key.equals("allowPrivateMessage")) value = String.valueOf(allowPrivateMessages);
 		else if(key.equals("nickPrefix")) value = nickPrefix;
 		else if(key.equals("nickSuffix")) value = nickSuffix;
 		return value;
@@ -89,8 +75,6 @@ public class GlobalConfig {
 			persistentConnection = Boolean.parseBoolean(value);
 		} else if(key.equals("saveCredentials")){
 			saveCredentials = Boolean.parseBoolean(value);
-		} else if(key.equals("enableLinkFilter")){
-			enableLinkFilter = Boolean.parseBoolean(value);
 		} else if(key.equals("registerShortCommands")){
 			registerShortCommands = Boolean.parseBoolean(value);
 			Utils.sendLocalizedMessage(sender, "irc.config.requiresRestart");
@@ -100,8 +84,6 @@ public class GlobalConfig {
 		} else if(key.equals("charset")) {
 			charset = value;
 			Utils.sendLocalizedMessage(sender, "irc.config.requiresRestart");
-		} else if(key.equals("allowPrivateMessages")){
-			allowPrivateMessages = Boolean.parseBoolean(value);
 		} else if(key.equals("nickPrefix")) {
 			if(value.equals("none")) {
 				value = "";
@@ -124,24 +106,20 @@ public class GlobalConfig {
 		list.add("enableLinkFilter");
 		list.add("registerShortCommands");
 		list.add("charset");
-		list.add("allowPrivateMessages");
 		list.add("nickPrefix");
 		list.add("nickSuffix");
 	}
 	
 	public static void save(Configuration config) {
 		config.get(ConfigurationHandler.CATEGORY_GLOBAL, "nick", "").set(Utils.quote(nick));
-		config.get(ConfigurationHandler.CATEGORY_GLOBAL, "allowPrivateMessages", allowPrivateMessages).set(allowPrivateMessages);
-		config.get(ConfigurationHandler.CATEGORY_GLOBAL, "enableLinkFilter", enableLinkFilter).set(enableLinkFilter);
 		config.get(ConfigurationHandler.CATEGORY_GLOBAL, "saveCredentials", saveCredentials).set(saveCredentials);
 		config.get(ConfigurationHandler.CATEGORY_GLOBAL, "charset", "").set(Utils.quote(charset));
 
 		config.get(ConfigurationHandler.CATEGORY_CLIENTONLY, "persistentConnection", persistentConnection).set(persistentConnection);
 
-		config.get(ConfigurationHandler.CATEGORY_SERVERONLY, "enableAliases", enableAliases).set(enableAliases);
 		config.get(ConfigurationHandler.CATEGORY_SERVERONLY, "colorBlackList", new String[0]).set(colorBlackList.toArray(new String[colorBlackList.size()]));
-		config.get(ConfigurationHandler.CATEGORY_SERVERONLY, "nickPrefix", "").set(nickPrefix);
-		config.get(ConfigurationHandler.CATEGORY_SERVERONLY, "nickSuffix", "").set(nickSuffix);
+		config.get(ConfigurationHandler.CATEGORY_SERVERONLY, "nickPrefix", "").set(Utils.quote(nickPrefix));
+		config.get(ConfigurationHandler.CATEGORY_SERVERONLY, "nickSuffix", "").set(Utils.quote(nickSuffix));
 		
 		config.removeCategory(config.getCategory(ConfigurationHandler.CATEGORY_SERVERS));
 		int c = 0;

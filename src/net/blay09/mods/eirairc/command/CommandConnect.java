@@ -1,20 +1,19 @@
-// Copyright (c) 2013, Christopher "blay09" Baker
+// Copyright (c) 2014, Christopher "blay09" Baker
 // All rights reserved.
 
 package net.blay09.mods.eirairc.command;
 
 import java.util.List;
 
-import net.blay09.mods.eirairc.util.Globals;
-import net.minecraft.command.ICommand;
+import net.blay09.mods.eirairc.EiraIRC;
+import net.blay09.mods.eirairc.api.IIRCContext;
+import net.blay09.mods.eirairc.config.ServerConfig;
+import net.blay09.mods.eirairc.handler.ConfigurationHandler;
+import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.command.WrongUsageException;
 
-public class CommandConnect implements ICommand {
-
-	@Override
-	public int compareTo(Object arg0) {
-		return 0;
-	}
+public class CommandConnect extends SubCommand {
 
 	@Override
 	public String getCommandName() {
@@ -22,33 +21,61 @@ public class CommandConnect implements ICommand {
 	}
 
 	@Override
-	public String getCommandUsage(ICommandSender icommandsender) {
-		return Globals.MOD_ID + ":irc.commands.connect.short";
+	public String getUsageString(ICommandSender sender) {
+		return "irc.commands.connect";
 	}
 
 	@Override
-	public List getCommandAliases() {
+	public String[] getAliases() {
 		return null;
 	}
 
 	@Override
-	public void processCommand(ICommandSender sender, String[] args) {
-		IRCCommandHandler.processCommand(sender, IRCCommandHandler.getShiftedArgs(args, getCommandName()), true);
-	}
-
-	@Override
-	public boolean canCommandSenderUseCommand(ICommandSender sender) {
+	public boolean processCommand(ICommandSender sender, IIRCContext context, String[] args, boolean serverSide) {
+		if(args.length < 1) {
+			throw new WrongUsageException(getCommandUsage(sender));
+		}
+		String host = args[0];
+		if(EiraIRC.instance.isConnectedTo(host)) {
+			Utils.sendLocalizedMessage(sender, "irc.general.alreadyConnected", host);
+			return true;
+		}
+		Utils.sendLocalizedMessage(sender, "irc.basic.connecting", host);
+		ServerConfig serverConfig = ConfigurationHandler.getServerConfig(host);
+		if(args.length >= 2) {
+			serverConfig.setServerPassword(args[1]);
+		}
+		if(Utils.connectTo(serverConfig) != null) {
+			ConfigurationHandler.addServerConfig(serverConfig);
+			ConfigurationHandler.save();
+		} else {
+			Utils.sendLocalizedMessage(sender, "irc.connect.error", host);
+		}
 		return true;
 	}
 
 	@Override
-	public List addTabCompletionOptions(ICommandSender sender, String[] args) {
-		return IRCCommandHandler.addTabCompletionOptions(getCommandName(), sender, IRCCommandHandler.getShiftedArgs(args, getCommandName()));
+	public boolean canCommandSenderUseCommand(ICommandSender sender) {
+		return Utils.isOP(sender);
 	}
 
 	@Override
-	public boolean isUsernameIndex(String[] args, int i) {
-		return IRCCommandHandler.isUsernameIndex(IRCCommandHandler.getShiftedArgs(args, getCommandName()), i);
+	public void addTabCompletionOptions(List<String> list, ICommandSender sender, String[] args) {
+		if(args.length == 0) {
+			for(ServerConfig serverConfig : ConfigurationHandler.getServerConfigs()) {
+				list.add(serverConfig.getHost());
+			}
+		}
+	}
+
+	@Override
+	public boolean isUsernameIndex(String[] args, int idx) {
+		return false;
+	}
+
+	@Override
+	public boolean hasQuickCommand() {
+		return true;
 	}
 
 }

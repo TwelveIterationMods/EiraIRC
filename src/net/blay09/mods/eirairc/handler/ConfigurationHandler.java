@@ -1,25 +1,29 @@
-// Copyright (c) 2013, Christopher "blay09" Baker
+// Copyright (c) 2014, Christopher "blay09" Baker
 // All rights reserved.
 
 package net.blay09.mods.eirairc.handler;
 
 import java.io.File;
+import java.io.FilenameFilter;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import net.blay09.mods.eirairc.config.BotProfile;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.CompatibilityConfig;
 import net.blay09.mods.eirairc.config.DisplayConfig;
+import net.blay09.mods.eirairc.config.DisplayFormatConfig;
 import net.blay09.mods.eirairc.config.GlobalConfig;
 import net.blay09.mods.eirairc.config.KeyConfig;
 import net.blay09.mods.eirairc.config.NotificationConfig;
 import net.blay09.mods.eirairc.config.ScreenshotConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.ServiceConfig;
-import net.blay09.mods.eirairc.util.IRCTargetError;
+import net.blay09.mods.eirairc.util.IRCResolver;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
 import net.minecraftforge.common.ConfigCategory;
@@ -27,13 +31,14 @@ import net.minecraftforge.common.Configuration;
 
 public class ConfigurationHandler {
 
-	private static final String CONFIG_VERSION = "2";
+	private static String CONFIG_VERSION = "2";
 	
 	public static final String CATEGORY_GLOBAL = "global";
 	public static final String CATEGORY_DISPLAY = "display";
 	public static final String CATEGORY_FORMATS = "formats";
 	public static final String CATEGORY_SERVERONLY = "serveronly";
 	public static final String CATEGORY_CLIENTONLY = "clientonly";
+	public static final String CATEGORY_KEYBINDS = "keybinds";
 	public static final String CATEGORY_SERVERS = "servers";
 	public static final String CATEGORY_CHANNELS = "channels";
 	public static final String CATEGORY_COMPAT = "compatibility";
@@ -44,19 +49,83 @@ public class ConfigurationHandler {
 	private static final Map<String, ServerConfig> serverConfigs = new HashMap<String, ServerConfig>();
 
 	private static Configuration config;
+	private static Map<String, BotProfile> botProfiles = new HashMap<String, BotProfile>();
+	private static List<BotProfile> botProfileList = new ArrayList<BotProfile>();
+	private static BotProfile defaultBotProfile;
+	private static File botProfileDir;
+	private static final Map<String, DisplayFormatConfig> displayFormats = new HashMap<String, DisplayFormatConfig>();
+	private static List<DisplayFormatConfig> displayFormatList = new ArrayList<DisplayFormatConfig>();
+	private static DisplayFormatConfig defaultDisplayFormat;
+	
+	public static void loadBotProfiles(File profileDir) {
+		if(!profileDir.exists()) {
+			profileDir.mkdirs();
+		}
+		botProfileDir = profileDir;
+		BotProfile.setupDefaultProfiles(profileDir);
+		File[] files = profileDir.listFiles(new FilenameFilter() {
+			@Override
+			public boolean accept(File file, String name) {
+				return name.endsWith(".cfg");
+			}
+		});
+		for(int i = 0; i < files.length; i++) {
+			BotProfile botProfile = new BotProfile(files[i]);
+			botProfile.loadCommands();
+			botProfiles.put(botProfile.getName(), botProfile);
+			botProfileList.add(botProfile);
+		}
+		findDefaultBotProfile();
+	}
+	
+	public static void findDefaultBotProfile() {
+		defaultBotProfile = botProfiles.get("Client");
+		if(defaultBotProfile == null) {
+			for(BotProfile botProfile : botProfiles.values()) {
+				if(botProfile.isDefaultProfile()) {
+					defaultBotProfile = botProfile;
+					return;
+				}
+			}
+			if(defaultBotProfile == null) {
+				Iterator<BotProfile> it = botProfiles.values().iterator();
+				defaultBotProfile = it.next();
+			}
+		}
+	}
+	
+	public static void loadDisplayFormats(File formatDir) {
+		if(!formatDir.exists()) {
+			formatDir.mkdirs();
+		}
+		DisplayFormatConfig.setupDefaultFormats(formatDir);
+		File[] files = formatDir.listFiles(new FilenameFilter() {
+			@Override
+			public boolean accept(File file, String name) {
+				return name.endsWith(".cfg");
+			}
+		});
+		for(int i = 0; i < files.length; i++) {
+			DisplayFormatConfig dfc = new DisplayFormatConfig(files[i]);
+			dfc.loadFormats();
+			displayFormats.put(dfc.getName(), dfc);
+			displayFormatList.add(dfc);
+		}
+		defaultDisplayFormat = displayFormats.get(DisplayFormatConfig.DEFAULT_FORMAT);
+	}
+	
+	public static void loadServices(File configDir) {
+		if(!configDir.exists()) {
+			configDir.mkdirs();
+		}
+		Configuration serviceConfig = new Configuration(new File(configDir, "services.cfg"));
+		ServiceConfig.setupDefaultServices(serviceConfig);
+		ServiceConfig.load(serviceConfig);
+	}
 	
 	public static void load(File configFile) {
 		boolean newConfigFile = !configFile.exists();
 		config = new Configuration(configFile);
-		if(newConfigFile) {
-			config.get(CATEGORY_GLOBAL, "isNewConfigFormat", true, "Do not change this, it'll reset your config file.").set(true);
-		} else if(!config.get(CATEGORY_GLOBAL, "isNewConfigFormat", false, "Do not change this, it'll reset your config file.").getBoolean(false)) {
-			resetConfig();
-			config.get(CATEGORY_GLOBAL, "isNewConfigFormat", true, "Do not change this, it'll reset your config file.").set(true);
-		}
-		config.removeCategory(config.getCategory(Configuration.CATEGORY_GENERAL));
-		config.removeCategory(config.getCategory(Configuration.CATEGORY_BLOCK));
-		config.removeCategory(config.getCategory(Configuration.CATEGORY_ITEM));
 		
 		GlobalConfig.load(config);
 		KeyConfig.load(config);
@@ -64,7 +133,6 @@ public class ConfigurationHandler {
 		ScreenshotConfig.load(config);
 		DisplayConfig.load(config);
 		CompatibilityConfig.load(config);
-		ServiceConfig.load(config);
 		
 		config.save();
 	}
@@ -126,24 +194,16 @@ public class ConfigurationHandler {
 				Utils.sendLocalizedMessage(sender, "irc.config.invalidOption", "Global", key);
 			}
 		} else {
-			Object rt = Utils.resolveIRCTarget(target, true, false, true, false, false, false);
-			if(rt instanceof IRCTargetError) {
-				switch((IRCTargetError) rt) {
-				case ChannelNotFound: Utils.sendLocalizedMessage(sender, "irc.target.channelNotFound", target);
-					break;
-				case InvalidTarget: Utils.sendLocalizedMessage(sender, "irc.target.invalid");
-					break;
-				case ServerNotFound: Utils.sendLocalizedMessage(sender, "irc.target.serverNotFound", target);
-					break;
-				case SpecifyServer: Utils.sendLocalizedMessage(sender, "irc.target.unknown");
-					break;
-				default: Utils.sendLocalizedMessage(sender, "irc.target.unknown");
-					break;
+			ChannelConfig channelConfig = IRCResolver.resolveChannelConfig(target, IRCResolver.FLAGS_NONE);
+			if(channelConfig != null) {
+				channelConfig.handleConfigCommand(sender, key, value);
+			} else {
+				ServerConfig serverConfig = IRCResolver.resolveServerConfig(target, IRCResolver.FLAGS_NONE);
+				if(serverConfig != null) {
+					serverConfig.handleConfigCommand(sender, key, value);
+				} else {
+					Utils.sendLocalizedMessage(sender, "irc.target.targetNotFound", target);
 				}
-			} else if(rt instanceof ServerConfig) {
-				((ServerConfig) rt).handleConfigCommand(sender, key, value);
-			} else if(rt instanceof ChannelConfig) {
-				((ChannelConfig) rt).handleConfigCommand(sender, key, value);
 			}
 		}
 	}
@@ -156,31 +216,22 @@ public class ConfigurationHandler {
 			if(result == null) result = ScreenshotConfig.handleConfigCommand(sender, key);
 			if(result == null) result = DisplayConfig.handleConfigCommand(sender, key);
 			if(result == null) result = CompatibilityConfig.handleConfigCommand(sender, key);
-			
 			if(result != null) {
 				Utils.sendLocalizedMessage(sender, "irc.config.lookup", "Global", key, result);
 			} else {
 				Utils.sendLocalizedMessage(sender, "irc.config.invalidOption", "Global", key);
 			}
 		} else {
-			Object rt = Utils.resolveIRCTarget(target, true, false, true, false, false, false);
-			if(rt instanceof IRCTargetError) {
-				switch((IRCTargetError) rt) {
-				case ChannelNotFound: Utils.sendLocalizedMessage(sender, "irc.target.channelNotFound", target);
-					break;
-				case InvalidTarget: Utils.sendLocalizedMessage(sender, "irc.target.invalid");
-					break;
-				case ServerNotFound: Utils.sendLocalizedMessage(sender, "irc.target.serverNotFound", target);
-					break;
-				case SpecifyServer: Utils.sendLocalizedMessage(sender, "irc.target.unknown");
-					break;
-				default: Utils.sendLocalizedMessage(sender, "irc.target.unknown");
-					break;
+			ChannelConfig channelConfig = IRCResolver.resolveChannelConfig(target, IRCResolver.FLAGS_NONE);
+			if(channelConfig != null) {
+				channelConfig.handleConfigCommand(sender, key);
+			} else {
+				ServerConfig serverConfig = IRCResolver.resolveServerConfig(target, IRCResolver.FLAGS_NONE);
+				if(serverConfig != null) {
+					serverConfig.handleConfigCommand(sender, key);
+				} else {
+					Utils.sendLocalizedMessage(sender, "irc.target.targetNotFound", target);
 				}
-			} else if(rt instanceof ServerConfig) {
-				((ServerConfig) rt).handleConfigCommand(sender, key);
-			} else if(rt instanceof ChannelConfig) {
-				((ChannelConfig) rt).handleConfigCommand(sender, key);
 			}
 		}
 	}
@@ -207,6 +258,55 @@ public class ConfigurationHandler {
 		NotificationConfig.addValuesToList(list, option);
 		ScreenshotConfig.addValuesToList(list, option);
 		CompatibilityConfig.addValuesToList(list, option);
+	}
+
+	public static BotProfile getBotProfile(String name) {
+		BotProfile botProfile = botProfiles.get(name);
+		if(botProfile == null) {
+			return defaultBotProfile;
+		}
+		return botProfile;
+	}
+	
+	public static List<BotProfile> getBotProfiles() {
+		return botProfileList;
+	}
+
+	public static DisplayFormatConfig getDisplayFormat(String displayMode) {
+		DisplayFormatConfig displayFormat = displayFormats.get(displayMode);
+		if(displayFormat == null) {
+			return defaultDisplayFormat;
+		}
+		return displayFormat;
+	}
+
+	public static File getBotProfileDir() {
+		return botProfileDir;
+	}
+	
+	public static List<DisplayFormatConfig> getDisplayFormats() {
+		return displayFormatList;
+	}
+
+	public static void addBotProfile(BotProfile botProfile) {
+		botProfiles.put(botProfile.getName(), botProfile);
+		botProfileList.add(botProfile);
+	}
+	
+	public static void renameBotProfile(BotProfile botProfile, String newName) {
+		botProfiles.remove(botProfile.getName());
+		botProfile.setName(newName);
+		botProfiles.put(botProfile.getName(), botProfile);
+	}
+
+	public static void removeBotProfile(BotProfile botProfile) {
+		botProfiles.remove(botProfile.getName());
+		botProfileList.remove(botProfile);
+		botProfile.getFile().delete();
+	}
+
+	public static BotProfile getDefaultBotProfile() {
+		return defaultBotProfile;
 	}
 
 }

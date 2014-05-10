@@ -15,7 +15,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.config.ChannelConfig;
+import net.blay09.mods.eirairc.api.IIRCChannel;
+import net.blay09.mods.eirairc.api.IIRCConnection;
+import net.blay09.mods.eirairc.api.IIRCContext;
+import net.blay09.mods.eirairc.api.IIRCUser;
+import net.blay09.mods.eirairc.bot.EiraIRCBot;
 import net.blay09.mods.eirairc.config.DisplayConfig;
 import net.blay09.mods.eirairc.config.GlobalConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
@@ -24,7 +28,6 @@ import net.blay09.mods.eirairc.config.ServiceSettings;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.irc.IRCChannel;
 import net.blay09.mods.eirairc.irc.IRCConnection;
-import net.blay09.mods.eirairc.irc.IRCTarget;
 import net.blay09.mods.eirairc.irc.IRCUser;
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.ICommandSender;
@@ -120,45 +123,79 @@ public class Utils {
 		return "\"" + s + "\"";
 	}
 	
-	public static String addPreSuffix(String name) {
+	private static String addPreSuffix(String name) {
 		return GlobalConfig.nickPrefix + name + GlobalConfig.nickSuffix;
+	}
+	
+	private static String addColorCodes(String name, char colorCode) {
+		if(colorCode == INVALID_COLOR) {
+			return name;
+		}
+		return Globals.COLOR_CODE_PREFIX + String.valueOf(colorCode) + name + Globals.COLOR_CODE_PREFIX + "f";
+	}
+
+	public static String getNickIRC(EntityPlayer player) {
+		return addPreSuffix(getAliasForPlayer(player));
+	}
+	
+	public static String getNickGame(EntityPlayer player, boolean color) {
+		if(color) {
+			return addColorCodes(getAliasForPlayer(player), getColorCodeForPlayer(player));
+		} else {
+			return getAliasForPlayer(player);
+		}
+	}
+	
+	public static String getNickGame(IIRCChannel channel, IIRCUser user, boolean color) {
+		if(color) {
+			return addColorCodes(user.getName(), getColorCodeForUser(channel, user));
+		} else {
+			return user.getName();
+		}
+	}
+	
+	public static char getColorCodeForUser(IIRCChannel channel, IIRCUser user) {
+		if(channel == null) {
+			return getColorCode(DisplayConfig.ircPrivateColor);
+		}
+		if(user.isOperator(channel)) {
+			if(!DisplayConfig.ircOpColor.isEmpty()) {
+				return getColorCode(DisplayConfig.ircOpColor);
+			}
+		} else if(user.hasVoice(channel)) {
+			if(!DisplayConfig.ircVoiceColor.isEmpty()) {
+				return getColorCode(DisplayConfig.ircVoiceColor);
+			}
+		}
+		return getColorCode(DisplayConfig.ircColor);
+	}
+	
+	public static char getColorCodeForPlayer(EntityPlayer player) {
+		NBTTagCompound tagCompound = player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getCompoundTag("EiraIRC");
+		boolean isOP = Utils.isServerSide() && isOP(player);
+		if(!DisplayConfig.enableNameColors && !isOP) {
+			return INVALID_COLOR;
+		}
+		String colorName = tagCompound.getString("NameColor");
+		if(!colorName.isEmpty()) {
+			return getColorCode(colorName);
+		} else if(isOP) {
+			if(!DisplayConfig.mcOpColor.isEmpty()) {
+				return getColorCode(DisplayConfig.mcOpColor);
+			}
+		}
+		return getColorCode(DisplayConfig.mcColor);
 	}
 	
 	public static String getAliasForPlayer(EntityPlayer player) {
 		if(!GlobalConfig.enableAliases) {
-			return addPreSuffix(player.username);
+			return player.getCommandSenderName();
 		}
 		String name = player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getCompoundTag("EiraIRC").getString("Alias");
 		if(name.isEmpty()) {
-			name = player.username;
+			name = player.getCommandSenderName();
 		}
-		return addPreSuffix(name);
-	}
-	
-	public static String getColorAliasForPlayer(EntityPlayer player) {
-		NBTTagCompound tagCompound = player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getCompoundTag("EiraIRC");
-		String alias = getAliasForPlayer(player);
-		boolean isOP = isOP(player);
-		if(!DisplayConfig.enableNameColors && !isOP) {
-			return alias;
-		}
-		String colorName = tagCompound.getString("NameColor");
-		if(!colorName.isEmpty()) {
-			char colorCode = getColorCode(colorName);
-			if(colorCode == INVALID_COLOR) {
-				return alias;
-			}
-			return getColoredName(alias, colorCode);
-		} else if(isOP) {
-			if(!DisplayConfig.opColor.isEmpty()) {
-				char colorCode = getColorCode(colorName);
-				if(colorCode == INVALID_COLOR) {
-					return alias;
-				}
-				return getColoredName(alias, colorCode);
-			}
-		}
-		return alias;
+		return name;
 	}
 	
 	public static boolean isOP(ICommandSender sender) {
@@ -251,7 +288,7 @@ public class Utils {
 	}
 
 	public static void addConnectionsToList(List<String> list) {
-		for(IRCConnection connection : EiraIRC.instance.getConnections()) {
+		for(IIRCConnection connection : EiraIRC.instance.getConnections()) {
 			list.add(connection.getHost());
 		}		
 	}
@@ -320,17 +357,16 @@ public class Utils {
 	}
 
 	public static IRCConnection connectTo(ServerConfig config) {
-		IRCConnection connection = new IRCConnection(config.getHost(), IRCConnection.IRC_DEFAULT_PORT, config.getServerPassword(), ConfigHelper.getFormattedNick(config), config.getIdent(), config.getDescription());
+		IRCConnection connection = new IRCConnection(config.getHost(), config.getServerPassword(), ConfigHelper.getFormattedNick(config), config.getIdent(), config.getDescription());
 		connection.setCharset(GlobalConfig.charset);
-		connection.setEventHandler(EiraIRC.instance.getIRCEventHandler());
-		connection.setConnectionHandler(EiraIRC.instance.getIRCConnectionHandler());
+		connection.setBot(new EiraIRCBot(connection, ConfigurationHandler.getBotProfile(config.getBotProfile())));
 		if(connection.connect()) {
 			return connection;
 		}
 		return null;
 	}
 	
-	public static void doNickServ(IRCConnection connection, ServerConfig config) {
+	public static void doNickServ(IIRCConnection connection, ServerConfig config) {
 		ServiceSettings settings = ServiceConfig.getSettings(connection.getHost(), connection.getServerType());
 		if(settings == null) {
 			return;
@@ -340,28 +376,32 @@ public class Utils {
 		if(username == null || username.isEmpty() || password == null || password.isEmpty()) {
 			return;
 		}
-		connection.sendIRC(settings.getIdentifyCommand(username, password));
+		connection.irc(settings.getIdentifyCommand(username, password));
 	}
 
-	public static String getQuitMessage(IRCConnection connection) {
-		ServerConfig serverConfig = ConfigurationHandler.getServerConfig(connection.getHost());
-		if(serverConfig.getQuitMessage() != null && !serverConfig.getQuitMessage().isEmpty()) {
-			return serverConfig.getQuitMessage();
-		}
-		return DisplayConfig.quitMessage;
-	}
-	
-	public static void sendUserList(ICommandSender sender, IRCConnection connection, IRCChannel channel) {
-		Collection<IRCUser> userList = channel.getUserList();
+	public static void sendUserList(ICommandSender player, IIRCConnection connection, IIRCChannel channel) {
+		Collection<IIRCUser> userList = channel.getUserList();
 		if(userList.size() == 0) {
-			sendLocalizedMessage(sender, "irc.who.noUsersOnline", connection.getHost(), channel.getName());
+			if(player == null) {
+				addMessageToChat(Utils.getLocalizedMessage("irc.who.noUsersOnline", connection.getHost(), channel.getName()));
+			} else {
+				sendLocalizedMessage(player, "irc.who.noUsersOnline", connection.getHost(), channel.getName());
+			}
 			return;
 		}
-		sendLocalizedMessage(sender, "irc.who.usersOnline", connection.getHost(), userList.size(), channel.getName());
+		if(player == null) {
+			addMessageToChat(Utils.getLocalizedMessage("irc.who.usersOnline", connection.getHost(), userList.size(), channel.getName()));
+		} else {
+			sendLocalizedMessage(player, "irc.who.usersOnline", connection.getHost(), userList.size(), channel.getName());
+		}
 		String s = " * ";
-		for(IRCUser user : userList) {
+		for(IIRCUser user : userList) {
 			if(s.length() + user.getName().length() > Globals.CHAT_MAX_LENGTH) {
-				sendUnlocalizedMessage(sender, s);
+				if(player == null) {
+					addMessageToChat(s);
+				} else {
+					sendUnlocalizedMessage(player, s);
+				}
 				s = " * ";
 			}
 			if(s.length() > 3) {
@@ -370,26 +410,30 @@ public class Utils {
 			s += user.getName();
 		}
 		if(s.length() > 3) {
-			sendUnlocalizedMessage(sender, s);
+			if(player == null) {
+				addMessageToChat(s);
+			} else {
+				sendUnlocalizedMessage(player, s);
+			}
 		}
 	}
-
-	public static void sendUserList(IRCConnection connection, IRCUser user) {
+	
+	public static void sendPlayerList(IIRCUser user) {
 		if(MinecraftServer.getServer() == null || MinecraftServer.getServer().isSinglePlayer()) {
 			return;
 		}
-		List<EntityPlayer> userList = MinecraftServer.getServer().getConfigurationManager().playerEntityList;
-		if(userList.size() == 0) {
-			connection.sendPrivateNotice(user, getLocalizedMessage("irc.bot.noPlayersOnline"));
+		List<EntityPlayer> playerList = MinecraftServer.getServer().getConfigurationManager().playerEntityList;
+		if(playerList.size() == 0) {
+			user.notice(getLocalizedMessage("irc.bot.noPlayersOnline"));
 			return;
 		}
-		connection.sendPrivateNotice(user, getLocalizedMessage("irc.bot.playersOnline", userList.size()));
+		user.notice(getLocalizedMessage("irc.bot.playersOnline", playerList.size()));
 		String s = " * ";
-		for(int i = 0; i < userList.size(); i++) {
-			EntityPlayer entityPlayer = userList.get(i);
-			String alias = Utils.getAliasForPlayer(entityPlayer);
+		for(int i = 0; i < playerList.size(); i++) {
+			EntityPlayer entityPlayer = playerList.get(i);
+			String alias = getNickIRC(entityPlayer);
 			if(s.length() + alias.length() > Globals.CHAT_MAX_LENGTH) {
-				connection.sendPrivateNotice(user, s);
+				user.notice(s);
 				s = " * ";
 			}
 			if(s.length() > 3) {
@@ -398,192 +442,23 @@ public class Utils {
 			s += alias;
 		}
 		if(s.length() > 3) {
-			connection.sendPrivateNotice(user, s);
+			user.notice(s);
 		}
 	}
 	
-	public static IRCConnection getSuggestedConnection() {
-		if(EiraIRC.instance.getChatSessionHandler().getIRCTarget() != null) {
-			IRCTarget activeTarget = EiraIRC.instance.getChatSessionHandler().getIRCTarget();
-			if(activeTarget != null) {
-				return activeTarget.getConnection();
-			}
-		}
-		if(EiraIRC.instance.getConnectionCount() == 1) {
-			return EiraIRC.instance.getDefaultConnection();
-		}
-		return null;
-	}
-	
-	public static IRCTarget getSuggestedTarget() {
-		IRCTarget result = getSuggestedUser();
+	public static IIRCContext getSuggestedTarget() {
+		IIRCContext result = EiraIRC.instance.getChatSessionHandler().getIRCTarget();
 		if(result == null) {
-			return getSuggestedChannel();
-		}
-		return result;
-	}
-	
-	public static IRCChannel getSuggestedChannel() {
-		if(EiraIRC.instance.getChatSessionHandler().getIRCTarget() != null) {
-			IRCTarget activeTarget = EiraIRC.instance.getChatSessionHandler().getIRCTarget();
-			if(activeTarget instanceof IRCChannel) {
-				return (IRCChannel) activeTarget;
-			}
-		}
-		IRCConnection connection = getSuggestedConnection();
-		if(connection != null) {
-			if(connection.getChannels().size() == 1) {
-				return connection.getDefaultChannel();
+			IIRCConnection connection = EiraIRC.instance.getDefaultConnection();
+			if(connection != null) {
+				if(connection.getChannels().size() == 1) {
+					return connection.getChannels().iterator().next();
+				}
+				return null;
 			}
 			return null;
 		}
-		return null;
-	}
-	
-	public static IRCUser getSuggestedUser() {
-		if(EiraIRC.instance.getChatSessionHandler().getIRCTarget() != null) {
-			IRCTarget activeTarget = EiraIRC.instance.getChatSessionHandler().getIRCTarget();
-			if(activeTarget instanceof IRCUser) {
-				return (IRCUser) activeTarget;
-			}
-		}
-		return null;
-	}
-		
-	public static Object resolveIRCTarget(String target, boolean allowServers, boolean requireConnected, boolean allowChannels, boolean requireOnChannel, boolean allowUsers, boolean channelUsersOnly) {
-		String server = null;
-		String channel = null;
-		if(target.startsWith("#")) {
-			if(!allowChannels) {
-				return IRCTargetError.InvalidTarget;
-			}
-			channel = target;
-			ChannelConfig foundConfig = null;
-			for(ServerConfig serverConfig : ConfigurationHandler.getServerConfigs()) {
-				if(serverConfig.hasChannelConfig(channel)) {
-					if(foundConfig != null) {
-						return IRCTargetError.SpecifyServer;
-					}
-					foundConfig = serverConfig.getChannelConfig(channel);
-				}
-			}
-			if(foundConfig == null) {
-				if(EiraIRC.instance.getConnectionCount() > 1) {
-					return IRCTargetError.SpecifyServer;
-				} else {
-					foundConfig = ConfigurationHandler.getDefaultServerConfig().getChannelConfig(channel);
-				}
-			}
-			if(requireConnected || requireOnChannel) {
-				ServerConfig serverConfig = foundConfig.getServerConfig();
-				IRCConnection connection = EiraIRC.instance.getConnection(serverConfig.getHost());
-				if(connection == null) {
-					return IRCTargetError.NotConnected;
-				}
-				if(requireOnChannel) {
-					IRCChannel foundChannel = connection.getChannel(foundConfig.getName());
-					if(foundChannel == null) {
-						return IRCTargetError.NotOnChannel;
-					}
-					return foundChannel;
-				}
-			}
-			return foundConfig;
-		} else {
-			int channelIndex = target.indexOf('/');
-			if(channelIndex != -1 && channelIndex < target.length() - 1) {
-				server = target.substring(0, channelIndex);
-				if(!ConfigurationHandler.hasServerConfig(server)) {
-					return IRCTargetError.ServerNotFound;
-				}
-				ServerConfig serverConfig = ConfigurationHandler.getServerConfig(server);
-				channel = target.substring(channelIndex + 1);
-				if(channel.startsWith("#")) {
-					if(!allowChannels) {
-						return IRCTargetError.InvalidTarget;
-					}
-					if(requireConnected || requireOnChannel) {
-						IRCConnection connection = EiraIRC.instance.getConnection(serverConfig.getHost());
-						if(connection == null) {
-							return IRCTargetError.NotConnected;
-						}
-						ChannelConfig channelConfig = serverConfig.getChannelConfig(channel);
-						if(requireOnChannel) {
-							IRCChannel foundChannel = connection.getChannel(channelConfig.getName());
-							if(foundChannel == null) {
-								return IRCTargetError.NotOnChannel;
-							}
-							return foundChannel;
-						}
-						return channelConfig;
-					}
-				} else {
-					if(!allowUsers) {
-						return IRCTargetError.InvalidTarget;
-					}
-					IRCConnection connection = EiraIRC.instance.getConnection(serverConfig.getHost());
-					if(connection == null) {
-						return IRCTargetError.NotConnected;
-					}
-					IRCUser user = connection.getUser(channel);
-					if(user == null) {
-						if(channelUsersOnly) {
-							return IRCTargetError.UserNotFound;
-						}
-						return new IRCUser(connection, channel);
-					}
-					return user;
-				}
-			} else {
-				if(target.endsWith("/")) {
-					target = target.substring(0, target.length() - 1);
-				}
-				if(ConfigurationHandler.hasServerConfig(target)) {
-					if(!allowServers) {
-						return IRCTargetError.InvalidTarget;
-					}
-					if(requireConnected) {
-						IRCConnection connection = EiraIRC.instance.getConnection(target);
-						if(connection == null) {
-							return IRCTargetError.NotConnected;
-						}
-						return connection;
-					}
-					return ConfigurationHandler.getServerConfig(target);
-				} else {
-					if(allowUsers) {
-						IRCUser foundUser = null;
-						for(IRCConnection connection : EiraIRC.instance.getConnections()) {
-							IRCUser user = connection.getUser(target);
-							if(user != null) {
-								if(foundUser != null) {
-									return IRCTargetError.SpecifyServer;
-								}
-								foundUser = user;
-							}
-						}
-						if(foundUser == null) {
-							if(channelUsersOnly) {
-								return IRCTargetError.UserNotFound;
-							} else {
-								if(EiraIRC.instance.getConnectionCount() > 1) {
-									return IRCTargetError.SpecifyServer;
-								} else {
-									return new IRCUser(EiraIRC.instance.getDefaultConnection(), target);
-								}
-							}
-						}
-						return foundUser;
-					}
-					if(allowServers && !allowUsers) {
-						return IRCTargetError.ServerNotFound;
-					} else if(allowUsers && !allowServers) {
-						return IRCTargetError.UserNotFound;
-					}
-				}
-			}
-		}
-		return IRCTargetError.TargetNotFound;
+		return result;
 	}
 	
 	public static String getUsername() {
@@ -615,4 +490,44 @@ public class Utils {
 		}
 	}
 	
+	public static boolean isServerSide() {
+		return MinecraftServer.getServer() != null && !MinecraftServer.getServer().isSinglePlayer();
+	}
+	
+	public static String[] shiftArgs(String[] args, int offset) {
+		String[] shiftedArgs = new String[args.length - offset];
+		for(int i = offset; i < args.length; i++) {
+			shiftedArgs[i - offset] = args[i];
+		}
+		return shiftedArgs;
+	}
+	
+	public static String joinStrings(String[] arr, String delimiter) {
+		return joinStrings(arr, delimiter, 0);
+	}
+	
+	public static String joinStrings(String[] args, String delimiter, int startIdx) {
+		StringBuilder sb = new StringBuilder();
+		for(int i = startIdx; i < args.length; i++) {
+			if(i > startIdx) {
+				sb.append(delimiter);
+			}
+			sb.append(args[i]);
+		}
+		return sb.toString();
+	}
+
+	public static String formatMessageNew(String format, IIRCConnection connection, IIRCChannel channel, IIRCUser user, String message, boolean colorName) {
+		String result = format;
+		result = result.replaceAll("\\{SERVER\\}", connection.getIdentifier());
+		if(channel != null) {
+			result = result.replaceAll("\\{CHANNEL\\}", channel.getName());
+		}
+		if(user != null) {
+			result = result.replaceAll("\\{USER\\}", user.getIdentifier());
+			result = result.replaceAll("\\{NICK\\}", getNickGame(channel, user, colorName));
+		}
+		result = result.replaceAll("\\{MESSAGE\\}", Matcher.quoteReplacement(message)).replaceAll("\\\\$", "\\$");
+		return result;
+	}
 }
