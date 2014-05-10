@@ -14,7 +14,11 @@ import net.blay09.mods.eirairc.api.bot.IBotCommand;
 import net.blay09.mods.eirairc.api.bot.IBotProfile;
 import net.blay09.mods.eirairc.api.bot.IIRCBot;
 import net.blay09.mods.eirairc.config.BotProfile;
+import net.blay09.mods.eirairc.config.ChannelConfig;
+import net.blay09.mods.eirairc.config.ServerConfig;
+import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.irc.IRCConnection;
+import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatMessageComponent;
@@ -24,18 +28,14 @@ import net.minecraft.world.World;
 public class EiraIRCBot implements IIRCBot {
 
 	private final IRCConnection connection;
-	private final BotProfile mainProfile;
 	private final Map<String, BotProfile> profiles = new HashMap<String, BotProfile>();
 	private final StringBuffer logBuffer = new StringBuffer();
+	private BotProfile mainProfile;
 	private boolean opEnabled;
 	
-	public EiraIRCBot(IRCConnection connection, BotProfile defaultProfile) {
+	public EiraIRCBot(IRCConnection connection) {
 		this.connection = connection;
-		this.mainProfile = defaultProfile;
-	}
-	
-	public void setProfile(String channelName, BotProfile profile) {
-		profiles.put(channelName.toLowerCase(), profile);
+		updateProfiles();
 	}
 	
 	public BotProfile getProfile(String channelName) {
@@ -155,4 +155,14 @@ public class EiraIRCBot implements IIRCBot {
 		return (context != null ? getProfile(context).getDisplayFormat() : mainProfile.getDisplayFormat());
 	}
 
+	public void updateProfiles() {
+		ServerConfig serverConfig = ConfigHelper.getServerConfig(connection);
+		mainProfile = ConfigurationHandler.getBotProfile(serverConfig.getBotProfile());
+		profiles.clear();
+		for(ChannelConfig channelConfig : serverConfig.getChannelConfigs()) {
+			if(!channelConfig.getBotProfile().equals(mainProfile.getName())) {
+				profiles.put(channelConfig.getName().toLowerCase(), ConfigurationHandler.getBotProfile(channelConfig.getBotProfile()));
+			}
+		}
+	}
 }
