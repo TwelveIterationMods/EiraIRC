@@ -1,6 +1,6 @@
 [
 {
-  "modid": "EiraIRC",
+  "modid": "eirairc",
   "name": "EiraIRC",
   "description": "An IRC Connector that works both on clients and servers independently, with some neat special features.",
   "version": "@VERSION@",
