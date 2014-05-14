@@ -21,7 +21,7 @@ public class CommandServIRC implements ICommand {
 
 	@Override
 	public String getCommandName() {
-		return "servrc";
+		return "servirc";
 	}
 
 	@Override

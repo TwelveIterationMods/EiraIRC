@@ -241,7 +241,7 @@ public class Utils {
 			colorCode = '4';
 		} else if(colorName.equals("purple")) {
 			colorCode = '5';
-		} else if(colorName.equals("gold")) {
+		} else if(colorName.equals("gold") || colorName.equals("orange")) {
 			colorCode = '6';
 		} else if(colorName.equals("gray") || colorName.equals("grey")) {
 			colorCode = '7';

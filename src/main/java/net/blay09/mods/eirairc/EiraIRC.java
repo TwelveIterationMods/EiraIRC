@@ -43,7 +43,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 
-@Mod(modid = EiraIRC.MOD_ID)
+@Mod(modid = EiraIRC.MOD_ID, acceptableRemoteVersions="*")
 public class EiraIRC {
 
 	public static final String MOD_ID = "eirairc";

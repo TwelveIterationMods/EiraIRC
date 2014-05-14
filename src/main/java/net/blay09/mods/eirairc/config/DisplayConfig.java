@@ -21,7 +21,7 @@ public class DisplayConfig {
 	public static String mcColor = "white";
 	public static String mcOpColor = "red";
 	public static String ircOpColor = "gold";
-	public static String ircVoiceColor = "lightgray";
+	public static String ircVoiceColor = "gray";
 	public static String ircColor = "gray";
 	public static String ircPrivateColor = "gray";
 	public static String emoteColor = "gold";

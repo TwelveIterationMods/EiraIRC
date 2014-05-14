@@ -24,7 +24,7 @@ public class ServiceSettings {
 	}
 
 	public boolean hasGhostCommand() {
-		return ghostCMD != null || ghostCMD.isEmpty();
+		return ghostCMD != null && !ghostCMD.isEmpty();
 	}
 
 }

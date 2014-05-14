@@ -123,8 +123,8 @@ public class MCEventHandler {
 		}
 		String[] target = chatTarget.split("/");
 		IIRCConnection connection = EiraIRC.instance.getConnection(target[0]);
-		IIRCBot bot = connection.getBot();
 		if(connection != null) {
+			IIRCBot bot = connection.getBot();
 			String mcMessage = null;
 			if(target[1].startsWith("#")) {
 				IIRCChannel targetChannel = connection.getChannel(target[1]);
@@ -153,8 +153,8 @@ public class MCEventHandler {
 		}
 		String[] target = chatTarget.split("/");
 		IIRCConnection connection = EiraIRC.instance.getConnection(target[0]);
-		IIRCBot bot = connection.getBot();
 		if(connection != null) {
+			IIRCBot bot = connection.getBot();
 			ServerConfig serverConfig = ConfigurationHandler.getServerConfig(connection.getHost());
 			String emoteColor = Globals.COLOR_CODE_PREFIX + Utils.getColorCode(ConfigHelper.getEmoteColor(serverConfig));
 			String mcMessage = null;
