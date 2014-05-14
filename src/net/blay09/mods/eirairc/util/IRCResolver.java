@@ -83,7 +83,6 @@ public class IRCResolver {
 		int serverIdx = path.indexOf('/');
 		if(serverIdx != -1) {
 			server = path.substring(0, serverIdx);
-			path = path.substring(serverIdx + 1);
 		} else {
 			if(path.startsWith("#")) {
 				for(IIRCConnection connection : EiraIRC.instance.getConnections()) {

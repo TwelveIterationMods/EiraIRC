@@ -29,8 +29,8 @@ public class PacketHandler implements IPacketHandler {
 				EiraPacket subPacket = packetType.newInstance();
 				if(subPacket != null) {
 					subPacket.read(in);
+					execute(subPacket, manager, player);
 				}
-				execute(subPacket, manager, player);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

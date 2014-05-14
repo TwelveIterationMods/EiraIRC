@@ -65,7 +65,7 @@ public class CommandWho extends SubCommand {
 		} else {
 			for(IIRCConnection con : EiraIRC.instance.getConnections()) {
 				for(IIRCChannel channel : con.getChannels()) {
-					Utils.sendUserList(sender, connection, channel);
+					Utils.sendUserList(sender, con, channel);
 				}
 			}
 		}

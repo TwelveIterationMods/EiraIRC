@@ -38,7 +38,7 @@ public class BotCommandOp implements IBotCommand {
 		}
 		String[] commandBlacklist = bot.getProfile(channel).getInterOpBlacklist();
 		for(int i = 0; i < commandBlacklist.length; i++) {
-			if(commandBlacklist[i] == Utils.unquote("*") || message.contains(Utils.unquote(commandBlacklist[i]))) {
+			if(commandBlacklist[i].equals(Utils.unquote("*")) || message.contains(Utils.unquote(commandBlacklist[i]))) {
 				user.notice(Utils.getLocalizedMessage("irc.bot.interOpBlacklist"));
 				return;
 			}
