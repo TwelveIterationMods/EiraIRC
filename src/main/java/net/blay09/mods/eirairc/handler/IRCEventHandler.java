@@ -27,6 +27,8 @@ import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ChatAllowedCharacters;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.IChatComponent;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
@@ -135,13 +137,16 @@ public class IRCEventHandler {
 		String emoteColor = ConfigHelper.getEmoteColor(event.channel);
 		String mcMessage = null;
 		if(event.isEmote) {
-			mcMessage = (emoteColor != null ? Globals.COLOR_CODE_PREFIX + Utils.getColorCode(emoteColor) : "");
-			mcMessage += ConfigHelper.getDisplayFormat(event.bot.getDisplayFormat(event.channel)).mcChannelEmote;
+			mcMessage = ConfigHelper.getDisplayFormat(event.bot.getDisplayFormat(event.channel)).mcChannelEmote;
 		} else {
 			mcMessage = ConfigHelper.getDisplayFormat(event.bot.getDisplayFormat(event.channel)).mcChannelMessage;
 		}
 		mcMessage = Utils.formatMessageNew(mcMessage, event.connection, event.channel, event.sender, message, !event.isEmote);
-		Utils.addMessageToChat(mcMessage);
+		IChatComponent chatComponent = new ChatComponentText(mcMessage);
+		if(emoteColor != null) {
+			chatComponent.getChatStyle().setColor(Utils.getColorFormatting(emoteColor));
+		}
+		Utils.addMessageToChat(chatComponent);
 	}
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)

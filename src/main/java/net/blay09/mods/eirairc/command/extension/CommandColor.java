@@ -66,6 +66,7 @@ public class CommandColor extends SubCommand {
 		}
 		persistentTag.setTag(Globals.NBT_EIRAIRC, tagCompound);
 		entityPlayer.getEntityData().setTag(EntityPlayer.PERSISTED_NBT_TAG, persistentTag);
+		entityPlayer.refreshDisplayName();
 		if(colorName.equals(COLOR_NONE)) {
 			Utils.sendLocalizedMessage(sender, "irc.color.reset");
 		} else {

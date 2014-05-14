@@ -22,9 +22,15 @@ import net.minecraft.command.server.CommandBroadcast;
 import net.minecraft.command.server.CommandEmote;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
 import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
+import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
@@ -64,10 +70,13 @@ public class MCEventHandler {
 				if(emote.length() == 0) {
 					return;
 				}
-				String mcAlias = Utils.getNickGame((EntityPlayer) event.sender, false);
+				String mcAlias = Utils.getNickGame((EntityPlayer) event.sender);
 				String ircAlias = Utils.getNickIRC((EntityPlayer) event.sender);
-				String mcMessage = (DisplayConfig.emoteColor != null ? Globals.COLOR_CODE_PREFIX + Utils.getColorCode(DisplayConfig.emoteColor) : "") + "* " + mcAlias + " " + emote;
-				Utils.addMessageToChat(mcMessage);
+				IChatComponent chatComponent = new ChatComponentText("* " + mcAlias + " " + emote);
+				if(DisplayConfig.emoteColor != null) {
+					chatComponent.getChatStyle().setColor(Utils.getColorFormatting(DisplayConfig.emoteColor));
+				}
+				Utils.addMessageToChat(chatComponent);
 				if(!MinecraftServer.getServer().isSinglePlayer()) {
 					for(IIRCConnection connection : EiraIRC.instance.getConnections()) {
 						IIRCBot bot = connection.getBot();
@@ -130,13 +139,13 @@ public class MCEventHandler {
 				IIRCChannel targetChannel = connection.getChannel(target[1]);
 				if(targetChannel != null) {
 					targetChannel.message(text);
-					mcMessage = Utils.formatMessage(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetChannel)).mcSendChannelMessage, connection.getHost(), targetChannel.getName(), null, Utils.getNickGame(sender, true), text);
+					mcMessage = Utils.formatMessage(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetChannel)).mcSendChannelMessage, connection.getHost(), targetChannel.getName(), null, Utils.getNickGame(sender), text);
 				}
 			} else {
 				IIRCUser targetUser = connection.getUser(target[1]);
 				if(targetUser != null) {
 					targetUser.message(text);
-					mcMessage = Utils.formatMessage(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetUser)).mcSendPrivateMessage, connection.getHost(), targetUser.getName(), targetUser.getIdentifier(), Utils.getNickGame(sender, true), text);
+					mcMessage = Utils.formatMessage(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetUser)).mcSendPrivateMessage, connection.getHost(), targetUser.getName(), targetUser.getIdentifier(), Utils.getNickGame(sender), text);
 				}
 			}
 			Utils.addMessageToChat(mcMessage);
@@ -156,22 +165,26 @@ public class MCEventHandler {
 		if(connection != null) {
 			IIRCBot bot = connection.getBot();
 			ServerConfig serverConfig = ConfigurationHandler.getServerConfig(connection.getHost());
-			String emoteColor = Globals.COLOR_CODE_PREFIX + Utils.getColorCode(ConfigHelper.getEmoteColor(serverConfig));
+			EnumChatFormatting emoteColor = Utils.getColorFormatting(ConfigHelper.getEmoteColor(serverConfig));
 			String mcMessage = null;
 			if(target[1].startsWith("#")) {
 				IIRCChannel targetChannel = connection.getChannel(target[1]);
 				if(targetChannel != null) {
 					ChannelConfig channelConfig = serverConfig.getChannelConfig(targetChannel);
-					emoteColor = Globals.COLOR_CODE_PREFIX + Utils.getColorCode(ConfigHelper.getEmoteColor(channelConfig));
+					emoteColor = Utils.getColorFormatting(ConfigHelper.getEmoteColor(channelConfig));
 					targetChannel.message(IRCConnection.EMOTE_START + text + IRCConnection.EMOTE_END);
-					mcMessage = emoteColor + Utils.formatMessage(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetChannel)).mcSendChannelEmote, connection.getHost(), targetChannel.getName(), null, Utils.getNickGame(sender, false), text);
+					mcMessage = Utils.formatMessage(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetChannel)).mcSendChannelEmote, connection.getHost(), targetChannel.getName(), null, Utils.getNickGame(sender), text);
 				}
 			} else {
 				IIRCUser targetUser = connection.getUser(target[1]);
 				if(targetUser != null) {
 					targetUser.message(IRCConnection.EMOTE_START + text + IRCConnection.EMOTE_END);
-					mcMessage = emoteColor + Utils.formatMessage(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetUser)).mcSendPrivateEmote, connection.getHost(), targetUser.getName(), targetUser.getIdentifier(), Utils.getNickGame(sender, false), text);
+					mcMessage = Utils.formatMessage(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetUser)).mcSendPrivateEmote, connection.getHost(), targetUser.getName(), targetUser.getIdentifier(), Utils.getNickGame(sender), text);
 				}
+			}
+			IChatComponent chatComponent = new ChatComponentText(mcMessage);
+			if(emoteColor != EnumChatFormatting.RESET) {
+				chatComponent.getChatStyle().setColor(emoteColor);
 			}
 			Utils.addMessageToChat(mcMessage);
 		}
@@ -181,8 +194,9 @@ public class MCEventHandler {
 	@SubscribeEvent
 	public void onServerChat(ServerChatEvent event) {
 		String ircNick = Utils.getNickIRC(event.player);
-		String mcNick = Utils.getNickGame(event.player, true);
-		event.component = Utils.getLocalizedChatMessageNoPrefix("chat.type.text", mcNick, event.message);
+		IChatComponent senderComponent = event.player.func_145748_c_();
+		senderComponent.getChatStyle().setColor(Utils.getColorFormattingForPlayer(event.player));
+		event.component = new ChatComponentTranslation("chat.type.text", senderComponent, event.message);
 		if(!MinecraftServer.getServer().isSinglePlayer()) {
 			String text = event.message;
 			if(IRCCommandHandler.onChatCommand(event.player, text, true)) {
@@ -216,6 +230,11 @@ public class MCEventHandler {
 				}
 			}
 		}
+	}
+	
+	@SubscribeEvent(priority = EventPriority.HIGHEST)
+	public void onPlayerNameFormat(PlayerEvent.NameFormat event) {
+		event.displayname = Utils.getNickGame(event.entityPlayer);
 	}
 	
 	@SubscribeEvent

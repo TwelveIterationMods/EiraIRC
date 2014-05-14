@@ -44,7 +44,7 @@ public class BotCommandMessage implements IBotCommand {
 		if(entityPlayer == null) {
 			List<EntityPlayer> playerEntityList = MinecraftServer.getServer().getConfigurationManager().playerEntityList;
 			for(EntityPlayer entity : playerEntityList) {
-				if(Utils.getNickGame(entity, false).equals(playerName) || Utils.getNickIRC(entity).equals(playerName)) {
+				if(Utils.getNickGame(entity).equals(playerName) || Utils.getNickIRC(entity).equals(playerName)) {
 					entityPlayer = entity;
 				}
 			}
