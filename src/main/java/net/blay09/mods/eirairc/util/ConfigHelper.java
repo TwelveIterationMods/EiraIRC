@@ -5,6 +5,8 @@ package net.blay09.mods.eirairc.util;
 
 import net.blay09.mods.eirairc.api.IIRCChannel;
 import net.blay09.mods.eirairc.api.IIRCConnection;
+import net.blay09.mods.eirairc.api.IIRCContext;
+import net.blay09.mods.eirairc.api.IIRCUser;
 import net.blay09.mods.eirairc.api.bot.IBotProfile;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.DisplayConfig;
@@ -15,36 +17,6 @@ import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.minecraftforge.common.config.ConfigCategory;
 
 public class ConfigHelper {
-
-	public static String getEmoteColor(IIRCChannel channel) {
-		return null;
-	}
-	
-	public static String getEmoteColor(ChannelConfig channelConfig) {
-		return getEmoteColor(channelConfig.getServerConfig());
-	}
-	
-	public static String getEmoteColor(ServerConfig serverConfig) {
-		if(serverConfig.getEmoteColor() != null && !serverConfig.getEmoteColor().isEmpty()) {
-			return serverConfig.getEmoteColor();
-		}
-		return DisplayConfig.emoteColor;
-	}
-	
-	public static String getIRCColor(IIRCConnection connection) {
-		return getIRCColor(ConfigurationHandler.getServerConfig(connection.getHost()));
-	}
-	
-	public static String getIRCColor(ChannelConfig channelConfig) {
-		return getIRCColor(channelConfig.getServerConfig());
-	}
-	
-	public static String getIRCColor(ServerConfig serverConfig) {
-		if(serverConfig.getIRCColor() != null && !serverConfig.getIRCColor().isEmpty()) {
-			return serverConfig.getIRCColor();
-		}
-		return DisplayConfig.ircColor;
-	}
 	
 	public static String formatNick(String nickFormate) {
 		String result = nickFormate.replace("%USERNAME%", Utils.getUsername());
@@ -73,9 +45,26 @@ public class ConfigHelper {
 	public static ServerConfig getServerConfig(IIRCConnection connection) {
 		return ConfigurationHandler.getServerConfig(connection.getHost());
 	}
+	
+	public static ChannelConfig getChannelConfig(IIRCChannel channel) {
+		return getServerConfig(channel.getConnection()).getChannelConfig(channel);
+	}
 
 	public static DisplayFormatConfig getDisplayFormat(String displayFormat) {
 		return ConfigurationHandler.getDisplayFormat(displayFormat);
+	}
+
+	public static String getEmoteColor(IIRCContext context) {
+		if(context instanceof IIRCChannel) {
+			ChannelConfig channelConfig = getChannelConfig((IIRCChannel) context);
+			if(channelConfig != null) {
+				ServerConfig serverConfig = channelConfig.getServerConfig();
+				if(!serverConfig.getEmoteColor().isEmpty()) {
+					return serverConfig.getEmoteColor();
+				}
+			}
+		}
+		return DisplayConfig.emoteColor;
 	}
 
 }

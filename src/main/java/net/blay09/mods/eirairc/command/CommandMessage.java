@@ -9,17 +9,16 @@ import net.blay09.mods.eirairc.api.IIRCContext;
 import net.blay09.mods.eirairc.api.bot.IBotProfile;
 import net.blay09.mods.eirairc.api.bot.IIRCBot;
 import net.blay09.mods.eirairc.config.ChannelConfig;
-import net.blay09.mods.eirairc.config.GlobalConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.irc.IRCUser;
-import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.IRCResolver;
 import net.blay09.mods.eirairc.util.IRCTargetError;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ChatComponentText;
 
 public class CommandMessage extends SubCommand {
 
@@ -71,7 +70,7 @@ public class CommandMessage extends SubCommand {
 		}
 		target.message(ircMessage);
 		String mcMessage = "[-> " + target.getName() + "] <" + Utils.getNickGame((EntityPlayer) sender) + "> " + message;
-		Utils.sendUnlocalizedMessage(sender, mcMessage);
+		sender.addChatMessage(new ChatComponentText(mcMessage));
 		return true;
 	}
 

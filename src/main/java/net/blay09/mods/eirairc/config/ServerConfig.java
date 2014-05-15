@@ -32,7 +32,7 @@ public class ServerConfig {
 	private boolean autoConnect = true;
 	private String quitMessage;
 	private String ircColor;
-	private String emoteColor;
+	private String emoteColor = "";
 	
 	public ServerConfig(String host) {
 		this.host = host;
@@ -148,7 +148,7 @@ public class ServerConfig {
 		ident = Utils.unquote(config.get(categoryName, "ident", Globals.DEFAULT_IDENT).getString());
 		description = Utils.unquote(config.get(categoryName, "description", Globals.DEFAULT_DESCRIPTION).getString());
 		ircColor = Utils.unquote(config.get(categoryName, "ircColor", "").getString());
-		emoteColor = Utils.unquote(config.get(categoryName, "emoteColor", "").getString());
+		emoteColor = Utils.unquote(config.get(categoryName, "emoteColor", emoteColor).getString());
 		quitMessage = Utils.unquote(config.get(categoryName, "quitMessage", "").getString());
 		nickServName = Utils.unquote(config.get(categoryName, "nickServName", "").getString());
 		nickServPassword = Utils.unquote(config.get(categoryName, "nickServPassword", "").getString());
@@ -172,7 +172,7 @@ public class ServerConfig {
 		config.get(categoryName, "ident", "").set(Utils.quote(ident != null ? ident : Globals.DEFAULT_IDENT));
 		config.get(categoryName, "description", "").set(Utils.quote(description != null ? description : Globals.DEFAULT_DESCRIPTION));
 		config.get(categoryName, "ircColor", "").set(Utils.quote(ircColor != null ? ircColor : ""));
-		config.get(categoryName, "emoteColor", "").set(Utils.quote(emoteColor != null ? emoteColor : ""));
+		config.get(categoryName, "emoteColor", "").set(Utils.quote(emoteColor));
 		config.get(categoryName, "quitMessage", "").set(Utils.quote(quitMessage != null ? quitMessage : ""));
 		config.get(categoryName, "nickServName", "").set(Utils.quote(GlobalConfig.saveCredentials && nickServName != null ? nickServName : ""));
 		config.get(categoryName, "nickServPassword", "").set(Utils.quote(GlobalConfig.saveCredentials && nickServPassword != null ? nickServPassword : ""));

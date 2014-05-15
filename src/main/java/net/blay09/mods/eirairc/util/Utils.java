@@ -50,19 +50,13 @@ public class Utils {
 	private static final Pattern pattern = Pattern.compile("^(?:(https?)://)?([-\\w_\\.]{2,}\\.[a-z]{2,4})(/\\S*)?$");
 	private static final String DEFAULT_USERNAME = "EiraBot";
 	
-	@Deprecated
 	public static void sendLocalizedMessage(ICommandSender sender, String key, Object... args) {
 		EiraPlayerInfo playerInfo = EiraIRC.instance.getNetHandler().getPlayerInfo(sender.getCommandSenderName());
 		if(playerInfo.modInstalled) {
 			sender.addChatMessage(getLocalizedChatMessage(key, args));
 		} else {
-			sendUnlocalizedMessage(sender, getLocalizedChatMessage(key, args).getUnformattedText());
+			sender.addChatMessage(new ChatComponentText(getLocalizedChatMessage(key, args).getUnformattedText()));
 		}
-	}
-	
-	@Deprecated
-	public static void sendUnlocalizedMessage(ICommandSender sender, String text) {
-		sender.addChatMessage(getUnlocalizedChatMessage(text));
 	}
 	
 	public static String getLocalizedMessageNoPrefix(String key, Object... args) {
@@ -77,16 +71,6 @@ public class Utils {
 		return new ChatComponentTranslation(EiraIRC.MOD_ID + ":" + key, args);
 	}
 	
-	@Deprecated
-	public static ChatComponentTranslation getLocalizedChatMessageNoPrefix(String key, Object... args) {
-		return new ChatComponentTranslation(key, args);
-	}
-	
-	@Deprecated
-	public static ChatComponentText getUnlocalizedChatMessage(String text) {
-		return new ChatComponentText(text);
-	}
-	
 	public static void addMessageToChat(IChatComponent chatComponent) {
 		if(MinecraftServer.getServer() != null) {
 			MinecraftServer.getServer().getConfigurationManager().sendChatMsg(chatComponent);
@@ -99,7 +83,7 @@ public class Utils {
 	
 	public static void addMessageToChat(String text) {
 		for(String string : wrapString(text, MAX_CHAT_LENGTH)) {
-			addMessageToChat(Utils.getUnlocalizedChatMessage(text));
+			addMessageToChat(new ChatComponentText(text));
 		}
 	}
 	
@@ -178,7 +162,7 @@ public class Utils {
 		NBTTagCompound tagCompound = player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getCompoundTag(Globals.NBT_EIRAIRC);
 		boolean isOP = Utils.isServerSide() && isOP(player);
 		if(!DisplayConfig.enableNameColors && !isOP) {
-			return EnumChatFormatting.RESET;
+			return null;
 		}
 		String colorName = tagCompound.getString(Globals.NBT_NAMECOLOR);
 		if(!colorName.isEmpty()) {
@@ -303,20 +287,6 @@ public class Utils {
 		}
 	}
 	
-	public static String formatMessage(String format, String user, String nick, String message) {
-		return formatMessage(format, getCurrentServerName(), "", user, nick, message);
-	}
-
-	public static String formatMessage(String format, String server, String channel, String user, String nick, String message) {
-		String result = format;
-		result = result.replaceAll("\\{SERVER\\}", server);
-		result = result.replaceAll("\\{CHANNEL\\}", channel);
-		result = result.replaceAll("\\{USER\\}", user);
-		result = result.replaceAll("\\{NICK\\}", nick);
-		result = result.replaceAll("\\{MESSAGE\\}", Matcher.quoteReplacement(message)).replaceAll("\\\\$", "\\$");
-		return result;
-	}
-	
 	public static String filterLinks(String message) {
 		String[] s = message.split(" ");
 		String result = "";
@@ -374,7 +344,7 @@ public class Utils {
 				if(player == null) {
 					addMessageToChat(s);
 				} else {
-					sendUnlocalizedMessage(player, s);
+					player.addChatMessage(new ChatComponentText(s));
 				}
 				s = " * ";
 			}
@@ -387,7 +357,7 @@ public class Utils {
 			if(player == null) {
 				addMessageToChat(s);
 			} else {
-				sendUnlocalizedMessage(player, s);
+				player.addChatMessage(new ChatComponentText(s));
 			}
 		}
 	}
@@ -497,7 +467,29 @@ public class Utils {
 		return sb.toString();
 	}
 
-	public static String formatMessageNew(String format, IIRCConnection connection, IIRCChannel channel, IIRCUser user, String message, boolean colorName) {
+	public static String formatMessage(String format, ICommandSender sender, String message, boolean colorName) {
+		String result = format;
+		result = result.replaceAll("\\{SERVER\\}", getCurrentServerName());
+		if(sender != null) {
+			result = result.replaceAll("\\{USER\\}", sender.getCommandSenderName());
+			String nick = null;
+			if(sender instanceof EntityPlayer) {
+				EntityPlayer player = (EntityPlayer) sender;
+				IChatComponent senderComponent = player.func_145748_c_().createCopy();
+				if(colorName) {
+					senderComponent.getChatStyle().setColor(getColorFormattingForPlayer(player));
+				}
+				nick = colorName ? senderComponent.getFormattedText() : senderComponent.getUnformattedText();
+			} else {
+				nick = sender.getCommandSenderName();
+			}
+			result = result.replaceAll("\\{NICK\\}", nick);
+		}
+		result = result.replaceAll("\\{MESSAGE\\}", Matcher.quoteReplacement(message)).replaceAll("\\\\$", "\\$");
+		return result;
+	}
+	
+	public static String formatMessage(String format, IIRCConnection connection, IIRCChannel channel, IIRCUser user, String message, boolean colorName) {
 		String result = format;
 		result = result.replaceAll("\\{SERVER\\}", connection.getIdentifier());
 		if(channel != null) {
@@ -505,7 +497,11 @@ public class Utils {
 		}
 		if(user != null) {
 			result = result.replaceAll("\\{USER\\}", user.getIdentifier());
-			result = result.replaceAll("\\{NICK\\}", getNickGame(channel, user));
+			IChatComponent senderComponent = new ChatComponentText(getNickGame(channel, user));
+			if(colorName) {
+				senderComponent.getChatStyle().setColor(Utils.getColorFormattingForUser(channel, user));
+			}
+			result = result.replaceAll("\\{NICK\\}", colorName ? senderComponent.getFormattedText() : senderComponent.getUnformattedText());
 		}
 		result = result.replaceAll("\\{MESSAGE\\}", Matcher.quoteReplacement(message)).replaceAll("\\\\$", "\\$");
 		return result;

@@ -110,13 +110,18 @@ public class IRCEventHandler {
 		} else {
 			mcMessage = ConfigHelper.getDisplayFormat(event.bot.getDisplayFormat(event.sender)).mcPrivateMessage;
 		}
-		mcMessage = Utils.formatMessageNew(mcMessage, event.connection, null, event.sender, message, !event.isEmote);
+		mcMessage = Utils.formatMessage(mcMessage, event.connection, null, event.sender, message, !event.isEmote);
 		String notifyMsg = mcMessage;
 		if(notifyMsg.length() > 42) {
 			notifyMsg = notifyMsg.substring(0, 42) + "...";
 		}
 		EiraIRC.proxy.publishNotification(NotificationType.PrivateMessage, notifyMsg);
 		EiraIRC.instance.getChatSessionHandler().addTargetUser(event.sender);
+		IChatComponent chatComponent = new ChatComponentText(mcMessage);
+		String emoteColor = ConfigHelper.getEmoteColor(event.sender);
+		if(event.isEmote && emoteColor != null) {
+			chatComponent.getChatStyle().setColor(Utils.getColorFormatting(emoteColor));
+		}
 		Utils.addMessageToChat(mcMessage);
 	}
 	
@@ -141,9 +146,9 @@ public class IRCEventHandler {
 		} else {
 			mcMessage = ConfigHelper.getDisplayFormat(event.bot.getDisplayFormat(event.channel)).mcChannelMessage;
 		}
-		mcMessage = Utils.formatMessageNew(mcMessage, event.connection, event.channel, event.sender, message, !event.isEmote);
+		mcMessage = Utils.formatMessage(mcMessage, event.connection, event.channel, event.sender, message, !event.isEmote);
 		IChatComponent chatComponent = new ChatComponentText(mcMessage);
-		if(emoteColor != null) {
+		if(event.isEmote && emoteColor != null) {
 			chatComponent.getChatStyle().setColor(Utils.getColorFormatting(emoteColor));
 		}
 		Utils.addMessageToChat(chatComponent);

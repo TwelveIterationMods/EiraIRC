@@ -11,6 +11,7 @@ import net.blay09.mods.eirairc.api.IIRCConnection;
 import net.blay09.mods.eirairc.api.IIRCContext;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.util.ChatComponentText;
 
 public class CommandList extends SubCommand {
 
@@ -44,7 +45,7 @@ public class CommandList extends SubCommand {
 				}
 				channels += channel.getName();
 			}
-			Utils.sendUnlocalizedMessage(sender, " * " + connection.getHost() + " (" + channels + ")");
+			sender.addChatMessage(new ChatComponentText(" * " + connection.getHost() + " (" + channels + ")"));
 		}
 		return true;
 	}
