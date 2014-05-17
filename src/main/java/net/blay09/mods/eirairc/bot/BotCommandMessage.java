@@ -19,6 +19,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatAllowedCharacters;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.IChatComponent;
 
 public class BotCommandMessage implements IBotCommand {
 
@@ -57,13 +58,13 @@ public class BotCommandMessage implements IBotCommand {
 		}
 		message = Utils.filterCodes(message);
 		message = ChatAllowedCharacters.filerAllowedCharacters(message);
-		String mcMessage = Utils.formatMessage(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(user)).mcPrivateMessage, bot.getConnection(), null, user, message, true);
-		String notifyMsg = mcMessage;
+		IChatComponent chatComponent = Utils.formatChatComponent(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(user)).mcPrivateMessage, bot.getConnection(), null, user, message, true);
+		String notifyMsg = chatComponent.getUnformattedText();
 		if(notifyMsg.length() > 42) {
 			notifyMsg = notifyMsg.substring(0, 42) + "...";
 		}
 		EiraIRC.proxy.sendNotification((EntityPlayerMP) entityPlayer, NotificationType.PrivateMessage, notifyMsg);
-		entityPlayer.addChatMessage(new ChatComponentText(mcMessage));
+		entityPlayer.addChatMessage(chatComponent);
 		user.notice(Utils.getLocalizedMessage("irc.bot.msgSent", playerName, message));
 	}
 	

@@ -132,21 +132,21 @@ public class MCEventHandler {
 		IIRCConnection connection = EiraIRC.instance.getConnection(target[0]);
 		if(connection != null) {
 			IIRCBot bot = connection.getBot();
-			String mcMessage = null;
+			IChatComponent chatComponent = null;
 			if(target[1].startsWith("#")) {
 				IIRCChannel targetChannel = connection.getChannel(target[1]);
 				if(targetChannel != null) {
 					targetChannel.message(text);
-					mcMessage = Utils.formatMessage(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetChannel)).mcSendChannelMessage, sender, text, true);
+					chatComponent = Utils.formatChatComponent(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetChannel)).mcSendChannelMessage, sender, text, true);
 				}
 			} else {
 				IIRCUser targetUser = connection.getUser(target[1]);
 				if(targetUser != null) {
 					targetUser.message(text);
-					mcMessage = Utils.formatMessage(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetUser)).mcSendPrivateMessage, sender, text, true);
+					chatComponent = Utils.formatChatComponent(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetUser)).mcSendPrivateMessage, sender, text, true);
 				}
 			}
-			Utils.addMessageToChat(mcMessage);
+			Utils.addMessageToChat(chatComponent);
 		}
 		return true;
 	}
@@ -164,24 +164,23 @@ public class MCEventHandler {
 			IIRCBot bot = connection.getBot();
 			ServerConfig serverConfig = ConfigurationHandler.getServerConfig(connection.getHost());
 			EnumChatFormatting emoteColor = null;
-			String mcMessage = null;
+			IChatComponent chatComponent = null;
 			if(target[1].startsWith("#")) {
 				IIRCChannel targetChannel = connection.getChannel(target[1]);
 				if(targetChannel != null) {
 					ChannelConfig channelConfig = serverConfig.getChannelConfig(targetChannel);
 					emoteColor = Utils.getColorFormatting(ConfigHelper.getEmoteColor(targetChannel));
 					targetChannel.message(IRCConnection.EMOTE_START + text + IRCConnection.EMOTE_END);
-					mcMessage = Utils.formatMessage(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetChannel)).mcSendChannelEmote, sender, text, false);
+					chatComponent = Utils.formatChatComponent(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetChannel)).mcSendChannelEmote, sender, text, false);
 				}
 			} else {
 				IIRCUser targetUser = connection.getUser(target[1]);
 				if(targetUser != null) {
 					emoteColor = Utils.getColorFormatting(ConfigHelper.getEmoteColor(targetUser));
 					targetUser.message(IRCConnection.EMOTE_START + text + IRCConnection.EMOTE_END);
-					mcMessage = Utils.formatMessage(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetUser)).mcSendPrivateEmote, sender, text, false);
+					chatComponent = Utils.formatChatComponent(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetUser)).mcSendPrivateEmote, sender, text, false);
 				}
 			}
-			IChatComponent chatComponent = new ChatComponentText(mcMessage);
 			if(emoteColor != null) {
 				chatComponent.getChatStyle().setColor(emoteColor);
 			}

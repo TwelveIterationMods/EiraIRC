@@ -37,6 +37,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ChatComponentStyle;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
@@ -468,43 +469,111 @@ public class Utils {
 	}
 
 	public static String formatMessage(String format, ICommandSender sender, String message, boolean colorName) {
-		String result = format;
-		result = result.replaceAll("\\{SERVER\\}", getCurrentServerName());
-		if(sender != null) {
-			result = result.replaceAll("\\{USER\\}", sender.getCommandSenderName());
-			String nick = null;
-			if(sender instanceof EntityPlayer) {
-				EntityPlayer player = (EntityPlayer) sender;
-				IChatComponent senderComponent = player.func_145748_c_().createCopy();
-				if(colorName) {
-					senderComponent.getChatStyle().setColor(getColorFormattingForPlayer(player));
+		return formatChatComponent(format, sender, message, colorName).getUnformattedText();
+	}
+	
+	public static IChatComponent formatChatComponent(String format, ICommandSender sender, String message, boolean colorName) {
+		IChatComponent root = new ChatComponentText("");
+		StringBuilder sb = new StringBuilder();
+		int currentIdx = 0;
+		while(currentIdx < format.length()) {
+			char c = format.charAt(currentIdx);
+			if(c == '{') {
+				int tokenEnd = format.indexOf('}', currentIdx);
+				if(tokenEnd != -1) {
+					boolean validToken = true;
+					String token = format.substring(currentIdx + 1, tokenEnd);
+					IChatComponent component = null;
+					if(token.equals("SERVER")) {
+						component = new ChatComponentText(getCurrentServerName());
+					} else if(token.equals("USER")) {
+						component = new ChatComponentText(sender.getCommandSenderName());
+					} else if(token.equals("NICK")) {
+						if(sender instanceof EntityPlayer) {
+							EntityPlayer player = (EntityPlayer) sender;
+							component = player.func_145748_c_().createCopy();
+							if(colorName) {
+								component.getChatStyle().setColor(Utils.getColorFormattingForPlayer(player));
+							}
+						} else {
+							component = new ChatComponentText(sender.getCommandSenderName());
+						}
+						
+					} else if(token.equals("MESSAGE")) {
+						component = new ChatComponentText(message);
+					} else {
+						validToken = false;
+					}
+					if(validToken) {
+						if(sb.length() > 0) {
+							root.appendSibling(new ChatComponentText(sb.toString()));
+							sb = new StringBuilder();
+						}
+						root.appendSibling(component);
+						currentIdx += token.length() + 2;
+						continue;
+					}
 				}
-				nick = colorName ? senderComponent.getFormattedText() : senderComponent.getUnformattedText();
-			} else {
-				nick = sender.getCommandSenderName();
 			}
-			result = result.replaceAll("\\{NICK\\}", nick);
+			sb.append(c);
+			currentIdx++;
 		}
-		result = result.replaceAll("\\{MESSAGE\\}", Matcher.quoteReplacement(message)).replaceAll("\\\\$", "\\$");
-		return result;
+		if(sb.length() > 0) {
+			root.appendSibling(new ChatComponentText(sb.toString()));
+		}
+		return root;
 	}
 	
 	public static String formatMessage(String format, IIRCConnection connection, IIRCChannel channel, IIRCUser user, String message, boolean colorName) {
-		String result = format;
-		result = result.replaceAll("\\{SERVER\\}", connection.getIdentifier());
-		if(channel != null) {
-			result = result.replaceAll("\\{CHANNEL\\}", channel.getName());
-		}
-		if(user != null) {
-			result = result.replaceAll("\\{USER\\}", user.getIdentifier());
-			IChatComponent senderComponent = new ChatComponentText(getNickGame(channel, user));
-			if(colorName) {
-				senderComponent.getChatStyle().setColor(Utils.getColorFormattingForUser(channel, user));
+		return formatChatComponent(format, connection, channel, user, message, colorName).getUnformattedText();
+	}
+
+	public static IChatComponent formatChatComponent(String format, IIRCConnection connection, IIRCChannel channel, IIRCUser user, String message, boolean colorName) {
+		IChatComponent root = new ChatComponentText("");
+		StringBuilder sb = new StringBuilder();
+		int currentIdx = 0;
+		while(currentIdx < format.length()) {
+			char c = format.charAt(currentIdx);
+			if(c == '{') {
+				int tokenEnd = format.indexOf('}', currentIdx);
+				if(tokenEnd != -1) {
+					boolean validToken = true;
+					String token = format.substring(currentIdx + 1, tokenEnd);
+					IChatComponent component = null;
+					if(token.equals("SERVER")) {
+						component = new ChatComponentText(connection.getIdentifier());
+					} else if(token.equals("CHANNEL")) {
+						component = new ChatComponentText(channel.getName());
+					} else if(token.equals("USER")) {
+						component = new ChatComponentText(user.getIdentifier());
+					} else if(token.equals("NICK")) {
+						component = new ChatComponentText(getNickGame(channel, user));
+						if(colorName) {
+							component.getChatStyle().setColor(Utils.getColorFormattingForUser(channel, user));
+						}
+					} else if(token.equals("MESSAGE")) {
+						component = new ChatComponentText(message);
+					} else {
+						validToken = false;
+					}
+					if(validToken) {
+						if(sb.length() > 0) {
+							root.appendSibling(new ChatComponentText(sb.toString()));
+							sb = new StringBuilder();
+						}
+						root.appendSibling(component);
+						currentIdx += token.length() + 2;
+						continue;
+					}
+				}
 			}
-			result = result.replaceAll("\\{NICK\\}", colorName ? senderComponent.getFormattedText() : senderComponent.getUnformattedText());
+			sb.append(c);
+			currentIdx++;
 		}
-		result = result.replaceAll("\\{MESSAGE\\}", Matcher.quoteReplacement(message)).replaceAll("\\\\$", "\\$");
-		return result;
+		if(sb.length() > 0) {
+			root.appendSibling(new ChatComponentText(sb.toString()));
+		}
+		return root;
 	}
 
 }

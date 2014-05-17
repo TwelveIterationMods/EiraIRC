@@ -104,25 +104,24 @@ public class IRCEventHandler {
 		}
 		message = Utils.filterCodes(message);
 		message = ChatAllowedCharacters.filerAllowedCharacters(message);
-		String mcMessage = null;
+		String format = null;
 		if(event.isEmote) {
-			mcMessage = ConfigHelper.getDisplayFormat(event.bot.getDisplayFormat(event.sender)).mcPrivateEmote;
+			format = ConfigHelper.getDisplayFormat(event.bot.getDisplayFormat(event.sender)).mcPrivateEmote;
 		} else {
-			mcMessage = ConfigHelper.getDisplayFormat(event.bot.getDisplayFormat(event.sender)).mcPrivateMessage;
+			format = ConfigHelper.getDisplayFormat(event.bot.getDisplayFormat(event.sender)).mcPrivateMessage;
 		}
-		mcMessage = Utils.formatMessage(mcMessage, event.connection, null, event.sender, message, !event.isEmote);
-		String notifyMsg = mcMessage;
+		IChatComponent chatComponent = Utils.formatChatComponent(format, event.connection, null, event.sender, message, !event.isEmote);
+		String notifyMsg = chatComponent.getUnformattedText();
 		if(notifyMsg.length() > 42) {
 			notifyMsg = notifyMsg.substring(0, 42) + "...";
 		}
 		EiraIRC.proxy.publishNotification(NotificationType.PrivateMessage, notifyMsg);
 		EiraIRC.instance.getChatSessionHandler().addTargetUser(event.sender);
-		IChatComponent chatComponent = new ChatComponentText(mcMessage);
 		String emoteColor = ConfigHelper.getEmoteColor(event.sender);
 		if(event.isEmote && emoteColor != null) {
 			chatComponent.getChatStyle().setColor(Utils.getColorFormatting(emoteColor));
 		}
-		Utils.addMessageToChat(mcMessage);
+		Utils.addMessageToChat(chatComponent);
 	}
 	
 	@SubscribeEvent(priority = EventPriority.LOWEST)
@@ -140,14 +139,13 @@ public class IRCEventHandler {
 		message = Utils.filterCodes(message);
 		message = ChatAllowedCharacters.filerAllowedCharacters(message);
 		String emoteColor = ConfigHelper.getEmoteColor(event.channel);
-		String mcMessage = null;
+		String format = null;
 		if(event.isEmote) {
-			mcMessage = ConfigHelper.getDisplayFormat(event.bot.getDisplayFormat(event.channel)).mcChannelEmote;
+			format = ConfigHelper.getDisplayFormat(event.bot.getDisplayFormat(event.channel)).mcChannelEmote;
 		} else {
-			mcMessage = ConfigHelper.getDisplayFormat(event.bot.getDisplayFormat(event.channel)).mcChannelMessage;
+			format = ConfigHelper.getDisplayFormat(event.bot.getDisplayFormat(event.channel)).mcChannelMessage;
 		}
-		mcMessage = Utils.formatMessage(mcMessage, event.connection, event.channel, event.sender, message, !event.isEmote);
-		IChatComponent chatComponent = new ChatComponentText(mcMessage);
+		IChatComponent chatComponent = Utils.formatChatComponent(format, event.connection, event.channel, event.sender, message, !event.isEmote);
 		if(event.isEmote && emoteColor != null) {
 			chatComponent.getChatStyle().setColor(Utils.getColorFormatting(emoteColor));
 		}

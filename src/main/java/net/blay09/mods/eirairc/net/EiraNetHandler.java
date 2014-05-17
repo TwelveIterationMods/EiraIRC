@@ -19,26 +19,32 @@ public class EiraNetHandler {
 	private final Map<String, EiraPlayerInfo> playerInfoMap = new HashMap<String, EiraPlayerInfo>();
 	
 	public EiraPlayerInfo getPlayerInfo(String username) {
-		EiraPlayerInfo playerInfo = playerInfoMap.get(username);
-		if(playerInfo == null) {
-			playerInfo = new EiraPlayerInfo(username);
-			playerInfoMap.put(username, playerInfo);
+		synchronized(playerInfoMap) {
+			EiraPlayerInfo playerInfo = playerInfoMap.get(username);
+			if(playerInfo == null) {
+				playerInfo = new EiraPlayerInfo(username);
+				playerInfoMap.put(username, playerInfo);
+			}
+			return playerInfo;
 		}
-		return playerInfo;
 	}
 
 	@SubscribeEvent
 	public void onPlayerLogin(PlayerLoggedInEvent event) {
 		EntityPlayerMP entityPlayerMP = (EntityPlayerMP) event.player;
-		for(EiraPlayerInfo playerInfo : playerInfoMap.values()) {
-			AbstractPacket packet = new PacketRecLiveState(playerInfo.getUsername(), playerInfo.isRecording, playerInfo.isLive);
-			EiraIRC.instance.packetPipeline.sendTo(packet, entityPlayerMP);
+		synchronized(playerInfoMap) {
+			for(EiraPlayerInfo playerInfo : playerInfoMap.values()) {
+				AbstractPacket packet = new PacketRecLiveState(playerInfo.getUsername(), playerInfo.isRecording, playerInfo.isLive);
+				EiraIRC.instance.packetPipeline.sendTo(packet, entityPlayerMP);
+			}
 		}
 	}
 
 	@SubscribeEvent
 	public void onPlayerLogout(PlayerLoggedOutEvent event) {
-		playerInfoMap.remove(event.player.getCommandSenderName());
+		synchronized(playerInfoMap) {
+			playerInfoMap.remove(event.player.getCommandSenderName());
+		}
 	}
 	
 }
