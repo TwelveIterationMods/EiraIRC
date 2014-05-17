@@ -15,7 +15,7 @@ eirairc:irc.commands.msg=/[serv]irc msg <channel|nick> <message ...>
 eirairc:irc.commands.help=/[serv]irc help <topic>
 eirairc:irc.commands.nick=/[serv]irc nick [server] <nick>
 eirairc:irc.commands.nick.short=/nick [server] <nick>
-eirairc:irc.commands.config=/[serv]irc config (global|<server>|<channel>) <key> [value]
+eirairc:irc.commands.config=/[serv]irc config (global|<server>|<channel>) <key> [value] OR /[serv]irc config reload
 eirairc:irc.commands.twitch=/servirc twitch <username> <oauth>
 eirairc:irc.commands.nickserv=/servirc nickserv <username> <password>
 eirairc:irc.commands.color=/irc color <color>
@@ -234,6 +234,7 @@ eirairc:irc.config.lookup=[%s] Config option '%s' is set to '%s'
 eirairc:irc.config.invalidOption=[%s] Invalid config option '%s'. Use TAB to loop through valid options.
 eirairc:irc.config.requiresRestart=This config option requires a restart to take effect.
 eirairc:irc.config.invalidDisplayMode=Invalid display mode '%s'
+eirairc:irc.config.reload=Reloading config from file...
 ## Help
 eirairc:irc.help.validTopics=§eValid topics are:
 eirairc:irc.help.topicList=* color, alias, twitch, msg, commands, config

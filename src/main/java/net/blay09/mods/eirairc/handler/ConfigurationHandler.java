@@ -48,6 +48,7 @@ public class ConfigurationHandler {
 	
 	private static final Map<String, ServerConfig> serverConfigs = new HashMap<String, ServerConfig>();
 
+	private static File configFile;
 	private static Configuration config;
 	private static Map<String, BotProfile> botProfiles = new HashMap<String, BotProfile>();
 	private static List<BotProfile> botProfileList = new ArrayList<BotProfile>();
@@ -58,6 +59,8 @@ public class ConfigurationHandler {
 	private static DisplayFormatConfig defaultDisplayFormat;
 	
 	public static void loadBotProfiles(File profileDir) {
+		botProfiles.clear();
+		botProfileList.clear();
 		if(!profileDir.exists()) {
 			profileDir.mkdirs();
 		}
@@ -95,6 +98,8 @@ public class ConfigurationHandler {
 	}
 	
 	public static void loadDisplayFormats(File formatDir) {
+		displayFormats.clear();
+		displayFormatList.clear();
 		if(!formatDir.exists()) {
 			formatDir.mkdirs();
 		}
@@ -124,6 +129,7 @@ public class ConfigurationHandler {
 	}
 	
 	public static void load(File configFile) {
+		ConfigurationHandler.configFile = configFile;
 		boolean newConfigFile = !configFile.exists();
 		config = new Configuration(configFile);
 		
@@ -144,15 +150,6 @@ public class ConfigurationHandler {
 		ScreenshotConfig.save(config);
 		DisplayConfig.save(config);
 		CompatibilityConfig.save(config);
-	}
-	
-	public static void resetConfig() {
-		for(String categoryName : config.getCategoryNames()) {
-			ConfigCategory category = config.getCategory(categoryName);
-			if(category.parent == null) {
-				config.removeCategory(category);
-			}
-		}
 	}
 	
 	public static ServerConfig getServerConfig(String host) {
@@ -307,6 +304,10 @@ public class ConfigurationHandler {
 
 	public static BotProfile getDefaultBotProfile() {
 		return defaultBotProfile;
+	}
+
+	public static void reload() {
+		load(configFile);
 	}
 
 }
