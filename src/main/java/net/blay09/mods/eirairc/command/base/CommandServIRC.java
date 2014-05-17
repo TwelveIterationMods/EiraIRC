@@ -3,13 +3,13 @@
 
 package net.blay09.mods.eirairc.command.base;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.command.WrongUsageException;
 import net.minecraft.server.MinecraftServer;
 
 public class CommandServIRC implements ICommand {
@@ -31,7 +31,9 @@ public class CommandServIRC implements ICommand {
 
 	@Override
 	public List getCommandAliases() {
-		return null;
+		List<String> aliases = new ArrayList<String>();
+		aliases.add("sirc");
+		return aliases;
 	}
 
 	@Override

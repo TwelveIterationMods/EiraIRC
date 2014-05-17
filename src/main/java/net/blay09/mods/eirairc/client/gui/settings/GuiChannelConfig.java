@@ -117,6 +117,10 @@ public class GuiChannelConfig extends GuiScreen {
 		updateButtons();
 	}
 	
+	public void setBotProfile(String profileName) {
+		config.setBotProfile(profileName);
+	}
+	
 	@Override
 	public void drawScreen(int par1, int par2, float par3) {
 		drawBackground(0);

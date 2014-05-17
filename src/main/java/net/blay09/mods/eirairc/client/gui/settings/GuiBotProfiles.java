@@ -197,6 +197,11 @@ public class GuiBotProfiles extends GuiScreen {
 	@Override
 	public void actionPerformed(GuiButton button) {
 		if(button == btnBack) {
+			if(parentScreen instanceof GuiChannelConfig) {
+				((GuiChannelConfig) parentScreen).setBotProfile(currentProfile.getName());
+			} else if(parentScreen instanceof GuiServerConfig) {
+				((GuiServerConfig) parentScreen).setBotProfile(currentProfile.getName());
+			}
 			Minecraft.getMinecraft().displayGuiScreen(parentScreen);
 			return;
 		} else if(button == btnCurrentProfile) {
