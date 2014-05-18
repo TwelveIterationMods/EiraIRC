@@ -12,6 +12,7 @@ public class Screenshot {
 	private File file;
 	private String uploadURL;
 	private String deleteURL;
+	private String hoster;
 	private ScreenshotThumbnail thumbnail;
 	
 	public Screenshot(File file) {
@@ -54,5 +55,13 @@ public class Screenshot {
 
 	public String getDeleteURL() {
 		return deleteURL;
+	}
+
+	public String getHoster() {
+		return hoster;
+	}
+	
+	public void setHoster(String hoster) {
+		this.hoster = hoster;
 	}
 }

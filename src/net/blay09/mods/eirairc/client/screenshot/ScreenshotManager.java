@@ -54,6 +54,7 @@ public class ScreenshotManager {
 
 	private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss");
 	private static final String PROPERTY_DELETE_URL = "_delete";
+	private static final String PROPERTY_HOSTER = "hoster";
 	private static IntBuffer intBuffer;
 	private static int[] buffer;
 	
@@ -102,6 +103,7 @@ public class ScreenshotManager {
 				Screenshot screenshot = new Screenshot(screenshotFiles[i]);
 				screenshot.setURL(prop.getProperty(screenshot.getName()));
 				screenshot.setDeleteURL(prop.getProperty(screenshot.getName() + PROPERTY_DELETE_URL));
+				screenshot.setHoster(prop.getProperty(screenshot.getName() + PROPERTY_HOSTER));
 				screenshots.add(screenshot);
 			}
 		}
@@ -116,6 +118,7 @@ public class ScreenshotManager {
 			if (screenshot.isUploaded()) {
 				prop.setProperty(screenshot.getName(), screenshot.getUploadURL());
 				prop.setProperty(screenshot.getName() + PROPERTY_DELETE_URL, screenshot.getDeleteURL() != null ? screenshot.getDeleteURL() : "");
+				prop.setProperty(screenshot.getName() + PROPERTY_HOSTER, screenshot.getHoster() != null ? screenshot.getHoster() : "");
 			}
 		}
 		try {
@@ -192,7 +195,6 @@ public class ScreenshotManager {
 		IUploadHoster hoster = UploadManager.getUploadHoster(ScreenshotConfig.uploadHoster);
 		if (hoster != null) {
 			uploadTasks.add(new AsyncUploadScreenshot(hoster, screenshot, followUpAction));
-			save();
 		}
 	}
 	
@@ -200,13 +202,15 @@ public class ScreenshotManager {
 		for(int i = uploadTasks.size() - 1; i >= 0; i--) {
 			if(uploadTasks.get(i).isComplete()) {
 				AsyncUploadScreenshot task = uploadTasks.remove(i);
-				int action = task.getFollowUpAction();
-				if (action == ScreenshotConfig.VALUE_UPLOADCLIPBOARD) {
-					Utils.setClipboardString(task.getScreenshot().getUploadURL());
-				} else if (action == ScreenshotConfig.VALUE_UPLOADSHARE) {
-					shareScreenshot(task.getScreenshot());
+				if(task.getScreenshot().isUploaded()) {
+					int action = task.getFollowUpAction();
+					if (action == ScreenshotConfig.VALUE_UPLOADCLIPBOARD) {
+						Utils.setClipboardString(task.getScreenshot().getUploadURL());
+					} else if (action == ScreenshotConfig.VALUE_UPLOADSHARE) {
+						shareScreenshot(task.getScreenshot());
+					}
+					save();
 				}
-				save();
 			}
 		}
 	}
@@ -215,14 +219,6 @@ public class ScreenshotManager {
 		String ircMessage = Utils.getLocalizedMessage("irc.display.shareScreenshot", screenshot.getUploadURL());
 		String mcMessage = "/me " + ircMessage;
 		Minecraft.getMinecraft().thePlayer.sendChatMessage(mcMessage);
-//		for(IIRCConnection connection : EiraIRC.instance.getConnections()) {
-//			IIRCBot bot = connection.getBot();
-//			for(IIRCChannel channel : connection.getChannels()) {
-//				if(!bot.isReadOnly(channel)) {
-//					channel.message(IRCConnection.EMOTE_START + ircMessage + IRCConnection.EMOTE_END);
-//				}
-//			}
-//		}
 	}
 
 	public void handleNewScreenshot(Screenshot screenshot) {

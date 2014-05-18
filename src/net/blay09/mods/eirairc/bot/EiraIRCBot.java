@@ -160,7 +160,7 @@ public class EiraIRCBot implements IIRCBot {
 		mainProfile = ConfigurationHandler.getBotProfile(serverConfig.getBotProfile());
 		profiles.clear();
 		for(ChannelConfig channelConfig : serverConfig.getChannelConfigs()) {
-			if(!channelConfig.getBotProfile().equals(mainProfile.getName())) {
+			if(!channelConfig.getBotProfile().equals(mainProfile.getName()) && !channelConfig.getBotProfile().equals(IBotProfile.PROFILE_INHERIT)) {
 				profiles.put(channelConfig.getName().toLowerCase(), ConfigurationHandler.getBotProfile(channelConfig.getBotProfile()));
 			}
 		}

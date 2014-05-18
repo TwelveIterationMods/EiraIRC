@@ -134,7 +134,7 @@ public class Utils {
 		return GlobalConfig.nickPrefix + name + GlobalConfig.nickSuffix;
 	}
 	
-	private static String addColorCodes(String name, char colorCode) {
+	public static String addColorCodes(String name, char colorCode) {
 		if(colorCode == INVALID_COLOR) {
 			return name;
 		}

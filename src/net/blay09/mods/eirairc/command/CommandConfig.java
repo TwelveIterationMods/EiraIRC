@@ -5,6 +5,7 @@ package net.blay09.mods.eirairc.command;
 
 import java.util.List;
 
+import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.IIRCContext;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
@@ -34,10 +35,20 @@ public class CommandConfig extends SubCommand {
 
 	@Override
 	public boolean processCommand(ICommandSender sender, IIRCContext context, String[] args, boolean serverSide) {
-		if(args.length < 2) {
+		if(args.length < 1) {
 			throw new WrongUsageException(getCommandUsage(sender));
 		}
 		String target = args[0];
+		if(target.equals("reload")) {
+			Utils.sendLocalizedMessage(sender, "irc.config.reload");
+			EiraIRC.instance.stopIRC();
+			ConfigurationHandler.reload();
+			EiraIRC.instance.startIRC();
+			return true;
+		}
+		if(args.length < 2) {
+			throw new WrongUsageException(getCommandUsage(sender));
+		}
 		String config = args[1];
 		if(args.length > 2) {
 			ConfigurationHandler.handleConfigCommand(sender, target, config, args[2]);
@@ -54,7 +65,8 @@ public class CommandConfig extends SubCommand {
 
 	@Override
 	public void addTabCompletionOptions(List<String> list, ICommandSender sender, String[] args) {
-		if(args.length == 0) {
+		if(args.length == 1) {
+			list.add("reload");
 			list.add(TARGET_GLOBAL);
 			Utils.addConnectionsToList(list);
 			for(ServerConfig serverConfig : ConfigurationHandler.getServerConfigs()) {
@@ -63,7 +75,10 @@ public class CommandConfig extends SubCommand {
 					list.add(channelConfig.getName());
 				}
 			}
-		} else if(args.length == 1) {
+		} else if(args.length == 2) {
+			if(args[0].equals("reload")) {
+				return;
+			}
 			if(args[0].equals(TARGET_GLOBAL)) {
 				ConfigurationHandler.addOptionsToList(list);
 			} else if(args[0].contains("#")) {
@@ -71,7 +86,10 @@ public class CommandConfig extends SubCommand {
 			} else {
 				ServerConfig.addOptionstoList(list);
 			}
-		} else if(args.length == 2) {
+		} else if(args.length == 3) {
+			if(args[0].equals("reload")) {
+				return;
+			}
 			if(args[0].equals(TARGET_GLOBAL)) {
 				ConfigurationHandler.addValuesToList(list, args[1]);
 			} else if(args[0].contains("#")) {

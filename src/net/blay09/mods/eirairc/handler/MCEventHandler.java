@@ -28,9 +28,11 @@ import net.minecraft.network.packet.NetHandler;
 import net.minecraft.network.packet.Packet1Login;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.event.CommandEvent;
+import net.minecraftforge.event.EventPriority;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import cpw.mods.fml.common.IPlayerTracker;
 import cpw.mods.fml.common.network.IConnectionHandler;
 import cpw.mods.fml.common.network.Player;
@@ -184,10 +186,15 @@ public class MCEventHandler implements IPlayerTracker, IConnectionHandler {
 		return true;
 	}
 	
+	@ForgeSubscribe(priority = EventPriority.HIGHEST)
+	public void NameFormat(PlayerEvent.NameFormat event) {
+		event.displayname = Utils.getAliasForPlayer(event.entityPlayer);
+	}
+	
 	@ForgeSubscribe
 	public void onServerChat(ServerChatEvent event) {
 		String ircNick = Utils.getNickIRC(event.player);
-		String mcNick = Utils.getNickGame(event.player, true);
+		String mcNick = Utils.addColorCodes(event.player.getDisplayName(), Utils.getColorCodeForPlayer(event.player));
 		event.component = Utils.getLocalizedChatMessageNoPrefix("chat.type.text", mcNick, event.message);
 		if(!MinecraftServer.getServer().isSinglePlayer()) {
 			String text = event.message;

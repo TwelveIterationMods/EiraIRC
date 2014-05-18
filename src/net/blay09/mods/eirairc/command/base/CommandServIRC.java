@@ -3,6 +3,7 @@
 
 package net.blay09.mods.eirairc.command.base;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.blay09.mods.eirairc.util.Globals;
@@ -11,6 +12,8 @@ import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.EnumChatFormatting;
 
 public class CommandServIRC implements ICommand {
 
@@ -21,7 +24,7 @@ public class CommandServIRC implements ICommand {
 
 	@Override
 	public String getCommandName() {
-		return "servrc";
+		return "servirc";
 	}
 
 	@Override
@@ -31,7 +34,9 @@ public class CommandServIRC implements ICommand {
 
 	@Override
 	public List getCommandAliases() {
-		return null;
+		List<String> aliases = new ArrayList<String>();
+		aliases.add("sirc");
+		return aliases;
 	}
 
 	@Override
@@ -44,7 +49,13 @@ public class CommandServIRC implements ICommand {
 			Utils.sendLocalizedMessage(sender, "irc.general.notMultiplayer");
 			return;
 		}
-		IRCCommandHandler.processCommand(sender, args, false);
+		try {
+			IRCCommandHandler.processCommand(sender, args, false);
+		} catch (WrongUsageException e) {
+			ChatMessageComponent chatComponent = ChatMessageComponent.createFromTranslationWithSubstitutions("commands.generic.usage", Utils.getLocalizedMessageNoPrefix(e.getMessage(), e.getErrorOjbects()));
+			chatComponent.setColor(EnumChatFormatting.RED);
+			sender.sendChatToPlayer(chatComponent);
+		}
 	}
 
 	@Override

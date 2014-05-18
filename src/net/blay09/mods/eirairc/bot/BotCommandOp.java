@@ -26,8 +26,7 @@ public class BotCommandOp implements IBotCommand {
 
 	@Override
 	public void processCommand(IIRCBot bot, IIRCChannel channel, IIRCUser user, String[] args) {
-		IBotProfile botProfile = bot.getMainProfile();
-		if(!botProfile.isInterOp() || !bot.getProfile(channel).isInterOp() || !botProfile.isInterOpAuth(user.getAuthLogin()) || !bot.getProfile(channel).isInterOpAuth(user.getAuthLogin())) {
+		if(!bot.getProfile(channel).isInterOp() || !bot.getProfile(channel).isInterOpAuth(user.getAuthLogin())) {
 			user.notice(Utils.getLocalizedMessage("irc.bot.noPermission"));
 			return;
 		}

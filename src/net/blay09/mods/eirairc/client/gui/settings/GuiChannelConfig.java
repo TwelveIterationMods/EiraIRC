@@ -94,6 +94,10 @@ public class GuiChannelConfig extends GuiScreen {
 		loadFromConfig();
 	}
 	
+	public void setBotProfile(String profileName) {
+		config.setBotProfile(profileName);
+	}
+	
 	@Override
 	public void onGuiClosed() {
 		Keyboard.enableRepeatEvents(false);
