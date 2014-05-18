@@ -28,12 +28,12 @@ import net.blay09.mods.eirairc.command.interop.InterOpCommandKick;
 import net.blay09.mods.eirairc.command.interop.InterOpCommandMode;
 import net.blay09.mods.eirairc.command.interop.InterOpCommandTopic;
 import net.blay09.mods.eirairc.command.interop.InterOpCommandUserModeBase;
-import net.blay09.mods.eirairc.config.GlobalConfig;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.CommandHandler;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
 
