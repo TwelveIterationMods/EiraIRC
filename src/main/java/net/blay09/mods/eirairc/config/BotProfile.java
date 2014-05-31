@@ -100,7 +100,7 @@ public class BotProfile implements IBotProfile {
 	}
 	
 	public void registerCommand(IBotCommand command) {
-		commands.put(command.getCommandName(), command);
+		commands.put(command.getCommandName().toLowerCase(), command);
 	}
 	
 	public void loadCommands() {
@@ -201,7 +201,7 @@ public class BotProfile implements IBotProfile {
 	}
 
 	public IBotCommand getCommand(String commandName) {
-		return commands.get(commandName);
+		return commands.get(commandName.toLowerCase());
 	}
 
 	public static void setupDefaultProfiles(File profileDir) {
@@ -276,7 +276,7 @@ public class BotProfile implements IBotProfile {
 	}
 
 	public void deleteCustomCommand(BotCommandCustom botCommand) {
-		commands.remove(botCommand.getCommandName());
+		commands.remove(botCommand.getCommandName().toLowerCase());
 		if(botCommand.getCategoryName() != null) {
 			config.removeCategory(config.getCategory(botCommand.getCategoryName()));
 		}
