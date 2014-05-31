@@ -176,7 +176,7 @@ eirairc:irc.notify.recordingFalse=%s has stopped recording.
 
 # Bot
 eirairc:irc.bot.auth=Authenticating with EiraIRC...
-eirairc:irc.bot.cmdlist=Channel Bot Commands: !who, !auth, !op
+eirairc:irc.bot.cmdlist=Channel Bot Commands: %s
 eirairc:irc.bot.unknownCommand=Unknown command. Type HELP to see a list of all available commands.
 eirairc:irc.bot.msgSent=Message sent to %s: %s
 eirairc:irc.bot.nickInUse=Nickname %s is already in use. Trying %s

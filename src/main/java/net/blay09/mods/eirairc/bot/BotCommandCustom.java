@@ -15,6 +15,7 @@ public class BotCommandCustom implements IBotCommand {
 	private String catName;
 	private String name = "";
 	private String command = "";
+	private String description;
 	private boolean allowArgs;
 	private boolean runAsOp;
 	private boolean requireAuth;
@@ -23,10 +24,11 @@ public class BotCommandCustom implements IBotCommand {
 	public BotCommandCustom() {
 	}
 	
-	public BotCommandCustom(String catName, String name, String command, boolean allowArgs, boolean broadcastResult, boolean runAsOp, boolean requireAuth) {
+	public BotCommandCustom(String catName, String name, String command, String description, boolean allowArgs, boolean broadcastResult, boolean runAsOp, boolean requireAuth) {
 		this.catName = catName;
 		this.name = name;
 		this.command = command;
+		this.description = description;
 		this.allowArgs = allowArgs;
 		this.broadcastResult = broadcastResult;
 		this.runAsOp = runAsOp;
@@ -114,6 +116,15 @@ public class BotCommandCustom implements IBotCommand {
 	
 	public void setMinecraftCommand(String command) {
 		this.command = command;
+	}
+	
+	public void setCommandDescription(String description) {
+		this.description = description;
+	}
+
+	@Override
+	public String getCommandDescription() {
+		return description;
 	}
 
 }

@@ -67,5 +67,10 @@ public class BotCommandMessage implements IBotCommand {
 		entityPlayer.addChatMessage(chatComponent);
 		user.notice(Utils.getLocalizedMessage("irc.bot.msgSent", playerName, message));
 	}
+
+	@Override
+	public String getCommandDescription() {
+		return "Send a private message to an online player.";
+	}
 	
 }

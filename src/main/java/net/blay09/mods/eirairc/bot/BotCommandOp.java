@@ -48,5 +48,10 @@ public class BotCommandOp implements IBotCommand {
 		bot.setOpEnabled(false);
 		user.notice("> " + bot.getLogContents());
 	}
+
+	@Override
+	public String getCommandDescription() {
+		return "Perform an OP-command on the server (requires you to be authenticated).";
+	}
 	
 }

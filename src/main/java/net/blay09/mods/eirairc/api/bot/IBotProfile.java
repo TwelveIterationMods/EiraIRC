@@ -3,6 +3,8 @@
 
 package net.blay09.mods.eirairc.api.bot;
 
+import java.util.Collection;
+
 public interface IBotProfile {
 
 	public static final String KEY_ALLOWPRIVMSG = "allowPrivateMessages";
@@ -23,5 +25,6 @@ public interface IBotProfile {
 	public boolean isInterOp();
 	public boolean isInterOpAuth(String authName);
 	public String[] getInterOpBlacklist();
+	public Collection<IBotCommand> getCommands();
 	
 }

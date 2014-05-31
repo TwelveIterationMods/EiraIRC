@@ -26,5 +26,12 @@ public class BotCommandAuth implements IBotCommand {
 		user.whois();
 		user.notice(Utils.getLocalizedMessage("irc.bot.auth"));
 	}
+
+	@Override
+	public String getCommandDescription() {
+		return "Authenticate with the EiraIRC Bot.";
+	}
+	
+	
 	
 }

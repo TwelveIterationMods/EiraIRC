@@ -50,7 +50,7 @@ public class EiraIRCBot implements IIRCBot {
 	@Override
 	public IBotProfile getProfile(IIRCContext channel) {
 		if(channel == null) {
-			return null;
+			return mainProfile;
 		}
 		return getProfile(channel.getName());
 	}
