@@ -313,7 +313,17 @@ public class IRCConnection implements Runnable, IIRCConnection {
 				MinecraftForge.EVENT_BUS.post(new IRCPrivateChatEvent(this, user, message, isEmote));
 			}
 		} else if(cmd.equals("NOTICE")) {
-			System.out.println("(" + msg.getPrefix() + ") " + msg.arg(1));
+			IRCUser user = null;
+			if(msg.getNick() != null) {
+				user = (IRCUser) getOrCreateUser(msg.getNick());
+			}
+			String target = msg.arg(0);
+			String message = msg.arg(1);
+			if(target.startsWith("#")) {
+				MinecraftForge.EVENT_BUS.post(new IRCChannelChatEvent(this, getChannel(target), user, message, false, true));
+			} else if(target.equals(this.nick)) {
+				MinecraftForge.EVENT_BUS.post(new IRCPrivateChatEvent(this, user, message, false, true));
+			}
 		} else if(cmd.equals("JOIN")) {
 			IRCUser user = (IRCUser) getOrCreateUser(msg.getNick());
 			IRCChannel channel = (IRCChannel) getOrCreateChannel(msg.arg(0));

@@ -25,12 +25,14 @@ public class GlobalConfig {
 	public static String charset = "UTF-8";
 	public static final List<String> colorBlackList = new ArrayList<String>();
 	public static boolean registerShortCommands = true;
+	public static boolean hideNotices = false;
 	
 	public static void load(Configuration config) {
 		nick = Utils.unquote(config.get(ConfigurationHandler.CATEGORY_GLOBAL, "nick", nick).getString());
 		saveCredentials = config.get(ConfigurationHandler.CATEGORY_GLOBAL, "saveCredentials", saveCredentials).getBoolean(saveCredentials);
 		registerShortCommands = config.get(ConfigurationHandler.CATEGORY_GLOBAL, "registerShortCommands", registerShortCommands).getBoolean(registerShortCommands);
 		charset = Utils.unquote(config.get(ConfigurationHandler.CATEGORY_GLOBAL, "charset", charset).getString());
+		hideNotices = config.get(ConfigurationHandler.CATEGORY_GLOBAL, "hideNotices", false).getBoolean(false);
 		config.getCategory(ConfigurationHandler.CATEGORY_GLOBAL).setComment("These are settings that are applied on all servers and channels.");
 		
 		persistentConnection = config.get(ConfigurationHandler.CATEGORY_CLIENTONLY, "persistentConnection", GlobalConfig.persistentConnection).getBoolean(GlobalConfig.persistentConnection);
@@ -67,15 +69,18 @@ public class GlobalConfig {
 		else if(key.equals("charset")) value = charset;
 		else if(key.equals("nickPrefix")) value = nickPrefix;
 		else if(key.equals("nickSuffix")) value = nickSuffix;
+		else if(key.equals("hideNotices")) value = String.valueOf(hideNotices);
 		return value;
 	}
 	
 	public static boolean handleConfigCommand(ICommandSender sender, String key, String value) {
-		if(key.equals("persistentConnection")){
+		if(key.equals("persistentConnection")) {
 			persistentConnection = Boolean.parseBoolean(value);
-		} else if(key.equals("saveCredentials")){
+		} else if(key.equals("saveCredentials")) {
 			saveCredentials = Boolean.parseBoolean(value);
-		} else if(key.equals("registerShortCommands")){
+		} else if(key.equals("hideNotices")) {
+			hideNotices = Boolean.parseBoolean(value);
+		} else if(key.equals("registerShortCommands")) {
 			registerShortCommands = Boolean.parseBoolean(value);
 			Utils.sendLocalizedMessage(sender, "irc.config.requiresRestart");
 		} else if(key.equals("interOp") || key.equals("enableAliases")) {
@@ -108,12 +113,14 @@ public class GlobalConfig {
 		list.add("charset");
 		list.add("nickPrefix");
 		list.add("nickSuffix");
+		list.add("hideNotices");
 	}
 	
 	public static void save(Configuration config) {
 		config.get(ConfigurationHandler.CATEGORY_GLOBAL, "nick", "").set(Utils.quote(nick));
 		config.get(ConfigurationHandler.CATEGORY_GLOBAL, "saveCredentials", saveCredentials).set(saveCredentials);
 		config.get(ConfigurationHandler.CATEGORY_GLOBAL, "charset", "").set(Utils.quote(charset));
+		config.get(ConfigurationHandler.CATEGORY_GLOBAL, "hideNotices", hideNotices).set(hideNotices);
 
 		config.get(ConfigurationHandler.CATEGORY_CLIENTONLY, "persistentConnection", persistentConnection).set(persistentConnection);
 
@@ -133,7 +140,7 @@ public class GlobalConfig {
 	}
 
 	public static void addValuesToList(List<String> list, String option) {
-		if(option.startsWith("enable") || option.startsWith("allow") || option.equals("saveCredentials") || option.equals("persistentConnection")) {
+		if(option.startsWith("enable") || option.startsWith("allow") || option.equals("saveCredentials") || option.equals("persistentConnection") || option.equals("hideNotices")) {
 			Utils.addBooleansToList(list);
 		} else if(option.equals("charset")) {
 			for(String cs : Charset.availableCharsets().keySet()) {

@@ -24,6 +24,7 @@ public class DisplayConfig {
 	public static String ircVoiceColor = "gray";
 	public static String ircColor = "gray";
 	public static String ircPrivateColor = "gray";
+	public static String ircNoticeColor = "red";
 	public static String emoteColor = "gold";
 	public static String quitMessage = "Leaving.";
 	public static boolean hudRecState = true;
@@ -37,6 +38,7 @@ public class DisplayConfig {
 		ircPrivateColor = config.get(CATEGORY, "ircPrivateColor", ircPrivateColor).getString();
 		ircVoiceColor = config.get(CATEGORY, "ircVoiceColor", ircVoiceColor).getString();
 		ircOpColor = config.get(CATEGORY, "ircOpColor", ircOpColor).getString();
+		ircNoticeColor = config.get(CATEGORY, "ircNoticeColor", ircNoticeColor).getString();
 		enableNameColors = config.get(CATEGORY, "enableNameColors", enableNameColors).getBoolean(enableNameColors);
 		hudRecState = config.get(CATEGORY, "hudRecState", hudRecState).getBoolean(hudRecState);
 	}
@@ -49,6 +51,7 @@ public class DisplayConfig {
 		config.get(CATEGORY, "ircPrivateColor", ircPrivateColor).set(ircPrivateColor);
 		config.get(CATEGORY, "ircVoiceColor", ircVoiceColor).set(ircVoiceColor);
 		config.get(CATEGORY, "ircOpColor", ircOpColor).set(ircOpColor);
+		config.get(CATEGORY, "ircNoticeColor", ircNoticeColor).set(ircNoticeColor);
 		config.get(CATEGORY, "enableNameColors", enableNameColors).set(enableNameColors);
 		config.get(CATEGORY, "hudRecState", hudRecState).set(hudRecState);
 	}
@@ -61,6 +64,7 @@ public class DisplayConfig {
 		list.add("ircPrivateColor");
 		list.add("ircVoiceColor");
 		list.add("ircOpColor");
+		list.add("ircNoticeColor");
 		list.add("enableNameColors");
 	}
 	
@@ -81,6 +85,7 @@ public class DisplayConfig {
 		else if(key.equals("ircPrivateColor")) value = ircPrivateColor;
 		else if(key.equals("ircVoiceColor")) value = ircVoiceColor;
 		else if(key.equals("ircOpColor")) value = ircOpColor;
+		else if(key.equals("ircNoticeColor")) value = ircNoticeColor;
 		else if(key.equals("emoteColor")) value = emoteColor;
 		else if(key.equals("quitMessage")) value = quitMessage;
 		return value;
@@ -105,6 +110,8 @@ public class DisplayConfig {
 			ircVoiceColor = value;
 		} else if(key.equals("ircOpColor")) {
 			ircOpColor = value;
+		} else if(key.equals("ircNoticeColor")) {
+			ircNoticeColor = value;
 		} else if(key.equals("emoteColor")) {
 			emoteColor = value;
 		} else if(key.equals("quitMessage")) {

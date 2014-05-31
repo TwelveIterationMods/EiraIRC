@@ -20,7 +20,7 @@ import net.minecraftforge.common.config.Configuration;
 public class ServerConfig {
 	
 	private final String host;
-	private String nick;
+	private String nick = "";
 	private String serverPassword;
 	private String botProfile;
 	private String ident = Globals.DEFAULT_IDENT;

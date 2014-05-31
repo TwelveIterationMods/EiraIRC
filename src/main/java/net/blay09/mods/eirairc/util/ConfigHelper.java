@@ -67,4 +67,8 @@ public class ConfigHelper {
 		return DisplayConfig.emoteColor;
 	}
 
+	public static String getNoticeColor(IIRCContext context) {
+		return DisplayConfig.ircNoticeColor;
+	}
+
 }

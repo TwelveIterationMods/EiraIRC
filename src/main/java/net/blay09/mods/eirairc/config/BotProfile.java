@@ -111,9 +111,7 @@ public class BotProfile implements IBotProfile {
 		registerCommand(new BotCommandMessage());
 		registerCommand(new BotCommandWho("who"));
 		registerCommand(new BotCommandWho("players"));
-		if(!interOp) {
-			registerCommand(new BotCommandOp());
-		}
+		registerCommand(new BotCommandOp());
 		
 		for(int i = 0; i < disabledNativeCommands.length; i++) {
 			if(Utils.unquote(disabledNativeCommands[i]).equals("*")) {
