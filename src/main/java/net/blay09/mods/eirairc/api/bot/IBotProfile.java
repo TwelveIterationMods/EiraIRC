@@ -15,7 +15,7 @@ public interface IBotProfile {
 	public static final String KEY_RELAYNICKCHANGES = "relayNickChanges";
 	public static final String KEY_RELAYBROADCASTS = "relayBroadcasts";
 	public static final String KEY_LINKFILTER = "enableLinkFilter";
-	public static final String PROFILE_INHERIT = "Inherit";
+	public static final String INHERIT = "Inherit";
 
 	public boolean getBoolean(String key, boolean defaultVal);
 	public IBotCommand getCommand(String commandName);

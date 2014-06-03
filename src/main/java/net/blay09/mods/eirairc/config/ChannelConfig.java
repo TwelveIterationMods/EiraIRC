@@ -5,6 +5,7 @@ package net.blay09.mods.eirairc.config;
 
 import java.util.List;
 
+import net.blay09.mods.eirairc.api.bot.IBotProfile;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
@@ -120,6 +121,10 @@ public class ChannelConfig {
 
 	public void setBotProfile(String botProfile) {
 		this.botProfile = botProfile;
+	}
+
+	public void useDefaults(boolean serverSide) {
+		botProfile = BotProfile.INHERIT;
 	}
 	
 }

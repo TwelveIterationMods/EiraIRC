@@ -32,9 +32,13 @@ public class BotProfile implements IBotProfile {
 	private static final String CATEGORY_COMMANDS = "commands";
 	private static final String CATEGORY_MACROS = "macros";
 	
-	public static final String DEFAULT_CLIENT = "default_client";
-	public static final String DEFAULT_SERVER = "default_server";
-	public static final String DEFAULT_TWITCH = "default_twitch";
+	private static final String DEFAULT_CLIENT_FILE = "default_client";
+	private static final String DEFAULT_SERVER_FILE = "default_server";
+	private static final String DEFAULT_TWITCH_FILE = "default_twitch";
+	
+	public static final String DEFAULT_TWITCH = "Twitch";
+	public static final String DEFAULT_SERVER = "Server";
+	public static final String DEFAULT_CLIENT = "Client";
 	
 	private final Map<String, IBotCommand> commands = new HashMap<String, IBotCommand>();
 	public final List<String> interOpAuthList = new ArrayList<String>();
@@ -206,21 +210,21 @@ public class BotProfile implements IBotProfile {
 	}
 
 	public static void setupDefaultProfiles(File profileDir) {
-		File file = new File(profileDir, BotProfile.DEFAULT_CLIENT + ".cfg");
+		File file = new File(profileDir, BotProfile.DEFAULT_CLIENT_FILE + ".cfg");
 		if(!file.exists()) {
 			BotProfile botProfile = new BotProfile(file);
 			botProfile.defaultClient();
 			botProfile.save();
 			botProfile.loadCommands();
 		}
-		file = new File(profileDir, BotProfile.DEFAULT_SERVER + ".cfg");
+		file = new File(profileDir, BotProfile.DEFAULT_SERVER_FILE + ".cfg");
 		if(!file.exists()) {
 			BotProfile botProfile = new BotProfile(file);
 			botProfile.defaultServer();
 			botProfile.save();
 			botProfile.loadCommands();
 		}
-		file = new File(profileDir, BotProfile.DEFAULT_TWITCH + ".cfg");
+		file = new File(profileDir, BotProfile.DEFAULT_TWITCH_FILE + ".cfg");
 		if(!file.exists()) {
 			BotProfile botProfile = new BotProfile(file);
 			botProfile.defaultTwitch();
