@@ -153,7 +153,7 @@ public class EiraIRCBot implements IIRCBot {
 
 	@Override
 	public boolean isServerSide() {
-		return false;
+		return Utils.isServerSide();
 	}
 
 	@Override
