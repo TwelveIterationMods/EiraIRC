@@ -9,11 +9,9 @@ import net.blay09.mods.eirairc.api.IIRCContext;
 import net.blay09.mods.eirairc.api.IIRCUser;
 import net.minecraft.command.ICommandSender;
 
-public interface IIRCBot extends ICommandSender {
+public interface IIRCBot {
 
 	public IIRCConnection getConnection();
-	public void resetLog();
-	public String getLogContents();
 	public boolean processCommand(IIRCChannel channel, IIRCUser sender, String message);
 	public IBotProfile getMainProfile();
 	public IBotProfile getProfile(IIRCContext context);
@@ -22,6 +20,5 @@ public interface IIRCBot extends ICommandSender {
 	public boolean isMuted(IIRCContext context);
 	public boolean isReadOnly(IIRCContext context);
 	public boolean isServerSide();
-	public void setOpEnabled(boolean opEnabled);
 	
 }

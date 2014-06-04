@@ -5,6 +5,8 @@ package net.blay09.mods.eirairc.api;
 
 import java.util.Collection;
 
+import net.minecraft.command.ICommandSender;
+
 public interface IIRCUser extends IIRCContext {
 
 	public void whois();

@@ -63,15 +63,7 @@ public class BotCommandCustom implements IBotCommand {
 		if(allowArgs) {
 			message += " " + Utils.joinStrings(args, " ", 0).trim();
 		}
-		bot.resetLog();
-		bot.setOpEnabled(runAsOp);
-		MinecraftServer.getServer().getCommandManager().executeCommand(bot, message);
-		bot.setOpEnabled(false);
-		if(broadcastResult) {
-			channel.message("> " + bot.getLogContents());
-		} else {
-			user.notice("> " + bot.getLogContents());
-		}
+		MinecraftServer.getServer().getCommandManager().executeCommand(new IRCUserCommandSender(channel, user, broadcastResult, runAsOp), message);
 	}
 
 	public boolean allowsArgs() {

@@ -18,6 +18,7 @@ import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.irc.IRCConnection;
+import net.blay09.mods.eirairc.irc.IRCUser;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.server.MinecraftServer;
@@ -30,9 +31,7 @@ public class EiraIRCBot implements IIRCBot {
 
 	private final IRCConnection connection;
 	private final Map<String, BotProfile> profiles = new HashMap<String, BotProfile>();
-	private final StringBuffer logBuffer = new StringBuffer();
 	private BotProfile mainProfile;
-	private boolean opEnabled;
 	
 	public EiraIRCBot(IRCConnection connection) {
 		this.connection = connection;
@@ -59,56 +58,12 @@ public class EiraIRCBot implements IIRCBot {
 	public IBotProfile getMainProfile() {
 		return mainProfile;
 	}
-	
-	@Override
-	public String getCommandSenderName() {
-		return "EiraIRC Bot (" + connection.getHost() + ")";
-	}
-
-	@Override
-	public IChatComponent func_145748_c_() {
-		return new ChatComponentText(this.getCommandSenderName());
-	}
-
-	@Override
-	public void addChatMessage(IChatComponent chatComponent) {
-		logBuffer.append(chatComponent.getUnformattedText());
-	}
-
-	@Override
-	public boolean canCommandSenderUseCommand(int level, String commandName) {
-		return opEnabled;
-	}
-
-	@Override
-	public ChunkCoordinates getPlayerCoordinates() {
-		return new ChunkCoordinates(0, 0, 0);
-	}
-
-	@Override
-	public World getEntityWorld() {
-		return MinecraftServer.getServer().getEntityWorld();
-	}
 
 	@Override
 	public IIRCConnection getConnection() {
 		return connection;
 	}
 
-	@Override
-	public void resetLog() {
-		logBuffer.setLength(0);
-	}
-
-	@Override
-	public String getLogContents() {
-		return logBuffer.toString();
-	}
-
-	public void setOpEnabled(boolean opEnabled) {
-		this.opEnabled = opEnabled;
-	}
-	
 	@Override
 	public boolean processCommand(IIRCChannel channel, IIRCUser sender, String message) {
 		String[] args = message.split(" ");
