@@ -3,7 +3,6 @@
 
 package net.blay09.mods.eirairc.config;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 

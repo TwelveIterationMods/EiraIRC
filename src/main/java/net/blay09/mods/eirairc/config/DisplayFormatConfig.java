@@ -6,7 +6,6 @@ package net.blay09.mods.eirairc.config;
 import java.io.File;
 
 import net.blay09.mods.eirairc.util.Utils;
-import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
 
 public class DisplayFormatConfig {

@@ -3,14 +3,11 @@
 
 package net.blay09.mods.eirairc.config;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
-import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
 
 public class DisplayConfig {

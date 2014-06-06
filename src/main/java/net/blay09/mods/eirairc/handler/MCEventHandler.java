@@ -15,7 +15,6 @@ import net.blay09.mods.eirairc.config.DisplayConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.irc.IRCConnection;
 import net.blay09.mods.eirairc.util.ConfigHelper;
-import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.server.CommandBroadcast;

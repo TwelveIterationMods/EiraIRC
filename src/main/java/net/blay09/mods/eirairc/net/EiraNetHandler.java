@@ -6,9 +6,7 @@ package net.blay09.mods.eirairc.net;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.net.packet.AbstractPacket;
-import net.blay09.mods.eirairc.net.packet.PacketRecLiveState;
+import net.blay09.mods.eirairc.net.message.MessageRecLiveState.SMessageRecLiveState;
 import net.minecraft.entity.player.EntityPlayerMP;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
@@ -34,8 +32,7 @@ public class EiraNetHandler {
 		EntityPlayerMP entityPlayerMP = (EntityPlayerMP) event.player;
 		synchronized(playerInfoMap) {
 			for(EiraPlayerInfo playerInfo : playerInfoMap.values()) {
-				AbstractPacket packet = new PacketRecLiveState(playerInfo.getUsername(), playerInfo.isRecording, playerInfo.isLive);
-				EiraIRC.instance.packetPipeline.sendTo(packet, entityPlayerMP);
+				PacketHandler.INSTANCE.sendTo(new SMessageRecLiveState(playerInfo.getUsername(), playerInfo.isRecording, playerInfo.isLive), entityPlayerMP);
 			}
 		}
 	}

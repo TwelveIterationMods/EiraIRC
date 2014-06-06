@@ -16,7 +16,8 @@ import net.blay09.mods.eirairc.config.CompatibilityConfig;
 import net.blay09.mods.eirairc.config.KeyConfig;
 import net.blay09.mods.eirairc.config.ScreenshotConfig;
 import net.blay09.mods.eirairc.net.EiraPlayerInfo;
-import net.blay09.mods.eirairc.net.packet.PacketRecLiveState;
+import net.blay09.mods.eirairc.net.PacketHandler;
+import net.blay09.mods.eirairc.net.message.MessageRecLiveState.CMessageRecLiveState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.gui.GuiChat;
@@ -72,13 +73,13 @@ public class EiraTickHandler {
 			EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
 			EiraPlayerInfo playerInfo = EiraIRC.instance.getNetHandler().getPlayerInfo(player.getCommandSenderName());
 			playerInfo.isRecording = !playerInfo.isRecording;
-			EiraIRC.instance.packetPipeline.sendToServer(new PacketRecLiveState(player.getCommandSenderName(), playerInfo.isRecording, playerInfo.isLive));
+			PacketHandler.INSTANCE.sendToServer(new CMessageRecLiveState(player.getCommandSenderName(), playerInfo.isRecording, playerInfo.isLive));
 		}
 		if(isKeyPressed(KeyConfig.toggleLive, KeyConfig.IDX_TOGGLELIVE)) {
 			EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
 			EiraPlayerInfo playerInfo = EiraIRC.instance.getNetHandler().getPlayerInfo(player.getCommandSenderName());
 			playerInfo.isLive = !playerInfo.isLive;
-			EiraIRC.instance.packetPipeline.sendToServer(new PacketRecLiveState(player.getCommandSenderName(), playerInfo.isRecording, playerInfo.isLive));
+			PacketHandler.INSTANCE.sendToServer(new CMessageRecLiveState(player.getCommandSenderName(), playerInfo.isRecording, playerInfo.isLive));
 		}
 		if(isKeyPressed(KeyConfig.screenshotShare, KeyConfig.IDX_SCREENSHOTSHARE)) {
 			Screenshot screenshot = ScreenshotManager.getInstance().takeScreenshot();

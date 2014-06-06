@@ -7,8 +7,8 @@ import java.util.List;
 
 import net.blay09.mods.eirairc.api.IIRCChannel;
 import net.blay09.mods.eirairc.api.IIRCUser;
-import net.blay09.mods.eirairc.api.bot.IIRCBot;
 import net.blay09.mods.eirairc.api.bot.IBotCommand;
+import net.blay09.mods.eirairc.api.bot.IIRCBot;
 import net.blay09.mods.eirairc.config.GlobalConfig;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.entity.player.EntityPlayer;

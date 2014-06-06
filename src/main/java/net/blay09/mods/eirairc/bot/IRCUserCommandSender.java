@@ -2,8 +2,6 @@ package net.blay09.mods.eirairc.bot;
 
 import net.blay09.mods.eirairc.api.IIRCChannel;
 import net.blay09.mods.eirairc.api.IIRCUser;
-import net.blay09.mods.eirairc.irc.IRCChannel;
-import net.blay09.mods.eirairc.irc.IRCUser;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;

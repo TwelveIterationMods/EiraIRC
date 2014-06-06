@@ -3,7 +3,6 @@
 
 package net.blay09.mods.eirairc.config;
 
-import java.io.File;
 
 public class ServiceSettings {
 	

@@ -22,10 +22,7 @@ import net.blay09.mods.eirairc.handler.IRCConnectionHandler;
 import net.blay09.mods.eirairc.handler.IRCEventHandler;
 import net.blay09.mods.eirairc.handler.MCEventHandler;
 import net.blay09.mods.eirairc.net.EiraNetHandler;
-import net.blay09.mods.eirairc.net.PacketPipeline;
-import net.blay09.mods.eirairc.net.packet.PacketHello;
-import net.blay09.mods.eirairc.net.packet.PacketNotification;
-import net.blay09.mods.eirairc.net.packet.PacketRecLiveState;
+import net.blay09.mods.eirairc.net.PacketHandler;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Localization;
 import net.blay09.mods.eirairc.util.Utils;
@@ -53,8 +50,6 @@ public class EiraIRC {
 	
 	@SidedProxy(serverSide = "net.blay09.mods.eirairc.CommonProxy", clientSide = "net.blay09.mods.eirairc.client.ClientProxy")
 	public static CommonProxy proxy;
-	
-	public PacketPipeline packetPipeline;
 	
 	private IRCEventHandler ircEventHandler;
 	private IRCConnectionHandler ircConnectionHandler;
@@ -88,16 +83,11 @@ public class EiraIRC {
 		FMLCommonHandler.instance().bus().register(netHandler);
 		
 		Localization.init();
-		packetPipeline = new PacketPipeline();
-		packetPipeline.initialize();
-		packetPipeline.registerPacket(PacketHello.class);
-		packetPipeline.registerPacket(PacketNotification.class);
-		packetPipeline.registerPacket(PacketRecLiveState.class);
+		PacketHandler.init();
 	}
 	
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
-		packetPipeline.postInitialize();
 		connections = new HashMap<String, IIRCConnection>();
 	}
 	

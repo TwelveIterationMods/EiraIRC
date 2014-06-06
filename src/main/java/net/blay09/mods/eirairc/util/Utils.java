@@ -3,10 +3,13 @@
 
 package net.blay09.mods.eirairc.util;
 
+import io.netty.buffer.ByteBuf;
+
 import java.awt.Desktop;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -28,16 +31,13 @@ import net.blay09.mods.eirairc.config.GlobalConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.ServiceConfig;
 import net.blay09.mods.eirairc.config.ServiceSettings;
-import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.irc.IRCConnection;
 import net.blay09.mods.eirairc.net.EiraPlayerInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ChatComponentStyle;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
@@ -50,6 +50,7 @@ public class Utils {
 	private static final int MAX_CHAT_LENGTH = 100;
 	private static final Pattern pattern = Pattern.compile("^(?:(https?)://)?([-\\w_\\.]{2,}\\.[a-z]{2,4})(/\\S*)?$");
 	private static final String DEFAULT_USERNAME = "EiraBot";
+	private static final String ENCODING = "UTF-8";
 	
 	public static void sendLocalizedMessage(ICommandSender sender, String key, Object... args) {
 		EiraPlayerInfo playerInfo = EiraIRC.instance.getNetHandler().getPlayerInfo(sender.getCommandSenderName());
@@ -576,4 +577,25 @@ public class Utils {
 		return root;
 	}
 
+	public static String readString(ByteBuf buf) {
+		short len = buf.readShort();
+		byte[] b = new byte[len];
+		buf.readBytes(b);
+		try {
+			return new String(b, ENCODING);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public static void writeString(ByteBuf buffer, String s) {
+		try {
+			byte[] b = s.getBytes(ENCODING);
+			buffer.writeShort(b.length);
+			buffer.writeBytes(b);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+	}
 }

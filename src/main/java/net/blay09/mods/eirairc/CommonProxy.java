@@ -3,9 +3,8 @@
 
 package net.blay09.mods.eirairc;
 
-import net.blay09.mods.eirairc.api.IIRCChannel;
-import net.blay09.mods.eirairc.irc.IRCChannel;
-import net.blay09.mods.eirairc.net.packet.PacketNotification;
+import net.blay09.mods.eirairc.net.PacketHandler;
+import net.blay09.mods.eirairc.net.message.MessageNotification;
 import net.blay09.mods.eirairc.util.NotificationType;
 import net.minecraft.entity.player.EntityPlayerMP;
 
@@ -15,11 +14,11 @@ public class CommonProxy {
 	}
 
 	public void sendNotification(EntityPlayerMP entityPlayer, NotificationType type, String text) {
-		EiraIRC.instance.packetPipeline.sendTo(new PacketNotification(type, text), entityPlayer);
+		PacketHandler.INSTANCE.sendTo(new MessageNotification(type, text), entityPlayer);
 	}
 	
 	public void publishNotification(NotificationType type, String text) {
-		EiraIRC.instance.packetPipeline.sendToAll(new PacketNotification(type, text));
+		PacketHandler.INSTANCE.sendToAll(new MessageNotification(type, text));
 	}
 	
 	public String getUsername() {
