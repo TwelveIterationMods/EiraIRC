@@ -20,6 +20,8 @@ public class CompatibilityConfig {
 	public static void load(Configuration config) {
 		disableChatToggle = config.get(CATEGORY, "disableChatToggle", disableChatToggle).getBoolean(disableChatToggle);
 		vanillaChat = config.get(CATEGORY, "vanillaChat", vanillaChat).getBoolean(vanillaChat);
+		// TODO forcefully enable vanillaChat
+		vanillaChat = true;
 	}
 	
 	public static void save(Configuration config) {
