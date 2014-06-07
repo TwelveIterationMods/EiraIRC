@@ -82,6 +82,9 @@ public class Utils {
 	}
 	
 	public static void addMessageToChat(String text) {
+		if(text == null) {
+			return;
+		}
 		if(text.length() <= MAX_CHAT_LENGTH) {
 			if(MinecraftServer.getServer() != null) {
 				MinecraftServer.getServer().getConfigurationManager().sendChatMsg(Utils.getUnlocalizedChatMessage(text));
