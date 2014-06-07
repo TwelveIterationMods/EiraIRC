@@ -82,20 +82,29 @@ public class Utils {
 	}
 	
 	public static void addMessageToChat(String text) {
-		for(String string : wrapString(text, MAX_CHAT_LENGTH)) {
+		if(text.length() <= MAX_CHAT_LENGTH) {
 			if(MinecraftServer.getServer() != null) {
-				MinecraftServer.getServer().getConfigurationManager().sendChatMsg(Utils.getUnlocalizedChatMessage(string));
+				MinecraftServer.getServer().getConfigurationManager().sendChatMsg(Utils.getUnlocalizedChatMessage(text));
 			} else {
 				if(Minecraft.getMinecraft().thePlayer != null) {
-					Minecraft.getMinecraft().thePlayer.sendChatToPlayer(Utils.getUnlocalizedChatMessage(string));
+					Minecraft.getMinecraft().thePlayer.sendChatToPlayer(Utils.getUnlocalizedChatMessage(text));
+				}
+			}
+		} else {
+			for(String string : wrapString(text, MAX_CHAT_LENGTH)) {
+				if(MinecraftServer.getServer() != null) {
+					MinecraftServer.getServer().getConfigurationManager().sendChatMsg(Utils.getUnlocalizedChatMessage(string));
+				} else {
+					if(Minecraft.getMinecraft().thePlayer != null) {
+						Minecraft.getMinecraft().thePlayer.sendChatToPlayer(Utils.getUnlocalizedChatMessage(string));
+					}
 				}
 			}
 		}
 	}
 	
-	private static List<String> tmpStrings = new ArrayList<String>();
 	public static List<String> wrapString(String text, int maxLength) {
-		tmpStrings.clear();
+		List<String> tmpStrings = new ArrayList<String>();
 		if(text == null) {
 			return tmpStrings;
 		}

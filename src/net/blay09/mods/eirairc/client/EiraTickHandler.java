@@ -93,27 +93,32 @@ public class EiraTickHandler implements ITickHandler {
 				Minecraft.getMinecraft().displayGuiScreen(new GuiSettings());
 			}
 		}
-		if(isKeyPressed(KeyConfig.toggleRecording, KeyConfig.IDX_TOGGLERECORDING)) {
-			EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
-			EiraPlayerInfo playerInfo = EiraIRC.instance.getNetHandler().getPlayerInfo(player.getCommandSenderName());
-			playerInfo.isRecording = !playerInfo.isRecording;
-			Packet packet = new PacketRecLiveState(player.username, playerInfo.isRecording, playerInfo.isLive).createPacket();
-			if(packet != null) {
-				player.sendQueue.addToSendQueue(packet);
+		EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
+		if(player != null) {
+			if(isKeyPressed(KeyConfig.toggleRecording, KeyConfig.IDX_TOGGLERECORDING)) {
+				if(player != null) {
+					EiraPlayerInfo playerInfo = EiraIRC.instance.getNetHandler().getPlayerInfo(player.getCommandSenderName());
+					playerInfo.isRecording = !playerInfo.isRecording;
+					Packet packet = new PacketRecLiveState(player.username, playerInfo.isRecording, playerInfo.isLive).createPacket();
+					if(packet != null) {
+						player.sendQueue.addToSendQueue(packet);
+					}
+				}
 			}
-		}
-		if(isKeyPressed(KeyConfig.toggleLive, KeyConfig.IDX_TOGGLELIVE)) {
-			EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
-			EiraPlayerInfo playerInfo = EiraIRC.instance.getNetHandler().getPlayerInfo(player.getCommandSenderName());
-			playerInfo.isLive = !playerInfo.isLive;
-			Packet packet = new PacketRecLiveState(player.username, playerInfo.isRecording, playerInfo.isLive).createPacket();
-			if(packet != null) {
-				player.sendQueue.addToSendQueue(packet);
+			if(isKeyPressed(KeyConfig.toggleLive, KeyConfig.IDX_TOGGLELIVE)) {
+				EiraPlayerInfo playerInfo = EiraIRC.instance.getNetHandler().getPlayerInfo(player.getCommandSenderName());
+				playerInfo.isLive = !playerInfo.isLive;
+				Packet packet = new PacketRecLiveState(player.username, playerInfo.isRecording, playerInfo.isLive).createPacket();
+				if(packet != null) {
+					player.sendQueue.addToSendQueue(packet);
+				}
 			}
 		}
 		if(isKeyPressed(KeyConfig.screenshotShare, KeyConfig.IDX_SCREENSHOTSHARE)) {
 			Screenshot screenshot = ScreenshotManager.getInstance().takeScreenshot();
-			ScreenshotManager.getInstance().uploadScreenshot(screenshot, ScreenshotConfig.VALUE_UPLOADSHARE);
+			if(screenshot != null) {
+				ScreenshotManager.getInstance().uploadScreenshot(screenshot, ScreenshotConfig.VALUE_UPLOADSHARE);
+			}
 		}
 		if(isKeyPressed(KeyConfig.openScreenshots, KeyConfig.IDX_OPENSCREENSHOTS)) {
 			if(Minecraft.getMinecraft().currentScreen == null) {
