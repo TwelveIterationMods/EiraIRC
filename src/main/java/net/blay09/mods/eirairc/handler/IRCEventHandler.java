@@ -134,7 +134,6 @@ public class IRCEventHandler {
 		if(event.bot.getBoolean(event.sender, IBotProfile.KEY_LINKFILTER, false)) {
 			message = Utils.filterLinks(message);
 		}
-		String originalMessage = message;
 		message = Utils.filterAllowedCharacters(message, true, DisplayConfig.enableIRCColors);
 		String emoteColor = ConfigHelper.getEmoteColor(event.channel);
 		String noticeColor = ConfigHelper.getNoticeColor(event.channel);

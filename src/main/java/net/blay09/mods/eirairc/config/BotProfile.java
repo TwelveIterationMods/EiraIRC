@@ -131,7 +131,7 @@ public class BotProfile implements IBotProfile {
 		for(ConfigCategory subCategory : configCategory.getChildren()) {
 			String commandName = Utils.unquote(config.get(subCategory.getQualifiedName(), "name", "").getString());
 			String command = Utils.unquote(config.get(subCategory.getQualifiedName(), "command", "").getString());
-			String description = Utils.unquote(config.get(subCategory.getQualifiedName(), "command", "[Custom Command: Missing Description]").getString());
+			String description = Utils.unquote(config.get(subCategory.getQualifiedName(), "description", "[Custom Command: Missing Description]").getString());
 			boolean allowArgs = config.get(subCategory.getQualifiedName(), "allowArgs", false).getBoolean(false);
 			boolean runAsOp = config.get(subCategory.getQualifiedName(), "runAsOp", false).getBoolean(false);
 			boolean broadcastResult = config.get(subCategory.getQualifiedName(), "broadcastResult", false).getBoolean(false);
