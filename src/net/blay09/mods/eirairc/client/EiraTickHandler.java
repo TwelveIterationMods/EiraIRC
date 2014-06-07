@@ -20,6 +20,8 @@ import net.blay09.mods.eirairc.net.packet.PacketRecLiveState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.gui.GuiChat;
+import net.minecraft.client.settings.GameSettings;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.network.packet.Packet;
 
 import org.lwjgl.input.Keyboard;
@@ -32,13 +34,30 @@ public class EiraTickHandler implements ITickHandler {
 	private GuiEiraChat eiraChat;
 	private int screenshotCheck;
 	private boolean[] keyState = new boolean[10];
-	private final int keyChat;
-	private final int keyCommand;
+	private GameSettings gameSettings;
+	private KeyBinding ovrdKeyChat;
+	private KeyBinding ovrdKeyCommand;
 
 	public EiraTickHandler(GuiEiraChat eiraChat) {
 		this.eiraChat = eiraChat;
-		keyChat = Minecraft.getMinecraft().gameSettings.keyBindChat.keyCode;
-		keyCommand = Minecraft.getMinecraft().gameSettings.keyBindCommand.keyCode;
+		this.gameSettings = Minecraft.getMinecraft().gameSettings;
+		
+		overrideVanillaChatKeyBindings();
+	}
+	
+	private void overrideVanillaChatKeyBindings() {
+		KeyBinding keyChat = gameSettings.keyBindChat;
+		KeyBinding keyCommand = gameSettings.keyBindCommand;
+		KeyBinding.keybindArray.remove(keyChat);
+		KeyBinding.hash.removeObject(keyChat.keyCode);
+		KeyBinding.keybindArray.remove(keyCommand);
+		KeyBinding.hash.removeObject(keyCommand.keyCode);
+		
+		ovrdKeyChat = new KeyBinding("key.chat", 20);
+		ovrdKeyCommand = new KeyBinding("key.command", 53);
+		
+		gameSettings.keyBindings[10] = ovrdKeyChat;
+		gameSettings.keyBindings[13] = ovrdKeyCommand;
 	}
 
 	private boolean isKeyPressed(int keyCode, int keyIdx) {
@@ -60,6 +79,15 @@ public class EiraTickHandler implements ITickHandler {
 		if(Minecraft.getMinecraft().currentScreen instanceof GuiKeybinds) {
 			return;
 		}
+		
+		boolean flag = gameSettings.chatVisibility != 2;
+		while(ovrdKeyChat.isPressed() && flag) {
+			Minecraft.getMinecraft().displayGuiScreen(new GuiChatExtended());
+		}
+		if(Minecraft.getMinecraft().currentScreen == null && ovrdKeyCommand.isPressed() && flag) {
+			Minecraft.getMinecraft().displayGuiScreen(new GuiChatExtended("/"));
+		}
+		
 		if(isKeyPressed(KeyConfig.openMenu, KeyConfig.IDX_OPENSETTINGS)) {
 			if(Minecraft.getMinecraft().currentScreen == null) {
 				Minecraft.getMinecraft().displayGuiScreen(new GuiSettings());
@@ -115,9 +143,9 @@ public class EiraTickHandler implements ITickHandler {
 		}
 		ScreenshotManager.getInstance().clientTick();
 		handleKeyInput();
-		if(Minecraft.getMinecraft().currentScreen != null && Minecraft.getMinecraft().currentScreen.getClass() == GuiChat.class) {
-			Minecraft.getMinecraft().displayGuiScreen(new GuiChatExtended());
-		}
+//		if(Minecraft.getMinecraft().currentScreen != null && Minecraft.getMinecraft().currentScreen.getClass() == GuiChat.class) {
+//			Minecraft.getMinecraft().displayGuiScreen(new GuiChatExtended());
+//		}
 	}
 	
 	public void renderTick(Object... tickData) {
