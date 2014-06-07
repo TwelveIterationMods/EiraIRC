@@ -48,7 +48,8 @@ public class Utils {
 
 	private static final char INVALID_COLOR = 'n';
 	private static final int MAX_CHAT_LENGTH = 100;
-	private static final Pattern pattern = Pattern.compile("^(?:(https?)://)?([-\\w_\\.]{2,}\\.[a-z]{2,4})(/\\S*)?$");
+	private static final Pattern urlPattern = Pattern.compile("^(?:(https?)://)?([-\\w_\\.]{2,}\\.[a-z]{2,4})(/\\S*)?$");
+	private static final Pattern ircColorPattern = Pattern.compile("\u0003([0-9][0-9]?)(?:[,][0-9][0-9]?)?");
 	private static final String DEFAULT_USERNAME = "EiraBot";
 	private static final String ENCODING = "UTF-8";
 	
@@ -293,16 +294,62 @@ public class Utils {
 		String[] s = message.split(" ");
 		String result = "";
 		for(int i = 0; i < s.length; i++) {
-			Matcher matcher = pattern.matcher(s[i]);
+			Matcher matcher = urlPattern.matcher(s[i]);
 			result += ((i > 0) ? " " : "") + matcher.replaceAll(Utils.getLocalizedMessage("irc.general.linkRemoved"));
 		}
 		return result;
 	}
 	
-	public static String filterCodes(String message) {
-		message = message.replaceAll(Globals.COLOR_CODE_PREFIX, "");
-		message = message.replaceAll("\u0003[0-9][0-9]?[,]?[0-9]?[0-9]?", "");
+	public static EnumChatFormatting getColorFromIRCColorCode(int code) {
+		switch(code) {
+		case 0: return EnumChatFormatting.WHITE;
+		case 1: return EnumChatFormatting.BLACK;
+		case 2: return EnumChatFormatting.DARK_BLUE;
+		case 3: return EnumChatFormatting.DARK_GREEN;
+		case 4: return EnumChatFormatting.RED;
+		case 5: return EnumChatFormatting.DARK_RED;
+		case 6: return EnumChatFormatting.DARK_PURPLE;
+		case 7: return EnumChatFormatting.GOLD;
+		case 8: return EnumChatFormatting.YELLOW;
+		case 9: return EnumChatFormatting.GREEN;
+		case 10: return EnumChatFormatting.AQUA;
+		case 11: return EnumChatFormatting.BLUE;
+		case 12: return EnumChatFormatting.DARK_AQUA;
+		case 13: return EnumChatFormatting.LIGHT_PURPLE;
+		case 14: return EnumChatFormatting.DARK_GRAY;
+		case 15: return EnumChatFormatting.GRAY;
+		}
+		return null;
+	}
+	
+	public static String filterAllowedCharacters(String message, boolean killMCColorCodes, boolean convertIRCColorCodes) {
+		if(killMCColorCodes) {
+			message = message.replaceAll(Globals.COLOR_CODE_PREFIX, "");
+		}
+		if(convertIRCColorCodes) {
+			Matcher matcher = ircColorPattern.matcher(message);
+			while(matcher.find()) {
+				String colorMatch = matcher.group(1);
+				int colorCode = Integer.parseInt(colorMatch);
+				EnumChatFormatting colorFormat = getColorFromIRCColorCode(colorCode);
+				String repl = matcher.quoteReplacement(matcher.group());
+				message = message.replaceAll(repl, Globals.COLOR_CODE_PREFIX + colorFormat.getFormattingCode());
+			}
+		} else {
+			ircColorPattern.matcher(message).replaceAll("");
+		}
+        StringBuilder stringbuilder = new StringBuilder();
+        char[] charArray = message.toCharArray();
+        for (int i = 0; i < charArray.length; i++) {
+            if (isAllowedCharacter(charArray[i])) {
+                stringbuilder.append(charArray[i]);
+            }
+        }
 		return message;
+	}
+	
+	private static boolean isAllowedCharacter(char c) {
+		return c >= 32 && c != 127;
 	}
 
 	public static IRCConnection connectTo(ServerConfig config) {

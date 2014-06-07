@@ -11,6 +11,7 @@ import net.blay09.mods.eirairc.api.IIRCUser;
 import net.blay09.mods.eirairc.api.bot.IBotCommand;
 import net.blay09.mods.eirairc.api.bot.IBotProfile;
 import net.blay09.mods.eirairc.api.bot.IIRCBot;
+import net.blay09.mods.eirairc.config.DisplayConfig;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.NotificationType;
 import net.blay09.mods.eirairc.util.Utils;
@@ -55,8 +56,7 @@ public class BotCommandMessage implements IBotCommand {
 		if(bot.getBoolean(user, IBotProfile.KEY_LINKFILTER, false)) {
 			message = Utils.filterLinks(message);
 		}
-		message = Utils.filterCodes(message);
-		message = ChatAllowedCharacters.filerAllowedCharacters(message);
+		message = Utils.filterAllowedCharacters(message, true, DisplayConfig.enableIRCColors);
 		IChatComponent chatComponent = Utils.formatChatComponent(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(user)).mcPrivateMessage, bot.getConnection(), null, user, message, true);
 		String notifyMsg = chatComponent.getUnformattedText();
 		if(notifyMsg.length() > 42) {

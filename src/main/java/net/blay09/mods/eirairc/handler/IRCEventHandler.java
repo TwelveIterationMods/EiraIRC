@@ -12,6 +12,7 @@ import net.blay09.mods.eirairc.api.event.IRCUserJoinEvent;
 import net.blay09.mods.eirairc.api.event.IRCUserLeaveEvent;
 import net.blay09.mods.eirairc.api.event.IRCUserNickChangeEvent;
 import net.blay09.mods.eirairc.api.event.IRCUserQuitEvent;
+import net.blay09.mods.eirairc.config.DisplayConfig;
 import net.blay09.mods.eirairc.config.GlobalConfig;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.NotificationType;
@@ -91,8 +92,7 @@ public class IRCEventHandler {
 		if(event.bot.getBoolean(event.sender, IBotProfile.KEY_LINKFILTER, false)) {
 			message = Utils.filterLinks(message);
 		}
-		message = Utils.filterCodes(message);
-		message = ChatAllowedCharacters.filerAllowedCharacters(message);
+		message = Utils.filterAllowedCharacters(message, true, DisplayConfig.enableIRCColors);
 		String format = null;
 		if(event.isNotice) {
 			format = ConfigHelper.getDisplayFormat(event.bot.getDisplayFormat(event.sender)).mcPrivateNotice;
@@ -134,8 +134,8 @@ public class IRCEventHandler {
 		if(event.bot.getBoolean(event.sender, IBotProfile.KEY_LINKFILTER, false)) {
 			message = Utils.filterLinks(message);
 		}
-		message = Utils.filterCodes(message);
-		message = ChatAllowedCharacters.filerAllowedCharacters(message);
+		String originalMessage = message;
+		message = Utils.filterAllowedCharacters(message, true, DisplayConfig.enableIRCColors);
 		String emoteColor = ConfigHelper.getEmoteColor(event.channel);
 		String noticeColor = ConfigHelper.getNoticeColor(event.channel);
 		String format = null;

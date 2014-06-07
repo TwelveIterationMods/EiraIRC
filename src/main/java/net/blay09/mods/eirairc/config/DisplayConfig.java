@@ -15,6 +15,7 @@ public class DisplayConfig {
 	private static final String CATEGORY = ConfigurationHandler.CATEGORY_DISPLAY;
 	
 	public static boolean enableNameColors = true;
+	public static boolean enableIRCColors = true;
 	public static String mcColor = "white";
 	public static String mcOpColor = "red";
 	public static String ircOpColor = "gold";
@@ -37,6 +38,7 @@ public class DisplayConfig {
 		ircOpColor = config.get(CATEGORY, "ircOpColor", ircOpColor).getString();
 		ircNoticeColor = config.get(CATEGORY, "ircNoticeColor", ircNoticeColor).getString();
 		enableNameColors = config.get(CATEGORY, "enableNameColors", enableNameColors).getBoolean(enableNameColors);
+		enableIRCColors = config.get(CATEGORY, "enableIRCColors", enableIRCColors).getBoolean(enableIRCColors);
 		hudRecState = config.get(CATEGORY, "hudRecState", hudRecState).getBoolean(hudRecState);
 	}
 	
@@ -50,6 +52,7 @@ public class DisplayConfig {
 		config.get(CATEGORY, "ircOpColor", ircOpColor).set(ircOpColor);
 		config.get(CATEGORY, "ircNoticeColor", ircNoticeColor).set(ircNoticeColor);
 		config.get(CATEGORY, "enableNameColors", enableNameColors).set(enableNameColors);
+		config.get(CATEGORY, "enableIRCColors", enableIRCColors).set(enableIRCColors);
 		config.get(CATEGORY, "hudRecState", hudRecState).set(hudRecState);
 	}
 	
@@ -63,6 +66,7 @@ public class DisplayConfig {
 		list.add("ircOpColor");
 		list.add("ircNoticeColor");
 		list.add("enableNameColors");
+		list.add("enableIRCColors");
 	}
 	
 	public static void addValuesToList(List<String> list, String option) {
@@ -76,6 +80,7 @@ public class DisplayConfig {
 	public static String handleConfigCommand(ICommandSender sender, String key) {
 		String value = null;
 		if(key.equals("enableNameColors")) value = String.valueOf(enableNameColors);
+		else if(key.equals("enableIRCColors")) value = String.valueOf(enableIRCColors);
 		else if(key.equals("defaultColor")) value = mcColor;
 		else if(key.equals("opColor")) value = mcOpColor;
 		else if(key.equals("ircColor")) value = ircColor;
@@ -115,6 +120,8 @@ public class DisplayConfig {
 			quitMessage = value;
 		} else if(key.equals("enableNameColors")){
 			enableNameColors = Boolean.parseBoolean(value);
+		} else if(key.equals("enableIRCColors")){
+			enableIRCColors = Boolean.parseBoolean(value);
 		} else {
 			return false;
 		}
