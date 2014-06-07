@@ -42,11 +42,12 @@ public class BotCommandOp implements IBotCommand {
 				return;
 			}
 		}
-		bot.resetLog();
-		bot.setOpEnabled(true);
-		MinecraftServer.getServer().getCommandManager().executeCommand(bot, message);
-		bot.setOpEnabled(false);
-		user.notice("> " + bot.getLogContents());
+		MinecraftServer.getServer().getCommandManager().executeCommand(new IRCUserCommandSender(channel, user, false, true), message);
+	}
+
+	@Override
+	public String getCommandDescription() {
+		return "Perform an OP-command on the server (requires you to be authenticated).";
 	}
 	
 }

@@ -32,9 +32,13 @@ public class BotProfile implements IBotProfile {
 	private static final String CATEGORY_COMMANDS = "commands";
 	private static final String CATEGORY_MACROS = "macros";
 	
-	public static final String DEFAULT_CLIENT = "default_client";
-	public static final String DEFAULT_SERVER = "default_server";
-	public static final String DEFAULT_TWITCH = "default_twitch";
+	private static final String DEFAULT_CLIENT_FILE = "default_client";
+	private static final String DEFAULT_SERVER_FILE = "default_server";
+	private static final String DEFAULT_TWITCH_FILE = "default_twitch";
+
+	public static final String DEFAULT_TWITCH = "Twitch";
+	public static final String DEFAULT_SERVER = "Server";
+	public static final String DEFAULT_CLIENT = "Client";
 	
 	private final Map<String, IBotCommand> commands = new HashMap<String, IBotCommand>();
 	public final List<String> interOpAuthList = new ArrayList<String>();
@@ -100,7 +104,7 @@ public class BotProfile implements IBotProfile {
 	}
 	
 	public void registerCommand(IBotCommand command) {
-		commands.put(command.getCommandName(), command);
+		commands.put(command.getCommandName().toLowerCase(), command);
 	}
 	
 	public void loadCommands() {
@@ -111,9 +115,7 @@ public class BotProfile implements IBotProfile {
 		registerCommand(new BotCommandMessage());
 		registerCommand(new BotCommandWho("who"));
 		registerCommand(new BotCommandWho("players"));
-		if(!interOp) {
-			registerCommand(new BotCommandOp());
-		}
+		registerCommand(new BotCommandOp());
 		
 		for(int i = 0; i < disabledNativeCommands.length; i++) {
 			if(Utils.unquote(disabledNativeCommands[i]).equals("*")) {
@@ -129,11 +131,12 @@ public class BotProfile implements IBotProfile {
 		for(ConfigCategory subCategory : configCategory.getChildren()) {
 			String commandName = Utils.unquote(config.get(subCategory.getQualifiedName(), "name", "").getString());
 			String command = Utils.unquote(config.get(subCategory.getQualifiedName(), "command", "").getString());
+			String description = Utils.unquote(config.get(subCategory.getQualifiedName(), "description", "[Custom Command: Missing Description]").getString());
 			boolean allowArgs = config.get(subCategory.getQualifiedName(), "allowArgs", false).getBoolean(false);
 			boolean runAsOp = config.get(subCategory.getQualifiedName(), "runAsOp", false).getBoolean(false);
 			boolean broadcastResult = config.get(subCategory.getQualifiedName(), "broadcastResult", false).getBoolean(false);
 			boolean requireAuth = config.get(subCategory.getQualifiedName(), "requireAuth", runAsOp).getBoolean(runAsOp);
-			registerCommand(new BotCommandCustom(subCategory.getQualifiedName(), commandName, command, allowArgs, broadcastResult, runAsOp, requireAuth));
+			registerCommand(new BotCommandCustom(subCategory.getQualifiedName(), commandName, command, description, allowArgs, broadcastResult, runAsOp, requireAuth));
 		}
 	}
 	
@@ -203,25 +206,25 @@ public class BotProfile implements IBotProfile {
 	}
 
 	public IBotCommand getCommand(String commandName) {
-		return commands.get(commandName);
+		return commands.get(commandName.toLowerCase());
 	}
 
 	public static void setupDefaultProfiles(File profileDir) {
-		File file = new File(profileDir, BotProfile.DEFAULT_CLIENT + ".cfg");
+		File file = new File(profileDir, BotProfile.DEFAULT_CLIENT_FILE + ".cfg");
 		if(!file.exists()) {
 			BotProfile botProfile = new BotProfile(file);
 			botProfile.defaultClient();
 			botProfile.save();
 			botProfile.loadCommands();
 		}
-		file = new File(profileDir, BotProfile.DEFAULT_SERVER + ".cfg");
+		file = new File(profileDir, BotProfile.DEFAULT_SERVER_FILE + ".cfg");
 		if(!file.exists()) {
 			BotProfile botProfile = new BotProfile(file);
 			botProfile.defaultServer();
 			botProfile.save();
 			botProfile.loadCommands();
 		}
-		file = new File(profileDir, BotProfile.DEFAULT_TWITCH + ".cfg");
+		file = new File(profileDir, BotProfile.DEFAULT_TWITCH_FILE + ".cfg");
 		if(!file.exists()) {
 			BotProfile botProfile = new BotProfile(file);
 			botProfile.defaultTwitch();
@@ -278,7 +281,7 @@ public class BotProfile implements IBotProfile {
 	}
 
 	public void deleteCustomCommand(BotCommandCustom botCommand) {
-		commands.remove(botCommand.getCommandName());
+		commands.remove(botCommand.getCommandName().toLowerCase());
 		if(botCommand.getCategoryName() != null) {
 			config.removeCategory(config.getCategory(botCommand.getCategoryName()));
 		}

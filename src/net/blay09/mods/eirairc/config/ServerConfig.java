@@ -20,7 +20,7 @@ import net.minecraftforge.common.Configuration;
 public class ServerConfig {
 	
 	private final String host;
-	private String nick;
+	private String nick = "";
 	private String serverPassword;
 	private String botProfile;
 	private String ident = Globals.DEFAULT_IDENT;
@@ -28,7 +28,6 @@ public class ServerConfig {
 	private String nickServName;
 	private String nickServPassword;
 	private final Map<String, ChannelConfig> channels = new HashMap<String, ChannelConfig>();
-	private boolean serverSide;
 	private boolean autoConnect = true;
 	private String quitMessage;
 	private String ircColor;
@@ -36,15 +35,6 @@ public class ServerConfig {
 	
 	public ServerConfig(String host) {
 		this.host = host;
-		if(MinecraftServer.getServer() != null) {
-			if(MinecraftServer.getServer().isSinglePlayer()) {
-				serverSide = false;
-			} else {
-				serverSide = true;
-			}
-		} else {
-			serverSide = false;
-		}
 	}
 	
 	public String getHost() {
@@ -91,10 +81,6 @@ public class ServerConfig {
 		return description;
 	}
 	
-	public boolean isClientSide() {
-		return !serverSide;
-	}
-	
 	public boolean isAutoConnect() {
 		return autoConnect;
 	}
@@ -103,6 +89,7 @@ public class ServerConfig {
 		ChannelConfig channelConfig = channels.get(channelName.toLowerCase());
 		if(channelConfig == null) {
 			channelConfig = new ChannelConfig(this, channelName);
+			channelConfig.useDefaults(Utils.isServerSide());
 			channels.put(channelConfig.getName().toLowerCase(), channelConfig);
 			ConfigurationHandler.save();
 		}
@@ -258,6 +245,16 @@ public class ServerConfig {
 
 	public void setBotProfile(String botProfile) {
 		this.botProfile = botProfile;
+	}
+	
+	public void useDefaults(boolean serverSide) {
+		if(host.equals(Globals.TWITCH_SERVER)) {
+			botProfile = BotProfile.DEFAULT_TWITCH;
+		} else if(serverSide) {
+			botProfile = BotProfile.DEFAULT_SERVER;
+		} else {
+			botProfile = BotProfile.DEFAULT_CLIENT;
+		}
 	}
 
 }

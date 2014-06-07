@@ -42,5 +42,10 @@ public class BotCommandAlias implements IBotCommand {
 		}
 		user.notice(Utils.getLocalizedMessage("irc.general.noSuchPlayer"));
 	}
+
+	@Override
+	public String getCommandDescription() {
+		return "Look up the username of an online player.";
+	}
 	
 }

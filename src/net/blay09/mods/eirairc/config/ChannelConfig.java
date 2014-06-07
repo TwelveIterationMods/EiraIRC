@@ -122,4 +122,7 @@ public class ChannelConfig {
 		this.botProfile = botProfile;
 	}
 	
+	public void useDefaults(boolean serverSide) {
+		botProfile = BotProfile.INHERIT;
+	}
 }

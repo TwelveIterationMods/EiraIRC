@@ -15,6 +15,7 @@ public class BotCommandCustom implements IBotCommand {
 	private String catName;
 	private String name = "";
 	private String command = "";
+	private String description;
 	private boolean allowArgs;
 	private boolean runAsOp;
 	private boolean requireAuth;
@@ -23,10 +24,11 @@ public class BotCommandCustom implements IBotCommand {
 	public BotCommandCustom() {
 	}
 	
-	public BotCommandCustom(String catName, String name, String command, boolean allowArgs, boolean broadcastResult, boolean runAsOp, boolean requireAuth) {
+	public BotCommandCustom(String catName, String name, String command, String description, boolean allowArgs, boolean broadcastResult, boolean runAsOp, boolean requireAuth) {
 		this.catName = catName;
 		this.name = name;
 		this.command = command;
+		this.description = description;
 		this.allowArgs = allowArgs;
 		this.broadcastResult = broadcastResult;
 		this.runAsOp = runAsOp;
@@ -61,15 +63,7 @@ public class BotCommandCustom implements IBotCommand {
 		if(allowArgs) {
 			message += " " + Utils.joinStrings(args, " ", 0).trim();
 		}
-		bot.resetLog();
-		bot.setOpEnabled(runAsOp);
-		MinecraftServer.getServer().getCommandManager().executeCommand(bot, message);
-		bot.setOpEnabled(false);
-		if(broadcastResult) {
-			channel.message("> " + bot.getLogContents());
-		} else {
-			user.notice("> " + bot.getLogContents());
-		}
+		MinecraftServer.getServer().getCommandManager().executeCommand(new IRCUserCommandSender(channel, user, broadcastResult, runAsOp), message);
 	}
 
 	public boolean allowsArgs() {
@@ -114,6 +108,15 @@ public class BotCommandCustom implements IBotCommand {
 	
 	public void setMinecraftCommand(String command) {
 		this.command = command;
+	}
+
+	@Override
+	public String getCommandDescription() {
+		return description;
+	}
+	
+	public void setCommandDescription(String description) {
+		this.description = description;
 	}
 
 }

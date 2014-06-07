@@ -3,9 +3,11 @@
 
 package net.blay09.mods.eirairc.api.bot;
 
+import java.util.Collection;
+
 public interface IBotProfile {
 
-	public static final String PROFILE_INHERIT = "Inherit";
+	public static final String INHERIT = "Inherit";
 	
 	public static final String KEY_ALLOWPRIVMSG = "allowPrivateMessages";
 	public static final String KEY_AUTOPLAYERS = "autoWho";
@@ -24,5 +26,6 @@ public interface IBotProfile {
 	public boolean isInterOp();
 	public boolean isInterOpAuth(String authName);
 	public String[] getInterOpBlacklist();
+	public Collection<IBotCommand> getCommands();
 	
 }

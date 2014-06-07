@@ -165,6 +165,7 @@ public class ConfigurationHandler {
 		ServerConfig serverConfig = serverConfigs.get(host.toLowerCase());
 		if(serverConfig == null) {
 			serverConfig = new ServerConfig(host);
+			serverConfig.useDefaults(Utils.isServerSide());
 		}
 		return serverConfig;
 	}

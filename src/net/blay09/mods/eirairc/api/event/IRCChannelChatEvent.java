@@ -13,12 +13,18 @@ public class IRCChannelChatEvent extends IRCEvent {
 	public final IIRCUser sender;
 	public final String message;
 	public final boolean isEmote;
+	public final boolean isNotice;
 	
 	public IRCChannelChatEvent(IIRCConnection connection, IIRCChannel channel, IIRCUser sender, String message, boolean isEmote) {
+		this(connection, channel, sender, message, isEmote, false);
+	}
+	
+	public IRCChannelChatEvent(IIRCConnection connection, IIRCChannel channel, IIRCUser sender, String message, boolean isEmote, boolean isNotice) {
 		super(connection);
 		this.channel = channel;
 		this.sender = sender;
 		this.message = message;
 		this.isEmote = isEmote;
+		this.isNotice = isNotice;
 	}
 }

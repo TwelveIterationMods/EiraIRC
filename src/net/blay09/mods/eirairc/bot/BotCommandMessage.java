@@ -8,19 +8,16 @@ import java.util.List;
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.IIRCChannel;
 import net.blay09.mods.eirairc.api.IIRCUser;
-import net.blay09.mods.eirairc.api.bot.IIRCBot;
 import net.blay09.mods.eirairc.api.bot.IBotCommand;
 import net.blay09.mods.eirairc.api.bot.IBotProfile;
-import net.blay09.mods.eirairc.config.GlobalConfig;
-import net.blay09.mods.eirairc.config.ServerConfig;
-import net.blay09.mods.eirairc.handler.ConfigurationHandler;
+import net.blay09.mods.eirairc.api.bot.IIRCBot;
+import net.blay09.mods.eirairc.config.DisplayConfig;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.NotificationType;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ChatAllowedCharacters;
 
 public class BotCommandMessage implements IBotCommand {
 
@@ -57,8 +54,7 @@ public class BotCommandMessage implements IBotCommand {
 		if(bot.getBoolean(user, IBotProfile.KEY_LINKFILTER, false)) {
 			message = Utils.filterLinks(message);
 		}
-		message = Utils.filterCodes(message);
-		message = ChatAllowedCharacters.filerAllowedCharacters(message);
+		message = Utils.filterAllowedCharacters(message, true, DisplayConfig.enableIRCColors);
 		String mcMessage = Utils.formatMessageNew(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(user)).mcPrivateMessage, bot.getConnection(), null, user, message, true);
 		String notifyMsg = mcMessage;
 		if(notifyMsg.length() > 42) {
@@ -67,6 +63,11 @@ public class BotCommandMessage implements IBotCommand {
 		EiraIRC.proxy.sendNotification((EntityPlayerMP) entityPlayer, NotificationType.PrivateMessage, notifyMsg);
 		entityPlayer.sendChatToPlayer(Utils.getUnlocalizedChatMessage(mcMessage));
 		user.notice(Utils.getLocalizedMessage("irc.bot.msgSent", playerName, message));
+	}
+
+	@Override
+	public String getCommandDescription() {
+		return "Send a private message to an online player.";
 	}
 	
 }

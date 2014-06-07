@@ -163,20 +163,19 @@ public class MCEventHandler implements IPlayerTracker, IConnectionHandler {
 		IIRCConnection connection = EiraIRC.instance.getConnection(target[0]);
 		if(connection != null) {
 			IIRCBot bot = connection.getBot();
-			ServerConfig serverConfig = ConfigurationHandler.getServerConfig(connection.getHost());
-			String emoteColor = Globals.COLOR_CODE_PREFIX + Utils.getColorCode(ConfigHelper.getEmoteColor(serverConfig));
+			String emoteColor = null;
 			String mcMessage = null;
 			if(target[1].startsWith("#")) {
 				IIRCChannel targetChannel = connection.getChannel(target[1]);
 				if(targetChannel != null) {
-					ChannelConfig channelConfig = serverConfig.getChannelConfig(targetChannel);
-					emoteColor = Globals.COLOR_CODE_PREFIX + Utils.getColorCode(ConfigHelper.getEmoteColor(channelConfig));
+					emoteColor = Globals.COLOR_CODE_PREFIX + Utils.getColorCode(ConfigHelper.getEmoteColor(targetChannel));
 					targetChannel.message(IRCConnection.EMOTE_START + text + IRCConnection.EMOTE_END);
 					mcMessage = emoteColor + Utils.formatMessage(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetChannel)).mcSendChannelEmote, connection.getHost(), targetChannel.getName(), null, Utils.getNickGame(sender, false), text);
 				}
 			} else {
 				IIRCUser targetUser = connection.getUser(target[1]);
 				if(targetUser != null) {
+					emoteColor = Globals.COLOR_CODE_PREFIX + Utils.getColorCode(ConfigHelper.getEmoteColor(targetUser));
 					targetUser.message(IRCConnection.EMOTE_START + text + IRCConnection.EMOTE_END);
 					mcMessage = emoteColor + Utils.formatMessage(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetUser)).mcSendPrivateEmote, connection.getHost(), targetUser.getName(), targetUser.getIdentifier(), Utils.getNickGame(sender, false), text);
 				}

@@ -31,5 +31,10 @@ public class BotCommandWho implements IBotCommand {
 	public void processCommand(IIRCBot bot, IIRCChannel channel, IIRCUser user, String[] args) {
 		Utils.sendPlayerList(user);
 	}
+
+	@Override
+	public String getCommandDescription() {
+		return "Prints out a list of all players online.";
+	}
 	
 }

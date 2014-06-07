@@ -24,7 +24,14 @@ public class BotCommandHelp implements IBotCommand {
 	@Override
 	public void processCommand(IIRCBot bot, IIRCChannel channel, IIRCUser user, String[] args) {
 		if(channel != null) {
-			user.notice(Utils.getLocalizedMessage("irc.bot.cmdlist"));
+			StringBuilder sb = new StringBuilder();
+			for(IBotCommand command : bot.getProfile(channel).getCommands()) {
+				if(sb.length() > 0) {
+					sb.append(", ");
+				}
+				sb.append(command.getCommandName());
+			}
+			user.notice(Utils.getLocalizedMessage("irc.bot.cmdlist", sb.toString()));
 		} else {
 			user.notice("***** EiraIRC Help *****");
 			user.notice("EiraIRC connects a Minecraft client or a whole server");
@@ -32,13 +39,16 @@ public class BotCommandHelp implements IBotCommand {
 			user.notice("Visit http://blay09.net/?page_id=63 for more information on this bot.");
 			user.notice(" ");
 			user.notice("The following commands are available:");
-			user.notice("HELP            Prints this command list");
-			user.notice("WHO            Prints out a list of all players online");
-			user.notice("ALIAS            Look up the username of an online player");
-			user.notice("MSG            Send a private message to an online player");
-			user.notice("OP            Perform an OP-command on the server (requires permissions)");
+			for(IBotCommand command : bot.getProfile(channel).getCommands()) {
+				user.notice(command.getCommandName().toUpperCase() + " : " + command.getCommandDescription());
+			}
 			user.notice("***** End of Help *****");
 		}
+	}
+
+	@Override
+	public String getCommandDescription() {
+		return "Prints out this command list.";
 	}
 	
 }

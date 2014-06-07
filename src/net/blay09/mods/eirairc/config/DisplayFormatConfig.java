@@ -22,8 +22,10 @@ public class DisplayFormatConfig {
 	private String name;
 	public String mcChannelMessage;
 	public String mcChannelEmote;
+	public String mcChannelNotice;
 	public String mcPrivateMessage;
 	public String mcPrivateEmote;
+	public String mcPrivateNotice;
 	public String mcSendChannelMessage;
 	public String mcSendChannelEmote;
 	public String mcSendPrivateMessage;
@@ -55,8 +57,10 @@ public class DisplayFormatConfig {
 		String categoryName = CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC;
 		mcChannelMessage = Utils.unquote(config.get(categoryName, "mcChannelMessage", "").getString());
 		mcChannelEmote = Utils.unquote(config.get(categoryName, "mcChannelEmote", "").getString());
+		mcChannelNotice = Utils.unquote(config.get(categoryName, "mcChannelNotice", "").getString());
 		mcPrivateMessage = Utils.unquote(config.get(categoryName, "mcPrivateMessage", "").getString());
 		mcPrivateEmote = Utils.unquote(config.get(categoryName, "mcPrivateEmote", "").getString());
+		mcPrivateNotice = Utils.unquote(config.get(categoryName, "mcPrivateNotice", "").getString());
 		
 		mcSendChannelMessage = Utils.unquote(config.get(categoryName, "mcSendChannelMessage", "").getString());
 		mcSendChannelEmote = Utils.unquote(config.get(categoryName, "mcSendChannelEmote", "").getString());
@@ -92,8 +96,10 @@ public class DisplayFormatConfig {
 		config.get(CATEGORY_GENERAL, "name", Utils.quote("Classic"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcChannelMessage", Utils.quote("[{CHANNEL}] <{NICK}> {MESSAGE}"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcChannelEmote", Utils.quote("[{CHANNEL}] * {NICK} {MESSAGE}"));
+		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcChannelNotice", Utils.quote("[{CHANNEL}] ({NICK}) {MESSAGE}"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcPrivateMessage", Utils.quote("[Private] <{NICK}> {MESSAGE}"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcPrivateEmote", Utils.quote("[Private] * {NICK} {MESSAGE}"));
+		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcPrivateNotice", Utils.quote("[Private] ({NICK}) {MESSAGE}"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcSendChannelMessage", Utils.quote("[{CHANNEL}] <{NICK}> {MESSAGE}"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcSendChannelEmote", Utils.quote("[{CHANNEL}] * {NICK} {MESSAGE}"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcSendPrivateMessage", Utils.quote("[->{CHANNEL}] <{NICK}> {MESSAGE}"));
@@ -109,8 +115,10 @@ public class DisplayFormatConfig {
 		config.get(CATEGORY_GENERAL, "name", Utils.quote("Light"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcChannelMessage", Utils.quote("[ <{NICK}> {MESSAGE} ]"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcChannelEmote", Utils.quote("[ * {NICK} {MESSAGE} ]"));
+		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcChannelNotice", Utils.quote("[ ({NICK}) {MESSAGE} ]"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcPrivateMessage", Utils.quote("[[ <{NICK}> {MESSAGE} ]]"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcPrivateEmote", Utils.quote("[[ {NICK} {MESSAGE} ]]"));
+		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcPrivateNotice", Utils.quote("[[ ({NICK}) {MESSAGE} ]]"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcSendChannelMessage", Utils.quote("[ <{NICK}> {MESSAGE} ]"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcSendChannelEmote", Utils.quote("[ * {NICK} {MESSAGE} ]"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcSendPrivateMessage", Utils.quote("[[->{CHANNEL}] <{NICK}> {MESSAGE} ]"));
@@ -126,8 +134,10 @@ public class DisplayFormatConfig {
 		config.get(CATEGORY_GENERAL, "name", Utils.quote("S-Light"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcChannelMessage", Utils.quote("[{NICK}] {MESSAGE}"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcChannelEmote", Utils.quote("[ * {NICK} {MESSAGE} ]"));
+		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcChannelNotice", Utils.quote("({NICK}) {MESSAGE}"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcPrivateMessage", Utils.quote("[[{NICK}]] {MESSAGE}"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcPrivateEmote", Utils.quote("[[ {NICK} {MESSAGE} ]]"));
+		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcPrivateNotice", Utils.quote("[({NICK})] {MESSAGE}"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcSendChannelMessage", Utils.quote("[{NICK}] {MESSAGE}"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcSendChannelEmote", Utils.quote("[ * {NICK} {MESSAGE} ]"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcSendPrivateMessage", Utils.quote("[[>{CHANNEL}]{NICK}] {MESSAGE}"));
@@ -143,8 +153,10 @@ public class DisplayFormatConfig {
 		config.get(CATEGORY_GENERAL, "name", Utils.quote("Minecraft"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcChannelMessage", Utils.quote("<{NICK}> {MESSAGE}"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcChannelEmote", Utils.quote("* {NICK} {MESSAGE}"));
+		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcChannelNotice", Utils.quote("({NICK}) {MESSAGE}"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcPrivateMessage", Utils.quote("[P] <{NICK}> {MESSAGE}"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcPrivateEmote", Utils.quote("[P] * {NICK} {MESSAGE}"));
+		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcPrivateNotice", Utils.quote("[P] (NICK) {MESSAGE}"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcSendChannelMessage", Utils.quote("<{NICK}> {MESSAGE}"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcSendChannelEmote", Utils.quote("* {NICK} {MESSAGE}"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcSendPrivateMessage", Utils.quote("[{CHANNEL}] <{NICK}> {MESSAGE}"));
@@ -160,8 +172,10 @@ public class DisplayFormatConfig {
 		config.get(CATEGORY_GENERAL, "name", Utils.quote("Detail"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcChannelMessage", Utils.quote("[{SERVER}/{CHANNEL}] <{NICK}> {MESSAGE}"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcChannelEmote", Utils.quote("[{SERVER}/{CHANNEL}] * {NICK} {MESSAGE}"));
-		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcPrivateMessage", Utils.quote("[{SERVER}]  <{NICK}> {MESSAGE}"));
+		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcChannelNotice", Utils.quote("[{SERVER}/{CHANNEL}] ({NICK}) {MESSAGE}"));
+		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcPrivateMessage", Utils.quote("[{SERVER}] <{NICK}> {MESSAGE}"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcPrivateEmote", Utils.quote("[{SERVER}] * {NICK} {MESSAGE}"));
+		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcPrivateNotice", Utils.quote("[{SERVER}] ({NICK}) {MESSAGE}"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcSendChannelMessage", Utils.quote("[{SERVER}/{CHANNEL}] <{NICK}> {MESSAGE}"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcSendChannelEmote", Utils.quote("[{SERVER}/{CHANNEL}] * {NICK} {MESSAGE}"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcSendPrivateMessage", Utils.quote("[{SERVER}/{CHANNEL}]  <{NICK}> {MESSAGE}"));

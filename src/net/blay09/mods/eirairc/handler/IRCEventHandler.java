@@ -12,6 +12,8 @@ import net.blay09.mods.eirairc.api.event.IRCUserJoinEvent;
 import net.blay09.mods.eirairc.api.event.IRCUserLeaveEvent;
 import net.blay09.mods.eirairc.api.event.IRCUserNickChangeEvent;
 import net.blay09.mods.eirairc.api.event.IRCUserQuitEvent;
+import net.blay09.mods.eirairc.config.DisplayConfig;
+import net.blay09.mods.eirairc.config.GlobalConfig;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.NotificationType;
@@ -90,21 +92,33 @@ public class IRCEventHandler {
 		if(event.bot.getBoolean(event.sender, IBotProfile.KEY_LINKFILTER, false)) {
 			message = Utils.filterLinks(message);
 		}
-		message = Utils.filterCodes(message);
-		message = ChatAllowedCharacters.filerAllowedCharacters(message);
+		message = Utils.filterAllowedCharacters(message, true, DisplayConfig.enableIRCColors);
 		String mcMessage = null;
-		if(event.isEmote) {
+		if(event.isNotice) {
+			mcMessage = ConfigHelper.getDisplayFormat(event.bot.getDisplayFormat(event.sender)).mcPrivateNotice;
+		} else if(event.isEmote) {
 			mcMessage = ConfigHelper.getDisplayFormat(event.bot.getDisplayFormat(event.sender)).mcPrivateEmote;
 		} else {
 			mcMessage = ConfigHelper.getDisplayFormat(event.bot.getDisplayFormat(event.sender)).mcPrivateMessage;
 		}
 		mcMessage = Utils.formatMessageNew(mcMessage, event.connection, null, event.sender, message, !event.isEmote);
+		if(event.isNotice && GlobalConfig.hideNotices) {
+			System.out.println(mcMessage);
+			return;
+		}
 		String notifyMsg = mcMessage;
 		if(notifyMsg.length() > 42) {
 			notifyMsg = notifyMsg.substring(0, 42) + "...";
 		}
 		EiraIRC.proxy.publishNotification(NotificationType.PrivateMessage, notifyMsg);
 		EiraIRC.instance.getChatSessionHandler().addTargetUser(event.sender);
+		String emoteColor = ConfigHelper.getEmoteColor(event.sender);
+		String noticeColor = ConfigHelper.getNoticeColor(event.sender);
+ 		if(event.isEmote && emoteColor != null) {
+ 			mcMessage = Globals.COLOR_CODE_PREFIX + Utils.getColorCode(emoteColor) + mcMessage;
+		} else if(event.isNotice && noticeColor != null) {
+			mcMessage = Globals.COLOR_CODE_PREFIX + Utils.getColorCode(noticeColor) + mcMessage;
+ 		}
 		Utils.addMessageToChat(mcMessage);
 	}
 	
@@ -120,17 +134,27 @@ public class IRCEventHandler {
 		if(event.bot.getBoolean(event.sender, IBotProfile.KEY_LINKFILTER, false)) {
 			message = Utils.filterLinks(message);
 		}
-		message = Utils.filterCodes(message);
-		message = ChatAllowedCharacters.filerAllowedCharacters(message);
-		String emoteColor = ConfigHelper.getEmoteColor(event.channel);
+		message = Utils.filterAllowedCharacters(message, true, DisplayConfig.enableIRCColors);
 		String mcMessage = null;
-		if(event.isEmote) {
-			mcMessage = (emoteColor != null ? Globals.COLOR_CODE_PREFIX + Utils.getColorCode(emoteColor) : "");
-			mcMessage += ConfigHelper.getDisplayFormat(event.bot.getDisplayFormat(event.channel)).mcChannelEmote;
+		if(event.isNotice) {
+			mcMessage = ConfigHelper.getDisplayFormat(event.bot.getDisplayFormat(event.channel)).mcChannelNotice;
+		} else if(event.isEmote) {
+			mcMessage = ConfigHelper.getDisplayFormat(event.bot.getDisplayFormat(event.channel)).mcChannelEmote;
 		} else {
 			mcMessage = ConfigHelper.getDisplayFormat(event.bot.getDisplayFormat(event.channel)).mcChannelMessage;
 		}
 		mcMessage = Utils.formatMessageNew(mcMessage, event.connection, event.channel, event.sender, message, !event.isEmote);
+		if(event.isNotice && GlobalConfig.hideNotices) {
+			System.out.println(mcMessage);
+			return;
+		}
+		String emoteColor = ConfigHelper.getEmoteColor(event.sender);
+		String noticeColor = ConfigHelper.getNoticeColor(event.sender);
+ 		if(event.isEmote && emoteColor != null) {
+ 			mcMessage = Globals.COLOR_CODE_PREFIX + Utils.getColorCode(emoteColor) + mcMessage;
+		} else if(event.isNotice && noticeColor != null) {
+			mcMessage = Globals.COLOR_CODE_PREFIX + Utils.getColorCode(noticeColor) + mcMessage;
+ 		}
 		Utils.addMessageToChat(mcMessage);
 	}
 

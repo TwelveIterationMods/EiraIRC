@@ -29,9 +29,7 @@ public class EiraIRCBot implements IIRCBot {
 
 	private final IRCConnection connection;
 	private final Map<String, BotProfile> profiles = new HashMap<String, BotProfile>();
-	private final StringBuffer logBuffer = new StringBuffer();
 	private BotProfile mainProfile;
-	private boolean opEnabled;
 	
 	public EiraIRCBot(IRCConnection connection) {
 		this.connection = connection;
@@ -49,7 +47,7 @@ public class EiraIRCBot implements IIRCBot {
 	@Override
 	public IBotProfile getProfile(IIRCContext channel) {
 		if(channel == null) {
-			return null;
+			return mainProfile;
 		}
 		return getProfile(channel.getName());
 	}
@@ -60,49 +58,10 @@ public class EiraIRCBot implements IIRCBot {
 	}
 	
 	@Override
-	public String getCommandSenderName() {
-		return "EiraIRC Bot (" + connection.getHost() + ")";
-	}
-
-	@Override
-	public void sendChatToPlayer(ChatMessageComponent chatComponent) {
-		logBuffer.append(chatComponent.toString());
-	}
-
-	@Override
-	public boolean canCommandSenderUseCommand(int level, String commandName) {
-		return opEnabled;
-	}
-
-	@Override
-	public ChunkCoordinates getPlayerCoordinates() {
-		return new ChunkCoordinates(0, 0, 0);
-	}
-
-	@Override
-	public World getEntityWorld() {
-		return MinecraftServer.getServer().getEntityWorld();
-	}
-
-	@Override
 	public IIRCConnection getConnection() {
 		return connection;
 	}
 
-	@Override
-	public void resetLog() {
-		logBuffer.setLength(0);
-	}
-
-	@Override
-	public String getLogContents() {
-		return logBuffer.toString();
-	}
-
-	public void setOpEnabled(boolean opEnabled) {
-		this.opEnabled = opEnabled;
-	}
-	
 	@Override
 	public boolean processCommand(IIRCChannel channel, IIRCUser sender, String message) {
 		String[] args = message.split(" ");
@@ -147,7 +106,7 @@ public class EiraIRCBot implements IIRCBot {
 
 	@Override
 	public boolean isServerSide() {
-		return false;
+		return Utils.isServerSide();
 	}
 
 	@Override
@@ -160,7 +119,7 @@ public class EiraIRCBot implements IIRCBot {
 		mainProfile = ConfigurationHandler.getBotProfile(serverConfig.getBotProfile());
 		profiles.clear();
 		for(ChannelConfig channelConfig : serverConfig.getChannelConfigs()) {
-			if(!channelConfig.getBotProfile().equals(mainProfile.getName()) && !channelConfig.getBotProfile().equals(IBotProfile.PROFILE_INHERIT)) {
+			if(!channelConfig.getBotProfile().equals(mainProfile.getName()) && !channelConfig.getBotProfile().equals(IBotProfile.INHERIT)) {
 				profiles.put(channelConfig.getName().toLowerCase(), ConfigurationHandler.getBotProfile(channelConfig.getBotProfile()));
 			}
 		}
