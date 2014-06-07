@@ -69,21 +69,24 @@ public class EiraTickHandler {
 				Minecraft.getMinecraft().displayGuiScreen(new GuiSettings());
 			}
 		}
-		if(isKeyPressed(KeyConfig.toggleRecording, KeyConfig.IDX_TOGGLERECORDING)) {
-			EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
-			EiraPlayerInfo playerInfo = EiraIRC.instance.getNetHandler().getPlayerInfo(player.getCommandSenderName());
-			playerInfo.isRecording = !playerInfo.isRecording;
-			PacketHandler.INSTANCE.sendToServer(new CMessageRecLiveState(player.getCommandSenderName(), playerInfo.isRecording, playerInfo.isLive));
-		}
-		if(isKeyPressed(KeyConfig.toggleLive, KeyConfig.IDX_TOGGLELIVE)) {
-			EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
-			EiraPlayerInfo playerInfo = EiraIRC.instance.getNetHandler().getPlayerInfo(player.getCommandSenderName());
-			playerInfo.isLive = !playerInfo.isLive;
-			PacketHandler.INSTANCE.sendToServer(new CMessageRecLiveState(player.getCommandSenderName(), playerInfo.isRecording, playerInfo.isLive));
+		EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
+		if(player != null) {
+			if(isKeyPressed(KeyConfig.toggleRecording, KeyConfig.IDX_TOGGLERECORDING)) {
+				EiraPlayerInfo playerInfo = EiraIRC.instance.getNetHandler().getPlayerInfo(player.getCommandSenderName());
+				playerInfo.isRecording = !playerInfo.isRecording;
+				PacketHandler.INSTANCE.sendToServer(new CMessageRecLiveState(player.getCommandSenderName(), playerInfo.isRecording, playerInfo.isLive));
+			}
+			if(isKeyPressed(KeyConfig.toggleLive, KeyConfig.IDX_TOGGLELIVE)) {
+				EiraPlayerInfo playerInfo = EiraIRC.instance.getNetHandler().getPlayerInfo(player.getCommandSenderName());
+				playerInfo.isLive = !playerInfo.isLive;
+				PacketHandler.INSTANCE.sendToServer(new CMessageRecLiveState(player.getCommandSenderName(), playerInfo.isRecording, playerInfo.isLive));
+			}
 		}
 		if(isKeyPressed(KeyConfig.screenshotShare, KeyConfig.IDX_SCREENSHOTSHARE)) {
 			Screenshot screenshot = ScreenshotManager.getInstance().takeScreenshot();
-			ScreenshotManager.getInstance().uploadScreenshot(screenshot, ScreenshotConfig.VALUE_UPLOADSHARE);
+			if(screenshot != null) {
+				ScreenshotManager.getInstance().uploadScreenshot(screenshot, ScreenshotConfig.VALUE_UPLOADSHARE);
+			}
 		}
 		if(isKeyPressed(KeyConfig.openScreenshots, KeyConfig.IDX_OPENSCREENSHOTS)) {
 			if(Minecraft.getMinecraft().currentScreen == null) {

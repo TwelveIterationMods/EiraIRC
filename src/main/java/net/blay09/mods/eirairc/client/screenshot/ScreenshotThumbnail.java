@@ -35,7 +35,9 @@ public class ScreenshotThumbnail extends AbstractTexture {
 				ImageIO.write(img, "png", thumbnailFile);
 			} catch (IOException e) {
 				e.printStackTrace();
-			}
+			} catch (IndexOutOfBoundsException e) {
+				System.out.println("Could not generate thumbnail for malformed screenshot file: " + screenshotFile.getName() + " (" + e.getMessage() + ")");
+		 	}
 		}
 		resourceLocation = new ResourceLocation(Globals.MOD_ID, "thumbnails/" + thumbnailFile.getName());
 	}

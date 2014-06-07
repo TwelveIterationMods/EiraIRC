@@ -85,14 +85,20 @@ public class Utils {
 	}
 	
 	public static void addMessageToChat(String text) {
-		for(String string : wrapString(text, MAX_CHAT_LENGTH)) {
+		if(text == null) {
+			return;
+		}
+		if(text.length() < MAX_CHAT_LENGTH) {
 			addMessageToChat(new ChatComponentText(text));
+		} else {
+			for(String string : wrapString(text, MAX_CHAT_LENGTH)) {
+				addMessageToChat(new ChatComponentText(string));
+			}
 		}
 	}
 	
-	private static List<String> tmpStrings = new ArrayList<String>();
 	public static List<String> wrapString(String text, int maxLength) {
-		tmpStrings.clear();
+		List<String> tmpStrings = new ArrayList<String>();
 		if(text == null) {
 			return tmpStrings;
 		}

@@ -4,9 +4,11 @@
 package net.blay09.mods.eirairc;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import net.blay09.mods.eirairc.api.IIRCConnection;
@@ -117,8 +119,12 @@ public class EiraIRC {
 	}
 	
 	public void stopIRC() {
+		List<IIRCConnection> dcList = new ArrayList<IIRCConnection>();
 		for(IIRCConnection connection : connections.values()) {
-			connection.disconnect(ConfigHelper.getQuitMessage(connection));
+			dcList.add(connection);
+		}
+		for(int i = 0; i < dcList.size(); i++) {
+			dcList.get(i).disconnect(ConfigHelper.getQuitMessage(dcList.get(i)));
 		}
 		connections.clear();
 		ircRunning = false;
