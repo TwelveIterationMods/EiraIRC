@@ -26,6 +26,7 @@ public class GlobalConfig {
 	public static final List<String> colorBlackList = new ArrayList<String>();
 	public static boolean registerShortCommands = true;
 	public static boolean hideNotices = false;
+	public static boolean debugMode = false;
 	
 	public static void load(Configuration config) {
 		nick = Utils.unquote(config.get(ConfigurationHandler.CATEGORY_GLOBAL, "nick", nick).getString());
@@ -33,6 +34,7 @@ public class GlobalConfig {
 		registerShortCommands = config.get(ConfigurationHandler.CATEGORY_GLOBAL, "registerShortCommands", registerShortCommands).getBoolean(registerShortCommands);
 		charset = Utils.unquote(config.get(ConfigurationHandler.CATEGORY_GLOBAL, "charset", charset).getString());
 		hideNotices = config.get(ConfigurationHandler.CATEGORY_GLOBAL, "hideNotices", false).getBoolean(false);
+		debugMode = config.get(ConfigurationHandler.CATEGORY_GLOBAL, "debugMode", false).getBoolean(false);
 		config.getCategory(ConfigurationHandler.CATEGORY_GLOBAL).setComment("These are settings that are applied on all servers and channels.");
 		
 		persistentConnection = config.get(ConfigurationHandler.CATEGORY_CLIENTONLY, "persistentConnection", GlobalConfig.persistentConnection).getBoolean(GlobalConfig.persistentConnection);
@@ -70,6 +72,7 @@ public class GlobalConfig {
 		else if(key.equals("nickPrefix")) value = nickPrefix;
 		else if(key.equals("nickSuffix")) value = nickSuffix;
 		else if(key.equals("hideNotices")) value = String.valueOf(hideNotices);
+		else if(key.equals("debugMode")) value = String.valueOf(debugMode);
 		return value;
 	}
 	
@@ -80,6 +83,8 @@ public class GlobalConfig {
 			saveCredentials = Boolean.parseBoolean(value);
 		} else if(key.equals("hideNotices")) {
 			hideNotices = Boolean.parseBoolean(value);
+		} else if(key.equals("debugMode")) {
+			debugMode = Boolean.parseBoolean(value);
 		} else if(key.equals("registerShortCommands")) {
 			registerShortCommands = Boolean.parseBoolean(value);
 			Utils.sendLocalizedMessage(sender, "irc.config.requiresRestart");
@@ -114,6 +119,7 @@ public class GlobalConfig {
 		list.add("nickPrefix");
 		list.add("nickSuffix");
 		list.add("hideNotices");
+		list.add("debugMode");
 	}
 	
 	public static void save(Configuration config) {
@@ -121,6 +127,7 @@ public class GlobalConfig {
 		config.get(ConfigurationHandler.CATEGORY_GLOBAL, "saveCredentials", saveCredentials).set(saveCredentials);
 		config.get(ConfigurationHandler.CATEGORY_GLOBAL, "charset", "").set(Utils.quote(charset));
 		config.get(ConfigurationHandler.CATEGORY_GLOBAL, "hideNotices", hideNotices).set(hideNotices);
+		config.get(ConfigurationHandler.CATEGORY_GLOBAL, "debugMode", debugMode).set(debugMode);
 		config.get(ConfigurationHandler.CATEGORY_CLIENTONLY, "persistentConnection", persistentConnection).set(persistentConnection);
 
 		config.get(ConfigurationHandler.CATEGORY_SERVERONLY, "colorBlackList", new String[0]).set(colorBlackList.toArray(new String[colorBlackList.size()]));
@@ -139,7 +146,7 @@ public class GlobalConfig {
 	}
 
 	public static void addValuesToList(List<String> list, String option) {
-		if(option.startsWith("enable") || option.startsWith("allow") || option.equals("saveCredentials") || option.equals("persistentConnection") || option.equals("hideNotices")) {
+		if(option.startsWith("enable") || option.startsWith("allow") || option.equals("saveCredentials") || option.equals("persistentConnection") || option.equals("hideNotices")  || option.equals("debugMode")) {
 			Utils.addBooleansToList(list);
 		} else if(option.equals("charset")) {
 			for(String cs : Charset.availableCharsets().keySet()) {
