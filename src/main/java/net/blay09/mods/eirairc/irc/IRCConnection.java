@@ -33,6 +33,7 @@ import net.blay09.mods.eirairc.api.event.IRCUserLeaveEvent;
 import net.blay09.mods.eirairc.api.event.IRCUserNickChangeEvent;
 import net.blay09.mods.eirairc.api.event.IRCUserQuitEvent;
 import net.blay09.mods.eirairc.bot.EiraIRCBot;
+import net.blay09.mods.eirairc.config.GlobalConfig;
 import net.minecraftforge.common.MinecraftForge;
 
 public class IRCConnection implements Runnable, IIRCConnection {
@@ -157,6 +158,9 @@ public class IRCConnection implements Runnable, IIRCConnection {
 			register();
 			String line = null;
 			while((line = reader.readLine()) != null) {
+				if(GlobalConfig.debugMode) {
+					System.out.println(line);
+				}
 				IRCMessage msg = parser.parse(line);
 				if(handleNumericMessage(msg)) {
 					continue;

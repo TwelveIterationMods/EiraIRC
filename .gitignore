@@ -10,3 +10,7 @@
 /.gradle
 /.settings
 /.classpath
+/*.ipr
+/*.iws
+/*.iml
+/out
