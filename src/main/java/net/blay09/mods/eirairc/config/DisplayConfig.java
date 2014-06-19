@@ -26,8 +26,9 @@ public class DisplayConfig {
 	public static String emoteColor = "gold";
 	public static String quitMessage = "Leaving.";
 	public static boolean hudRecState = true;
+	public static boolean hidePlayerTags = false;
 
-	
+
 	public static void load(Configuration config) {
 		emoteColor = config.get(CATEGORY, "emoteColor", emoteColor).getString();
 		mcColor = config.get(CATEGORY, "defaultColor", mcColor).getString();
@@ -40,6 +41,7 @@ public class DisplayConfig {
 		enableNameColors = config.get(CATEGORY, "enableNameColors", enableNameColors).getBoolean(enableNameColors);
 		enableIRCColors = config.get(CATEGORY, "enableIRCColors", enableIRCColors).getBoolean(enableIRCColors);
 		hudRecState = config.get(CATEGORY, "hudRecState", hudRecState).getBoolean(hudRecState);
+		hidePlayerTags = config.get(CATEGORY, "hidePlayerTags", hidePlayerTags).getBoolean(hidePlayerTags);
 	}
 	
 	public static void save(Configuration config) {
@@ -54,6 +56,7 @@ public class DisplayConfig {
 		config.get(CATEGORY, "enableNameColors", enableNameColors).set(enableNameColors);
 		config.get(CATEGORY, "enableIRCColors", enableIRCColors).set(enableIRCColors);
 		config.get(CATEGORY, "hudRecState", hudRecState).set(hudRecState);
+		config.get(CATEGORY, "hidePlayerTags", hidePlayerTags).set(hidePlayerTags);
 	}
 	
 	public static void addOptionsToList(List<String> list) {
@@ -67,12 +70,13 @@ public class DisplayConfig {
 		list.add("ircNoticeColor");
 		list.add("enableNameColors");
 		list.add("enableIRCColors");
+		list.add("hidePlayerTags");
 	}
 	
 	public static void addValuesToList(List<String> list, String option) {
 		if(option.endsWith("Color")) {
 			Utils.addValidColorsToList(list);
-		} else if(option.startsWith("enable")) {
+		} else if(option.startsWith("enable") || option.equals("hidePlayerTags")) {
 			Utils.addBooleansToList(list);
 		}
 	}
@@ -90,6 +94,7 @@ public class DisplayConfig {
 		else if(key.equals("ircNoticeColor")) value = ircNoticeColor;
 		else if(key.equals("emoteColor")) value = emoteColor;
 		else if(key.equals("quitMessage")) value = quitMessage;
+		else if(key.equals("hidePlayerTags")) value = String.valueOf(hidePlayerTags);
 		return value;
 	}
 	
@@ -122,6 +127,8 @@ public class DisplayConfig {
 			enableNameColors = Boolean.parseBoolean(value);
 		} else if(key.equals("enableIRCColors")){
 			enableIRCColors = Boolean.parseBoolean(value);
+		} else if(key.equals("hidePlayerTags")){
+			hidePlayerTags = Boolean.parseBoolean(value);
 		} else {
 			return false;
 		}

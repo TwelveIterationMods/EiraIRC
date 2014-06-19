@@ -50,6 +50,7 @@ public class Utils {
 	private static final int MAX_CHAT_LENGTH = 100;
 	private static final Pattern urlPattern = Pattern.compile("^(?:(https?)://)?([-\\w_\\.]{2,}\\.[a-z]{2,4})(/\\S*)?$");
 	private static final Pattern ircColorPattern = Pattern.compile("\u0003([0-9][0-9]?)(?:[,][0-9][0-9]?)?");
+	private static final Pattern playerTagPattern = Pattern.compile("[\\[][^\\]]+[\\]]");
 	private static final String DEFAULT_USERNAME = "EiraBot";
 	private static final String ENCODING = "UTF-8";
 	
@@ -338,11 +339,11 @@ public class Utils {
 				String colorMatch = matcher.group(1);
 				int colorCode = Integer.parseInt(colorMatch);
 				EnumChatFormatting colorFormat = getColorFromIRCColorCode(colorCode);
-				String repl = matcher.quoteReplacement(matcher.group());
+				String repl = Matcher.quoteReplacement(matcher.group());
 				message = message.replaceAll(repl, Globals.COLOR_CODE_PREFIX + colorFormat.getFormattingCode());
 			}
 		} else {
-			ircColorPattern.matcher(message).replaceAll("");
+			message = ircColorPattern.matcher(message).replaceAll("");
 		}
         StringBuilder stringbuilder = new StringBuilder();
         char[] charArray = message.toCharArray();
@@ -356,6 +357,10 @@ public class Utils {
 	
 	private static boolean isAllowedCharacter(char c) {
 		return c >= 32 && c != 127;
+	}
+
+	private static String filterPlayerTags(String playerName) {
+		return playerTagPattern.matcher(playerName).replaceAll("");
 	}
 
 	public static IRCConnection connectTo(ServerConfig config) {
@@ -522,11 +527,11 @@ public class Utils {
 		return sb.toString();
 	}
 
-	public static String formatMessage(String format, ICommandSender sender, String message, boolean colorName) {
-		return formatChatComponent(format, sender, message, colorName).getUnformattedText();
+	public static String formatMessage(String format, ICommandSender sender, String message, boolean colorName, boolean stripTags) {
+		return formatChatComponent(format, sender, message, colorName, stripTags).getUnformattedText();
 	}
 	
-	public static IChatComponent formatChatComponent(String format, ICommandSender sender, String message, boolean colorName) {
+	public static IChatComponent formatChatComponent(String format, ICommandSender sender, String message, boolean colorName, boolean stripTags) {
 		IChatComponent root = new ChatComponentText("");
 		StringBuilder sb = new StringBuilder();
 		int currentIdx = 0;
@@ -547,7 +552,16 @@ public class Utils {
 							EntityPlayer player = (EntityPlayer) sender;
 							component = player.func_145748_c_().createCopy();
 							if(colorName) {
+								if(stripTags) {
+									component = new ChatComponentText(filterPlayerTags(component.getUnformattedText()));
+								}
 								component.getChatStyle().setColor(Utils.getColorFormattingForPlayer(player));
+							} else {
+								String fixedName = Utils.filterAllowedCharacters(component.getUnformattedText(), true, false);
+								if(stripTags) {
+									fixedName = filterPlayerTags(fixedName);
+								}
+								component = new ChatComponentText(fixedName);
 							}
 						} else {
 							component = new ChatComponentText(sender.getCommandSenderName());
@@ -577,7 +591,7 @@ public class Utils {
 		}
 		return root;
 	}
-	
+
 	public static String formatMessage(String format, IIRCConnection connection, IIRCChannel channel, IIRCUser user, String message, boolean colorName) {
 		return formatChatComponent(format, connection, channel, user, message, colorName).getUnformattedText();
 	}
