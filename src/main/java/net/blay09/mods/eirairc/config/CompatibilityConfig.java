@@ -13,23 +13,30 @@ import net.minecraftforge.common.config.Configuration;
 public class CompatibilityConfig {
 
 	private static final String CATEGORY = ConfigurationHandler.CATEGORY_COMPAT;
+	private static final String DEFAULT_CLIENT_BRIDGE_TOKEN = "[IG]";
 
 	public static boolean disableChatToggle = false;
 	public static boolean vanillaChat = true;
 	public static boolean clientBridge = false;
-	
+	public static String clientBridgeMessageToken = DEFAULT_CLIENT_BRIDGE_TOKEN;
+	public static String clientBridgeNickToken = "";
+
 	public static void load(Configuration config) {
 		disableChatToggle = config.get(CATEGORY, "disableChatToggle", disableChatToggle).getBoolean(disableChatToggle);
 		vanillaChat = config.get(CATEGORY, "vanillaChat", vanillaChat).getBoolean(vanillaChat);
 		// TODO forcefully enable vanillaChat
 		vanillaChat = true;
 		clientBridge = config.get(CATEGORY, "clientBridge", clientBridge).getBoolean(clientBridge);
+		clientBridgeMessageToken = Utils.unquote(config.get(CATEGORY, "clientBridgeMessageToken", clientBridgeMessageToken).getString());
+		clientBridgeNickToken = Utils.unquote(config.get(CATEGORY, "clientBridgeNickToken", clientBridgeNickToken).getString());
 	}
 	
 	public static void save(Configuration config) {
 		config.get(CATEGORY, "disableChatToggle", disableChatToggle).set(disableChatToggle);
 		config.get(CATEGORY, "vanillaChat", vanillaChat).set(vanillaChat);
 		config.get(CATEGORY, "clientBridge", clientBridge).set(clientBridge);
+		config.get(CATEGORY, "clientBridgeMessageToken", "").set(Utils.quote(clientBridgeMessageToken));
+		config.get(CATEGORY, "clientBridgeNickToken", "").set(Utils.quote(clientBridgeNickToken));
 	}
 
 	public static String handleConfigCommand(ICommandSender sender, String key) {
@@ -37,6 +44,8 @@ public class CompatibilityConfig {
 		if(key.equals("disableChatToggle")) value = String.valueOf(disableChatToggle);
 		else if(key.equals("vanillaChat")) value = String.valueOf(vanillaChat);
 		else if(key.equals("clientBridge")) value = String.valueOf(clientBridge);
+		else if(key.equals("clientBridgeMessageToken")) value = clientBridgeMessageToken;
+		else if(key.equals("clientBridgeNickToken")) value = clientBridgeNickToken;
 		return value;
 	}
 
@@ -47,6 +56,10 @@ public class CompatibilityConfig {
 			vanillaChat = Boolean.parseBoolean(value);
 		} else if(key.equals("clientBridge")) {
 			clientBridge = Boolean.parseBoolean(value);
+		} else if(key.equals("clientBridgeMessageToken")) {
+			clientBridgeMessageToken = value;
+		} else if(key.equals("clientBridgeNickToken")) {
+			clientBridgeNickToken = value;
 		} else {
 			return false;
 		}
@@ -57,11 +70,15 @@ public class CompatibilityConfig {
 		list.add("disableChatToggle");
 //		list.add("vanillaChat");
 		list.add("clientBridge");
+		list.add("clientBridgeMessageToken");
+		list.add("clientBridgeNickToken");
 	}
 
 	public static void addValuesToList(List<String> list, String option) {
 		if(option.equals("disableChatToggle") || option.equals("vanillaChat") || option.equals("clientBridge")) {
 			Utils.addBooleansToList(list);
+		} else if(option.equals("clientBridgeMessageToken")) {
+			list.add(DEFAULT_CLIENT_BRIDGE_TOKEN);
 		}
 	}
 }

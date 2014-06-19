@@ -3,6 +3,7 @@
 
 package net.blay09.mods.eirairc.client;
 
+import cpw.mods.fml.common.network.FMLNetworkEvent;
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.client.gui.chat.GuiChatExtended;
 import net.blay09.mods.eirairc.client.gui.chat.GuiEiraChat;
@@ -120,7 +121,7 @@ public class EiraTickHandler {
 	}
 	
 	@SubscribeEvent
-	public void worldJoined(PlayerLoggedInEvent event) {
+	public void worldJoined(FMLNetworkEvent.ClientConnectedToServerEvent event) {
 		if(!EiraIRC.instance.isIRCRunning()) {
 			EiraIRC.instance.startIRC();
 		}

@@ -118,7 +118,7 @@ public class MCEventHandler {
 				IIRCBot bot = connection.getBot();
 				for(IIRCChannel channel : connection.getChannels()) {
 					if(!bot.isReadOnly(channel)) {
-						channel.message(text);
+						channel.message(text + (!CompatibilityConfig.clientBridgeMessageToken.isEmpty() ? " " + CompatibilityConfig.clientBridgeMessageToken : ""));
 					}
 				}
 			}
@@ -159,7 +159,7 @@ public class MCEventHandler {
 				IIRCBot bot = connection.getBot();
 				for(IIRCChannel channel : connection.getChannels()) {
 					if(!bot.isReadOnly(channel)) {
-						channel.message(IRCConnection.EMOTE_START + text + IRCConnection.EMOTE_END);
+						channel.message(IRCConnection.EMOTE_START + text + (!CompatibilityConfig.clientBridgeMessageToken.isEmpty() ? " " + CompatibilityConfig.clientBridgeMessageToken : "") + IRCConnection.EMOTE_END);
 					}
 				}
 			}

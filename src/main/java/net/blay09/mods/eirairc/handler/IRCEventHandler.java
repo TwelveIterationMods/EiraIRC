@@ -12,12 +12,13 @@ import net.blay09.mods.eirairc.api.event.IRCUserJoinEvent;
 import net.blay09.mods.eirairc.api.event.IRCUserLeaveEvent;
 import net.blay09.mods.eirairc.api.event.IRCUserNickChangeEvent;
 import net.blay09.mods.eirairc.api.event.IRCUserQuitEvent;
+import net.blay09.mods.eirairc.config.CompatibilityConfig;
 import net.blay09.mods.eirairc.config.DisplayConfig;
 import net.blay09.mods.eirairc.config.GlobalConfig;
+import net.blay09.mods.eirairc.irc.IRCConnection;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.NotificationType;
 import net.blay09.mods.eirairc.util.Utils;
-import net.minecraft.util.ChatAllowedCharacters;
 import net.minecraft.util.IChatComponent;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -131,6 +132,18 @@ public class IRCEventHandler {
 			return;
 		}
 		String message = event.message;
+		if(CompatibilityConfig.clientBridge) {
+			if(!CompatibilityConfig.clientBridgeMessageToken.isEmpty()) {
+				if (message.endsWith(CompatibilityConfig.clientBridgeMessageToken) || message.endsWith(CompatibilityConfig.clientBridgeMessageToken + IRCConnection.EMOTE_END)) {
+					return;
+				}
+			}
+			if(!CompatibilityConfig.clientBridgeNickToken.isEmpty()) {
+				if (event.sender.getName().endsWith(CompatibilityConfig.clientBridgeNickToken)) {
+					return;
+				}
+			}
+		}
 		if(event.bot.getBoolean(event.sender, IBotProfile.KEY_LINKFILTER, false)) {
 			message = Utils.filterLinks(message);
 		}
