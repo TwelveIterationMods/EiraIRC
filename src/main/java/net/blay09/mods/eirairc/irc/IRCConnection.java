@@ -9,6 +9,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -34,7 +36,14 @@ import net.blay09.mods.eirairc.api.event.IRCUserNickChangeEvent;
 import net.blay09.mods.eirairc.api.event.IRCUserQuitEvent;
 import net.blay09.mods.eirairc.bot.EiraIRCBot;
 import net.blay09.mods.eirairc.config.GlobalConfig;
+import net.blay09.mods.eirairc.irc.ssl.NaiveTrustManager;
 import net.minecraftforge.common.MinecraftForge;
+
+import javax.net.SocketFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
 
 public class IRCConnection implements Runnable, IIRCConnection {
 
@@ -54,15 +63,16 @@ public class IRCConnection implements Runnable, IIRCConnection {
 	private String nick;
 	private String ident;
 	private String description;
+	private boolean secureConnection;
 	private String charset;
 	private boolean connected;
-	
+
 	private Thread thread;
 	private Socket socket;
 	private BufferedWriter writer;
 	private BufferedReader reader;
 	
-	public IRCConnection(String host, String password, String nick, String ident, String description) {
+	public IRCConnection(String host, String password, String nick, String ident, String description, boolean secureConnection) {
 		int portIdx = host.indexOf(':');
 		if(portIdx != -1) {
 			this.host = host.substring(0, portIdx);
@@ -75,16 +85,13 @@ public class IRCConnection implements Runnable, IIRCConnection {
 		this.nick = nick;
 		this.ident = ident;
 		this.description = description;
+		this.secureConnection = secureConnection;
 	}
 	
 	public void setBot(EiraIRCBot bot) {
 		this.bot = bot;
 	}
-	
-	public void setLogin(String login) {
-		this.ident = login;
-	}
-	
+
 	public void setDescription(String description) {
 		this.description = description;
 	}
@@ -137,7 +144,25 @@ public class IRCConnection implements Runnable, IIRCConnection {
 			if(MinecraftForge.EVENT_BUS.post(new IRCConnectingEvent(this))) {
 				return false;
 			}
-			socket = new Socket(host, port);
+			SocketFactory socketFactory;
+			if(secureConnection) {
+				if(!GlobalConfig.sslCustomTrustStore.isEmpty()) {
+					System.setProperty("javax.net.ssl.trustStore", GlobalConfig.sslCustomTrustStore);
+				}
+				if(GlobalConfig.sslTrustAllCerts) {
+					SSLContext context = SSLContext.getInstance("TLS");
+					context.init(null, new TrustManager[] { new NaiveTrustManager() }, null);
+					socketFactory = context.getSocketFactory();
+				} else {
+					socketFactory = SSLSocketFactory.getDefault();
+				}
+			} else {
+				socketFactory = SocketFactory.getDefault();
+			}
+			socket = socketFactory.createSocket(host, port);
+			if(secureConnection) {
+				((SSLSocket) socket).startHandshake();
+			}
 			writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), charset));
 			reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), charset));
 		} catch (UnknownHostException e) {
@@ -146,6 +171,10 @@ public class IRCConnection implements Runnable, IIRCConnection {
 		} catch (IOException e) {
 			e.printStackTrace();
 			return false;
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		} catch (KeyManagementException e) {
+			e.printStackTrace();
 		}
 		thread = new Thread(this);
 		thread.start();
@@ -156,7 +185,7 @@ public class IRCConnection implements Runnable, IIRCConnection {
 	public void run() {
 		try {
 			register();
-			String line = null;
+			String line;
 			while((line = reader.readLine()) != null) {
 				if(GlobalConfig.debugMode) {
 					System.out.println(line);
@@ -252,16 +281,15 @@ public class IRCConnection implements Runnable, IIRCConnection {
 		if(numeric == IRCReplyCodes.RPL_NAMREPLY) {
 			IRCChannel channel = (IRCChannel) getChannel(msg.arg(2));
 			String[] names = msg.arg(3).split(" ");
-			for(int i = 0; i < names.length; i++) {
-				String name = names[i];
+			for (String name : names) {
 				boolean isOp = false;
 				boolean isVoice = false;
-				if(name.startsWith("@")) {
+				if (name.startsWith("@")) {
 					isOp = true;
-				} else if(name.startsWith("+")) {
+				} else if (name.startsWith("+")) {
 					isVoice = true;
 				}
-				if(isOp || isVoice) {
+				if (isOp || isVoice) {
 					name = name.substring(1);
 				}
 				IRCUser user = (IRCUser) getOrCreateUser(name);
@@ -384,22 +412,20 @@ public class IRCConnection implements Runnable, IIRCConnection {
 					unsetList.add(c);
 				}
 			}
-			for(int i = 0; i < setList.size(); i++) {
-				char c = setList.get(i);
-				if(c == 'o') {
+			for (char c : setList) {
+				if (c == 'o') {
 					IRCUser user = (IRCUser) getOrCreateUser(param);
 					user.setOperator(channel, true);
-				} else if(c == 'v') {
+				} else if (c == 'v') {
 					IRCUser user = (IRCUser) getOrCreateUser(param);
 					user.setVoice(channel, true);
 				}
 			}
-			for(int i = 0; i < unsetList.size(); i++) {
-				char c = unsetList.get(i);
-				if(c == 'o') {
+			for (char c : unsetList) {
+				if (c == 'o') {
 					IRCUser user = (IRCUser) getOrCreateUser(param);
 					user.setOperator(channel, true);
-				} else if(c == 'v') {
+				} else if (c == 'v') {
 					IRCUser user = (IRCUser) getOrCreateUser(param);
 					user.setVoice(channel, true);
 				}

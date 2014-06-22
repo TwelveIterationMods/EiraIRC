@@ -27,14 +27,19 @@ public class GlobalConfig {
 	public static boolean registerShortCommands = true;
 	public static boolean hideNotices = false;
 	public static boolean debugMode = false;
+
+	public static boolean sslTrustAllCerts = false;
+	public static String sslCustomTrustStore = "";
 	
 	public static void load(Configuration config) {
 		nick = Utils.unquote(config.get(ConfigurationHandler.CATEGORY_GLOBAL, "nick", nick).getString());
 		saveCredentials = config.get(ConfigurationHandler.CATEGORY_GLOBAL, "saveCredentials", saveCredentials).getBoolean(saveCredentials);
 		registerShortCommands = config.get(ConfigurationHandler.CATEGORY_GLOBAL, "registerShortCommands", registerShortCommands).getBoolean(registerShortCommands);
 		charset = Utils.unquote(config.get(ConfigurationHandler.CATEGORY_GLOBAL, "charset", charset).getString());
-		hideNotices = config.get(ConfigurationHandler.CATEGORY_GLOBAL, "hideNotices", false).getBoolean(false);
-		debugMode = config.get(ConfigurationHandler.CATEGORY_GLOBAL, "debugMode", false).getBoolean(false);
+		hideNotices = config.get(ConfigurationHandler.CATEGORY_GLOBAL, "hideNotices", hideNotices).getBoolean(hideNotices);
+		debugMode = config.get(ConfigurationHandler.CATEGORY_GLOBAL, "debugMode", debugMode).getBoolean(debugMode);
+		sslTrustAllCerts = config.get(ConfigurationHandler.CATEGORY_GLOBAL, "sslTrustAllCerts", sslTrustAllCerts).getBoolean(sslTrustAllCerts);
+		sslCustomTrustStore = Utils.unquote(config.get(ConfigurationHandler.CATEGORY_GLOBAL, "sslCustomTrustStore", "").getString());
 		config.getCategory(ConfigurationHandler.CATEGORY_GLOBAL).setComment("These are settings that are applied on all servers and channels.");
 		
 		persistentConnection = config.get(ConfigurationHandler.CATEGORY_CLIENTONLY, "persistentConnection", GlobalConfig.persistentConnection).getBoolean(GlobalConfig.persistentConnection);
@@ -73,6 +78,8 @@ public class GlobalConfig {
 		else if(key.equals("nickSuffix")) value = nickSuffix;
 		else if(key.equals("hideNotices")) value = String.valueOf(hideNotices);
 		else if(key.equals("debugMode")) value = String.valueOf(debugMode);
+		else if(key.equals("sslTrustAllCerts")) value = String.valueOf(sslTrustAllCerts);
+		else if(key.equals("sslCustomTrustStore")) value = sslCustomTrustStore;
 		return value;
 	}
 	
@@ -85,6 +92,8 @@ public class GlobalConfig {
 			hideNotices = Boolean.parseBoolean(value);
 		} else if(key.equals("debugMode")) {
 			debugMode = Boolean.parseBoolean(value);
+		} else if(key.equals("sslTrustAllCerts")) {
+			sslTrustAllCerts = Boolean.parseBoolean(value);
 		} else if(key.equals("registerShortCommands")) {
 			registerShortCommands = Boolean.parseBoolean(value);
 			Utils.sendLocalizedMessage(sender, "irc.config.requiresRestart");
@@ -104,6 +113,11 @@ public class GlobalConfig {
 				value = "";
 			}
 			nickSuffix = value;
+		} else if(key.equals("sslCustomTrustStore")) {
+			if(value.equals("none")) {
+				value = "";
+			}
+			sslCustomTrustStore = value;
 		} else {
 			return false;
 		}
@@ -120,6 +134,8 @@ public class GlobalConfig {
 		list.add("nickSuffix");
 		list.add("hideNotices");
 		list.add("debugMode");
+		list.add("sslTrustAllCerts");
+		list.add("sslCustomTrustStore");
 	}
 	
 	public static void save(Configuration config) {
@@ -128,6 +144,8 @@ public class GlobalConfig {
 		config.get(ConfigurationHandler.CATEGORY_GLOBAL, "charset", "").set(Utils.quote(charset));
 		config.get(ConfigurationHandler.CATEGORY_GLOBAL, "hideNotices", hideNotices).set(hideNotices);
 		config.get(ConfigurationHandler.CATEGORY_GLOBAL, "debugMode", debugMode).set(debugMode);
+		config.get(ConfigurationHandler.CATEGORY_GLOBAL, "sslTrustAllCerts", sslTrustAllCerts).set(sslTrustAllCerts);
+		config.get(ConfigurationHandler.CATEGORY_GLOBAL, "sslCustomTrustStore", "").set(Utils.quote(sslCustomTrustStore));
 		config.get(ConfigurationHandler.CATEGORY_CLIENTONLY, "persistentConnection", persistentConnection).set(persistentConnection);
 
 		config.get(ConfigurationHandler.CATEGORY_SERVERONLY, "colorBlackList", new String[0]).set(colorBlackList.toArray(new String[colorBlackList.size()]));
@@ -146,13 +164,13 @@ public class GlobalConfig {
 	}
 
 	public static void addValuesToList(List<String> list, String option) {
-		if(option.startsWith("enable") || option.startsWith("allow") || option.equals("saveCredentials") || option.equals("persistentConnection") || option.equals("hideNotices")  || option.equals("debugMode")) {
+		if(option.startsWith("enable") || option.startsWith("allow") || option.equals("saveCredentials") || option.equals("persistentConnection") || option.equals("hideNotices")  || option.equals("debugMode") || option.equals("sslTrustAllCerts")) {
 			Utils.addBooleansToList(list);
 		} else if(option.equals("charset")) {
 			for(String cs : Charset.availableCharsets().keySet()) {
 				list.add(cs);
 			}
-		} else if(option.equals("nickPrefix") || option.equals("nickSuffix")) {
+		} else if(option.equals("nickPrefix") || option.equals("nickSuffix") || option.equals("sslCustomTrustStore")) {
 			list.add("none");
 		}
 	}

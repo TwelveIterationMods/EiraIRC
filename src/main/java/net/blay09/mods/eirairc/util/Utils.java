@@ -46,7 +46,6 @@ import net.minecraft.util.StatCollector;
 
 public class Utils {
 
-	private static final char INVALID_COLOR = 'n';
 	private static final int MAX_CHAT_LENGTH = 100;
 	private static final Pattern urlPattern = Pattern.compile("^(?:(https?)://)?([-\\w_\\.]{2,}\\.[a-z]{2,4})(/\\S*)?$");
 	private static final Pattern ircColorPattern = Pattern.compile("\u0003([0-9][0-9]?)(?:[,][0-9][0-9]?)?");
@@ -364,7 +363,7 @@ public class Utils {
 	}
 
 	public static IRCConnection connectTo(ServerConfig config) {
-		IRCConnection connection = new IRCConnection(config.getHost(), config.getServerPassword(), ConfigHelper.getFormattedNick(config), config.getIdent(), config.getDescription());
+		IRCConnection connection = new IRCConnection(config.getHost(), config.getServerPassword(), ConfigHelper.getFormattedNick(config), config.getIdent(), config.getDescription(), config.isSecureConnection());
 		connection.setCharset(GlobalConfig.charset);
 		connection.setBot(new EiraIRCBot(connection));
 		if(connection.connect()) {

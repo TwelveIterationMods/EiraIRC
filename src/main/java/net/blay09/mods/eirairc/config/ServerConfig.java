@@ -31,7 +31,8 @@ public class ServerConfig {
 	private String quitMessage;
 	private String ircColor;
 	private String emoteColor = "";
-	
+	private boolean secureConnection = false;
+
 	public ServerConfig(String host) {
 		this.host = host;
 	}
@@ -151,6 +152,7 @@ public class ServerConfig {
 		serverPassword = Utils.unquote(config.get(categoryName, "serverPassword", "").getString());
 		autoConnect = config.get(categoryName, "autoConnect", autoConnect).getBoolean(autoConnect);
 		botProfile = Utils.unquote(config.get(categoryName, "botProfile", "").getString());
+		secureConnection = config.get(categoryName, "secureConnection", secureConnection).getBoolean(secureConnection);
 		
 		String channelsCategoryName = categoryName + Configuration.CATEGORY_SPLITTER + ConfigurationHandler.CATEGORY_CHANNELS;
 		ConfigCategory channelsCategory = config.getCategory(channelsCategoryName);
@@ -175,6 +177,7 @@ public class ServerConfig {
 		config.get(categoryName, "serverPassword", "").set(Utils.quote(GlobalConfig.saveCredentials && serverPassword != null ? serverPassword : ""));
 		config.get(categoryName, "autoConnect", autoConnect).set(autoConnect);
 		config.get(categoryName, "botProfile", "").set(Utils.quote(botProfile != null ? botProfile : ""));
+		config.get(categoryName, "secureConnection", secureConnection).set(secureConnection);
 		
 		String channelsCategoryName = categoryName + Configuration.CATEGORY_SPLITTER + ConfigurationHandler.CATEGORY_CHANNELS;
 		int c = 0;
@@ -256,4 +259,7 @@ public class ServerConfig {
 		this.botProfile = botProfile;
 	}
 
+	public boolean isSecureConnection() {
+		return secureConnection;
+	}
 }
