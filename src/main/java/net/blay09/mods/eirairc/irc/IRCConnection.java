@@ -11,11 +11,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import net.blay09.mods.eirairc.api.IIRCChannel;
 import net.blay09.mods.eirairc.api.IIRCConnection;
@@ -35,15 +31,13 @@ import net.blay09.mods.eirairc.api.event.IRCUserLeaveEvent;
 import net.blay09.mods.eirairc.api.event.IRCUserNickChangeEvent;
 import net.blay09.mods.eirairc.api.event.IRCUserQuitEvent;
 import net.blay09.mods.eirairc.bot.EiraIRCBot;
+import net.blay09.mods.eirairc.config.CompatibilityConfig;
 import net.blay09.mods.eirairc.config.GlobalConfig;
 import net.blay09.mods.eirairc.irc.ssl.NaiveTrustManager;
 import net.minecraftforge.common.MinecraftForge;
 
 import javax.net.SocketFactory;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocket;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
+import javax.net.ssl.*;
 
 public class IRCConnection implements Runnable, IIRCConnection {
 
@@ -161,7 +155,22 @@ public class IRCConnection implements Runnable, IIRCConnection {
 			}
 			socket = socketFactory.createSocket(host, port);
 			if(secureConnection) {
-				((SSLSocket) socket).startHandshake();
+				try {
+					if(CompatibilityConfig.sslDisableDiffieHellman) {
+						List<String> limited = new LinkedList<String>();
+						for(String suite : ((SSLSocket) socket).getEnabledCipherSuites()) {
+							if(!suite.contains("_DHE_")) {
+								limited.add(suite);
+							}
+						}
+						((SSLSocket) socket).setEnabledCipherSuites(limited.toArray(new String[limited.size()]));
+					}
+					((SSLSocket) socket).startHandshake();
+				} catch (SSLHandshakeException e) {
+					System.out.println("Couldn't connect to " + host + " at port " + port + ": untrusted certificate");
+					MinecraftForge.EVENT_BUS.post(new IRCDisconnectEvent(this));
+					return false;
+				}
 			}
 			writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), charset));
 			reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), charset));
@@ -213,9 +222,11 @@ public class IRCConnection implements Runnable, IIRCConnection {
 	public void disconnect(String quitMessage) {
 		try {
 			connected = false;
-			if(socket != null) {
+			if(writer != null) {
 				writer.write("QUIT :" + quitMessage + "\r\n");
 				writer.flush();
+			}
+			if(socket != null) {
 				socket.close();
 			}
 		} catch (IOException e) {

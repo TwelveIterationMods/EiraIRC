@@ -30,7 +30,7 @@ public class GlobalConfig {
 
 	public static boolean sslTrustAllCerts = false;
 	public static String sslCustomTrustStore = "";
-	
+
 	public static void load(Configuration config) {
 		nick = Utils.unquote(config.get(ConfigurationHandler.CATEGORY_GLOBAL, "nick", nick).getString());
 		saveCredentials = config.get(ConfigurationHandler.CATEGORY_GLOBAL, "saveCredentials", saveCredentials).getBoolean(saveCredentials);

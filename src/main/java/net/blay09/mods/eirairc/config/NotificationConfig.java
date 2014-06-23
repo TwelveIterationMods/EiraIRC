@@ -92,7 +92,7 @@ public class NotificationConfig {
 		if(key.equals(OPTION_SOUNDNAME)) value = notificationSound;
 		else if(key.equals(OPTION_SOUNDVOLUME)) value = String.valueOf(soundVolume);
 		else if(key.equals(OPTION_SOUNDPITCH)) value = String.valueOf(soundPitch);
-		else {
+		else if(key.startsWith(PREFIX_OPTION)) {
 			int action = 0;
 			if(key.equals(OPTION_FRIENDJOIN)) {
 				action = friendJoined;
