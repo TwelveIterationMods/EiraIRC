@@ -20,7 +20,6 @@ public class CompatibilityConfig {
 	public static boolean clientBridge = false;
 	public static String clientBridgeMessageToken = DEFAULT_CLIENT_BRIDGE_TOKEN;
 	public static String clientBridgeNickToken = "";
-	public static boolean sslDisableDiffieHellman = true;
 
 	public static void load(Configuration config) {
 		disableChatToggle = config.get(CATEGORY, "disableChatToggle", disableChatToggle).getBoolean(disableChatToggle);
@@ -30,7 +29,7 @@ public class CompatibilityConfig {
 		clientBridge = config.get(CATEGORY, "clientBridge", clientBridge).getBoolean(clientBridge);
 		clientBridgeMessageToken = Utils.unquote(config.get(CATEGORY, "clientBridgeMessageToken", clientBridgeMessageToken).getString());
 		clientBridgeNickToken = Utils.unquote(config.get(CATEGORY, "clientBridgeNickToken", clientBridgeNickToken).getString());
-		sslDisableDiffieHellman = config.get(CATEGORY, "sslDisableDiffieHellman", sslDisableDiffieHellman).getBoolean(sslDisableDiffieHellman);
+
 	}
 	
 	public static void save(Configuration config) {
@@ -39,7 +38,7 @@ public class CompatibilityConfig {
 		config.get(CATEGORY, "clientBridge", clientBridge).set(clientBridge);
 		config.get(CATEGORY, "clientBridgeMessageToken", "").set(Utils.quote(clientBridgeMessageToken));
 		config.get(CATEGORY, "clientBridgeNickToken", "").set(Utils.quote(clientBridgeNickToken));
-		config.get(CATEGORY, "sslDisableDiffieHellman", sslDisableDiffieHellman).set(sslDisableDiffieHellman);
+
 	}
 
 	public static String handleConfigCommand(ICommandSender sender, String key) {
@@ -49,7 +48,6 @@ public class CompatibilityConfig {
 		else if(key.equals("clientBridge")) value = String.valueOf(clientBridge);
 		else if(key.equals("clientBridgeMessageToken")) value = clientBridgeMessageToken;
 		else if(key.equals("clientBridgeNickToken")) value = clientBridgeNickToken;
-		else if(key.equals("sslDisableDiffieHellman")) value = String.valueOf(sslDisableDiffieHellman);
 		return value;
 	}
 
@@ -62,8 +60,6 @@ public class CompatibilityConfig {
 			clientBridge = Boolean.parseBoolean(value);
 		} else if(key.equals("clientBridgeMessageToken")) {
 			clientBridgeMessageToken = value;
-		} else if(key.equals("sslDisableDiffieHellman")) {
-			sslDisableDiffieHellman = Boolean.parseBoolean(value);
 		} else if(key.equals("clientBridgeNickToken")) {
 			clientBridgeNickToken = value;
 		} else {
@@ -78,11 +74,10 @@ public class CompatibilityConfig {
 		list.add("clientBridge");
 		list.add("clientBridgeMessageToken");
 		list.add("clientBridgeNickToken");
-		list.add("sslDisableDiffieHellman");
 	}
 
 	public static void addValuesToList(List<String> list, String option) {
-		if(option.equals("disableChatToggle") || option.equals("vanillaChat") || option.equals("clientBridge") || option.equals("sslDisableDiffieHellman")) {
+		if(option.equals("disableChatToggle") || option.equals("vanillaChat") || option.equals("clientBridge")) {
 			Utils.addBooleansToList(list);
 		} else if(option.equals("clientBridgeMessageToken")) {
 			list.add(DEFAULT_CLIENT_BRIDGE_TOKEN);

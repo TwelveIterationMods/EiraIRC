@@ -31,8 +31,8 @@ import net.minecraftforge.common.config.Configuration;
 public class ConfigurationHandler {
 
 	private static String CONFIG_VERSION = "2";
-	
 	public static final String CATEGORY_GLOBAL = "global";
+
 	public static final String CATEGORY_DISPLAY = "display";
 	public static final String CATEGORY_FORMATS = "formats";
 	public static final String CATEGORY_SERVERONLY = "serveronly";
@@ -42,6 +42,7 @@ public class ConfigurationHandler {
 	public static final String CATEGORY_CHANNELS = "channels";
 	public static final String CATEGORY_COMPAT = "compatibility";
 	public static final String CATEGORY_NOTIFICATIONS = "notifications";
+	public static final String CATEGORY_NETWORK = "network";
 	public static final String PREFIX_SERVER = "server";
 	public static final String PREFIX_CHANNEL = "channel";
 	

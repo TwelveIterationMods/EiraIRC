@@ -32,6 +32,7 @@ import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.ServiceConfig;
 import net.blay09.mods.eirairc.config.ServiceSettings;
 import net.blay09.mods.eirairc.irc.IRCConnection;
+import net.blay09.mods.eirairc.irc.ssl.IRCConnectionSSL;
 import net.blay09.mods.eirairc.net.EiraPlayerInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.ICommandSender;
@@ -220,13 +221,13 @@ public class Utils {
 		EnumChatFormatting colorFormatting = EnumChatFormatting.RESET;
 		if(colorName.equals("black")) {
 			colorFormatting = EnumChatFormatting.BLACK;
-		} else if(colorName.equals("darkblue")) {
+		} else if(colorName.equals("darkblue") || colorName.equals("dark blue")) {
 			colorFormatting = EnumChatFormatting.DARK_BLUE;
 		} else if(colorName.equals("green")) {
 			colorFormatting = EnumChatFormatting.DARK_GREEN;
 		} else if(colorName.equals("cyan")) {
 			colorFormatting = EnumChatFormatting.DARK_AQUA;
-		} else if(colorName.equals("darkred")) {
+		} else if(colorName.equals("darkred") || colorName.equals("dark red")) {
 			colorFormatting = EnumChatFormatting.DARK_RED;
 		} else if(colorName.equals("purple")) {
 			colorFormatting = EnumChatFormatting.DARK_PURPLE;
@@ -234,13 +235,13 @@ public class Utils {
 			colorFormatting = EnumChatFormatting.GOLD;
 		} else if(colorName.equals("gray") || colorName.equals("grey")) {
 			colorFormatting = EnumChatFormatting.GRAY;
-		} else if(colorName.equals("darkgray") || colorName.equals("darkgrey")) {
+		} else if(colorName.equals("darkgray") || colorName.equals("darkgrey") || colorName.equals("dark gray") || colorName.equals("dark grey")) {
 			colorFormatting = EnumChatFormatting.DARK_GRAY;
 		} else if(colorName.equals("blue")) {
 			colorFormatting = EnumChatFormatting.BLUE;
 		} else if(colorName.equals("lime")) {
 			colorFormatting = EnumChatFormatting.GREEN;
-		} else if(colorName.equals("lightblue")) {
+		} else if(colorName.equals("lightblue") || colorName.equals("light blue")) {
 			colorFormatting = EnumChatFormatting.AQUA;
 		} else if(colorName.equals("red")) {
 			colorFormatting = EnumChatFormatting.RED;
@@ -363,10 +364,15 @@ public class Utils {
 	}
 
 	public static IRCConnection connectTo(ServerConfig config) {
-		IRCConnection connection = new IRCConnection(config.getHost(), config.getServerPassword(), ConfigHelper.getFormattedNick(config), config.getIdent(), config.getDescription(), config.isSecureConnection());
+		IRCConnection connection;
+		if(config.isSecureConnection()) {
+			connection = new IRCConnectionSSL(config.getHost(), config.getServerPassword(), ConfigHelper.getFormattedNick(config), config.getIdent(), config.getDescription());
+		} else {
+			connection = new IRCConnection(config.getHost(), config.getServerPassword(), ConfigHelper.getFormattedNick(config), config.getIdent(), config.getDescription());
+		}
 		connection.setCharset(GlobalConfig.charset);
 		connection.setBot(new EiraIRCBot(connection));
-		if(connection.connect()) {
+		if(connection.start()) {
 			return connection;
 		}
 		return null;
@@ -663,5 +669,26 @@ public class Utils {
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public static String extractHost(String url) {
+		int portIdx = url.indexOf(':');
+		if(portIdx != -1) {
+			return url.substring(0, portIdx);
+		} else {
+			return url;
+		}
+	}
+
+	public static int extractPort(String url, int defaultPort) {
+		int portIdx = url.indexOf(':');
+		if(portIdx != -1) {
+			try {
+				return Integer.parseInt(url.substring(portIdx + 1));
+			} catch (NumberFormatException e) {
+				return defaultPort;
+			}
+		}
+		return defaultPort;
 	}
 }

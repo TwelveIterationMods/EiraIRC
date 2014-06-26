@@ -7,10 +7,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.net.Socket;
-import java.net.UnknownHostException;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
+import java.net.*;
 import java.util.*;
 
 import net.blay09.mods.eirairc.api.IIRCChannel;
@@ -31,55 +28,59 @@ import net.blay09.mods.eirairc.api.event.IRCUserLeaveEvent;
 import net.blay09.mods.eirairc.api.event.IRCUserNickChangeEvent;
 import net.blay09.mods.eirairc.api.event.IRCUserQuitEvent;
 import net.blay09.mods.eirairc.bot.EiraIRCBot;
-import net.blay09.mods.eirairc.config.CompatibilityConfig;
 import net.blay09.mods.eirairc.config.GlobalConfig;
-import net.blay09.mods.eirairc.irc.ssl.NaiveTrustManager;
+import net.blay09.mods.eirairc.config.NetworkConfig;
+import net.blay09.mods.eirairc.util.Utils;
 import net.minecraftforge.common.MinecraftForge;
 
-import javax.net.SocketFactory;
-import javax.net.ssl.*;
-
 public class IRCConnection implements Runnable, IIRCConnection {
+
+	public static class ProxyAuthenticator extends Authenticator {
+
+		private PasswordAuthentication auth;
+
+		public ProxyAuthenticator(String username, String password) {
+			auth = new PasswordAuthentication(username, password.toCharArray());
+		}
+
+		@Override
+		protected PasswordAuthentication getPasswordAuthentication() {
+			return auth;
+		}
+	}
 
 	public static final int DEFAULT_PORT = 6667;
 	public static final String EMOTE_START = "\u0001ACTION ";
 	public static final String EMOTE_END = "\u0001";
 	private static final String LINE_FEED = "\r\n";
-	
+	protected static final int DEFAULT_PROXY_PORT = 1080;
+
 	private final IRCParser parser = new IRCParser();
 	private final Map<String, IIRCChannel> channels = new HashMap<String, IIRCChannel>();
 	private final Map<String, IIRCUser> users = new HashMap<String, IIRCUser>();
-	private final int port;
-	private final String host;
+	protected final int port;
+	protected final String host;
 	private final String password;
 	private EiraIRCBot bot;
 	private String serverType;
 	private String nick;
 	private String ident;
 	private String description;
-	private boolean secureConnection;
-	private String charset;
+	protected String charset;
 	private boolean connected;
 
 	private Thread thread;
 	private Socket socket;
-	private BufferedWriter writer;
-	private BufferedReader reader;
+	protected BufferedWriter writer;
+	protected BufferedReader reader;
 	
-	public IRCConnection(String host, String password, String nick, String ident, String description, boolean secureConnection) {
-		int portIdx = host.indexOf(':');
-		if(portIdx != -1) {
-			this.host = host.substring(0, portIdx);
-			this.port = Integer.parseInt(host.substring(portIdx + 1));
-		} else {
-			this.host = host;
-			this.port = DEFAULT_PORT;
-		}
+	public IRCConnection(String url, String password, String nick, String ident, String description) {
+		this.host = Utils.extractHost(url);
+		this.port = Utils.extractPort(url, DEFAULT_PORT);
 		this.password = password;
 		this.nick = nick;
 		this.ident = ident;
 		this.description = description;
-		this.secureConnection = secureConnection;
 	}
 	
 	public void setBot(EiraIRCBot bot) {
@@ -133,63 +134,54 @@ public class IRCConnection implements Runnable, IIRCConnection {
 		return channels.values();
 	}
 	
-	public boolean connect() {
-		try {
-			if(MinecraftForge.EVENT_BUS.post(new IRCConnectingEvent(this))) {
-				return false;
-			}
-			SocketFactory socketFactory;
-			if(secureConnection) {
-				if(!GlobalConfig.sslCustomTrustStore.isEmpty()) {
-					System.setProperty("javax.net.ssl.trustStore", GlobalConfig.sslCustomTrustStore);
-				}
-				if(GlobalConfig.sslTrustAllCerts) {
-					SSLContext context = SSLContext.getInstance("TLS");
-					context.init(null, new TrustManager[] { new NaiveTrustManager() }, null);
-					socketFactory = context.getSocketFactory();
-				} else {
-					socketFactory = SSLSocketFactory.getDefault();
-				}
-			} else {
-				socketFactory = SocketFactory.getDefault();
-			}
-			socket = socketFactory.createSocket(host, port);
-			if(secureConnection) {
-				try {
-					if(CompatibilityConfig.sslDisableDiffieHellman) {
-						List<String> limited = new LinkedList<String>();
-						for(String suite : ((SSLSocket) socket).getEnabledCipherSuites()) {
-							if(!suite.contains("_DHE_")) {
-								limited.add(suite);
-							}
-						}
-						((SSLSocket) socket).setEnabledCipherSuites(limited.toArray(new String[limited.size()]));
-					}
-					((SSLSocket) socket).startHandshake();
-				} catch (SSLHandshakeException e) {
-					System.out.println("Couldn't connect to " + host + " at port " + port + ": untrusted certificate");
-					MinecraftForge.EVENT_BUS.post(new IRCDisconnectEvent(this));
-					return false;
-				}
-			}
-			writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), charset));
-			reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), charset));
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
+	public boolean start() {
+		if(MinecraftForge.EVENT_BUS.post(new IRCConnectingEvent(this))) {
 			return false;
-		} catch (IOException e) {
-			e.printStackTrace();
+		}
+		socket = connect();
+		if(socket == null) {
+			MinecraftForge.EVENT_BUS.post(new IRCDisconnectEvent(this));
 			return false;
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		} catch (KeyManagementException e) {
-			e.printStackTrace();
 		}
 		thread = new Thread(this);
 		thread.start();
 		return true;
 	}
-	
+
+	protected Proxy createProxy() {
+		if(!NetworkConfig.proxyHost.isEmpty()) {
+			if(!NetworkConfig.proxyUsername.isEmpty() || !NetworkConfig.proxyPassword.isEmpty()) {
+				Authenticator.setDefault(new ProxyAuthenticator(NetworkConfig.proxyUsername, NetworkConfig.proxyPassword));
+			}
+			SocketAddress proxyAddr = new InetSocketAddress(Utils.extractHost(NetworkConfig.proxyHost), Utils.extractPort(NetworkConfig.proxyHost, DEFAULT_PROXY_PORT));
+			return new Proxy(Proxy.Type.SOCKS, proxyAddr);
+		}
+		return null;
+	}
+
+	protected Socket connect() {
+		try {
+			SocketAddress targetAddr = new InetSocketAddress(host, port);
+			Socket newSocket;
+			Proxy proxy = createProxy();
+			if(proxy != null) {
+				newSocket = new Socket(proxy);
+			} else {
+				newSocket = new Socket();
+			}
+			newSocket.connect(targetAddr);
+			writer = new BufferedWriter(new OutputStreamWriter(newSocket.getOutputStream(), charset));
+			reader = new BufferedReader(new InputStreamReader(newSocket.getInputStream(), charset));
+			return newSocket;
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+			return null;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 	@Override
 	public void run() {
 		try {
@@ -215,7 +207,7 @@ public class IRCConnection implements Runnable, IIRCConnection {
 	public void tryReconnect() {
 		MinecraftForge.EVENT_BUS.post(new IRCDisconnectEvent(this));
 		if(connected) {
-			connect();
+			start();
 		}
 	}
 	
