@@ -60,7 +60,7 @@ public class GuiChatExtended extends GuiChat {
 	
 	@Override
 	protected void keyTyped(char unicode, int keyCode) {
-		if(keyCode == KeyConfig.toggleTarget && !CompatibilityConfig.disableChatToggle && !inputField.getText().startsWith("/")) {
+		if(keyCode == KeyConfig.toggleTarget && !CompatibilityConfig.disableChatToggle && !CompatibilityConfig.clientBridge && !inputField.getText().startsWith("/")) {
 			if(Keyboard.isRepeatEvent()) {
 				if(System.currentTimeMillis() - lastToggleTarget >= 1000) {
 					chatSession.setChatTarget((String) null);
@@ -95,7 +95,7 @@ public class GuiChatExtended extends GuiChat {
 	@Override
 	public void drawScreen(int i, int j, float k) {
 		super.drawScreen(i, j, k);
-		if(!CompatibilityConfig.disableChatToggle) {
+		if(!CompatibilityConfig.disableChatToggle && !CompatibilityConfig.clientBridge) {
 			String target = chatSession.getChatTarget();
 			if(target == null) {
 				target = "Minecraft";

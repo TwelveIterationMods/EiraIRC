@@ -13,7 +13,6 @@ import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.ConfigCategory;
 import net.minecraftforge.common.Configuration;
 
@@ -31,10 +30,21 @@ public class ServerConfig {
 	private boolean autoConnect = true;
 	private String quitMessage;
 	private String ircColor;
-	private String emoteColor;
-	
+	private String emoteColor = "";
+	private boolean secureConnection = false;
+
 	public ServerConfig(String host) {
 		this.host = host;
+	}
+	
+	public void useDefaults(boolean serverSide) {
+		if(host.equals(Globals.TWITCH_SERVER)) {
+			botProfile = BotProfile.DEFAULT_TWITCH;
+		} else if(serverSide) {
+			botProfile = BotProfile.DEFAULT_SERVER;
+		} else {
+			botProfile = BotProfile.DEFAULT_CLIENT;
+		}
 	}
 	
 	public String getHost() {
@@ -135,13 +145,14 @@ public class ServerConfig {
 		ident = Utils.unquote(config.get(categoryName, "ident", Globals.DEFAULT_IDENT).getString());
 		description = Utils.unquote(config.get(categoryName, "description", Globals.DEFAULT_DESCRIPTION).getString());
 		ircColor = Utils.unquote(config.get(categoryName, "ircColor", "").getString());
-		emoteColor = Utils.unquote(config.get(categoryName, "emoteColor", "").getString());
+		emoteColor = Utils.unquote(config.get(categoryName, "emoteColor", emoteColor).getString());
 		quitMessage = Utils.unquote(config.get(categoryName, "quitMessage", "").getString());
 		nickServName = Utils.unquote(config.get(categoryName, "nickServName", "").getString());
 		nickServPassword = Utils.unquote(config.get(categoryName, "nickServPassword", "").getString());
 		serverPassword = Utils.unquote(config.get(categoryName, "serverPassword", "").getString());
 		autoConnect = config.get(categoryName, "autoConnect", autoConnect).getBoolean(autoConnect);
 		botProfile = Utils.unquote(config.get(categoryName, "botProfile", "").getString());
+		secureConnection = config.get(categoryName, "secureConnection", secureConnection).getBoolean(secureConnection);
 		
 		String channelsCategoryName = categoryName + Configuration.CATEGORY_SPLITTER + ConfigurationHandler.CATEGORY_CHANNELS;
 		ConfigCategory channelsCategory = config.getCategory(channelsCategoryName);
@@ -159,13 +170,14 @@ public class ServerConfig {
 		config.get(categoryName, "ident", "").set(Utils.quote(ident != null ? ident : Globals.DEFAULT_IDENT));
 		config.get(categoryName, "description", "").set(Utils.quote(description != null ? description : Globals.DEFAULT_DESCRIPTION));
 		config.get(categoryName, "ircColor", "").set(Utils.quote(ircColor != null ? ircColor : ""));
-		config.get(categoryName, "emoteColor", "").set(Utils.quote(emoteColor != null ? emoteColor : ""));
+		config.get(categoryName, "emoteColor", "").set(Utils.quote(emoteColor));
 		config.get(categoryName, "quitMessage", "").set(Utils.quote(quitMessage != null ? quitMessage : ""));
 		config.get(categoryName, "nickServName", "").set(Utils.quote(GlobalConfig.saveCredentials && nickServName != null ? nickServName : ""));
 		config.get(categoryName, "nickServPassword", "").set(Utils.quote(GlobalConfig.saveCredentials && nickServPassword != null ? nickServPassword : ""));
 		config.get(categoryName, "serverPassword", "").set(Utils.quote(GlobalConfig.saveCredentials && serverPassword != null ? serverPassword : ""));
 		config.get(categoryName, "autoConnect", autoConnect).set(autoConnect);
 		config.get(categoryName, "botProfile", "").set(Utils.quote(botProfile != null ? botProfile : ""));
+		config.get(categoryName, "secureConnection", secureConnection).set(secureConnection);
 		
 		String channelsCategoryName = categoryName + Configuration.CATEGORY_SPLITTER + ConfigurationHandler.CATEGORY_CHANNELS;
 		int c = 0;
@@ -246,15 +258,8 @@ public class ServerConfig {
 	public void setBotProfile(String botProfile) {
 		this.botProfile = botProfile;
 	}
-	
-	public void useDefaults(boolean serverSide) {
-		if(host.equals(Globals.TWITCH_SERVER)) {
-			botProfile = BotProfile.DEFAULT_TWITCH;
-		} else if(serverSide) {
-			botProfile = BotProfile.DEFAULT_SERVER;
-		} else {
-			botProfile = BotProfile.DEFAULT_CLIENT;
-		}
-	}
 
+	public boolean isSecureConnection() {
+		return secureConnection;
+	}
 }

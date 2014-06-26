@@ -7,13 +7,8 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.net.Socket;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.net.*;
+import java.util.*;
 
 import net.blay09.mods.eirairc.api.IIRCChannel;
 import net.blay09.mods.eirairc.api.IIRCConnection;
@@ -34,43 +29,54 @@ import net.blay09.mods.eirairc.api.event.IRCUserNickChangeEvent;
 import net.blay09.mods.eirairc.api.event.IRCUserQuitEvent;
 import net.blay09.mods.eirairc.bot.EiraIRCBot;
 import net.blay09.mods.eirairc.config.GlobalConfig;
+import net.blay09.mods.eirairc.config.NetworkConfig;
+import net.blay09.mods.eirairc.util.Utils;
 import net.minecraftforge.common.MinecraftForge;
 
 public class IRCConnection implements Runnable, IIRCConnection {
+
+	public static class ProxyAuthenticator extends Authenticator {
+
+		private PasswordAuthentication auth;
+
+		public ProxyAuthenticator(String username, String password) {
+			auth = new PasswordAuthentication(username, password.toCharArray());
+		}
+
+		@Override
+		protected PasswordAuthentication getPasswordAuthentication() {
+			return auth;
+		}
+	}
 
 	public static final int DEFAULT_PORT = 6667;
 	public static final String EMOTE_START = "\u0001ACTION ";
 	public static final String EMOTE_END = "\u0001";
 	private static final String LINE_FEED = "\r\n";
-	
+	protected static final int DEFAULT_PROXY_PORT = 1080;
+
 	private final IRCParser parser = new IRCParser();
 	private final Map<String, IIRCChannel> channels = new HashMap<String, IIRCChannel>();
 	private final Map<String, IIRCUser> users = new HashMap<String, IIRCUser>();
-	private final int port;
-	private final String host;
+	protected final int port;
+	protected final String host;
 	private final String password;
 	private EiraIRCBot bot;
 	private String serverType;
 	private String nick;
 	private String ident;
 	private String description;
-	private String charset;
+	protected String charset;
 	private boolean connected;
-	
+
 	private Thread thread;
 	private Socket socket;
-	private BufferedWriter writer;
-	private BufferedReader reader;
+	protected BufferedWriter writer;
+	protected BufferedReader reader;
 	
-	public IRCConnection(String host, String password, String nick, String ident, String description) {
-		int portIdx = host.indexOf(':');
-		if(portIdx != -1) {
-			this.host = host.substring(0, portIdx);
-			this.port = Integer.parseInt(host.substring(portIdx + 1));
-		} else {
-			this.host = host;
-			this.port = DEFAULT_PORT;
-		}
+	public IRCConnection(String url, String password, String nick, String ident, String description) {
+		this.host = Utils.extractHost(url);
+		this.port = Utils.extractPort(url, DEFAULT_PORT);
 		this.password = password;
 		this.nick = nick;
 		this.ident = ident;
@@ -80,11 +86,7 @@ public class IRCConnection implements Runnable, IIRCConnection {
 	public void setBot(EiraIRCBot bot) {
 		this.bot = bot;
 	}
-	
-	public void setLogin(String login) {
-		this.ident = login;
-	}
-	
+
 	public void setDescription(String description) {
 		this.description = description;
 	}
@@ -132,34 +134,62 @@ public class IRCConnection implements Runnable, IIRCConnection {
 		return channels.values();
 	}
 	
-	public boolean connect() {
-		try {
-			if(MinecraftForge.EVENT_BUS.post(new IRCConnectingEvent(this))) {
-				return false;
-			}
-			socket = new Socket(host, port);
-			writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), charset));
-			reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), charset));
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
+	public boolean start() {
+		if(MinecraftForge.EVENT_BUS.post(new IRCConnectingEvent(this))) {
 			return false;
-		} catch (IOException e) {
-			e.printStackTrace();
+		}
+		socket = connect();
+		if(socket == null) {
+			MinecraftForge.EVENT_BUS.post(new IRCDisconnectEvent(this));
 			return false;
 		}
 		thread = new Thread(this);
 		thread.start();
 		return true;
 	}
-	
+
+	protected Proxy createProxy() {
+		if(!NetworkConfig.proxyHost.isEmpty()) {
+			if(!NetworkConfig.proxyUsername.isEmpty() || !NetworkConfig.proxyPassword.isEmpty()) {
+				Authenticator.setDefault(new ProxyAuthenticator(NetworkConfig.proxyUsername, NetworkConfig.proxyPassword));
+			}
+			SocketAddress proxyAddr = new InetSocketAddress(Utils.extractHost(NetworkConfig.proxyHost), Utils.extractPort(NetworkConfig.proxyHost, DEFAULT_PROXY_PORT));
+			return new Proxy(Proxy.Type.SOCKS, proxyAddr);
+		}
+		return null;
+	}
+
+	protected Socket connect() {
+		try {
+			SocketAddress targetAddr = new InetSocketAddress(host, port);
+			Socket newSocket;
+			Proxy proxy = createProxy();
+			if(proxy != null) {
+				newSocket = new Socket(proxy);
+			} else {
+				newSocket = new Socket();
+			}
+			newSocket.connect(targetAddr);
+			writer = new BufferedWriter(new OutputStreamWriter(newSocket.getOutputStream(), charset));
+			reader = new BufferedReader(new InputStreamReader(newSocket.getInputStream(), charset));
+			return newSocket;
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+			return null;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 	@Override
 	public void run() {
 		try {
 			register();
-			String line = null;
+			String line;
 			while((line = reader.readLine()) != null) {
 				if(GlobalConfig.debugMode) {
-					System.out.println("[DEBUGMODE] " + line);
+					System.out.println(line);
 				}
 				IRCMessage msg = parser.parse(line);
 				if(handleNumericMessage(msg)) {
@@ -177,16 +207,18 @@ public class IRCConnection implements Runnable, IIRCConnection {
 	public void tryReconnect() {
 		MinecraftForge.EVENT_BUS.post(new IRCDisconnectEvent(this));
 		if(connected) {
-			connect();
+			start();
 		}
 	}
 	
 	public void disconnect(String quitMessage) {
 		try {
 			connected = false;
-			if(socket != null) {
+			if(writer != null) {
 				writer.write("QUIT :" + quitMessage + "\r\n");
 				writer.flush();
+			}
+			if(socket != null) {
 				socket.close();
 			}
 		} catch (IOException e) {
@@ -252,16 +284,15 @@ public class IRCConnection implements Runnable, IIRCConnection {
 		if(numeric == IRCReplyCodes.RPL_NAMREPLY) {
 			IRCChannel channel = (IRCChannel) getChannel(msg.arg(2));
 			String[] names = msg.arg(3).split(" ");
-			for(int i = 0; i < names.length; i++) {
-				String name = names[i];
+			for (String name : names) {
 				boolean isOp = false;
 				boolean isVoice = false;
-				if(name.startsWith("@")) {
+				if (name.startsWith("@")) {
 					isOp = true;
-				} else if(name.startsWith("+")) {
+				} else if (name.startsWith("+")) {
 					isVoice = true;
 				}
-				if(isOp || isVoice) {
+				if (isOp || isVoice) {
 					name = name.substring(1);
 				}
 				IRCUser user = (IRCUser) getOrCreateUser(name);
@@ -290,6 +321,8 @@ public class IRCConnection implements Runnable, IIRCConnection {
 			MinecraftForge.EVENT_BUS.post(new IRCErrorEvent(this, msg.getNumericCommand(), msg.args()));
 		} else if(numeric == IRCReplyCodes.RPL_MOTD) {
 			// ignore
+		} else if(numeric == IRCReplyCodes.ERR_PASSWDMISMATCH) {
+			MinecraftForge.EVENT_BUS.post(new IRCPrivateChatEvent(this, null, msg.arg(1), false, true));
 		} else if(numeric <= 5 || numeric == 251 || numeric == 252 || numeric == 254 || numeric == 255 || numeric == 265 || numeric == 266 || numeric == 250 || numeric == 375) {
 			// ignore for now
 		} else {
@@ -382,22 +415,20 @@ public class IRCConnection implements Runnable, IIRCConnection {
 					unsetList.add(c);
 				}
 			}
-			for(int i = 0; i < setList.size(); i++) {
-				char c = setList.get(i);
-				if(c == 'o') {
+			for (char c : setList) {
+				if (c == 'o') {
 					IRCUser user = (IRCUser) getOrCreateUser(param);
 					user.setOperator(channel, true);
-				} else if(c == 'v') {
+				} else if (c == 'v') {
 					IRCUser user = (IRCUser) getOrCreateUser(param);
 					user.setVoice(channel, true);
 				}
 			}
-			for(int i = 0; i < unsetList.size(); i++) {
-				char c = unsetList.get(i);
-				if(c == 'o') {
+			for (char c : unsetList) {
+				if (c == 'o') {
 					IRCUser user = (IRCUser) getOrCreateUser(param);
 					user.setOperator(channel, true);
-				} else if(c == 'v') {
+				} else if (c == 'v') {
 					IRCUser user = (IRCUser) getOrCreateUser(param);
 					user.setVoice(channel, true);
 				}

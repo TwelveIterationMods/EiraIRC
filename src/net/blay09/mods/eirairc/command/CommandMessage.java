@@ -70,7 +70,7 @@ public class CommandMessage extends SubCommand {
 			ircMessage = "<" + Utils.getNickIRC((EntityPlayer) sender) + "> " + ircMessage;
 		}
 		target.message(ircMessage);
-		String mcMessage = "[-> " + target.getName() + "] <" + Utils.getNickGame((EntityPlayer) sender, true) + "> " + message;
+		String mcMessage = "[-> " + target.getName() + "] <" + Utils.getNickGame((EntityPlayer) sender) + "> " + message;
 		Utils.sendUnlocalizedMessage(sender, mcMessage);
 		return true;
 	}

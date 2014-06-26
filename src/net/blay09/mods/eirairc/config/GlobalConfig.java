@@ -27,14 +27,14 @@ public class GlobalConfig {
 	public static boolean registerShortCommands = true;
 	public static boolean hideNotices = false;
 	public static boolean debugMode = false;
-	
+
 	public static void load(Configuration config) {
 		nick = Utils.unquote(config.get(ConfigurationHandler.CATEGORY_GLOBAL, "nick", nick).getString());
 		saveCredentials = config.get(ConfigurationHandler.CATEGORY_GLOBAL, "saveCredentials", saveCredentials).getBoolean(saveCredentials);
 		registerShortCommands = config.get(ConfigurationHandler.CATEGORY_GLOBAL, "registerShortCommands", registerShortCommands).getBoolean(registerShortCommands);
 		charset = Utils.unquote(config.get(ConfigurationHandler.CATEGORY_GLOBAL, "charset", charset).getString());
-		hideNotices = config.get(ConfigurationHandler.CATEGORY_GLOBAL, "hideNotices", false).getBoolean(false);
-		debugMode = config.get(ConfigurationHandler.CATEGORY_GLOBAL, "debugMode", false).getBoolean(false);
+		hideNotices = config.get(ConfigurationHandler.CATEGORY_GLOBAL, "hideNotices", hideNotices).getBoolean(hideNotices);
+		debugMode = config.get(ConfigurationHandler.CATEGORY_GLOBAL, "debugMode", debugMode).getBoolean(debugMode);
 		config.getCategory(ConfigurationHandler.CATEGORY_GLOBAL).setComment("These are settings that are applied on all servers and channels.");
 		
 		persistentConnection = config.get(ConfigurationHandler.CATEGORY_CLIENTONLY, "persistentConnection", GlobalConfig.persistentConnection).getBoolean(GlobalConfig.persistentConnection);

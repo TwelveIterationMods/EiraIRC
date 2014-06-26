@@ -18,6 +18,7 @@ import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ChatMessageComponent;
 
 public class BotCommandMessage implements IBotCommand {
 
@@ -41,7 +42,7 @@ public class BotCommandMessage implements IBotCommand {
 		if(entityPlayer == null) {
 			List<EntityPlayer> playerEntityList = MinecraftServer.getServer().getConfigurationManager().playerEntityList;
 			for(EntityPlayer entity : playerEntityList) {
-				if(Utils.getNickGame(entity, false).equals(playerName) || Utils.getNickIRC(entity).equals(playerName)) {
+				if(Utils.getNickGame(entity).equals(playerName) || Utils.getNickIRC(entity).equals(playerName)) {
 					entityPlayer = entity;
 				}
 			}
@@ -55,13 +56,13 @@ public class BotCommandMessage implements IBotCommand {
 			message = Utils.filterLinks(message);
 		}
 		message = Utils.filterAllowedCharacters(message, true, DisplayConfig.enableIRCColors);
-		String mcMessage = Utils.formatMessageNew(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(user)).mcPrivateMessage, bot.getConnection(), null, user, message, true);
-		String notifyMsg = mcMessage;
+		ChatMessageComponent chatComponent = Utils.formatChatComponent(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(user)).mcPrivateMessage, bot.getConnection(), null, user, message, true);
+		String notifyMsg = chatComponent.toString();
 		if(notifyMsg.length() > 42) {
 			notifyMsg = notifyMsg.substring(0, 42) + "...";
 		}
 		EiraIRC.proxy.sendNotification((EntityPlayerMP) entityPlayer, NotificationType.PrivateMessage, notifyMsg);
-		entityPlayer.sendChatToPlayer(Utils.getUnlocalizedChatMessage(mcMessage));
+		entityPlayer.sendChatToPlayer(chatComponent);
 		user.notice(Utils.getLocalizedMessage("irc.bot.msgSent", playerName, message));
 	}
 

@@ -43,6 +43,7 @@ public class ConfigurationHandler {
 	public static final String CATEGORY_CHANNELS = "channels";
 	public static final String CATEGORY_COMPAT = "compatibility";
 	public static final String CATEGORY_NOTIFICATIONS = "notifications";
+	public static final String CATEGORY_NETWORK = "network";
 	public static final String PREFIX_SERVER = "server";
 	public static final String PREFIX_CHANNEL = "channel";
 	
@@ -55,6 +56,7 @@ public class ConfigurationHandler {
 	private static BotProfile defaultBotProfile;
 	private static File botProfileDir;
 	private static final Map<String, DisplayFormatConfig> displayFormats = new HashMap<String, DisplayFormatConfig>();
+
 	private static List<DisplayFormatConfig> displayFormatList = new ArrayList<DisplayFormatConfig>();
 	private static DisplayFormatConfig defaultDisplayFormat;
 	

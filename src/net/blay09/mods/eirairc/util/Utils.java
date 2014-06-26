@@ -30,6 +30,7 @@ import net.blay09.mods.eirairc.config.ServiceConfig;
 import net.blay09.mods.eirairc.config.ServiceSettings;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.irc.IRCConnection;
+import net.blay09.mods.eirairc.irc.ssl.IRCConnectionSSL;
 import net.blay09.mods.eirairc.net.EiraPlayerInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.ICommandSender;
@@ -46,6 +47,7 @@ public class Utils {
 	private static final int MAX_CHAT_LENGTH = 100;
 	private static final Pattern urlPattern = Pattern.compile("^(?:(https?)://)?([-\\w_\\.]{2,}\\.[a-z]{2,4})(/\\S*)?$");
 	private static final Pattern ircColorPattern = Pattern.compile("\u0003([0-9][0-9]?)(?:[,][0-9][0-9]?)?");
+	private static final Pattern playerTagPattern = Pattern.compile("[\\[][^\\]]+[\\]]");
 	private static final String DEFAULT_USERNAME = "EiraBot";
 	
 	public static void sendLocalizedMessage(ICommandSender sender, String key, Object... args) {
@@ -106,6 +108,16 @@ public class Utils {
 		}
 	}
 	
+	public static void addMessageToChat(ChatMessageComponent chatComponent) {
+		if(MinecraftServer.getServer() != null) {
+			MinecraftServer.getServer().getConfigurationManager().sendChatMsg(chatComponent);
+		} else {
+			if(Minecraft.getMinecraft().thePlayer != null) {
+				Minecraft.getMinecraft().thePlayer.sendChatToPlayer(chatComponent);
+			}
+		}
+	}
+	
 	public static List<String> wrapString(String text, int maxLength) {
 		List<String> tmpStrings = new ArrayList<String>();
 		if(text == null) {
@@ -159,20 +171,12 @@ public class Utils {
 		return addPreSuffix(getAliasForPlayer(player));
 	}
 	
-	public static String getNickGame(EntityPlayer player, boolean color) {
-		if(color) {
-			return addColorCodes(getAliasForPlayer(player), getColorCodeForPlayer(player));
-		} else {
-			return getAliasForPlayer(player);
-		}
+	public static String getNickGame(EntityPlayer player) {
+		return getAliasForPlayer(player);
 	}
 	
-	public static String getNickGame(IIRCChannel channel, IIRCUser user, boolean color) {
-		if(color) {
-			return addColorCodes(user.getName(), getColorCodeForUser(channel, user));
-		} else {
-			return user.getName();
-		}
+	public static String getNickGame(IIRCChannel channel, IIRCUser user) {
+		return user.getName();
 	}
 	
 	public static char getColorCodeForUser(IIRCChannel channel, IIRCUser user) {
@@ -206,6 +210,81 @@ public class Utils {
 			}
 		}
 		return getColorCode(DisplayConfig.mcColor);
+	}
+	
+	public static EnumChatFormatting getColorFormatting(String colorName) {
+		if(colorName.isEmpty()) {
+			return EnumChatFormatting.RESET;
+		}
+		colorName = colorName.toLowerCase();
+		EnumChatFormatting colorFormatting = EnumChatFormatting.RESET;
+		if(colorName.equals("black")) {
+			colorFormatting = EnumChatFormatting.BLACK;
+		} else if(colorName.equals("darkblue") || colorName.equals("dark blue")) {
+			colorFormatting = EnumChatFormatting.DARK_BLUE;
+		} else if(colorName.equals("green")) {
+			colorFormatting = EnumChatFormatting.DARK_GREEN;
+		} else if(colorName.equals("cyan")) {
+			colorFormatting = EnumChatFormatting.DARK_AQUA;
+		} else if(colorName.equals("darkred") || colorName.equals("dark red")) {
+			colorFormatting = EnumChatFormatting.DARK_RED;
+		} else if(colorName.equals("purple")) {
+			colorFormatting = EnumChatFormatting.DARK_PURPLE;
+		} else if(colorName.equals("gold") || colorName.equals("orange")) {
+			colorFormatting = EnumChatFormatting.GOLD;
+		} else if(colorName.equals("gray") || colorName.equals("grey")) {
+			colorFormatting = EnumChatFormatting.GRAY;
+		} else if(colorName.equals("darkgray") || colorName.equals("darkgrey") || colorName.equals("dark gray") || colorName.equals("dark grey")) {
+			colorFormatting = EnumChatFormatting.DARK_GRAY;
+		} else if(colorName.equals("blue")) {
+			colorFormatting = EnumChatFormatting.BLUE;
+		} else if(colorName.equals("lime")) {
+			colorFormatting = EnumChatFormatting.GREEN;
+		} else if(colorName.equals("lightblue") || colorName.equals("light blue")) {
+			colorFormatting = EnumChatFormatting.AQUA;
+		} else if(colorName.equals("red")) {
+			colorFormatting = EnumChatFormatting.RED;
+		} else if(colorName.equals("magenta") || colorName.equals("pink")) {
+			colorFormatting = EnumChatFormatting.LIGHT_PURPLE;
+		} else if(colorName.equals("yellow")) {
+			colorFormatting = EnumChatFormatting.YELLOW;
+		} else if(colorName.equals("white")) {
+			colorFormatting = EnumChatFormatting.WHITE;
+		}
+		return colorFormatting;
+	}
+	
+	public static EnumChatFormatting getColorFormattingForUser(IIRCChannel channel, IIRCUser user) {
+		if(channel == null) {
+			return getColorFormatting(DisplayConfig.ircPrivateColor);
+		}
+		if(user.isOperator(channel)) {
+			if(!DisplayConfig.ircOpColor.isEmpty()) {
+				return getColorFormatting(DisplayConfig.ircOpColor);
+			}
+		} else if(user.hasVoice(channel)) {
+			if(!DisplayConfig.ircVoiceColor.isEmpty()) {
+				return getColorFormatting(DisplayConfig.ircVoiceColor);
+			}
+		}
+		return getColorFormatting(DisplayConfig.ircColor);
+	}
+	
+	public static EnumChatFormatting getColorFormattingForPlayer(EntityPlayer player) {
+		NBTTagCompound tagCompound = player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getCompoundTag(Globals.NBT_EIRAIRC);
+		boolean isOP = Utils.isServerSide() && isOP(player);
+		if(!DisplayConfig.enableNameColors && !isOP) {
+			return null;
+		}
+		String colorName = tagCompound.getString(Globals.NBT_NAMECOLOR);
+		if(!colorName.isEmpty()) {
+			return getColorFormatting(colorName);
+		} else if(isOP) {
+			if(!DisplayConfig.mcOpColor.isEmpty()) {
+				return getColorFormatting(DisplayConfig.mcOpColor);
+			}
+		}
+		return getColorFormatting(DisplayConfig.mcColor);
 	}
 	
 	public static String getAliasForPlayer(EntityPlayer player) {
@@ -320,20 +399,6 @@ public class Utils {
 		}
 	}
 	
-	public static String formatMessage(String format, String user, String nick, String message) {
-		return formatMessage(format, getCurrentServerName(), "", user, nick, message);
-	}
-
-	public static String formatMessage(String format, String server, String channel, String user, String nick, String message) {
-		String result = format;
-		result = result.replaceAll("\\{SERVER\\}", server);
-		result = result.replaceAll("\\{CHANNEL\\}", channel);
-		result = result.replaceAll("\\{USER\\}", user);
-		result = result.replaceAll("\\{NICK\\}", nick);
-		result = result.replaceAll("\\{MESSAGE\\}", Matcher.quoteReplacement(message)).replaceAll("\\\\$", "\\$");
-		return result;
-	}
-	
 	public static String filterLinks(String message) {
 		String[] s = message.split(" ");
 		String result = "";
@@ -376,11 +441,11 @@ public class Utils {
 				String colorMatch = matcher.group(1);
 				int colorCode = Integer.parseInt(colorMatch);
 				EnumChatFormatting colorFormat = getColorFromIRCColorCode(colorCode);
-				String repl = matcher.quoteReplacement(matcher.group());
+				String repl = Matcher.quoteReplacement(matcher.group());
 				message = message.replaceAll(repl, Globals.COLOR_CODE_PREFIX + colorFormat.func_96298_a());
 			}
 		} else {
-			ircColorPattern.matcher(message).replaceAll("");
+			message = ircColorPattern.matcher(message).replaceAll("");
 		}
         StringBuilder stringbuilder = new StringBuilder();
         char[] charArray = message.toCharArray();
@@ -396,11 +461,20 @@ public class Utils {
 		return c >= 32 && c != 127;
 	}
 
+	private static String filterPlayerTags(String playerName) {
+		return playerTagPattern.matcher(playerName).replaceAll("");
+	}
+	
 	public static IRCConnection connectTo(ServerConfig config) {
-		IRCConnection connection = new IRCConnection(config.getHost(), config.getServerPassword(), ConfigHelper.getFormattedNick(config), config.getIdent(), config.getDescription());
+		IRCConnection connection;
+		if(config.isSecureConnection()) {
+			connection = new IRCConnectionSSL(config.getHost(), config.getServerPassword(), ConfigHelper.getFormattedNick(config), config.getIdent(), config.getDescription());
+		} else {
+			connection = new IRCConnection(config.getHost(), config.getServerPassword(), ConfigHelper.getFormattedNick(config), config.getIdent(), config.getDescription());
+		}
 		connection.setCharset(GlobalConfig.charset);
 		connection.setBot(new EiraIRCBot(connection));
-		if(connection.connect()) {
+		if(connection.start()) {
 			return connection;
 		}
 		return null;
@@ -559,19 +633,138 @@ public class Utils {
 		}
 		return sb.toString();
 	}
-
-	public static String formatMessageNew(String format, IIRCConnection connection, IIRCChannel channel, IIRCUser user, String message, boolean colorName) {
-		String result = format;
-		result = result.replaceAll("\\{SERVER\\}", connection.getIdentifier());
-		if(channel != null) {
-			result = result.replaceAll("\\{CHANNEL\\}", channel.getName());
+	
+	public static String formatMessage(String format, ICommandSender sender, String message, boolean colorName, boolean stripTags) {
+		return formatChatComponent(format, sender, message, colorName, stripTags).toString();
+	}
+	
+	public static ChatMessageComponent formatChatComponent(String format, ICommandSender sender, String message, boolean colorName, boolean stripTags) {
+		ChatMessageComponent root = ChatMessageComponent.createFromText("");
+		StringBuilder sb = new StringBuilder();
+		int currentIdx = 0;
+		while(currentIdx < format.length()) {
+			char c = format.charAt(currentIdx);
+			if(c == '{') {
+				int tokenEnd = format.indexOf('}', currentIdx);
+				if(tokenEnd != -1) {
+					boolean validToken = true;
+					String token = format.substring(currentIdx + 1, tokenEnd);
+					ChatMessageComponent component = null;
+					if(token.equals("SERVER")) {
+						component = ChatMessageComponent.createFromText(getCurrentServerName());
+					} else if(token.equals("USER")) {
+						component = ChatMessageComponent.createFromText(sender.getCommandSenderName());
+					} else if(token.equals("NICK")) {
+						if(sender instanceof EntityPlayer) {
+							EntityPlayer player = (EntityPlayer) sender;
+							String displayName = player.getDisplayName();
+							if(stripTags) {
+								displayName = filterPlayerTags(displayName);
+							}
+							component = ChatMessageComponent.createFromText(displayName);
+							if(colorName) {
+								component.setColor(Utils.getColorFormattingForPlayer(player));
+							}
+						} else {
+							component = ChatMessageComponent.createFromText(sender.getCommandSenderName());
+						}
+						
+					} else if(token.equals("MESSAGE")) {
+						component = ChatMessageComponent.createFromText(message);
+					} else {
+						validToken = false;
+					}
+					if(validToken) {
+						if(sb.length() > 0) {
+							root.appendComponent(ChatMessageComponent.createFromText(sb.toString()));
+							sb = new StringBuilder();
+						}
+						root.appendComponent(component);
+						currentIdx += token.length() + 2;
+						continue;
+					}
+				}
+			}
+			sb.append(c);
+			currentIdx++;
 		}
-		if(user != null) {
-			result = result.replaceAll("\\{USER\\}", user.getIdentifier());
-			result = result.replaceAll("\\{NICK\\}", getNickGame(channel, user, colorName));
+		if(sb.length() > 0) {
+			root.appendComponent(ChatMessageComponent.createFromText(sb.toString()));
 		}
-		result = result.replaceAll("\\{MESSAGE\\}", Matcher.quoteReplacement(message)).replaceAll("\\\\$", "\\$");
-		return result;
+		return root;
+	}
+	
+	public static String formatMessage(String format, IIRCConnection connection, IIRCChannel channel, IIRCUser user, String message, boolean colorName) {
+		return formatChatComponent(format, connection, channel, user, message, colorName).toString();
 	}
 
+	public static ChatMessageComponent formatChatComponent(String format, IIRCConnection connection, IIRCChannel channel, IIRCUser user, String message, boolean colorName) {
+		ChatMessageComponent root = ChatMessageComponent.createFromText("");
+		StringBuilder sb = new StringBuilder();
+		int currentIdx = 0;
+		while(currentIdx < format.length()) {
+			char c = format.charAt(currentIdx);
+			if(c == '{') {
+				int tokenEnd = format.indexOf('}', currentIdx);
+				if(tokenEnd != -1) {
+					boolean validToken = true;
+					String token = format.substring(currentIdx + 1, tokenEnd);
+					ChatMessageComponent component = null;
+					if(token.equals("SERVER")) {
+						component = ChatMessageComponent.createFromText(connection.getIdentifier());
+					} else if(token.equals("CHANNEL")) {
+						component = ChatMessageComponent.createFromText(channel.getName());
+					} else if(token.equals("USER")) {
+						component = ChatMessageComponent.createFromText(user.getIdentifier());
+					} else if(token.equals("NICK")) {
+						component = ChatMessageComponent.createFromText(getNickGame(channel, user));
+						if(colorName) {
+							component.setColor(Utils.getColorFormattingForUser(channel, user));
+						}
+					} else if(token.equals("MESSAGE")) {
+						component = ChatMessageComponent.createFromText(message);
+					} else {
+						validToken = false;
+					}
+					if(validToken) {
+						if(sb.length() > 0) {
+							root.appendComponent(ChatMessageComponent.createFromText(sb.toString()));
+							sb = new StringBuilder();
+						}
+						root.appendComponent(component);
+						currentIdx += token.length() + 2;
+						continue;
+					}
+				}
+			}
+			sb.append(c);
+			currentIdx++;
+		}
+		if(sb.length() > 0) {
+			root.appendComponent(ChatMessageComponent.createFromText(sb.toString()));
+		}
+		return root;
+	}
+
+	public static String extractHost(String url) {
+		int portIdx = url.indexOf(':');
+		if(portIdx != -1) {
+			return url.substring(0, portIdx);
+		} else {
+			return url;
+		}
+	}
+
+	public static int extractPort(String url, int defaultPort) {
+		int portIdx = url.indexOf(':');
+		if(portIdx != -1) {
+			try {
+				return Integer.parseInt(url.substring(portIdx + 1));
+			} catch (NumberFormatException e) {
+				return defaultPort;
+			}
+		}
+		return defaultPort;
+	}
+	
 }
