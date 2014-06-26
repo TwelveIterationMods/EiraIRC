@@ -19,6 +19,7 @@ import net.blay09.mods.eirairc.config.DisplayConfig;
 import net.blay09.mods.eirairc.config.DisplayFormatConfig;
 import net.blay09.mods.eirairc.config.GlobalConfig;
 import net.blay09.mods.eirairc.config.KeyConfig;
+import net.blay09.mods.eirairc.config.NetworkConfig;
 import net.blay09.mods.eirairc.config.NotificationConfig;
 import net.blay09.mods.eirairc.config.ScreenshotConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
@@ -141,6 +142,7 @@ public class ConfigurationHandler {
 		ScreenshotConfig.load(config);
 		DisplayConfig.load(config);
 		CompatibilityConfig.load(config);
+		NetworkConfig.load(config);
 		
 		config.save();
 	}
@@ -152,6 +154,7 @@ public class ConfigurationHandler {
 		ScreenshotConfig.save(config);
 		DisplayConfig.save(config);
 		CompatibilityConfig.save(config);
+		NetworkConfig.save(config);
 	}
 	
 	public static void resetConfig() {
@@ -196,6 +199,7 @@ public class ConfigurationHandler {
 			if(!result) result = ScreenshotConfig.handleConfigCommand(sender, key, value);
 			if(!result) result = DisplayConfig.handleConfigCommand(sender, key, value);
 			if(!result) result = CompatibilityConfig.handleConfigCommand(sender, key, value);
+			if(!result) result = NetworkConfig.handleConfigCommand(sender, key, value);
 			if(result) {
 				Utils.sendLocalizedMessage(sender, "irc.config.change", "Global", key, value);
 				ConfigurationHandler.save();
@@ -225,6 +229,7 @@ public class ConfigurationHandler {
 			if(result == null) result = ScreenshotConfig.handleConfigCommand(sender, key);
 			if(result == null) result = DisplayConfig.handleConfigCommand(sender, key);
 			if(result == null) result = CompatibilityConfig.handleConfigCommand(sender, key);
+			if(result == null) result = NetworkConfig.handleConfigCommand(sender, key);
 			if(result != null) {
 				Utils.sendLocalizedMessage(sender, "irc.config.lookup", "Global", key, result);
 			} else {
@@ -259,6 +264,7 @@ public class ConfigurationHandler {
 		NotificationConfig.addOptionsToList(list);
 		ScreenshotConfig.addOptionsToList(list);
 		CompatibilityConfig.addOptionsToList(list);
+		NetworkConfig.addOptionsToList(list);
 	}
 
 	public static void addValuesToList(List<String> list, String option) {
@@ -267,6 +273,7 @@ public class ConfigurationHandler {
 		NotificationConfig.addValuesToList(list, option);
 		ScreenshotConfig.addValuesToList(list, option);
 		CompatibilityConfig.addValuesToList(list, option);
+		NetworkConfig.addValuesToList(list, option);
 	}
 
 	public static BotProfile getBotProfile(String name) {
