@@ -11,12 +11,9 @@ import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiYesNo;
+import net.minecraft.client.gui.*;
 
-public class GuiServerList extends GuiScreen {
+public class GuiServerList extends GuiScreen implements GuiYesNoCallback {
 
 	private GuiServerSlot guiServerSlot;
 	private GuiButton btnConnect;

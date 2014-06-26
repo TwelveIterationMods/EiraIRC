@@ -204,7 +204,7 @@ public class Utils {
 			return true;
 		}
 		if(sender instanceof EntityPlayer) {
-			return MinecraftServer.getServer().getConfigurationManager().isPlayerOpped(sender.getCommandSenderName().toLowerCase());
+			return MinecraftServer.getServer().getConfigurationManager().func_152603_m().func_152700_a(sender.getCommandSenderName().toLowerCase()) != null; // isPlayerOpped
 		}
 		return true;
 	}

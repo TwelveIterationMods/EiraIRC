@@ -60,7 +60,7 @@ public class CommandAlias extends SubCommand {
 		} else {
 			String username = args[0];
 			String alias = args[1];
-			EntityPlayerMP entityPlayer = MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(username);
+			EntityPlayerMP entityPlayer = MinecraftServer.getServer().getConfigurationManager().func_152612_a(username); // getPlayerForUsername
 			if(entityPlayer == null) {
 				for(int i = 0; i < playerEntityList.size(); i++) {
 					EntityPlayerMP playerEntity = playerEntityList.get(i);

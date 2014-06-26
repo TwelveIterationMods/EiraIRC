@@ -12,12 +12,9 @@ import net.blay09.mods.eirairc.irc.IRCConnection;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiYesNo;
+import net.minecraft.client.gui.*;
 
-public class GuiChannelList extends GuiScreen {
+public class GuiChannelList extends GuiScreen implements GuiYesNoCallback {
 
 	private final GuiScreen parentScreen;
 	private GuiChannelSlot guiChannelSlot;

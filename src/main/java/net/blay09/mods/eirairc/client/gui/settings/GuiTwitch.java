@@ -12,14 +12,11 @@ import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiConfirmOpenLink;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.gui.*;
 
 import org.lwjgl.input.Keyboard;
 
-public class GuiTwitch extends GuiScreen {
+public class GuiTwitch extends GuiScreen implements GuiYesNoCallback {
 
 	private GuiScreen parentScreen;
 	private ServerConfig config;

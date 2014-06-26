@@ -49,9 +49,9 @@ public class OverlayRecLive extends Gui {
 		GL11.glLoadIdentity();
 		windowWidth = this.theGame.displayWidth;
 		windowHeight = this.theGame.displayHeight;
-		ScaledResolution scaledresolution = new ScaledResolution(this.theGame.gameSettings, this.theGame.displayWidth, this.theGame.displayHeight);
-		windowWidth = scaledresolution.getScaledWidth();
-		windowHeight = scaledresolution.getScaledHeight();
+		ScaledResolution scaledResolution = new ScaledResolution(this.theGame, this.theGame.displayWidth, this.theGame.displayHeight);
+		windowWidth = scaledResolution.getScaledWidth();
+		windowHeight = scaledResolution.getScaledHeight();
 		GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
 		GL11.glMatrixMode(GL11.GL_PROJECTION);
 		GL11.glLoadIdentity();
