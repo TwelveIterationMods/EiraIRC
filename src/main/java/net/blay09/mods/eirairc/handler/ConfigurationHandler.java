@@ -120,7 +120,6 @@ public class ConfigurationHandler {
 	
 	public static void load(File configFile) {
 		ConfigurationHandler.configFile = configFile;
-		boolean newConfigFile = !configFile.exists();
 		config = new Configuration(configFile);
 		
 		GlobalConfig.load(config);
