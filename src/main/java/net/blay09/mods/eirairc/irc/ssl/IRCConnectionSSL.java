@@ -2,20 +2,10 @@
 
 package net.blay09.mods.eirairc.irc.ssl;
 
-import net.blay09.mods.eirairc.api.IIRCChannel;
-import net.blay09.mods.eirairc.api.IIRCConnection;
-import net.blay09.mods.eirairc.api.IIRCUser;
-import net.blay09.mods.eirairc.api.bot.IIRCBot;
-import net.blay09.mods.eirairc.api.event.*;
-import net.blay09.mods.eirairc.bot.EiraIRCBot;
-import net.blay09.mods.eirairc.config.CompatibilityConfig;
-import net.blay09.mods.eirairc.config.GlobalConfig;
 import net.blay09.mods.eirairc.config.NetworkConfig;
 import net.blay09.mods.eirairc.irc.*;
 import net.blay09.mods.eirairc.util.Utils;
-import net.minecraftforge.common.MinecraftForge;
 
-import javax.net.SocketFactory;
 import javax.net.ssl.*;
 import java.io.*;
 import java.net.InetSocketAddress;
@@ -35,7 +25,7 @@ public class IRCConnectionSSL extends IRCConnection {
 	}
 
 	@Override
-	public Socket connect() {
+	protected Socket connect() {
 		try {
 			if(!NetworkConfig.sslCustomTrustStore.isEmpty()) {
 				System.setProperty("javax.net.ssl.trustStore", NetworkConfig.sslCustomTrustStore);
