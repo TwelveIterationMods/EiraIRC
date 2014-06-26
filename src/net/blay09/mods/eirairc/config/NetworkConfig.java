@@ -26,6 +26,8 @@ public class NetworkConfig {
 		sslCustomTrustStore = Utils.unquote(config.get(CATEGORY, "sslCustomTrustStore", "").getString());
 		sslDisableDiffieHellman = config.get(CATEGORY, "sslDisableDiffieHellman", sslDisableDiffieHellman).getBoolean(sslDisableDiffieHellman);
 		proxyHost = Utils.unquote(config.get(CATEGORY, "proxyHost", "").getString());
+		proxyUsername = Utils.unquote(config.get(CATEGORY, "proxyUsername", "").getString());
+		proxyPassword = Utils.unquote(config.get(CATEGORY, "proxyPassword", "").getString());
 	}
 	
 	public static void save(Configuration config) {
