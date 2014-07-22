@@ -31,13 +31,16 @@ public class ScreenshotThumbnail extends AbstractTexture {
 		if(!thumbnailFile.exists()) {
 			try {
 				BufferedImage img = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
-				img.createGraphics().drawImage(ImageIO.read(screenshotFile).getScaledInstance(WIDTH, HEIGHT, Image.SCALE_SMOOTH), 0, 0, null);
+				BufferedImage screenshotImage = ImageIO.read(screenshotFile);
+				if(screenshotImage != null) {
+					img.createGraphics().drawImage(screenshotImage.getScaledInstance(WIDTH, HEIGHT, Image.SCALE_SMOOTH), 0, 0, null);
+				}
 				ImageIO.write(img, "png", thumbnailFile);
 			} catch (IOException e) {
 				e.printStackTrace();
 			} catch (IndexOutOfBoundsException e) {
 				System.out.println("Could not generate thumbnail for malformed screenshot file: " + screenshotFile.getName() + " (" + e.getMessage() + ")");
-		 	}
+			}
 		}
 		resourceLocation = new ResourceLocation(Globals.MOD_ID, "thumbnails/" + thumbnailFile.getName());
 	}
@@ -48,7 +51,9 @@ public class ScreenshotThumbnail extends AbstractTexture {
 			FileInputStream fis = new FileInputStream(thumbnailFile);
 			bufferedImage = ImageIO.read(fis);
 			fis.close();
-			TextureUtil.uploadTextureImage(getGlTextureId(), this.bufferedImage);
+			if(bufferedImage != null) {
+				TextureUtil.uploadTextureImage(getGlTextureId(), this.bufferedImage);
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

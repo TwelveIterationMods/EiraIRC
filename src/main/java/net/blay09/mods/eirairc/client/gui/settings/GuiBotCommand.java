@@ -72,7 +72,7 @@ public class GuiBotCommand extends GuiScreen {
 		buttonList.add(btnBroadcastResult);
 		
 		btnDelete = new GuiButton(6, leftX, topY + 75, 50, BUTTON_HEIGHT, Utils.getLocalizedMessage("irc.gui.delete"));
-		btnDelete.packedFGColour = -65536;
+//		btnDelete.packedFGColour = -65536;
 		btnDelete.packedFGColour = -1048576;
 		buttonList.add(btnDelete);
 		

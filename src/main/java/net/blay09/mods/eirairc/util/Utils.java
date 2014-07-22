@@ -44,6 +44,7 @@ import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.StatCollector;
+import org.jetbrains.annotations.NotNull;
 
 public class Utils {
 
@@ -75,7 +76,7 @@ public class Utils {
 		return new ChatComponentTranslation(EiraIRC.MOD_ID + ":" + key, args);
 	}
 	
-	public static void addMessageToChat(IChatComponent chatComponent) {
+	public static void addMessageToChat(@NotNull IChatComponent chatComponent) {
 		if(MinecraftServer.getServer() != null) {
 			MinecraftServer.getServer().getConfigurationManager().sendChatMsg(chatComponent);
 		} else {
@@ -299,12 +300,12 @@ public class Utils {
 	
 	public static String filterLinks(String message) {
 		String[] s = message.split(" ");
-		String result = "";
+		StringBuilder sb = new StringBuilder();
 		for(int i = 0; i < s.length; i++) {
 			Matcher matcher = urlPattern.matcher(s[i]);
-			result += ((i > 0) ? " " : "") + matcher.replaceAll(Utils.getLocalizedMessage("irc.general.linkRemoved"));
+			sb.append(((i > 0) ? " " : "") + matcher.replaceAll(Utils.getLocalizedMessage("irc.general.linkRemoved")));
 		}
-		return result;
+		return sb.toString();
 	}
 	
 	public static EnumChatFormatting getColorFromIRCColorCode(int code) {
