@@ -15,9 +15,10 @@ import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
+import org.jetbrains.annotations.NotNull;
 
 public class ServerConfig {
-	
+
 	private final String host;
 	private String nick = "";
 	private String serverPassword = "";
@@ -51,7 +52,7 @@ public class ServerConfig {
 		return host;
 	}
 	
-	public void setNick(String nick) {
+	public void setNick(@NotNull String nick) {
 		this.nick = nick;
 	}
 	
@@ -63,7 +64,7 @@ public class ServerConfig {
 		return serverPassword;
 	}
 	
-	public void setServerPassword(String serverPassword) {
+	public void setServerPassword(@NotNull String serverPassword) {
 		this.serverPassword = serverPassword;
 	}
 	
@@ -75,7 +76,7 @@ public class ServerConfig {
 		return nickServPassword;
 	}
 	
-	public void setIdent(String ident) {
+	public void setIdent(@NotNull String ident) {
 		this.ident = ident;
 	}
 	
@@ -83,7 +84,7 @@ public class ServerConfig {
 		return ident;
 	}
 	
-	public void setDescription(String description) {
+	public void setDescription(@NotNull String description) {
 		this.description = description;
 	}
 	
@@ -110,7 +111,7 @@ public class ServerConfig {
 		return getChannelConfig(channel.getName());
 	}
 
-	public void setNickServ(String nickServName, String nickServPassword) {
+	public void setNickServ(@NotNull String nickServName, @NotNull String nickServPassword) {
 		this.nickServName = nickServName;
 		this.nickServPassword = nickServPassword;
 	}
@@ -119,15 +120,15 @@ public class ServerConfig {
 		this.autoConnect = autoConnect;
 	}
 
-	public void addChannelConfig(ChannelConfig channelConfig) {
+	public void addChannelConfig(@NotNull ChannelConfig channelConfig) {
 		channels.put(channelConfig.getName().toLowerCase(), channelConfig);
 	}
 	
-	public void removeChannelConfig(String channelName) {
+	public void removeChannelConfig(@NotNull String channelName) {
 		channels.remove(channelName.toLowerCase());
 	}
 
-	public boolean hasChannelConfig(String channelName) {
+	public boolean hasChannelConfig(@NotNull String channelName) {
 		return channels.containsKey(channelName.toLowerCase());
 	}
 
@@ -255,7 +256,7 @@ public class ServerConfig {
 		return botProfile;
 	}
 
-	public void setBotProfile(String botProfile) {
+	public void setBotProfile(@NotNull String botProfile) {
 		this.botProfile = botProfile;
 	}
 

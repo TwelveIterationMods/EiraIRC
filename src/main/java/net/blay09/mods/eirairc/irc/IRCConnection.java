@@ -138,11 +138,6 @@ public class IRCConnection implements Runnable, IIRCConnection {
 		if(MinecraftForge.EVENT_BUS.post(new IRCConnectingEvent(this))) {
 			return false;
 		}
-		socket = connect();
-		if(socket == null) {
-			MinecraftForge.EVENT_BUS.post(new IRCDisconnectEvent(this));
-			return false;
-		}
 		thread = new Thread(this);
 		thread.start();
 		return true;
@@ -185,6 +180,11 @@ public class IRCConnection implements Runnable, IIRCConnection {
 	@Override
 	public void run() {
 		try {
+			socket = connect();
+			if(socket == null) {
+				MinecraftForge.EVENT_BUS.post(new IRCDisconnectEvent(this));
+				return;
+			}
 			register();
 			String line;
 			while((line = reader.readLine()) != null) {

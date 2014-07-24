@@ -111,7 +111,6 @@ public class GuiTwitch extends GuiScreen implements GuiYesNoCallback {
 		}
 		if(txtPassword.textboxKeyTyped(unicode, keyCode)) {
 			config.setServerPassword(txtPassword.getText());
-			return;
 		}
 	}
 	
