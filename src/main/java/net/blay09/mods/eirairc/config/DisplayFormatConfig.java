@@ -186,6 +186,25 @@ public class DisplayFormatConfig {
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircPrivateEmote", Utils.quote("* {NICK} {MESSAGE}"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircBroadcastMessage", Utils.quote("[{SERVER}] *** {MESSAGE} ***"));
 		config.save();
+
+		config = new Configuration(new File(displayDir, "twitch.cfg"));
+		config.get(CATEGORY_GENERAL, "name", Utils.quote("Twitch"));
+		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcChannelMessage", Utils.quote("[{CHANNEL}] <{NICK}> {MESSAGE}"));
+		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcChannelEmote", Utils.quote("[{CHANNEL}] * {NICK} {MESSAGE}"));
+		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcChannelNotice", Utils.quote("[{CHANNEL}] ({NICK}) {MESSAGE}"));
+		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcPrivateMessage", Utils.quote("[Private] <{NICK}> {MESSAGE}"));
+		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcPrivateEmote", Utils.quote("[Private] * {NICK} {MESSAGE}"));
+		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcPrivateNotice", Utils.quote("[Private] ({NICK}) {MESSAGE}"));
+		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcSendChannelMessage", Utils.quote("[{CHANNEL}] <{NICK}> {MESSAGE}"));
+		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcSendChannelEmote", Utils.quote("[{CHANNEL}] * {NICK} {MESSAGE}"));
+		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcSendPrivateMessage", Utils.quote("[->{CHANNEL}] <{NICK}> {MESSAGE}"));
+		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcSendPrivateEmote", Utils.quote("[->{CHANNEL}] * {NICK} {MESSAGE}"));
+		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircChannelMessage", Utils.quote("[{NICK}] {MESSAGE}"));
+		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircChannelEmote", Utils.quote("* {NICK} {MESSAGE}"));
+		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircPrivateMessage", Utils.quote("[{NICK}] {MESSAGE}"));
+		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircPrivateEmote", Utils.quote("* {NICK} {MESSAGE}"));
+		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircBroadcastMessage", Utils.quote("*** {MESSAGE} ***"));
+		config.save();
 	}
 
 }
