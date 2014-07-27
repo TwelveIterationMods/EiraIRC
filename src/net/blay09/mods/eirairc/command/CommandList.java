@@ -37,14 +37,14 @@ public class CommandList extends SubCommand {
 		}
 		Utils.sendLocalizedMessage(sender, "irc.list.activeConnections");
 		for(IIRCConnection connection : EiraIRC.instance.getConnections()) {
-			String channels = "";
+			StringBuilder sb = new StringBuilder();
 			for(IIRCChannel channel : connection.getChannels()) {
-				if(channels.length() > 0) {
-					channels += ", ";
+				if(sb.length() > 0) {
+					sb.append(", ");
 				}
-				channels += channel.getName();
+				sb.append(channel.getName());
 			}
-			Utils.sendUnlocalizedMessage(sender, " * " + connection.getHost() + " (" + channels + ")");
+			Utils.sendUnlocalizedMessage(sender, " * " + connection.getHost() + " (" + sb.toString() + ")");
 		}
 		return true;
 	}

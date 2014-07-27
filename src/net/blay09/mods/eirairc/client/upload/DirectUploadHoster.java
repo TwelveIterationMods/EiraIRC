@@ -42,7 +42,7 @@ public class DirectUploadHoster implements IUploadHoster {
 			
 			FileInputStream fis = new FileInputStream(file);
 			byte[] buffer = new byte[ScreenshotConfig.uploadBufferSize];
-			int len = 0;
+			int len;
 			while((len = fis.read(buffer)) != -1) {
 				out.write(buffer, 0, len);
 			}
@@ -56,7 +56,7 @@ public class DirectUploadHoster implements IUploadHoster {
 			
 			InputStream in = new BufferedInputStream(con.getInputStream());
 			BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-			String line = "";
+			String line;
 			StringBuilder stringBuilder = new StringBuilder();
 			while ((line = reader.readLine()) != null) {
 				stringBuilder.append(line).append("\n");

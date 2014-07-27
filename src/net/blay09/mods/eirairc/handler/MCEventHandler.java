@@ -108,8 +108,8 @@ public class MCEventHandler implements IPlayerTracker, IConnectionHandler {
 	@SideOnly(Side.CLIENT)
 	public boolean onClientChat(String text) {
 		if(text.startsWith("/")) {
-			if(text.startsWith("/me")) {
-				return onClientEmote(text.substring(4));
+			if(text.startsWith("/me") && text.length() > 3) {
+				return onClientEmote(text.substring(3));
 			}
 			return false;
 		}
@@ -137,19 +137,21 @@ public class MCEventHandler implements IPlayerTracker, IConnectionHandler {
 		if(connection != null) {
 			IIRCBot bot = connection.getBot();
 			String mcMessage = null;
-			ChatMessageComponent chatComponent = null;
+			ChatMessageComponent chatComponent;
 			if(target[1].startsWith("#")) {
 				IIRCChannel targetChannel = connection.getChannel(target[1]);
-				if(targetChannel != null) {
-					targetChannel.message(text);
-					chatComponent = Utils.formatChatComponent(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetChannel)).mcSendChannelMessage, sender, text, true, DisplayConfig.hidePlayerTags);
+				if(targetChannel == null) {
+					return true;
 				}
+				targetChannel.message(text);
+				chatComponent = Utils.formatChatComponent(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetChannel)).mcSendChannelMessage, sender, text, true, DisplayConfig.hidePlayerTags);
 			} else {
 				IIRCUser targetUser = connection.getUser(target[1]);
-				if(targetUser != null) {
-					targetUser.message(text);
-					chatComponent = Utils.formatChatComponent(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetUser)).mcSendPrivateMessage, sender, text, true, DisplayConfig.hidePlayerTags);
+				if(targetUser == null) {
+					return true;
 				}
+				targetUser.message(text);
+				chatComponent = Utils.formatChatComponent(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetUser)).mcSendPrivateMessage, sender, text, true, DisplayConfig.hidePlayerTags);
 			}
 			Utils.addMessageToChat(chatComponent);
 		}
@@ -178,22 +180,24 @@ public class MCEventHandler implements IPlayerTracker, IConnectionHandler {
 		IIRCConnection connection = EiraIRC.instance.getConnection(target[0]);
 		if(connection != null) {
 			IIRCBot bot = connection.getBot();
-			EnumChatFormatting emoteColor = null;
-			ChatMessageComponent chatComponent = null;
+			EnumChatFormatting emoteColor;
+			ChatMessageComponent chatComponent;
 			if(target[1].startsWith("#")) {
 				IIRCChannel targetChannel = connection.getChannel(target[1]);
-				if(targetChannel != null) {
-					emoteColor = Utils.getColorFormatting(ConfigHelper.getEmoteColor(targetChannel));
-					targetChannel.message(IRCConnection.EMOTE_START + text + IRCConnection.EMOTE_END);
-					chatComponent = Utils.formatChatComponent(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetChannel)).mcSendChannelEmote, sender, text, false, DisplayConfig.hidePlayerTags);
+				if(targetChannel == null) {
+					return true;
 				}
+				emoteColor = Utils.getColorFormatting(ConfigHelper.getEmoteColor(targetChannel));
+				targetChannel.message(IRCConnection.EMOTE_START + text + IRCConnection.EMOTE_END);
+				chatComponent = Utils.formatChatComponent(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetChannel)).mcSendChannelEmote, sender, text, false, DisplayConfig.hidePlayerTags);
 			} else {
 				IIRCUser targetUser = connection.getUser(target[1]);
-				if(targetUser != null) {
-					emoteColor = Utils.getColorFormatting(ConfigHelper.getEmoteColor(targetUser));
-					targetUser.message(IRCConnection.EMOTE_START + text + IRCConnection.EMOTE_END);
-					chatComponent = Utils.formatChatComponent(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetUser)).mcSendPrivateEmote, sender, text, false, DisplayConfig.hidePlayerTags);
+				if(targetUser == null) {
+					return true;
 				}
+				emoteColor = Utils.getColorFormatting(ConfigHelper.getEmoteColor(targetUser));
+				targetUser.message(IRCConnection.EMOTE_START + text + IRCConnection.EMOTE_END);
+				chatComponent = Utils.formatChatComponent(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetUser)).mcSendPrivateEmote, sender, text, false, DisplayConfig.hidePlayerTags);
 			}
 			if(emoteColor != null) {
 				chatComponent.setColor(emoteColor);

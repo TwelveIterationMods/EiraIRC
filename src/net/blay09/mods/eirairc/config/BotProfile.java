@@ -200,6 +200,8 @@ public class BotProfile implements IBotProfile {
 		config.get(CATEGORY_SETTINGS, KEY_RELAYIRCJOINLEAVE, false).set(false);
 		config.get(CATEGORY_SETTINGS, KEY_RELAYNICKCHANGES, false).set(false);
 		
+		config.get(CATEGORY_SETTINGS, "displayFormat", "").set("Twitch");
+		
 		config.get(CATEGORY_COMMANDS, "disabledNativeCommands", new String[0]).set(new String[] {
 				Utils.quote("*")
 			});

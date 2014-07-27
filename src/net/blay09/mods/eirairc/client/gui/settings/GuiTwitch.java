@@ -114,7 +114,6 @@ public class GuiTwitch extends GuiScreen {
 		}
 		if(txtPassword.textboxKeyTyped(unicode, keyCode)) {
 			config.setServerPassword(txtPassword.getText());
-			return;
 		}
 	}
 	

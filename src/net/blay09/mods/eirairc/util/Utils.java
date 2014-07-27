@@ -401,12 +401,12 @@ public class Utils {
 	
 	public static String filterLinks(String message) {
 		String[] s = message.split(" ");
-		String result = "";
+		StringBuilder sb = new StringBuilder();
 		for(int i = 0; i < s.length; i++) {
 			Matcher matcher = urlPattern.matcher(s[i]);
-			result += ((i > 0) ? " " : "") + matcher.replaceAll(Utils.getLocalizedMessage("irc.general.linkRemoved"));
+			sb.append(((i > 0) ? " " : "") + matcher.replaceAll(Utils.getLocalizedMessage("irc.general.linkRemoved")));
 		}
-		return result;
+		return sb.toString();
 	}
 	
 	public static EnumChatFormatting getColorFromIRCColorCode(int code) {
