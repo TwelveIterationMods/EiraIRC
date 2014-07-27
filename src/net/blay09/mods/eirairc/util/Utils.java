@@ -661,6 +661,7 @@ public class Utils {
 							if(stripTags) {
 								displayName = filterPlayerTags(displayName);
 							}
+							displayName = addPreSuffix(displayName);
 							component = ChatMessageComponent.createFromText(displayName);
 							if(colorName) {
 								component.setColor(Utils.getColorFormattingForPlayer(player));

@@ -90,7 +90,9 @@ public class IRCEventHandler {
 			return;
 		}
 		if(!event.bot.getBoolean(event.sender, "allowPrivateMessages", true)) {
-			event.sender.notice(Utils.getLocalizedMessage("irc.msg.disabled"));
+			if(!event.isNotice) {
+				event.sender.notice(Utils.getLocalizedMessage("irc.msg.disabled"));
+			}
 			return;
 		}
 		String message = event.message;
