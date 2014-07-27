@@ -32,7 +32,7 @@ public class CommandQuote extends SubCommand {
 	@Override
 	public boolean processCommand(ICommandSender sender, IIRCContext context, String[] args, boolean serverSide) {
 		int msgIdx = 0;
-		IIRCConnection connection = null;
+		IIRCConnection connection;
 		if(context == null) {
 			if(args.length < 2) {
 				Utils.sendLocalizedMessage(sender, "irc.target.specifyServer");
@@ -42,6 +42,10 @@ public class CommandQuote extends SubCommand {
 			msgIdx = 1;
 		} else {
 			connection = context.getConnection();
+		}
+		if(connection == null) {
+			Utils.sendLocalizedMessage(sender, "irc.target.serverNotFound", args[0]);
+			return true;
 		}
 		String msg = Utils.joinStrings(args, " ", msgIdx);
 		connection.irc(msg);

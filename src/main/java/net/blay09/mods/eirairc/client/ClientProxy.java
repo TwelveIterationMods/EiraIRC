@@ -30,11 +30,11 @@ public class ClientProxy extends CommonProxy {
 	public void setupClient() {
 		eiraChat = new GuiEiraChat();
 		
-		FMLCommonHandler.instance().bus().register(new EiraTickHandler(eiraChat));
 		notificationGUI = new OverlayNotification();
 		recLiveGUI= new OverlayRecLive();
 		ScreenshotManager.create();
-		
+		FMLCommonHandler.instance().bus().register(new EiraTickHandler(eiraChat));
+
 		UploadManager.registerUploadHoster(new DirectUploadHoster());
 		UploadManager.registerUploadHoster(new ImgurHoster());
 		

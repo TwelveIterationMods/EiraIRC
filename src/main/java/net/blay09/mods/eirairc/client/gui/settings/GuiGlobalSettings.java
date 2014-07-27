@@ -3,9 +3,6 @@
 
 package net.blay09.mods.eirairc.client.gui.settings;
 
-import java.util.Iterator;
-
-import net.blay09.mods.eirairc.config.DisplayFormatConfig;
 import net.blay09.mods.eirairc.config.GlobalConfig;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.Globals;
@@ -25,8 +22,6 @@ public class GuiGlobalSettings extends GuiScreen {
 	private GuiButton btnPersistentConnections;
 	private GuiButton btnSaveCredentials;
 	private GuiButton btnBack;
-	
-	private Iterator<DisplayFormatConfig> displayFormatIterator;
 	
 	@Override
 	public void initGui() {

@@ -20,16 +20,16 @@ public class ServerConfig {
 	
 	private final String host;
 	private String nick = "";
-	private String serverPassword;
-	private String botProfile;
+	private String serverPassword = "";
+	private String botProfile = "";
 	private String ident = Globals.DEFAULT_IDENT;
 	private String description = Globals.DEFAULT_DESCRIPTION;
-	private String nickServName;
-	private String nickServPassword;
+	private String nickServName = "";
+	private String nickServPassword = "";
 	private final Map<String, ChannelConfig> channels = new HashMap<String, ChannelConfig>();
 	private boolean autoConnect = true;
-	private String quitMessage;
-	private String ircColor;
+	private String quitMessage = "";
+	private String ircColor = "";
 	private String emoteColor = "";
 	private boolean secureConnection = false;
 

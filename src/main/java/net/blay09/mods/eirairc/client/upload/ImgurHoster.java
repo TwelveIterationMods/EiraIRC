@@ -12,6 +12,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Scanner;
 
+import com.google.gson.JsonElement;
 import net.blay09.mods.eirairc.api.upload.IUploadHoster;
 import net.blay09.mods.eirairc.api.upload.UploadedFile;
 import net.blay09.mods.eirairc.config.ScreenshotConfig;
@@ -40,7 +41,7 @@ public class ImgurHoster implements IUploadHoster {
 			OutputStream out = con.getOutputStream();
 			FileInputStream fis = new FileInputStream(file);
 			byte[] buffer = new byte[ScreenshotConfig.uploadBufferSize];
-			int len = 0;
+			int len;
 			while((len = fis.read(buffer)) != -1) {
 				out.write(buffer, 0, len);
 			}
@@ -55,7 +56,11 @@ public class ImgurHoster implements IUploadHoster {
 				handleError(con.getErrorStream());
 			}
 			con.disconnect();
-			return new UploadedFile(result, null);
+			if(result != null) {
+				return new UploadedFile(result, null);
+			} else {
+				return null;
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 			return null;
@@ -75,13 +80,17 @@ public class ImgurHoster implements IUploadHoster {
 		}
 		scanner.close();
 		JsonParser parser = new JsonParser();
-		JsonObject root = parser.parse(sb.toString()).getAsJsonObject();
-		JsonObject data = root.getAsJsonObject("data");
-		String imageId = data.get("id").getAsString();
-		String deleteHash = data.get("deletehash").getAsString();
-		String result = IMAGE_BASE_URL + imageId;
-		System.out.println("Uploaded image to imgur at " + result + " (delete hash: " + deleteHash + ")");
-		return result;
+		JsonElement element = parser.parse(sb.toString());
+		if(element.isJsonObject()) {
+			JsonObject root = element.getAsJsonObject();
+			JsonObject data = root.getAsJsonObject("data");
+			String imageId = data.get("id").getAsString();
+			String deleteHash = data.get("deletehash").getAsString();
+			String result = IMAGE_BASE_URL + imageId;
+			System.out.println("Uploaded image to imgur at " + result + " (delete hash: " + deleteHash + ")");
+			return result;
+		}
+		return null;
 	}
 	
 	private void handleError(InputStream in) {

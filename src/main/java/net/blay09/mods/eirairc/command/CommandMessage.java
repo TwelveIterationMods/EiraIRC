@@ -48,10 +48,7 @@ public class CommandMessage extends SubCommand {
 		}
 		IIRCContext target = IRCResolver.resolveTarget(args[0], flags);
 		if(target instanceof IRCTargetError) {
-			if(target instanceof IRCTargetError) {
-				Utils.sendLocalizedMessage(sender, target.getName(), args[0]);
-				return true;
-			}
+			Utils.sendLocalizedMessage(sender, target.getName(), args[0]);
 			return true;
 		} else if(target instanceof IRCUser) {
 			IIRCBot bot = target.getConnection().getBot();

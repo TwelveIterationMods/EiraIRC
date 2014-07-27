@@ -128,6 +128,7 @@ public class ScreenshotManager {
 		try {
 			FileOutputStream out = new FileOutputStream(new File(screenshotDir, "eirairc.properties"));
 			prop.store(out, null);
+			out.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
