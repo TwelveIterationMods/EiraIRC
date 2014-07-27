@@ -566,6 +566,7 @@ public class Utils {
 								if(stripTags) {
 									fixedName = filterPlayerTags(fixedName);
 								}
+								fixedName = addPreSuffix(fixedName);
 								component = new ChatComponentText(fixedName);
 							}
 						} else {
