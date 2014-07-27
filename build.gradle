@@ -22,7 +22,7 @@ group= "net.blay09.mods" // http://maven.apache.org/guides/mini/guide-naming-con
 archivesBaseName = "eirairc"
 
 minecraft {
-    version = "1.7.10-10.13.0.1150"
+    version = "1.7.10-10.13.0.1180"
     assetDir = "eclipse/assets"
 }
 
