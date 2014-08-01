@@ -25,6 +25,7 @@ import net.blay09.mods.eirairc.api.IIRCChannel;
 import net.blay09.mods.eirairc.api.IIRCConnection;
 import net.blay09.mods.eirairc.api.IIRCContext;
 import net.blay09.mods.eirairc.api.IIRCUser;
+import net.blay09.mods.eirairc.api.bot.IIRCBot;
 import net.blay09.mods.eirairc.bot.EiraIRCBot;
 import net.blay09.mods.eirairc.config.DisplayConfig;
 import net.blay09.mods.eirairc.config.GlobalConfig;
@@ -533,11 +534,27 @@ public class Utils {
 		return sb.toString();
 	}
 
-	public static String formatMessage(String format, ICommandSender sender, String message, boolean colorName, boolean stripTags) {
-		return formatChatComponent(format, sender, message, colorName, stripTags).getUnformattedText();
+	public static String getMessageFormat(IIRCBot bot, IIRCContext context, boolean isEmote) {
+		if(context instanceof IIRCUser) {
+			if(isEmote) {
+				return ConfigHelper.getDisplayFormat(bot.getDisplayFormat(context)).ircPrivateEmote;
+			} else {
+				return ConfigHelper.getDisplayFormat(bot.getDisplayFormat(context)).ircPrivateMessage;
+			}
+		} else {
+			if(isEmote) {
+				return ConfigHelper.getDisplayFormat(bot.getDisplayFormat(context)).ircChannelEmote;
+			} else {
+				return ConfigHelper.getDisplayFormat(bot.getDisplayFormat(context)).ircChannelMessage;
+			}
+		}
+	}
+
+	public static String formatMessage(String format, ICommandSender sender, String message, boolean colorName, boolean stripTags, boolean addPreSuffix) {
+		return formatChatComponent(format, sender, message, colorName, stripTags, addPreSuffix).getUnformattedText();
 	}
 	
-	public static IChatComponent formatChatComponent(String format, ICommandSender sender, String message, boolean colorName, boolean stripTags) {
+	public static IChatComponent formatChatComponent(String format, ICommandSender sender, String message, boolean colorName, boolean stripTags, boolean addPreSuffix) {
 		IChatComponent root = new ChatComponentText("");
 		StringBuilder sb = new StringBuilder();
 		int currentIdx = 0;
@@ -557,17 +574,24 @@ public class Utils {
 						if(sender instanceof EntityPlayer) {
 							EntityPlayer player = (EntityPlayer) sender;
 							component = player.func_145748_c_().createCopy();
+							String fixedName = component.getUnformattedText();
 							if(colorName) {
-								if(stripTags) {
-									component = new ChatComponentText(filterPlayerTags(component.getUnformattedText()));
-								}
-								component.getChatStyle().setColor(Utils.getColorFormattingForPlayer(player));
-							} else {
-								String fixedName = Utils.filterAllowedCharacters(component.getUnformattedText(), true, false);
 								if(stripTags) {
 									fixedName = filterPlayerTags(fixedName);
 								}
-								fixedName = addPreSuffix(fixedName);
+								if(addPreSuffix) {
+									fixedName = addPreSuffix(fixedName);
+								}
+								component = new ChatComponentText(fixedName);
+								component.getChatStyle().setColor(Utils.getColorFormattingForPlayer(player));
+							} else {
+								fixedName = Utils.filterAllowedCharacters(fixedName, true, false);
+								if(stripTags) {
+									fixedName = filterPlayerTags(fixedName);
+								}
+								if(addPreSuffix) {
+									fixedName = addPreSuffix(fixedName);
+								}
 								component = new ChatComponentText(fixedName);
 							}
 						} else {
