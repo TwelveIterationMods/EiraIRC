@@ -6,13 +6,13 @@ package net.blay09.mods.eirairc.command;
 import java.util.List;
 
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.api.IIRCChannel;
-import net.blay09.mods.eirairc.api.IIRCConnection;
-import net.blay09.mods.eirairc.api.IIRCContext;
+import net.blay09.mods.eirairc.api.IRCChannel;
+import net.blay09.mods.eirairc.api.IRCConnection;
+import net.blay09.mods.eirairc.api.IRCContext;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
-import net.blay09.mods.eirairc.irc.IRCChannel;
+import net.blay09.mods.eirairc.irc.IRCChannelImpl;
 import net.blay09.mods.eirairc.util.IRCResolver;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
@@ -35,8 +35,8 @@ public class CommandWho extends SubCommand {
 	}
 
 	@Override
-	public boolean processCommand(ICommandSender sender, IIRCContext context, String[] args, boolean serverSide) {
-		IIRCConnection connection = null;
+	public boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) {
+		IRCConnection connection = null;
 		if(args.length > 0) {
 			connection = IRCResolver.resolveConnection(args[0], IRCResolver.FLAGS_NONE);
 			if(connection == null) {
@@ -56,15 +56,15 @@ public class CommandWho extends SubCommand {
 				return true;
 			}
 		}
-		if(context instanceof IRCChannel) {
-			Utils.sendUserList(sender, connection, (IRCChannel) context);
+		if(context instanceof IRCChannelImpl) {
+			Utils.sendUserList(sender, connection, (IRCChannelImpl) context);
 		} else if(connection != null) {
-			for(IIRCChannel channel : connection.getChannels()) {
+			for(IRCChannel channel : connection.getChannels()) {
 				Utils.sendUserList(sender, connection, channel);
 			}
 		} else {
-			for(IIRCConnection con : EiraIRC.instance.getConnections()) {
-				for(IIRCChannel channel : con.getChannels()) {
+			for(IRCConnection con : EiraIRC.instance.getConnections()) {
+				for(IRCChannel channel : con.getChannels()) {
 					Utils.sendUserList(sender, con, channel);
 				}
 			}

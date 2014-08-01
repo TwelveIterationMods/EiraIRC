@@ -4,7 +4,7 @@
 package net.blay09.mods.eirairc.client.gui.settings;
 
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.api.IIRCConnection;
+import net.blay09.mods.eirairc.api.IRCConnection;
 import net.blay09.mods.eirairc.client.gui.GuiAdvancedTextField;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
@@ -72,7 +72,7 @@ public class GuiTwitch extends GuiScreen implements GuiYesNoCallback {
 	public void actionPerformed(GuiButton button) {
 		if(button == btnBack) {
 			if(config.isAutoConnect() || EiraIRC.instance.isConnectedTo(Globals.TWITCH_SERVER)) {
-				IIRCConnection connection = EiraIRC.instance.getConnection(Globals.TWITCH_SERVER);
+				IRCConnection connection = EiraIRC.instance.getConnection(Globals.TWITCH_SERVER);
 				if(connection != null) {
 					connection.disconnect(ConfigHelper.getQuitMessage(connection));
 				}

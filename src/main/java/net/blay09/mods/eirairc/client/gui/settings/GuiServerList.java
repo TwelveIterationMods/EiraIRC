@@ -4,7 +4,7 @@
 package net.blay09.mods.eirairc.client.gui.settings;
 
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.api.IIRCConnection;
+import net.blay09.mods.eirairc.api.IRCConnection;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.ConfigHelper;
@@ -61,7 +61,7 @@ public class GuiServerList extends GuiScreen implements GuiYesNoCallback {
 		if(button == btnBack) {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiSettings());
 		} else if(button == btnConnect) {
-			IIRCConnection connection = EiraIRC.instance.getConnection(configs[selectedElement].getHost());
+			IRCConnection connection = EiraIRC.instance.getConnection(configs[selectedElement].getHost());
 			if(connection != null) {
 				connection.disconnect(ConfigHelper.getQuitMessage(connection));
 			} else {
@@ -85,7 +85,7 @@ public class GuiServerList extends GuiScreen implements GuiYesNoCallback {
 			Minecraft.getMinecraft().displayGuiScreen(this);
 			return;
 		}
-		IIRCConnection connection = EiraIRC.instance.getConnection(configs[serverIdx].getHost());
+		IRCConnection connection = EiraIRC.instance.getConnection(configs[serverIdx].getHost());
 		if(connection != null) {
 			connection.disconnect(ConfigHelper.getQuitMessage(connection));
 		}

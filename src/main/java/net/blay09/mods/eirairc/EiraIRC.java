@@ -11,7 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import net.blay09.mods.eirairc.api.IIRCConnection;
+import net.blay09.mods.eirairc.api.IRCConnection;
 import net.blay09.mods.eirairc.command.base.CommandIRC;
 import net.blay09.mods.eirairc.command.base.CommandServIRC;
 import net.blay09.mods.eirairc.command.base.IRCCommandHandler;
@@ -58,7 +58,7 @@ public class EiraIRC {
 	private MCEventHandler mcEventHandler;
 	private ChatSessionHandler chatSessionHandler;
 	private EiraNetHandler netHandler;
-	private Map<String, IIRCConnection> connections;
+	private Map<String, IRCConnection> connections;
 	private boolean ircRunning;
 	
 	@EventHandler
@@ -90,7 +90,7 @@ public class EiraIRC {
 	
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
-		connections = new HashMap<String, IIRCConnection>();
+		connections = new HashMap<String, IRCConnection>();
 	}
 	
 	@EventHandler
@@ -119,8 +119,8 @@ public class EiraIRC {
 	}
 	
 	public void stopIRC() {
-		List<IIRCConnection> dcList = new ArrayList<IIRCConnection>();
-		for(IIRCConnection connection : connections.values()) {
+		List<IRCConnection> dcList = new ArrayList<IRCConnection>();
+		for(IRCConnection connection : connections.values()) {
 			dcList.add(connection);
 		}
 		for(int i = 0; i < dcList.size(); i++) {
@@ -134,11 +134,11 @@ public class EiraIRC {
 		return ircRunning;
 	}
 	
-	public Collection<IIRCConnection> getConnections() {
+	public Collection<IRCConnection> getConnections() {
 		return connections.values();
 	}
 	
-	public void addConnection(IIRCConnection connection) {
+	public void addConnection(IRCConnection connection) {
 		connections.put(connection.getIdentifier(), connection);
 	}
 
@@ -146,19 +146,19 @@ public class EiraIRC {
 		return connections.size();
 	}
 	
-	public IIRCConnection getDefaultConnection() {
-		Iterator<IIRCConnection> it = connections.values().iterator();
+	public IRCConnection getDefaultConnection() {
+		Iterator<IRCConnection> it = connections.values().iterator();
 		if(it.hasNext()) {
 			return it.next();
 		}
 		return null;
 	}
 
-	public IIRCConnection getConnection(String identifier) {
+	public IRCConnection getConnection(String identifier) {
 		return connections.get(identifier);
 	}
 	
-	public void removeConnection(IIRCConnection connection) {
+	public void removeConnection(IRCConnection connection) {
 		connections.remove(connection.getHost());
 	}
 

@@ -6,7 +6,7 @@ package net.blay09.mods.eirairc.command.extension;
 import java.util.List;
 
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.api.IIRCContext;
+import net.blay09.mods.eirairc.api.IRCContext;
 import net.blay09.mods.eirairc.command.SubCommand;
 import net.blay09.mods.eirairc.config.GlobalConfig;
 import net.blay09.mods.eirairc.util.Globals;
@@ -38,7 +38,7 @@ public class CommandAlias extends SubCommand {
 	}
 
 	@Override
-	public boolean processCommand(ICommandSender sender, IIRCContext context, String[] args, boolean serverSide) {
+	public boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) {
 		if(!GlobalConfig.enableAliases) {
 			Utils.sendLocalizedMessage(sender, "irc.alias.disabled");
 			return true;

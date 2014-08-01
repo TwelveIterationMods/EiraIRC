@@ -5,8 +5,8 @@ package net.blay09.mods.eirairc.command;
 
 import java.util.List;
 
-import net.blay09.mods.eirairc.api.IIRCConnection;
-import net.blay09.mods.eirairc.api.IIRCContext;
+import net.blay09.mods.eirairc.api.IRCConnection;
+import net.blay09.mods.eirairc.api.IRCContext;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
@@ -34,11 +34,11 @@ public class CommandJoin extends SubCommand {
 	}
 
 	@Override
-	public boolean processCommand(ICommandSender sender, IIRCContext context, String[] args, boolean serverSide) {
+	public boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) {
 		if(args.length < 1) {
 			throw new WrongUsageException(getCommandUsage(sender));
 		}
-		IIRCConnection connection = null;
+		IRCConnection connection = null;
 		if(IRCResolver.hasServerPrefix(args[0])) {
 			connection = IRCResolver.resolveConnection(args[0], IRCResolver.FLAGS_NONE);
 			if(connection == null) {

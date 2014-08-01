@@ -1,7 +1,7 @@
 package net.blay09.mods.eirairc.api.event;
 
 import cpw.mods.fml.common.eventhandler.Event;
-import net.blay09.mods.eirairc.api.IIRCContext;
+import net.blay09.mods.eirairc.api.IRCContext;
 import net.minecraft.command.ICommandSender;
 
 /**
@@ -9,7 +9,7 @@ import net.minecraft.command.ICommandSender;
  */
 public class RelayChat extends Event {
 
-	public final IIRCContext target;
+	public final IRCContext target;
 	public final ICommandSender sender;
 	public final String message;
 	public final boolean isEmote;
@@ -27,7 +27,7 @@ public class RelayChat extends Event {
 		this(sender, message, isEmote, isNotice, null);
 	}
 
-	public RelayChat(ICommandSender sender, String message, boolean isEmote, boolean isNotice, IIRCContext target) {
+	public RelayChat(ICommandSender sender, String message, boolean isEmote, boolean isNotice, IRCContext target) {
 		this.sender = sender;
 		this.message = message;
 		this.isEmote = isEmote;

@@ -40,9 +40,9 @@ public class ConfigurationHandler {
 
 	private static File configFile;
 	private static Configuration config;
-	private static Map<String, BotProfile> botProfiles = new HashMap<String, BotProfile>();
-	private static List<BotProfile> botProfileList = new ArrayList<BotProfile>();
-	private static BotProfile defaultBotProfile;
+	private static Map<String, BotProfileImpl> botProfiles = new HashMap<String, BotProfileImpl>();
+	private static List<BotProfileImpl> botProfileList = new ArrayList<BotProfileImpl>();
+	private static BotProfileImpl defaultBotProfile;
 	private static File botProfileDir;
 	private static final Map<String, DisplayFormatConfig> displayFormats = new HashMap<String, DisplayFormatConfig>();
 	private static List<DisplayFormatConfig> displayFormatList = new ArrayList<DisplayFormatConfig>();
@@ -55,7 +55,7 @@ public class ConfigurationHandler {
 			profileDir.mkdirs();
 		}
 		botProfileDir = profileDir;
-		BotProfile.setupDefaultProfiles(profileDir);
+		BotProfileImpl.setupDefaultProfiles(profileDir);
 		File[] files = profileDir.listFiles(new FilenameFilter() {
 			@Override
 			public boolean accept(File file, String name) {
@@ -63,7 +63,7 @@ public class ConfigurationHandler {
 			}
 		});
 		for(int i = 0; i < files.length; i++) {
-			BotProfile botProfile = new BotProfile(files[i]);
+			BotProfileImpl botProfile = new BotProfileImpl(files[i]);
 			botProfile.loadCommands();
 			botProfiles.put(botProfile.getName(), botProfile);
 			botProfileList.add(botProfile);
@@ -74,14 +74,14 @@ public class ConfigurationHandler {
 	public static void findDefaultBotProfile() {
 		defaultBotProfile = botProfiles.get("Client");
 		if(defaultBotProfile == null) {
-			for(BotProfile botProfile : botProfiles.values()) {
+			for(BotProfileImpl botProfile : botProfiles.values()) {
 				if(botProfile.isDefaultProfile()) {
 					defaultBotProfile = botProfile;
 					return;
 				}
 			}
 			if(defaultBotProfile == null) {
-				Iterator<BotProfile> it = botProfiles.values().iterator();
+				Iterator<BotProfileImpl> it = botProfiles.values().iterator();
 				defaultBotProfile = it.next();
 			}
 		}
@@ -253,15 +253,15 @@ public class ConfigurationHandler {
 		NetworkConfig.addValuesToList(list, option);
 	}
 
-	public static BotProfile getBotProfile(String name) {
-		BotProfile botProfile = botProfiles.get(name);
+	public static BotProfileImpl getBotProfile(String name) {
+		BotProfileImpl botProfile = botProfiles.get(name);
 		if(botProfile == null) {
 			return defaultBotProfile;
 		}
 		return botProfile;
 	}
 	
-	public static List<BotProfile> getBotProfiles() {
+	public static List<BotProfileImpl> getBotProfiles() {
 		return botProfileList;
 	}
 
@@ -281,24 +281,24 @@ public class ConfigurationHandler {
 		return displayFormatList;
 	}
 
-	public static void addBotProfile(BotProfile botProfile) {
+	public static void addBotProfile(BotProfileImpl botProfile) {
 		botProfiles.put(botProfile.getName(), botProfile);
 		botProfileList.add(botProfile);
 	}
 	
-	public static void renameBotProfile(BotProfile botProfile, String newName) {
+	public static void renameBotProfile(BotProfileImpl botProfile, String newName) {
 		botProfiles.remove(botProfile.getName());
 		botProfile.setName(newName);
 		botProfiles.put(botProfile.getName(), botProfile);
 	}
 
-	public static void removeBotProfile(BotProfile botProfile) {
+	public static void removeBotProfile(BotProfileImpl botProfile) {
 		botProfiles.remove(botProfile.getName());
 		botProfileList.remove(botProfile);
 		botProfile.getFile().delete();
 	}
 
-	public static BotProfile getDefaultBotProfile() {
+	public static BotProfileImpl getDefaultBotProfile() {
 		return defaultBotProfile;
 	}
 

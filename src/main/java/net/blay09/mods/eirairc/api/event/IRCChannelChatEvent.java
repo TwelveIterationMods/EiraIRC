@@ -3,26 +3,23 @@
 
 package net.blay09.mods.eirairc.api.event;
 
-import net.blay09.mods.eirairc.api.IIRCChannel;
-import net.blay09.mods.eirairc.api.IIRCConnection;
-import net.blay09.mods.eirairc.api.IIRCUser;
-import net.blay09.mods.eirairc.api.bot.IIRCBot;
-import net.blay09.mods.eirairc.irc.IRCUser;
-import cpw.mods.fml.common.eventhandler.Event;
+import net.blay09.mods.eirairc.api.IRCChannel;
+import net.blay09.mods.eirairc.api.IRCConnection;
+import net.blay09.mods.eirairc.api.IRCUser;
 
 public class IRCChannelChatEvent extends IRCEvent {
 
-	public final IIRCChannel channel;
-	public final IIRCUser sender;
+	public final IRCChannel channel;
+	public final IRCUser sender;
 	public final String message;
 	public final boolean isEmote;
 	public final boolean isNotice;
 	
-	public IRCChannelChatEvent(IIRCConnection connection, IIRCChannel channel, IIRCUser sender, String message, boolean isEmote) {
+	public IRCChannelChatEvent(IRCConnection connection, IRCChannel channel, IRCUser sender, String message, boolean isEmote) {
 		this(connection, channel, sender, message, isEmote, false);
 	}
 
-	public IRCChannelChatEvent(IIRCConnection connection, IIRCChannel channel, IIRCUser sender, String message, boolean isEmote, boolean isNotice) {
+	public IRCChannelChatEvent(IRCConnection connection, IRCChannel channel, IRCUser sender, String message, boolean isEmote, boolean isNotice) {
 		super(connection);
 		this.channel = channel;
 		this.sender = sender;
