@@ -11,6 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import cpw.mods.fml.common.event.*;
 import net.blay09.mods.eirairc.api.IRCConnection;
 import net.blay09.mods.eirairc.command.base.CommandIRC;
 import net.blay09.mods.eirairc.command.base.CommandServIRC;
@@ -26,6 +27,7 @@ import net.blay09.mods.eirairc.handler.MCEventHandler;
 import net.blay09.mods.eirairc.net.EiraNetHandler;
 import net.blay09.mods.eirairc.net.PacketHandler;
 import net.blay09.mods.eirairc.util.ConfigHelper;
+import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Localization;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.CommandHandler;
@@ -36,11 +38,6 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.event.FMLServerStartingEvent;
-import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 
 @Mod(modid = EiraIRC.MOD_ID, acceptableRemoteVersions="*")
 public class EiraIRC {
@@ -67,6 +64,8 @@ public class EiraIRC {
 		ConfigurationHandler.load(event.getSuggestedConfigurationFile());
 		ConfigurationHandler.loadDisplayFormats(new File(event.getModConfigurationDirectory(), "eirairc/formats"));
 		ConfigurationHandler.loadBotProfiles(new File(event.getModConfigurationDirectory(), "eirairc/bots"));
+
+		FMLInterModComms.sendRuntimeMessage(this, "VersionChecker", "addVersionCheck", Globals.UPDATE_URL);
 	}
 	
 	@EventHandler
