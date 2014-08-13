@@ -52,10 +52,10 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 	public static final int DEFAULT_PORT = 6667;
 	public static final String EMOTE_START = "\u0001ACTION ";
 	public static final String EMOTE_END = "\u0001";
-	private static final String LINE_FEED = "\r\n";
 	protected static final int DEFAULT_PROXY_PORT = 1080;
 
 	private final IRCParser parser = new IRCParser();
+	private final IRCSender sender = new IRCSender();
 	private final Map<String, IRCChannel> channels = new HashMap<String, IRCChannel>();
 	private final Map<String, IRCUser> users = new HashMap<String, IRCUser>();
 	protected final int port;
@@ -172,6 +172,7 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 			newSocket.connect(targetAddr);
 			writer = new BufferedWriter(new OutputStreamWriter(newSocket.getOutputStream(), charset));
 			reader = new BufferedReader(new InputStreamReader(newSocket.getInputStream(), charset));
+			sender.setWriter(writer);
 			return newSocket;
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
@@ -191,6 +192,7 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 				return;
 			}
 			register();
+			sender.start();
 			String line;
 			while((line = reader.readLine()) != null) {
 				if(GlobalConfig.debugMode) {
@@ -471,16 +473,7 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 
 	@Override
 	public boolean irc(String message) {
-		try {
-			writer.write(message);
-			writer.write(LINE_FEED);
-			writer.flush();
-			return true;
-		} catch (IOException e) {
-			e.printStackTrace();
-			tryReconnect();
-			return false;
-		}
+		return sender.addToSendQueue(message);
 	}
 
 	@Override
