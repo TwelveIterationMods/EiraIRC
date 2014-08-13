@@ -94,11 +94,13 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 	public void setCharset(String charset) {
 		this.charset = charset;
 	}
-	
+
+	@Override
 	public String getNick() {
 		return nick;
 	}
-	
+
+	@Override
 	public IRCChannel getChannel(String channelName) {
 		return channels.get(channelName.toLowerCase());
 	}
@@ -111,11 +113,13 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 		}
 		return channel;
 	}
-	
+
+	@Override
 	public IRCUser getUser(String nick) {
 		return users.get(nick.toLowerCase());
 	}
-	
+
+	@Override
 	public IRCUser getOrCreateUser(String nick) {
 		IRCUser user = getUser(nick);
 		if(user == null) {
@@ -129,7 +133,8 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 	public String getHost() {
 		return host;
 	}
-	
+
+	@Override
 	public Collection<IRCChannel> getChannels() {
 		return channels.values();
 	}
@@ -210,7 +215,8 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 			start();
 		}
 	}
-	
+
+	@Override
 	public void disconnect(String quitMessage) {
 		try {
 			connected = false;
@@ -239,17 +245,20 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 			tryReconnect();
 		}
 	}
-	
+
+	@Override
 	public void nick(String nick) {
 		if(irc("NICK " + nick)) {
 			this.nick = nick;
 		}
 	}
-	
+
+	@Override
 	public void join(String channelName, String channelKey) {
 		irc("JOIN " + channelName + (channelKey != null ? (" " + channelKey) : ""));
 	}
-	
+
+	@Override
 	public void part(String channelName) {
 		if(irc("PART " + channelName)) {
 			IRCChannel channel = getChannel(channelName);
@@ -259,19 +268,18 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 			channels.remove(channelName.toLowerCase());
 		}
 	}
-	
+
+	@Override
 	public void mode(String targetName, String flags) {
 		irc("MODE " + targetName + " " + flags);
 	}
-	
+
+	@Override
 	public void mode(String targetName, String flags, String nick) {
 		irc("MODE " + targetName + " " + flags + " " + nick);
 	}
 	
-	public void topic(String channelName) {
-		irc("TOPIC " + channelName);
-	}
-	
+	@Override
 	public void topic(String channelName, String topic) {
 		irc("TOPIC " + channelName + " :" + topic);
 	}
@@ -455,11 +463,13 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 	public void notice(String target, String message) {
 		irc("NOTICE " + target + " :" + message);
 	}
-	
+
+	@Override
 	public void kick(String channelName, String nick, String reason) {
 		irc("KICK " + channelName + " " + nick + (reason != null ? (" :" + reason) : ""));
 	}
-	
+
+	@Override
 	public boolean irc(String message) {
 		try {
 			writer.write(message);
@@ -473,6 +483,7 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 		}
 	}
 
+	@Override
 	public String getServerType() {
 		return serverType;
 	}
