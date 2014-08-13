@@ -24,7 +24,7 @@ import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class IRCEventHandler {
-	
+
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void onNickChange(IRCUserNickChangeEvent event) {
 		if(event.bot.isMuted(null)) {
@@ -98,7 +98,7 @@ public class IRCEventHandler {
 			message = Utils.filterLinks(message);
 		}
 		message = Utils.filterAllowedCharacters(message, true, DisplayConfig.enableIRCColors);
-		String format = null;
+		String format;
 		if(event.isNotice) {
 			format = ConfigHelper.getDisplayFormat(event.bot.getDisplayFormat(event.sender)).mcPrivateNotice;
 		} else if(event.isEmote) {

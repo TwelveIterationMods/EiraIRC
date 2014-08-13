@@ -322,7 +322,7 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 		} else if(numeric == IRCReplyCodes.RPL_MOTD) {
 			// ignore
 		} else if(numeric == IRCReplyCodes.ERR_PASSWDMISMATCH) {
-			MinecraftForge.EVENT_BUS.post(new IRCPrivateChatEvent(this, null, msg.arg(1), false, true));
+			MinecraftForge.EVENT_BUS.post(new IRCErrorEvent(this, msg.getNumericCommand(), msg.args()));
 		} else if(numeric <= 5 || numeric == 251 || numeric == 252 || numeric == 254 || numeric == 255 || numeric == 265 || numeric == 266 || numeric == 250 || numeric == 375) {
 			// ignore for now
 		} else {

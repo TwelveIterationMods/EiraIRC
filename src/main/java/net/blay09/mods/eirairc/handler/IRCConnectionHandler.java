@@ -73,6 +73,8 @@ public class IRCConnectionHandler {
 				GlobalConfig.nick = event.connection.getNick();
 			}
 			break;
+		case IRCReplyCodes.ERR_PASSWDMISMATCH:
+			Utils.addMessageToChat(event.args[0]);
 		default:
 			System.out.println("Unhandled error code: " + event.numeric + " (" + event.args.length + " arguments)");
 			break;
