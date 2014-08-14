@@ -208,14 +208,14 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		tryReconnect();
+		if(connected) {
+			tryReconnect();
+		}
 	}
 	
 	public void tryReconnect() {
 		MinecraftForge.EVENT_BUS.post(new IRCDisconnectEvent(this));
-		if(connected) {
-			start();
-		}
+		start();
 	}
 
 	@Override
@@ -229,6 +229,7 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 			if(socket != null) {
 				socket.close();
 			}
+			MinecraftForge.EVENT_BUS.post(new IRCDisconnectEvent(this));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -244,7 +245,9 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 			writer.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
-			tryReconnect();
+			if(connected) {
+				tryReconnect();
+			}
 		}
 	}
 
