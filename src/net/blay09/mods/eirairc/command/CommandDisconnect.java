@@ -6,8 +6,8 @@ package net.blay09.mods.eirairc.command;
 import java.util.List;
 
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.api.IIRCConnection;
-import net.blay09.mods.eirairc.api.IIRCContext;
+import net.blay09.mods.eirairc.api.IRCConnection;
+import net.blay09.mods.eirairc.api.IRCContext;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
@@ -32,7 +32,7 @@ public class CommandDisconnect extends SubCommand {
 	}
 
 	@Override
-	public boolean processCommand(ICommandSender sender, IIRCContext context, String[] args, boolean serverSide) {
+	public boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) {
 		String target = null;
 		if(args.length < 1) {
 			if(context != null) {
@@ -46,12 +46,12 @@ public class CommandDisconnect extends SubCommand {
 		}
 		if(target.equals(TARGET_ALL)) {
 			Utils.sendLocalizedMessage(sender, "irc.basic.disconnecting", "IRC");
-			for(IIRCConnection connection : EiraIRC.instance.getConnections()) {
+			for(IRCConnection connection : EiraIRC.instance.getConnections()) {
 				connection.disconnect(ConfigHelper.getQuitMessage(connection));
 			}
 			EiraIRC.instance.clearConnections();
 		} else {
-			IIRCConnection connection = EiraIRC.instance.getConnection(target);
+			IRCConnection connection = EiraIRC.instance.getConnection(target);
 			if(connection == null) {
 				Utils.sendLocalizedMessage(sender, "irc.general.notConnected", target);
 				return true;

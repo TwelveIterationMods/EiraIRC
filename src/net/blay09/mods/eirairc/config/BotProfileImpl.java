@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.blay09.mods.eirairc.api.bot.IBotCommand;
-import net.blay09.mods.eirairc.api.bot.IBotProfile;
+import net.blay09.mods.eirairc.api.bot.BotProfile;
 import net.blay09.mods.eirairc.bot.BotCommandAlias;
 import net.blay09.mods.eirairc.bot.BotCommandAuth;
 import net.blay09.mods.eirairc.bot.BotCommandCustom;
@@ -26,7 +26,7 @@ import net.minecraftforge.common.Configuration;
 
 import com.google.common.io.Files;
 
-public class BotProfile implements IBotProfile {
+public class BotProfileImpl implements BotProfile {
 
 	private static final String CATEGORY_SETTINGS = "settings";
 	private static final String CATEGORY_COMMANDS = "commands";
@@ -54,7 +54,7 @@ public class BotProfile implements IBotProfile {
 	private boolean interOp;
 	private boolean isDefaultProfile;
 	
-	public BotProfile(File dir, String name) {
+	public BotProfileImpl(File dir, String name) {
 		File file = findFreeFile(dir, name);
 		config = new Configuration(file);
 		this.file = file;
@@ -62,14 +62,14 @@ public class BotProfile implements IBotProfile {
 		load();
 	}
 	
-	public BotProfile(File file) {
+	public BotProfileImpl(File file) {
 		config = new Configuration(file);
 		this.file = file;
 		name = file.getName().substring(0, file.getName().length() - 4);
 		load();
 	}
 	
-	public BotProfile(BotProfile copy, String name) {
+	public BotProfileImpl(BotProfileImpl copy, String name) {
 		file = findFreeFile(copy.getFile().getParentFile(), name);
 		try {
 			Files.copy(copy.getFile(), file);
@@ -212,23 +212,23 @@ public class BotProfile implements IBotProfile {
 	}
 
 	public static void setupDefaultProfiles(File profileDir) {
-		File file = new File(profileDir, BotProfile.DEFAULT_CLIENT_FILE + ".cfg");
+		File file = new File(profileDir, BotProfileImpl.DEFAULT_CLIENT_FILE + ".cfg");
 		if(!file.exists()) {
-			BotProfile botProfile = new BotProfile(file);
+			BotProfileImpl botProfile = new BotProfileImpl(file);
 			botProfile.defaultClient();
 			botProfile.save();
 			botProfile.loadCommands();
 		}
-		file = new File(profileDir, BotProfile.DEFAULT_SERVER_FILE + ".cfg");
+		file = new File(profileDir, BotProfileImpl.DEFAULT_SERVER_FILE + ".cfg");
 		if(!file.exists()) {
-			BotProfile botProfile = new BotProfile(file);
+			BotProfileImpl botProfile = new BotProfileImpl(file);
 			botProfile.defaultServer();
 			botProfile.save();
 			botProfile.loadCommands();
 		}
-		file = new File(profileDir, BotProfile.DEFAULT_TWITCH_FILE + ".cfg");
+		file = new File(profileDir, BotProfileImpl.DEFAULT_TWITCH_FILE + ".cfg");
 		if(!file.exists()) {
-			BotProfile botProfile = new BotProfile(file);
+			BotProfileImpl botProfile = new BotProfileImpl(file);
 			botProfile.defaultTwitch();
 			botProfile.save();
 			botProfile.loadCommands();

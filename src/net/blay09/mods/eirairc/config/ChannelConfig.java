@@ -123,6 +123,6 @@ public class ChannelConfig {
 	}
 	
 	public void useDefaults(boolean serverSide) {
-		botProfile = BotProfile.INHERIT;
+		botProfile = BotProfileImpl.INHERIT;
 	}
 }

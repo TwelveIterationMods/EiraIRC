@@ -3,15 +3,15 @@
 
 package net.blay09.mods.eirairc.api.event;
 
-import net.blay09.mods.eirairc.api.IIRCConnection;
-import net.blay09.mods.eirairc.api.IIRCUser;
+import net.blay09.mods.eirairc.api.IRCConnection;
+import net.blay09.mods.eirairc.api.IRCUser;
 
 public class IRCUserQuitEvent extends IRCEvent {
 	
-	public final IIRCUser user;
+	public final IRCUser user;
 	public final String message;
 	
-	public IRCUserQuitEvent(IIRCConnection connection, IIRCUser user, String message) {
+	public IRCUserQuitEvent(IRCConnection connection, IRCUser user, String message) {
 		super(connection);
 		this.user = user;
 		this.message = message;

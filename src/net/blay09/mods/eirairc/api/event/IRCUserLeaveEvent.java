@@ -3,17 +3,17 @@
 
 package net.blay09.mods.eirairc.api.event;
 
-import net.blay09.mods.eirairc.api.IIRCChannel;
-import net.blay09.mods.eirairc.api.IIRCConnection;
-import net.blay09.mods.eirairc.api.IIRCUser;
+import net.blay09.mods.eirairc.api.IRCChannel;
+import net.blay09.mods.eirairc.api.IRCConnection;
+import net.blay09.mods.eirairc.api.IRCUser;
 
 public class IRCUserLeaveEvent extends IRCEvent {
 
-	public final IIRCChannel channel;
-	public final IIRCUser user;
+	public final IRCChannel channel;
+	public final IRCUser user;
 	public final String message;
 	
-	public IRCUserLeaveEvent(IIRCConnection connection, IIRCChannel channel, IIRCUser user, String message) {
+	public IRCUserLeaveEvent(IRCConnection connection, IRCChannel channel, IRCUser user, String message) {
 		super(connection);
 		this.channel = channel;
 		this.user = user;

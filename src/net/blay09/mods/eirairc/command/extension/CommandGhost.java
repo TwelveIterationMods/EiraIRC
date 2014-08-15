@@ -5,8 +5,8 @@ package net.blay09.mods.eirairc.command.extension;
 
 import java.util.List;
 
-import net.blay09.mods.eirairc.api.IIRCConnection;
-import net.blay09.mods.eirairc.api.IIRCContext;
+import net.blay09.mods.eirairc.api.IRCConnection;
+import net.blay09.mods.eirairc.api.IRCContext;
 import net.blay09.mods.eirairc.command.SubCommand;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.ServiceConfig;
@@ -34,8 +34,8 @@ public class CommandGhost extends SubCommand {
 	}
 
 	@Override
-	public boolean processCommand(ICommandSender sender, IIRCContext context, String[] args, boolean serverSide) {
-		IIRCConnection connection = null;
+	public boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) {
+		IRCConnection connection = null;
 		if(args.length > 0) {
 			connection = IRCResolver.resolveConnection(args[0], IRCResolver.FLAGS_NONE);
 			if(connection == null) {

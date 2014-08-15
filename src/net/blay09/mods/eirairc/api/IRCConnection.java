@@ -5,9 +5,9 @@ package net.blay09.mods.eirairc.api;
 
 import java.util.Collection;
 
-import net.blay09.mods.eirairc.api.bot.IIRCBot;
+import net.blay09.mods.eirairc.api.bot.IRCBot;
 
-public interface IIRCConnection {
+public interface IRCConnection {
 
 	public boolean irc(String irc);
 	public void nick(String nick);
@@ -20,13 +20,13 @@ public interface IIRCConnection {
 	public void disconnect(String quitMessage);
 	
 	public String getServerType();
-	public Collection<IIRCChannel> getChannels();
-	public IIRCChannel getChannel(String name);
-	public IIRCUser getUser(String name);
-	public IIRCUser getOrCreateUser(String name);
+	public Collection<IRCChannel> getChannels();
+	public IRCChannel getChannel(String name);
+	public IRCUser getUser(String name);
+	public IRCUser getOrCreateUser(String name);
 	public String getHost();
 	public int getPort();
-	public IIRCBot getBot();
+	public IRCBot getBot();
 	public String getIdentifier();
 	public String getNick();
 	

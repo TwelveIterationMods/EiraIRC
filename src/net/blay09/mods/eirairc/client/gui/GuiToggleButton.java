@@ -1,6 +1,6 @@
 package net.blay09.mods.eirairc.client.gui;
 
-import net.blay09.mods.eirairc.config.BotProfile;
+import net.blay09.mods.eirairc.config.BotProfileImpl;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;

@@ -9,19 +9,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.blay09.mods.eirairc.api.IIRCChannel;
-import net.blay09.mods.eirairc.api.IIRCUser;
+import net.blay09.mods.eirairc.api.IRCChannel;
+import net.blay09.mods.eirairc.api.IRCUser;
 
-public class IRCUser implements IIRCUser {
+public class IRCUserImpl implements IRCUser {
 
-	private final IRCConnection connection;
-	private final Map<String, IIRCChannel> channels = new HashMap<String, IIRCChannel>();
-	private final List<IIRCChannel> opChannels = new ArrayList<IIRCChannel>();
-	private final List<IIRCChannel> voiceChannels = new ArrayList<IIRCChannel>();
+	private final IRCConnectionImpl connection;
+	private final Map<String, IRCChannel> channels = new HashMap<String, IRCChannel>();
+	private final List<IRCChannel> opChannels = new ArrayList<IRCChannel>();
+	private final List<IRCChannel> voiceChannels = new ArrayList<IRCChannel>();
 	private String name;
 	private String authLogin;
 	
-	public IRCUser(IRCConnection connection, String name) {
+	public IRCUserImpl(IRCConnectionImpl connection, String name) {
 		this.connection = connection;
 		this.name = name;
 	}
@@ -35,16 +35,16 @@ public class IRCUser implements IIRCUser {
 	}
 
 	@Override
-	public boolean isOperator(IIRCChannel channel) {
+	public boolean isOperator(IRCChannel channel) {
 		return opChannels.contains(channel);
 	}
 	
 	@Override
-	public boolean hasVoice(IIRCChannel channel) {
+	public boolean hasVoice(IRCChannel channel) {
 		return opChannels.contains(channel) || voiceChannels.contains(channel);
 	}
 	
-	public void setOperator(IRCChannel channel, boolean opFlag) {
+	public void setOperator(IRCChannelImpl channel, boolean opFlag) {
 		if(opFlag && !opChannels.contains(channel)) {
 			opChannels.add(channel);
 		} else {
@@ -52,7 +52,7 @@ public class IRCUser implements IIRCUser {
 		}
 	}
 	
-	public void setVoice(IRCChannel channel, boolean voiceFlag) {
+	public void setVoice(IRCChannelImpl channel, boolean voiceFlag) {
 		if(voiceFlag && !voiceChannels.contains(channel)) {
 			voiceChannels.add(channel);
 		} else {
@@ -60,15 +60,15 @@ public class IRCUser implements IIRCUser {
 		}
 	}
 	
-	public void addChannel(IRCChannel channel) {
+	public void addChannel(IRCChannelImpl channel) {
 		channels.put(channel.getName(), channel);
 	}
 	
-	public void removeChannel(IRCChannel channel) {
+	public void removeChannel(IRCChannelImpl channel) {
 		channels.remove(channel.getName());
 	}
 	
-	public Collection<IIRCChannel> getChannels() {
+	public Collection<IRCChannel> getChannels() {
 		return channels.values();
 	}
 
@@ -81,7 +81,7 @@ public class IRCUser implements IIRCUser {
 		return name;
 	}
 
-	public IRCConnection getConnection() {
+	public IRCConnectionImpl getConnection() {
 		return connection;
 	}
 

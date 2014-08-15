@@ -5,12 +5,12 @@ package net.blay09.mods.eirairc.api;
 
 import java.util.Collection;
 
-public interface IIRCUser extends IIRCContext {
+public interface IRCUser extends IRCContext {
 
 	public void whois();
 	public String getAuthLogin();
-	public Collection<IIRCChannel> getChannels();
-	public boolean isOperator(IIRCChannel channel);
-	public boolean hasVoice(IIRCChannel channel);
+	public Collection<IRCChannel> getChannels();
+	public boolean isOperator(IRCChannel channel);
+	public boolean hasVoice(IRCChannel channel);
 
 }

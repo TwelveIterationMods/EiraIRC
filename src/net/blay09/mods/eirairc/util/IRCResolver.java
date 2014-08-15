@@ -4,10 +4,10 @@
 package net.blay09.mods.eirairc.util;
 
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.api.IIRCChannel;
-import net.blay09.mods.eirairc.api.IIRCConnection;
-import net.blay09.mods.eirairc.api.IIRCContext;
-import net.blay09.mods.eirairc.api.IIRCUser;
+import net.blay09.mods.eirairc.api.IRCChannel;
+import net.blay09.mods.eirairc.api.IRCConnection;
+import net.blay09.mods.eirairc.api.IRCContext;
+import net.blay09.mods.eirairc.api.IRCUser;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
 
@@ -19,10 +19,10 @@ public class IRCResolver {
 	public static final short FLAG_ONCHANNEL = 32;
 	public static final short FLAG_USERONCHANNEL = 512;
 
-	public static IIRCContext resolveTarget(String path, short flags) {
+	public static IRCContext resolveTarget(String path, short flags) {
 		String server = null;
 		int serverIdx = path.indexOf('/');
-		IIRCConnection connection = null;
+		IRCConnection connection = null;
 		if(serverIdx != -1) {
 			server = path.substring(0, serverIdx);
 			path = path.substring(serverIdx + 1);
@@ -31,8 +31,8 @@ public class IRCResolver {
 				return IRCTargetError.NotConnected;
 			}
 		} else {
-			IIRCConnection foundConnection = null;
-			for(IIRCConnection con : EiraIRC.instance.getConnections()) {
+			IRCConnection foundConnection = null;
+			for(IRCConnection con : EiraIRC.instance.getConnections()) {
 				if(con.getChannel(path) != null || con.getUser(path) != null) {
 					if(foundConnection != null) {
 						return IRCTargetError.SpecifyServer;
@@ -49,7 +49,7 @@ public class IRCResolver {
 			if((flags & FLAG_CHANNEL) == 0) {
 				return IRCTargetError.InvalidTarget;
 			}
-			IIRCChannel channel = connection.getChannel(path);
+			IRCChannel channel = connection.getChannel(path);
 			if(channel == null) {
 				return IRCTargetError.NotOnChannel;
 			}
@@ -58,7 +58,7 @@ public class IRCResolver {
 			if((flags & FLAG_USER) == 0) {
 				return IRCTargetError.InvalidTarget;
 			}
-			IIRCUser user = connection.getUser(path);
+			IRCUser user = connection.getUser(path);
 			if(user == null) {
 				if((flags & FLAG_USERONCHANNEL) != 0) {
 					return IRCTargetError.UserNotFound;
@@ -78,14 +78,14 @@ public class IRCResolver {
 		return path;
 	}
 	
-	public static IIRCConnection resolveConnection(String path, short flags) {
+	public static IRCConnection resolveConnection(String path, short flags) {
 		String server = null;
 		int serverIdx = path.indexOf('/');
 		if(serverIdx != -1) {
 			server = path.substring(0, serverIdx);
 		} else {
 			if(path.startsWith("#")) {
-				for(IIRCConnection connection : EiraIRC.instance.getConnections()) {
+				for(IRCConnection connection : EiraIRC.instance.getConnections()) {
 					if(connection.getChannel(path) != null) {
 						return connection;
 					}

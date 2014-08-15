@@ -6,11 +6,11 @@ package net.blay09.mods.eirairc.client.gui.settings;
 import java.util.List;
 
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.api.IIRCConnection;
-import net.blay09.mods.eirairc.bot.EiraIRCBot;
+import net.blay09.mods.eirairc.api.IRCConnection;
+import net.blay09.mods.eirairc.bot.IRCBotImpl;
 import net.blay09.mods.eirairc.client.gui.GuiAdvancedTextField;
 import net.blay09.mods.eirairc.client.gui.GuiToggleButton;
-import net.blay09.mods.eirairc.config.BotProfile;
+import net.blay09.mods.eirairc.config.BotProfileImpl;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
@@ -42,7 +42,7 @@ public class GuiChannelConfig extends GuiScreen {
 	private GuiTextField txtName;
 	private GuiAdvancedTextField txtChannelPassword;
 	
-	private List<BotProfile> profileList;
+	private List<BotProfileImpl> profileList;
 	private int currentProfileIdx;
 	private String currentProfile;
 	
@@ -216,9 +216,9 @@ public class GuiChannelConfig extends GuiScreen {
 		config.setAutoJoin(btnAutoJoin.getState());
 		config.setAutoWho(btnAutoWho.getState());
 		config.setBotProfile(currentProfile);
-		IIRCConnection connection = EiraIRC.instance.getConnection(serverConfig.getHost());
+		IRCConnection connection = EiraIRC.instance.getConnection(serverConfig.getHost());
 		if(connection != null) {
-			EiraIRCBot bot = (EiraIRCBot) connection.getBot();
+			IRCBotImpl bot = (IRCBotImpl) connection.getBot();
 			bot.updateProfiles();
 		}
 		serverConfig.addChannelConfig(config);

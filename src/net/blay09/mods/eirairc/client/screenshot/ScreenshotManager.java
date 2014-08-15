@@ -25,13 +25,13 @@ import java.util.Properties;
 import javax.imageio.ImageIO;
 
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.api.IIRCChannel;
-import net.blay09.mods.eirairc.api.IIRCConnection;
-import net.blay09.mods.eirairc.api.bot.IIRCBot;
+import net.blay09.mods.eirairc.api.IRCChannel;
+import net.blay09.mods.eirairc.api.IRCConnection;
+import net.blay09.mods.eirairc.api.bot.IRCBot;
 import net.blay09.mods.eirairc.api.upload.IUploadHoster;
 import net.blay09.mods.eirairc.api.upload.UploadManager;
 import net.blay09.mods.eirairc.config.ScreenshotConfig;
-import net.blay09.mods.eirairc.irc.IRCConnection;
+import net.blay09.mods.eirairc.irc.IRCConnectionImpl;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
 

@@ -4,7 +4,7 @@
 package net.blay09.mods.eirairc.handler;
 
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.api.IIRCChannel;
+import net.blay09.mods.eirairc.api.IRCChannel;
 import net.blay09.mods.eirairc.api.event.IRCChannelJoinedEvent;
 import net.blay09.mods.eirairc.api.event.IRCChannelLeftEvent;
 import net.blay09.mods.eirairc.api.event.IRCConnectEvent;
@@ -49,7 +49,7 @@ public class IRCConnectionHandler {
 	public void onDisconnected(IRCDisconnectEvent event) {
 		String mcMessage = Utils.getLocalizedMessage("irc.basic.disconnected", event.connection.getHost());
 		Utils.addMessageToChat(mcMessage);
-		for(IIRCChannel channel : event.connection.getChannels()) {
+		for(IRCChannel channel : event.connection.getChannels()) {
 			EiraIRC.instance.getChatSessionHandler().removeTargetChannel(channel);
 		}
 		EiraIRC.instance.removeConnection(event.connection);
@@ -72,6 +72,9 @@ public class IRCConnectionHandler {
 			} else {
 				GlobalConfig.nick = event.connection.getNick();
 			}
+			break;
+		case IRCReplyCodes.ERR_PASSWDMISMATCH:
+			Utils.addMessageToChat(event.args[0]);
 			break;
 		default:
 			System.out.println("Unhandled error code: " + event.numeric + " (" + event.args.length + " arguments)");

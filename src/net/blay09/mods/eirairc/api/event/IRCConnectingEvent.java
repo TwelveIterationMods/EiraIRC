@@ -3,12 +3,12 @@
 
 package net.blay09.mods.eirairc.api.event;
 
-import net.blay09.mods.eirairc.api.IIRCChannel;
-import net.blay09.mods.eirairc.api.IIRCConnection;
+import net.blay09.mods.eirairc.api.IRCChannel;
+import net.blay09.mods.eirairc.api.IRCConnection;
 
 public class IRCConnectingEvent extends IRCEvent {
 
-	public IRCConnectingEvent(IIRCConnection connection) {
+	public IRCConnectingEvent(IRCConnection connection) {
 		super(connection);
 	}
 

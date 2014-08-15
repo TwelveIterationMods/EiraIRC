@@ -3,16 +3,16 @@
 
 package net.blay09.mods.eirairc.api.event;
 
-import net.blay09.mods.eirairc.api.IIRCConnection;
-import net.blay09.mods.eirairc.api.bot.IIRCBot;
+import net.blay09.mods.eirairc.api.IRCConnection;
+import net.blay09.mods.eirairc.api.bot.IRCBot;
 import net.minecraftforge.event.Event;
 
 public abstract class IRCEvent extends Event {
 
-	public final IIRCConnection connection;
-	public final IIRCBot bot;
+	public final IRCConnection connection;
+	public final IRCBot bot;
 	
-	public IRCEvent(IIRCConnection connection) {
+	public IRCEvent(IRCConnection connection) {
 		this.connection = connection;
 		this.bot = connection.getBot();
 	}

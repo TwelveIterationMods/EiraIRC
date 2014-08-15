@@ -5,14 +5,14 @@ package net.blay09.mods.eirairc.command;
 
 import java.util.List;
 
-import net.blay09.mods.eirairc.api.IIRCContext;
-import net.blay09.mods.eirairc.api.bot.IBotProfile;
-import net.blay09.mods.eirairc.api.bot.IIRCBot;
+import net.blay09.mods.eirairc.api.IRCContext;
+import net.blay09.mods.eirairc.api.bot.BotProfile;
+import net.blay09.mods.eirairc.api.bot.IRCBot;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.GlobalConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
-import net.blay09.mods.eirairc.irc.IRCUser;
+import net.blay09.mods.eirairc.irc.IRCUserImpl;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.IRCResolver;
 import net.blay09.mods.eirairc.util.IRCTargetError;
@@ -39,7 +39,7 @@ public class CommandMessage extends SubCommand {
 	}
 
 	@Override
-	public boolean processCommand(ICommandSender sender, IIRCContext context, String[] args, boolean serverSide) {
+	public boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) {
 		if(args.length < 2) {
 			throw new WrongUsageException(getCommandUsage(sender));
 		}
@@ -47,13 +47,13 @@ public class CommandMessage extends SubCommand {
 		if(serverSide && !Utils.isOP(sender)) {
 			flags += IRCResolver.FLAG_USERONCHANNEL;
 		}
-		IIRCContext target = IRCResolver.resolveTarget(args[0], flags);
+		IRCContext target = IRCResolver.resolveTarget(args[0], flags);
 		if(target instanceof IRCTargetError) {
 			Utils.sendLocalizedMessage(sender, target.getName(), args[0]);
 			return true;
-		} else if(target instanceof IRCUser) {
-			IIRCBot bot = target.getConnection().getBot();
-			if(bot.getBoolean(target, IBotProfile.KEY_ALLOWPRIVMSG, true)) {
+		} else if(target instanceof IRCUserImpl) {
+			IRCBot bot = target.getConnection().getBot();
+			if(bot.getBoolean(target, BotProfile.KEY_ALLOWPRIVMSG, true)) {
 				Utils.sendLocalizedMessage(sender, "irc.msg.disabled");
 				return true;
 			}

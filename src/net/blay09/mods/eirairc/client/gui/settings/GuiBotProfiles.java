@@ -7,7 +7,7 @@ import java.util.List;
 
 import net.blay09.mods.eirairc.client.gui.GuiAdvancedTextField;
 import net.blay09.mods.eirairc.client.gui.GuiToggleButton;
-import net.blay09.mods.eirairc.config.BotProfile;
+import net.blay09.mods.eirairc.config.BotProfileImpl;
 import net.blay09.mods.eirairc.config.DisplayFormatConfig;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.Globals;
@@ -71,8 +71,8 @@ public class GuiBotProfiles extends GuiScreen {
 	
 	private final GuiScreen parentScreen;
 	private final String customName;
-	private final List<BotProfile> profileList;
-	private BotProfile currentProfile;
+	private final List<BotProfileImpl> profileList;
+	private BotProfileImpl currentProfile;
 	private int currentIdx;
 	
 	private final List<DisplayFormatConfig> displayFormatList;
@@ -86,7 +86,7 @@ public class GuiBotProfiles extends GuiScreen {
 		this(parentScreen, customName, !ConfigurationHandler.getBotProfiles().isEmpty() ? ConfigurationHandler.getBotProfiles().get(0) : null);
 	}
 	
-	public GuiBotProfiles(GuiScreen parentScreen, String customName, BotProfile initialProfile) {
+	public GuiBotProfiles(GuiScreen parentScreen, String customName, BotProfileImpl initialProfile) {
 		this.parentScreen = parentScreen;
 		this.customName = customName;
 		displayFormatList = ConfigurationHandler.getDisplayFormats();
@@ -142,19 +142,19 @@ public class GuiBotProfiles extends GuiScreen {
 		
 		// Relay Options
 		
-		btnRelayDeathMessages = new GuiBotProfileToggleButton(7, leftX, topY, BUTTON_WIDTH, BUTTON_HEIGHT, "irc.gui.config.relayDeathMessages", BotProfile.KEY_RELAYDEATHMESSAGES);
+		btnRelayDeathMessages = new GuiBotProfileToggleButton(7, leftX, topY, BUTTON_WIDTH, BUTTON_HEIGHT, "irc.gui.config.relayDeathMessages", BotProfileImpl.KEY_RELAYDEATHMESSAGES);
 		buttonList.add(btnRelayDeathMessages);
 		
-		btnRelayMCJoinLeave = new GuiBotProfileToggleButton(8, leftX, topY + 25, BUTTON_WIDTH, BUTTON_HEIGHT, "irc.gui.config.relayMinecraftJoins", BotProfile.KEY_RELAYMCJOINLEAVE);
+		btnRelayMCJoinLeave = new GuiBotProfileToggleButton(8, leftX, topY + 25, BUTTON_WIDTH, BUTTON_HEIGHT, "irc.gui.config.relayMinecraftJoins", BotProfileImpl.KEY_RELAYMCJOINLEAVE);
 		buttonList.add(btnRelayMCJoinLeave);
 		
-		btnRelayBroadcasts = new GuiBotProfileToggleButton(9, leftX, topY + 50, BUTTON_WIDTH, BUTTON_HEIGHT, "irc.gui.config.relayBroadcasts", BotProfile.KEY_RELAYBROADCASTS);
+		btnRelayBroadcasts = new GuiBotProfileToggleButton(9, leftX, topY + 50, BUTTON_WIDTH, BUTTON_HEIGHT, "irc.gui.config.relayBroadcasts", BotProfileImpl.KEY_RELAYBROADCASTS);
 		buttonList.add(btnRelayBroadcasts);
 		
-		btnRelayIRCJoinLeave = new GuiBotProfileToggleButton(10, leftX, topY + 75, BUTTON_WIDTH, BUTTON_HEIGHT, "irc.gui.config.relayIRCJoins", BotProfile.KEY_RELAYIRCJOINLEAVE);
+		btnRelayIRCJoinLeave = new GuiBotProfileToggleButton(10, leftX, topY + 75, BUTTON_WIDTH, BUTTON_HEIGHT, "irc.gui.config.relayIRCJoins", BotProfileImpl.KEY_RELAYIRCJOINLEAVE);
 		buttonList.add(btnRelayIRCJoinLeave);
 		
-		btnRelayNickChanges = new GuiBotProfileToggleButton(11, leftX, topY + 100, BUTTON_WIDTH, BUTTON_HEIGHT, "irc.gui.config.relayNickChanges", BotProfile.KEY_RELAYNICKCHANGES);
+		btnRelayNickChanges = new GuiBotProfileToggleButton(11, leftX, topY + 100, BUTTON_WIDTH, BUTTON_HEIGHT, "irc.gui.config.relayNickChanges", BotProfileImpl.KEY_RELAYNICKCHANGES);
 		buttonList.add(btnRelayNickChanges);
 		
 		// Other Options
@@ -165,13 +165,13 @@ public class GuiBotProfiles extends GuiScreen {
 		btnReadOnly = new GuiButton(18, rightX, topY - 25, BUTTON_WIDTH, BUTTON_HEIGHT, "");
 		buttonList.add(btnReadOnly);
 		
-		btnLinkFilter = new GuiBotProfileToggleButton(12, rightX, topY, BUTTON_WIDTH, BUTTON_HEIGHT, "irc.gui.config.linkFilter", BotProfile.KEY_LINKFILTER);
+		btnLinkFilter = new GuiBotProfileToggleButton(12, rightX, topY, BUTTON_WIDTH, BUTTON_HEIGHT, "irc.gui.config.linkFilter", BotProfileImpl.KEY_LINKFILTER);
 		buttonList.add(btnLinkFilter);
 		
-		btnAutoPlayers = new GuiBotProfileToggleButton(13, rightX, topY + 25, BUTTON_WIDTH, BUTTON_HEIGHT, "irc.gui.config.autoPlayers", BotProfile.KEY_AUTOPLAYERS);
+		btnAutoPlayers = new GuiBotProfileToggleButton(13, rightX, topY + 25, BUTTON_WIDTH, BUTTON_HEIGHT, "irc.gui.config.autoPlayers", BotProfileImpl.KEY_AUTOPLAYERS);
 		buttonList.add(btnAutoPlayers);
 		
-		btnAllowPrivateMessages = new GuiBotProfileToggleButton(14, rightX, topY + 50, BUTTON_WIDTH, BUTTON_HEIGHT, "irc.gui.config.privateMessages", BotProfile.KEY_ALLOWPRIVMSG);
+		btnAllowPrivateMessages = new GuiBotProfileToggleButton(14, rightX, topY + 50, BUTTON_WIDTH, BUTTON_HEIGHT, "irc.gui.config.privateMessages", BotProfileImpl.KEY_ALLOWPRIVMSG);
 		buttonList.add(btnAllowPrivateMessages);
 		
 		btnDisplayFormat = new GuiButton(15, rightX, topY + 75, BUTTON_WIDTH, BUTTON_HEIGHT, "Display Format: ???");
@@ -218,7 +218,7 @@ public class GuiBotProfiles extends GuiScreen {
 			nextProfile(1);
 		} else if(button == btnNewProfile) {
 			currentIdx = profileList.size();
-			currentProfile = new BotProfile(ConfigurationHandler.getBotProfileDir(), customName);
+			currentProfile = new BotProfileImpl(ConfigurationHandler.getBotProfileDir(), customName);
 			ConfigurationHandler.addBotProfile(currentProfile);
 			loadFromProfile(currentProfile);
 		} else if(button == btnDeleteProfile) {
@@ -234,7 +234,7 @@ public class GuiBotProfiles extends GuiScreen {
 			return;
 		} else if(button == btnCopyProfile) {
 			currentIdx = profileList.size();
-			currentProfile = new BotProfile(currentProfile, currentProfile.getName() + "_copy");
+			currentProfile = new BotProfileImpl(currentProfile, currentProfile.getName() + "_copy");
 			ConfigurationHandler.addBotProfile(currentProfile);
 			loadFromProfile(currentProfile);
 		} else if(button == btnDisplayFormat) {
@@ -252,7 +252,7 @@ public class GuiBotProfiles extends GuiScreen {
 			currentProfile.setReadOnly(!currentProfile.isReadOnly());
 		} else if(currentProfile != null && currentProfile.isDefaultProfile()) {
 			currentIdx = profileList.size();
-			currentProfile = new BotProfile(currentProfile, currentProfile.getName() + "_copy");
+			currentProfile = new BotProfileImpl(currentProfile, currentProfile.getName() + "_copy");
 			ConfigurationHandler.addBotProfile(currentProfile);
 			loadFromProfile(currentProfile);
 			actionPerformed(button);
@@ -280,7 +280,7 @@ public class GuiBotProfiles extends GuiScreen {
 		loadFromProfile(currentProfile);
 	}
 	
-	public void loadFromProfile(BotProfile profile) {
+	public void loadFromProfile(BotProfileImpl profile) {
 		btnCurrentProfile.displayString = profile.getName();
 		btnCurrentProfile.enabled = !profile.isDefaultProfile();
 		btnDeleteProfile.enabled = !profile.isDefaultProfile();
@@ -290,14 +290,14 @@ public class GuiBotProfiles extends GuiScreen {
 				break;
 			}
 		}
-		btnRelayDeathMessages.setState(currentProfile.getBoolean(BotProfile.KEY_RELAYDEATHMESSAGES, false));
-		btnRelayMCJoinLeave.setState(currentProfile.getBoolean(BotProfile.KEY_RELAYMCJOINLEAVE, false));
-		btnRelayIRCJoinLeave.setState(currentProfile.getBoolean(BotProfile.KEY_RELAYIRCJOINLEAVE, true));
-		btnRelayNickChanges.setState(currentProfile.getBoolean(BotProfile.KEY_RELAYNICKCHANGES, true));
-		btnRelayBroadcasts.setState(currentProfile.getBoolean(BotProfile.KEY_RELAYBROADCASTS, false));
-		btnLinkFilter.setState(currentProfile.getBoolean(BotProfile.KEY_LINKFILTER, false));
-		btnAllowPrivateMessages.setState(currentProfile.getBoolean(BotProfile.KEY_ALLOWPRIVMSG, true));
-		btnAutoPlayers.setState(currentProfile.getBoolean(BotProfile.KEY_AUTOPLAYERS, false));
+		btnRelayDeathMessages.setState(currentProfile.getBoolean(BotProfileImpl.KEY_RELAYDEATHMESSAGES, false));
+		btnRelayMCJoinLeave.setState(currentProfile.getBoolean(BotProfileImpl.KEY_RELAYMCJOINLEAVE, false));
+		btnRelayIRCJoinLeave.setState(currentProfile.getBoolean(BotProfileImpl.KEY_RELAYIRCJOINLEAVE, true));
+		btnRelayNickChanges.setState(currentProfile.getBoolean(BotProfileImpl.KEY_RELAYNICKCHANGES, true));
+		btnRelayBroadcasts.setState(currentProfile.getBoolean(BotProfileImpl.KEY_RELAYBROADCASTS, false));
+		btnLinkFilter.setState(currentProfile.getBoolean(BotProfileImpl.KEY_LINKFILTER, false));
+		btnAllowPrivateMessages.setState(currentProfile.getBoolean(BotProfileImpl.KEY_ALLOWPRIVMSG, true));
+		btnAutoPlayers.setState(currentProfile.getBoolean(BotProfileImpl.KEY_AUTOPLAYERS, false));
 		updateButtonText();
 	}
 	

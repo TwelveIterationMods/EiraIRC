@@ -6,7 +6,7 @@ package net.blay09.mods.eirairc.client.gui.settings;
 import net.blay09.mods.eirairc.bot.BotCommandCustom;
 import net.blay09.mods.eirairc.client.gui.GuiAdvancedTextField;
 import net.blay09.mods.eirairc.client.gui.GuiToggleButton;
-import net.blay09.mods.eirairc.config.BotProfile;
+import net.blay09.mods.eirairc.config.BotProfileImpl;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
@@ -21,7 +21,7 @@ public class GuiBotCommand extends GuiScreen {
 	private static final int BUTTON_HEIGHT = 20;
 
 	private final GuiScreen parentScreen;
-	private final BotProfile botProfile;
+	private final BotProfileImpl botProfile;
 	private final BotCommandCustom botCommand;
 	
 	private GuiAdvancedTextField txtCommand;
@@ -39,7 +39,7 @@ public class GuiBotCommand extends GuiScreen {
 	private boolean requireAuth;
 	private boolean broadcastResult;
 	
-	public GuiBotCommand(GuiScreen parentScreen, BotProfile botProfile, BotCommandCustom botCommand) {
+	public GuiBotCommand(GuiScreen parentScreen, BotProfileImpl botProfile, BotCommandCustom botCommand) {
 		this.parentScreen = parentScreen;
 		this.botProfile = botProfile;
 		this.botCommand = botCommand;

@@ -3,10 +3,10 @@
 
 package net.blay09.mods.eirairc.util;
 
-import net.blay09.mods.eirairc.api.IIRCChannel;
-import net.blay09.mods.eirairc.api.IIRCConnection;
-import net.blay09.mods.eirairc.api.IIRCContext;
-import net.blay09.mods.eirairc.api.IIRCUser;
+import net.blay09.mods.eirairc.api.IRCChannel;
+import net.blay09.mods.eirairc.api.IRCConnection;
+import net.blay09.mods.eirairc.api.IRCContext;
+import net.blay09.mods.eirairc.api.IRCUser;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.DisplayConfig;
 import net.blay09.mods.eirairc.config.DisplayFormatConfig;
@@ -16,9 +16,9 @@ import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 
 public class ConfigHelper {
 
-	public static String getEmoteColor(IIRCContext context) {
-		if(context instanceof IIRCChannel) {
-			ChannelConfig channelConfig = getChannelConfig((IIRCChannel) context);
+	public static String getEmoteColor(IRCContext context) {
+		if(context instanceof IRCChannel) {
+			ChannelConfig channelConfig = getChannelConfig((IRCChannel) context);
 			if(channelConfig != null) {
 				ServerConfig serverConfig = channelConfig.getServerConfig();
 				if(!serverConfig.getEmoteColor().isEmpty()) {
@@ -29,15 +29,15 @@ public class ConfigHelper {
 		return DisplayConfig.emoteColor;
 	}
 	
-	public static String getNoticeColor(IIRCContext context) {
+	public static String getNoticeColor(IRCContext context) {
 		return DisplayConfig.ircNoticeColor;
 	}
 	
-	public static ChannelConfig getChannelConfig(IIRCChannel channel) {
+	public static ChannelConfig getChannelConfig(IRCChannel channel) {
 		return getServerConfig(channel.getConnection()).getChannelConfig(channel);
 	}
 	
-	public static String getIRCColor(IIRCConnection connection) {
+	public static String getIRCColor(IRCConnection connection) {
 		return getIRCColor(ConfigurationHandler.getServerConfig(connection.getHost()));
 	}
 	
@@ -68,7 +68,7 @@ public class ConfigHelper {
 		return formatNick(getNick(serverConfig));
 	}
 
-	public static String getQuitMessage(IIRCConnection connection) {
+	public static String getQuitMessage(IRCConnection connection) {
 		ServerConfig serverConfig = ConfigurationHandler.getServerConfig(connection.getHost());
 		if(serverConfig.getQuitMessage() != null && !serverConfig.getQuitMessage().isEmpty()) {
 			return serverConfig.getQuitMessage();
@@ -76,7 +76,7 @@ public class ConfigHelper {
 		return DisplayConfig.quitMessage;
 	}
 
-	public static ServerConfig getServerConfig(IIRCConnection connection) {
+	public static ServerConfig getServerConfig(IRCConnection connection) {
 		return ConfigurationHandler.getServerConfig(connection.getHost());
 	}
 

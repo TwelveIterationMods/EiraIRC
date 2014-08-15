@@ -6,9 +6,9 @@ package net.blay09.mods.eirairc.command;
 import java.util.List;
 
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.api.IIRCChannel;
-import net.blay09.mods.eirairc.api.IIRCConnection;
-import net.blay09.mods.eirairc.api.IIRCContext;
+import net.blay09.mods.eirairc.api.IRCChannel;
+import net.blay09.mods.eirairc.api.IRCConnection;
+import net.blay09.mods.eirairc.api.IRCContext;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
 
@@ -30,15 +30,15 @@ public class CommandList extends SubCommand {
 	}
 
 	@Override
-	public boolean processCommand(ICommandSender sender, IIRCContext context, String[] args, boolean serverSide) {
+	public boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) {
 		if(EiraIRC.instance.getConnectionCount() == 0) {
 			Utils.sendLocalizedMessage(sender, "irc.general.notConnected", "IRC");
 			return true;
 		}
 		Utils.sendLocalizedMessage(sender, "irc.list.activeConnections");
-		for(IIRCConnection connection : EiraIRC.instance.getConnections()) {
+		for(IRCConnection connection : EiraIRC.instance.getConnections()) {
 			StringBuilder sb = new StringBuilder();
-			for(IIRCChannel channel : connection.getChannels()) {
+			for(IRCChannel channel : connection.getChannels()) {
 				if(sb.length() > 0) {
 					sb.append(", ");
 				}

@@ -5,7 +5,7 @@ package net.blay09.mods.eirairc.command.extension;
 
 import java.util.List;
 
-import net.blay09.mods.eirairc.api.IIRCContext;
+import net.blay09.mods.eirairc.api.IRCContext;
 import net.blay09.mods.eirairc.command.SubCommand;
 import net.blay09.mods.eirairc.config.DisplayConfig;
 import net.blay09.mods.eirairc.config.GlobalConfig;
@@ -36,7 +36,7 @@ public class CommandColor extends SubCommand {
 	}
 
 	@Override
-	public boolean processCommand(ICommandSender sender, IIRCContext context, String[] args, boolean serverSide) {
+	public boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) {
 		if(!(sender instanceof EntityPlayer)) {
 			return true;
 		}
