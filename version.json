@@ -10,5 +10,15 @@
 			"isDirectLink":"false",
 			"newFileName":""
 		}
+        {
+            "mcVersion":"1.7.2"
+            "modVersion":"mc1.7.2-v1.7.1"
+            "changeLog": [
+                ""
+            ]
+            "updateURL":"http://minecraft.curseforge.com/mc-mods/68420-eirairc/files"
+            "isDirectLink":"false",
+			"newFileName":""
+        }
 	}
 }
