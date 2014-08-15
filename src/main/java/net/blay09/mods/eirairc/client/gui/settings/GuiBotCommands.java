@@ -8,12 +8,11 @@ import net.blay09.mods.eirairc.bot.BotCommandCustom;
 import net.blay09.mods.eirairc.client.gui.GuiAdvancedTextField;
 import net.blay09.mods.eirairc.client.gui.GuiList;
 import net.blay09.mods.eirairc.client.gui.GuiListTextEntry;
-import net.blay09.mods.eirairc.config.BotProfile;
+import net.blay09.mods.eirairc.config.BotProfileImpl;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
@@ -26,7 +25,7 @@ public class GuiBotCommands extends GuiScreen {
 	private static final int BUTTON_HEIGHT = 20;
 
 	private final GuiScreen parentScreen;
-	private final BotProfile botProfile;
+	private final BotProfileImpl botProfile;
 	
 	private GuiButton btnInterOp;
 	private GuiAdvancedTextField txtDisabledInterOpCommands;
@@ -35,7 +34,7 @@ public class GuiBotCommands extends GuiScreen {
 	private GuiButton btnSave;
 	private GuiButton btnBack;
 	
-	public GuiBotCommands(GuiScreen parentScreen, BotProfile botProfile) {
+	public GuiBotCommands(GuiScreen parentScreen, BotProfileImpl botProfile) {
 		this.parentScreen = parentScreen;
 		this.botProfile = botProfile;
 	}

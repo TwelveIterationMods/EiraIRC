@@ -6,8 +6,8 @@ package net.blay09.mods.eirairc.command;
 import java.util.List;
 
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.api.IIRCConnection;
-import net.blay09.mods.eirairc.api.IIRCContext;
+import net.blay09.mods.eirairc.api.IRCConnection;
+import net.blay09.mods.eirairc.api.IRCContext;
 import net.blay09.mods.eirairc.util.IRCResolver;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
@@ -30,9 +30,9 @@ public class CommandQuote extends SubCommand {
 	}
 
 	@Override
-	public boolean processCommand(ICommandSender sender, IIRCContext context, String[] args, boolean serverSide) {
+	public boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) {
 		int msgIdx = 0;
-		IIRCConnection connection;
+		IRCConnection connection;
 		if(context == null) {
 			if(args.length < 2) {
 				Utils.sendLocalizedMessage(sender, "irc.target.specifyServer");
@@ -60,7 +60,7 @@ public class CommandQuote extends SubCommand {
 	@Override
 	public void addTabCompletionOptions(List<String> list, ICommandSender sender, String[] args) {
 		if(args.length == 0) {
-			for(IIRCConnection connection : EiraIRC.instance.getConnections()) {
+			for(IRCConnection connection : EiraIRC.instance.getConnections()) {
 				list.add(connection.getHost());
 			}
 		}

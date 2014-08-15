@@ -5,7 +5,7 @@ package net.blay09.mods.eirairc.api.bot;
 
 import java.util.Collection;
 
-public interface IBotProfile {
+public interface BotProfile {
 
 	public static final String KEY_ALLOWPRIVMSG = "allowPrivateMessages";
 	public static final String KEY_AUTOPLAYERS = "autoWho";

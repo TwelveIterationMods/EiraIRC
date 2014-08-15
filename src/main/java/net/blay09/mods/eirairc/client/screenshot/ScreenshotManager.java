@@ -25,14 +25,9 @@ import java.util.Properties;
 import javax.imageio.ImageIO;
 
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.api.IIRCChannel;
-import net.blay09.mods.eirairc.api.IIRCConnection;
-import net.blay09.mods.eirairc.api.bot.IIRCBot;
 import net.blay09.mods.eirairc.api.upload.IUploadHoster;
 import net.blay09.mods.eirairc.api.upload.UploadManager;
-import net.blay09.mods.eirairc.api.upload.UploadedFile;
 import net.blay09.mods.eirairc.config.ScreenshotConfig;
-import net.blay09.mods.eirairc.irc.IRCConnection;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
 
@@ -40,7 +35,6 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 
 public class ScreenshotManager {

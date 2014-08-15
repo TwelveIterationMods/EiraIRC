@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.blay09.mods.eirairc.api.IIRCChannel;
+import net.blay09.mods.eirairc.api.IRCChannel;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
@@ -39,11 +39,11 @@ public class ServerConfig {
 	
 	public void useDefaults(boolean serverSide) {
 		if(host.equals(Globals.TWITCH_SERVER)) {
-			botProfile = BotProfile.DEFAULT_TWITCH;
+			botProfile = BotProfileImpl.DEFAULT_TWITCH;
 		} else if(serverSide) {
-			botProfile = BotProfile.DEFAULT_SERVER;
+			botProfile = BotProfileImpl.DEFAULT_SERVER;
 		} else {
-			botProfile = BotProfile.DEFAULT_CLIENT;
+			botProfile = BotProfileImpl.DEFAULT_CLIENT;
 		}
 	}
 	
@@ -106,7 +106,7 @@ public class ServerConfig {
 		return channelConfig;
 	}
 	
-	public ChannelConfig getChannelConfig(IIRCChannel channel) {
+	public ChannelConfig getChannelConfig(IRCChannel channel) {
 		return getChannelConfig(channel.getName());
 	}
 

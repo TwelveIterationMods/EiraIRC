@@ -5,10 +5,10 @@ package net.blay09.mods.eirairc.bot;
 
 import java.util.List;
 
-import net.blay09.mods.eirairc.api.IIRCChannel;
-import net.blay09.mods.eirairc.api.IIRCUser;
+import net.blay09.mods.eirairc.api.IRCChannel;
+import net.blay09.mods.eirairc.api.IRCUser;
 import net.blay09.mods.eirairc.api.bot.IBotCommand;
-import net.blay09.mods.eirairc.api.bot.IIRCBot;
+import net.blay09.mods.eirairc.api.bot.IRCBot;
 import net.blay09.mods.eirairc.config.GlobalConfig;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.entity.player.EntityPlayer;
@@ -27,7 +27,7 @@ public class BotCommandAlias implements IBotCommand {
 	}
 
 	@Override
-	public void processCommand(IIRCBot bot, IIRCChannel channel, IIRCUser user, String[] args) {
+	public void processCommand(IRCBot bot, IRCChannel channel, IRCUser user, String[] args) {
 		if(!GlobalConfig.enableAliases) {
 			user.notice(Utils.getLocalizedMessage("irc.alias.disabled"));
 			return;

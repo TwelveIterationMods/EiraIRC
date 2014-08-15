@@ -6,7 +6,7 @@ package net.blay09.mods.eirairc.command;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.blay09.mods.eirairc.api.IIRCContext;
+import net.blay09.mods.eirairc.api.IRCContext;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommand;
@@ -16,7 +16,7 @@ public abstract class SubCommand implements ICommand {
 
 	public abstract boolean hasQuickCommand();
 	
-	public abstract boolean processCommand(ICommandSender sender, IIRCContext context, String[] args, boolean serverSide);
+	public abstract boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide);
 	
 	public abstract String getUsageString(ICommandSender sender);
 	

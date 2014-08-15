@@ -1,7 +1,7 @@
 package net.blay09.mods.eirairc.bot;
 
-import net.blay09.mods.eirairc.api.IIRCChannel;
-import net.blay09.mods.eirairc.api.IIRCUser;
+import net.blay09.mods.eirairc.api.IRCChannel;
+import net.blay09.mods.eirairc.api.IRCUser;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
@@ -11,12 +11,12 @@ import net.minecraft.world.World;
 
 public class IRCUserCommandSender implements ICommandSender {
 
-	private final IIRCChannel channel;
-	private final IIRCUser user;
+	private final IRCChannel channel;
+	private final IRCUser user;
 	private final boolean broadcastResult;
 	private final boolean opEnabled;
 	
-	public IRCUserCommandSender(IIRCChannel channel, IIRCUser user, boolean broadcastResult, boolean opEnabled) {
+	public IRCUserCommandSender(IRCChannel channel, IRCUser user, boolean broadcastResult, boolean opEnabled) {
 		this.channel = channel;
 		this.user = user;
 		this.broadcastResult = broadcastResult;

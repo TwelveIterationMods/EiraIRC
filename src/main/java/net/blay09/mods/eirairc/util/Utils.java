@@ -21,18 +21,19 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.api.IIRCChannel;
-import net.blay09.mods.eirairc.api.IIRCConnection;
-import net.blay09.mods.eirairc.api.IIRCContext;
-import net.blay09.mods.eirairc.api.IIRCUser;
-import net.blay09.mods.eirairc.bot.EiraIRCBot;
+import net.blay09.mods.eirairc.api.IRCChannel;
+import net.blay09.mods.eirairc.api.IRCConnection;
+import net.blay09.mods.eirairc.api.IRCContext;
+import net.blay09.mods.eirairc.api.IRCUser;
+import net.blay09.mods.eirairc.api.bot.IRCBot;
+import net.blay09.mods.eirairc.bot.IRCBotImpl;
 import net.blay09.mods.eirairc.config.DisplayConfig;
 import net.blay09.mods.eirairc.config.GlobalConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.ServiceConfig;
 import net.blay09.mods.eirairc.config.ServiceSettings;
-import net.blay09.mods.eirairc.irc.IRCConnection;
-import net.blay09.mods.eirairc.irc.ssl.IRCConnectionSSL;
+import net.blay09.mods.eirairc.irc.IRCConnectionImpl;
+import net.blay09.mods.eirairc.irc.ssl.IRCConnectionSSLImpl;
 import net.blay09.mods.eirairc.net.EiraPlayerInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.ICommandSender;
@@ -148,11 +149,11 @@ public class Utils {
 		return getAliasForPlayer(player);
 	}
 	
-	public static String getNickGame(IIRCChannel channel, IIRCUser user) {
+	public static String getNickGame(IRCChannel channel, IRCUser user) {
 		return user.getName();
 	}
 	
-	public static EnumChatFormatting getColorFormattingForUser(IIRCChannel channel, IIRCUser user) {
+	public static EnumChatFormatting getColorFormattingForUser(IRCChannel channel, IRCUser user) {
 		if(channel == null) {
 			return getColorFormatting(DisplayConfig.ircPrivateColor);
 		}
@@ -197,10 +198,7 @@ public class Utils {
 	}
 	
 	public static boolean isOP(ICommandSender sender) {
-		if(MinecraftServer.getServer() == null) {
-			return false;
-		}
-		if(MinecraftServer.getServer().isSinglePlayer()) {
+		if(MinecraftServer.getServer() == null || MinecraftServer.getServer().isSinglePlayer()) {
 			return true;
 		}
 		if(sender instanceof EntityPlayer) {
@@ -275,7 +273,7 @@ public class Utils {
 	}
 
 	public static void addConnectionsToList(List<String> list) {
-		for(IIRCConnection connection : EiraIRC.instance.getConnections()) {
+		for(IRCConnection connection : EiraIRC.instance.getConnections()) {
 			list.add(connection.getHost());
 		}		
 	}
@@ -363,22 +361,22 @@ public class Utils {
 		return playerTagPattern.matcher(playerName).replaceAll("");
 	}
 
-	public static IRCConnection connectTo(ServerConfig config) {
-		IRCConnection connection;
+	public static IRCConnectionImpl connectTo(ServerConfig config) {
+		IRCConnectionImpl connection;
 		if(config.isSecureConnection()) {
-			connection = new IRCConnectionSSL(config.getHost(), config.getServerPassword(), ConfigHelper.getFormattedNick(config), config.getIdent(), config.getDescription());
+			connection = new IRCConnectionSSLImpl(config.getHost(), config.getServerPassword(), ConfigHelper.getFormattedNick(config), config.getIdent(), config.getDescription());
 		} else {
-			connection = new IRCConnection(config.getHost(), config.getServerPassword(), ConfigHelper.getFormattedNick(config), config.getIdent(), config.getDescription());
+			connection = new IRCConnectionImpl(config.getHost(), config.getServerPassword(), ConfigHelper.getFormattedNick(config), config.getIdent(), config.getDescription());
 		}
 		connection.setCharset(GlobalConfig.charset);
-		connection.setBot(new EiraIRCBot(connection));
+		connection.setBot(new IRCBotImpl(connection));
 		if(connection.start()) {
 			return connection;
 		}
 		return null;
 	}
 	
-	public static void doNickServ(IIRCConnection connection, ServerConfig config) {
+	public static void doNickServ(IRCConnection connection, ServerConfig config) {
 		ServiceSettings settings = ServiceConfig.getSettings(connection.getHost(), connection.getServerType());
 		String username = config.getNickServName();
 		String password = config.getNickServPassword();
@@ -388,8 +386,8 @@ public class Utils {
 		connection.irc(settings.getIdentifyCommand(username, password));
 	}
 	
-	public static void sendUserList(ICommandSender player, IIRCConnection connection, IIRCChannel channel) {
-		Collection<IIRCUser> userList = channel.getUserList();
+	public static void sendUserList(ICommandSender player, IRCConnection connection, IRCChannel channel) {
+		Collection<IRCUser> userList = channel.getUserList();
 		if(userList.size() == 0) {
 			if(player == null) {
 				addMessageToChat(Utils.getLocalizedMessage("irc.who.noUsersOnline", connection.getHost(), channel.getName()));
@@ -404,7 +402,7 @@ public class Utils {
 			sendLocalizedMessage(player, "irc.who.usersOnline", connection.getHost(), userList.size(), channel.getName());
 		}
 		String s = " * ";
-		for(IIRCUser user : userList) {
+		for(IRCUser user : userList) {
 			if(s.length() + user.getName().length() > Globals.CHAT_MAX_LENGTH) {
 				if(player == null) {
 					addMessageToChat(s);
@@ -427,7 +425,7 @@ public class Utils {
 		}
 	}
 	
-	public static void sendPlayerList(IIRCUser user) {
+	public static void sendPlayerList(IRCUser user) {
 		if(MinecraftServer.getServer() == null || MinecraftServer.getServer().isSinglePlayer()) {
 			return;
 		}
@@ -455,10 +453,10 @@ public class Utils {
 		}
 	}
 	
-	public static IIRCContext getSuggestedTarget() {
-		IIRCContext result = EiraIRC.instance.getChatSessionHandler().getIRCTarget();
+	public static IRCContext getSuggestedTarget() {
+		IRCContext result = EiraIRC.instance.getChatSessionHandler().getIRCTarget();
 		if(result == null) {
-			IIRCConnection connection = EiraIRC.instance.getDefaultConnection();
+			IRCConnection connection = EiraIRC.instance.getDefaultConnection();
 			if(connection != null) {
 				if(connection.getChannels().size() == 1) {
 					return connection.getChannels().iterator().next();
@@ -532,11 +530,27 @@ public class Utils {
 		return sb.toString();
 	}
 
-	public static String formatMessage(String format, ICommandSender sender, String message, boolean colorName, boolean stripTags) {
-		return formatChatComponent(format, sender, message, colorName, stripTags).getUnformattedText();
+	public static String getMessageFormat(IRCBot bot, IRCContext context, boolean isEmote) {
+		if(context instanceof IRCUser) {
+			if(isEmote) {
+				return ConfigHelper.getDisplayFormat(bot.getDisplayFormat(context)).ircPrivateEmote;
+			} else {
+				return ConfigHelper.getDisplayFormat(bot.getDisplayFormat(context)).ircPrivateMessage;
+			}
+		} else {
+			if(isEmote) {
+				return ConfigHelper.getDisplayFormat(bot.getDisplayFormat(context)).ircChannelEmote;
+			} else {
+				return ConfigHelper.getDisplayFormat(bot.getDisplayFormat(context)).ircChannelMessage;
+			}
+		}
+	}
+
+	public static String formatMessage(String format, ICommandSender sender, String message, boolean colorName, boolean stripTags, boolean addPreSuffix) {
+		return formatChatComponent(format, sender, message, colorName, stripTags, addPreSuffix).getUnformattedText();
 	}
 	
-	public static IChatComponent formatChatComponent(String format, ICommandSender sender, String message, boolean colorName, boolean stripTags) {
+	public static IChatComponent formatChatComponent(String format, ICommandSender sender, String message, boolean colorName, boolean stripTags, boolean addPreSuffix) {
 		IChatComponent root = new ChatComponentText("");
 		StringBuilder sb = new StringBuilder();
 		int currentIdx = 0;
@@ -556,17 +570,24 @@ public class Utils {
 						if(sender instanceof EntityPlayer) {
 							EntityPlayer player = (EntityPlayer) sender;
 							component = player.func_145748_c_().createCopy();
+							String fixedName = component.getUnformattedText();
 							if(colorName) {
-								if(stripTags) {
-									component = new ChatComponentText(filterPlayerTags(component.getUnformattedText()));
-								}
-								component.getChatStyle().setColor(Utils.getColorFormattingForPlayer(player));
-							} else {
-								String fixedName = Utils.filterAllowedCharacters(component.getUnformattedText(), true, false);
 								if(stripTags) {
 									fixedName = filterPlayerTags(fixedName);
 								}
-								fixedName = addPreSuffix(fixedName);
+								if(addPreSuffix) {
+									fixedName = addPreSuffix(fixedName);
+								}
+								component = new ChatComponentText(fixedName);
+								component.getChatStyle().setColor(Utils.getColorFormattingForPlayer(player));
+							} else {
+								fixedName = Utils.filterAllowedCharacters(fixedName, true, false);
+								if(stripTags) {
+									fixedName = filterPlayerTags(fixedName);
+								}
+								if(addPreSuffix) {
+									fixedName = addPreSuffix(fixedName);
+								}
 								component = new ChatComponentText(fixedName);
 							}
 						} else {
@@ -598,11 +619,11 @@ public class Utils {
 		return root;
 	}
 
-	public static String formatMessage(String format, IIRCConnection connection, IIRCChannel channel, IIRCUser user, String message, boolean colorName) {
+	public static String formatMessage(String format, IRCConnection connection, IRCChannel channel, IRCUser user, String message, boolean colorName) {
 		return formatChatComponent(format, connection, channel, user, message, colorName).getUnformattedText();
 	}
 
-	public static IChatComponent formatChatComponent(String format, IIRCConnection connection, IIRCChannel channel, IIRCUser user, String message, boolean colorName) {
+	public static IChatComponent formatChatComponent(String format, IRCConnection connection, IRCChannel channel, IRCUser user, String message, boolean colorName) {
 		IChatComponent root = new ChatComponentText("");
 		StringBuilder sb = new StringBuilder();
 		int currentIdx = 0;

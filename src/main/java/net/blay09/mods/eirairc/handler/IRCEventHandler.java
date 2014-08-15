@@ -4,7 +4,7 @@
 package net.blay09.mods.eirairc.handler;
 
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.api.bot.IBotProfile;
+import net.blay09.mods.eirairc.api.bot.BotProfile;
 import net.blay09.mods.eirairc.api.event.IRCChannelChatEvent;
 import net.blay09.mods.eirairc.api.event.IRCChannelTopicEvent;
 import net.blay09.mods.eirairc.api.event.IRCPrivateChatEvent;
@@ -15,7 +15,7 @@ import net.blay09.mods.eirairc.api.event.IRCUserQuitEvent;
 import net.blay09.mods.eirairc.config.CompatibilityConfig;
 import net.blay09.mods.eirairc.config.DisplayConfig;
 import net.blay09.mods.eirairc.config.GlobalConfig;
-import net.blay09.mods.eirairc.irc.IRCConnection;
+import net.blay09.mods.eirairc.irc.IRCConnectionImpl;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.NotificationType;
 import net.blay09.mods.eirairc.util.Utils;
@@ -30,7 +30,7 @@ public class IRCEventHandler {
 		if(event.bot.isMuted(null)) {
 			return;
 		}
-		if(event.bot.getBoolean(null, IBotProfile.KEY_RELAYNICKCHANGES, true)) {
+		if(event.bot.getBoolean(null, BotProfile.KEY_RELAYNICKCHANGES, true)) {
 			String mcMessage = Utils.getLocalizedMessage("irc.display.irc.nickChange", event.connection.getHost(), event.oldNick, event.newNick);
 			Utils.addMessageToChat(mcMessage);
 		}
@@ -41,11 +41,11 @@ public class IRCEventHandler {
 		if(event.bot.isMuted(event.channel)) {
 			return;
 		}
-		if(event.bot.getBoolean(event.channel, IBotProfile.KEY_RELAYIRCJOINLEAVE, true)) {
+		if(event.bot.getBoolean(event.channel, BotProfile.KEY_RELAYIRCJOINLEAVE, true)) {
 			String mcMessage = Utils.getLocalizedMessage("irc.display.irc.joinMsg", event.channel.getName(), event.user.getName());
 			Utils.addMessageToChat(mcMessage);
 		}
-		if(event.bot.getBoolean(event.channel, IBotProfile.KEY_AUTOPLAYERS, false)) {
+		if(event.bot.getBoolean(event.channel, BotProfile.KEY_AUTOPLAYERS, false)) {
 			Utils.sendPlayerList(event.user);
 		}
 	}
@@ -55,7 +55,7 @@ public class IRCEventHandler {
 		if(event.bot.isMuted(event.channel)) {
 			return;
 		}
-		if(event.bot.getBoolean(event.channel, IBotProfile.KEY_RELAYIRCJOINLEAVE, true)) {
+		if(event.bot.getBoolean(event.channel, BotProfile.KEY_RELAYIRCJOINLEAVE, true)) {
 			String mcMessage = Utils.getLocalizedMessage("irc.display.irc.partMsg", event.channel.getName(), event.user.getName());
 			Utils.addMessageToChat(mcMessage);
 		}
@@ -66,7 +66,7 @@ public class IRCEventHandler {
 		if(event.bot.isMuted(null)) {
 			return;
 		}
-		if(event.bot.getBoolean(null, IBotProfile.KEY_RELAYIRCJOINLEAVE, true)) {
+		if(event.bot.getBoolean(null, BotProfile.KEY_RELAYIRCJOINLEAVE, true)) {
 			String mcMessage = Utils.getLocalizedMessage("irc.display.irc.quitMsg", event.connection.getHost(), event.user.getName(), event.message);
 			Utils.addMessageToChat(mcMessage);
 		}
@@ -94,11 +94,11 @@ public class IRCEventHandler {
 			return;
 		}
 		String message = event.message;
-		if(event.bot.getBoolean(event.sender, IBotProfile.KEY_LINKFILTER, false)) {
+		if(event.bot.getBoolean(event.sender, BotProfile.KEY_LINKFILTER, false)) {
 			message = Utils.filterLinks(message);
 		}
 		message = Utils.filterAllowedCharacters(message, true, DisplayConfig.enableIRCColors);
-		String format = null;
+		String format;
 		if(event.isNotice) {
 			format = ConfigHelper.getDisplayFormat(event.bot.getDisplayFormat(event.sender)).mcPrivateNotice;
 		} else if(event.isEmote) {
@@ -138,7 +138,7 @@ public class IRCEventHandler {
 		String message = event.message;
 		if(CompatibilityConfig.clientBridge) {
 			if(!CompatibilityConfig.clientBridgeMessageToken.isEmpty()) {
-				if (message.endsWith(CompatibilityConfig.clientBridgeMessageToken) || message.endsWith(CompatibilityConfig.clientBridgeMessageToken + IRCConnection.EMOTE_END)) {
+				if (message.endsWith(CompatibilityConfig.clientBridgeMessageToken) || message.endsWith(CompatibilityConfig.clientBridgeMessageToken + IRCConnectionImpl.EMOTE_END)) {
 					return;
 				}
 			}
@@ -148,7 +148,7 @@ public class IRCEventHandler {
 				}
 			}
 		}
-		if(event.bot.getBoolean(event.sender, IBotProfile.KEY_LINKFILTER, false)) {
+		if(event.bot.getBoolean(event.sender, BotProfile.KEY_LINKFILTER, false)) {
 			message = Utils.filterLinks(message);
 		}
 		message = Utils.filterAllowedCharacters(message, true, DisplayConfig.enableIRCColors);

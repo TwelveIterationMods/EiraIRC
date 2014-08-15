@@ -3,15 +3,14 @@
 
 package net.blay09.mods.eirairc.api.event;
 
-import net.blay09.mods.eirairc.api.IIRCChannel;
-import net.blay09.mods.eirairc.api.IIRCConnection;
+import net.blay09.mods.eirairc.api.IRCConnection;
 
 public class IRCErrorEvent extends IRCEvent {
 
 	public final int numeric;
 	public final String[] args;
 	
-	public IRCErrorEvent(IIRCConnection connection, int numeric, String[] args) {
+	public IRCErrorEvent(IRCConnection connection, int numeric, String[] args) {
 		super(connection);
 		this.numeric = numeric;
 		this.args = args;

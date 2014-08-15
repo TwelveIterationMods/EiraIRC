@@ -5,9 +5,8 @@ package net.blay09.mods.eirairc.command.interop;
 
 import java.util.List;
 
-import net.blay09.mods.eirairc.api.IIRCContext;
+import net.blay09.mods.eirairc.api.IRCContext;
 import net.blay09.mods.eirairc.command.SubCommand;
-import net.blay09.mods.eirairc.config.GlobalConfig;
 import net.blay09.mods.eirairc.util.IRCResolver;
 import net.blay09.mods.eirairc.util.IRCTargetError;
 import net.blay09.mods.eirairc.util.Utils;
@@ -32,11 +31,11 @@ public class InterOpCommandTopic extends SubCommand {
 	}
 	
 	@Override
-	public boolean processCommand(ICommandSender sender, IIRCContext context, String[] args, boolean serverSide) {
+	public boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) {
 		if(args.length < 2) {
 			throw new WrongUsageException(getCommandUsage(sender));
 		}
-		IIRCContext targetChannel = IRCResolver.resolveTarget(args[0], (short) (IRCResolver.FLAG_CHANNEL + IRCResolver.FLAG_ONCHANNEL));
+		IRCContext targetChannel = IRCResolver.resolveTarget(args[0], (short) (IRCResolver.FLAG_CHANNEL + IRCResolver.FLAG_ONCHANNEL));
 		if(targetChannel instanceof IRCTargetError) {
 			Utils.sendLocalizedMessage(sender, targetChannel.getName(), args[0]);
 			return true;

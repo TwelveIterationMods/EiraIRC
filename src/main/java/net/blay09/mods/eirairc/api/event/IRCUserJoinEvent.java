@@ -3,18 +3,16 @@
 
 package net.blay09.mods.eirairc.api.event;
 
-import net.blay09.mods.eirairc.api.IIRCChannel;
-import net.blay09.mods.eirairc.api.IIRCConnection;
-import net.blay09.mods.eirairc.api.IIRCUser;
-import net.blay09.mods.eirairc.api.bot.IIRCBot;
-import cpw.mods.fml.common.eventhandler.Event;
+import net.blay09.mods.eirairc.api.IRCChannel;
+import net.blay09.mods.eirairc.api.IRCConnection;
+import net.blay09.mods.eirairc.api.IRCUser;
 
 public class IRCUserJoinEvent extends IRCEvent {
 
-	public final IIRCChannel channel;
-	public final IIRCUser user;
+	public final IRCChannel channel;
+	public final IRCUser user;
 	
-	public IRCUserJoinEvent(IIRCConnection connection, IIRCChannel channel, IIRCUser user) {
+	public IRCUserJoinEvent(IRCConnection connection, IRCChannel channel, IRCUser user) {
 		super(connection);
 		this.channel = channel;
 		this.user = user;

@@ -16,11 +16,11 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
-public class IRCConnectionSSL extends IRCConnection {
+public class IRCConnectionSSLImpl extends IRCConnectionImpl {
 
 	private SSLSocket sslSocket;
 
-	public IRCConnectionSSL(String host, String password, String nick, String ident, String description) {
+	public IRCConnectionSSLImpl(String host, String password, String nick, String ident, String description) {
 		super(host, password, nick, ident, description);
 	}
 
