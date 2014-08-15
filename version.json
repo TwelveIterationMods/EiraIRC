@@ -4,20 +4,30 @@
 			"mcVersion":"1.7.10"
 			"modVersion":"mc1.7.10-v1.7.1"
 			"changeLog": [
-				""
+				"Added VersionChecker compatibility"
+                "Added RelayChat API event to allow better compatibility with other mods modifying chat behaviour"
+                "Fixed duplicate Twitch connections resulting in duplicate chat messages"
+                "Fixed "You do not have permission to use this command" on multiplayer servers"
+                "Fixed connection crash when sending messages without it being fully connected yet"
+                "Fixed connection crash on wrong password"
 			]
-			"updateURL":"http://minecraft.curseforge.com/mc-mods/68420-eirairc/files"
-			"isDirectLink":"false",
+			"updateURL":"http://minecraft.curseforge.com/mc-mods/68420-eirairc/files/2211736/download"
+			"isDirectLink":"true",
 			"newFileName":""
 		}
         {
             "mcVersion":"1.7.2"
             "modVersion":"mc1.7.2-v1.7.1"
             "changeLog": [
-                ""
+                "Added VersionChecker compatibility"
+                "Added RelayChat API event to allow better compatibility with other mods modifying chat behaviour"
+                "Fixed duplicate Twitch connections resulting in duplicate chat messages"
+                "Fixed "You do not have permission to use this command" on multiplayer servers"
+                "Fixed connection crash when sending messages without it being fully connected yet"
+                "Fixed connection crash on wrong password"
             ]
-            "updateURL":"http://minecraft.curseforge.com/mc-mods/68420-eirairc/files"
-            "isDirectLink":"false",
+            "updateURL":"http://minecraft.curseforge.com/mc-mods/68420-eirairc/files/2211737/download"
+            "isDirectLink":"true",
 			"newFileName":""
         }
 	}
