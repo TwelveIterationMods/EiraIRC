@@ -641,11 +641,19 @@ public class Utils {
 					} else if(token.equals("CHANNEL")) {
 						component = new ChatComponentText(channel.getName());
 					} else if(token.equals("USER")) {
-						component = new ChatComponentText(user.getIdentifier());
+						if(user != null) {
+							component = new ChatComponentText(user.getIdentifier());
+						} else {
+							component = new ChatComponentText(connection.getIdentifier());
+						}
 					} else if(token.equals("NICK")) {
-						component = new ChatComponentText(getNickGame(channel, user));
-						if(colorName) {
-							component.getChatStyle().setColor(Utils.getColorFormattingForUser(channel, user));
+						if(user != null) {
+							component = new ChatComponentText(getNickGame(channel, user));
+							if(colorName) {
+								component.getChatStyle().setColor(Utils.getColorFormattingForUser(channel, user));
+							}
+						} else {
+							component = new ChatComponentText(connection.getIdentifier());
 						}
 					} else if(token.equals("MESSAGE")) {
 						component = new ChatComponentText(message);
