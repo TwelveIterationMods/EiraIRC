@@ -43,13 +43,18 @@ public class IRCSender implements Runnable {
 		try {
 			while(running) {
 				synchronized (queue) {
-					while(!queue.isEmpty()) {
-						String entry = queue.removeFirst();
-						writer.write(entry);
-						writer.write(LINE_FEED);
+					if(queue.size() > 0) {
+						while(!queue.isEmpty()) {
+							String entry = queue.removeFirst();
+							writer.write(entry);
+							writer.write(LINE_FEED);
+						}
+						writer.flush();
 					}
-					writer.flush();
 				}
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException ignored) { }
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
