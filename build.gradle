@@ -35,7 +35,7 @@ curse {
     Fixed connection crash for messages sent directly from the IRC server
     Removed EiraIRC's /list command as it overwrote the vanilla one. Now only accessible through /irc list.
     """
-    releaseType = "${System.getenv("RELEASE_TYPE") ?: 'release'}"
+    releaseType = "${System.getenv("RELEASE_TYPE") ?: release}"
 }
 
 processResources
