@@ -23,7 +23,7 @@ archivesBaseName = "eirairc"
 
 minecraft {
     version = "1.7.10-10.13.0.1180"
-    assetDir = "eclipse/assets"
+    runDir = "eclipse/assets"
 }
 
 processResources
@@ -47,7 +47,7 @@ dependencies {
 }
 
 task cleanBuildDir(type: Delete) {
-    delete 'build/libs/*'
+    delete fileTree(dir: project.buildDir.getPath() + "/libs/", include: "*.jar")
 }
 
 build.shouldRunAfter(cleanBuildDir)
