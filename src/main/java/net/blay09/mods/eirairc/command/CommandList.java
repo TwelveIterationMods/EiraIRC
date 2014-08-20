@@ -66,7 +66,7 @@ public class CommandList extends SubCommand {
 
 	@Override
 	public boolean hasQuickCommand() {
-		return true;
+		return false;
 	}
 
 }
