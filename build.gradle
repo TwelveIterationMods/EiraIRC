@@ -31,9 +31,11 @@ curse {
     apiKey = "${System.getenv("CURSEFORGE_KEY") ?: project.curseforge_key}"
     projectId = "68420"
     changelog = """
-    [insert changelog here]
+    Fixed overambitious CPU usage
+    Fixed connection crash for messages sent directly from the IRC server
+    Removed EiraIRC's /list command as it overwrote the vanilla one. Now only accessible through /irc list.
     """
-    releaseType = "release"
+    releaseType = "${System.getenv("RELEASE_TYPE") ?: 'release'}"
 }
 
 
