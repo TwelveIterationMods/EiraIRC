@@ -15,15 +15,25 @@ buildscript {
     }
 }
 
+apply plugin: 'curseforge'
 apply plugin: 'forge'
 
 version = "mc1.7.10-v1.7." + "${System.getenv("BUILD_NUMBER") ?: 0}"
-group= "net.blay09.mods" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+group = "net.blay09.mods" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "eirairc"
 
 minecraft {
     version = "1.7.10-10.13.0.1180"
     runDir = "eclipse/assets"
+}
+
+curse {
+    apiKey = project.curseforge_key
+    projectId = "68420"
+    changelog = """
+    [insert changelog here]
+    """
+    releaseType = "release"
 }
 
 processResources
