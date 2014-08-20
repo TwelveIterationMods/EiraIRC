@@ -41,3 +41,9 @@ processResources
         exclude 'mcmod.info'
     }
 }
+
+task cleanBuildDir(type: Delete) {
+    delete 'build/libs/*'
+}
+
+build.shouldRunAfter(cleanBuildDir)
