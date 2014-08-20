@@ -833,14 +833,19 @@ public class Utils {
 						component = ChatMessageComponent.createFromText(channel
 								.getName());
 					} else if (token.equals("USER")) {
-						component = ChatMessageComponent.createFromText(user
-								.getIdentifier());
+						if(user != null) {
+							component = ChatMessageComponent.createFromText(user.getIdentifier());
+						} else {
+							component = ChatMessageComponent.createFromText(connection.getIdentifier());
+						}
 					} else if (token.equals("NICK")) {
-						component = ChatMessageComponent
-								.createFromText(getNickGame(channel, user));
-						if (colorName) {
-							component.setColor(Utils.getColorFormattingForUser(
-									channel, user));
+						if(user != null) {
+							component = ChatMessageComponent.createFromText(getNickGame(channel, user));
+							if (colorName) {
+								component.setColor(Utils.getColorFormattingForUser(channel, user));
+							}
+						} else {
+							component = ChatMessageComponent.createFromText(connection.getIdentifier());
 						}
 					} else if (token.equals("MESSAGE")) {
 						component = ChatMessageComponent
