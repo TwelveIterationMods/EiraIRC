@@ -28,7 +28,7 @@ minecraft {
 }
 
 curse {
-    apiKey = project.curseforge_key
+    apiKey = "${System.getenv("CURSEFORGE_KEY") ?: project.curseforge_key}"
     projectId = "68420"
     changelog = """
     [insert changelog here]
