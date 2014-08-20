@@ -45,3 +45,9 @@ processResources
 dependencies {
     compile 'org.jetbrains:annotations:13.0'
 }
+
+task cleanBuildDir(type: Delete) {
+    delete 'build/libs/*'
+}
+
+build.shouldRunAfter(cleanBuildDir)
