@@ -14,15 +14,15 @@ public class IRCParser {
 	
 	public IRCMessage parse(String data) {
 		this.data = data;
-		String prefix = null;
-		String cmd = null;
+		String prefix = "";
+		String cmd;
 		if(data.startsWith(":")) {
 			skip(1);
 			prefix = next();
 		}
 		cmd = next();
 		
-		String arg = null;
+		String arg;
 		while((arg = next()) != null) {
 			args.add(arg);
 		}
