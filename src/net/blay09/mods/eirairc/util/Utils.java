@@ -129,7 +129,7 @@ public class Utils {
 	}
 
 	public static void addMessageToChat(ChatMessageComponent chatComponent) {
-		if (MinecraftServer.getServer() != null) {
+		if (MinecraftServer.getServer() != null && !MinecraftServer.getServer().isSinglePlayer()) {
 			MinecraftServer.getServer().getConfigurationManager()
 					.sendChatMsg(chatComponent);
 		} else {
@@ -765,12 +765,10 @@ public class Utils {
 							if (addPreSuffix) {
 								displayName = addPreSuffix(displayName);
 							}
-							component = ChatMessageComponent
-									.createFromText(displayName);
 							if (colorName) {
-								component.setColor(Utils
-										.getColorFormattingForPlayer(player));
+								displayName = Globals.COLOR_CODE_PREFIX + Utils.getColorFormattingForPlayer(player).func_96298_a() + displayName + Globals.COLOR_CODE_PREFIX + 'f';
 							}
+							component = ChatMessageComponent.createFromText(displayName);
 						} else {
 							component = ChatMessageComponent
 									.createFromText(sender
@@ -840,7 +838,11 @@ public class Utils {
 						}
 					} else if (token.equals("NICK")) {
 						if(user != null) {
-							component = ChatMessageComponent.createFromText(getNickGame(channel, user));
+							String displayName = getNickGame(channel, user);
+							if (colorName) {
+								displayName = Globals.COLOR_CODE_PREFIX + Utils.getColorFormattingForUser(channel, user).func_96298_a() + displayName + Globals.COLOR_CODE_PREFIX + 'f';
+							}
+							component = ChatMessageComponent.createFromText(displayName);
 							if (colorName) {
 								component.setColor(Utils.getColorFormattingForUser(channel, user));
 							}
