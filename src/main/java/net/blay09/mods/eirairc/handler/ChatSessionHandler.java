@@ -109,4 +109,7 @@ public class ChatSessionHandler {
 		}
 	}
 
+	public boolean isMinecraftTarget() {
+		return chatTarget == null;
+	}
 }
