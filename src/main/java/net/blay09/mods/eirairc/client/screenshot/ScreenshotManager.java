@@ -25,12 +25,24 @@ import java.util.Properties;
 import javax.imageio.ImageIO;
 
 import net.blay09.mods.eirairc.EiraIRC;
+import net.blay09.mods.eirairc.api.IRCChannel;
+import net.blay09.mods.eirairc.api.IRCConnection;
+import net.blay09.mods.eirairc.api.IRCContext;
+import net.blay09.mods.eirairc.api.IRCUser;
+import net.blay09.mods.eirairc.api.bot.IRCBot;
+import net.blay09.mods.eirairc.api.event.RelayChat;
 import net.blay09.mods.eirairc.api.upload.IUploadHoster;
 import net.blay09.mods.eirairc.api.upload.UploadManager;
+import net.blay09.mods.eirairc.config.DisplayConfig;
 import net.blay09.mods.eirairc.config.ScreenshotConfig;
+import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
+import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
@@ -215,9 +227,45 @@ public class ScreenshotManager {
 	}
 	
 	public void shareScreenshot(Screenshot screenshot) {
-		String ircMessage = Utils.getLocalizedMessage("irc.display.shareScreenshot", screenshot.getUploadURL());
-		String mcMessage = "/me " + ircMessage;
-		Minecraft.getMinecraft().thePlayer.sendChatMessage(mcMessage);
+		String text = Utils.getLocalizedMessage("irc.display.shareScreenshot", screenshot.getUploadURL());
+		if(EiraIRC.instance.getChatSessionHandler().isMinecraftTarget()) {
+			String mcMessage = "/me " + text;
+			Minecraft.getMinecraft().thePlayer.sendChatMessage(mcMessage);
+		} else {
+			// TODO damn, clean up your shitty code once 1.6.4 and 1.7.2 is dropped
+			EntityPlayer sender = Minecraft.getMinecraft().thePlayer;
+			MinecraftForge.EVENT_BUS.post(new RelayChat(sender, text, true));
+			String chatTarget = EiraIRC.instance.getChatSessionHandler().getChatTarget();
+			if(chatTarget == null) {
+				return;
+			}
+			String[] target = chatTarget.split("/");
+			IRCConnection connection = EiraIRC.instance.getConnection(target[0]);
+			if(connection != null) {
+				IRCBot bot = connection.getBot();
+				EnumChatFormatting emoteColor;
+				IChatComponent chatComponent;
+				if (target[1].startsWith("#")) {
+					IRCChannel targetChannel = connection.getChannel(target[1]);
+					if (targetChannel == null) {
+						return;
+					}
+					emoteColor = Utils.getColorFormatting(ConfigHelper.getEmoteColor(targetChannel));
+					chatComponent = Utils.formatChatComponent(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetChannel)).mcSendChannelEmote, sender, text, false, DisplayConfig.hidePlayerTags, false);
+				} else {
+					IRCUser targetUser = connection.getUser(target[1]);
+					if (targetUser == null) {
+						return;
+					}
+					emoteColor = Utils.getColorFormatting(ConfigHelper.getEmoteColor(targetUser));
+					chatComponent = Utils.formatChatComponent(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetUser)).mcSendPrivateEmote, sender, text, false, DisplayConfig.hidePlayerTags, false);
+				}
+				if (emoteColor != null) {
+					chatComponent.getChatStyle().setColor(emoteColor);
+				}
+				Utils.addMessageToChat(chatComponent);
+			}
+		}
 	}
 
 	public void handleNewScreenshot(Screenshot screenshot) {
