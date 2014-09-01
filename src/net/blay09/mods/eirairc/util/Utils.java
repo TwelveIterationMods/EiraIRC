@@ -494,20 +494,23 @@ public class Utils {
 				int colorCode = Integer.parseInt(colorMatch);
 				EnumChatFormatting colorFormat = getColorFromIRCColorCode(colorCode);
 				String repl = Matcher.quoteReplacement(matcher.group());
-				message = message.replaceAll(repl, Globals.COLOR_CODE_PREFIX
-						+ colorFormat.func_96298_a());
+				message = message.replaceFirst(repl, Globals.COLOR_CODE_PREFIX + colorFormat.func_96298_a());
 			}
+			message = message.replaceAll("\u000f", Globals.COLOR_CODE_PREFIX + "r"); // reset
+			message = message.replaceAll("\u0002", Globals.COLOR_CODE_PREFIX + "l"); // bold
+			message = message.replaceAll("\u001f", Globals.COLOR_CODE_PREFIX + "n"); // underline
+			message = message.replaceAll("\u0016", Globals.COLOR_CODE_PREFIX + "o"); // italic
 		} else {
 			message = ircColorPattern.matcher(message).replaceAll("");
 		}
-		StringBuilder stringbuilder = new StringBuilder();
+		StringBuilder sb = new StringBuilder();
 		char[] charArray = message.toCharArray();
 		for (int i = 0; i < charArray.length; i++) {
 			if (isAllowedCharacter(charArray[i])) {
-				stringbuilder.append(charArray[i]);
+				sb.append(charArray[i]);
 			}
 		}
-		return message;
+		return sb.toString();
 	}
 
 	private static boolean isAllowedCharacter(char c) {
