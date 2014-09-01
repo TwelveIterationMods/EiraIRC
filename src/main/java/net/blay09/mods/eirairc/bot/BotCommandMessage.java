@@ -13,6 +13,7 @@ import net.blay09.mods.eirairc.api.bot.IBotCommand;
 import net.blay09.mods.eirairc.api.bot.IRCBot;
 import net.blay09.mods.eirairc.config.DisplayConfig;
 import net.blay09.mods.eirairc.util.ConfigHelper;
+import net.blay09.mods.eirairc.util.MessageFormat;
 import net.blay09.mods.eirairc.util.NotificationType;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.entity.player.EntityPlayer;
@@ -53,10 +54,9 @@ public class BotCommandMessage implements IBotCommand {
 		}
 		String message = Utils.joinStrings(args, " ", 1);
 		if(bot.getBoolean(user, BotProfile.KEY_LINKFILTER, false)) {
-			message = Utils.filterLinks(message);
+			message = MessageFormat.filterLinks(message);
 		}
-		message = Utils.filterAllowedCharacters(message, true, DisplayConfig.enableIRCColors);
-		IChatComponent chatComponent = Utils.formatChatComponent(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(user)).mcPrivateMessage, bot.getConnection(), null, user, message, true);
+		IChatComponent chatComponent = MessageFormat.formatChatComponent(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(user)).mcPrivateMessage, bot.getConnection(), null, user, message, MessageFormat.Target.Minecraft, MessageFormat.Mode.Message);
 		String notifyMsg = chatComponent.getUnformattedText();
 		if(notifyMsg.length() > 42) {
 			notifyMsg = notifyMsg.substring(0, 42) + "...";

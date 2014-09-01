@@ -18,6 +18,7 @@ import net.blay09.mods.eirairc.config.DisplayConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.irc.IRCConnectionImpl;
 import net.blay09.mods.eirairc.util.ConfigHelper;
+import net.blay09.mods.eirairc.util.MessageFormat;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.ICommandSender;
@@ -87,7 +88,7 @@ public class MCEventHandler {
 			for(IRCConnection connection : EiraIRC.instance.getConnections()) {
 				IRCBot bot = connection.getBot();
 				for(IRCChannel channel : connection.getChannels()) {
-					String ircMessage = Utils.formatMessage(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(channel)).ircBroadcastMessage, event.sender, Utils.joinStrings(event.parameters, " "), false, DisplayConfig.hidePlayerTags, true);
+					String ircMessage = MessageFormat.formatMessage(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(channel)).ircBroadcastMessage, event.sender, Utils.joinStrings(event.parameters, " "), MessageFormat.Target.IRC, MessageFormat.Mode.Message);
 					if(!bot.isReadOnly(channel) && bot.getBoolean(channel, BotProfile.KEY_RELAYBROADCASTS, true)) {
 						channel.message(ircMessage);
 					}
@@ -128,14 +129,14 @@ public class MCEventHandler {
 					return true;
 				}
 				context = targetChannel;
-				chatComponent = Utils.formatChatComponent(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetChannel)).mcSendChannelMessage, sender, text, true, DisplayConfig.hidePlayerTags, false);
+				chatComponent = MessageFormat.formatChatComponent(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetChannel)).mcSendChannelMessage, sender, text, MessageFormat.Target.IRC, MessageFormat.Mode.Message);
 			} else {
 				IRCUser targetUser = connection.getUser(target[1]);
 				if(targetUser == null) {
 					return true;
 				}
 				context = targetUser;
-				chatComponent = Utils.formatChatComponent(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetUser)).mcSendPrivateMessage, sender, text, true, DisplayConfig.hidePlayerTags, false);
+				chatComponent = MessageFormat.formatChatComponent(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetUser)).mcSendPrivateMessage, sender, text, MessageFormat.Target.IRC, MessageFormat.Mode.Message);
 			}
 			relayChatClient(text, false, false, context, false);
 			Utils.addMessageToChat(chatComponent);
@@ -168,7 +169,7 @@ public class MCEventHandler {
 				}
 				context = targetChannel;
 				emoteColor = Utils.getColorFormatting(ConfigHelper.getEmoteColor(targetChannel));
-				chatComponent = Utils.formatChatComponent(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetChannel)).mcSendChannelEmote, sender, text, false, DisplayConfig.hidePlayerTags, false);
+				chatComponent = MessageFormat.formatChatComponent(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetChannel)).mcSendChannelEmote, sender, text, MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
 			} else {
 				IRCUser targetUser = connection.getUser(target[1]);
 				if(targetUser == null) {
@@ -176,7 +177,7 @@ public class MCEventHandler {
 				}
 				context = targetUser;
 				emoteColor = Utils.getColorFormatting(ConfigHelper.getEmoteColor(targetUser));
-				chatComponent = Utils.formatChatComponent(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetUser)).mcSendPrivateEmote, sender, text, false, DisplayConfig.hidePlayerTags, false);
+				chatComponent = MessageFormat.formatChatComponent(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetUser)).mcSendPrivateEmote, sender, text, MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
 			}
 			relayChatClient(text, true, false, context, false);
 			if(emoteColor != null) {
@@ -293,8 +294,8 @@ public class MCEventHandler {
 			IRCConnection connection = target.getConnection();
 			IRCBot bot = connection.getBot();
 			if(!bot.isReadOnly(target)) {
-				String format = Utils.getMessageFormat(bot, target, isEmote);
-				String ircMessage = Utils.formatMessage(format, sender, message, false, DisplayConfig.hidePlayerTags, true);
+				String format = MessageFormat.getMessageFormat(bot, target, isEmote);
+				String ircMessage = MessageFormat.formatMessage(format, sender, message, MessageFormat.Target.IRC, (isEmote ? MessageFormat.Mode.Emote : MessageFormat.Mode.Message));
 				if(isEmote) {
 					ircMessage = IRCConnectionImpl.EMOTE_START + ircMessage + IRCConnectionImpl.EMOTE_END;
 				}
@@ -308,8 +309,8 @@ public class MCEventHandler {
 			for(IRCConnection connection : EiraIRC.instance.getConnections()) {
 				IRCBot bot = connection.getBot();
 				for(IRCChannel channel : connection.getChannels()) {
-					String format = Utils.getMessageFormat(bot, channel, isEmote);
-					String ircMessage = Utils.formatMessage(format, sender, message, false, DisplayConfig.hidePlayerTags, true);
+					String format = MessageFormat.getMessageFormat(bot, channel, isEmote);
+					String ircMessage = MessageFormat.formatMessage(format, sender, message, MessageFormat.Target.IRC, (isEmote ? MessageFormat.Mode.Emote : MessageFormat.Mode.Message));
 					if(isEmote) {
 						ircMessage = IRCConnectionImpl.EMOTE_START + ircMessage + IRCConnectionImpl.EMOTE_END;
 					}

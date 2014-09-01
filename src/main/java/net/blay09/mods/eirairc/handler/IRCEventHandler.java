@@ -13,10 +13,10 @@ import net.blay09.mods.eirairc.api.event.IRCUserLeaveEvent;
 import net.blay09.mods.eirairc.api.event.IRCUserNickChangeEvent;
 import net.blay09.mods.eirairc.api.event.IRCUserQuitEvent;
 import net.blay09.mods.eirairc.config.CompatibilityConfig;
-import net.blay09.mods.eirairc.config.DisplayConfig;
 import net.blay09.mods.eirairc.config.GlobalConfig;
 import net.blay09.mods.eirairc.irc.IRCConnectionImpl;
 import net.blay09.mods.eirairc.util.ConfigHelper;
+import net.blay09.mods.eirairc.util.MessageFormat;
 import net.blay09.mods.eirairc.util.NotificationType;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.util.IChatComponent;
@@ -95,9 +95,8 @@ public class IRCEventHandler {
 		}
 		String message = event.message;
 		if(event.bot.getBoolean(event.sender, BotProfile.KEY_LINKFILTER, false)) {
-			message = Utils.filterLinks(message);
+			message = MessageFormat.filterLinks(message);
 		}
-		message = Utils.filterAllowedCharacters(message, true, DisplayConfig.enableIRCColors);
 		String format;
 		if(event.isNotice) {
 			format = ConfigHelper.getDisplayFormat(event.bot.getDisplayFormat(event.sender)).mcPrivateNotice;
@@ -106,7 +105,7 @@ public class IRCEventHandler {
 		} else {
 			format = ConfigHelper.getDisplayFormat(event.bot.getDisplayFormat(event.sender)).mcPrivateMessage;
 		}
-		IChatComponent chatComponent = Utils.formatChatComponent(format, event.connection, null, event.sender, message, !event.isEmote);
+		IChatComponent chatComponent = MessageFormat.formatChatComponent(format, event.connection, null, event.sender, message, MessageFormat.Target.Minecraft, (event.isEmote ? MessageFormat.Mode.Emote : MessageFormat.Mode.Message));
 		if(event.isNotice && GlobalConfig.hideNotices) {
 			System.out.println(chatComponent.getUnformattedText());
 			return;
@@ -149,12 +148,11 @@ public class IRCEventHandler {
 			}
 		}
 		if(event.bot.getBoolean(event.sender, BotProfile.KEY_LINKFILTER, false)) {
-			message = Utils.filterLinks(message);
+			message = MessageFormat.filterLinks(message);
 		}
-		message = Utils.filterAllowedCharacters(message, true, DisplayConfig.enableIRCColors);
 		String emoteColor = ConfigHelper.getEmoteColor(event.channel);
 		String noticeColor = ConfigHelper.getNoticeColor(event.channel);
-		String format = null;
+		String format;
 		if(event.isNotice) {
 			format = ConfigHelper.getDisplayFormat(event.bot.getDisplayFormat(event.channel)).mcChannelNotice;
 		} else if(event.isEmote) {
@@ -162,7 +160,7 @@ public class IRCEventHandler {
 		} else {
 			format = ConfigHelper.getDisplayFormat(event.bot.getDisplayFormat(event.channel)).mcChannelMessage;
 		}
-		IChatComponent chatComponent = Utils.formatChatComponent(format, event.connection, event.channel, event.sender, message, !event.isEmote);
+		IChatComponent chatComponent = MessageFormat.formatChatComponent(format, event.connection, event.channel, event.sender, message, MessageFormat.Target.Minecraft, event.isEmote ? MessageFormat.Mode.Emote : MessageFormat.Mode.Message);
 		if(event.isNotice && GlobalConfig.hideNotices) {
 			System.out.println(chatComponent.getUnformattedText());
 			return;

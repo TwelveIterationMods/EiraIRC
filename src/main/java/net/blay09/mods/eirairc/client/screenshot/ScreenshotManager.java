@@ -36,6 +36,7 @@ import net.blay09.mods.eirairc.api.upload.UploadManager;
 import net.blay09.mods.eirairc.config.DisplayConfig;
 import net.blay09.mods.eirairc.config.ScreenshotConfig;
 import net.blay09.mods.eirairc.util.ConfigHelper;
+import net.blay09.mods.eirairc.util.MessageFormat;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
 
@@ -251,14 +252,14 @@ public class ScreenshotManager {
 						return;
 					}
 					emoteColor = Utils.getColorFormatting(ConfigHelper.getEmoteColor(targetChannel));
-					chatComponent = Utils.formatChatComponent(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetChannel)).mcSendChannelEmote, sender, text, false, DisplayConfig.hidePlayerTags, false);
+					chatComponent = MessageFormat.formatChatComponent(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetChannel)).mcSendChannelEmote, sender, text, MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
 				} else {
 					IRCUser targetUser = connection.getUser(target[1]);
 					if (targetUser == null) {
 						return;
 					}
 					emoteColor = Utils.getColorFormatting(ConfigHelper.getEmoteColor(targetUser));
-					chatComponent = Utils.formatChatComponent(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetUser)).mcSendPrivateEmote, sender, text, false, DisplayConfig.hidePlayerTags, false);
+					chatComponent = MessageFormat.formatChatComponent(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetUser)).mcSendPrivateEmote, sender, text, MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
 				}
 				if (emoteColor != null) {
 					chatComponent.getChatStyle().setColor(emoteColor);
