@@ -15,9 +15,11 @@ public enum IRCFormatting {
 	ITALIC("\u0016", "o"),
 	RESET("\u000f", "r");
 
+	public static final String IRC_COLOR_PREFIX = "\u0003";
 	public static final String MC_FORMATTING_PREFIX = "\u00a7";
 
 	private static final Pattern ircColorPattern = Pattern.compile("\u0003([0-9][0-9]?)(?:[,][0-9][0-9]?)?");
+	private static final Pattern mcColorPattern = Pattern.compile("\u00a7([0-9a-f])");
 	private static final IRCFormatting[] values = values();
 
 	private final String ircCode;
@@ -33,7 +35,19 @@ public enum IRCFormatting {
 		for(IRCFormatting format : values) {
 			result = result.replaceAll(format.mcCode, killFormatting ? "" : format.ircCode);
 		}
-		// TODO convert colors mc -> irc
+		if(killFormatting) {
+			Matcher matcher = mcColorPattern.matcher(result);
+			while(matcher.find()) {
+				result = result.replaceFirst(Matcher.quoteReplacement(matcher.group()), "");
+			}
+		} else {
+			Matcher matcher = mcColorPattern.matcher(result);
+			while(matcher.find()) {
+				char mcColorCode = matcher.group(1).charAt(0);
+				int ircColorCode = getIRCColorCodeFromMCColorCode(mcColorCode);
+				result = result.replaceFirst(Matcher.quoteReplacement(matcher.group()), IRC_COLOR_PREFIX + ircColorCode);
+			}
+		}
 		return result;
 	}
 
@@ -43,7 +57,10 @@ public enum IRCFormatting {
 			result = result.replaceAll(format.ircCode, killFormatting ? "" : format.mcCode);
 		}
 		if(killFormatting) {
-			result = ircColorPattern.matcher(result).replaceAll("");
+			Matcher matcher = ircColorPattern.matcher(result);
+			while(matcher.find()) {
+				result = result.replaceFirst(Matcher.quoteReplacement(matcher.group()), "");
+			}
 		} else {
 			Matcher matcher = ircColorPattern.matcher(result);
 			while(matcher.find()) {
@@ -76,6 +93,28 @@ public enum IRCFormatting {
 			case 15: return EnumChatFormatting.GRAY;
 		}
 		return null;
+	}
+
+	public static int getIRCColorCodeFromMCColorCode(char colorCode) {
+		switch(colorCode) {
+			case '0': return 1; // black
+			case '1': return 2; // dark blue
+			case '2': return 3; // dark green
+			case '3': return 12; // dark aqua
+			case '4': return 5; // dark red
+			case '5': return 6; // dark purple
+			case '6': return 7; // gold
+			case '7': return 15; // gray
+			case '8': return 14; // dark gray
+			case '9': return 11; // blue
+			case 'a': return 9; // green
+			case 'b': return 10; // aqua
+			case 'c': return 4; // red
+			case 'd': return 13; // light purple
+			case 'e': return 8; // yellow
+			case 'f': return 0; // white
+		}
+		return 1;
 	}
 
 }
