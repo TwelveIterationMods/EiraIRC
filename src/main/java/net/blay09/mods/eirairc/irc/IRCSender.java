@@ -4,6 +4,7 @@ import net.blay09.mods.eirairc.api.IRCConnection;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.net.SocketException;
 import java.util.LinkedList;
 
 /**
@@ -13,13 +14,14 @@ public class IRCSender implements Runnable {
 
 	private static final String LINE_FEED = "\r\n";
 
-	private final Thread thread;
+	private final IRCConnectionImpl connection;
+	private Thread thread;
 	private final LinkedList<String> queue = new LinkedList<String>();
 	private boolean running;
 	private BufferedWriter writer;
 
-	public IRCSender() {
-		thread = new Thread(this);
+	public IRCSender(IRCConnectionImpl connection) {
+		this.connection = connection;
 	}
 
 	public void setWriter(BufferedWriter writer) {
@@ -27,7 +29,11 @@ public class IRCSender implements Runnable {
 	}
 
 	public void start() {
+		if(running) {
+			stop();
+		}
 		running = true;
+		thread = new Thread(this);
 		thread.start();
 	}
 
@@ -41,10 +47,10 @@ public class IRCSender implements Runnable {
 	@Override
 	public void run() {
 		try {
-			while(running) {
+			while (running) {
 				synchronized (queue) {
-					if(queue.size() > 0) {
-						while(!queue.isEmpty()) {
+					if (queue.size() > 0) {
+						while (!queue.isEmpty()) {
 							String entry = queue.removeFirst();
 							writer.write(entry);
 							writer.write(LINE_FEED);
@@ -54,10 +60,19 @@ public class IRCSender implements Runnable {
 				}
 				try {
 					Thread.sleep(100);
-				} catch (InterruptedException ignored) { }
+				} catch (InterruptedException ignored) {
+				}
+			}
+		} catch (SocketException e) {
+			e.printStackTrace();
+			if(connection.isConnected()) {
+				connection.tryReconnect();
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
+			if(connection.isConnected()) {
+				connection.tryReconnect();
+			}
 		}
 	}
 
