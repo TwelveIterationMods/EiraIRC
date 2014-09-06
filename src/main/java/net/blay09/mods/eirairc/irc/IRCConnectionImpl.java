@@ -55,7 +55,7 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 	protected static final int DEFAULT_PROXY_PORT = 1080;
 
 	private final IRCParser parser = new IRCParser();
-	private final IRCSender sender = new IRCSender();
+	private final IRCSender sender = new IRCSender(this);
 	private final Map<String, IRCChannel> channels = new HashMap<String, IRCChannel>();
 	private final Map<String, IRCUser> users = new HashMap<String, IRCUser>();
 	protected final int port;
@@ -499,6 +499,10 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 	@Override
 	public int getPort() {
 		return port;
+	}
+
+	public boolean isConnected() {
+		return connected;
 	}
 
 }
