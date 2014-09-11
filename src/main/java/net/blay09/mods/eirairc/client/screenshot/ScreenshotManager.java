@@ -252,14 +252,14 @@ public class ScreenshotManager {
 						return;
 					}
 					emoteColor = Utils.getColorFormatting(ConfigHelper.getEmoteColor(targetChannel));
-					chatComponent = MessageFormat.formatChatComponent(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetChannel)).mcSendChannelEmote, sender, text, MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
+					chatComponent = MessageFormat.formatChatComponent(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetChannel)).mcSendChannelEmote, targetChannel, sender, text, MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
 				} else {
 					IRCUser targetUser = connection.getUser(target[1]);
 					if (targetUser == null) {
 						return;
 					}
 					emoteColor = Utils.getColorFormatting(ConfigHelper.getEmoteColor(targetUser));
-					chatComponent = MessageFormat.formatChatComponent(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetUser)).mcSendPrivateEmote, sender, text, MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
+					chatComponent = MessageFormat.formatChatComponent(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetUser)).mcSendPrivateEmote, targetUser, sender, text, MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
 				}
 				if (emoteColor != null) {
 					chatComponent.getChatStyle().setColor(emoteColor);

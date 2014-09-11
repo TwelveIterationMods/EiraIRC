@@ -88,8 +88,8 @@ public class MessageFormat {
 		return nick;
 	}
 
-	public static String formatMessage(String format, ICommandSender sender, String message, Target target, Mode mode) {
-		String result = formatChatComponent(format, sender, message, target, mode).getUnformattedText();
+	public static String formatMessage(String format, IRCContext context, ICommandSender sender, String message, Target target, Mode mode) {
+		String result = formatChatComponent(format, context, sender, message, target, mode).getUnformattedText();
 		if(target == Target.IRC) {
 			result = IRCFormatting.toIRC(result, !DisplayConfig.enableIRCColors);
 		} else if(target == Target.Minecraft) {
@@ -99,7 +99,7 @@ public class MessageFormat {
 		return result;
 	}
 
-	public static IChatComponent formatChatComponent(String format, ICommandSender sender, String message, Target target, Mode mode) {
+	public static IChatComponent formatChatComponent(String format, IRCContext context, ICommandSender sender, String message, Target target, Mode mode) {
 		IChatComponent root = new ChatComponentText("");
 		StringBuilder sb = new StringBuilder();
 		int currentIdx = 0;
@@ -115,6 +115,8 @@ public class MessageFormat {
 						component = new ChatComponentText(Utils.getCurrentServerName());
 					} else if(token.equals("USER")) {
 						component = new ChatComponentText(sender.getCommandSenderName());
+					} else if(token.equals("CHANNEL")) {
+						component = new ChatComponentText(context != null ? context.getName() : "");
 					} else if(token.equals("NICK")) {
 						if(sender instanceof EntityPlayer) {
 							EntityPlayer player = (EntityPlayer) sender;
