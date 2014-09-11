@@ -87,7 +87,7 @@ public class MCEventHandler {
 			for(IRCConnection connection : EiraIRC.instance.getConnections()) {
 				IRCBot bot = connection.getBot();
 				for(IRCChannel channel : connection.getChannels()) {
-					String ircMessage = Utils.formatMessage(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(channel)).ircBroadcastMessage, event.sender, Utils.joinStrings(event.parameters, " "), false, DisplayConfig.hidePlayerTags, true);
+					String ircMessage = Utils.formatMessage(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(channel)).ircBroadcastMessage, channel, event.sender, Utils.joinStrings(event.parameters, " "), false, DisplayConfig.hidePlayerTags, true);
 					if(!bot.isReadOnly(channel) && bot.getBoolean(channel, BotProfile.KEY_RELAYBROADCASTS, true)) {
 						channel.message(ircMessage);
 					}
@@ -128,14 +128,14 @@ public class MCEventHandler {
 					return true;
 				}
 				context = targetChannel;
-				chatComponent = Utils.formatChatComponent(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetChannel)).mcSendChannelMessage, sender, text, true, DisplayConfig.hidePlayerTags, false);
+				chatComponent = Utils.formatChatComponent(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetChannel)).mcSendChannelMessage, context, sender, text, true, DisplayConfig.hidePlayerTags, false);
 			} else {
 				IRCUser targetUser = connection.getUser(target[1]);
 				if(targetUser == null) {
 					return true;
 				}
 				context = targetUser;
-				chatComponent = Utils.formatChatComponent(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetUser)).mcSendPrivateMessage, sender, text, true, DisplayConfig.hidePlayerTags, false);
+				chatComponent = Utils.formatChatComponent(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetUser)).mcSendPrivateMessage, context, sender, text, true, DisplayConfig.hidePlayerTags, false);
 			}
 			relayChatClient(text, false, false, context, false);
 			Utils.addMessageToChat(chatComponent);
@@ -168,7 +168,7 @@ public class MCEventHandler {
 				}
 				context = targetChannel;
 				emoteColor = Utils.getColorFormatting(ConfigHelper.getEmoteColor(targetChannel));
-				chatComponent = Utils.formatChatComponent(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetChannel)).mcSendChannelEmote, sender, text, false, DisplayConfig.hidePlayerTags, false);
+				chatComponent = Utils.formatChatComponent(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetChannel)).mcSendChannelEmote, context, sender, text, false, DisplayConfig.hidePlayerTags, false);
 			} else {
 				IRCUser targetUser = connection.getUser(target[1]);
 				if(targetUser == null) {
@@ -176,7 +176,7 @@ public class MCEventHandler {
 				}
 				context = targetUser;
 				emoteColor = Utils.getColorFormatting(ConfigHelper.getEmoteColor(targetUser));
-				chatComponent = Utils.formatChatComponent(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetUser)).mcSendPrivateEmote, sender, text, false, DisplayConfig.hidePlayerTags, false);
+				chatComponent = Utils.formatChatComponent(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetUser)).mcSendPrivateEmote, context, sender, text, false, DisplayConfig.hidePlayerTags, false);
 			}
 			relayChatClient(text, true, false, context, false);
 			if(emoteColor != null) {
@@ -341,7 +341,7 @@ public class MCEventHandler {
 			IRCBot bot = connection.getBot();
 			if(!bot.isReadOnly(target)) {
 				String format = Utils.getMessageFormat(bot, target, isEmote);
-				String ircMessage = Utils.formatMessage(format, sender, message, false, DisplayConfig.hidePlayerTags, true);
+				String ircMessage = Utils.formatMessage(format, target, sender, message, false, DisplayConfig.hidePlayerTags, true);
 				if(isEmote) {
 					ircMessage = IRCConnectionImpl.EMOTE_START + ircMessage + IRCConnectionImpl.EMOTE_END;
 				}
@@ -356,7 +356,7 @@ public class MCEventHandler {
 				IRCBot bot = connection.getBot();
 				for(IRCChannel channel : connection.getChannels()) {
 					String format = Utils.getMessageFormat(bot, channel, isEmote);
-					String ircMessage = Utils.formatMessage(format, sender, message, false, DisplayConfig.hidePlayerTags, true);
+					String ircMessage = Utils.formatMessage(format, channel, sender, message, false, DisplayConfig.hidePlayerTags, true);
 					if(isEmote) {
 						ircMessage = IRCConnectionImpl.EMOTE_START + ircMessage + IRCConnectionImpl.EMOTE_END;
 					}

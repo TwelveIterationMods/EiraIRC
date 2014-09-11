@@ -249,14 +249,14 @@ public class ScreenshotManager {
 						return;
 					}
 					emoteColor = Utils.getColorFormatting(ConfigHelper.getEmoteColor(targetChannel));
-					chatComponent = Utils.formatChatComponent(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetChannel)).mcSendChannelEmote, sender, text, false, DisplayConfig.hidePlayerTags, false);
+					chatComponent = Utils.formatChatComponent(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetChannel)).mcSendChannelEmote, targetChannel, sender, text, false, DisplayConfig.hidePlayerTags, false);
 				} else {
 					IRCUser targetUser = connection.getUser(target[1]);
 					if (targetUser == null) {
 						return;
 					}
 					emoteColor = Utils.getColorFormatting(ConfigHelper.getEmoteColor(targetUser));
-					chatComponent = Utils.formatChatComponent(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetUser)).mcSendPrivateEmote, sender, text, false, DisplayConfig.hidePlayerTags, false);
+					chatComponent = Utils.formatChatComponent(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetUser)).mcSendPrivateEmote, targetUser, sender, text, false, DisplayConfig.hidePlayerTags, false);
 				}
 				if (emoteColor != null) {
 					chatComponent.getChatStyle().setColor(emoteColor);
