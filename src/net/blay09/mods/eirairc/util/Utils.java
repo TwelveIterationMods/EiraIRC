@@ -732,14 +732,14 @@ public class Utils {
 		}
 	}
 
-	public static String formatMessage(String format, ICommandSender sender,
+	public static String formatMessage(String format, IRCContext context, ICommandSender sender,
 			String message, boolean colorName, boolean stripTags, boolean addPreSuffix) {
-		return formatChatComponent(format, sender, message, colorName,
+		return formatChatComponent(format, context, sender, message, colorName,
 				stripTags, addPreSuffix).toString();
 	}
 
 	public static ChatMessageComponent formatChatComponent(String format,
-			ICommandSender sender, String message, boolean colorName,
+			IRCContext context, ICommandSender sender, String message, boolean colorName,
 			boolean stripTags, boolean addPreSuffix) {
 		ChatMessageComponent root = ChatMessageComponent.createFromText("");
 		StringBuilder sb = new StringBuilder();
@@ -756,8 +756,9 @@ public class Utils {
 						component = ChatMessageComponent
 								.createFromText(getCurrentServerName());
 					} else if (token.equals("USER")) {
-						component = ChatMessageComponent.createFromText(sender
-								.getCommandSenderName());
+						component = ChatMessageComponent.createFromText(sender.getCommandSenderName());
+					} else if(token.equals("CHANNEL")) {
+						component = ChatMessageComponent.createFromText(context != null ? context.getName() : "");
 					} else if (token.equals("NICK")) {
 						if (sender instanceof EntityPlayer) {
 							EntityPlayer player = (EntityPlayer) sender;
