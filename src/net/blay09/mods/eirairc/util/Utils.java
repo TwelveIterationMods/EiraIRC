@@ -50,6 +50,7 @@ public class Utils {
 			.compile("^(?:(https?)://)?([-\\w_\\.]{2,}\\.[a-z]{2,4})(/\\S*)?$");
 	private static final Pattern ircColorPattern = Pattern
 			.compile("\u0003([0-9][0-9]?)(?:[,][0-9][0-9]?)?");
+	private static final Pattern mcColorPattern = Pattern.compile("\u00a7([0-9a-f])");
 	private static final Pattern playerTagPattern = Pattern
 			.compile("[\\[][^\\]]+[\\]]");
 	private static final String DEFAULT_USERNAME = "EiraBot";
@@ -485,7 +486,10 @@ public class Utils {
 	public static String filterAllowedCharacters(String message,
 			boolean killMCColorCodes, boolean convertIRCColorCodes) {
 		if (killMCColorCodes) {
-			message = message.replaceAll(Globals.COLOR_CODE_PREFIX, "");
+			Matcher matcher = mcColorPattern.matcher(message);
+			while(matcher.find()) {
+				message = message.replaceFirst(Matcher.quoteReplacement(matcher.group()), "");
+			}
 		}
 		if (convertIRCColorCodes) {
 			Matcher matcher = ircColorPattern.matcher(message);

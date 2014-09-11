@@ -217,6 +217,7 @@ public class MCEventHandler implements IPlayerTracker, IConnectionHandler {
 			String name = Utils.getNickIRC((EntityPlayer) event.entityLiving);
 			String ircMessage = event.entityLiving.func_110142_aN().func_94546_b().toString();
 			ircMessage = ircMessage.replaceAll(event.entityLiving.getEntityName(), name);
+			ircMessage = Utils.filterAllowedCharacters(ircMessage, true, false);
 			for(IRCConnection connection : EiraIRC.instance.getConnections()) {
 				IRCBot bot = connection.getBot();
 				for(IRCChannel channel : connection.getChannels()) {
