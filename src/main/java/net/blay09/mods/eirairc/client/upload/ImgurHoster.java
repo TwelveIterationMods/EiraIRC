@@ -23,7 +23,7 @@ import com.google.gson.JsonParser;
 public class ImgurHoster implements IUploadHoster {
 
 	private static final String API = "https://api.imgur.com/3/image.json";
-	private static final String IMAGE_BASE_URL = "http://imgur.com/";
+	private static final String IMAGE_BASE_URL = "https://imgur.com/";
 	private static final String API_CLIENT_ID = "d47c0303c944643";
 	
 	private static final int BUFFER_SIZE = 1024;
