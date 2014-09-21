@@ -228,6 +228,9 @@ public class ScreenshotManager {
 	}
 	
 	public void shareScreenshot(Screenshot screenshot) {
+		if(Minecraft.getMinecraft().thePlayer == null) {
+			return;
+		}
 		String text = Utils.getLocalizedMessage("irc.display.shareScreenshot", screenshot.getUploadURL());
 		if(EiraIRC.instance.getChatSessionHandler().isMinecraftTarget()) {
 			String mcMessage = "/me " + text;
