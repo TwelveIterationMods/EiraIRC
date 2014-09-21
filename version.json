@@ -4,13 +4,13 @@
 			"mcVersion":"1.7.10",
 			"modVersion":"mc1.7.10-v1.7.43",
 			"changeLog": [
-                "Added MC -> IRC color conversion.",
-				"Fixed another connection crash related to nick-less NOTICEs.Fixed screenshot uploads not being sent to IRC anymore.",
-                "Fixed invalid formatting of chat message causing a connection crash.",
-                "Fixed formatting conversion between IRC <> Minecraft.",
-                "Fixed reconnect on ping timeout."
+                "Fixed {CHANNEL} not being replaced in chat messages",
+				"Fixed death message colors not being converted to IRC",
+                "Fixed crash in /leave command when run with no argument",
+                "Fixed crash when sharing screenshot while not ingame",
+                "Changed imgur URL to use https protocol"
 			],
-			"updateURL":"http://minecraft.curseforge.com/mc-mods/68420-eirairc/files/2213823/download",
+			"updateURL":"http://minecraft.curseforge.com/mc-mods/68420-eirairc/files/2214874/download",
 			"isDirectLink":"true",
 			"newFileName":""
 		}
@@ -18,13 +18,13 @@
             "mcVersion":"1.7.2",
             "modVersion":"mc1.7.2-v1.7.15",
             "changeLog": [
-                "Added MC -> IRC color conversion.",
-				"Fixed another connection crash related to nick-less NOTICEs.Fixed screenshot uploads not being sent to IRC anymore.",
-                "Fixed invalid formatting of chat message causing a connection crash.",
-                "Fixed formatting conversion between IRC <> Minecraft.",
-                "Fixed reconnect on ping timeout."
+                "Fixed {CHANNEL} not being replaced in chat messages",
+				"Fixed death message colors not being converted to IRC",
+                "Fixed crash in /leave command when run with no argument",
+                "Fixed crash when sharing screenshot while not ingame",
+                "Changed imgur URL to use https protocol"
             ],
-            "updateURL":"http://minecraft.curseforge.com/mc-mods/68420-eirairc/files/2213824/download",
+            "updateURL":"http://minecraft.curseforge.com/mc-mods/68420-eirairc/files/2214873/download",
             "isDirectLink":"true",
 			"newFileName":""
         }
