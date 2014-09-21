@@ -742,9 +742,7 @@ public class Utils {
 				stripTags, addPreSuffix).toString();
 	}
 
-	public static ChatMessageComponent formatChatComponent(String format,
-			IRCContext context, ICommandSender sender, String message, boolean colorName,
-			boolean stripTags, boolean addPreSuffix) {
+	public static ChatMessageComponent formatChatComponent(String format, IRCContext context, ICommandSender sender, String message, boolean colorName, boolean stripTags, boolean addPreSuffix) {
 		ChatMessageComponent root = ChatMessageComponent.createFromText("");
 		StringBuilder sb = new StringBuilder();
 		int currentIdx = 0;
@@ -757,8 +755,7 @@ public class Utils {
 					String token = format.substring(currentIdx + 1, tokenEnd);
 					ChatMessageComponent component = null;
 					if (token.equals("SERVER")) {
-						component = ChatMessageComponent
-								.createFromText(getCurrentServerName());
+						component = ChatMessageComponent.createFromText(getCurrentServerName());
 					} else if (token.equals("USER")) {
 						component = ChatMessageComponent.createFromText(sender.getCommandSenderName());
 					} else if(token.equals("CHANNEL")) {
@@ -774,13 +771,14 @@ public class Utils {
 								displayName = addPreSuffix(displayName);
 							}
 							if (colorName) {
-								displayName = Globals.COLOR_CODE_PREFIX + Utils.getColorFormattingForPlayer(player).func_96298_a() + displayName + Globals.COLOR_CODE_PREFIX + 'f';
+								EnumChatFormatting nameColor = Utils.getColorFormattingForPlayer(player);
+								if(nameColor != null) {
+									displayName = Globals.COLOR_CODE_PREFIX + nameColor.func_96298_a() + displayName + Globals.COLOR_CODE_PREFIX + 'f';
+								}
 							}
 							component = ChatMessageComponent.createFromText(displayName);
 						} else {
-							component = ChatMessageComponent
-									.createFromText(sender
-											.getCommandSenderName());
+							component = ChatMessageComponent.createFromText(sender.getCommandSenderName());
 						}
 
 					} else if (token.equals("MESSAGE")) {
