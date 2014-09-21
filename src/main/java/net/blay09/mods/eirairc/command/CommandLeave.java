@@ -41,21 +41,23 @@ public class CommandLeave extends SubCommand {
 		if(context == null && args.length < 1) {
 			throw new WrongUsageException(getCommandUsage(sender));
 		}
-		IRCConnection connection = null;
+		IRCConnection connection;
+		String channelName;
 		if(args.length > 0) {
 			connection = IRCResolver.resolveConnection(args[0], IRCResolver.FLAGS_NONE);
 			if(connection == null) {
 				Utils.sendLocalizedMessage(sender, "irc.target.serverNotFound");
 				return true;
 			}
+			channelName = IRCResolver.stripPath(args[0]);
 		} else {
 			if(context == null) {
 				Utils.sendLocalizedMessage(sender, "irc.target.specifyServer");
 				return true;
 			}
 			connection = context.getConnection();
+			channelName = context.getName();
 		}
-		String channelName = IRCResolver.stripPath(args[0]);
 		if(channelName.equals(TARGET_ALL)) {
 			for(IRCChannel channel : connection.getChannels()) {
 				connection.part(channel.getName());
