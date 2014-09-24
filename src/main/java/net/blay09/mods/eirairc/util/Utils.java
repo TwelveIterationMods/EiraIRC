@@ -209,7 +209,8 @@ public class Utils {
 	}
 	
 	public static boolean isValidColor(String colorName) {
-		return getColorFormatting(colorName) != EnumChatFormatting.RESET;
+		EnumChatFormatting colorFormatting = getColorFormatting(colorName);
+		return colorFormatting != null && colorFormatting.isColor();
 	}
 	
 	public static EnumChatFormatting getColorFormatting(String colorName) {
@@ -217,7 +218,7 @@ public class Utils {
 			return null;
 		}
 		colorName = colorName.toLowerCase();
-		EnumChatFormatting colorFormatting = EnumChatFormatting.RESET;
+		EnumChatFormatting colorFormatting = null;
 		if(colorName.equals("black")) {
 			colorFormatting = EnumChatFormatting.BLACK;
 		} else if(colorName.equals("darkblue") || colorName.equals("dark blue")) {
