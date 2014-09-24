@@ -243,7 +243,7 @@ public class Utils {
 			return null;
 		}
 		colorName = colorName.toLowerCase();
-		EnumChatFormatting colorFormatting = EnumChatFormatting.RESET;
+		EnumChatFormatting colorFormatting = null;
 		if (colorName.equals("black")) {
 			colorFormatting = EnumChatFormatting.BLACK;
 		} else if (colorName.equals("darkblue")
