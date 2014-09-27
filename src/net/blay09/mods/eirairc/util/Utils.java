@@ -240,7 +240,7 @@ public class Utils {
 
 	public static EnumChatFormatting getColorFormatting(String colorName) {
 		if (colorName.isEmpty()) {
-			return null;
+			return EnumChatFormatting.WHITE;
 		}
 		colorName = colorName.toLowerCase();
 		EnumChatFormatting colorFormatting = null;
