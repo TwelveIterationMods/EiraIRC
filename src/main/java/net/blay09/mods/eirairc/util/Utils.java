@@ -214,7 +214,7 @@ public class Utils {
 	}
 	
 	public static EnumChatFormatting getColorFormatting(String colorName) {
-		if(colorName.isEmpty()) {
+		if(colorName == null || colorName.isEmpty()) {
 			return null;
 		}
 		colorName = colorName.toLowerCase();
@@ -582,24 +582,21 @@ public class Utils {
 							EntityPlayer player = (EntityPlayer) sender;
 							component = player.func_145748_c_().createCopy();
 							String fixedName = component.getUnformattedText();
-							if(colorName) {
-								if(stripTags) {
-									fixedName = filterPlayerTags(fixedName);
-								}
-								if(addPreSuffix) {
-									fixedName = addPreSuffix(fixedName);
-								}
-								component = new ChatComponentText(fixedName);
-								component.getChatStyle().setColor(Utils.getColorFormattingForPlayer(player));
-							} else {
+							if(!colorName) {
 								fixedName = Utils.filterAllowedCharacters(fixedName, true, false);
-								if(stripTags) {
-									fixedName = filterPlayerTags(fixedName);
+							}
+							if(stripTags) {
+								fixedName = filterPlayerTags(fixedName);
+							}
+							if(addPreSuffix) {
+								fixedName = addPreSuffix(fixedName);
+							}
+							component = new ChatComponentText(fixedName);
+							if(colorName) {
+								EnumChatFormatting nameColor = Utils.getColorFormattingForPlayer(player);
+								if(nameColor != null) {
+									component.getChatStyle().setColor(nameColor);
 								}
-								if(addPreSuffix) {
-									fixedName = addPreSuffix(fixedName);
-								}
-								component = new ChatComponentText(fixedName);
 							}
 						} else {
 							component = new ChatComponentText(sender.getCommandSenderName());
@@ -660,7 +657,10 @@ public class Utils {
 						if(user != null) {
 							component = new ChatComponentText(getNickGame(channel, user));
 							if(colorName) {
-								component.getChatStyle().setColor(Utils.getColorFormattingForUser(channel, user));
+								EnumChatFormatting nameColor = Utils.getColorFormattingForUser(channel, user);
+								if(nameColor != null) {
+									component.getChatStyle().setColor(nameColor);
+								}
 							}
 						} else {
 							component = new ChatComponentText(connection.getIdentifier());

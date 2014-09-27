@@ -74,8 +74,9 @@ public class MCEventHandler {
 				}
 				String mcAlias = Utils.getNickGame((EntityPlayer) event.sender);
 				IChatComponent chatComponent = new ChatComponentText("* " + mcAlias + " " + emote);
-				if(DisplayConfig.emoteColor != null) {
-					chatComponent.getChatStyle().setColor(Utils.getColorFormatting(DisplayConfig.emoteColor));
+				EnumChatFormatting emoteColor = Utils.getColorFormatting(DisplayConfig.emoteColor);
+				if(emoteColor != null) {
+					chatComponent.getChatStyle().setColor(emoteColor);
 				}
 				Utils.addMessageToChat(chatComponent);
 				if(!MinecraftServer.getServer().isSinglePlayer()) {
@@ -190,7 +191,10 @@ public class MCEventHandler {
 	@SubscribeEvent
 	public void onServerChat(ServerChatEvent event) {
 		IChatComponent senderComponent = event.player.func_145748_c_();
-		senderComponent.getChatStyle().setColor(Utils.getColorFormattingForPlayer(event.player));
+		EnumChatFormatting nameColor = Utils.getColorFormattingForPlayer(event.player);
+		if(nameColor != null) {
+			senderComponent.getChatStyle().setColor(nameColor);
+		}
 		event.component = new ChatComponentTranslation("chat.type.text", senderComponent, event.message);
 		if(!MinecraftServer.getServer().isSinglePlayer()) {
 			if(IRCCommandHandler.onChatCommand(event.player, event.message, true)) {
