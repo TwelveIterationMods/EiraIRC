@@ -19,6 +19,7 @@ import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.MessageFormat;
 import net.blay09.mods.eirairc.util.NotificationType;
 import net.blay09.mods.eirairc.util.Utils;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -116,12 +117,12 @@ public class IRCEventHandler {
 		}
 		EiraIRC.proxy.publishNotification(NotificationType.PrivateMessage, notifyMsg);
 		EiraIRC.instance.getChatSessionHandler().addTargetUser(event.sender);
-		String emoteColor = ConfigHelper.getEmoteColor(event.sender);
-		String noticeColor = ConfigHelper.getNoticeColor(event.sender);
+		EnumChatFormatting emoteColor = Utils.getColorFormatting(ConfigHelper.getEmoteColor(event.sender));
+		EnumChatFormatting noticeColor = Utils.getColorFormatting(ConfigHelper.getNoticeColor(event.sender));
 		if(event.isEmote && emoteColor != null) {
-			chatComponent.getChatStyle().setColor(Utils.getColorFormatting(emoteColor));
+			chatComponent.getChatStyle().setColor(emoteColor);
 		} else if(event.isNotice && noticeColor != null) {
-			chatComponent.getChatStyle().setColor(Utils.getColorFormatting(noticeColor));
+			chatComponent.getChatStyle().setColor(noticeColor);
 		}
 		Utils.addMessageToChat(chatComponent);
 	}
@@ -150,8 +151,6 @@ public class IRCEventHandler {
 		if(event.bot.getBoolean(event.sender, BotProfile.KEY_LINKFILTER, false)) {
 			message = MessageFormat.filterLinks(message);
 		}
-		String emoteColor = ConfigHelper.getEmoteColor(event.channel);
-		String noticeColor = ConfigHelper.getNoticeColor(event.channel);
 		String format;
 		if(event.isNotice) {
 			format = ConfigHelper.getDisplayFormat(event.bot.getDisplayFormat(event.channel)).mcChannelNotice;
@@ -165,10 +164,12 @@ public class IRCEventHandler {
 			System.out.println(chatComponent.getUnformattedText());
 			return;
 		}
+		EnumChatFormatting emoteColor = Utils.getColorFormatting(ConfigHelper.getEmoteColor(event.channel));
+		EnumChatFormatting noticeColor = Utils.getColorFormatting(ConfigHelper.getNoticeColor(event.channel));
 		if(event.isEmote && emoteColor != null) {
-			chatComponent.getChatStyle().setColor(Utils.getColorFormatting(emoteColor));
+			chatComponent.getChatStyle().setColor(emoteColor);
 		} else if(event.isNotice && noticeColor != null) {
-			chatComponent.getChatStyle().setColor(Utils.getColorFormatting(noticeColor));
+			chatComponent.getChatStyle().setColor(noticeColor);
 		}
 		Utils.addMessageToChat(chatComponent);
 	}

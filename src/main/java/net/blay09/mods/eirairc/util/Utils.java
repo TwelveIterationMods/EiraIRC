@@ -47,6 +47,7 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.StatCollector;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class Utils {
 
@@ -170,8 +171,9 @@ public class Utils {
 		return colorFormatting != null && colorFormatting.isColor();
 	}
 
+	@Nullable
 	public static EnumChatFormatting getColorFormatting(String colorName) {
-		if(colorName.isEmpty()) {
+		if(colorName == null || colorName.isEmpty()) {
 			return null;
 		}
 		colorName = colorName.toLowerCase();
@@ -212,6 +214,7 @@ public class Utils {
 		return colorFormatting;
 	}
 
+	@Nullable
 	public static EnumChatFormatting getColorFormattingForPlayer(EntityPlayer player) {
 		NBTTagCompound tagCompound = player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getCompoundTag(Globals.NBT_EIRAIRC);
 		boolean isOP = Utils.isServerSide() && Utils.isOP(player);
@@ -229,6 +232,7 @@ public class Utils {
 		return Utils.getColorFormatting(DisplayConfig.mcColor);
 	}
 
+	@Nullable
 	public static EnumChatFormatting getColorFormattingForUser(IRCChannel channel, IRCUser user) {
 		if(channel == null) {
 			return Utils.getColorFormatting(DisplayConfig.ircPrivateColor);

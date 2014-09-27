@@ -10,6 +10,7 @@ import net.blay09.mods.eirairc.config.GlobalConfig;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 
 import java.util.regex.Matcher;
@@ -125,7 +126,10 @@ public class MessageFormat {
 							displayName = formatNick(displayName, target, mode);
 							component = new ChatComponentText(displayName);
 							if(mode != Mode.Emote) {
-								component.getChatStyle().setColor(Utils.getColorFormattingForPlayer(player));
+								EnumChatFormatting nameColor = Utils.getColorFormattingForPlayer(player);
+								if(nameColor != null) {
+									component.getChatStyle().setColor(Utils.getColorFormattingForPlayer(player));
+								}
 							}
 						} else {
 							component = new ChatComponentText(sender.getCommandSenderName());
@@ -200,7 +204,10 @@ public class MessageFormat {
 							displayName = formatNick(displayName, target, mode);
 							component = new ChatComponentText(displayName);
 							if(mode != Mode.Emote) {
-								component.getChatStyle().setColor(Utils.getColorFormattingForUser(channel, user));
+								EnumChatFormatting nameColor = Utils.getColorFormattingForUser(channel, user);
+								if(nameColor != null) {
+									component.getChatStyle().setColor(nameColor);
+								}
 							}
 						} else {
 							component = new ChatComponentText(connection.getIdentifier());
