@@ -22,6 +22,7 @@ import net.blay09.mods.eirairc.util.NotificationType;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.util.ChatAllowedCharacters;
 import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.event.EventPriority;
 import net.minecraftforge.event.ForgeSubscribe;
 
@@ -119,12 +120,12 @@ public class IRCEventHandler {
 		}
 		EiraIRC.proxy.publishNotification(NotificationType.PrivateMessage, notifyMsg);
 		EiraIRC.instance.getChatSessionHandler().addTargetUser(event.sender);
-		String emoteColor = ConfigHelper.getEmoteColor(event.sender);
-		String noticeColor = ConfigHelper.getNoticeColor(event.sender);
+		EnumChatFormatting emoteColor = Utils.getColorFormatting(ConfigHelper.getEmoteColor(event.sender));
+		EnumChatFormatting noticeColor = Utils.getColorFormatting(ConfigHelper.getNoticeColor(event.sender));
  		if(event.isEmote && emoteColor != null) {
- 			chatComponent.setColor(Utils.getColorFormatting(emoteColor));
+ 			chatComponent.setColor(emoteColor);
 		} else if(event.isNotice && noticeColor != null) {
-			chatComponent.setColor(Utils.getColorFormatting(noticeColor));
+			chatComponent.setColor(noticeColor);
  		}
 		Utils.addMessageToChat(chatComponent);
 	}
@@ -167,12 +168,12 @@ public class IRCEventHandler {
 			System.out.println(chatComponent.toString());
 			return;
 		}
-		String emoteColor = ConfigHelper.getEmoteColor(event.sender);
-		String noticeColor = ConfigHelper.getNoticeColor(event.sender);
+		EnumChatFormatting emoteColor = Utils.getColorFormatting(ConfigHelper.getEmoteColor(event.sender));
+		EnumChatFormatting noticeColor = Utils.getColorFormatting(ConfigHelper.getNoticeColor(event.sender));
  		if(event.isEmote && emoteColor != null) {
- 			chatComponent.setColor(Utils.getColorFormatting(emoteColor));
+ 			chatComponent.setColor(emoteColor);
 		} else if(event.isNotice && noticeColor != null) {
-			chatComponent.setColor(Utils.getColorFormatting(noticeColor));
+			chatComponent.setColor(noticeColor);
  		}
 		Utils.addMessageToChat(chatComponent);
 	}

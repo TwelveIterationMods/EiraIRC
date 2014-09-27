@@ -239,7 +239,7 @@ public class Utils {
 	}
 
 	public static EnumChatFormatting getColorFormatting(String colorName) {
-		if (colorName.isEmpty()) {
+		if (colorName == null || colorName.isEmpty()) {
 			return null;
 		}
 		colorName = colorName.toLowerCase();
@@ -845,12 +845,14 @@ public class Utils {
 					} else if (token.equals("NICK")) {
 						if(user != null) {
 							String displayName = getNickGame(channel, user);
-							if (colorName) {
-								displayName = Globals.COLOR_CODE_PREFIX + Utils.getColorFormattingForUser(channel, user).func_96298_a() + displayName + Globals.COLOR_CODE_PREFIX + 'f';
+							EnumChatFormatting nameColor = Utils.getColorFormattingForUser(channel, user);
+							if (colorName && nameColor != null) {
+								displayName = Globals.COLOR_CODE_PREFIX + nameColor.func_96298_a() + displayName + Globals.COLOR_CODE_PREFIX + 'f';
 							}
 							component = ChatMessageComponent.createFromText(displayName);
-							if (colorName) {
-								component.setColor(Utils.getColorFormattingForUser(channel, user));
+							// double coloring ftw
+							if (colorName && nameColor != null) {
+								component.setColor(nameColor);
 							}
 						} else {
 							component = ChatMessageComponent.createFromText(connection.getIdentifier());
