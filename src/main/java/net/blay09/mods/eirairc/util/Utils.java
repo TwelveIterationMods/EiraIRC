@@ -26,7 +26,7 @@ import net.blay09.mods.eirairc.api.IRCUser;
 import net.blay09.mods.eirairc.bot.IRCBotImpl;
 import net.blay09.mods.eirairc.config.DisplayConfig;
 import net.blay09.mods.eirairc.config.GlobalConfig;
-import net.blay09.mods.eirairc.config.ServerConfig;
+import net.blay09.mods.eirairc.config2.ServerConfig;
 import net.blay09.mods.eirairc.config2.base.ServiceConfig;
 import net.blay09.mods.eirairc.config2.base.ServiceSettings;
 import net.blay09.mods.eirairc.irc.IRCConnectionImpl;
@@ -277,10 +277,10 @@ public class Utils {
 
 	public static IRCConnectionImpl connectTo(ServerConfig config) {
 		IRCConnectionImpl connection;
-		if(config.isSecureConnection()) {
-			connection = new IRCConnectionSSLImpl(config.getHost(), config.getServerPassword(), ConfigHelper.getFormattedNick(config), config.getIdent(), config.getDescription());
+		if(config.isSSL()) {
+			connection = new IRCConnectionSSLImpl(config.getAddress(), config.getServerPassword(), ConfigHelper.getFormattedNick(config), config.getIdent(), config.getDescription());
 		} else {
-			connection = new IRCConnectionImpl(config.getHost(), config.getServerPassword(), ConfigHelper.getFormattedNick(config), config.getIdent(), config.getDescription());
+			connection = new IRCConnectionImpl(config.getAddress(), config.getServerPassword(), ConfigHelper.getFormattedNick(config), config.getIdent(), config.getDescription());
 		}
 		connection.setCharset(GlobalConfig.charset);
 		connection.setBot(new IRCBotImpl(connection));

@@ -11,7 +11,7 @@ import net.blay09.mods.eirairc.bot.IRCBotImpl;
 import net.blay09.mods.eirairc.client.gui.GuiAdvancedTextField;
 import net.blay09.mods.eirairc.client.gui.GuiToggleButton;
 import net.blay09.mods.eirairc.config2.base.BotProfileImpl;
-import net.blay09.mods.eirairc.config.ServerConfig;
+import net.blay09.mods.eirairc.config2.ServerConfig;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
@@ -206,7 +206,7 @@ public class GuiServerConfig extends GuiScreen {
 	public void actionPerformed(GuiButton button) {
 		if(button == btnSave) {
 			saveToConfig();
-			if(btnAutoConnect.getState() && !EiraIRC.instance.isConnectedTo(config.getHost())) {
+			if(btnAutoConnect.getState() && !EiraIRC.instance.isConnectedTo(config.getAddress())) {
 				Utils.connectTo(config);
 			}
 			Minecraft.getMinecraft().displayGuiScreen(new GuiServerList());
@@ -221,7 +221,7 @@ public class GuiServerConfig extends GuiScreen {
 			nextProfile(1);
 		} else if(button == btnProfile) {
 			saveToConfig();
-			Minecraft.getMinecraft().displayGuiScreen(new GuiBotProfiles(this, txtHost.getText().isEmpty() ? config.getHost() : txtHost.getText(), ConfigurationHandler.getBotProfile(currentProfile)));
+			Minecraft.getMinecraft().displayGuiScreen(new GuiBotProfiles(this, txtHost.getText().isEmpty() ? config.getAddress() : txtHost.getText(), ConfigurationHandler.getBotProfile(currentProfile)));
 		}
 	}
 	
@@ -238,7 +238,7 @@ public class GuiServerConfig extends GuiScreen {
 	
 	public void loadFromConfig() {
 		if(config != null) {
-			txtHost.setText(config.getHost());
+			txtHost.setText(config.getAddress());
 			txtNick.setText(config.getNick());
 			txtServerPassword.setText(config.getServerPassword());
 			txtNickServName.setText(config.getNickServName());
@@ -261,9 +261,9 @@ public class GuiServerConfig extends GuiScreen {
 	}
 	
 	public void saveToConfig() {
-		if(config == null || !config.getHost().equals(txtHost.getText())) {
+		if(config == null || !config.getAddress().equals(txtHost.getText())) {
 			if(config != null) {
-				ConfigurationHandler.removeServerConfig(config.getHost());
+				ConfigurationHandler.removeServerConfig(config.getAddress());
 			}
 			config = ConfigurationHandler.getServerConfig(txtHost.getText());
 		}
@@ -274,7 +274,7 @@ public class GuiServerConfig extends GuiScreen {
 		config.setIdent(!txtIdent.getText().isEmpty() ? txtIdent.getText() : Globals.DEFAULT_IDENT);
 		config.setDescription(!txtDescription.getText().isEmpty() ? txtDescription.getText() : Globals.DEFAULT_DESCRIPTION);
 		config.setBotProfile(currentProfile);
-		IRCConnection connection = EiraIRC.instance.getConnection(config.getHost());
+		IRCConnection connection = EiraIRC.instance.getConnection(config.getAddress());
 		if(connection != null) {
 			IRCBotImpl bot = (IRCBotImpl) connection.getBot();
 			bot.updateProfiles();

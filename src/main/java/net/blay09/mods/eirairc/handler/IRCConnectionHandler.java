@@ -11,9 +11,9 @@ import net.blay09.mods.eirairc.api.event.IRCConnectEvent;
 import net.blay09.mods.eirairc.api.event.IRCConnectingEvent;
 import net.blay09.mods.eirairc.api.event.IRCDisconnectEvent;
 import net.blay09.mods.eirairc.api.event.IRCErrorEvent;
-import net.blay09.mods.eirairc.config.ChannelConfig;
+import net.blay09.mods.eirairc.config2.ChannelConfig;
 import net.blay09.mods.eirairc.config.GlobalConfig;
-import net.blay09.mods.eirairc.config.ServerConfig;
+import net.blay09.mods.eirairc.config2.ServerConfig;
 import net.blay09.mods.eirairc.irc.IRCReplyCodes;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Globals;
@@ -33,7 +33,7 @@ public class IRCConnectionHandler {
 		String mcMessage = Utils.getLocalizedMessage("irc.basic.connected", event.connection.getHost());
 		Utils.addMessageToChat(mcMessage);
 		ServerConfig serverConfig = ConfigHelper.getServerConfig(event.connection);
-		if(serverConfig.getHost().equals(Globals.TWITCH_SERVER) && serverConfig.getNick() != null) {
+		if(serverConfig.getAddress().equals(Globals.TWITCH_SERVER) && serverConfig.getNick() != null) {
 			ChannelConfig twitchChannel = serverConfig.getChannelConfig("#" + serverConfig.getNick());
 			twitchChannel.setAutoJoin(true);
 		}

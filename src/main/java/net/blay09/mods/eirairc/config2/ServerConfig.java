@@ -1,7 +1,7 @@
 // Copyright (c) 2014, Christopher "blay09" Baker
 // All rights reserved.
 
-package net.blay09.mods.eirairc.config;
+package net.blay09.mods.eirairc.config2;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.blay09.mods.eirairc.api.IRCChannel;
+import net.blay09.mods.eirairc.config.GlobalConfig;
 import net.blay09.mods.eirairc.config2.base.BotProfileImpl;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.Globals;
@@ -20,27 +21,30 @@ import org.jetbrains.annotations.NotNull;
 
 public class ServerConfig {
 
-	private final String host; // server: address
-	private String nick = ""; // server
-	private String serverPassword = ""; // server
+	private final Map<String, ChannelConfig> channels = new HashMap<String, ChannelConfig>();
+
+	private final String address;
+	private String charset = "UTF-8";
+	private String nick = "";
+	private String serverPassword = "";
+	private String nickServName = "";
+	private String nickServPassword = "";
+	private boolean isSSL = false;
+
+	private boolean autoConnect = true; // channelsettings: autoJoin
 	private String botProfile = ""; // bot
 	private String ident = Globals.DEFAULT_IDENT; // bot
 	private String description = Globals.DEFAULT_DESCRIPTION; // bot
-	private String nickServName = ""; // server
-	private String nickServPassword = ""; // server
-	private final Map<String, ChannelConfig> channels = new HashMap<String, ChannelConfig>();
-	private boolean autoConnect = true; // server: autoJoin
-	private String quitMessage = ""; // server
+	private String quitMessage = ""; // bot
 	private String ircColor = ""; // theme
 	private String emoteColor = ""; // theme
-	private boolean secureConnection = false; // server: isSSL
 
-	public ServerConfig(String host) {
-		this.host = host;
+	public ServerConfig(String address) {
+		this.address = address;
 	}
-	
+
 	public void useDefaults(boolean serverSide) {
-		if(host.equals(Globals.TWITCH_SERVER)) {
+		if(address.equals(Globals.TWITCH_SERVER)) {
 			botProfile = BotProfileImpl.DEFAULT_TWITCH;
 		} else if(serverSide) {
 			botProfile = BotProfileImpl.DEFAULT_SERVER;
@@ -49,8 +53,8 @@ public class ServerConfig {
 		}
 	}
 	
-	public String getHost() {
-		return host;
+	public String getAddress() {
+		return address;
 	}
 	
 	public void setNick(@NotNull String nick) {
@@ -154,7 +158,7 @@ public class ServerConfig {
 		serverPassword = Utils.unquote(config.get(categoryName, "serverPassword", "").getString());
 		autoConnect = config.get(categoryName, "autoConnect", autoConnect).getBoolean(autoConnect);
 		botProfile = Utils.unquote(config.get(categoryName, "botProfile", "").getString());
-		secureConnection = config.get(categoryName, "secureConnection", secureConnection).getBoolean(secureConnection);
+		isSSL = config.get(categoryName, "secureConnection", isSSL).getBoolean(isSSL);
 		
 		String channelsCategoryName = categoryName + Configuration.CATEGORY_SPLITTER + ConfigurationHandler.CATEGORY_CHANNELS;
 		ConfigCategory channelsCategory = config.getCategory(channelsCategoryName);
@@ -167,7 +171,7 @@ public class ServerConfig {
 
 	public void save(Configuration config, ConfigCategory category) {
 		String categoryName = category.getQualifiedName();
-		config.get(categoryName, "host", "").set(Utils.quote(host));
+		config.get(categoryName, "host", "").set(Utils.quote(address));
 		config.get(categoryName, "nick", "").set(Utils.quote(nick != null ? nick : ""));
 		config.get(categoryName, "ident", "").set(Utils.quote(ident != null ? ident : Globals.DEFAULT_IDENT));
 		config.get(categoryName, "description", "").set(Utils.quote(description != null ? description : Globals.DEFAULT_DESCRIPTION));
@@ -179,7 +183,7 @@ public class ServerConfig {
 		config.get(categoryName, "serverPassword", "").set(Utils.quote(GlobalConfig.saveCredentials && serverPassword != null ? serverPassword : ""));
 		config.get(categoryName, "autoConnect", autoConnect).set(autoConnect);
 		config.get(categoryName, "botProfile", "").set(Utils.quote(botProfile != null ? botProfile : ""));
-		config.get(categoryName, "secureConnection", secureConnection).set(secureConnection);
+		config.get(categoryName, "secureConnection", isSSL).set(isSSL);
 		
 		String channelsCategoryName = categoryName + Configuration.CATEGORY_SPLITTER + ConfigurationHandler.CATEGORY_CHANNELS;
 		int c = 0;
@@ -205,9 +209,9 @@ public class ServerConfig {
 		else if(key.equals("quitMessage")) value = quitMessage;
 		else if(key.equals("autoConnect")) value = String.valueOf(autoConnect);
 		if(value != null) {
-			Utils.sendLocalizedMessage(sender, "irc.config.lookup", host, key, value);
+			Utils.sendLocalizedMessage(sender, "irc.config.lookup", address, key, value);
 		} else {
-			Utils.sendLocalizedMessage(sender, "irc.config.invalidOption", host, key);
+			Utils.sendLocalizedMessage(sender, "irc.config.invalidOption", address, key);
 		}
 	}
 	
@@ -231,10 +235,10 @@ public class ServerConfig {
 		} else if(key.equals("autoConnect")) {
 			autoConnect = Boolean.parseBoolean(value);
 		} else {
-			Utils.sendLocalizedMessage(sender, "irc.config.invalidOption", host, key, value);
+			Utils.sendLocalizedMessage(sender, "irc.config.invalidOption", address, key, value);
 			return;
 		}
-		Utils.sendLocalizedMessage(sender, "irc.config.change", host, key, value);
+		Utils.sendLocalizedMessage(sender, "irc.config.change", address, key, value);
 		ConfigurationHandler.save();
 	}
 	
@@ -261,7 +265,11 @@ public class ServerConfig {
 		this.botProfile = botProfile;
 	}
 
-	public boolean isSecureConnection() {
-		return secureConnection;
+	public boolean isSSL() {
+		return isSSL;
+	}
+
+	public String getCharset() {
+		return charset;
 	}
 }

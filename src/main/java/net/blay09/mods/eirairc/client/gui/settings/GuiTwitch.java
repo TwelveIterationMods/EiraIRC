@@ -6,7 +6,7 @@ package net.blay09.mods.eirairc.client.gui.settings;
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.IRCConnection;
 import net.blay09.mods.eirairc.client.gui.GuiAdvancedTextField;
-import net.blay09.mods.eirairc.config.ServerConfig;
+import net.blay09.mods.eirairc.config2.ServerConfig;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Globals;
@@ -81,7 +81,7 @@ public class GuiTwitch extends GuiScreen implements GuiYesNoCallback {
 					ConfigurationHandler.addServerConfig(config);
 					ConfigurationHandler.save();
 				} else {
-					ConfigurationHandler.removeServerConfig(config.getHost());
+					ConfigurationHandler.removeServerConfig(config.getAddress());
 					ConfigurationHandler.save();
 				}
 			}

@@ -8,8 +8,8 @@ import net.blay09.mods.eirairc.api.IRCChannel;
 import net.blay09.mods.eirairc.api.IRCConnection;
 import net.blay09.mods.eirairc.api.IRCContext;
 import net.blay09.mods.eirairc.api.IRCUser;
-import net.blay09.mods.eirairc.config.ChannelConfig;
-import net.blay09.mods.eirairc.config.ServerConfig;
+import net.blay09.mods.eirairc.config2.ChannelConfig;
+import net.blay09.mods.eirairc.config2.ServerConfig;
 
 public class IRCResolver {
 

@@ -1,10 +1,11 @@
 // Copyright (c) 2014, Christopher "blay09" Baker
 // All rights reserved.
 
-package net.blay09.mods.eirairc.config;
+package net.blay09.mods.eirairc.config2;
 
 import java.util.List;
 
+import net.blay09.mods.eirairc.config.GlobalConfig;
 import net.blay09.mods.eirairc.config2.base.BotProfileImpl;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.Globals;
@@ -24,7 +25,7 @@ public class ChannelConfig {
 	
 	public ChannelConfig(ServerConfig serverConfig, String name) {
 		this.serverConfig = serverConfig;
-		if(serverConfig.getHost().equals(Globals.TWITCH_SERVER)) {
+		if(serverConfig.getAddress().equals(Globals.TWITCH_SERVER)) {
 			this.name = name.toLowerCase();
 		} else {
 			this.name = name;

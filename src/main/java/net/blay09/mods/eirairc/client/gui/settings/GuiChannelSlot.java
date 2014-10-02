@@ -4,8 +4,8 @@
 package net.blay09.mods.eirairc.client.gui.settings;
 
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.config.ChannelConfig;
-import net.blay09.mods.eirairc.config.ServerConfig;
+import net.blay09.mods.eirairc.config2.ChannelConfig;
+import net.blay09.mods.eirairc.config2.ServerConfig;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
@@ -53,8 +53,8 @@ public class GuiChannelSlot extends GuiSlot {
 		ServerConfig serverConfig = parentGui.getServerConfig();
 		ChannelConfig channelConfig = parentGui.getChannelConfig(i);
 		String joinedString = null;
-		if(EiraIRC.instance.isConnectedTo(serverConfig.getHost())) {
-			if(EiraIRC.instance.getConnection(serverConfig.getHost()).getChannel(channelConfig.getName()) != null) {
+		if(EiraIRC.instance.isConnectedTo(serverConfig.getAddress())) {
+			if(EiraIRC.instance.getConnection(serverConfig.getAddress()).getChannel(channelConfig.getName()) != null) {
 				joinedString = Utils.getLocalizedMessage("irc.gui.channelList.joined");
 			} else {
 				joinedString = Utils.getLocalizedMessage("irc.gui.channelList.notJoined");

@@ -7,8 +7,8 @@ import java.util.List;
 
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.IRCContext;
-import net.blay09.mods.eirairc.config.ChannelConfig;
-import net.blay09.mods.eirairc.config.ServerConfig;
+import net.blay09.mods.eirairc.config2.ChannelConfig;
+import net.blay09.mods.eirairc.config2.ServerConfig;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
@@ -70,7 +70,7 @@ public class CommandConfig extends SubCommand {
 			list.add(TARGET_GLOBAL);
 			Utils.addConnectionsToList(list);
 			for(ServerConfig serverConfig : ConfigurationHandler.getServerConfigs()) {
-				list.add(serverConfig.getHost());
+				list.add(serverConfig.getAddress());
 				for(ChannelConfig channelConfig : serverConfig.getChannelConfigs()) {
 					list.add(channelConfig.getName());
 				}

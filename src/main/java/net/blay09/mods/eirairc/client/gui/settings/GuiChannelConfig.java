@@ -11,8 +11,8 @@ import net.blay09.mods.eirairc.bot.IRCBotImpl;
 import net.blay09.mods.eirairc.client.gui.GuiAdvancedTextField;
 import net.blay09.mods.eirairc.client.gui.GuiToggleButton;
 import net.blay09.mods.eirairc.config2.base.BotProfileImpl;
-import net.blay09.mods.eirairc.config.ChannelConfig;
-import net.blay09.mods.eirairc.config.ServerConfig;
+import net.blay09.mods.eirairc.config2.ChannelConfig;
+import net.blay09.mods.eirairc.config2.ServerConfig;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
@@ -168,8 +168,8 @@ public class GuiChannelConfig extends GuiScreen {
 	public void actionPerformed(GuiButton button) {
 		if(button == btnSave) {
 			saveToConfig();
-			if(btnAutoJoin.getState() && EiraIRC.instance.isConnectedTo(serverConfig.getHost())) {
-				EiraIRC.instance.getConnection(serverConfig.getHost()).join(config.getName(), config.getPassword());
+			if(btnAutoJoin.getState() && EiraIRC.instance.isConnectedTo(serverConfig.getAddress())) {
+				EiraIRC.instance.getConnection(serverConfig.getAddress()).join(config.getName(), config.getPassword());
 			}
 			Minecraft.getMinecraft().displayGuiScreen(new GuiChannelList(listParentScreen, serverConfig));
 		} else if(button == btnCancel) {
@@ -216,7 +216,7 @@ public class GuiChannelConfig extends GuiScreen {
 		config.setAutoJoin(btnAutoJoin.getState());
 		config.setAutoWho(btnAutoWho.getState());
 		config.setBotProfile(currentProfile);
-		IRCConnection connection = EiraIRC.instance.getConnection(serverConfig.getHost());
+		IRCConnection connection = EiraIRC.instance.getConnection(serverConfig.getAddress());
 		if(connection != null) {
 			IRCBotImpl bot = (IRCBotImpl) connection.getBot();
 			bot.updateProfiles();

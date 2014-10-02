@@ -5,8 +5,8 @@ package net.blay09.mods.eirairc.client.gui.settings;
 
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.IRCConnection;
-import net.blay09.mods.eirairc.config.ChannelConfig;
-import net.blay09.mods.eirairc.config.ServerConfig;
+import net.blay09.mods.eirairc.config2.ChannelConfig;
+import net.blay09.mods.eirairc.config2.ServerConfig;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
@@ -63,9 +63,9 @@ public class GuiChannelList extends GuiScreen implements GuiYesNoCallback {
 		if(button == btnBack) {
 			Minecraft.getMinecraft().displayGuiScreen(parentScreen);
 		} else if(button == btnJoin) {
-			IRCConnection connection = EiraIRC.instance.getConnection(parentConfig.getHost());
+			IRCConnection connection = EiraIRC.instance.getConnection(parentConfig.getAddress());
 			if(connection != null) {
-				if(EiraIRC.instance.getConnection(parentConfig.getHost()).getChannel(configs[selectedElement].getName()) == null) {
+				if(EiraIRC.instance.getConnection(parentConfig.getAddress()).getChannel(configs[selectedElement].getName()) == null) {
 					connection.join(configs[selectedElement].getName(), configs[selectedElement].getPassword());
 				} else {
 					connection.part(configs[selectedElement].getName());
@@ -87,7 +87,7 @@ public class GuiChannelList extends GuiScreen implements GuiYesNoCallback {
 			Minecraft.getMinecraft().displayGuiScreen(this);
 			return;
 		}
-		IRCConnection connection = EiraIRC.instance.getConnection(parentConfig.getHost());
+		IRCConnection connection = EiraIRC.instance.getConnection(parentConfig.getAddress());
 		if(connection != null) {
 			connection.part(configs[channelIdx].getName());
 		}
@@ -126,9 +126,9 @@ public class GuiChannelList extends GuiScreen implements GuiYesNoCallback {
 		}
 		btnEdit.enabled = true;
 		btnDelete.enabled = true;
-		if(EiraIRC.instance.isConnectedTo(parentConfig.getHost())) {
+		if(EiraIRC.instance.isConnectedTo(parentConfig.getAddress())) {
 			btnJoin.enabled = true;
-			if(EiraIRC.instance.getConnection(parentConfig.getHost()).getChannel(configs[i].getName()) != null) {
+			if(EiraIRC.instance.getConnection(parentConfig.getAddress()).getChannel(configs[i].getName()) != null) {
 				btnJoin.displayString = Utils.getLocalizedMessage("irc.gui.channelList.leave");
 			} else {
 				btnJoin.displayString = Utils.getLocalizedMessage("irc.gui.channelList.join");

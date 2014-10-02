@@ -4,7 +4,7 @@
 package net.blay09.mods.eirairc.client.gui.settings;
 
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.config.ServerConfig;
+import net.blay09.mods.eirairc.config2.ServerConfig;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
@@ -50,9 +50,9 @@ public class GuiServerSlot extends GuiSlot {
 	@Override
 	protected void drawSlot(int i, int x, int y, int l, Tessellator tessellator, int k, int j) {
 		ServerConfig config = parentGui.getServerConfig(i);
-		String connectedString = EiraIRC.instance.isConnectedTo(config.getHost()) ? Utils.getLocalizedMessage("irc.gui.serverList.connected") :  Utils.getLocalizedMessage("irc.gui.serverList.notConnected");
+		String connectedString = EiraIRC.instance.isConnectedTo(config.getAddress()) ? Utils.getLocalizedMessage("irc.gui.serverList.connected") :  Utils.getLocalizedMessage("irc.gui.serverList.notConnected");
 		
-		parentGui.drawString(parentGui.getFontRenderer(), config.getHost(), x + 2, y + 1, Globals.TEXT_COLOR);
+		parentGui.drawString(parentGui.getFontRenderer(), config.getAddress(), x + 2, y + 1, Globals.TEXT_COLOR);
 		parentGui.drawString(parentGui.getFontRenderer(), connectedString, x + 4, y + 11, Globals.TEXT_COLOR);
 	}
 

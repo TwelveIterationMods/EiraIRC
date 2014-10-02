@@ -5,7 +5,7 @@ package net.blay09.mods.eirairc.client.gui.settings;
 
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.IRCConnection;
-import net.blay09.mods.eirairc.config.ServerConfig;
+import net.blay09.mods.eirairc.config2.ServerConfig;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Globals;
@@ -61,7 +61,7 @@ public class GuiServerList extends GuiScreen implements GuiYesNoCallback {
 		if(button == btnBack) {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiSettings());
 		} else if(button == btnConnect) {
-			IRCConnection connection = EiraIRC.instance.getConnection(configs[selectedElement].getHost());
+			IRCConnection connection = EiraIRC.instance.getConnection(configs[selectedElement].getAddress());
 			if(connection != null) {
 				connection.disconnect(ConfigHelper.getQuitMessage(connection));
 			} else {
@@ -85,11 +85,11 @@ public class GuiServerList extends GuiScreen implements GuiYesNoCallback {
 			Minecraft.getMinecraft().displayGuiScreen(this);
 			return;
 		}
-		IRCConnection connection = EiraIRC.instance.getConnection(configs[serverIdx].getHost());
+		IRCConnection connection = EiraIRC.instance.getConnection(configs[serverIdx].getAddress());
 		if(connection != null) {
 			connection.disconnect(ConfigHelper.getQuitMessage(connection));
 		}
-		ConfigurationHandler.removeServerConfig(configs[serverIdx].getHost());
+		ConfigurationHandler.removeServerConfig(configs[serverIdx].getAddress());
 		ConfigurationHandler.save();
 		Minecraft.getMinecraft().displayGuiScreen(this);
 	}
@@ -114,7 +114,7 @@ public class GuiServerList extends GuiScreen implements GuiYesNoCallback {
 	}
 	
 	public void onElementClicked(int i) {
-		if(EiraIRC.instance.isConnectedTo(configs[i].getHost())) {
+		if(EiraIRC.instance.isConnectedTo(configs[i].getAddress())) {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiChannelList(this, configs[i]));
 		} else {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiServerConfig(configs[i]));
@@ -130,7 +130,7 @@ public class GuiServerList extends GuiScreen implements GuiYesNoCallback {
 		btnEdit.enabled = true;
 		btnDelete.enabled = true;
 		btnChannels.enabled = true;
-		if(EiraIRC.instance.isConnectedTo(configs[i].getHost())) {
+		if(EiraIRC.instance.isConnectedTo(configs[i].getAddress())) {
 			btnConnect.displayString = Utils.getLocalizedMessage("irc.gui.serverList.disconnect");
 		} else {
 			btnConnect.displayString = Utils.getLocalizedMessage("irc.gui.serverList.connect");

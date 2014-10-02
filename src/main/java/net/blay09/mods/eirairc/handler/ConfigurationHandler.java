@@ -15,6 +15,8 @@ import java.util.Map;
 import net.blay09.mods.eirairc.config.*;
 import net.blay09.mods.eirairc.config.done.KeyConfig;
 import net.blay09.mods.eirairc.config.done.NetworkConfig;
+import net.blay09.mods.eirairc.config2.ChannelConfig;
+import net.blay09.mods.eirairc.config2.ServerConfig;
 import net.blay09.mods.eirairc.config2.base.BotProfileImpl;
 import net.blay09.mods.eirairc.config2.base.DisplayFormatConfig;
 import net.blay09.mods.eirairc.config2.base.ServiceConfig;
@@ -162,7 +164,7 @@ public class ConfigurationHandler {
 	}
 
 	public static void addServerConfig(ServerConfig serverConfig) {
-		serverConfigs.put(serverConfig.getHost().toLowerCase(), serverConfig);
+		serverConfigs.put(serverConfig.getAddress().toLowerCase(), serverConfig);
 	}
 	
 	public static void removeServerConfig(String host) {
