@@ -5,7 +5,6 @@ package net.blay09.mods.eirairc.client.gui.chat;
 
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.client.gui.settings.GuiSettings;
-import net.blay09.mods.eirairc.config.done.KeyConfig;
 import net.blay09.mods.eirairc.config2.ClientGlobalConfig;
 import net.blay09.mods.eirairc.handler.ChatSessionHandler;
 import net.blay09.mods.eirairc.util.Globals;
@@ -60,7 +59,7 @@ public class GuiChatExtended extends GuiChat {
 	
 	@Override
 	protected void keyTyped(char unicode, int keyCode) {
-		if(keyCode == KeyConfig.toggleTarget && !ClientGlobalConfig.disableChatToggle && !ClientGlobalConfig.clientBridge && !inputField.getText().startsWith("/")) {
+		if(keyCode == ClientGlobalConfig.keyToggleTarget && !ClientGlobalConfig.disableChatToggle && !ClientGlobalConfig.clientBridge && !inputField.getText().startsWith("/")) {
 			if(Keyboard.isRepeatEvent()) {
 				if(System.currentTimeMillis() - lastToggleTarget >= 1000) {
 					chatSession.setChatTarget((String) null);

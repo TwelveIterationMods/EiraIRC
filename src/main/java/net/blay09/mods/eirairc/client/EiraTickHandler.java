@@ -13,7 +13,6 @@ import net.blay09.mods.eirairc.client.gui.settings.GuiKeybinds;
 import net.blay09.mods.eirairc.client.gui.settings.GuiSettings;
 import net.blay09.mods.eirairc.client.screenshot.Screenshot;
 import net.blay09.mods.eirairc.client.screenshot.ScreenshotManager;
-import net.blay09.mods.eirairc.config.done.KeyConfig;
 import net.blay09.mods.eirairc.config.done.ScreenshotConfig;
 import net.blay09.mods.eirairc.config2.ClientGlobalConfig;
 import net.blay09.mods.eirairc.net.EiraPlayerInfo;
@@ -32,6 +31,13 @@ import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.RenderTickEvent;
 
 public class EiraTickHandler {
+
+	public static final int KEY_IDX_OPENSETTINGS = 0;
+	public static final int KEY_IDX_TOGGLETARGET = 1;
+	public static final int KEY_IDX_SCREENSHOTSHARE = 2;
+	public static final int KEY_IDX_TOGGLERECORDING = 3;
+	public static final int KEY_IDX_TOGGLELIVE = 4;
+	public static final int KEY_IDX_OPENSCREENSHOTS = 5;
 
 	private GuiEiraChat eiraChat;
 	private int screenshotCheck;
@@ -64,31 +70,31 @@ public class EiraTickHandler {
 		if(Minecraft.getMinecraft().currentScreen instanceof GuiKeybinds) {
 			return;
 		}
-		if(isKeyPressed(KeyConfig.openMenu, KeyConfig.IDX_OPENSETTINGS)) {
+		if(isKeyPressed(ClientGlobalConfig.keyOpenMenu, KEY_IDX_OPENSETTINGS)) {
 			if(Minecraft.getMinecraft().currentScreen == null) {
 				Minecraft.getMinecraft().displayGuiScreen(new GuiSettings());
 			}
 		}
 		EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
 		if(player != null) {
-			if(isKeyPressed(KeyConfig.toggleRecording, KeyConfig.IDX_TOGGLERECORDING)) {
+			if(isKeyPressed(ClientGlobalConfig.keyToggleRecording, KEY_IDX_TOGGLERECORDING)) {
 				EiraPlayerInfo playerInfo = EiraIRC.instance.getNetHandler().getPlayerInfo(player.getCommandSenderName());
 				playerInfo.isRecording = !playerInfo.isRecording;
 				PacketHandler.INSTANCE.sendToServer(new CMessageRecLiveState(player.getCommandSenderName(), playerInfo.isRecording, playerInfo.isLive));
 			}
-			if(isKeyPressed(KeyConfig.toggleLive, KeyConfig.IDX_TOGGLELIVE)) {
+			if(isKeyPressed(ClientGlobalConfig.keyToggleLive, KEY_IDX_TOGGLELIVE)) {
 				EiraPlayerInfo playerInfo = EiraIRC.instance.getNetHandler().getPlayerInfo(player.getCommandSenderName());
 				playerInfo.isLive = !playerInfo.isLive;
 				PacketHandler.INSTANCE.sendToServer(new CMessageRecLiveState(player.getCommandSenderName(), playerInfo.isRecording, playerInfo.isLive));
 			}
 		}
-		if(isKeyPressed(KeyConfig.screenshotShare, KeyConfig.IDX_SCREENSHOTSHARE)) {
+		if(isKeyPressed(ClientGlobalConfig.keyScreenshotShare, KEY_IDX_SCREENSHOTSHARE)) {
 			Screenshot screenshot = ScreenshotManager.getInstance().takeScreenshot();
 			if(screenshot != null) {
 				ScreenshotManager.getInstance().uploadScreenshot(screenshot, ScreenshotConfig.VALUE_UPLOADSHARE);
 			}
 		}
-		if(isKeyPressed(KeyConfig.openScreenshots, KeyConfig.IDX_OPENSCREENSHOTS)) {
+		if(isKeyPressed(ClientGlobalConfig.keyOpenScreenshots, KEY_IDX_OPENSCREENSHOTS)) {
 			if(Minecraft.getMinecraft().currentScreen == null) {
 				Minecraft.getMinecraft().displayGuiScreen(new GuiScreenshotList(null));
 			}

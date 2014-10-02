@@ -128,7 +128,6 @@ public class ConfigurationHandler {
 		config = new Configuration(configFile);
 		
 		GlobalConfig.load(config);
-		KeyConfig.load(config);
 		NotificationConfig.load(config);
 		ScreenshotConfig.load(config);
 
@@ -137,7 +136,6 @@ public class ConfigurationHandler {
 	
 	public static void save() {
 		GlobalConfig.save(config);
-		KeyConfig.save(config);
 		NotificationConfig.save(config);
 		ScreenshotConfig.save(config);
 	}

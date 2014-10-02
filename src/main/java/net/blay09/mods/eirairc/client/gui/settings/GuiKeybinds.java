@@ -3,7 +3,8 @@
 
 package net.blay09.mods.eirairc.client.gui.settings;
 
-import net.blay09.mods.eirairc.config.done.KeyConfig;
+import net.blay09.mods.eirairc.client.EiraTickHandler;
+import net.blay09.mods.eirairc.config2.ClientGlobalConfig;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
@@ -63,17 +64,17 @@ public class GuiKeybinds extends GuiScreen {
 		if(button == btnBack) {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiSettings());
 		} else if(button == btnOpenSettings) {
-			currentKeyIdx = KeyConfig.IDX_OPENSETTINGS;
+			currentKeyIdx = EiraTickHandler.KEY_IDX_OPENSETTINGS;
 		} else if(button == btnToggleTarget) {
-			currentKeyIdx = KeyConfig.IDX_TOGGLETARGET;
+			currentKeyIdx = EiraTickHandler.KEY_IDX_TOGGLETARGET;
 		} else if(button == btnScreenshotShare) {
-			currentKeyIdx = KeyConfig.IDX_SCREENSHOTSHARE;
+			currentKeyIdx = EiraTickHandler.KEY_IDX_SCREENSHOTSHARE;
 		} else if(button == btnToggleRecording) {
-			currentKeyIdx = KeyConfig.IDX_TOGGLERECORDING;
+			currentKeyIdx = EiraTickHandler.KEY_IDX_TOGGLERECORDING;
 		} else if(button == btnToggleLive) {
-			currentKeyIdx = KeyConfig.IDX_TOGGLELIVE;
+			currentKeyIdx = EiraTickHandler.KEY_IDX_TOGGLELIVE;
 		} else if(button == btnOpenScreenshots) {
-			currentKeyIdx = KeyConfig.IDX_OPENSCREENSHOTS;
+			currentKeyIdx = EiraTickHandler.KEY_IDX_OPENSCREENSHOTS;
 		}
 	}
 	
@@ -84,12 +85,12 @@ public class GuiKeybinds extends GuiScreen {
 				keyCode = -1;
 			}
 			switch(currentKeyIdx) {
-				case KeyConfig.IDX_OPENSETTINGS: KeyConfig.openMenu = keyCode; break;
-				case KeyConfig.IDX_SCREENSHOTSHARE: KeyConfig.screenshotShare = keyCode; break;
-				case KeyConfig.IDX_TOGGLELIVE: KeyConfig.toggleLive = keyCode; break;
-				case KeyConfig.IDX_TOGGLERECORDING: KeyConfig.toggleRecording = keyCode; break;
-				case KeyConfig.IDX_TOGGLETARGET: KeyConfig.toggleTarget = keyCode; break;
-				case KeyConfig.IDX_OPENSCREENSHOTS: KeyConfig.openScreenshots = keyCode; break;
+				case EiraTickHandler.KEY_IDX_OPENSETTINGS: ClientGlobalConfig.keyOpenMenu = keyCode; break;
+				case EiraTickHandler.KEY_IDX_SCREENSHOTSHARE: ClientGlobalConfig.keyScreenshotShare = keyCode; break;
+				case EiraTickHandler.KEY_IDX_TOGGLELIVE: ClientGlobalConfig.keyToggleLive = keyCode; break;
+				case EiraTickHandler.KEY_IDX_TOGGLERECORDING: ClientGlobalConfig.keyToggleRecording = keyCode; break;
+				case EiraTickHandler.KEY_IDX_TOGGLETARGET: ClientGlobalConfig.keyToggleTarget = keyCode; break;
+				case EiraTickHandler.KEY_IDX_OPENSCREENSHOTS: ClientGlobalConfig.keyOpenScreenshots = keyCode; break;
 			}
 			currentKeyIdx = -1;
 			ConfigurationHandler.save();
@@ -100,12 +101,12 @@ public class GuiKeybinds extends GuiScreen {
 	}
 	
 	public void updateButtonText() {
-		btnOpenSettings.displayString = Utils.getLocalizedMessage("irc.gui.keybinds.menu", getKeyName(KeyConfig.openMenu));
-		btnScreenshotShare.displayString = Utils.getLocalizedMessage("irc.gui.keybinds.screenshotShare", getKeyName(KeyConfig.screenshotShare));
-		btnToggleLive.displayString = Utils.getLocalizedMessage("irc.gui.keybinds.toggleLive", getKeyName(KeyConfig.toggleLive));
-		btnToggleRecording.displayString = Utils.getLocalizedMessage("irc.gui.keybinds.toggleRecording", getKeyName(KeyConfig.toggleRecording));
-		btnToggleTarget.displayString = Utils.getLocalizedMessage("irc.gui.keybinds.toggleTarget", getKeyName(KeyConfig.toggleTarget));
-		btnOpenScreenshots.displayString = Utils.getLocalizedMessage("irc.gui.keybinds.openScreenshots", getKeyName(KeyConfig.openScreenshots));
+		btnOpenSettings.displayString = Utils.getLocalizedMessage("irc.gui.keybinds.menu", getKeyName(ClientGlobalConfig.keyOpenMenu));
+		btnScreenshotShare.displayString = Utils.getLocalizedMessage("irc.gui.keybinds.screenshotShare", getKeyName(ClientGlobalConfig.keyScreenshotShare));
+		btnToggleLive.displayString = Utils.getLocalizedMessage("irc.gui.keybinds.toggleLive", getKeyName(ClientGlobalConfig.keyToggleLive));
+		btnToggleRecording.displayString = Utils.getLocalizedMessage("irc.gui.keybinds.toggleRecording", getKeyName(ClientGlobalConfig.keyToggleRecording));
+		btnToggleTarget.displayString = Utils.getLocalizedMessage("irc.gui.keybinds.toggleTarget", getKeyName(ClientGlobalConfig.keyToggleTarget));
+		btnOpenScreenshots.displayString = Utils.getLocalizedMessage("irc.gui.keybinds.openScreenshots", getKeyName(ClientGlobalConfig.keyOpenScreenshots));
 	}
 	
 	private String getKeyName(int keyCode) {
