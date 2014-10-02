@@ -57,6 +57,7 @@ public class IRCConnectionSSLImpl extends IRCConnectionImpl {
 			}
 			writer = new BufferedWriter(new OutputStreamWriter(sslSocket.getOutputStream(), charset));
 			reader = new BufferedReader(new InputStreamReader(sslSocket.getInputStream(), charset));
+			sender.setWriter(writer);
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 			return null;
