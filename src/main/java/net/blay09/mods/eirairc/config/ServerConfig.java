@@ -10,6 +10,8 @@ import java.util.Map;
 
 import net.blay09.mods.eirairc.api.IRCChannel;
 import net.blay09.mods.eirairc.config.base.BotProfileImpl;
+import net.blay09.mods.eirairc.config.settings.BotSettings;
+import net.blay09.mods.eirairc.config.settings.GeneralSettings;
 import net.blay09.mods.eirairc.config.settings.ThemeSettings;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.Globals;
@@ -22,6 +24,9 @@ import org.jetbrains.annotations.NotNull;
 public class ServerConfig {
 
 	private final Map<String, ChannelConfig> channels = new HashMap<String, ChannelConfig>();
+	private final GeneralSettings generalSettings = new GeneralSettings(SharedGlobalConfig.generalSettings);
+	private final BotSettings botSettings = new BotSettings(SharedGlobalConfig.botSettings);
+	private final ThemeSettings theme = new ThemeSettings(SharedGlobalConfig.theme);
 
 	private final String address;
 	private String charset = "UTF-8";
@@ -29,9 +34,8 @@ public class ServerConfig {
 	private String serverPassword = "";
 	private String nickServName = "";
 	private String nickServPassword = "";
-	private boolean isSSL = false;
 
-	private ThemeSettings theme;
+	private boolean isSSL = false;
 
 	private boolean autoConnect = true; // channelsettings: autoJoin
 	private String botProfile = ""; // bot
@@ -216,5 +220,17 @@ public class ServerConfig {
 
 	public String getCharset() {
 		return charset;
+	}
+
+	public ThemeSettings getTheme() {
+		return theme;
+	}
+
+	public GeneralSettings getGeneralSettings() {
+		return generalSettings;
+	}
+
+	public BotSettings getBotSettings() {
+		return botSettings;
 	}
 }

@@ -7,14 +7,13 @@ import java.util.EnumMap;
 /**
  * Created by Blay09 on 02.10.2014.
  */
-public class BotSettings {
+public class GeneralSettings {
 
-	private final BotSettings parent;
+	private final GeneralSettings parent;
 
-	private final EnumMap<BotStringComponent, String> strings = new EnumMap<BotStringComponent, String>(BotStringComponent.class);
-	private final EnumMap<BotBooleanComponent, String> booleans = new EnumMap<BotBooleanComponent, String>(BotBooleanComponent.class);
+	private final EnumMap<GeneralBooleanComponent, String> booleans = new EnumMap<GeneralBooleanComponent, String>(GeneralBooleanComponent.class);
 
-	public BotSettings(BotSettings parent) {
+	public GeneralSettings(GeneralSettings parent) {
 		this.parent = parent;
 	}
 

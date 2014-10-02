@@ -1,5 +1,7 @@
 package net.blay09.mods.eirairc.config;
 
+import net.blay09.mods.eirairc.config.settings.BotSettings;
+import net.blay09.mods.eirairc.config.settings.GeneralSettings;
 import net.blay09.mods.eirairc.config.settings.ThemeSettings;
 import net.blay09.mods.eirairc.util.Globals;
 import net.minecraftforge.common.config.Configuration;
@@ -16,6 +18,8 @@ public class SharedGlobalConfig {
 	private static final String GENERAL = "general";
 	private static final String NETWORK = "network";
 	private static final String THEME = "theme";
+	private static final String BOT = "bot";
+	private static final String SETTINGS = "settings";
 
 	private static Configuration thisConfig;
 
@@ -35,8 +39,10 @@ public class SharedGlobalConfig {
 	public static String proxyUsername = "";
 	public static String proxyPassword = "";
 
-	// Theme Settings
-	public static final ThemeSettings baseTheme = new ThemeSettings(null);
+	// Default Settings
+	public static final ThemeSettings theme = new ThemeSettings(null);
+	public static final BotSettings botSettings = new BotSettings(null);
+	public static final GeneralSettings generalSettings = new GeneralSettings(null);
 
 	public static void load(File configDir) {
 		thisConfig = new Configuration(new File(configDir, "eirairc/shared.cfg"));
@@ -60,8 +66,10 @@ public class SharedGlobalConfig {
 		proxyUsername = thisConfig.getString("proxyUsername", NETWORK, proxyUsername, "[Advanced] The username to authenticate with the proxy, if necessary.");
 		proxyPassword = thisConfig.getString("proxyPassword", NETWORK, proxyPassword, "[Advanced] The password to authenticate with the proxy, if necessary.");
 
-		// Theme
-		baseTheme.load(thisConfig, THEME, true);
+		// Default Settings
+		theme.load(thisConfig, THEME, true);
+		botSettings.load(thisConfig, BOT, true);
+		generalSettings.load(thisConfig, SETTINGS, true);
 	}
 
 	public static void save() {
@@ -81,8 +89,10 @@ public class SharedGlobalConfig {
 		thisConfig.get(NETWORK, "proxyUsername", "").set(proxyUsername);
 		thisConfig.get(NETWORK, "proxyPassword", "").set(proxyPassword);
 
-		// Theme
-		baseTheme.save(thisConfig, THEME);
+		// Default Settings
+		theme.save(thisConfig, THEME);
+		botSettings.save(thisConfig, BOT);
+		generalSettings.save(thisConfig, SETTINGS);
 
 		thisConfig.save();
 	}
@@ -110,7 +120,9 @@ public class SharedGlobalConfig {
 		proxyPassword = legacyConfig.getString("proxyPassword", "network", proxyPassword, "");
 
 		// Theme
-		baseTheme.loadLegacy(legacyConfig);
+		theme.loadLegacy(legacyConfig);
+		botSettings.loadLegacy(legacyConfig);
+		generalSettings.loadLegacy(legacyConfig);
 
 		save();
 	}

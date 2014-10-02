@@ -74,7 +74,7 @@ public class MCEventHandler {
 				}
 				String mcAlias = Utils.getNickGame((EntityPlayer) event.sender);
 				IChatComponent chatComponent = new ChatComponentText("* " + mcAlias + " " + emote);
-				EnumChatFormatting emoteColor = Utils.getColorFormatting(SharedGlobalConfig.baseTheme.getColor(ThemeColorComponent.emoteTextColor));
+				EnumChatFormatting emoteColor = Utils.getColorFormatting(SharedGlobalConfig.theme.getColor(ThemeColorComponent.emoteTextColor));
 				if(emoteColor != null) {
 					chatComponent.getChatStyle().setColor(emoteColor);
 				}

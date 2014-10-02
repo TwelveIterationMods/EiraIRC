@@ -218,7 +218,7 @@ public class Utils {
 		if(!SharedGlobalConfig.enablePlayerColors && !isOP) {
 			return null;
 		}
-		ThemeSettings theme = SharedGlobalConfig.baseTheme;
+		ThemeSettings theme = SharedGlobalConfig.theme;
 		String colorName = tagCompound.getString(Globals.NBT_NAMECOLOR);
 		if(!colorName.isEmpty()) {
 			return Utils.getColorFormatting(colorName);

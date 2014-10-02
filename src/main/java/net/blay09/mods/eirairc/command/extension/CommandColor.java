@@ -48,7 +48,7 @@ public class CommandColor extends SubCommand {
 			throw new WrongUsageException(Utils.getLocalizedMessage("irc.commands.color"));
 		}
 		String colorName = args[0].toLowerCase();
-		if(!Utils.isOP(sender) && (SharedGlobalConfig.colorBlacklist.contains(colorName) || (SharedGlobalConfig.baseTheme.hasColor(ThemeColorComponent.mcOpNameColor) && SharedGlobalConfig.baseTheme.getColor(ThemeColorComponent.mcOpNameColor).equals(colorName)))) {
+		if(!Utils.isOP(sender) && (SharedGlobalConfig.colorBlacklist.contains(colorName) || (SharedGlobalConfig.theme.hasColor(ThemeColorComponent.mcOpNameColor) && SharedGlobalConfig.theme.getColor(ThemeColorComponent.mcOpNameColor).equals(colorName)))) {
 			Utils.sendLocalizedMessage(sender, "irc.color.blackList", colorName);
 			return true;
 		}

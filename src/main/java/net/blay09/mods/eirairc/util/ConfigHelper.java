@@ -6,7 +6,6 @@ package net.blay09.mods.eirairc.util;
 import net.blay09.mods.eirairc.api.IRCChannel;
 import net.blay09.mods.eirairc.api.IRCConnection;
 import net.blay09.mods.eirairc.api.IRCContext;
-import net.blay09.mods.eirairc.api.IRCUser;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.config.TempPlaceholder;
@@ -14,7 +13,6 @@ import net.blay09.mods.eirairc.config.base.DisplayFormatConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.settings.ThemeSettings;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
-import net.blay09.mods.eirairc.irc.IRCChannelImpl;
 
 public class ConfigHelper {
 	
@@ -58,6 +56,6 @@ public class ConfigHelper {
 		if(context instanceof IRCChannel) {
 			return getChannelConfig((IRCChannel) context).getTheme();
 		}
-		return SharedGlobalConfig.baseTheme;
+		return SharedGlobalConfig.theme;
 	}
 }

@@ -6,6 +6,8 @@ package net.blay09.mods.eirairc.config;
 import java.util.List;
 
 import net.blay09.mods.eirairc.config.base.BotProfileImpl;
+import net.blay09.mods.eirairc.config.settings.BotSettings;
+import net.blay09.mods.eirairc.config.settings.GeneralSettings;
 import net.blay09.mods.eirairc.config.settings.ThemeSettings;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.Globals;
@@ -18,14 +20,20 @@ public class ChannelConfig {
 
 	private final ServerConfig serverConfig;
 	private final String name;
+	private final GeneralSettings generalSettings;
+	private final BotSettings botSettings;
+	private final ThemeSettings theme;
 	private String password;
 	private boolean autoWho; // server
 	private boolean autoJoin = true; // server
 	private String botProfile; // bot
-	private ThemeSettings theme;
 
 	public ChannelConfig(ServerConfig serverConfig, String name) {
 		this.serverConfig = serverConfig;
+		generalSettings = new GeneralSettings(serverConfig.getGeneralSettings());
+		botSettings = new BotSettings(serverConfig.getBotSettings());
+		theme = new ThemeSettings(serverConfig.getTheme());
+
 		if(serverConfig.getAddress().equals(Globals.TWITCH_SERVER)) {
 			this.name = name.toLowerCase();
 		} else {
@@ -122,5 +130,13 @@ public class ChannelConfig {
 
 	public ThemeSettings getTheme() {
 		return theme;
+	}
+
+	public GeneralSettings getGeneralSettings() {
+		return generalSettings;
+	}
+
+	public BotSettings getBotSettings() {
+		return botSettings;
 	}
 }
