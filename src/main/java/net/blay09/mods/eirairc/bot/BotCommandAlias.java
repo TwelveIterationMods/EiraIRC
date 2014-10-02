@@ -9,7 +9,7 @@ import net.blay09.mods.eirairc.api.IRCChannel;
 import net.blay09.mods.eirairc.api.IRCUser;
 import net.blay09.mods.eirairc.api.bot.IBotCommand;
 import net.blay09.mods.eirairc.api.bot.IRCBot;
-import net.blay09.mods.eirairc.config2.SharedGlobalConfig;
+import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;

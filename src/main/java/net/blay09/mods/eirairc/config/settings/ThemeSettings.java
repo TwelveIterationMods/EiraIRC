@@ -1,4 +1,4 @@
-package net.blay09.mods.eirairc.config2.settings;
+package net.blay09.mods.eirairc.config.settings;
 
 import net.minecraftforge.common.config.Configuration;
 

@@ -1,4 +1,4 @@
-package net.blay09.mods.eirairc.config2.settings;
+package net.blay09.mods.eirairc.config.settings;
 
 /**
  * Created by Blay09 on 02.10.2014.

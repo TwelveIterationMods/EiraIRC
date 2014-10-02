@@ -7,7 +7,7 @@ import java.util.List;
 
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.IRCContext;
-import net.blay09.mods.eirairc.config2.ServerConfig;
+import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;

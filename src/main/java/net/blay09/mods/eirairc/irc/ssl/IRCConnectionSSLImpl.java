@@ -2,7 +2,7 @@
 
 package net.blay09.mods.eirairc.irc.ssl;
 
-import net.blay09.mods.eirairc.config2.SharedGlobalConfig;
+import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.irc.*;
 import net.blay09.mods.eirairc.util.Utils;
 

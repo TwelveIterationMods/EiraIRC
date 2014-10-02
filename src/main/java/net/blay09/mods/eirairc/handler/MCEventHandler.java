@@ -12,7 +12,7 @@ import net.blay09.mods.eirairc.api.bot.BotProfile;
 import net.blay09.mods.eirairc.api.bot.IRCBot;
 import net.blay09.mods.eirairc.api.event.RelayChat;
 import net.blay09.mods.eirairc.command.base.IRCCommandHandler;
-import net.blay09.mods.eirairc.config2.*;
+import net.blay09.mods.eirairc.config.*;
 import net.blay09.mods.eirairc.irc.IRCConnectionImpl;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.IRCFormatting;

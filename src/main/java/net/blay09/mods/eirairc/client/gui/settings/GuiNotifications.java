@@ -3,8 +3,8 @@
 
 package net.blay09.mods.eirairc.client.gui.settings;
 
-import net.blay09.mods.eirairc.config2.ClientGlobalConfig;
-import net.blay09.mods.eirairc.config2.NotificationStyle;
+import net.blay09.mods.eirairc.config.ClientGlobalConfig;
+import net.blay09.mods.eirairc.config.NotificationStyle;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;

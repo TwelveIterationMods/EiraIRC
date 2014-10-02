@@ -5,7 +5,7 @@ package net.blay09.mods.eirairc.client.gui.screenshot;
 
 import net.blay09.mods.eirairc.client.screenshot.Screenshot;
 import net.blay09.mods.eirairc.client.screenshot.ScreenshotManager;
-import net.blay09.mods.eirairc.config2.TempPlaceholder;
+import net.blay09.mods.eirairc.config.TempPlaceholder;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;

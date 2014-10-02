@@ -1,6 +1,6 @@
-package net.blay09.mods.eirairc.config2;
+package net.blay09.mods.eirairc.config;
 
-import net.blay09.mods.eirairc.config2.settings.ThemeSettings;
+import net.blay09.mods.eirairc.config.settings.ThemeSettings;
 import net.blay09.mods.eirairc.util.Globals;
 import net.minecraftforge.common.config.Configuration;
 

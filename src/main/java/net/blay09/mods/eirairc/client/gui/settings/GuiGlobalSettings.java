@@ -3,7 +3,7 @@
 
 package net.blay09.mods.eirairc.client.gui.settings;
 
-import net.blay09.mods.eirairc.config2.TempPlaceholder;
+import net.blay09.mods.eirairc.config.TempPlaceholder;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;

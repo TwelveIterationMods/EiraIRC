@@ -7,8 +7,8 @@ import java.util.List;
 
 import net.blay09.mods.eirairc.client.gui.GuiAdvancedTextField;
 import net.blay09.mods.eirairc.client.gui.GuiToggleButton;
-import net.blay09.mods.eirairc.config2.base.BotProfileImpl;
-import net.blay09.mods.eirairc.config2.base.DisplayFormatConfig;
+import net.blay09.mods.eirairc.config.base.BotProfileImpl;
+import net.blay09.mods.eirairc.config.base.DisplayFormatConfig;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;

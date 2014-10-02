@@ -18,7 +18,7 @@ import net.blay09.mods.eirairc.api.upload.UploadedFile;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import net.blay09.mods.eirairc.config2.ClientGlobalConfig;
+import net.blay09.mods.eirairc.config.ClientGlobalConfig;
 import org.jetbrains.annotations.Nullable;
 
 public class ImgurHoster implements IUploadHoster {

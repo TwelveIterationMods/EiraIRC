@@ -1,4 +1,4 @@
-package net.blay09.mods.eirairc.config2;
+package net.blay09.mods.eirairc.config;
 
 import net.blay09.mods.eirairc.api.upload.UploadManager;
 import net.minecraftforge.common.config.Configuration;
