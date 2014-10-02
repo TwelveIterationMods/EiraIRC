@@ -6,7 +6,7 @@ package net.blay09.mods.eirairc.client.gui.overlay;
 import java.util.List;
 
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.config.done.DisplayConfig;
+import net.blay09.mods.eirairc.config2.ClientGlobalConfig;
 import net.blay09.mods.eirairc.net.EiraPlayerInfo;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
@@ -99,7 +99,7 @@ public class OverlayRecLive extends Gui {
 				}
 			}
 		}
-		if (DisplayConfig.hudRecState) {
+		if (ClientGlobalConfig.hudRecState) {
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
 			theGame.getTextureManager().bindTexture(icons);
 			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);

@@ -12,10 +12,7 @@ import net.blay09.mods.eirairc.api.bot.BotProfile;
 import net.blay09.mods.eirairc.api.bot.IRCBot;
 import net.blay09.mods.eirairc.api.event.RelayChat;
 import net.blay09.mods.eirairc.command.base.IRCCommandHandler;
-import net.blay09.mods.eirairc.config2.ChannelConfig;
-import net.blay09.mods.eirairc.config.done.DisplayConfig;
-import net.blay09.mods.eirairc.config2.ClientGlobalConfig;
-import net.blay09.mods.eirairc.config2.ServerConfig;
+import net.blay09.mods.eirairc.config2.*;
 import net.blay09.mods.eirairc.irc.IRCConnectionImpl;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.IRCFormatting;
@@ -76,7 +73,7 @@ public class MCEventHandler {
 				}
 				String mcAlias = Utils.getNickGame((EntityPlayer) event.sender);
 				IChatComponent chatComponent = new ChatComponentText("* " + mcAlias + " " + emote);
-				EnumChatFormatting emoteColor = Utils.getColorFormatting(DisplayConfig.emoteColor);
+				EnumChatFormatting emoteColor = Utils.getColorFormatting(SharedGlobalConfig.baseTheme.emoteTextColor);
 				if(emoteColor != null) {
 					chatComponent.getChatStyle().setColor(emoteColor);
 				}
@@ -337,7 +334,7 @@ public class MCEventHandler {
 			String name = Utils.getNickIRC((EntityPlayer) event.entityLiving);
 			String ircMessage = event.entityLiving.func_110142_aN().func_151521_b().getUnformattedText();
 			ircMessage = ircMessage.replaceAll(event.entityLiving.getCommandSenderName(), name);
-			ircMessage = IRCFormatting.toIRC(ircMessage, !DisplayConfig.enableIRCColors);
+			ircMessage = IRCFormatting.toIRC(ircMessage, !TempPlaceholder.convertColors);
 			for(IRCConnection connection : EiraIRC.instance.getConnections()) {
 				IRCBot bot = connection.getBot();
 				for(IRCChannel channel : connection.getChannels()) {

@@ -3,7 +3,7 @@
 
 package net.blay09.mods.eirairc.client.gui.settings;
 
-import net.blay09.mods.eirairc.config.done.DisplayConfig;
+import net.blay09.mods.eirairc.config2.ClientGlobalConfig;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
@@ -33,7 +33,7 @@ public class GuiDisplaySettings extends GuiScreen {
 	}
 	
 	public void updateButtonText() {
-		btnRecordingHUD.displayString = Utils.getLocalizedMessage("irc.gui.displaySettings.recordingHud", Utils.getLocalizedMessage((DisplayConfig.hudRecState ? "irc.gui.yes" : "irc.gui.no")));
+		btnRecordingHUD.displayString = Utils.getLocalizedMessage("irc.gui.displaySettings.recordingHud", Utils.getLocalizedMessage((ClientGlobalConfig.hudRecState ? "irc.gui.yes" : "irc.gui.no")));
 	}
 	
 	@Override
@@ -41,7 +41,7 @@ public class GuiDisplaySettings extends GuiScreen {
 		if(button == btnBack) {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiSettings());
 		} else if(button == btnRecordingHUD) {
-			DisplayConfig.hudRecState = !DisplayConfig.hudRecState;
+			ClientGlobalConfig.hudRecState = !ClientGlobalConfig.hudRecState;
 			updateButtonText();
 		}
 	}

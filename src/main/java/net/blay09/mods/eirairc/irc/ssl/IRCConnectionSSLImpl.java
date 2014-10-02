@@ -2,7 +2,7 @@
 
 package net.blay09.mods.eirairc.irc.ssl;
 
-import net.blay09.mods.eirairc.config.done.NetworkConfig;
+import net.blay09.mods.eirairc.config2.SharedGlobalConfig;
 import net.blay09.mods.eirairc.irc.*;
 import net.blay09.mods.eirairc.util.Utils;
 
@@ -27,11 +27,11 @@ public class IRCConnectionSSLImpl extends IRCConnectionImpl {
 	@Override
 	protected Socket connect() {
 		try {
-			if(!NetworkConfig.sslCustomTrustStore.isEmpty()) {
-				System.setProperty("javax.net.ssl.trustStore", NetworkConfig.sslCustomTrustStore);
+			if(!SharedGlobalConfig.sslCustomTrustStore.isEmpty()) {
+				System.setProperty("javax.net.ssl.trustStore", SharedGlobalConfig.sslCustomTrustStore);
 			}
 			SSLSocketFactory socketFactory;
-			if(NetworkConfig.sslTrustAllCerts) {
+			if(SharedGlobalConfig.sslTrustAllCerts) {
 				SSLContext context = SSLContext.getInstance("TLS");
 				context.init(null, new TrustManager[] { new NaiveTrustManager() }, null);
 				socketFactory = context.getSocketFactory();
@@ -42,12 +42,12 @@ public class IRCConnectionSSLImpl extends IRCConnectionImpl {
 			if(proxy != null) {
 				Socket underlying = new Socket(proxy);
 				underlying.connect(new InetSocketAddress(host, port));
-				sslSocket = (SSLSocket) socketFactory.createSocket(underlying, Utils.extractHost(NetworkConfig.proxyHost), Utils.extractPort(NetworkConfig.proxyHost, DEFAULT_PROXY_PORT), true);
+				sslSocket = (SSLSocket) socketFactory.createSocket(underlying, Utils.extractHost(SharedGlobalConfig.proxyHost), Utils.extractPort(SharedGlobalConfig.proxyHost, DEFAULT_PROXY_PORT), true);
 			} else {
 				sslSocket = (SSLSocket) socketFactory.createSocket(host, port);
 			}
 			try {
-				if(NetworkConfig.sslDisableDiffieHellman) {
+				if(SharedGlobalConfig.sslDisableDiffieHellman) {
 					disableDiffieHellman(sslSocket);
 				}
 				sslSocket.startHandshake();

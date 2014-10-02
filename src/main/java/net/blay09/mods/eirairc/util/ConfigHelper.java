@@ -7,7 +7,8 @@ import net.blay09.mods.eirairc.api.IRCChannel;
 import net.blay09.mods.eirairc.api.IRCConnection;
 import net.blay09.mods.eirairc.api.IRCContext;
 import net.blay09.mods.eirairc.config2.ChannelConfig;
-import net.blay09.mods.eirairc.config.done.DisplayConfig;
+import net.blay09.mods.eirairc.config2.SharedGlobalConfig;
+import net.blay09.mods.eirairc.config2.TempPlaceholder;
 import net.blay09.mods.eirairc.config2.base.DisplayFormatConfig;
 import net.blay09.mods.eirairc.config.done.GlobalConfig;
 import net.blay09.mods.eirairc.config2.ServerConfig;
@@ -36,7 +37,7 @@ public class ConfigHelper {
 		if(serverConfig.getQuitMessage() != null && !serverConfig.getQuitMessage().isEmpty()) {
 			return serverConfig.getQuitMessage();
 		}
-		return DisplayConfig.quitMessage;
+		return TempPlaceholder.quitMessage;
 	}
 
 	public static ServerConfig getServerConfig(IRCConnection connection) {
@@ -61,11 +62,11 @@ public class ConfigHelper {
 				}
 			}
 		}
-		return DisplayConfig.emoteColor;
+		return SharedGlobalConfig.baseTheme.emoteTextColor;
 	}
 
 	public static String getNoticeColor(IRCContext context) {
-		return DisplayConfig.ircNoticeColor;
+		return SharedGlobalConfig.baseTheme.ircNoticeTextColor;
 	}
 
 }

@@ -24,9 +24,9 @@ import net.blay09.mods.eirairc.api.IRCConnection;
 import net.blay09.mods.eirairc.api.IRCContext;
 import net.blay09.mods.eirairc.api.IRCUser;
 import net.blay09.mods.eirairc.bot.IRCBotImpl;
-import net.blay09.mods.eirairc.config.done.DisplayConfig;
 import net.blay09.mods.eirairc.config.done.GlobalConfig;
 import net.blay09.mods.eirairc.config2.ServerConfig;
+import net.blay09.mods.eirairc.config2.SharedGlobalConfig;
 import net.blay09.mods.eirairc.config2.base.ServiceConfig;
 import net.blay09.mods.eirairc.config2.base.ServiceSettings;
 import net.blay09.mods.eirairc.irc.IRCConnectionImpl;
@@ -214,35 +214,35 @@ public class Utils {
 	public static EnumChatFormatting getColorFormattingForPlayer(EntityPlayer player) {
 		NBTTagCompound tagCompound = player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getCompoundTag(Globals.NBT_EIRAIRC);
 		boolean isOP = Utils.isServerSide() && Utils.isOP(player);
-		if(!DisplayConfig.enableNameColors && !isOP) {
+		if(!SharedGlobalConfig.enablePlayerColors && !isOP) {
 			return null;
 		}
 		String colorName = tagCompound.getString(Globals.NBT_NAMECOLOR);
 		if(!colorName.isEmpty()) {
 			return Utils.getColorFormatting(colorName);
 		} else if(isOP) {
-			if(!DisplayConfig.mcOpColor.isEmpty()) {
-				return Utils.getColorFormatting(DisplayConfig.mcOpColor);
+			if(!SharedGlobalConfig.baseTheme.mcOpNameColor.isEmpty()) {
+				return Utils.getColorFormatting(SharedGlobalConfig.baseTheme.mcOpNameColor);
 			}
 		}
-		return Utils.getColorFormatting(DisplayConfig.mcColor);
+		return Utils.getColorFormatting(SharedGlobalConfig.baseTheme.mcNameColor);
 	}
 
 	@Nullable
 	public static EnumChatFormatting getColorFormattingForUser(IRCChannel channel, IRCUser user) {
 		if(channel == null) {
-			return Utils.getColorFormatting(DisplayConfig.ircPrivateColor);
+			return Utils.getColorFormatting(SharedGlobalConfig.baseTheme.ircPrivateTextColor);
 		}
 		if(user.isOperator(channel)) {
-			if(!DisplayConfig.ircOpColor.isEmpty()) {
-				return Utils.getColorFormatting(DisplayConfig.ircOpColor);
+			if(!SharedGlobalConfig.baseTheme.ircOpNameColor.isEmpty()) {
+				return Utils.getColorFormatting(SharedGlobalConfig.baseTheme.ircOpNameColor);
 			}
 		} else if(user.hasVoice(channel)) {
-			if(!DisplayConfig.ircVoiceColor.isEmpty()) {
-				return Utils.getColorFormatting(DisplayConfig.ircVoiceColor);
+			if(!SharedGlobalConfig.baseTheme.ircVoiceNameColor.isEmpty()) {
+				return Utils.getColorFormatting(SharedGlobalConfig.baseTheme.ircVoiceNameColor);
 			}
 		}
-		return Utils.getColorFormatting(DisplayConfig.ircColor);
+		return Utils.getColorFormatting(SharedGlobalConfig.baseTheme.ircNameColor);
 	}
 
 	public static void addValidColorsToList(List<String> list) {

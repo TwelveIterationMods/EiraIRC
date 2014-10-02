@@ -27,14 +27,14 @@ public class ThemeSettings {
 	};
 
 
-	public static String mcNameColor = "white";
-	public static String mcOpNameColor = "red";
-	public static String ircNameColor = "gray";
-	public static String ircOpNameColor = "gold";
-	public static String ircVoiceNameColor = "gray";
-	public static String ircPrivateTextColor = "gray";
-	public static String ircNoticeTextColor = "red";
-	public static String emoteTextColor = "gold";
+	public String mcNameColor = "white";
+	public String mcOpNameColor = "red";
+	public String ircNameColor = "gray";
+	public String ircOpNameColor = "gold";
+	public String ircVoiceNameColor = "gray";
+	public String ircPrivateTextColor = "gray";
+	public String ircNoticeTextColor = "red";
+	public String emoteTextColor = "gold";
 
 	public void load(Configuration config, String category) {
 		mcNameColor = config.getString("mcNameColor", category, mcNameColor, "", VALID_COLORS);

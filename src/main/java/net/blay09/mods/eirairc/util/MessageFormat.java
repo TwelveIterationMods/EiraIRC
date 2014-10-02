@@ -5,8 +5,9 @@ import net.blay09.mods.eirairc.api.IRCConnection;
 import net.blay09.mods.eirairc.api.IRCContext;
 import net.blay09.mods.eirairc.api.IRCUser;
 import net.blay09.mods.eirairc.api.bot.IRCBot;
-import net.blay09.mods.eirairc.config.done.DisplayConfig;
 import net.blay09.mods.eirairc.config.done.GlobalConfig;
+import net.blay09.mods.eirairc.config2.SharedGlobalConfig;
+import net.blay09.mods.eirairc.config2.TempPlaceholder;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
@@ -81,7 +82,7 @@ public class MessageFormat {
 
 	private static String formatNick(String nick, Target target, Mode mode) {
 		if(target == Target.IRC) {
-			if (DisplayConfig.hidePlayerTags) {
+			if (SharedGlobalConfig.hidePlayerTags) {
 				nick = filterPlayerTags(nick);
 			}
 			nick = addPreSuffix(nick);
@@ -92,9 +93,9 @@ public class MessageFormat {
 	public static String formatMessage(String format, IRCContext context, ICommandSender sender, String message, Target target, Mode mode) {
 		String result = formatChatComponent(format, context, sender, message, target, mode).getUnformattedText();
 		if(target == Target.IRC) {
-			result = IRCFormatting.toIRC(result, !DisplayConfig.enableIRCColors);
+			result = IRCFormatting.toIRC(result, !TempPlaceholder.convertColors);
 		} else if(target == Target.Minecraft) {
-			result = IRCFormatting.toMC(result, !DisplayConfig.enableIRCColors);
+			result = IRCFormatting.toMC(result, !TempPlaceholder.convertColors);
 			result = filterAllowedCharacters(result);
 		}
 		return result;
@@ -136,10 +137,10 @@ public class MessageFormat {
 						}
 					} else if(token.equals("MESSAGE")) {
 						if(target == Target.Minecraft) {
-							message = IRCFormatting.toMC(message, !DisplayConfig.enableIRCColors);
+							message = IRCFormatting.toMC(message, !TempPlaceholder.convertColors);
 							message = filterAllowedCharacters(message);
 						} else if(target == Target.IRC) {
-							message = IRCFormatting.toIRC(message, !DisplayConfig.enableIRCColors);
+							message = IRCFormatting.toIRC(message, !TempPlaceholder.convertColors);
 						}
 						component = new ChatComponentText(message);
 					} else {
@@ -168,9 +169,9 @@ public class MessageFormat {
 	public static String formatMessage(String format, IRCConnection connection, IRCChannel channel, IRCUser user, String message, Target target, Mode mode) {
 		String result = formatChatComponent(format, connection, channel, user, message, target, mode).getUnformattedText();
 		if(target == Target.IRC) {
-			result = IRCFormatting.toIRC(result, !DisplayConfig.enableIRCColors);
+			result = IRCFormatting.toIRC(result, !TempPlaceholder.convertColors);
 		} else if(target == Target.Minecraft) {
-			result = IRCFormatting.toMC(result, !DisplayConfig.enableIRCColors);
+			result = IRCFormatting.toMC(result, !TempPlaceholder.convertColors);
 			result = filterAllowedCharacters(result);
 		}
 		return result;
@@ -214,10 +215,10 @@ public class MessageFormat {
 						}
 					} else if(token.equals("MESSAGE")) {
 						if(target == Target.Minecraft) {
-							message = IRCFormatting.toMC(message, !DisplayConfig.enableIRCColors);
+							message = IRCFormatting.toMC(message, !TempPlaceholder.convertColors);
 							message = filterAllowedCharacters(message);
 						} else if(target == Target.IRC) {
-							message = IRCFormatting.toIRC(message, !DisplayConfig.enableIRCColors);
+							message = IRCFormatting.toIRC(message, !TempPlaceholder.convertColors);
 						}
 						component = new ChatComponentText(message);
 					} else {

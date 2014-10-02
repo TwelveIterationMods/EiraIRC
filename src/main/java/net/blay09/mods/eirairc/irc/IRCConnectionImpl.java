@@ -29,7 +29,7 @@ import net.blay09.mods.eirairc.api.event.IRCUserNickChangeEvent;
 import net.blay09.mods.eirairc.api.event.IRCUserQuitEvent;
 import net.blay09.mods.eirairc.bot.IRCBotImpl;
 import net.blay09.mods.eirairc.config.done.GlobalConfig;
-import net.blay09.mods.eirairc.config.done.NetworkConfig;
+import net.blay09.mods.eirairc.config2.SharedGlobalConfig;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -149,11 +149,11 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 	}
 
 	protected Proxy createProxy() {
-		if(!NetworkConfig.proxyHost.isEmpty()) {
-			if(!NetworkConfig.proxyUsername.isEmpty() || !NetworkConfig.proxyPassword.isEmpty()) {
-				Authenticator.setDefault(new ProxyAuthenticator(NetworkConfig.proxyUsername, NetworkConfig.proxyPassword));
+		if(!SharedGlobalConfig.proxyHost.isEmpty()) {
+			if(!SharedGlobalConfig.proxyUsername.isEmpty() || !SharedGlobalConfig.proxyPassword.isEmpty()) {
+				Authenticator.setDefault(new ProxyAuthenticator(SharedGlobalConfig.proxyUsername, SharedGlobalConfig.proxyPassword));
 			}
-			SocketAddress proxyAddr = new InetSocketAddress(Utils.extractHost(NetworkConfig.proxyHost), Utils.extractPort(NetworkConfig.proxyHost, DEFAULT_PROXY_PORT));
+			SocketAddress proxyAddr = new InetSocketAddress(Utils.extractHost(SharedGlobalConfig.proxyHost), Utils.extractPort(SharedGlobalConfig.proxyHost, DEFAULT_PROXY_PORT));
 			return new Proxy(Proxy.Type.SOCKS, proxyAddr);
 		}
 		return null;
