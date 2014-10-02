@@ -15,6 +15,7 @@ public class ClientGlobalConfig {
 	private static final String SCREENSHOTS = "screenshots";
 	private static final String KEYBINDS = "keybinds";
 	private static final String NOTIFICATIONS = "notifications";
+	private static final String COMPATIBILITY = "compatibility";
 
 	private static Configuration thisConfig;
 
@@ -23,6 +24,7 @@ public class ClientGlobalConfig {
 
 	// Screenshots
 	public static String screenshotHoster = "";
+	public static int uploadBufferSize = 1024;
 
 	// Keybinds
 	public static int keyScreenshotShare = -1;
@@ -44,13 +46,19 @@ public class ClientGlobalConfig {
 	}
 
 	public static String notificationSound = "note.harp";
-	public static float soundVolume = 1f;
-	public static float soundPitch = 1f;
+	public static float notificationSoundVolume = 1f;
+	public static float notificationSoundPitch = 1f;
 	public static NotificationStyle ntfyFriendJoined = NotificationStyle.TextOnly;
 	public static NotificationStyle ntfyNameMentioned = NotificationStyle.TextAndSound;
 	public static NotificationStyle ntfyUserRecording = NotificationStyle.TextAndSound;
 	public static NotificationStyle ntfyPrivateMessage = NotificationStyle.TextOnly;
 
+	// Compatibility
+	public static boolean clientBridge = false;
+	public static String clientBridgeMessageToken = "[IG]";
+	public static String clientBridgeNickToken = "";
+	public static boolean disableChatToggle = false;
+	public static boolean vanillaChat = true;
 
 	public static void load(File configDir) {
 		thisConfig = new Configuration(new File(configDir, "eirairc/client.cfg"));
@@ -60,6 +68,7 @@ public class ClientGlobalConfig {
 
 		// Screenshots
 		screenshotHoster = thisConfig.getString("uploadHoster", SCREENSHOTS, screenshotHoster, "The name of the hoster to upload screenshots to. Valid values are: imgur, DirectUpload", UploadManager.getAvailableHosters());
+		uploadBufferSize = thisConfig.getInt("uploadBufferSize", SCREENSHOTS, uploadBufferSize, 256, Integer.MAX_VALUE, "[Advanced] Why would you even touch this option?");
 
 		// Keybinds
 		keyScreenshotShare = thisConfig.getInt("screenshotShare", KEYBINDS, keyScreenshotShare, -1, Integer.MAX_VALUE, "Key code to take a screenshot and share it in the current channel");
@@ -71,12 +80,19 @@ public class ClientGlobalConfig {
 
 		// Notifications
 		notificationSound = thisConfig.getString("soundName", NOTIFICATIONS, notificationSound, "Name of a sound known to Minecraft to play on notifications.");
-		soundVolume = thisConfig.getFloat("soundVolume", NOTIFICATIONS, soundVolume, 0f, 1f, "Volume for the sound to play on notifications.");
-		soundPitch = thisConfig.getFloat("soundPitch", NOTIFICATIONS, soundPitch, 0.5f, 2f, "Pitch for the sound to play on notifications.");
+		notificationSoundVolume = thisConfig.getFloat("soundVolume", NOTIFICATIONS, notificationSoundVolume, 0f, 1f, "Volume for the sound to play on notifications.");
+		notificationSoundPitch = thisConfig.getFloat("soundPitch", NOTIFICATIONS, notificationSoundPitch, 0.5f, 2f, "Pitch for the sound to play on notifications.");
 		ntfyFriendJoined = NotificationStyle.values[thisConfig.getInt("friendJoined", NOTIFICATIONS, ntfyFriendJoined.ordinal(), 0, NotificationStyle.MAX, "0: none, 1: text, 2: sound, 3: text and sound")];
 		ntfyNameMentioned = NotificationStyle.values[thisConfig.getInt("nameMentioned", NOTIFICATIONS, ntfyNameMentioned.ordinal(), 0, NotificationStyle.MAX, "0: none, 1: text, 2: sound, 3: text and sound")];
 		ntfyUserRecording = NotificationStyle.values[thisConfig.getInt("userRecording", NOTIFICATIONS, ntfyUserRecording.ordinal(), 0, NotificationStyle.MAX, "0: none, 1: text, 2: sound, 3: text and sound")];
 		ntfyPrivateMessage = NotificationStyle.values[thisConfig.getInt("privateMessage", NOTIFICATIONS, ntfyPrivateMessage.ordinal(), 0, NotificationStyle.MAX, "0: none, 1: text, 2: sound, 3: text and sound")];
+
+		// Compatibility
+		clientBridge = thisConfig.getBoolean("clientBridge", COMPATIBILITY, clientBridge, "");
+		clientBridgeMessageToken = thisConfig.getString("clientBridgeMessageToken", COMPATIBILITY, clientBridgeMessageToken, "");
+		clientBridgeNickToken = thisConfig.getString("clientBridgeNickToken", COMPATIBILITY, clientBridgeNickToken, "");
+		disableChatToggle = thisConfig.getBoolean("disableChatToggle", COMPATIBILITY, disableChatToggle, "");
+		vanillaChat = thisConfig.getBoolean("vanillaChat", COMPATIBILITY, vanillaChat, "");
 	}
 
 	public static void save() {
@@ -96,12 +112,19 @@ public class ClientGlobalConfig {
 
 		// Notifications
 		thisConfig.get(NOTIFICATIONS, "soundName", "").set(notificationSound);
-		thisConfig.get(NOTIFICATIONS, "soundVolume", 0f).set(soundVolume);
-		thisConfig.get(NOTIFICATIONS, "soundPitch", 0f).set(soundPitch);
+		thisConfig.get(NOTIFICATIONS, "soundVolume", 0f).set(notificationSoundVolume);
+		thisConfig.get(NOTIFICATIONS, "soundPitch", 0f).set(notificationSoundPitch);
 		thisConfig.get(NOTIFICATIONS, "friendJoined", 0).set(ntfyFriendJoined.ordinal());
 		thisConfig.get(NOTIFICATIONS, "nameMentioned", 0).set(ntfyNameMentioned.ordinal());
 		thisConfig.get(NOTIFICATIONS, "userRecording", 0).set(ntfyUserRecording.ordinal());
 		thisConfig.get(NOTIFICATIONS, "privateMessage", 0).set(ntfyPrivateMessage.ordinal());
+
+		// Compatibility
+		thisConfig.get(COMPATIBILITY, "clientBridge", false).set(clientBridge);
+		thisConfig.get(COMPATIBILITY, "clientBridgeMessageToken", "").set(clientBridgeMessageToken);
+		thisConfig.get(COMPATIBILITY, "clientBridgeNickToken", "").set(clientBridgeNickToken);
+		thisConfig.get(COMPATIBILITY, "disableChatToggle", false).set(disableChatToggle);
+		thisConfig.get(COMPATIBILITY, "vanillaChat", false).set(vanillaChat);
 
 		thisConfig.save();
 	}
@@ -125,12 +148,19 @@ public class ClientGlobalConfig {
 
 		// Notifications
 		notificationSound = legacyConfig.get("notifications", "sound", notificationSound).getString();
-		soundVolume = (float) legacyConfig.get("notifications", "soundVolume", soundVolume).getDouble();
-		soundPitch = (float) legacyConfig.get("notifications", "soundPitch", soundPitch).getDouble();
+		notificationSoundVolume = (float) legacyConfig.get("notifications", "soundVolume", notificationSoundVolume).getDouble();
+		notificationSoundPitch = (float) legacyConfig.get("notifications", "soundPitch", notificationSoundPitch).getDouble();
 		ntfyFriendJoined = NotificationStyle.values[legacyConfig.get("notifications", "notifyFriendJoined", ntfyFriendJoined.ordinal()).getInt()];
 		ntfyNameMentioned = NotificationStyle.values[legacyConfig.get("notifications", "notifyNameMentioned", ntfyNameMentioned.ordinal()).getInt()];
 		ntfyPrivateMessage = NotificationStyle.values[legacyConfig.get("notifications", "notifyPrivateMessage", ntfyPrivateMessage.ordinal()).getInt()];
 		ntfyUserRecording = NotificationStyle.values[legacyConfig.get("notifications", "notifyUserRecording", ntfyUserRecording.ordinal()).getInt()];
+
+		// Compatibility
+		clientBridge = legacyConfig.get("compatibility", "clientBridge", clientBridge).getBoolean();
+		clientBridgeMessageToken = legacyConfig.get("compatibility", "clientBridgeMessageToken", clientBridgeMessageToken).getString();
+		clientBridgeNickToken = legacyConfig.get("compatibility", "clientBridgeNickToken", clientBridgeNickToken).getString();
+		disableChatToggle = legacyConfig.get("compatibility", "disableChatToggle", disableChatToggle).getBoolean();
+		vanillaChat = legacyConfig.get("compatibility", "vanillaChat", vanillaChat).getBoolean();
 
 		save();
 	}

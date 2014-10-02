@@ -17,7 +17,7 @@ import java.net.URL;
 
 import net.blay09.mods.eirairc.api.upload.IUploadHoster;
 import net.blay09.mods.eirairc.api.upload.UploadedFile;
-import net.blay09.mods.eirairc.config.ScreenshotConfig;
+import net.blay09.mods.eirairc.config.done.ScreenshotConfig;
 
 public class DirectUploadHoster implements IUploadHoster {
 

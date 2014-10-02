@@ -5,7 +5,7 @@ package net.blay09.mods.eirairc.config2;
 
 import java.util.List;
 
-import net.blay09.mods.eirairc.config.GlobalConfig;
+import net.blay09.mods.eirairc.config.done.GlobalConfig;
 import net.blay09.mods.eirairc.config2.base.BotProfileImpl;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.Globals;

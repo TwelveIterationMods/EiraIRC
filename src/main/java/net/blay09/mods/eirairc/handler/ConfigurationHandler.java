@@ -12,9 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import net.blay09.mods.eirairc.config.*;
-import net.blay09.mods.eirairc.config.done.KeyConfig;
-import net.blay09.mods.eirairc.config.done.NetworkConfig;
+import net.blay09.mods.eirairc.config.done.*;
 import net.blay09.mods.eirairc.config2.ChannelConfig;
 import net.blay09.mods.eirairc.config2.ServerConfig;
 import net.blay09.mods.eirairc.config2.base.BotProfileImpl;

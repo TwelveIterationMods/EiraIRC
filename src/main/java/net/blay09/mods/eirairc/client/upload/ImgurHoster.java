@@ -15,7 +15,7 @@ import java.util.Scanner;
 import com.google.gson.JsonElement;
 import net.blay09.mods.eirairc.api.upload.IUploadHoster;
 import net.blay09.mods.eirairc.api.upload.UploadedFile;
-import net.blay09.mods.eirairc.config.ScreenshotConfig;
+import net.blay09.mods.eirairc.config.done.ScreenshotConfig;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;

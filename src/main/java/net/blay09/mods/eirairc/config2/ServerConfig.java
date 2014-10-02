@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.blay09.mods.eirairc.api.IRCChannel;
-import net.blay09.mods.eirairc.config.GlobalConfig;
+import net.blay09.mods.eirairc.config.done.GlobalConfig;
 import net.blay09.mods.eirairc.config2.base.BotProfileImpl;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.Globals;

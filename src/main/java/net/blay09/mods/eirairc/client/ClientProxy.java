@@ -12,7 +12,7 @@ import net.blay09.mods.eirairc.client.gui.overlay.OverlayRecLive;
 import net.blay09.mods.eirairc.client.screenshot.ScreenshotManager;
 import net.blay09.mods.eirairc.client.upload.DirectUploadHoster;
 import net.blay09.mods.eirairc.client.upload.ImgurHoster;
-import net.blay09.mods.eirairc.config.NotificationConfig;
+import net.blay09.mods.eirairc.config.done.NotificationConfig;
 import net.blay09.mods.eirairc.util.NotificationType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;

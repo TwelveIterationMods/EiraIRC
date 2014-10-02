@@ -7,9 +7,9 @@ import net.blay09.mods.eirairc.api.IRCChannel;
 import net.blay09.mods.eirairc.api.IRCConnection;
 import net.blay09.mods.eirairc.api.IRCContext;
 import net.blay09.mods.eirairc.config2.ChannelConfig;
-import net.blay09.mods.eirairc.config.DisplayConfig;
+import net.blay09.mods.eirairc.config.done.DisplayConfig;
 import net.blay09.mods.eirairc.config2.base.DisplayFormatConfig;
-import net.blay09.mods.eirairc.config.GlobalConfig;
+import net.blay09.mods.eirairc.config.done.GlobalConfig;
 import net.blay09.mods.eirairc.config2.ServerConfig;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 
