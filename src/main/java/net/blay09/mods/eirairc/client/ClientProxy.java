@@ -12,7 +12,8 @@ import net.blay09.mods.eirairc.client.gui.overlay.OverlayRecLive;
 import net.blay09.mods.eirairc.client.screenshot.ScreenshotManager;
 import net.blay09.mods.eirairc.client.upload.DirectUploadHoster;
 import net.blay09.mods.eirairc.client.upload.ImgurHoster;
-import net.blay09.mods.eirairc.config.done.NotificationConfig;
+import net.blay09.mods.eirairc.config2.ClientGlobalConfig;
+import net.blay09.mods.eirairc.config2.NotificationStyle;
 import net.blay09.mods.eirairc.util.NotificationType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -49,19 +50,19 @@ public class ClientProxy extends CommonProxy {
 	
 	@Override
 	public void publishNotification(NotificationType type, String text) {
-		int config = 0;
+		NotificationStyle config = NotificationStyle.None;
 		switch(type) {
-		case FriendJoined: config = NotificationConfig.friendJoined; break;
-		case PlayerMentioned: config = NotificationConfig.nameMentioned; break;
-		case UserRecording: config = NotificationConfig.userRecording; break;
-		case PrivateMessage: config = NotificationConfig.privateMessage; break;
+		case FriendJoined: config = ClientGlobalConfig.ntfyFriendJoined; break;
+		case PlayerMentioned: config = ClientGlobalConfig.ntfyNameMentioned; break;
+		case UserRecording: config = ClientGlobalConfig.ntfyUserRecording; break;
+		case PrivateMessage: config = ClientGlobalConfig.ntfyPrivateMessage; break;
 		default:
 		}
-		if(config != NotificationConfig.VALUE_NONE && config != NotificationConfig.VALUE_SOUNDONLY) {
+		if(config != NotificationStyle.None && config != NotificationStyle.SoundOnly) {
 			notificationGUI.showNotification(type, text);
 		}
-		if(config == NotificationConfig.VALUE_TEXTANDSOUND || config == NotificationConfig.VALUE_SOUNDONLY) {
-			Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation(NotificationConfig.notificationSound), NotificationConfig.soundVolume));
+		if(config == NotificationStyle.TextAndSound || config == NotificationStyle.SoundOnly) {
+			Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation(ClientGlobalConfig.notificationSound), ClientGlobalConfig.notificationSoundVolume));
 		}
 	}
 	

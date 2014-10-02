@@ -3,7 +3,8 @@
 
 package net.blay09.mods.eirairc.client.gui.settings;
 
-import net.blay09.mods.eirairc.config.done.NotificationConfig;
+import net.blay09.mods.eirairc.config2.ClientGlobalConfig;
+import net.blay09.mods.eirairc.config2.NotificationStyle;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
@@ -52,37 +53,37 @@ public class GuiNotifications extends GuiScreen {
 		if(button == btnBack) {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiSettings());
 		} else if(button == btnFriendJoined) {
-			NotificationConfig.friendJoined = getNextValue(NotificationConfig.friendJoined);
+			ClientGlobalConfig.ntfyFriendJoined = getNextValue(ClientGlobalConfig.ntfyFriendJoined);
 		} else if(button == btnNameMentioned) {
-			NotificationConfig.nameMentioned = getNextValue(NotificationConfig.nameMentioned);
+			ClientGlobalConfig.ntfyNameMentioned = getNextValue(ClientGlobalConfig.ntfyNameMentioned);
 		} else if(button == btnUserRecording) {
-			NotificationConfig.userRecording = getNextValue(NotificationConfig.userRecording);
+			ClientGlobalConfig.ntfyUserRecording = getNextValue(ClientGlobalConfig.ntfyUserRecording);
 		} else if(button == btnPrivateMessage) {
-			NotificationConfig.privateMessage = getNextValue(NotificationConfig.privateMessage);
+			ClientGlobalConfig.ntfyPrivateMessage = getNextValue(ClientGlobalConfig.ntfyPrivateMessage);
 		}
 		updateButtonText();
 	}
 	
 	public void updateButtonText() {
-		btnFriendJoined.displayString = Utils.getLocalizedMessage("irc.gui.notifications.friendJoined", getTextForValue(NotificationConfig.friendJoined));
-		btnNameMentioned.displayString = Utils.getLocalizedMessage("irc.gui.notifications.nameMentioned", getTextForValue(NotificationConfig.nameMentioned));
-		btnUserRecording.displayString = Utils.getLocalizedMessage("irc.gui.notifications.userRecording", getTextForValue(NotificationConfig.userRecording));
-		btnPrivateMessage.displayString = Utils.getLocalizedMessage("irc.gui.notifications.privateMessage", getTextForValue(NotificationConfig.privateMessage));
+		btnFriendJoined.displayString = Utils.getLocalizedMessage("irc.gui.notifications.friendJoined", getTextForValue(ClientGlobalConfig.ntfyFriendJoined));
+		btnNameMentioned.displayString = Utils.getLocalizedMessage("irc.gui.notifications.nameMentioned", getTextForValue(ClientGlobalConfig.ntfyNameMentioned));
+		btnUserRecording.displayString = Utils.getLocalizedMessage("irc.gui.notifications.userRecording", getTextForValue(ClientGlobalConfig.ntfyUserRecording));
+		btnPrivateMessage.displayString = Utils.getLocalizedMessage("irc.gui.notifications.privateMessage", getTextForValue(ClientGlobalConfig.ntfyPrivateMessage));
 	}
 	
-	private int getNextValue(int value) {
-		value++;
-		if(value > NotificationConfig.VALUE_TEXTANDSOUND) {
-			value = NotificationConfig.VALUE_NONE;
+	private NotificationStyle getNextValue(NotificationStyle prevValue) {
+		int value = prevValue.ordinal() + 1;
+		if(value > NotificationStyle.MAX) {
+			value = 0;
 		}
-		return value;
+		return NotificationStyle.values[value];
 	}
 	
-	private String getTextForValue(int configValue) {
+	private String getTextForValue(NotificationStyle configValue) {
 		switch(configValue) {
-			case NotificationConfig.VALUE_TEXTONLY: return Utils.getLocalizedMessage("irc.gui.notifications.textOnly");
-			case NotificationConfig.VALUE_SOUNDONLY: return Utils.getLocalizedMessage("irc.gui.notifications.soundOnly");
-			case NotificationConfig.VALUE_TEXTANDSOUND: return Utils.getLocalizedMessage("irc.gui.notifications.textAndSound");
+			case TextOnly: return Utils.getLocalizedMessage("irc.gui.notifications.textOnly");
+			case SoundOnly: return Utils.getLocalizedMessage("irc.gui.notifications.soundOnly");
+			case TextAndSound: return Utils.getLocalizedMessage("irc.gui.notifications.textAndSound");
 			default: return Utils.getLocalizedMessage("irc.gui.none");
 		}
 	}

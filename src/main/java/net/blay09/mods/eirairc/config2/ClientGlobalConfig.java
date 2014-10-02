@@ -34,17 +34,6 @@ public class ClientGlobalConfig {
 	public static int keyToggleTarget = Keyboard.KEY_TAB;
 	public static int keyOpenMenu = Keyboard.KEY_I;
 
-	// Notifications
-	public static enum NotificationStyle {
-		None,
-		TextOnly,
-		SoundOnly,
-		TextAndSound;
-
-		public static final NotificationStyle[] values = values();
-		public static final int MAX = values.length - 1;
-	}
-
 	public static String notificationSound = "note.harp";
 	public static float notificationSoundVolume = 1f;
 	public static float notificationSoundPitch = 1f;
@@ -81,7 +70,7 @@ public class ClientGlobalConfig {
 		// Notifications
 		notificationSound = thisConfig.getString("soundName", NOTIFICATIONS, notificationSound, "Name of a sound known to Minecraft to play on notifications.");
 		notificationSoundVolume = thisConfig.getFloat("soundVolume", NOTIFICATIONS, notificationSoundVolume, 0f, 1f, "Volume for the sound to play on notifications.");
-		notificationSoundPitch = thisConfig.getFloat("soundPitch", NOTIFICATIONS, notificationSoundPitch, 0.5f, 2f, "Pitch for the sound to play on notifications.");
+		notificationSoundPitch = thisConfig.getFloat("soundPitch", NOTIFICATIONS, notificationSoundPitch, 0.5f, 2f, "[Deprecated] Pitch for the sound to play on notifications. Currently unused.");
 		ntfyFriendJoined = NotificationStyle.values[thisConfig.getInt("friendJoined", NOTIFICATIONS, ntfyFriendJoined.ordinal(), 0, NotificationStyle.MAX, "0: none, 1: text, 2: sound, 3: text and sound")];
 		ntfyNameMentioned = NotificationStyle.values[thisConfig.getInt("nameMentioned", NOTIFICATIONS, ntfyNameMentioned.ordinal(), 0, NotificationStyle.MAX, "0: none, 1: text, 2: sound, 3: text and sound")];
 		ntfyUserRecording = NotificationStyle.values[thisConfig.getInt("userRecording", NOTIFICATIONS, ntfyUserRecording.ordinal(), 0, NotificationStyle.MAX, "0: none, 1: text, 2: sound, 3: text and sound")];

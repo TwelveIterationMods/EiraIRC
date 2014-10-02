@@ -128,7 +128,6 @@ public class ConfigurationHandler {
 		config = new Configuration(configFile);
 		
 		GlobalConfig.load(config);
-		NotificationConfig.load(config);
 		ScreenshotConfig.load(config);
 
 		config.save();
@@ -136,7 +135,6 @@ public class ConfigurationHandler {
 	
 	public static void save() {
 		GlobalConfig.save(config);
-		NotificationConfig.save(config);
 		ScreenshotConfig.save(config);
 	}
 	
@@ -169,7 +167,6 @@ public class ConfigurationHandler {
 		if(target.equals("global")) {
 			boolean result = false;
 			result = GlobalConfig.handleConfigCommand(sender, key, value);
-			if(!result) result = NotificationConfig.handleConfigCommand(sender, key, value);
 			if(!result) result = ScreenshotConfig.handleConfigCommand(sender, key, value);
 			if(result) {
 				Utils.sendLocalizedMessage(sender, "irc.config.change", "Global", key, value);
@@ -196,7 +193,6 @@ public class ConfigurationHandler {
 		if(target.equals("global")) {
 			String result = null;
 			result = GlobalConfig.handleConfigCommand(sender, key);
-			if(result == null) result = NotificationConfig.handleConfigCommand(sender, key);
 			if(result == null) result = ScreenshotConfig.handleConfigCommand(sender, key);
 			if(result != null) {
 				Utils.sendLocalizedMessage(sender, "irc.config.lookup", "Global", key, result);
@@ -228,13 +224,11 @@ public class ConfigurationHandler {
 
 	public static void addOptionsToList(List<String> list) {
 		GlobalConfig.addOptionsToList(list);
-		NotificationConfig.addOptionsToList(list);
 		ScreenshotConfig.addOptionsToList(list);
 	}
 
 	public static void addValuesToList(List<String> list, String option) {
 		GlobalConfig.addValuesToList(list, option);
-		NotificationConfig.addValuesToList(list, option);
 		ScreenshotConfig.addValuesToList(list, option);
 	}
 
