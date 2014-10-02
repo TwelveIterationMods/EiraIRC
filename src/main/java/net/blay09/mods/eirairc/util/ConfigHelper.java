@@ -10,7 +10,6 @@ import net.blay09.mods.eirairc.config2.ChannelConfig;
 import net.blay09.mods.eirairc.config2.SharedGlobalConfig;
 import net.blay09.mods.eirairc.config2.TempPlaceholder;
 import net.blay09.mods.eirairc.config2.base.DisplayFormatConfig;
-import net.blay09.mods.eirairc.config.done.GlobalConfig;
 import net.blay09.mods.eirairc.config2.ServerConfig;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 
@@ -25,7 +24,7 @@ public class ConfigHelper {
 		if(serverConfig.getNick() != null && !serverConfig.getNick().isEmpty()) {
 			return serverConfig.getNick();
 		}
-		return GlobalConfig.nick;
+		return "Baly-chan";
 	}
 
 	public static String getFormattedNick(ServerConfig serverConfig) {

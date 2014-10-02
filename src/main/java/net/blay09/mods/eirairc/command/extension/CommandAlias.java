@@ -8,7 +8,7 @@ import java.util.List;
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.IRCContext;
 import net.blay09.mods.eirairc.command.SubCommand;
-import net.blay09.mods.eirairc.config.done.GlobalConfig;
+import net.blay09.mods.eirairc.config2.SharedGlobalConfig;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
@@ -39,7 +39,7 @@ public class CommandAlias extends SubCommand {
 
 	@Override
 	public boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) {
-		if(!GlobalConfig.enableAliases) {
+		if(!SharedGlobalConfig.enablePlayerAliases) {
 			Utils.sendLocalizedMessage(sender, "irc.alias.disabled");
 			return true;
 		}

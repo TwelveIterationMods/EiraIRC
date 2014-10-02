@@ -24,7 +24,6 @@ import net.blay09.mods.eirairc.api.IRCConnection;
 import net.blay09.mods.eirairc.api.IRCContext;
 import net.blay09.mods.eirairc.api.IRCUser;
 import net.blay09.mods.eirairc.bot.IRCBotImpl;
-import net.blay09.mods.eirairc.config.done.GlobalConfig;
 import net.blay09.mods.eirairc.config2.ServerConfig;
 import net.blay09.mods.eirairc.config2.SharedGlobalConfig;
 import net.blay09.mods.eirairc.config2.base.ServiceConfig;
@@ -142,7 +141,7 @@ public class Utils {
 	}
 
 	public static String getAliasForPlayer(EntityPlayer player) {
-		if(!GlobalConfig.enableAliases) {
+		if(!SharedGlobalConfig.enablePlayerAliases) {
 			return player.getCommandSenderName();
 		}
 		String name = player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getCompoundTag(Globals.NBT_EIRAIRC).getString(Globals.NBT_ALIAS);
@@ -282,7 +281,7 @@ public class Utils {
 		} else {
 			connection = new IRCConnectionImpl(config.getAddress(), config.getServerPassword(), ConfigHelper.getFormattedNick(config), config.getIdent(), config.getDescription());
 		}
-		connection.setCharset(GlobalConfig.charset);
+		connection.setCharset(config.getCharset());
 		connection.setBot(new IRCBotImpl(connection));
 		if(connection.start()) {
 			return connection;

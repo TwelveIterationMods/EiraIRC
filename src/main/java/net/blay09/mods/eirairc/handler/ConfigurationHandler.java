@@ -126,14 +126,11 @@ public class ConfigurationHandler {
 	public static void load(File configFile) {
 		ConfigurationHandler.configFile = configFile;
 		config = new Configuration(configFile);
-		
-		GlobalConfig.load(config);
 
 		config.save();
 	}
 	
 	public static void save() {
-		GlobalConfig.save(config);
 	}
 	
 	public static ServerConfig getServerConfig(String host) {
@@ -164,7 +161,6 @@ public class ConfigurationHandler {
 	public static void handleConfigCommand(ICommandSender sender, String target, String key, String value) {
 		if(target.equals("global")) {
 			boolean result = false;
-			result = GlobalConfig.handleConfigCommand(sender, key, value);
 			if(result) {
 				Utils.sendLocalizedMessage(sender, "irc.config.change", "Global", key, value);
 				ConfigurationHandler.save();
@@ -189,7 +185,6 @@ public class ConfigurationHandler {
 	public static void handleConfigCommand(ICommandSender sender, String target, String key) {
 		if(target.equals("global")) {
 			String result = null;
-			result = GlobalConfig.handleConfigCommand(sender, key);
 			if(result != null) {
 				Utils.sendLocalizedMessage(sender, "irc.config.lookup", "Global", key, result);
 			} else {
@@ -219,11 +214,9 @@ public class ConfigurationHandler {
 	}
 
 	public static void addOptionsToList(List<String> list) {
-		GlobalConfig.addOptionsToList(list);
 	}
 
 	public static void addValuesToList(List<String> list, String option) {
-		GlobalConfig.addValuesToList(list, option);
 	}
 
 	public static BotProfileImpl getBotProfile(String name) {

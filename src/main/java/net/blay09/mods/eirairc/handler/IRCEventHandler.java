@@ -12,8 +12,8 @@ import net.blay09.mods.eirairc.api.event.IRCUserJoinEvent;
 import net.blay09.mods.eirairc.api.event.IRCUserLeaveEvent;
 import net.blay09.mods.eirairc.api.event.IRCUserNickChangeEvent;
 import net.blay09.mods.eirairc.api.event.IRCUserQuitEvent;
-import net.blay09.mods.eirairc.config.done.GlobalConfig;
 import net.blay09.mods.eirairc.config2.ClientGlobalConfig;
+import net.blay09.mods.eirairc.config2.TempPlaceholder;
 import net.blay09.mods.eirairc.irc.IRCConnectionImpl;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.MessageFormat;
@@ -107,7 +107,7 @@ public class IRCEventHandler {
 			format = ConfigHelper.getDisplayFormat(event.bot.getDisplayFormat(event.sender)).mcPrivateMessage;
 		}
 		IChatComponent chatComponent = MessageFormat.formatChatComponent(format, event.connection, null, event.sender, message, MessageFormat.Target.Minecraft, (event.isEmote ? MessageFormat.Mode.Emote : MessageFormat.Mode.Message));
-		if(event.isNotice && GlobalConfig.hideNotices) {
+		if(event.isNotice && TempPlaceholder.hideNotices) {
 			System.out.println(chatComponent.getUnformattedText());
 			return;
 		}
@@ -160,7 +160,7 @@ public class IRCEventHandler {
 			format = ConfigHelper.getDisplayFormat(event.bot.getDisplayFormat(event.channel)).mcChannelMessage;
 		}
 		IChatComponent chatComponent = MessageFormat.formatChatComponent(format, event.connection, event.channel, event.sender, message, MessageFormat.Target.Minecraft, event.isEmote ? MessageFormat.Mode.Emote : MessageFormat.Mode.Message);
-		if(event.isNotice && GlobalConfig.hideNotices) {
+		if(event.isNotice && TempPlaceholder.hideNotices) {
 			System.out.println(chatComponent.getUnformattedText());
 			return;
 		}

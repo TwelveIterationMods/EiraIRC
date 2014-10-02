@@ -12,7 +12,6 @@ import net.blay09.mods.eirairc.api.event.IRCConnectingEvent;
 import net.blay09.mods.eirairc.api.event.IRCDisconnectEvent;
 import net.blay09.mods.eirairc.api.event.IRCErrorEvent;
 import net.blay09.mods.eirairc.config2.ChannelConfig;
-import net.blay09.mods.eirairc.config.done.GlobalConfig;
 import net.blay09.mods.eirairc.config2.ServerConfig;
 import net.blay09.mods.eirairc.irc.IRCReplyCodes;
 import net.blay09.mods.eirairc.util.ConfigHelper;
@@ -69,8 +68,6 @@ public class IRCConnectionHandler {
 			ServerConfig serverConfig = ConfigHelper.getServerConfig(event.connection);
 			if(serverConfig.getNick() != null) {
 				serverConfig.setNick(event.connection.getNick());
-			} else {
-				GlobalConfig.nick = event.connection.getNick();
 			}
 			break;
 		case IRCReplyCodes.ERR_PASSWDMISMATCH:

@@ -14,4 +14,8 @@ public class TempPlaceholder {
 	public static final int VALUE_UPLOADSHARE = 2;
 	public static final int VALUE_UPLOADCLIPBOARD = 3;
 	public static int screenshotAction = 0;
+	public static boolean persistentConnection = true;
+	public static boolean hideNotices = false;
+	public static String nickPrefix = "";
+	public static String nickSuffix = "";
 }

@@ -8,7 +8,6 @@ import java.util.List;
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.IRCConnection;
 import net.blay09.mods.eirairc.api.IRCContext;
-import net.blay09.mods.eirairc.config.done.GlobalConfig;
 import net.blay09.mods.eirairc.config2.ServerConfig;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.ConfigHelper;
@@ -57,7 +56,6 @@ public class CommandNick extends SubCommand {
 			String nick = args[0];
 			if(context == null) {
 				Utils.sendLocalizedMessage(sender, "irc.basic.changingNick", "Global", nick);
-				GlobalConfig.nick = nick;
 				for(ServerConfig serverConfig : ConfigurationHandler.getServerConfigs()) {
 					if(serverConfig.getAddress().equals(Globals.TWITCH_SERVER)) {
 						continue;

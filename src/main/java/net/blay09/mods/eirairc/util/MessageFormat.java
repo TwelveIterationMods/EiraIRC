@@ -5,7 +5,6 @@ import net.blay09.mods.eirairc.api.IRCConnection;
 import net.blay09.mods.eirairc.api.IRCContext;
 import net.blay09.mods.eirairc.api.IRCUser;
 import net.blay09.mods.eirairc.api.bot.IRCBot;
-import net.blay09.mods.eirairc.config.done.GlobalConfig;
 import net.blay09.mods.eirairc.config2.SharedGlobalConfig;
 import net.blay09.mods.eirairc.config2.TempPlaceholder;
 import net.minecraft.command.ICommandSender;
@@ -66,7 +65,7 @@ public class MessageFormat {
 	}
 
 	public static String addPreSuffix(String name) {
-		return GlobalConfig.nickPrefix + name + GlobalConfig.nickSuffix;
+		return TempPlaceholder.nickPrefix + name + TempPlaceholder.nickSuffix;
 	}
 
 	private static String filterAllowedCharacters(String message) {

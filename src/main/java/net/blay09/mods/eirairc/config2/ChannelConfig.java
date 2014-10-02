@@ -5,7 +5,6 @@ package net.blay09.mods.eirairc.config2;
 
 import java.util.List;
 
-import net.blay09.mods.eirairc.config.done.GlobalConfig;
 import net.blay09.mods.eirairc.config2.base.BotProfileImpl;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.Globals;
@@ -59,7 +58,7 @@ public class ChannelConfig {
 	public void save(Configuration config, ConfigCategory category) {
 		String categoryName = category.getQualifiedName();
 		config.get(categoryName, "name", "").set(Utils.quote(name));
-		config.get(categoryName, "password", "").set(Utils.quote(GlobalConfig.saveCredentials && password != null ? password : ""));
+		config.get(categoryName, "password", "").set(Utils.quote(password != null ? password : ""));
 		config.get(categoryName, "autoJoin", autoJoin).set(autoJoin);
 		config.get(categoryName, "autoWho", autoWho).set(autoWho);
 		config.get(categoryName, "botProfile", "").set(Utils.quote(botProfile));

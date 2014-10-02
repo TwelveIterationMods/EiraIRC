@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 
 import net.blay09.mods.eirairc.api.IRCChannel;
-import net.blay09.mods.eirairc.config.done.GlobalConfig;
 import net.blay09.mods.eirairc.config2.base.BotProfileImpl;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.Globals;
@@ -178,9 +177,9 @@ public class ServerConfig {
 		config.get(categoryName, "ircColor", "").set(Utils.quote(ircColor != null ? ircColor : ""));
 		config.get(categoryName, "emoteColor", "").set(Utils.quote(emoteColor));
 		config.get(categoryName, "quitMessage", "").set(Utils.quote(quitMessage != null ? quitMessage : ""));
-		config.get(categoryName, "nickServName", "").set(Utils.quote(GlobalConfig.saveCredentials && nickServName != null ? nickServName : ""));
-		config.get(categoryName, "nickServPassword", "").set(Utils.quote(GlobalConfig.saveCredentials && nickServPassword != null ? nickServPassword : ""));
-		config.get(categoryName, "serverPassword", "").set(Utils.quote(GlobalConfig.saveCredentials && serverPassword != null ? serverPassword : ""));
+		config.get(categoryName, "nickServName", "").set(Utils.quote(nickServName != null ? nickServName : ""));
+		config.get(categoryName, "nickServPassword", "").set(Utils.quote(nickServPassword != null ? nickServPassword : ""));
+		config.get(categoryName, "serverPassword", "").set(Utils.quote(serverPassword != null ? serverPassword : ""));
 		config.get(categoryName, "autoConnect", autoConnect).set(autoConnect);
 		config.get(categoryName, "botProfile", "").set(Utils.quote(botProfile != null ? botProfile : ""));
 		config.get(categoryName, "secureConnection", isSSL).set(isSSL);

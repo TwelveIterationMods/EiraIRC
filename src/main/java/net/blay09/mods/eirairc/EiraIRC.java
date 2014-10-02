@@ -17,8 +17,8 @@ import net.blay09.mods.eirairc.command.base.CommandIRC;
 import net.blay09.mods.eirairc.command.base.CommandServIRC;
 import net.blay09.mods.eirairc.command.base.IRCCommandHandler;
 import net.blay09.mods.eirairc.command.base.IgnoreCommand;
-import net.blay09.mods.eirairc.config.done.GlobalConfig;
 import net.blay09.mods.eirairc.config2.ServerConfig;
+import net.blay09.mods.eirairc.config2.SharedGlobalConfig;
 import net.blay09.mods.eirairc.handler.ChatSessionHandler;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.handler.IRCConnectionHandler;
@@ -193,7 +193,7 @@ public class EiraIRC {
 			handler.registerCommand(new CommandIRC());
 		}
 		IRCCommandHandler.registerCommands();
-		if(GlobalConfig.registerShortCommands) {
+		if(SharedGlobalConfig.registerShortCommands) {
 			IRCCommandHandler.registerQuickCommands(handler);
 		}
 	}
