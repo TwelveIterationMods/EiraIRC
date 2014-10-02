@@ -5,7 +5,7 @@ package net.blay09.mods.eirairc.client.gui.screenshot;
 
 import net.blay09.mods.eirairc.client.screenshot.Screenshot;
 import net.blay09.mods.eirairc.client.screenshot.ScreenshotManager;
-import net.blay09.mods.eirairc.config.done.ScreenshotConfig;
+import net.blay09.mods.eirairc.config2.TempPlaceholder;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
@@ -60,7 +60,7 @@ public class GuiScreenshotList extends GuiScreen implements GuiYesNoCallback {
 		if(button == btnBack) {
 			Minecraft.getMinecraft().displayGuiScreen(parentScreen);
 		} else if(button == btnUpload) {
-			ScreenshotManager.getInstance().uploadScreenshot(screenshots[selectedElement], ScreenshotConfig.VALUE_NONE);
+			ScreenshotManager.getInstance().uploadScreenshot(screenshots[selectedElement], TempPlaceholder.VALUE_NONE);
 		} else if(button == btnRename) {
 			onElementClicked(selectedElement);
 		} else if(button == btnDelete) {

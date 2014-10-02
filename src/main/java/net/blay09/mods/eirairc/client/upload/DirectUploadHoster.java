@@ -17,7 +17,7 @@ import java.net.URL;
 
 import net.blay09.mods.eirairc.api.upload.IUploadHoster;
 import net.blay09.mods.eirairc.api.upload.UploadedFile;
-import net.blay09.mods.eirairc.config.done.ScreenshotConfig;
+import net.blay09.mods.eirairc.config2.ClientGlobalConfig;
 
 public class DirectUploadHoster implements IUploadHoster {
 
@@ -41,7 +41,7 @@ public class DirectUploadHoster implements IUploadHoster {
 			out.writeBytes("\r\n");
 			
 			FileInputStream fis = new FileInputStream(file);
-			byte[] buffer = new byte[ScreenshotConfig.uploadBufferSize];
+			byte[] buffer = new byte[ClientGlobalConfig.uploadBufferSize];
 			int len;
 			while((len = fis.read(buffer)) != -1) {
 				out.write(buffer, 0, len);

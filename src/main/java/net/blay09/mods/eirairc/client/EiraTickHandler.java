@@ -13,8 +13,8 @@ import net.blay09.mods.eirairc.client.gui.settings.GuiKeybinds;
 import net.blay09.mods.eirairc.client.gui.settings.GuiSettings;
 import net.blay09.mods.eirairc.client.screenshot.Screenshot;
 import net.blay09.mods.eirairc.client.screenshot.ScreenshotManager;
-import net.blay09.mods.eirairc.config.done.ScreenshotConfig;
 import net.blay09.mods.eirairc.config2.ClientGlobalConfig;
+import net.blay09.mods.eirairc.config2.TempPlaceholder;
 import net.blay09.mods.eirairc.net.EiraPlayerInfo;
 import net.blay09.mods.eirairc.net.PacketHandler;
 import net.blay09.mods.eirairc.net.message.MessageRecLiveState.CMessageRecLiveState;
@@ -91,7 +91,7 @@ public class EiraTickHandler {
 		if(isKeyPressed(ClientGlobalConfig.keyScreenshotShare, KEY_IDX_SCREENSHOTSHARE)) {
 			Screenshot screenshot = ScreenshotManager.getInstance().takeScreenshot();
 			if(screenshot != null) {
-				ScreenshotManager.getInstance().uploadScreenshot(screenshot, ScreenshotConfig.VALUE_UPLOADSHARE);
+				ScreenshotManager.getInstance().uploadScreenshot(screenshot, TempPlaceholder.VALUE_UPLOADSHARE);
 			}
 		}
 		if(isKeyPressed(ClientGlobalConfig.keyOpenScreenshots, KEY_IDX_OPENSCREENSHOTS)) {

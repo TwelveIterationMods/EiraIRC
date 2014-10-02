@@ -7,7 +7,8 @@ import net.blay09.mods.eirairc.api.upload.IUploadHoster;
 import net.blay09.mods.eirairc.api.upload.UploadManager;
 import net.blay09.mods.eirairc.client.gui.settings.GuiSettings;
 import net.blay09.mods.eirairc.client.screenshot.ScreenshotManager;
-import net.blay09.mods.eirairc.config.done.ScreenshotConfig;
+import net.blay09.mods.eirairc.config2.ClientGlobalConfig;
+import net.blay09.mods.eirairc.config2.TempPlaceholder;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
@@ -66,17 +67,17 @@ public class GuiScreenshots extends GuiScreen {
 			if(hosterIdx >= UploadManager.getAvailableHosters().length) {
 				hosterIdx = 0;
 			}
-			ScreenshotConfig.uploadHoster = UploadManager.getAvailableHosters()[hosterIdx];
+			ClientGlobalConfig.screenshotHoster = UploadManager.getAvailableHosters()[hosterIdx];
 			ConfigurationHandler.save();
 			updateButtonText();
 		} else if(button == btnScreenshotAction) {
-			int action = ScreenshotConfig.screenshotAction;
+			int action = TempPlaceholder.screenshotAction;
 			action++;
-			if(action > ScreenshotConfig.VALUE_UPLOADCLIPBOARD) {
-				action = ScreenshotConfig.VALUE_NONE;
+			if(action > TempPlaceholder.VALUE_UPLOADCLIPBOARD) {
+				action = TempPlaceholder.VALUE_NONE;
 			}
-			ScreenshotConfig.screenshotAction = action;
-			if(action != ScreenshotConfig.VALUE_NONE) {
+			TempPlaceholder.screenshotAction = action;
+			if(action != TempPlaceholder.VALUE_NONE) {
 				ScreenshotManager.getInstance().findNewScreenshots(false);
 			}
 			ConfigurationHandler.save();
@@ -85,18 +86,18 @@ public class GuiScreenshots extends GuiScreen {
 	}
 	
 	public void updateButtonText() {
-		btnUploadService.displayString = Utils.getLocalizedMessage("irc.gui.screenshots.hoster", ScreenshotConfig.uploadHoster);
-		IUploadHoster hoster = UploadManager.getUploadHoster(ScreenshotConfig.uploadHoster);
+		btnUploadService.displayString = Utils.getLocalizedMessage("irc.gui.screenshots.hoster", ClientGlobalConfig.screenshotHoster);
+		IUploadHoster hoster = UploadManager.getUploadHoster(ClientGlobalConfig.screenshotHoster);
 		if(hoster != null && hoster.isCustomizable()) {
 			btnCustomUpload.enabled = true;
 		} else {
 			btnCustomUpload.enabled = false;
 		}
-		String autoAction = null;
-		switch(ScreenshotConfig.screenshotAction) {
-			case ScreenshotConfig.VALUE_UPLOAD: autoAction = "irc.gui.screenshots.upload"; break;
-			case ScreenshotConfig.VALUE_UPLOADSHARE: autoAction = "irc.gui.screenshots.uploadShare"; break;
-			case ScreenshotConfig.VALUE_UPLOADCLIPBOARD: autoAction = "irc.gui.screenshots.uploadClipboard"; break;
+		String autoAction;
+		switch(TempPlaceholder.screenshotAction) {
+			case TempPlaceholder.VALUE_UPLOAD: autoAction = "irc.gui.screenshots.upload"; break;
+			case TempPlaceholder.VALUE_UPLOADSHARE: autoAction = "irc.gui.screenshots.uploadShare"; break;
+			case TempPlaceholder.VALUE_UPLOADCLIPBOARD: autoAction = "irc.gui.screenshots.uploadClipboard"; break;
 			default: autoAction = "irc.gui.none"; break;
 		}
 		btnScreenshotAction.displayString = Utils.getLocalizedMessage("irc.gui.screenshots.autoAction", Utils.getLocalizedMessage(autoAction));

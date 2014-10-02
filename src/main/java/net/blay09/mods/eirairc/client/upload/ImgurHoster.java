@@ -15,10 +15,10 @@ import java.util.Scanner;
 import com.google.gson.JsonElement;
 import net.blay09.mods.eirairc.api.upload.IUploadHoster;
 import net.blay09.mods.eirairc.api.upload.UploadedFile;
-import net.blay09.mods.eirairc.config.done.ScreenshotConfig;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import net.blay09.mods.eirairc.config2.ClientGlobalConfig;
 import org.jetbrains.annotations.Nullable;
 
 public class ImgurHoster implements IUploadHoster {
@@ -41,7 +41,7 @@ public class ImgurHoster implements IUploadHoster {
 			
 			OutputStream out = con.getOutputStream();
 			FileInputStream fis = new FileInputStream(file);
-			byte[] buffer = new byte[ScreenshotConfig.uploadBufferSize];
+			byte[] buffer = new byte[ClientGlobalConfig.uploadBufferSize];
 			int len;
 			while((len = fis.read(buffer)) != -1) {
 				out.write(buffer, 0, len);

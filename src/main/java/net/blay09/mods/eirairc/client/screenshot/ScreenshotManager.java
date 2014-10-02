@@ -32,7 +32,8 @@ import net.blay09.mods.eirairc.api.bot.IRCBot;
 import net.blay09.mods.eirairc.api.event.RelayChat;
 import net.blay09.mods.eirairc.api.upload.IUploadHoster;
 import net.blay09.mods.eirairc.api.upload.UploadManager;
-import net.blay09.mods.eirairc.config.done.ScreenshotConfig;
+import net.blay09.mods.eirairc.config2.ClientGlobalConfig;
+import net.blay09.mods.eirairc.config2.TempPlaceholder;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.MessageFormat;
 import net.blay09.mods.eirairc.util.Utils;
@@ -202,7 +203,7 @@ public class ScreenshotManager {
 	}
 
 	public void uploadScreenshot(Screenshot screenshot, int followUpAction) {
-		IUploadHoster hoster = UploadManager.getUploadHoster(ScreenshotConfig.uploadHoster);
+		IUploadHoster hoster = UploadManager.getUploadHoster(ClientGlobalConfig.screenshotHoster);
 		if (hoster != null) {
 			uploadTasks.add(new AsyncUploadScreenshot(hoster, screenshot, followUpAction));
 		}
@@ -214,9 +215,9 @@ public class ScreenshotManager {
 				AsyncUploadScreenshot task = uploadTasks.remove(i);
 				if(task.getScreenshot().isUploaded()) {
 					int action = task.getFollowUpAction();
-					if (action == ScreenshotConfig.VALUE_UPLOADCLIPBOARD) {
+					if (action == TempPlaceholder.VALUE_UPLOADCLIPBOARD) {
 						Utils.setClipboardString(task.getScreenshot().getUploadURL());
-					} else if (action == ScreenshotConfig.VALUE_UPLOADSHARE) {
+					} else if (action == TempPlaceholder.VALUE_UPLOADSHARE) {
 						shareScreenshot(task.getScreenshot());
 					}
 					save();
@@ -272,8 +273,8 @@ public class ScreenshotManager {
 
 	public void handleNewScreenshot(Screenshot screenshot) {
 		if (EiraIRC.proxy.isIngame()) {
-			int action = ScreenshotConfig.screenshotAction;
-			if (action == ScreenshotConfig.VALUE_UPLOADCLIPBOARD || action == ScreenshotConfig.VALUE_UPLOADSHARE) {
+			int action = TempPlaceholder.screenshotAction;
+			if (action == TempPlaceholder.VALUE_UPLOADCLIPBOARD || action == TempPlaceholder.VALUE_UPLOADSHARE) {
 				uploadScreenshot(screenshot, action);
 			}
 		}
