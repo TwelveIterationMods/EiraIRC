@@ -13,8 +13,8 @@ import net.blay09.mods.eirairc.api.bot.IRCBot;
 import net.blay09.mods.eirairc.api.event.RelayChat;
 import net.blay09.mods.eirairc.command.base.IRCCommandHandler;
 import net.blay09.mods.eirairc.config2.ChannelConfig;
-import net.blay09.mods.eirairc.config.done.CompatibilityConfig;
 import net.blay09.mods.eirairc.config.done.DisplayConfig;
+import net.blay09.mods.eirairc.config2.ClientGlobalConfig;
 import net.blay09.mods.eirairc.config2.ServerConfig;
 import net.blay09.mods.eirairc.irc.IRCConnectionImpl;
 import net.blay09.mods.eirairc.util.ConfigHelper;
@@ -111,7 +111,7 @@ public class MCEventHandler {
 		if(EiraIRC.instance.getConnectionCount() > 0 && IRCCommandHandler.onChatCommand(sender, text, false)) {
 			return true;
 		}
-		if(CompatibilityConfig.clientBridge) {
+		if(ClientGlobalConfig.clientBridge) {
 			relayChatClient(text, false, false, null, true);
 			return false;
 		}
@@ -149,7 +149,7 @@ public class MCEventHandler {
 	@SideOnly(Side.CLIENT)
 	public boolean onClientEmote(String text) {
 		EntityPlayer sender = Minecraft.getMinecraft().thePlayer;
-		if(CompatibilityConfig.clientBridge) {
+		if(ClientGlobalConfig.clientBridge) {
 			relayChatClient(text, true, false, null, true);
 			return false;
 		}
@@ -210,7 +210,7 @@ public class MCEventHandler {
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public void relayChatClient(RelayChat event) {
-		relayChatClient(event.message, event.isEmote, event.isNotice, event.target, CompatibilityConfig.clientBridge);
+		relayChatClient(event.message, event.isEmote, event.isNotice, event.target, ClientGlobalConfig.clientBridge);
 	}
 
 	private void relayChatClient(String message, boolean isEmote, boolean isNotice, IRCContext target, boolean clientBridge) {
@@ -234,8 +234,8 @@ public class MCEventHandler {
 				if(isEmote) {
 					ircMessage = IRCConnectionImpl.EMOTE_START + ircMessage + IRCConnectionImpl.EMOTE_END;
 				}
-				if(!CompatibilityConfig.clientBridgeMessageToken.isEmpty()) {
-					ircMessage = ircMessage + " " + CompatibilityConfig.clientBridgeMessageToken;
+				if(!ClientGlobalConfig.clientBridgeMessageToken.isEmpty()) {
+					ircMessage = ircMessage + " " + ClientGlobalConfig.clientBridgeMessageToken;
 				}
 				for(IRCConnection connection : EiraIRC.instance.getConnections()) {
 					IRCBot bot = connection.getBot();

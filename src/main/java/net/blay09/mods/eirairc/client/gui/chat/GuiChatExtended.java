@@ -5,8 +5,8 @@ package net.blay09.mods.eirairc.client.gui.chat;
 
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.client.gui.settings.GuiSettings;
-import net.blay09.mods.eirairc.config.done.CompatibilityConfig;
 import net.blay09.mods.eirairc.config.done.KeyConfig;
+import net.blay09.mods.eirairc.config2.ClientGlobalConfig;
 import net.blay09.mods.eirairc.handler.ChatSessionHandler;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
@@ -60,7 +60,7 @@ public class GuiChatExtended extends GuiChat {
 	
 	@Override
 	protected void keyTyped(char unicode, int keyCode) {
-		if(keyCode == KeyConfig.toggleTarget && !CompatibilityConfig.disableChatToggle && !CompatibilityConfig.clientBridge && !inputField.getText().startsWith("/")) {
+		if(keyCode == KeyConfig.toggleTarget && !ClientGlobalConfig.disableChatToggle && !ClientGlobalConfig.clientBridge && !inputField.getText().startsWith("/")) {
 			if(Keyboard.isRepeatEvent()) {
 				if(System.currentTimeMillis() - lastToggleTarget >= 1000) {
 					chatSession.setChatTarget((String) null);
@@ -95,7 +95,7 @@ public class GuiChatExtended extends GuiChat {
 	@Override
 	public void drawScreen(int i, int j, float k) {
 		super.drawScreen(i, j, k);
-		if(!CompatibilityConfig.disableChatToggle && !CompatibilityConfig.clientBridge) {
+		if(!ClientGlobalConfig.disableChatToggle && !ClientGlobalConfig.clientBridge) {
 			String target = chatSession.getChatTarget();
 			if(target == null) {
 				target = "Minecraft";

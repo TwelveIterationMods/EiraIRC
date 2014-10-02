@@ -132,7 +132,6 @@ public class ConfigurationHandler {
 		NotificationConfig.load(config);
 		ScreenshotConfig.load(config);
 		DisplayConfig.load(config);
-		CompatibilityConfig.load(config);
 		NetworkConfig.load(config);
 		
 		config.save();
@@ -144,7 +143,6 @@ public class ConfigurationHandler {
 		NotificationConfig.save(config);
 		ScreenshotConfig.save(config);
 		DisplayConfig.save(config);
-		CompatibilityConfig.save(config);
 		NetworkConfig.save(config);
 	}
 	
@@ -180,7 +178,6 @@ public class ConfigurationHandler {
 			if(!result) result = NotificationConfig.handleConfigCommand(sender, key, value);
 			if(!result) result = ScreenshotConfig.handleConfigCommand(sender, key, value);
 			if(!result) result = DisplayConfig.handleConfigCommand(sender, key, value);
-			if(!result) result = CompatibilityConfig.handleConfigCommand(sender, key, value);
 			if(!result) result = NetworkConfig.handleConfigCommand(sender, key, value);
 			if(result) {
 				Utils.sendLocalizedMessage(sender, "irc.config.change", "Global", key, value);
@@ -210,7 +207,6 @@ public class ConfigurationHandler {
 			if(result == null) result = NotificationConfig.handleConfigCommand(sender, key);
 			if(result == null) result = ScreenshotConfig.handleConfigCommand(sender, key);
 			if(result == null) result = DisplayConfig.handleConfigCommand(sender, key);
-			if(result == null) result = CompatibilityConfig.handleConfigCommand(sender, key);
 			if(result == null) result = NetworkConfig.handleConfigCommand(sender, key);
 			if(result != null) {
 				Utils.sendLocalizedMessage(sender, "irc.config.lookup", "Global", key, result);
@@ -245,7 +241,6 @@ public class ConfigurationHandler {
 		DisplayConfig.addOptionsToList(list);
 		NotificationConfig.addOptionsToList(list);
 		ScreenshotConfig.addOptionsToList(list);
-		CompatibilityConfig.addOptionsToList(list);
 		NetworkConfig.addOptionsToList(list);
 	}
 
@@ -254,7 +249,6 @@ public class ConfigurationHandler {
 		DisplayConfig.addValuesToList(list, option);
 		NotificationConfig.addValuesToList(list, option);
 		ScreenshotConfig.addValuesToList(list, option);
-		CompatibilityConfig.addValuesToList(list, option);
 		NetworkConfig.addValuesToList(list, option);
 	}
 

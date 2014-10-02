@@ -5,8 +5,8 @@ package net.blay09.mods.eirairc.client.gui.chat;
 
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.client.gui.settings.GuiSettings;
-import net.blay09.mods.eirairc.config.done.CompatibilityConfig;
 import net.blay09.mods.eirairc.config.done.KeyConfig;
+import net.blay09.mods.eirairc.config2.ClientGlobalConfig;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
@@ -87,7 +87,7 @@ public class GuiEiraChatInput extends GuiScreen {
 	
 	@Override
 	protected void keyTyped(char unicode, int keyCode) {
-		if(keyCode == KeyConfig.toggleTarget && !CompatibilityConfig.disableChatToggle) {
+		if(keyCode == KeyConfig.toggleTarget && !ClientGlobalConfig.disableChatToggle) {
 			if(Keyboard.isRepeatEvent()) {
 				if(System.currentTimeMillis() - lastToggleTarget >= 1000) {
 					parentChat.getChatSession().setChatTarget((String) null);
@@ -139,7 +139,7 @@ public class GuiEiraChatInput extends GuiScreen {
 		drawRect(2, this.height - 14, this.width - 2, this.height - 2, Integer.MIN_VALUE);
 		txtInput.drawTextBox();
 		
-		if(!CompatibilityConfig.disableChatToggle) {
+		if(!ClientGlobalConfig.disableChatToggle) {
 			drawTargetOverlay();
 		}
 	}

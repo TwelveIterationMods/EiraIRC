@@ -12,8 +12,8 @@ import net.blay09.mods.eirairc.api.event.IRCUserJoinEvent;
 import net.blay09.mods.eirairc.api.event.IRCUserLeaveEvent;
 import net.blay09.mods.eirairc.api.event.IRCUserNickChangeEvent;
 import net.blay09.mods.eirairc.api.event.IRCUserQuitEvent;
-import net.blay09.mods.eirairc.config.done.CompatibilityConfig;
 import net.blay09.mods.eirairc.config.done.GlobalConfig;
+import net.blay09.mods.eirairc.config2.ClientGlobalConfig;
 import net.blay09.mods.eirairc.irc.IRCConnectionImpl;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.MessageFormat;
@@ -136,14 +136,14 @@ public class IRCEventHandler {
 			return;
 		}
 		String message = event.message;
-		if(CompatibilityConfig.clientBridge) {
-			if(!CompatibilityConfig.clientBridgeMessageToken.isEmpty()) {
-				if (message.endsWith(CompatibilityConfig.clientBridgeMessageToken) || message.endsWith(CompatibilityConfig.clientBridgeMessageToken + IRCConnectionImpl.EMOTE_END)) {
+		if(ClientGlobalConfig.clientBridge) {
+			if(!ClientGlobalConfig.clientBridgeMessageToken.isEmpty()) {
+				if (message.endsWith(ClientGlobalConfig.clientBridgeMessageToken) || message.endsWith(ClientGlobalConfig.clientBridgeMessageToken + IRCConnectionImpl.EMOTE_END)) {
 					return;
 				}
 			}
-			if(!CompatibilityConfig.clientBridgeNickToken.isEmpty()) {
-				if (event.sender.getName().endsWith(CompatibilityConfig.clientBridgeNickToken)) {
+			if(!ClientGlobalConfig.clientBridgeNickToken.isEmpty()) {
+				if (event.sender.getName().endsWith(ClientGlobalConfig.clientBridgeNickToken)) {
 					return;
 				}
 			}
