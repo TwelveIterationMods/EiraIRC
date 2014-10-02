@@ -9,6 +9,7 @@ import java.util.Map;
 
 import net.blay09.mods.eirairc.api.IRCChannel;
 import net.blay09.mods.eirairc.api.IRCUser;
+import net.blay09.mods.eirairc.config.settings.ThemeSettings;
 
 public class IRCChannelImpl implements IRCChannel {
 
@@ -16,7 +17,7 @@ public class IRCChannelImpl implements IRCChannel {
 	private String name;
 	private String topic;
 	private Map<String, IRCUser> users = new HashMap<String, IRCUser>();
-	
+
 	public IRCChannelImpl(IRCConnectionImpl connection, String name) {
 		this.connection = connection;
 		this.name = name;

@@ -3,6 +3,7 @@
 
 package net.blay09.mods.eirairc.client.gui.settings;
 
+import net.blay09.mods.eirairc.config.ClientGlobalConfig;
 import net.blay09.mods.eirairc.config.TempPlaceholder;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.Globals;
@@ -41,13 +42,13 @@ public class GuiGlobalSettings extends GuiScreen {
 	public void updateButtonText() {
 		String yes = Utils.getLocalizedMessage("irc.gui.yes");
 		String no = Utils.getLocalizedMessage("irc.gui.no");
-		btnPersistentConnections.displayString = Utils.getLocalizedMessage("irc.gui.globalSettings.persistentConnection", (TempPlaceholder.persistentConnection ? yes : no));
+		btnPersistentConnections.displayString = Utils.getLocalizedMessage("irc.gui.globalSettings.persistentConnection", (ClientGlobalConfig.persistentConnection ? yes : no));
 	}
 	
 	@Override
 	public void actionPerformed(GuiButton button) {
 		if(button == btnPersistentConnections) {
-			TempPlaceholder.persistentConnection = !TempPlaceholder.persistentConnection;
+			ClientGlobalConfig.persistentConnection = !ClientGlobalConfig.persistentConnection;
 		} else if(button == btnBack) {
 			ConfigurationHandler.save();
 			Minecraft.getMinecraft().displayGuiScreen(new GuiSettings());

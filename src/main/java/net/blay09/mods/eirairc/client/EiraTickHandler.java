@@ -14,6 +14,7 @@ import net.blay09.mods.eirairc.client.gui.settings.GuiSettings;
 import net.blay09.mods.eirairc.client.screenshot.Screenshot;
 import net.blay09.mods.eirairc.client.screenshot.ScreenshotManager;
 import net.blay09.mods.eirairc.config.ClientGlobalConfig;
+import net.blay09.mods.eirairc.config.ScreenshotAction;
 import net.blay09.mods.eirairc.config.TempPlaceholder;
 import net.blay09.mods.eirairc.net.EiraPlayerInfo;
 import net.blay09.mods.eirairc.net.PacketHandler;
@@ -91,7 +92,7 @@ public class EiraTickHandler {
 		if(isKeyPressed(ClientGlobalConfig.keyScreenshotShare, KEY_IDX_SCREENSHOTSHARE)) {
 			Screenshot screenshot = ScreenshotManager.getInstance().takeScreenshot();
 			if(screenshot != null) {
-				ScreenshotManager.getInstance().uploadScreenshot(screenshot, TempPlaceholder.VALUE_UPLOADSHARE);
+				ScreenshotManager.getInstance().uploadScreenshot(screenshot, ScreenshotAction.UploadShare);
 			}
 		}
 		if(isKeyPressed(ClientGlobalConfig.keyOpenScreenshots, KEY_IDX_OPENSCREENSHOTS)) {

@@ -13,6 +13,7 @@ import net.blay09.mods.eirairc.api.bot.IRCBot;
 import net.blay09.mods.eirairc.api.event.RelayChat;
 import net.blay09.mods.eirairc.command.base.IRCCommandHandler;
 import net.blay09.mods.eirairc.config.*;
+import net.blay09.mods.eirairc.config.settings.ThemeColorComponent;
 import net.blay09.mods.eirairc.irc.IRCConnectionImpl;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.IRCFormatting;
@@ -73,7 +74,7 @@ public class MCEventHandler {
 				}
 				String mcAlias = Utils.getNickGame((EntityPlayer) event.sender);
 				IChatComponent chatComponent = new ChatComponentText("* " + mcAlias + " " + emote);
-				EnumChatFormatting emoteColor = Utils.getColorFormatting(SharedGlobalConfig.baseTheme.emoteTextColor);
+				EnumChatFormatting emoteColor = Utils.getColorFormatting(SharedGlobalConfig.baseTheme.getColor(ThemeColorComponent.emoteTextColor));
 				if(emoteColor != null) {
 					chatComponent.getChatStyle().setColor(emoteColor);
 				}
@@ -167,7 +168,7 @@ public class MCEventHandler {
 					return true;
 				}
 				context = targetChannel;
-				emoteColor = Utils.getColorFormatting(ConfigHelper.getEmoteColor(targetChannel));
+				emoteColor = Utils.getColorFormatting(ConfigHelper.getTheme(targetChannel).getColor(ThemeColorComponent.emoteTextColor));
 				chatComponent = MessageFormat.formatChatComponent(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetChannel)).mcSendChannelEmote, context, sender, text, MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
 			} else {
 				IRCUser targetUser = connection.getUser(target[1]);
@@ -175,7 +176,7 @@ public class MCEventHandler {
 					return true;
 				}
 				context = targetUser;
-				emoteColor = Utils.getColorFormatting(ConfigHelper.getEmoteColor(targetUser));
+				emoteColor = Utils.getColorFormatting(ConfigHelper.getTheme(targetUser).getColor(ThemeColorComponent.emoteTextColor));
 				chatComponent = MessageFormat.formatChatComponent(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetUser)).mcSendPrivateEmote, context, sender, text, MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
 			}
 			relayChatClient(text, true, false, context, false);

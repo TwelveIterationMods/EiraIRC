@@ -21,9 +21,11 @@ public class ClientGlobalConfig {
 
 	// General
 	public static boolean hudRecState = false;
+	public static boolean persistentConnection = true;
 
 	// Screenshots
 	public static String screenshotHoster = "";
+	public static ScreenshotAction screenshotAction = ScreenshotAction.None;
 	public static int uploadBufferSize = 1024;
 
 	// Keybinds
@@ -54,9 +56,11 @@ public class ClientGlobalConfig {
 
 		// General
 		hudRecState = thisConfig.getBoolean("hudRecState", GENERAL, hudRecState, "[Deprecated] If set to true, your screen will get cool red and green dots in some locations.");
+		persistentConnection = thisConfig.getBoolean("persistentConnection", GENERAL, persistentConnection, "If set to true, the IRC connection will remain open after leaving a world or server (until Minecraft closes).");
 
 		// Screenshots
 		screenshotHoster = thisConfig.getString("uploadHoster", SCREENSHOTS, screenshotHoster, "The name of the hoster to upload screenshots to. Valid values are: imgur, DirectUpload", UploadManager.getAvailableHosters());
+		screenshotAction = ScreenshotAction.values[thisConfig.getInt("autoAction", SCREENSHOTS, screenshotAction.ordinal(), 0, ScreenshotAction.MAX, "[Deprecated] The action to perform after a screenshot was taken.")];
 		uploadBufferSize = thisConfig.getInt("uploadBufferSize", SCREENSHOTS, uploadBufferSize, 256, Integer.MAX_VALUE, "[Advanced] Why would you even touch this option?");
 
 		// Keybinds
@@ -87,9 +91,12 @@ public class ClientGlobalConfig {
 	public static void save() {
 		// General
 		thisConfig.get(GENERAL, "hudRecState", false).set(hudRecState);
+		thisConfig.get(GENERAL, "persistentConnection", false).set(persistentConnection);
 
 		// Screenshots
 		thisConfig.get(SCREENSHOTS, "uploadHoster", "").set(screenshotHoster);
+		thisConfig.get(SCREENSHOTS, "autoAction", 0).set(screenshotAction.ordinal());
+		thisConfig.get(SCREENSHOTS, "uploadBufferSize", 0).set(uploadBufferSize);
 
 		// Keybinds
 		thisConfig.get(KEYBINDS, "screenshotShare", -1).set(keyScreenshotShare);
@@ -123,9 +130,12 @@ public class ClientGlobalConfig {
 
 		// General
 		hudRecState = legacyConfig.get("display", "hudRecState", hudRecState).getBoolean();
+		persistentConnection = legacyConfig.get("clientonly", "persistentConnection", persistentConnection).getBoolean();
 
 		// Screenshots
 		screenshotHoster = legacyConfig.get("clientonly", "screenshotHoster", screenshotHoster).getString();
+		screenshotAction = ScreenshotAction.values[legacyConfig.get("clientonly", "screenshotAction", screenshotAction.ordinal()).getInt()];
+		uploadBufferSize = legacyConfig.get("clientonly", "uploadBufferSize", uploadBufferSize).getInt();
 
 		// Keybinds
 		keyOpenMenu = legacyConfig.get("keybinds", "keyMenu", keyOpenMenu).getInt();

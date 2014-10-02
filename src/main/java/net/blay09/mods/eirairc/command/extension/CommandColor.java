@@ -8,6 +8,7 @@ import java.util.List;
 import net.blay09.mods.eirairc.api.IRCContext;
 import net.blay09.mods.eirairc.command.SubCommand;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
+import net.blay09.mods.eirairc.config.settings.ThemeColorComponent;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
@@ -47,7 +48,7 @@ public class CommandColor extends SubCommand {
 			throw new WrongUsageException(Utils.getLocalizedMessage("irc.commands.color"));
 		}
 		String colorName = args[0].toLowerCase();
-		if(!Utils.isOP(sender) && (SharedGlobalConfig.colorBlacklist.contains(colorName) || SharedGlobalConfig.baseTheme.mcOpNameColor.equals(colorName))) {
+		if(!Utils.isOP(sender) && (SharedGlobalConfig.colorBlacklist.contains(colorName) || (SharedGlobalConfig.baseTheme.hasColor(ThemeColorComponent.mcOpNameColor) && SharedGlobalConfig.baseTheme.getColor(ThemeColorComponent.mcOpNameColor).equals(colorName)))) {
 			Utils.sendLocalizedMessage(sender, "irc.color.blackList", colorName);
 			return true;
 		}

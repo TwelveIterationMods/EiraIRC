@@ -36,7 +36,7 @@ public class SharedGlobalConfig {
 	public static String proxyPassword = "";
 
 	// Theme Settings
-	public static final ThemeSettings baseTheme = new ThemeSettings();
+	public static final ThemeSettings baseTheme = new ThemeSettings(null);
 
 	public static void load(File configDir) {
 		thisConfig = new Configuration(new File(configDir, "eirairc/shared.cfg"));
@@ -61,7 +61,7 @@ public class SharedGlobalConfig {
 		proxyPassword = thisConfig.getString("proxyPassword", NETWORK, proxyPassword, "[Advanced] The password to authenticate with the proxy, if necessary.");
 
 		// Theme
-		baseTheme.load(thisConfig, THEME);
+		baseTheme.load(thisConfig, THEME, true);
 	}
 
 	public static void save() {

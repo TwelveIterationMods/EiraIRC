@@ -33,7 +33,9 @@ import net.blay09.mods.eirairc.api.event.RelayChat;
 import net.blay09.mods.eirairc.api.upload.IUploadHoster;
 import net.blay09.mods.eirairc.api.upload.UploadManager;
 import net.blay09.mods.eirairc.config.ClientGlobalConfig;
+import net.blay09.mods.eirairc.config.ScreenshotAction;
 import net.blay09.mods.eirairc.config.TempPlaceholder;
+import net.blay09.mods.eirairc.config.settings.ThemeColorComponent;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.MessageFormat;
 import net.blay09.mods.eirairc.util.Utils;
@@ -202,7 +204,7 @@ public class ScreenshotManager {
 		screenshots.remove(screenshot);
 	}
 
-	public void uploadScreenshot(Screenshot screenshot, int followUpAction) {
+	public void uploadScreenshot(Screenshot screenshot, ScreenshotAction followUpAction) {
 		IUploadHoster hoster = UploadManager.getUploadHoster(ClientGlobalConfig.screenshotHoster);
 		if (hoster != null) {
 			uploadTasks.add(new AsyncUploadScreenshot(hoster, screenshot, followUpAction));
@@ -214,10 +216,10 @@ public class ScreenshotManager {
 			if(uploadTasks.get(i).isComplete()) {
 				AsyncUploadScreenshot task = uploadTasks.remove(i);
 				if(task.getScreenshot().isUploaded()) {
-					int action = task.getFollowUpAction();
-					if (action == TempPlaceholder.VALUE_UPLOADCLIPBOARD) {
+					ScreenshotAction action = task.getFollowUpAction();
+					if (action == ScreenshotAction.UploadClipboard) {
 						Utils.setClipboardString(task.getScreenshot().getUploadURL());
-					} else if (action == TempPlaceholder.VALUE_UPLOADSHARE) {
+					} else if (action == ScreenshotAction.UploadShare) {
 						shareScreenshot(task.getScreenshot());
 					}
 					save();
@@ -253,14 +255,14 @@ public class ScreenshotManager {
 					if (targetChannel == null) {
 						return;
 					}
-					emoteColor = Utils.getColorFormatting(ConfigHelper.getEmoteColor(targetChannel));
+					emoteColor = Utils.getColorFormatting(ConfigHelper.getTheme(targetChannel).getColor(ThemeColorComponent.emoteTextColor));
 					chatComponent = MessageFormat.formatChatComponent(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetChannel)).mcSendChannelEmote, targetChannel, sender, text, MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
 				} else {
 					IRCUser targetUser = connection.getUser(target[1]);
 					if (targetUser == null) {
 						return;
 					}
-					emoteColor = Utils.getColorFormatting(ConfigHelper.getEmoteColor(targetUser));
+					emoteColor = Utils.getColorFormatting(ConfigHelper.getTheme(targetUser).getColor(ThemeColorComponent.emoteTextColor));
 					chatComponent = MessageFormat.formatChatComponent(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetUser)).mcSendPrivateEmote, targetUser, sender, text, MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
 				}
 				if (emoteColor != null) {
@@ -273,8 +275,8 @@ public class ScreenshotManager {
 
 	public void handleNewScreenshot(Screenshot screenshot) {
 		if (EiraIRC.proxy.isIngame()) {
-			int action = TempPlaceholder.screenshotAction;
-			if (action == TempPlaceholder.VALUE_UPLOADCLIPBOARD || action == TempPlaceholder.VALUE_UPLOADSHARE) {
+			ScreenshotAction action = ClientGlobalConfig.screenshotAction;
+			if (action == ScreenshotAction.UploadClipboard || action == ScreenshotAction.UploadShare) {
 				uploadScreenshot(screenshot, action);
 			}
 		}

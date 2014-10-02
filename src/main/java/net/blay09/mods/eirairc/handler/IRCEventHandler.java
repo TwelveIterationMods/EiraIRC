@@ -14,6 +14,8 @@ import net.blay09.mods.eirairc.api.event.IRCUserNickChangeEvent;
 import net.blay09.mods.eirairc.api.event.IRCUserQuitEvent;
 import net.blay09.mods.eirairc.config.ClientGlobalConfig;
 import net.blay09.mods.eirairc.config.TempPlaceholder;
+import net.blay09.mods.eirairc.config.settings.ThemeColorComponent;
+import net.blay09.mods.eirairc.config.settings.ThemeSettings;
 import net.blay09.mods.eirairc.irc.IRCConnectionImpl;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.MessageFormat;
@@ -117,8 +119,9 @@ public class IRCEventHandler {
 		}
 		EiraIRC.proxy.publishNotification(NotificationType.PrivateMessage, notifyMsg);
 		EiraIRC.instance.getChatSessionHandler().addTargetUser(event.sender);
-		EnumChatFormatting emoteColor = Utils.getColorFormatting(ConfigHelper.getEmoteColor(event.sender));
-		EnumChatFormatting noticeColor = Utils.getColorFormatting(ConfigHelper.getNoticeColor(event.sender));
+		ThemeSettings theme = ConfigHelper.getTheme(event.sender);
+		EnumChatFormatting emoteColor = Utils.getColorFormatting(theme.getColor(ThemeColorComponent.emoteTextColor));
+		EnumChatFormatting noticeColor = Utils.getColorFormatting(theme.getColor(ThemeColorComponent.ircNoticeTextColor));
 		if(event.isEmote && emoteColor != null) {
 			chatComponent.getChatStyle().setColor(emoteColor);
 		} else if(event.isNotice && noticeColor != null) {
@@ -164,8 +167,9 @@ public class IRCEventHandler {
 			System.out.println(chatComponent.getUnformattedText());
 			return;
 		}
-		EnumChatFormatting emoteColor = Utils.getColorFormatting(ConfigHelper.getEmoteColor(event.channel));
-		EnumChatFormatting noticeColor = Utils.getColorFormatting(ConfigHelper.getNoticeColor(event.channel));
+		ThemeSettings theme = ConfigHelper.getTheme(event.sender);
+		EnumChatFormatting emoteColor = Utils.getColorFormatting(theme.getColor(ThemeColorComponent.emoteTextColor));
+		EnumChatFormatting noticeColor = Utils.getColorFormatting(theme.getColor(ThemeColorComponent.ircNoticeTextColor));
 		if(event.isEmote && emoteColor != null) {
 			chatComponent.getChatStyle().setColor(emoteColor);
 		} else if(event.isNotice && noticeColor != null) {

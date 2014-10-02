@@ -2,6 +2,9 @@ package net.blay09.mods.eirairc.config.settings;
 
 import net.minecraftforge.common.config.Configuration;
 
+import java.util.EnumMap;
+import java.util.Map;
+
 /**
  * Created by Blay09 on 29.09.2014.
  */
@@ -27,45 +30,45 @@ public class ThemeSettings {
 	};
 
 
-	public String mcNameColor = "white";
-	public String mcOpNameColor = "red";
-	public String ircNameColor = "gray";
-	public String ircOpNameColor = "gold";
-	public String ircVoiceNameColor = "gray";
-	public String ircPrivateTextColor = "gray";
-	public String ircNoticeTextColor = "red";
-	public String emoteTextColor = "gold";
+	private final ThemeSettings parent;
+	private final EnumMap<ThemeColorComponent, String> colors = new EnumMap<ThemeColorComponent, String>(ThemeColorComponent.class);
 
-	public void load(Configuration config, String category) {
-		mcNameColor = config.getString("mcNameColor", category, mcNameColor, "", VALID_COLORS);
-		mcOpNameColor = config.getString("mcOpNameColor", category, mcOpNameColor, "", VALID_COLORS);
-		ircNameColor = config.getString("ircNameColor", category, ircNameColor, "", VALID_COLORS);
-		ircOpNameColor = config.getString("ircOpNameColor", category, ircOpNameColor, "", VALID_COLORS);
-		ircVoiceNameColor = config.getString("ircVoiceNameColor", category, ircVoiceNameColor, "", VALID_COLORS);
-		ircPrivateTextColor = config.getString("ircPrivateTextColor", category, ircPrivateTextColor, "", VALID_COLORS);
-		ircNoticeTextColor = config.getString("ircNoticeTextColor", category, ircNoticeTextColor, "", VALID_COLORS);
-		emoteTextColor = config.getString("emoteTextColor", category, emoteTextColor, "", VALID_COLORS);
+	public ThemeSettings(ThemeSettings parent) {
+		this.parent = parent;
+	}
+
+	public String getColor(ThemeColorComponent component) {
+		String color = colors.get(component);
+		if(color == null && parent != null) {
+			return parent.getColor(component);
+		}
+		return color;
+	}
+
+	public boolean hasColor(ThemeColorComponent component) {
+		return colors.containsKey(component);
+	}
+
+	public void load(Configuration config, String category, boolean defaultValues) {
+		for(int i = 0; i < ThemeColorComponent.values().length; i++) {
+			config.getString(ThemeColorComponent.values[i].name(), category, (defaultValues ? ThemeColorComponent.values[i].defaultValue : null), "", VALID_COLORS);
+		}
 	}
 
 	public void save(Configuration config, String category) {
-		config.get(category, "mcNameColor", "").set(mcNameColor);
-		config.get(category, "mcOpNameColor", "").set(mcOpNameColor);
-		config.get(category, "ircNameColor", "").set(ircNameColor);
-		config.get(category, "ircOpNameColor", "").set(ircOpNameColor);
-		config.get(category, "ircVoiceNameColor", "").set(ircVoiceNameColor);
-		config.get(category, "ircPrivateTextColor", "").set(ircPrivateTextColor);
-		config.get(category, "ircNoticeTextColor", "").set(ircNoticeTextColor);
-		config.get(category, "emoteTextColor", "").set(emoteTextColor);
+		for(Map.Entry<ThemeColorComponent, String> entry : colors.entrySet()) {
+			config.get(category, entry.getKey().name(), "", entry.getKey().comment).set(entry.getValue());
+		}
 	}
 
 	public void loadLegacy(Configuration legacyConfig) {
-		emoteTextColor = legacyConfig.get("display", "emoteColor", emoteTextColor).getString();
-		mcNameColor = legacyConfig.get("display", "defaultColor", mcNameColor).getString();
-		mcOpNameColor = legacyConfig.get("display", "opColor", mcOpNameColor).getString();
-		ircNameColor = legacyConfig.get("display", "ircColor", ircNameColor).getString();
-		ircPrivateTextColor = legacyConfig.get("display", "ircPrivateColor", ircPrivateTextColor).getString();
-		ircVoiceNameColor = legacyConfig.get("display", "ircVoiceColor", ircVoiceNameColor).getString();
-		ircOpNameColor = legacyConfig.get("display", "ircOpColor", ircOpNameColor).getString();
-		ircNoticeTextColor = legacyConfig.get("display", "ircNoticeColor", ircNoticeTextColor).getString();
+		colors.put(ThemeColorComponent.emoteTextColor, legacyConfig.get("display", "emoteColor", ThemeColorComponent.emoteTextColor.defaultValue).getString());
+		colors.put(ThemeColorComponent.mcNameColor, legacyConfig.get("display", "defaultColor", ThemeColorComponent.mcNameColor.defaultValue).getString());
+		colors.put(ThemeColorComponent.mcOpNameColor, legacyConfig.get("display", "opColor", ThemeColorComponent.mcOpNameColor.defaultValue).getString());
+		colors.put(ThemeColorComponent.ircNameColor, legacyConfig.get("display", "ircColor", ThemeColorComponent.ircNameColor.defaultValue).getString());
+		colors.put(ThemeColorComponent.ircPrivateNameColor, legacyConfig.get("display", "ircPrivateColor", ThemeColorComponent.ircPrivateNameColor.defaultValue).getString());
+		colors.put(ThemeColorComponent.ircVoiceNameColor, legacyConfig.get("display", "ircVoiceColor", ThemeColorComponent.ircVoiceNameColor.defaultValue).getString());
+		colors.put(ThemeColorComponent.ircOpNameColor, legacyConfig.get("display", "ircOpColor", ThemeColorComponent.ircOpNameColor.defaultValue).getString());
+		colors.put(ThemeColorComponent.ircNoticeTextColor, legacyConfig.get("display", "ircNoticeColor", ThemeColorComponent.ircNoticeTextColor.defaultValue).getString());
 	}
 }

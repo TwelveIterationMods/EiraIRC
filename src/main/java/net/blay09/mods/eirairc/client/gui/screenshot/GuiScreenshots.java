@@ -8,6 +8,7 @@ import net.blay09.mods.eirairc.api.upload.UploadManager;
 import net.blay09.mods.eirairc.client.gui.settings.GuiSettings;
 import net.blay09.mods.eirairc.client.screenshot.ScreenshotManager;
 import net.blay09.mods.eirairc.config.ClientGlobalConfig;
+import net.blay09.mods.eirairc.config.ScreenshotAction;
 import net.blay09.mods.eirairc.config.TempPlaceholder;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.Globals;
@@ -71,13 +72,12 @@ public class GuiScreenshots extends GuiScreen {
 			ConfigurationHandler.save();
 			updateButtonText();
 		} else if(button == btnScreenshotAction) {
-			int action = TempPlaceholder.screenshotAction;
-			action++;
-			if(action > TempPlaceholder.VALUE_UPLOADCLIPBOARD) {
-				action = TempPlaceholder.VALUE_NONE;
+			int actionIdx = ClientGlobalConfig.screenshotAction.ordinal() + 1;
+			if(actionIdx > ScreenshotAction.MAX) {
+				actionIdx = 0;
 			}
-			TempPlaceholder.screenshotAction = action;
-			if(action != TempPlaceholder.VALUE_NONE) {
+			ClientGlobalConfig.screenshotAction = ScreenshotAction.values[actionIdx];
+			if(ClientGlobalConfig.screenshotAction != ScreenshotAction.None) {
 				ScreenshotManager.getInstance().findNewScreenshots(false);
 			}
 			ConfigurationHandler.save();
@@ -94,10 +94,10 @@ public class GuiScreenshots extends GuiScreen {
 			btnCustomUpload.enabled = false;
 		}
 		String autoAction;
-		switch(TempPlaceholder.screenshotAction) {
-			case TempPlaceholder.VALUE_UPLOAD: autoAction = "irc.gui.screenshots.upload"; break;
-			case TempPlaceholder.VALUE_UPLOADSHARE: autoAction = "irc.gui.screenshots.uploadShare"; break;
-			case TempPlaceholder.VALUE_UPLOADCLIPBOARD: autoAction = "irc.gui.screenshots.uploadClipboard"; break;
+		switch(ClientGlobalConfig.screenshotAction) {
+			case Upload: autoAction = "irc.gui.screenshots.upload"; break;
+			case UploadShare: autoAction = "irc.gui.screenshots.uploadShare"; break;
+			case UploadClipboard: autoAction = "irc.gui.screenshots.uploadClipboard"; break;
 			default: autoAction = "irc.gui.none"; break;
 		}
 		btnScreenshotAction.displayString = Utils.getLocalizedMessage("irc.gui.screenshots.autoAction", Utils.getLocalizedMessage(autoAction));

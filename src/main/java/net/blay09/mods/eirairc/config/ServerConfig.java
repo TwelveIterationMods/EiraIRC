@@ -10,6 +10,7 @@ import java.util.Map;
 
 import net.blay09.mods.eirairc.api.IRCChannel;
 import net.blay09.mods.eirairc.config.base.BotProfileImpl;
+import net.blay09.mods.eirairc.config.settings.ThemeSettings;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
@@ -30,13 +31,13 @@ public class ServerConfig {
 	private String nickServPassword = "";
 	private boolean isSSL = false;
 
+	private ThemeSettings theme;
+
 	private boolean autoConnect = true; // channelsettings: autoJoin
 	private String botProfile = ""; // bot
 	private String ident = Globals.DEFAULT_IDENT; // bot
 	private String description = Globals.DEFAULT_DESCRIPTION; // bot
 	private String quitMessage = ""; // bot
-	private String ircColor = ""; // theme
-	private String emoteColor = ""; // theme
 
 	public ServerConfig(String address) {
 		this.address = address;
@@ -144,13 +145,11 @@ public class ServerConfig {
 		return channels.values();
 	}
 
-	public void load(Configuration config, ConfigCategory category) {
+	public void loadLegacy(Configuration config, ConfigCategory category) {
 		String categoryName = category.getQualifiedName();
 		nick = Utils.unquote(config.get(categoryName, "nick", "").getString());
 		ident = Utils.unquote(config.get(categoryName, "ident", Globals.DEFAULT_IDENT).getString());
 		description = Utils.unquote(config.get(categoryName, "description", Globals.DEFAULT_DESCRIPTION).getString());
-		ircColor = Utils.unquote(config.get(categoryName, "ircColor", "").getString());
-		emoteColor = Utils.unquote(config.get(categoryName, "emoteColor", emoteColor).getString());
 		quitMessage = Utils.unquote(config.get(categoryName, "quitMessage", "").getString());
 		nickServName = Utils.unquote(config.get(categoryName, "nickServName", "").getString());
 		nickServPassword = Utils.unquote(config.get(categoryName, "nickServPassword", "").getString());
@@ -163,49 +162,14 @@ public class ServerConfig {
 		ConfigCategory channelsCategory = config.getCategory(channelsCategoryName);
 		for(ConfigCategory channelCategory : channelsCategory.getChildren()) {
 			ChannelConfig channelConfig = new ChannelConfig(this, Utils.unquote(config.get(channelCategory.getQualifiedName(), "name", "").getString()));
-			channelConfig.load(config, channelCategory);
+			channelConfig.loadLegacy(config, channelCategory);
 			addChannelConfig(channelConfig);
 		}
 	}
 
-	public void save(Configuration config, ConfigCategory category) {
-		String categoryName = category.getQualifiedName();
-		config.get(categoryName, "host", "").set(Utils.quote(address));
-		config.get(categoryName, "nick", "").set(Utils.quote(nick != null ? nick : ""));
-		config.get(categoryName, "ident", "").set(Utils.quote(ident != null ? ident : Globals.DEFAULT_IDENT));
-		config.get(categoryName, "description", "").set(Utils.quote(description != null ? description : Globals.DEFAULT_DESCRIPTION));
-		config.get(categoryName, "ircColor", "").set(Utils.quote(ircColor != null ? ircColor : ""));
-		config.get(categoryName, "emoteColor", "").set(Utils.quote(emoteColor));
-		config.get(categoryName, "quitMessage", "").set(Utils.quote(quitMessage != null ? quitMessage : ""));
-		config.get(categoryName, "nickServName", "").set(Utils.quote(nickServName != null ? nickServName : ""));
-		config.get(categoryName, "nickServPassword", "").set(Utils.quote(nickServPassword != null ? nickServPassword : ""));
-		config.get(categoryName, "serverPassword", "").set(Utils.quote(serverPassword != null ? serverPassword : ""));
-		config.get(categoryName, "autoConnect", autoConnect).set(autoConnect);
-		config.get(categoryName, "botProfile", "").set(Utils.quote(botProfile != null ? botProfile : ""));
-		config.get(categoryName, "secureConnection", isSSL).set(isSSL);
-		
-		String channelsCategoryName = categoryName + Configuration.CATEGORY_SPLITTER + ConfigurationHandler.CATEGORY_CHANNELS;
-		int c = 0;
-		for(ChannelConfig channelConfig : channels.values()) {
-			String channelCategoryName = channelsCategoryName + Configuration.CATEGORY_SPLITTER + ConfigurationHandler.PREFIX_CHANNEL + c;
-			channelConfig.save(config, config.getCategory(channelCategoryName));
-			c++;
-		}
-	}
-
-	public String getIRCColor() {
-		return ircColor;
-	}
-	
-	public String getEmoteColor() {
-		return emoteColor;
-	}
-
 	public void handleConfigCommand(ICommandSender sender, String key) {
 		String value = null;
-		if(key.equals("ircColor")) value = ircColor;
-		else if(key.equals("emoteColor")) value = emoteColor;
-		else if(key.equals("quitMessage")) value = quitMessage;
+		if(key.equals("quitMessage")) value = quitMessage;
 		else if(key.equals("autoConnect")) value = String.valueOf(autoConnect);
 		if(value != null) {
 			Utils.sendLocalizedMessage(sender, "irc.config.lookup", address, key, value);
@@ -215,21 +179,7 @@ public class ServerConfig {
 	}
 	
 	public void handleConfigCommand(ICommandSender sender, String key, String value) {
-		if(key.equals("ircColor")) {
-			if(Utils.isValidColor(value)) {
-				ircColor = value;
-			} else {
-				Utils.sendLocalizedMessage(sender, "irc.color.invalid", value);
-				return;
-			}
-		} else if(key.equals("emoteColor")) {
-			if(Utils.isValidColor(value)) {
-				emoteColor = value;
-			} else {
-				Utils.sendLocalizedMessage(sender, "irc.color.invalid", value);
-				return;
-			}
-		} else if(key.equals("quitMessage")) {
+		if(key.equals("quitMessage")) {
 			quitMessage = value;
 		} else if(key.equals("autoConnect")) {
 			autoConnect = Boolean.parseBoolean(value);
@@ -242,16 +192,12 @@ public class ServerConfig {
 	}
 	
 	public static void addOptionstoList(List<String> list) {
-		list.add("ircColor");
-		list.add("emoteColor");
 		list.add("quitMessage");
 		list.add("autoConnect");
 	}
 
 	public static void addValuesToList(List<String> list, String option) {
-		if(option.equals("ircColor") || option.equals("emoteColor")) {
-			Utils.addValidColorsToList(list);
-		} else if(option.equals("autoConnect")) {
+		if(option.equals("autoConnect")) {
 			Utils.addBooleansToList(list);
 		}
 	}

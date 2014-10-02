@@ -6,6 +6,7 @@ package net.blay09.mods.eirairc.config;
 import java.util.List;
 
 import net.blay09.mods.eirairc.config.base.BotProfileImpl;
+import net.blay09.mods.eirairc.config.settings.ThemeSettings;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
@@ -21,7 +22,8 @@ public class ChannelConfig {
 	private boolean autoWho; // server
 	private boolean autoJoin = true; // server
 	private String botProfile; // bot
-	
+	private ThemeSettings theme;
+
 	public ChannelConfig(ServerConfig serverConfig, String name) {
 		this.serverConfig = serverConfig;
 		if(serverConfig.getAddress().equals(Globals.TWITCH_SERVER)) {
@@ -47,21 +49,12 @@ public class ChannelConfig {
 		return autoJoin;
 	}
 
-	public void load(Configuration config, ConfigCategory category) {
+	public void loadLegacy(Configuration config, ConfigCategory category) {
 		String categoryName = category.getQualifiedName();
 		password = Utils.unquote(config.get(categoryName, "password", "").getString());
 		autoJoin = config.get(categoryName, "autoJoin", autoJoin).getBoolean(autoJoin);
 		autoWho = config.get(categoryName, "autoWho", autoWho).getBoolean(autoWho);
 		botProfile = Utils.unquote(config.get(categoryName, "botProfile", "").getString());
-	}
-
-	public void save(Configuration config, ConfigCategory category) {
-		String categoryName = category.getQualifiedName();
-		config.get(categoryName, "name", "").set(Utils.quote(name));
-		config.get(categoryName, "password", "").set(Utils.quote(password != null ? password : ""));
-		config.get(categoryName, "autoJoin", autoJoin).set(autoJoin);
-		config.get(categoryName, "autoWho", autoWho).set(autoWho);
-		config.get(categoryName, "botProfile", "").set(Utils.quote(botProfile));
 	}
 
 	public void handleConfigCommand(ICommandSender sender, String key) {
@@ -126,5 +119,8 @@ public class ChannelConfig {
 	public void useDefaults(boolean serverSide) {
 		botProfile = BotProfileImpl.INHERIT;
 	}
-	
+
+	public ThemeSettings getTheme() {
+		return theme;
+	}
 }
