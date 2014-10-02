@@ -15,11 +15,11 @@ public class CompatibilityConfig {
 	private static final String CATEGORY = ConfigurationHandler.CATEGORY_COMPAT;
 	private static final String DEFAULT_CLIENT_BRIDGE_TOKEN = "[IG]";
 
-	public static boolean disableChatToggle = false;
-	public static boolean vanillaChat = true;
-	public static boolean clientBridge = false;
-	public static String clientBridgeMessageToken = DEFAULT_CLIENT_BRIDGE_TOKEN;
-	public static String clientBridgeNickToken = "";
+	public static boolean disableChatToggle = false; // shared or client?
+	public static boolean vanillaChat = true; // shared or client?
+	public static boolean clientBridge = false; // shared or client?
+	public static String clientBridgeMessageToken = DEFAULT_CLIENT_BRIDGE_TOKEN; // shared or client?
+	public static String clientBridgeNickToken = ""; // shared or client?
 
 	public static void load(Configuration config) {
 		disableChatToggle = config.get(CATEGORY, "disableChatToggle", disableChatToggle).getBoolean(disableChatToggle);

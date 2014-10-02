@@ -29,7 +29,7 @@ import net.blay09.mods.eirairc.api.event.IRCUserNickChangeEvent;
 import net.blay09.mods.eirairc.api.event.IRCUserQuitEvent;
 import net.blay09.mods.eirairc.bot.IRCBotImpl;
 import net.blay09.mods.eirairc.config.GlobalConfig;
-import net.blay09.mods.eirairc.config.NetworkConfig;
+import net.blay09.mods.eirairc.config.done.NetworkConfig;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -55,7 +55,7 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 	protected static final int DEFAULT_PROXY_PORT = 1080;
 
 	private final IRCParser parser = new IRCParser();
-	private final IRCSender sender = new IRCSender(this);
+	protected final IRCSender sender = new IRCSender(this);
 	private final Map<String, IRCChannel> channels = new HashMap<String, IRCChannel>();
 	private final Map<String, IRCUser> users = new HashMap<String, IRCUser>();
 	protected final int port;
@@ -169,6 +169,7 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 			} else {
 				newSocket = new Socket();
 			}
+
 			newSocket.connect(targetAddr);
 			writer = new BufferedWriter(new OutputStreamWriter(newSocket.getOutputStream(), charset));
 			reader = new BufferedReader(new InputStreamReader(newSocket.getInputStream(), charset));

@@ -20,9 +20,9 @@ public class ScreenshotConfig {
 	public static final int VALUE_UPLOADSHARE = 2;
 	public static final int VALUE_UPLOADCLIPBOARD = 3;
 	
-	public static int screenshotAction = 0;
-	public static String uploadHoster = "imgur";
-	public static int uploadBufferSize = 1024;
+	public static int screenshotAction = 0; // client
+	public static String uploadHoster = "imgur"; // client
+	public static int uploadBufferSize = 1024; // client
 	
 	public static void load(Configuration config) {
 		screenshotAction = config.get(CATEGORY, "screenshotAction", screenshotAction).getInt();

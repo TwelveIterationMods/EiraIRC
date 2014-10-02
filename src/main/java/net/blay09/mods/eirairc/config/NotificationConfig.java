@@ -35,14 +35,14 @@ public class NotificationConfig {
 	public static final int VALUE_SOUNDONLY = 2;
 	public static final int VALUE_TEXTANDSOUND = 3;
 	
-	public static int friendJoined = VALUE_TEXTONLY;
-	public static int nameMentioned = VALUE_TEXTANDSOUND;
-	public static int userRecording = VALUE_TEXTANDSOUND;
-	public static int privateMessage = VALUE_TEXTONLY;
+	public static int friendJoined = VALUE_TEXTONLY; // client
+	public static int nameMentioned = VALUE_TEXTANDSOUND; // client
+	public static int userRecording = VALUE_TEXTANDSOUND; // client
+	public static int privateMessage = VALUE_TEXTONLY; // client
 	
-	public static String notificationSound = DEFAULT_SOUNDNAME;
-	public static float soundVolume = 1f;
-	public static float soundPitch = 1f;
+	public static String notificationSound = DEFAULT_SOUNDNAME; // client
+	public static float soundVolume = 1f; // client
+	public static float soundPitch = 1f; // client
 	
 	public static void load(Configuration config) {
 		friendJoined = config.get(CATEGORY, OPTION_FRIENDJOIN, friendJoined).getInt();

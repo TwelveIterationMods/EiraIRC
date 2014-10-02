@@ -16,17 +16,17 @@ import net.minecraftforge.common.config.Configuration;
 
 public class GlobalConfig {
 
-	public static String nick = "%USERNAME%";
-	public static String nickPrefix = "";
-	public static String nickSuffix = "";
-	public static boolean enableAliases = false;
-	public static boolean persistentConnection = true;
-	public static boolean saveCredentials = true;
-	public static String charset = "UTF-8";
-	public static final List<String> colorBlackList = new ArrayList<String>();
-	public static boolean registerShortCommands = true;
-	public static boolean hideNotices = false;
-	public static boolean debugMode = false;
+	public static String nick = "%USERNAME%"; // server
+	public static String nickPrefix = ""; // server: nickFormat
+	public static String nickSuffix = ""; // server: nickFormat
+	public static boolean enableAliases = false; // server
+	public static boolean persistentConnection = true; // client
+	public static boolean saveCredentials = true; // removed
+	public static String charset = "UTF-8"; // server
+	public static final List<String> colorBlackList = new ArrayList<String>(); // shared
+	public static boolean registerShortCommands = true; // shared
+	public static boolean hideNotices = false; // server
+	public static boolean debugMode = false; // shared
 
 	public static void load(Configuration config) {
 		nick = Utils.unquote(config.get(ConfigurationHandler.CATEGORY_GLOBAL, "nick", nick).getString());

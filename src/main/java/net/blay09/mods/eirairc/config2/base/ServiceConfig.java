@@ -1,7 +1,7 @@
 // Copyright (c) 2014, Christopher "blay09" Baker
 // All rights reserved.
 
-package net.blay09.mods.eirairc.config;
+package net.blay09.mods.eirairc.config2.base;
 
 import java.util.HashMap;
 import java.util.Map;

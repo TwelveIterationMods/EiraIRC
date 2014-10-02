@@ -13,6 +13,11 @@ import java.util.List;
 import java.util.Map;
 
 import net.blay09.mods.eirairc.config.*;
+import net.blay09.mods.eirairc.config.done.KeyConfig;
+import net.blay09.mods.eirairc.config.done.NetworkConfig;
+import net.blay09.mods.eirairc.config2.base.BotProfileImpl;
+import net.blay09.mods.eirairc.config2.base.DisplayFormatConfig;
+import net.blay09.mods.eirairc.config2.base.ServiceConfig;
 import net.blay09.mods.eirairc.util.IRCResolver;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;

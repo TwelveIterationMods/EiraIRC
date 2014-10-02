@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.blay09.mods.eirairc.api.IRCChannel;
+import net.blay09.mods.eirairc.config2.base.BotProfileImpl;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
@@ -19,20 +20,20 @@ import org.jetbrains.annotations.NotNull;
 
 public class ServerConfig {
 
-	private final String host;
-	private String nick = "";
-	private String serverPassword = "";
-	private String botProfile = "";
-	private String ident = Globals.DEFAULT_IDENT;
-	private String description = Globals.DEFAULT_DESCRIPTION;
-	private String nickServName = "";
-	private String nickServPassword = "";
+	private final String host; // server: address
+	private String nick = ""; // server
+	private String serverPassword = ""; // server
+	private String botProfile = ""; // bot
+	private String ident = Globals.DEFAULT_IDENT; // bot
+	private String description = Globals.DEFAULT_DESCRIPTION; // bot
+	private String nickServName = ""; // server
+	private String nickServPassword = ""; // server
 	private final Map<String, ChannelConfig> channels = new HashMap<String, ChannelConfig>();
-	private boolean autoConnect = true;
-	private String quitMessage = "";
-	private String ircColor = "";
-	private String emoteColor = "";
-	private boolean secureConnection = false;
+	private boolean autoConnect = true; // server: autoJoin
+	private String quitMessage = ""; // server
+	private String ircColor = ""; // theme
+	private String emoteColor = ""; // theme
+	private boolean secureConnection = false; // server: isSSL
 
 	public ServerConfig(String host) {
 		this.host = host;

@@ -1,7 +1,7 @@
 // Copyright (c) 2014, Christopher "blay09" Baker
 // All rights reserved.
 
-package net.blay09.mods.eirairc.config;
+package net.blay09.mods.eirairc.config.done;
 
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.Utils;
@@ -14,12 +14,12 @@ public class NetworkConfig {
 
 	private static final String CATEGORY = ConfigurationHandler.CATEGORY_NETWORK;
 
-	public static boolean sslTrustAllCerts = false;
-	public static String sslCustomTrustStore = "";
-	public static boolean sslDisableDiffieHellman = true;
-	public static String proxyHost = "";
-	public static String proxyUsername = "";
-	public static String proxyPassword = "";
+	public static boolean sslTrustAllCerts = false; // shared
+	public static String sslCustomTrustStore = ""; // shared
+	public static boolean sslDisableDiffieHellman = true; // shared
+	public static String proxyHost = ""; // shared
+	public static String proxyUsername = ""; // shared
+	public static String proxyPassword = ""; // shared
 
 	public static void load(Configuration config) {
 		sslTrustAllCerts = config.get(CATEGORY, "sslTrustAllCerts", sslTrustAllCerts).getBoolean(sslTrustAllCerts);

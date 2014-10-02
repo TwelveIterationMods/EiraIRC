@@ -1,7 +1,7 @@
 // Copyright (c) 2014, Christopher "blay09" Baker
 // All rights reserved.
 
-package net.blay09.mods.eirairc.config;
+package net.blay09.mods.eirairc.config2.base;
 
 import java.io.File;
 import java.io.IOException;
@@ -46,9 +46,9 @@ public class BotProfileImpl implements BotProfile {
 	private final Configuration config;
 	
 	private String name;
-	private boolean muted;
-	private boolean readOnly;
-	private String displayFormat;
+	private boolean muted; // server
+	private boolean readOnly; // server
+	private String displayFormat; // server
 	private String[] disabledNativeCommands;
 	private String[] disabledInterOpCommands;
 	private boolean interOp;

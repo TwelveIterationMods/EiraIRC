@@ -2,7 +2,7 @@
 
 package net.blay09.mods.eirairc.irc.ssl;
 
-import net.blay09.mods.eirairc.config.NetworkConfig;
+import net.blay09.mods.eirairc.config.done.NetworkConfig;
 import net.blay09.mods.eirairc.irc.*;
 import net.blay09.mods.eirairc.util.Utils;
 
@@ -57,6 +57,7 @@ public class IRCConnectionSSLImpl extends IRCConnectionImpl {
 			}
 			writer = new BufferedWriter(new OutputStreamWriter(sslSocket.getOutputStream(), charset));
 			reader = new BufferedReader(new InputStreamReader(sslSocket.getInputStream(), charset));
+			sender.setWriter(writer);
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 			return null;

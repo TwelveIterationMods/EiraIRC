@@ -14,19 +14,21 @@ public class DisplayConfig {
 
 	private static final String CATEGORY = ConfigurationHandler.CATEGORY_DISPLAY;
 	
-	public static boolean enableNameColors = true;
-	public static boolean enableIRCColors = true;
-	public static String mcColor = "white";
-	public static String mcOpColor = "red";
-	public static String ircOpColor = "gold";
-	public static String ircVoiceColor = "gray";
-	public static String ircColor = "gray";
-	public static String ircPrivateColor = "gray";
-	public static String ircNoticeColor = "red";
-	public static String emoteColor = "gold";
-	public static String quitMessage = "Leaving.";
-	public static boolean hudRecState = true;
-	public static boolean hidePlayerTags = false;
+	public static boolean enableNameColors = true; // shared
+	public static boolean enableIRCColors = true; // server
+
+	public static String mcColor = "white"; // theme (default mc name)
+	public static String mcOpColor = "red"; // theme (default op name)
+	public static String ircOpColor = "gold"; // theme (default irc op name)
+	public static String ircVoiceColor = "gray"; // theme (default irc voice name)
+	public static String ircColor = "gray";  // theme (default irc name)
+	public static String ircPrivateColor = "gray";  // theme (irc priv msg color)
+	public static String ircNoticeColor = "red"; // theme (irc notice msg color)
+	public static String emoteColor = "gold"; // theme (mc&irc emote msg color)
+
+	public static String quitMessage = "Leaving."; // server
+	public static boolean hudRecState = true; // client
+	public static boolean hidePlayerTags = false; // shared
 
 
 	public static void load(Configuration config) {

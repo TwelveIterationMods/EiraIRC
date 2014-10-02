@@ -5,6 +5,7 @@ package net.blay09.mods.eirairc.config;
 
 import java.util.List;
 
+import net.blay09.mods.eirairc.config2.base.BotProfileImpl;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
@@ -17,9 +18,9 @@ public class ChannelConfig {
 	private final ServerConfig serverConfig;
 	private final String name;
 	private String password;
-	private boolean autoWho;
-	private boolean autoJoin = true;
-	private String botProfile;
+	private boolean autoWho; // server
+	private boolean autoJoin = true; // server
+	private String botProfile; // bot
 	
 	public ChannelConfig(ServerConfig serverConfig, String name) {
 		this.serverConfig = serverConfig;
