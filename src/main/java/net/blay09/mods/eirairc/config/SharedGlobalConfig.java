@@ -49,23 +49,23 @@ public class SharedGlobalConfig {
 		thisConfig = new Configuration(new File(configDir, "shared.cfg"));
 
 		// General
-		enablePlayerAliases = thisConfig.getBoolean("enablePlayerAliases", GENERAL, enablePlayerAliases, "[Deprecated] If set to true, OPs can assign an alias for a MC nick that will be used instead.");
-		enablePlayerColors = thisConfig.getBoolean("enablePlayerColors", GENERAL, enablePlayerColors, "If set to true, players can use the '/irc color' command to set a color for their MC nick. See also: colorBlackList");
-		String[] colorBlacklistArray = thisConfig.getStringList("colorBlackList", GENERAL, Globals.DEFAULT_COLOR_BLACKLIST, "A list of colors that players are not allowed to use as name colors when using the '/irc color' command.");
+		enablePlayerAliases = thisConfig.getBoolean("enablePlayerAliases", GENERAL, enablePlayerAliases, "");
+		enablePlayerColors = thisConfig.getBoolean("enablePlayerColors", GENERAL, enablePlayerColors, "");
+		String[] colorBlacklistArray = thisConfig.getStringList("colorBlackList", GENERAL, Globals.DEFAULT_COLOR_BLACKLIST, "");
 		for(String entry : colorBlacklistArray) {
 			colorBlacklist.add(entry);
 		}
-		registerShortCommands = thisConfig.getBoolean("registerShortCommands", GENERAL, registerShortCommands, "If set to true, EiraIRC will link commands such as /join, /msg or /nick to it's /irc <command> variants for quicker usage.");
-		hidePlayerTags = thisConfig.getBoolean("hidePlayerTags", GENERAL, hidePlayerTags, "If set to true, EiraIRC will attempt to strip player name tags such as [Admin] (that were added by other mods) when sending to IRC.");
-		debugMode = thisConfig.getBoolean("debugMode", GENERAL, debugMode, "[Advanced] If set to true, raw IRC messages will be printed into the log for investigation purposes.");
+		registerShortCommands = thisConfig.getBoolean("registerShortCommands", GENERAL, registerShortCommands, "");
+		hidePlayerTags = thisConfig.getBoolean("hidePlayerTags", GENERAL, hidePlayerTags, "");
+		debugMode = thisConfig.getBoolean("debugMode", GENERAL, debugMode, "");
 
 		// Network
-		sslTrustAllCerts = thisConfig.getBoolean("sslTrustAllCerts", NETWORK, sslTrustAllCerts, "[Advanced] If set to true, EiraIRC will accept all SSL certificates without checking the truststore.");
-		sslCustomTrustStore = thisConfig.getString("sslCustomTrustStore", NETWORK, sslCustomTrustStore, "[Advanced] The path to a custom SSL truststore.");
-		sslDisableDiffieHellman = thisConfig.getBoolean("sslDisableDiffieHellman", NETWORK, sslDisableDiffieHellman, "[Advanced] If set to true, disables DiffieHellman encryption for SSL connections to fix a Java issue.");
-		proxyHost = thisConfig.getString("proxyHost", NETWORK, proxyHost, "[Advanced] The address to a proxy you want connections to go through.");
-		proxyUsername = thisConfig.getString("proxyUsername", NETWORK, proxyUsername, "[Advanced] The username to authenticate with the proxy, if necessary.");
-		proxyPassword = thisConfig.getString("proxyPassword", NETWORK, proxyPassword, "[Advanced] The password to authenticate with the proxy, if necessary.");
+		sslTrustAllCerts = thisConfig.getBoolean("sslTrustAllCerts", NETWORK, sslTrustAllCerts, "");
+		sslCustomTrustStore = thisConfig.getString("sslCustomTrustStore", NETWORK, sslCustomTrustStore, "");
+		sslDisableDiffieHellman = thisConfig.getBoolean("sslDisableDiffieHellman", NETWORK, sslDisableDiffieHellman, "");
+		proxyHost = thisConfig.getString("proxyHost", NETWORK, proxyHost, "");
+		proxyUsername = thisConfig.getString("proxyUsername", NETWORK, proxyUsername, "");
+		proxyPassword = thisConfig.getString("proxyPassword", NETWORK, proxyPassword, "");
 
 		// Default Settings
 		theme.load(thisConfig, THEME, true);
@@ -74,21 +74,28 @@ public class SharedGlobalConfig {
 	}
 
 	public static void save() {
+		// Category Comments
+		thisConfig.setCategoryComment(GENERAL, "Global EiraIRC settings");
+		thisConfig.setCategoryComment(NETWORK, "Advanced network settings to configure SSL usage and proxies");
+		thisConfig.setCategoryComment(THEME, "Color settings for names and text in chat. Can be overridden by servers and channels.");
+		thisConfig.setCategoryComment(BOT, "Bot settings and behaviour for the IRC chat. Can be overridden by servers and channels.");
+		thisConfig.setCategoryComment(SETTINGS, "General settings for IRC connections. Can be overridden by servers and channels.");
+
 		// General
-		thisConfig.get(GENERAL, "enablePlayerAliases", false).set(enablePlayerAliases);
-		thisConfig.get(GENERAL, "enablePlayerColors", false).set(enablePlayerColors);
-		thisConfig.get(GENERAL, "colorBlackList", new String[0]).set(colorBlacklist.toArray(new String[colorBlacklist.size()]));
-		thisConfig.get(GENERAL, "registerShortCommands", false).set(registerShortCommands);
-		thisConfig.get(GENERAL, "hidePlayerTags", false).set(hidePlayerTags);
-		thisConfig.get(GENERAL, "debugMode", false).set(debugMode);
+		thisConfig.get(GENERAL, "enablePlayerAliases", false, "[Deprecated] If set to true, OPs can assign an alias for a MC nick that will be used instead.").set(enablePlayerAliases);
+		thisConfig.get(GENERAL, "enablePlayerColors", false, "If set to true, players can use the '/irc color' command to set a color for their MC nick. See also: colorBlackList").set(enablePlayerColors);
+		thisConfig.get(GENERAL, "colorBlackList", new String[0], "A list of colors that players are not allowed to use as name colors when using the '/irc color' command.").set(colorBlacklist.toArray(new String[colorBlacklist.size()]));
+		thisConfig.get(GENERAL, "registerShortCommands", false, "If set to true, EiraIRC will link commands such as /join, /msg or /nick to it's /irc <command> variants for quicker usage.").set(registerShortCommands);
+		thisConfig.get(GENERAL, "hidePlayerTags", false, "If set to true, EiraIRC will attempt to strip player name tags such as [Admin] (that were added by other mods) when sending to IRC.").set(hidePlayerTags);
+		thisConfig.get(GENERAL, "debugMode", false, "[Advanced] If set to true, raw IRC messages will be printed into the log for investigation purposes.").set(debugMode);
 
 		// Network
-		thisConfig.get(NETWORK, "sslTrustAllCerts", false).set(sslTrustAllCerts);
-		thisConfig.get(NETWORK, "sslCustomTrustStore", "").set(sslCustomTrustStore);
-		thisConfig.get(NETWORK, "sslDisableDiffieHellman", false).set(sslDisableDiffieHellman);
-		thisConfig.get(NETWORK, "proxyHost", "").set(proxyHost);
-		thisConfig.get(NETWORK, "proxyUsername", "").set(proxyUsername);
-		thisConfig.get(NETWORK, "proxyPassword", "").set(proxyPassword);
+		thisConfig.get(NETWORK, "sslTrustAllCerts", false, "[Advanced] If set to true, EiraIRC will accept all SSL certificates without checking the truststore.").set(sslTrustAllCerts);
+		thisConfig.get(NETWORK, "sslCustomTrustStore", "[Advanced] The path to a custom SSL truststore.").set(sslCustomTrustStore);
+		thisConfig.get(NETWORK, "sslDisableDiffieHellman", false, "[Advanced] If set to true, disables DiffieHellman encryption for SSL connections to fix a Java issue.").set(sslDisableDiffieHellman);
+		thisConfig.get(NETWORK, "proxyHost", "", "[Advanced] The address to a proxy you want connections to go through.").set(proxyHost);
+		thisConfig.get(NETWORK, "proxyUsername", "", "[Advanced] The username to authenticate with the proxy, if necessary.").set(proxyUsername);
+		thisConfig.get(NETWORK, "proxyPassword", "", "[Advanced] The password to authenticate with the proxy, if necessary.").set(proxyPassword);
 
 		// Default Settings
 		theme.save(thisConfig, THEME);
@@ -121,8 +128,11 @@ public class SharedGlobalConfig {
 		proxyPassword = Utils.unquote(legacyConfig.getString("proxyPassword", "network", proxyPassword, ""));
 
 		// Theme
-		theme.loadLegacy(legacyConfig);
+		theme.load(thisConfig, THEME, true);
+		theme.loadLegacy(legacyConfig, null);
+		botSettings.load(thisConfig, BOT, true);
 		botSettings.loadLegacy(legacyConfig, null);
+		generalSettings.load(thisConfig, SETTINGS, true);
 		generalSettings.loadLegacy(legacyConfig, null);
 	}
 }

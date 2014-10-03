@@ -107,9 +107,10 @@ public class BotSettings {
 			if (legacyConfig.hasKey(category, "quitMessage")) {
 				strings.put(BotStringComponent.QuitMessage, Utils.unquote(legacyConfig.get(category, "quitMessage", BotStringComponent.QuitMessage.defaultValue).getString()));
 			}
+		} else {
+			strings.put(BotStringComponent.NickFormat, Utils.quote(Utils.unquote(legacyConfig.get("serveronly", "nickPrefix", "").getString()) + "%s" + Utils.unquote(legacyConfig.get("serveronly", "nickSuffix", "").getString())));
+			booleans.put(BotBooleanComponent.HideNotices, legacyConfig.get("display", "hideNotices", BotBooleanComponent.HideNotices.defaultValue).getBoolean());
+			booleans.put(BotBooleanComponent.ConvertColors, legacyConfig.get("display", "enableIRCColors", BotBooleanComponent.ConvertColors.defaultValue).getBoolean());
 		}
-		strings.put(BotStringComponent.NickFormat, Utils.quote(Utils.unquote(legacyConfig.get("serveronly", "nickPrefix", "").getString()) + "%s" + Utils.unquote(legacyConfig.get("serveronly", "nickSuffix", "").getString())));
-		booleans.put(BotBooleanComponent.HideNotices, legacyConfig.get("display", "hideNotices", BotBooleanComponent.HideNotices.defaultValue).getBoolean());
-		booleans.put(BotBooleanComponent.ConvertColors, legacyConfig.get("display", "enableIRCColors", BotBooleanComponent.ConvertColors.defaultValue).getBoolean());
 	}
 }

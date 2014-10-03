@@ -84,14 +84,25 @@ public class ThemeSettings {
 		}
 	}
 
-	public void loadLegacy(Configuration legacyConfig) {
-		colors.put(ThemeColorComponent.emoteTextColor, Utils.unquote(legacyConfig.get("display", "emoteColor", ThemeColorComponent.emoteTextColor.defaultValue).getString()));
-		colors.put(ThemeColorComponent.mcNameColor, Utils.unquote(legacyConfig.get("display", "defaultColor", ThemeColorComponent.mcNameColor.defaultValue).getString()));
-		colors.put(ThemeColorComponent.mcOpNameColor, Utils.unquote(legacyConfig.get("display", "opColor", ThemeColorComponent.mcOpNameColor.defaultValue).getString()));
-		colors.put(ThemeColorComponent.ircNameColor, Utils.unquote(legacyConfig.get("display", "ircColor", ThemeColorComponent.ircNameColor.defaultValue).getString()));
-		colors.put(ThemeColorComponent.ircPrivateNameColor, Utils.unquote(legacyConfig.get("display", "ircPrivateColor", ThemeColorComponent.ircPrivateNameColor.defaultValue).getString()));
-		colors.put(ThemeColorComponent.ircVoiceNameColor, Utils.unquote(legacyConfig.get("display", "ircVoiceColor", ThemeColorComponent.ircVoiceNameColor.defaultValue).getString()));
-		colors.put(ThemeColorComponent.ircOpNameColor, Utils.unquote(legacyConfig.get("display", "ircOpColor", ThemeColorComponent.ircOpNameColor.defaultValue).getString()));
-		colors.put(ThemeColorComponent.ircNoticeTextColor, Utils.unquote(legacyConfig.get("display", "ircNoticeColor", ThemeColorComponent.ircNoticeTextColor.defaultValue).getString()));
+	public void loadLegacy(Configuration legacyConfig, String categoryName) {
+		if(categoryName != null) {
+			String emoteColor = Utils.unquote(legacyConfig.get(categoryName, "emoteColor", "").getString());
+			if(!emoteColor.isEmpty()) {
+				colors.put(ThemeColorComponent.emoteTextColor, emoteColor);
+			}
+			String ircColor = Utils.unquote(legacyConfig.get(categoryName, "ircColor", "").getString());
+			if(!ircColor.isEmpty()) {
+				colors.put(ThemeColorComponent.ircNameColor, ircColor);
+			}
+		} else {
+			colors.put(ThemeColorComponent.emoteTextColor, Utils.unquote(legacyConfig.get("display", "emoteColor", ThemeColorComponent.emoteTextColor.defaultValue).getString()));
+			colors.put(ThemeColorComponent.mcNameColor, Utils.unquote(legacyConfig.get("display", "defaultColor", ThemeColorComponent.mcNameColor.defaultValue).getString()));
+			colors.put(ThemeColorComponent.mcOpNameColor, Utils.unquote(legacyConfig.get("display", "opColor", ThemeColorComponent.mcOpNameColor.defaultValue).getString()));
+			colors.put(ThemeColorComponent.ircNameColor, Utils.unquote(legacyConfig.get("display", "ircColor", ThemeColorComponent.ircNameColor.defaultValue).getString()));
+			colors.put(ThemeColorComponent.ircPrivateNameColor, Utils.unquote(legacyConfig.get("display", "ircPrivateColor", ThemeColorComponent.ircPrivateNameColor.defaultValue).getString()));
+			colors.put(ThemeColorComponent.ircVoiceNameColor, Utils.unquote(legacyConfig.get("display", "ircVoiceColor", ThemeColorComponent.ircVoiceNameColor.defaultValue).getString()));
+			colors.put(ThemeColorComponent.ircOpNameColor, Utils.unquote(legacyConfig.get("display", "ircOpColor", ThemeColorComponent.ircOpNameColor.defaultValue).getString()));
+			colors.put(ThemeColorComponent.ircNoticeTextColor, Utils.unquote(legacyConfig.get("display", "ircNoticeColor", ThemeColorComponent.ircNoticeTextColor.defaultValue).getString()));
+		}
 	}
 }

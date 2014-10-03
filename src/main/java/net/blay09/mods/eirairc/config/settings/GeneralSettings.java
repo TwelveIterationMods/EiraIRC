@@ -34,7 +34,7 @@ public class GeneralSettings {
 	}
 
 	public boolean isMuted() {
-		return isMuted();
+		return getBoolean(GeneralBooleanComponent.Muted);
 	}
 
 	public void load(Configuration config, String category, boolean defaultValues) {

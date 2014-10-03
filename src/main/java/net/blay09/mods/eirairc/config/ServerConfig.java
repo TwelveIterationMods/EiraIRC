@@ -136,6 +136,10 @@ public class ServerConfig {
 			channelConfig.loadLegacy(legacyConfig, channelCategory);
 			addChannelConfig(channelConfig);
 		}
+
+		theme.loadLegacy(legacyConfig, categoryName);
+		botSettings.loadLegacy(legacyConfig, categoryName);
+		generalSettings.loadLegacy(legacyConfig, categoryName);
 	}
 
 	public static ServerConfig loadFromJson(JsonObject object) {

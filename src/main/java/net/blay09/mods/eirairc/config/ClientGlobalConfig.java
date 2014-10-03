@@ -134,7 +134,7 @@ public class ClientGlobalConfig {
 		persistentConnection = legacyConfig.get("clientonly", "persistentConnection", persistentConnection).getBoolean();
 
 		// Screenshots
-		screenshotHoster = Utils.unquote(legacyConfig.get("clientonly", "screenshotHoster", screenshotHoster).getString());
+		screenshotHoster = Utils.unquote(legacyConfig.get("clientonly", "uploadHoster", screenshotHoster).getString());
 		screenshotAction = ScreenshotAction.values[legacyConfig.get("clientonly", "screenshotAction", screenshotAction.ordinal()).getInt()];
 		uploadBufferSize = legacyConfig.get("clientonly", "uploadBufferSize", uploadBufferSize).getInt();
 
