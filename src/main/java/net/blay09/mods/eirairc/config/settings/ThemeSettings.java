@@ -51,13 +51,15 @@ public class ThemeSettings {
 
 	public void load(Configuration config, String category, boolean defaultValues) {
 		for(int i = 0; i < ThemeColorComponent.values().length; i++) {
-			config.getString(ThemeColorComponent.values[i].name(), category, (defaultValues ? ThemeColorComponent.values[i].defaultValue : null), "", VALID_COLORS);
+			if(defaultValues || config.hasKey(category, ThemeColorComponent.values[i].name)) {
+				colors.put(ThemeColorComponent.values[i], config.getString(ThemeColorComponent.values[i].name, category, ThemeColorComponent.values[i].defaultValue, "", VALID_COLORS));
+			}
 		}
 	}
 
 	public void save(Configuration config, String category) {
 		for(Map.Entry<ThemeColorComponent, String> entry : colors.entrySet()) {
-			config.get(category, entry.getKey().name(), "", entry.getKey().comment).set(entry.getValue());
+			config.get(category, entry.getKey().name, "", entry.getKey().comment).set(entry.getValue());
 		}
 	}
 
