@@ -368,7 +368,7 @@ eirairc:config.property.proxyUsername.tooltip=[Advanced] The username to authent
 eirairc:config.property.proxyPassword=[Proxy] Password
 eirairc:config.property.proxyPassword.tooltip=[Advanced] The password to authenticate with the proxy, if necessary.
 
-# Properties (Client)
+## Properties (Client)
 eirairc:config.property.hudRecState=Show Red/Green Dot
 eirairc:config.property.hudRecState.tooltip=[Deprecated] If set to true, your screen will get cool red and green dots in some locations.
 eirairc:config.property.persistentConnection=Persistent Connection
@@ -415,5 +415,67 @@ eirairc:config.property.disableChatToggle=Disable Chat Toggle
 eirairc:config.property.disableChatToggle.tooltip=Disables the chat toggle at the top left. Originally meant for TabbyChat, so you could set up Tabs with the '/irc msg' command instead.
 eirairc:config.property.vanillaChat=Vanilla Chat
 eirairc:config.property.vanillaChat.tooltip=Nothing, go away. No effect.
+
+## Properties (Bot)
+eirairc:config.property.relayDeathMessages=Relay Death Messages
+eirairc:config.property.relayDeathMessages.tooltip=If set to true, Minecraft death messages will be sent to this IRC context.
+eirairc:config.property.relayMinecraftJoinLeave=Relay Minecraft Join/Leave
+eirairc:config.property.relayMinecraftJoinLeave.tooltip=If set to true, Minecraft join/leave messages will be sent to this IRC context.
+eirairc:config.property.relayIRCJoinLeave=Relay IRC Join/Leave
+eirairc:config.property.relayIRCJoinLeave.tooltip=If set to true, IRC join/leave messages from this IRC context will be sent to Minecraft chat.
+eirairc:config.property.relayNickChanges=Relay Nick Changes
+eirairc:config.property.relayNickChanges.tooltip=If set to true, IRC nick changes from this IRC context will be sent to Minecraft chat.
+eirairc:config.property.filterLinks=Enable Link Filter
+eirairc:config.property.filterLinks.tooltip=If set to true, links from this IRC context will be replaced by <removed link>.
+eirairc:config.property.hideNotices=Hide IRC Notices
+eirairc:config.property.hideNotices.tooltip=If set to true, NOTICE messages from this IRC context will only be printed in the console.
+eirairc:config.property.convertColors=Convert Color Codes
+eirairc:config.property.convertColors.tooltip=If set to true, colors from this IRC context will be translated into Minecraft colors and vice-versa.
+eirairc:config.property.allowPrivateMessages=Allow Private Messages
+eirairc:config.property.allowPrivateMessages.tooltip=If set to true, private messages can be sent and received from this IRC context.
+eirairc:config.property.sendAutoWho=Send Auto Who
+eirairc:config.property.sendAutoWho.tooltip=If set to true, users who join this IRC context will be sent a list of all online Minecraft players.
+eirairc:config.property.relayBroadcasts=Relay Broadcast Messages
+eirairc:config.property.relayBroadcasts.tooltip=If set to true, Minecraft server broadcasts (/say) will be sent to this IRC context.
+eirairc:config.property.ident=Ident
+eirairc:config.property.ident.tooltip=The ident for your IRC user. No effect in channels.
+eirairc:config.property.description=Description
+eirairc:config.property.description.tooltip=The description for your IRC user. No effect in channels.
+eirairc:config.property.quitMessage=Quit Message
+eirairc:config.property.quitMessage.tooltip=The message shown to others when you leave IRC.
+eirairc:config.property.messageFormat=Message Format
+eirairc:config.property.messageFormat.tooltip=The name to the message format used to display chat messages. See /eirairc/formats/.
+eirairc:config.property.mcNickFormat=Nick Format
+eirairc:config.property.mcNickFormat.tooltip=The format to put the nick in (previously nickPrefix and nickSuffix). %s will be replaced by the nick. No effect in channels. Example: %s-IG
+eirairc:config.property.botProfile=Bot Profile
+eirairc:config.property.botProfile.tooltip=[Deprecated] The bot profile to use for this connection. Only used for InterOP and custom commands. No effect in channels.
+
+## Properties (General Settings)
+eirairc:config.property.autoJoin=Auto Join
+eirairc:config.property.autoJoin.tooltip=If set to true, EiraIRC will automatically join this server / channel on startup.
+eirairc:config.property.autoWho=List Users on Join
+eirairc:config.property.autoWho.tooltip=If set to true, EiraIRC will automatically print a list of all IRC users to the chat.
+eirairc:config.property.readOnly=Read Only
+eirairc:config.property.readOnly.tooltip=If set to true, EiraIRC will only read messages from IRC, but never send any to this IRC context.
+eirairc:config.property.muted=Muted
+eirairc:config.property.muted.tooltip=If set to true, EiraIRC will not show messages from this IRC context in chat at all.
+
+# Properties (Theme)
+eirairc:config.property.mcNameColor=Name Color (Minecraft)
+eirairc:config.property.mcNameColor.tooltip=Color for default Minecraft names.
+eirairc:config.property.mcOpNameColor=Name Color (Minecraft OP)
+eirairc:config.property.mcOpNameColor.tooltip=Color for operator Minecraft names.
+eirairc:config.property.ircNameColor=Name Color (IRC)
+eirairc:config.property.ircNameColor.tooltip=Color for default IRC names.
+eirairc:config.property.ircOpNameColor=Name Color (IRC OP)
+eirairc:config.property.ircOpNameColor.tooltip=Color for operator IRC names.
+eirairc:config.property.ircVoiceNameColor=Name Color (IRC Voice)
+eirairc:config.property.ircVoiceNameColor.tooltip=Color for voiced IRC names.
+eirairc:config.property.ircPrivateNameColor=Name Color (IRC Private)
+eirairc:config.property.ircPrivateNameColor.tooltip=Color for IRC names in private chat.
+eirairc:config.property.ircNoticeTextColor=Text Color (IRC Notice)
+eirairc:config.property.ircNoticeTextColor.tooltip=Color for IRC NOTICE messages.
+eirairc:config.property.emoteTextColor=Text Color (Emote)
+eirairc:config.property.emoteTextColor.tooltip=Color for emote messages.
 
 #######################################################################################################################

@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import net.blay09.mods.eirairc.config.base.MessageFormatConfig;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.Utils;
+import net.minecraft.client.resources.I18n;
 import net.minecraftforge.common.config.Configuration;
 
 import java.util.EnumMap;
@@ -54,12 +55,12 @@ public class BotSettings {
 	public void load(Configuration config, String category, boolean defaultValues) {
 		for(int i = 0; i < BotStringComponent.values().length; i++) {
 			if(defaultValues || config.hasKey(category, BotStringComponent.values[i].name)) {
-				strings.put(BotStringComponent.values[i], config.getString(BotStringComponent.values[i].name, category, BotStringComponent.values[i].defaultValue, ""));
+				strings.put(BotStringComponent.values[i], config.getString(BotStringComponent.values[i].name, category, BotStringComponent.values[i].defaultValue, "", BotStringComponent.values[i].langKey));
 			}
 		}
 		for(int i = 0; i < BotBooleanComponent.values().length; i++) {
 			if(defaultValues || config.hasKey(category, BotBooleanComponent.values[i].name)) {
-				booleans.put(BotBooleanComponent.values[i], config.getBoolean(BotBooleanComponent.values[i].name, category, BotBooleanComponent.values[i].defaultValue, ""));
+				booleans.put(BotBooleanComponent.values[i], config.getBoolean(BotBooleanComponent.values[i].name, category, BotBooleanComponent.values[i].defaultValue, "", BotBooleanComponent.values[i].langKey));
 			}
 		}
 	}
@@ -93,10 +94,10 @@ public class BotSettings {
 
 	public void save(Configuration config, String category) {
 		for(Map.Entry<BotStringComponent, String> entry : strings.entrySet()) {
-			config.get(category, entry.getKey().name, "", entry.getKey().comment).set(entry.getValue());
+			config.get(category, entry.getKey().name, "", I18n.format(entry.getKey().langKey + ".tooltip")).set(entry.getValue());
 		}
 		for(Map.Entry<BotBooleanComponent, Boolean> entry : booleans.entrySet()) {
-			config.get(category, entry.getKey().name, false, entry.getKey().comment).set(entry.getValue());
+			config.get(category, entry.getKey().name, false, I18n.format(entry.getKey().langKey + ".tooltip")).set(entry.getValue());
 		}
 	}
 

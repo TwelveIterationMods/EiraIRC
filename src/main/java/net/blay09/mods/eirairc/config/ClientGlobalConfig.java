@@ -94,11 +94,11 @@ public class ClientGlobalConfig {
 
 	public static void save() {
 		// Category Comments
-		thisConfig.setCategoryComment(GENERAL, I18n.format("eirairc:config.category.general"));
-		thisConfig.setCategoryComment(SCREENSHOTS, I18n.format("eirairc:config.category.screenshots"));
-		thisConfig.setCategoryComment(KEYBINDS, I18n.format("eirairc:config.category.keybinds"));
-		thisConfig.setCategoryComment(NOTIFICATIONS, I18n.format("eirairc:config.category.notifications"));
-		thisConfig.setCategoryComment(COMPATIBILITY, I18n.format("eirairc:config.category.compatibility"));
+		thisConfig.setCategoryComment(GENERAL, I18n.format("eirairc:config.category.general.client.tooltip"));
+		thisConfig.setCategoryComment(SCREENSHOTS, I18n.format("eirairc:config.category.screenshots.tooltip"));
+		thisConfig.setCategoryComment(KEYBINDS, I18n.format("eirairc:config.category.keybinds.tooltip"));
+		thisConfig.setCategoryComment(NOTIFICATIONS, I18n.format("eirairc:config.category.notifications.tooltip"));
+		thisConfig.setCategoryComment(COMPATIBILITY, I18n.format("eirairc:config.category.compatibility.tooltip"));
 
 		// General
 		thisConfig.get(GENERAL, "hudRecState", false, I18n.format("eirairc:config.property.hudRecState")).set(hudRecState);

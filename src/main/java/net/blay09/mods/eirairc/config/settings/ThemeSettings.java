@@ -2,6 +2,7 @@ package net.blay09.mods.eirairc.config.settings;
 
 import com.google.gson.JsonObject;
 import net.blay09.mods.eirairc.util.Utils;
+import net.minecraft.client.resources.I18n;
 import net.minecraftforge.common.config.Configuration;
 
 import java.util.EnumMap;
@@ -54,7 +55,7 @@ public class ThemeSettings {
 	public void load(Configuration config, String category, boolean defaultValues) {
 		for(int i = 0; i < ThemeColorComponent.values().length; i++) {
 			if(defaultValues || config.hasKey(category, ThemeColorComponent.values[i].name)) {
-				colors.put(ThemeColorComponent.values[i], config.getString(ThemeColorComponent.values[i].name, category, ThemeColorComponent.values[i].defaultValue, "", VALID_COLORS));
+				colors.put(ThemeColorComponent.values[i], config.getString(ThemeColorComponent.values[i].name, category, ThemeColorComponent.values[i].defaultValue, "", VALID_COLORS, ThemeColorComponent.values[i].langKey));
 			}
 		}
 	}
@@ -80,7 +81,7 @@ public class ThemeSettings {
 
 	public void save(Configuration config, String category) {
 		for(Map.Entry<ThemeColorComponent, String> entry : colors.entrySet()) {
-			config.get(category, entry.getKey().name, "", entry.getKey().comment).set(entry.getValue());
+			config.get(category, entry.getKey().name, "", I18n.format(entry.getKey().langKey + ".tooltip")).set(entry.getValue());
 		}
 	}
 

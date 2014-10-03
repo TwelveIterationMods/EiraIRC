@@ -1,6 +1,7 @@
 package net.blay09.mods.eirairc.config.settings;
 
 import com.google.gson.JsonObject;
+import net.minecraft.client.resources.I18n;
 import net.minecraftforge.common.config.Configuration;
 
 import java.util.EnumMap;
@@ -40,7 +41,7 @@ public class GeneralSettings {
 	public void load(Configuration config, String category, boolean defaultValues) {
 		for(int i = 0; i < GeneralBooleanComponent.values().length; i++) {
 			if(defaultValues || config.hasKey(category, GeneralBooleanComponent.values[i].name)) {
-				booleans.put(GeneralBooleanComponent.values[i], config.getBoolean(GeneralBooleanComponent.values[i].name, category, GeneralBooleanComponent.values[i].defaultValue, ""));
+				booleans.put(GeneralBooleanComponent.values[i], config.getBoolean(GeneralBooleanComponent.values[i].name, category, GeneralBooleanComponent.values[i].defaultValue, "", GeneralBooleanComponent.values[i].langKey));
 			}
 		}
 	}
@@ -66,7 +67,7 @@ public class GeneralSettings {
 
 	public void save(Configuration config, String category) {
 		for(Map.Entry<GeneralBooleanComponent, Boolean> entry : booleans.entrySet()) {
-			config.get(category, entry.getKey().name, false, entry.getKey().comment).set(entry.getValue());
+			config.get(category, entry.getKey().name, false, I18n.format(entry.getKey().langKey + ".tooltip")).set(entry.getValue());
 		}
 	}
 

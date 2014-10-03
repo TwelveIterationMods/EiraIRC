@@ -78,11 +78,11 @@ public class SharedGlobalConfig {
 
 	public static void save() {
 		// Category Comments
-		thisConfig.setCategoryComment(GENERAL, I18n.format("eirairc:config.category.general"));
-		thisConfig.setCategoryComment(NETWORK, I18n.format("eirairc:config.category.network"));
-		thisConfig.setCategoryComment(THEME, I18n.format("eirairc:config.category.theme"));
-		thisConfig.setCategoryComment(BOT, I18n.format("eirairc:config.category.bot"));
-		thisConfig.setCategoryComment(SETTINGS, I18n.format("eirairc:config.category.settings"));
+		thisConfig.setCategoryComment(GENERAL, I18n.format("eirairc:config.category.general.shared.tooltip"));
+		thisConfig.setCategoryComment(NETWORK, I18n.format("eirairc:config.category.network.tooltip"));
+		thisConfig.setCategoryComment(THEME, I18n.format("eirairc:config.category.theme.tooltip"));
+		thisConfig.setCategoryComment(BOT, I18n.format("eirairc:config.category.bot.tooltip"));
+		thisConfig.setCategoryComment(SETTINGS, I18n.format("eirairc:config.category.settings.tooltip"));
 
 		// General
 		thisConfig.get(GENERAL, "enablePlayerAliases", false, I18n.format("eirairc:config.property.enablePlayerAliases.tooltip")).set(enablePlayerAliases);

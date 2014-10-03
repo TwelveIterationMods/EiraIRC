@@ -4,25 +4,25 @@ package net.blay09.mods.eirairc.config.settings;
 * Created by Blay09 on 02.10.2014.
 */
 public enum ThemeColorComponent {
-	mcNameColor("mcNameColor", "white", "Color for default Minecraft names."),
-	mcOpNameColor("mcOpNameColor", "red", "Color for operator Minecraft names."),
-	ircNameColor("ircNameColor", "gray", "Color for default IRC names."),
-	ircOpNameColor("ircOpNameColor", "gold", "Color for operator IRC names."),
-	ircVoiceNameColor("ircVoiceNameColor", "gray", "Color for voiced IRC names."),
-	ircPrivateNameColor("ircPrivateNameColor", "gray" ,"Color for IRC names in private chat."),
-	ircNoticeTextColor("ircNoticeTextColor", "red", "Color for IRC NOTICE messages."),
-	emoteTextColor("emoteTextColor", "gold", "Color for emote messages.");
+	mcNameColor("mcNameColor", "white", "eirairc:config.property.mcNameColor"),
+	mcOpNameColor("mcOpNameColor", "red", "eirairc:config.property.mcOpNameColor"),
+	ircNameColor("ircNameColor", "gray", "eirairc:config.property.ircNameColor"),
+	ircOpNameColor("ircOpNameColor", "gold", "eirairc:config.property.ircOpNameColor"),
+	ircVoiceNameColor("ircVoiceNameColor", "gray", "eirairc:config.property.ircVoiceNameColor"),
+	ircPrivateNameColor("ircPrivateNameColor", "gray" ,"eirairc:config.property.ircPrivateNameColor"),
+	ircNoticeTextColor("ircNoticeTextColor", "red", "eirairc:config.property.ircNoticeTextColor"),
+	emoteTextColor("emoteTextColor", "gold", "eirairc:config.property.emoteTextColor");
 
 	public static final ThemeColorComponent[] values = values();
 
 	public final String name;
 	public final String defaultValue;
-	public final String comment;
+	public final String langKey;
 
-	ThemeColorComponent(String name, String defaultValue, String comment) {
+	ThemeColorComponent(String name, String defaultValue, String langKey) {
 		this.name = name;
 		this.defaultValue = defaultValue;
-		this.comment = comment;
+		this.langKey = langKey;
 	}
 
 }
