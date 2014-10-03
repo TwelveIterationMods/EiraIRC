@@ -94,7 +94,7 @@ public class ClientGlobalConfig {
 
 	public static void save() {
 		// Category Comments
-		thisConfig.setCategoryComment(GENERAL, I18n.format("eirairc:config.category.general.client.tooltip"));
+		thisConfig.setCategoryComment(GENERAL, I18n.format("eirairc:config.category.general.tooltip"));
 		thisConfig.setCategoryComment(SCREENSHOTS, I18n.format("eirairc:config.category.screenshots.tooltip"));
 		thisConfig.setCategoryComment(KEYBINDS, I18n.format("eirairc:config.category.keybinds.tooltip"));
 		thisConfig.setCategoryComment(NOTIFICATIONS, I18n.format("eirairc:config.category.notifications.tooltip"));

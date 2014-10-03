@@ -25,8 +25,7 @@ public class EiraIRCConfigGUI extends GuiConfig {
 	@SuppressWarnings("unchecked")
 	private static List<IConfigElement> getCategories() {
 		List<IConfigElement> list = new ArrayList<IConfigElement>();
-		list.add(new DummyConfigElement.DummyCategoryElement(I18n.format("eirairc:config.category.general.shared"), "eirairc:config.category.general.shared", new ConfigElement(SharedGlobalConfig.thisConfig.getCategory(SharedGlobalConfig.GENERAL)).getChildElements()));
-		list.add(new DummyConfigElement.DummyCategoryElement(I18n.format("eirairc:config.category.general.client"), "eirairc:config.category.general.client", new ConfigElement(ClientGlobalConfig.thisConfig.getCategory(ClientGlobalConfig.GENERAL)).getChildElements()));
+		list.add(new DummyConfigElement.DummyCategoryElement(I18n.format("eirairc:config.category.general.shared"), "eirairc:config.category.general", getGeneralConfigElements(SharedGlobalConfig.thisConfig.getCategory(SharedGlobalConfig.GENERAL), ClientGlobalConfig.thisConfig.getCategory(ClientGlobalConfig.GENERAL))));
 		list.add(new DummyConfigElement.DummyCategoryElement(I18n.format("eirairc:config.category.screenshots"), "eirairc:config.category.screenshots", new ConfigElement(ClientGlobalConfig.thisConfig.getCategory(ClientGlobalConfig.SCREENSHOTS)).getChildElements()));
 		list.add(new DummyConfigElement.DummyCategoryElement(I18n.format("eirairc:config.category.notifications"), "eirairc:config.category.notifications", new ConfigElement(ClientGlobalConfig.thisConfig.getCategory(ClientGlobalConfig.NOTIFICATIONS)).getChildElements()));
 		list.add(new DummyConfigElement.DummyCategoryElement(I18n.format("eirairc:config.category.theme"), "eirairc:config.category.theme", getThemeConfigElements(SharedGlobalConfig.thisConfig.getCategory(SharedGlobalConfig.THEME))));
@@ -34,6 +33,14 @@ public class EiraIRCConfigGUI extends GuiConfig {
 		list.add(new DummyConfigElement.DummyCategoryElement(I18n.format("eirairc:config.category.settings"), "eirairc:config.category.settings", new ConfigElement(SharedGlobalConfig.thisConfig.getCategory(SharedGlobalConfig.SETTINGS)).getChildElements()));
 		list.add(new DummyConfigElement.DummyCategoryElement(I18n.format("eirairc:config.category.compatibility"), "eirairc:config.category.compatibility", new ConfigElement(ClientGlobalConfig.thisConfig.getCategory(ClientGlobalConfig.COMPATIBILITY)).getChildElements()));
 		list.add(new DummyConfigElement.DummyCategoryElement(I18n.format("eirairc:config.category.network"), "eirairc:config.category.network", new ConfigElement(SharedGlobalConfig.thisConfig.getCategory(SharedGlobalConfig.NETWORK)).getChildElements()));
+		return list;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static List<IConfigElement> getGeneralConfigElements(ConfigCategory ctgyShared, ConfigCategory ctgyClient) {
+		List<IConfigElement> list = new ArrayList<IConfigElement>();
+		list.addAll(new ConfigElement(ctgyShared).getChildElements());
+		list.addAll(new ConfigElement(ctgyClient).getChildElements());
 		return list;
 	}
 

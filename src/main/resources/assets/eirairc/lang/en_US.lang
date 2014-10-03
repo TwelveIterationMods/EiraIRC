@@ -321,10 +321,8 @@ eirairc:irc.target.notOnChannel=§cYou are not on channel %s
 
 # Config
 ## Categories
-eirairc:config.category.general.shared=General (Shared)
-eirairc:config.category.general.shared.tooltip=Basic EiraIRC Settings
-eirairc:config.category.general.client=General (Client)
-eirairc:config.category.general.client.tooltip=Client-Only EiraIRC Settings
+eirairc:config.category.general=General
+eirairc:config.category.general.tooltip=Basic EiraIRC Settings
 eirairc:config.category.network=Network (Advanced)
 eirairc:config.category.network.tooltip=Advanced network settings to configure SSL usage and proxies
 eirairc:config.category.screenshots=Screenshots

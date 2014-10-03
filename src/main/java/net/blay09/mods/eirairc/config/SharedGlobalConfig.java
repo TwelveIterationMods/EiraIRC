@@ -78,7 +78,7 @@ public class SharedGlobalConfig {
 
 	public static void save() {
 		// Category Comments
-		thisConfig.setCategoryComment(GENERAL, I18n.format("eirairc:config.category.general.shared.tooltip"));
+		thisConfig.setCategoryComment(GENERAL, I18n.format("eirairc:config.category.general.tooltip"));
 		thisConfig.setCategoryComment(NETWORK, I18n.format("eirairc:config.category.network.tooltip"));
 		thisConfig.setCategoryComment(THEME, I18n.format("eirairc:config.category.theme.tooltip"));
 		thisConfig.setCategoryComment(BOT, I18n.format("eirairc:config.category.bot.tooltip"));
