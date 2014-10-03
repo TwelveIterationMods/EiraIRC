@@ -64,7 +64,7 @@ public class ClientGlobalConfig {
 
 		// Screenshots
 		screenshotHoster = thisConfig.getString("uploadHoster", SCREENSHOTS, screenshotHoster, "", UploadManager.getAvailableHosters(), "eirairc:config.property.uploadHoster");
-		screenshotAction = ScreenshotAction.values[thisConfig.getInt("autoAction", SCREENSHOTS, screenshotAction.ordinal(), 0, ScreenshotAction.MAX, "", "eirairc:config.property.autoAction")];
+		screenshotAction = ScreenshotAction.valueOf(thisConfig.getString("autoAction", SCREENSHOTS, screenshotAction.name(), "", ScreenshotAction.NAMES, "eirairc:config.property.autoAction"));
 		uploadBufferSize = thisConfig.getInt("uploadBufferSize", SCREENSHOTS, uploadBufferSize, 256, 4096, "", "eirairc:config.property.uploadBufferSize");
 
 		// Keybinds
@@ -79,10 +79,10 @@ public class ClientGlobalConfig {
 		notificationSound = thisConfig.getString("soundName", NOTIFICATIONS, notificationSound, "", "eirairc:config.property.soundName");
 		notificationSoundVolume = thisConfig.getFloat("soundVolume", NOTIFICATIONS, notificationSoundVolume, 0f, 1f, "", "eirairc:config.property.soundVolume");
 		notificationSoundPitch = thisConfig.getFloat("soundPitch", NOTIFICATIONS, notificationSoundPitch, 0.5f, 2f, "", "eirairc:config.property.soundPitch");
-		ntfyFriendJoined = NotificationStyle.values[thisConfig.getInt("friendJoined", NOTIFICATIONS, ntfyFriendJoined.ordinal(), 0, NotificationStyle.MAX, "", "eirairc:config.property.friendJoined")];
-		ntfyNameMentioned = NotificationStyle.values[thisConfig.getInt("nameMentioned", NOTIFICATIONS, ntfyNameMentioned.ordinal(), 0, NotificationStyle.MAX, "", "eirairc:config.property.nameMentioned")];
-		ntfyUserRecording = NotificationStyle.values[thisConfig.getInt("userRecording", NOTIFICATIONS, ntfyUserRecording.ordinal(), 0, NotificationStyle.MAX, "", "eirairc:config.property.userRecording")];
-		ntfyPrivateMessage = NotificationStyle.values[thisConfig.getInt("privateMessage", NOTIFICATIONS, ntfyPrivateMessage.ordinal(), 0, NotificationStyle.MAX, "", "eirairc:config.property.privateMessage")];
+		ntfyFriendJoined = NotificationStyle.valueOf(thisConfig.getString("friendJoined", NOTIFICATIONS, ntfyFriendJoined.name(), "", NotificationStyle.NAMES, "eirairc:config.property.friendJoined"));
+		ntfyNameMentioned = NotificationStyle.valueOf(thisConfig.getString("nameMentioned", NOTIFICATIONS, ntfyNameMentioned.name(), "", NotificationStyle.NAMES, "eirairc:config.property.nameMentioned"));
+		ntfyUserRecording = NotificationStyle.valueOf(thisConfig.getString("userRecording", NOTIFICATIONS, ntfyUserRecording.name(), "", NotificationStyle.NAMES, "eirairc:config.property.userRecording"));
+		ntfyPrivateMessage = NotificationStyle.valueOf(thisConfig.getString("privateMessage", NOTIFICATIONS, ntfyPrivateMessage.name(), "", NotificationStyle.NAMES, "eirairc:config.property.privateMessage"));
 
 		// Compatibility
 		clientBridge = thisConfig.getBoolean("clientBridge", COMPATIBILITY, clientBridge, "", "eirairc:config.property.clientBridge");
@@ -106,7 +106,7 @@ public class ClientGlobalConfig {
 
 		// Screenshots
 		thisConfig.get(SCREENSHOTS, "uploadHoster", "", I18n.format("eirairc:config.property.uploadHoster")).set(screenshotHoster);
-		thisConfig.get(SCREENSHOTS, "autoAction", 0, I18n.format("eirairc:config.property.autoAction")).set(screenshotAction.ordinal());
+		thisConfig.get(SCREENSHOTS, "autoAction", "", I18n.format("eirairc:config.property.autoAction")).set(screenshotAction.name());
 		thisConfig.get(SCREENSHOTS, "uploadBufferSize", 0, I18n.format("eirairc:config.property.uploadBufferSize")).set(uploadBufferSize);
 
 		// Keybinds
@@ -121,10 +121,10 @@ public class ClientGlobalConfig {
 		thisConfig.get(NOTIFICATIONS, "soundName", "", I18n.format("eirairc:config.property.soundName")).set(notificationSound);
 		thisConfig.get(NOTIFICATIONS, "soundVolume", 0f, I18n.format("eirairc:config.property.soundVolume")).set(notificationSoundVolume);
 		thisConfig.get(NOTIFICATIONS, "soundPitch", 0f, I18n.format("eirairc:config.property.soundPitch")).set(notificationSoundPitch);
-		thisConfig.get(NOTIFICATIONS, "friendJoined", 0, I18n.format("eirairc:config.property.friendJoined")).set(ntfyFriendJoined.ordinal());
-		thisConfig.get(NOTIFICATIONS, "nameMentioned", 0, I18n.format("eirairc:config.property.nameMentioned")).set(ntfyNameMentioned.ordinal());
-		thisConfig.get(NOTIFICATIONS, "userRecording", 0, I18n.format("eirairc:config.property.userRecording")).set(ntfyUserRecording.ordinal());
-		thisConfig.get(NOTIFICATIONS, "privateMessage", 0, I18n.format("eirairc:config.property.privateMessage")).set(ntfyPrivateMessage.ordinal());
+		thisConfig.get(NOTIFICATIONS, "friendJoined", "", I18n.format("eirairc:config.property.friendJoined")).set(ntfyFriendJoined.name());
+		thisConfig.get(NOTIFICATIONS, "nameMentioned", "", I18n.format("eirairc:config.property.nameMentioned")).set(ntfyNameMentioned.name());
+		thisConfig.get(NOTIFICATIONS, "userRecording", "", I18n.format("eirairc:config.property.userRecording")).set(ntfyUserRecording.name());
+		thisConfig.get(NOTIFICATIONS, "privateMessage", "", I18n.format("eirairc:config.property.privateMessage")).set(ntfyPrivateMessage.name());
 
 		// Compatibility
 		thisConfig.get(COMPATIBILITY, "clientBridge", false, I18n.format("eirairc:config.property.clientBridge")).set(clientBridge);

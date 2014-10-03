@@ -11,4 +11,11 @@ public enum ScreenshotAction {
 
 	public static final ScreenshotAction[] values = values();
 	public static final int MAX = values.length - 1;
+
+	public static final String[] NAMES = new String[] {
+		None.name(),
+		Upload.name(),
+		UploadShare.name(),
+		UploadClipboard.name()
+	};
 }
