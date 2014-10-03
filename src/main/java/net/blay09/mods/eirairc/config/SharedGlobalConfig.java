@@ -45,7 +45,7 @@ public class SharedGlobalConfig {
 	public static final GeneralSettings generalSettings = new GeneralSettings(null);
 
 	public static void load(File configDir) {
-		thisConfig = new Configuration(new File(configDir, "eirairc/shared.cfg"));
+		thisConfig = new Configuration(new File(configDir, "shared.cfg"));
 
 		// General
 		enablePlayerAliases = thisConfig.getBoolean("enablePlayerAliases", GENERAL, enablePlayerAliases, "[Deprecated] If set to true, OPs can assign an alias for a MC nick that will be used instead.");
@@ -98,7 +98,7 @@ public class SharedGlobalConfig {
 	}
 
 	public static void loadLegacy(File configDir, Configuration legacyConfig) {
-		thisConfig = new Configuration(new File(configDir, "eirairc/shared.cfg"));
+		thisConfig = new Configuration(new File(configDir, "shared.cfg"));
 
 		// General
 		enablePlayerAliases = legacyConfig.getBoolean("enableAliases", "serveronly", enablePlayerAliases, "");
@@ -123,7 +123,5 @@ public class SharedGlobalConfig {
 		theme.loadLegacy(legacyConfig);
 		botSettings.loadLegacy(legacyConfig, null);
 		generalSettings.loadLegacy(legacyConfig, null);
-
-		save();
 	}
 }

@@ -23,6 +23,7 @@ import net.blay09.mods.eirairc.config.base.ServiceConfig;
 import net.blay09.mods.eirairc.util.IRCResolver;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
+import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
 
 public class ConfigurationHandler {
@@ -125,7 +126,7 @@ public class ConfigurationHandler {
 			Reader reader = new InputStreamReader(new FileInputStream(new File(configDir, "servers.json")));
 			JsonArray serverArray = gson.fromJson(reader, JsonArray.class);
 			for(int i = 0; i < serverArray.size(); i++) {
-				addServerConfig(ServerConfig.loadFromJson(serverArray.getAsJsonObject()));
+				addServerConfig(ServerConfig.loadFromJson(serverArray.get(i).getAsJsonObject()));
 			}
 			reader.close();
 		} catch (IOException e) {
@@ -133,15 +134,34 @@ public class ConfigurationHandler {
 		}
 	}
 
+	private static void loadLegacy(File configDir, Configuration legacyConfig) {
+		SharedGlobalConfig.loadLegacy(configDir, legacyConfig);
+		ClientGlobalConfig.loadLegacy(configDir, legacyConfig);
+
+		ConfigCategory serversCategory = legacyConfig.getCategory("servers");
+		for(ConfigCategory serverCategory : serversCategory.getChildren()) {
+			ServerConfig serverConfig = new ServerConfig(Utils.unquote(legacyConfig.get(serverCategory.getQualifiedName(), "host", "").getString()));
+			serverConfig.loadLegacy(legacyConfig, serverCategory);
+			addServerConfig(serverConfig);
+		}
+
+		save();
+	}
+
 	public static void load(File baseConfigDir) {
 		ConfigurationHandler.baseConfigDir = baseConfigDir;
-
 		File configDir = new File(baseConfigDir, "eirairc");
 
 		loadServices(configDir);
 
-		SharedGlobalConfig.load(baseConfigDir);
-		ClientGlobalConfig.load(baseConfigDir);
+		File legacyConfigFile = new File(baseConfigDir, "eirairc.cfg");
+		if(legacyConfigFile.exists()) {
+			Configuration legacyConfig = new Configuration(legacyConfigFile);
+			loadLegacy(configDir, legacyConfig);
+		} else {
+			SharedGlobalConfig.load(configDir);
+			ClientGlobalConfig.load(configDir);
+		}
 
 		loadDisplayFormats(new File(configDir, "formats"));
 		loadBotProfiles(new File(configDir, "bots"));

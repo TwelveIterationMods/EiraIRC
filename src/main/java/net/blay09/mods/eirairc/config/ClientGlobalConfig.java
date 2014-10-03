@@ -52,7 +52,7 @@ public class ClientGlobalConfig {
 	public static boolean vanillaChat = true;
 
 	public static void load(File configDir) {
-		thisConfig = new Configuration(new File(configDir, "eirairc/client.cfg"));
+		thisConfig = new Configuration(new File(configDir, "client.cfg"));
 
 		// General
 		hudRecState = thisConfig.getBoolean("hudRecState", GENERAL, hudRecState, "[Deprecated] If set to true, your screen will get cool red and green dots in some locations.");
@@ -126,7 +126,7 @@ public class ClientGlobalConfig {
 	}
 
 	public static void loadLegacy(File configDir, Configuration legacyConfig) {
-		thisConfig = new Configuration(new File(configDir, "eirairc/client.cfg"));
+		thisConfig = new Configuration(new File(configDir, "client.cfg"));
 
 		// General
 		hudRecState = legacyConfig.get("display", "hudRecState", hudRecState).getBoolean();
@@ -160,8 +160,6 @@ public class ClientGlobalConfig {
 		clientBridgeNickToken = legacyConfig.get("compatibility", "clientBridgeNickToken", clientBridgeNickToken).getString();
 		disableChatToggle = legacyConfig.get("compatibility", "disableChatToggle", disableChatToggle).getBoolean();
 		vanillaChat = legacyConfig.get("compatibility", "vanillaChat", vanillaChat).getBoolean();
-
-		save();
 	}
 
 }

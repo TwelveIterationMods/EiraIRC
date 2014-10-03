@@ -3,6 +3,7 @@ package net.blay09.mods.eirairc.config.settings;
 import com.google.gson.JsonObject;
 import net.blay09.mods.eirairc.config.base.MessageFormatConfig;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
+import net.blay09.mods.eirairc.util.Utils;
 import net.minecraftforge.common.config.Configuration;
 
 import java.util.EnumMap;
@@ -93,7 +94,7 @@ public class BotSettings {
 				strings.put(BotStringComponent.QuitMessage, legacyConfig.get(category, "quitMessage", BotStringComponent.QuitMessage.defaultValue).getString());
 			}
 		}
-		strings.put(BotStringComponent.NickFormat, legacyConfig.get("serveronly", "nickPrefix", "").getString() + "%s" + legacyConfig.get("serveronly", "nickSuffix", "").getString());
+		strings.put(BotStringComponent.NickFormat, Utils.quote(Utils.unquote(legacyConfig.get("serveronly", "nickPrefix", "").getString()) + "%s" + Utils.unquote(legacyConfig.get("serveronly", "nickSuffix", "").getString())));
 		booleans.put(BotBooleanComponent.HideNotices, legacyConfig.get("display", "hideNotices", BotBooleanComponent.HideNotices.defaultValue).getBoolean());
 		booleans.put(BotBooleanComponent.ConvertColors, legacyConfig.get("display", "enableIRCColors", BotBooleanComponent.ConvertColors.defaultValue).getBoolean());
 	}
