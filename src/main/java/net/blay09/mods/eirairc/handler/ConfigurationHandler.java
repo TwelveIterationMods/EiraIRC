@@ -26,8 +26,12 @@ import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class ConfigurationHandler {
+
+	private static final Logger logger = LogManager.getLogger();
 
 	private static final Map<String, ServerConfig> serverConfigs = new HashMap<String, ServerConfig>();
 	private static final Map<String, BotProfileImpl> botProfiles = new HashMap<String, BotProfileImpl>();
@@ -175,6 +179,9 @@ public class ConfigurationHandler {
 		if(legacyConfigFile.exists()) {
 			Configuration legacyConfig = new Configuration(legacyConfigFile);
 			loadLegacy(configDir, legacyConfig);
+			if(!legacyConfigFile.renameTo(new File(baseConfigDir, "eirairc.cfg.old"))) {
+				logger.error("Couldn't get rid of old 'eirairc.cfg' file. Config will REGENERATE unless you delete it yourself.");
+			}
 		} else {
 			SharedGlobalConfig.load(configDir);
 			ClientGlobalConfig.load(configDir);
