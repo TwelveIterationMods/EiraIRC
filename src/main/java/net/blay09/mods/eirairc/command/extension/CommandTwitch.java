@@ -62,7 +62,7 @@ public class CommandTwitch extends SubCommand {
 			serverConfig.setServerPassword(args[1]);
 			String userChannel = "#" + args[0];
 			if(!serverConfig.hasChannelConfig(userChannel)) {
-				ChannelConfig channelConfig = serverConfig.getChannelConfig(userChannel);
+				ChannelConfig channelConfig = serverConfig.getOrCreateChannelConfig(userChannel);
 				serverConfig.addChannelConfig(channelConfig);
 			}
 			ConfigurationHandler.addServerConfig(serverConfig);

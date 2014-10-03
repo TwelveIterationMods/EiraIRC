@@ -1,5 +1,6 @@
 package net.blay09.mods.eirairc.config.settings;
 
+import com.google.gson.JsonObject;
 import net.blay09.mods.eirairc.config.base.MessageFormatConfig;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.minecraftforge.common.config.Configuration;
@@ -31,6 +32,10 @@ public class BotSettings {
 		return strings.get(component);
 	}
 
+	public void setString(BotStringComponent component, String value) {
+		strings.put(component, value);
+	}
+
 	public boolean getBoolean(BotBooleanComponent component) {
 		if(!booleans.containsKey(component)) {
 			if(parent != null) {
@@ -54,6 +59,19 @@ public class BotSettings {
 		for(int i = 0; i < BotBooleanComponent.values().length; i++) {
 			if(defaultValues || config.hasKey(category, BotBooleanComponent.values[i].name)) {
 				booleans.put(BotBooleanComponent.values[i], config.getBoolean(BotBooleanComponent.values[i].name, category, BotBooleanComponent.values[i].defaultValue, ""));
+			}
+		}
+	}
+
+	public void load(JsonObject object) {
+		for(int i = 0; i < BotStringComponent.values().length; i++) {
+			if(object.has(BotStringComponent.values[i].name)) {
+				strings.put(BotStringComponent.values[i], object.get(BotStringComponent.values[i].name).getAsString());
+			}
+		}
+		for(int i = 0; i < BotBooleanComponent.values().length; i++) {
+			if(object.has(BotBooleanComponent.values[i].name)) {
+				booleans.put(BotBooleanComponent.values[i], object.get(BotBooleanComponent.values[i].name).getAsBoolean());
 			}
 		}
 	}

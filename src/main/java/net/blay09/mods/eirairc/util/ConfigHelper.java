@@ -42,7 +42,7 @@ public class ConfigHelper {
 	}
 	
 	public static ChannelConfig getChannelConfig(IRCChannel channel) {
-		return getServerConfig(channel.getConnection()).getChannelConfig(channel);
+		return getServerConfig(channel.getConnection()).getOrCreateChannelConfig(channel);
 	}
 
 	public static ThemeSettings getTheme(IRCContext context) {

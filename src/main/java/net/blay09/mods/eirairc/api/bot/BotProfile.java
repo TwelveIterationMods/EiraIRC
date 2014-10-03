@@ -10,9 +10,9 @@ public interface BotProfile {
 	public static final String INHERIT = "Inherit";
 
 	public IBotCommand getCommand(String commandName);
+	public Collection<IBotCommand> getCommands();
 	public boolean isInterOp();
 	public boolean isInterOpAuth(String authName);
 	public String[] getInterOpBlacklist();
-	public Collection<IBotCommand> getCommands();
-	
+
 }

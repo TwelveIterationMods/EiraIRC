@@ -8,7 +8,8 @@ public enum BotStringComponent {
 	Description("description", "EiraIRC Bot", ""),
 	QuitMessage("quitMessage", "Lycopene~", ""),
 	MessageFormat("messageFormat", "S-Light", ""),
-	NickFormat("mcNickFormat", "%s", "");
+	NickFormat("mcNickFormat", "%s", ""),
+	BotProfile("botProfile", "Inherit", "");
 
 	public static final BotStringComponent[] values = values();
 

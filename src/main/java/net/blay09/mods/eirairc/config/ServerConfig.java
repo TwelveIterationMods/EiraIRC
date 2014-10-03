@@ -8,9 +8,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import net.blay09.mods.eirairc.api.IRCChannel;
 import net.blay09.mods.eirairc.config.base.BotProfileImpl;
 import net.blay09.mods.eirairc.config.settings.BotSettings;
+import net.blay09.mods.eirairc.config.settings.BotStringComponent;
 import net.blay09.mods.eirairc.config.settings.GeneralSettings;
 import net.blay09.mods.eirairc.config.settings.ThemeSettings;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
@@ -36,19 +39,17 @@ public class ServerConfig {
 	private String nickServPassword = "";
 	private boolean isSSL = false;
 
-	private String botProfile = ""; // bot
-
 	public ServerConfig(String address) {
 		this.address = address;
 	}
 
 	public void useDefaults(boolean serverSide) {
 		if(address.equals(Globals.TWITCH_SERVER)) {
-			botProfile = BotProfileImpl.DEFAULT_TWITCH;
+			botSettings.setString(BotStringComponent.BotProfile, BotProfileImpl.DEFAULT_TWITCH);
 		} else if(serverSide) {
-			botProfile = BotProfileImpl.DEFAULT_SERVER;
+			botSettings.setString(BotStringComponent.BotProfile, BotProfileImpl.DEFAULT_SERVER);
 		} else {
-			botProfile = BotProfileImpl.DEFAULT_CLIENT;
+			botSettings.setString(BotStringComponent.BotProfile, BotProfileImpl.DEFAULT_CLIENT);
 		}
 	}
 	
@@ -80,19 +81,18 @@ public class ServerConfig {
 		return nickServPassword;
 	}
 	
-	public ChannelConfig getChannelConfig(String channelName) {
+	public ChannelConfig getOrCreateChannelConfig(String channelName) {
 		ChannelConfig channelConfig = channels.get(channelName.toLowerCase());
 		if(channelConfig == null) {
 			channelConfig = new ChannelConfig(this, channelName);
-			channelConfig.useDefaults(Utils.isServerSide());
 			channels.put(channelConfig.getName().toLowerCase(), channelConfig);
 			ConfigurationHandler.save();
 		}
 		return channelConfig;
 	}
 	
-	public ChannelConfig getChannelConfig(IRCChannel channel) {
-		return getChannelConfig(channel.getName());
+	public ChannelConfig getOrCreateChannelConfig(IRCChannel channel) {
+		return getOrCreateChannelConfig(channel.getName());
 	}
 
 	public void setNickServ(@NotNull String nickServName, @NotNull String nickServPassword) {
@@ -116,22 +116,63 @@ public class ServerConfig {
 		return channels.values();
 	}
 
-	public void loadLegacy(Configuration config, ConfigCategory category) {
+	public void loadLegacy(Configuration legacyConfig, ConfigCategory category) {
 		String categoryName = category.getQualifiedName();
-		nick = Utils.unquote(config.get(categoryName, "nick", "").getString());
-		nickServName = Utils.unquote(config.get(categoryName, "nickServName", "").getString());
-		nickServPassword = Utils.unquote(config.get(categoryName, "nickServPassword", "").getString());
-		serverPassword = Utils.unquote(config.get(categoryName, "serverPassword", "").getString());
-		botProfile = Utils.unquote(config.get(categoryName, "botProfile", "").getString());
-		isSSL = config.get(categoryName, "secureConnection", isSSL).getBoolean(isSSL);
+		if(legacyConfig.hasKey(categoryName, "nick")) {
+			nick = Utils.unquote(legacyConfig.get(categoryName, "nick", "").getString());
+		} else {
+			nick = Utils.unquote(legacyConfig.get("global", "nick", "%USERNAME").getString());
+		}
+		nickServName = Utils.unquote(legacyConfig.get(categoryName, "nickServName", "").getString());
+		nickServPassword = Utils.unquote(legacyConfig.get(categoryName, "nickServPassword", "").getString());
+		serverPassword = Utils.unquote(legacyConfig.get(categoryName, "serverPassword", "").getString());
+		isSSL = legacyConfig.get(categoryName, "secureConnection", isSSL).getBoolean(isSSL);
+		charset = legacyConfig.get("global", "charset", charset).getString();
 		
-		String channelsCategoryName = categoryName + Configuration.CATEGORY_SPLITTER + ConfigurationHandler.CATEGORY_CHANNELS;
-		ConfigCategory channelsCategory = config.getCategory(channelsCategoryName);
+		String channelsCategoryName = categoryName + Configuration.CATEGORY_SPLITTER + "channels";
+		ConfigCategory channelsCategory = legacyConfig.getCategory(channelsCategoryName);
 		for(ConfigCategory channelCategory : channelsCategory.getChildren()) {
-			ChannelConfig channelConfig = new ChannelConfig(this, Utils.unquote(config.get(channelCategory.getQualifiedName(), "name", "").getString()));
-			channelConfig.loadLegacy(config, channelCategory);
+			ChannelConfig channelConfig = new ChannelConfig(this, Utils.unquote(legacyConfig.get(channelCategory.getQualifiedName(), "name", "").getString()));
+			channelConfig.loadLegacy(legacyConfig, channelCategory);
 			addChannelConfig(channelConfig);
 		}
+	}
+
+	public static ServerConfig loadFromJson(JsonObject object) {
+		ServerConfig config = new ServerConfig(object.get("address").getAsString());
+		if(object.has("nick")) {
+			config.nick = object.get("nick").getAsString();
+		}
+		if(object.has("serverPassword")) {
+			config.serverPassword = object.get("serverPassword").getAsString();
+		}
+		if(object.has("charset")) {
+			config.charset = object.get("charset").getAsString();
+		}
+		if(object.has("isSSL")) {
+			config.isSSL = object.get("isSSL").getAsBoolean();
+		}
+		if(object.has("nickserv")) {
+			JsonObject nickServObject = object.getAsJsonObject("nickserv");
+			config.nickServName = nickServObject.get("username").getAsString();
+			config.nickServPassword = nickServObject.get("password").getAsString();
+		}
+		if(object.has("bot")) {
+			config.botSettings.load(object.getAsJsonObject("bot"));
+		}
+		if(object.has("theme")) {
+			config.theme.load(object.getAsJsonObject("theme"));
+		}
+		if(object.has("settings")) {
+			config.generalSettings.load(object.getAsJsonObject("settings"));
+		}
+		if(object.has("channels")) {
+			JsonArray channelArray = object.getAsJsonArray("channels");
+			for(int i = 0; i < channelArray.size(); i++) {
+				config.addChannelConfig(ChannelConfig.loadFromJson(config, channelArray.get(i).getAsJsonObject()));
+			}
+		}
+		return config;
 	}
 
 	public void handleConfigCommand(ICommandSender sender, String key) {
@@ -153,21 +194,9 @@ public class ServerConfig {
 	}
 	
 	public static void addOptionstoList(List<String> list) {
-		list.add("autoConnect");
 	}
 
 	public static void addValuesToList(List<String> list, String option) {
-		if(option.equals("autoConnect")) {
-			Utils.addBooleansToList(list);
-		}
-	}
-
-	public String getBotProfile() {
-		return botProfile;
-	}
-
-	public void setBotProfile(@NotNull String botProfile) {
-		this.botProfile = botProfile;
 	}
 
 	public boolean isSSL() {

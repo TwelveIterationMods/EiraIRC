@@ -1,5 +1,6 @@
 package net.blay09.mods.eirairc.config.settings;
 
+import com.google.gson.JsonObject;
 import net.minecraftforge.common.config.Configuration;
 
 import java.util.EnumMap;
@@ -40,6 +41,14 @@ public class GeneralSettings {
 		for(int i = 0; i < GeneralBooleanComponent.values().length; i++) {
 			if(defaultValues || config.hasKey(category, GeneralBooleanComponent.values[i].name)) {
 				booleans.put(GeneralBooleanComponent.values[i], config.getBoolean(GeneralBooleanComponent.values[i].name, category, GeneralBooleanComponent.values[i].defaultValue, ""));
+			}
+		}
+	}
+
+	public void load(JsonObject object) {
+		for(int i = 0; i < GeneralBooleanComponent.values().length; i++) {
+			if(object.has(GeneralBooleanComponent.values[i].name)) {
+				booleans.put(GeneralBooleanComponent.values[i], object.get(GeneralBooleanComponent.values[i].name).getAsBoolean());
 			}
 		}
 	}

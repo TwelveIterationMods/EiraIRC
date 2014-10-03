@@ -1,5 +1,6 @@
 package net.blay09.mods.eirairc.config.settings;
 
+import com.google.gson.JsonObject;
 import net.minecraftforge.common.config.Configuration;
 
 import java.util.EnumMap;
@@ -53,6 +54,14 @@ public class ThemeSettings {
 		for(int i = 0; i < ThemeColorComponent.values().length; i++) {
 			if(defaultValues || config.hasKey(category, ThemeColorComponent.values[i].name)) {
 				colors.put(ThemeColorComponent.values[i], config.getString(ThemeColorComponent.values[i].name, category, ThemeColorComponent.values[i].defaultValue, "", VALID_COLORS));
+			}
+		}
+	}
+
+	public void load(JsonObject object) {
+		for(int i = 0; i < ThemeColorComponent.values().length; i++) {
+			if(object.has(ThemeColorComponent.values[i].name)) {
+				colors.put(ThemeColorComponent.values[i], object.get(ThemeColorComponent.values[i].name).getAsString());
 			}
 		}
 	}

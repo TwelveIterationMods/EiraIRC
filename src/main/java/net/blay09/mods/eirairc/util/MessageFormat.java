@@ -36,7 +36,7 @@ public class MessageFormat {
 	private static final Pattern playerTagPattern = Pattern.compile("[\\[][^\\]]+[\\]]");
 	private static final Pattern urlPattern = Pattern.compile("^(?:(https?)://)?([-\\w_\\.]{2,}\\.[a-z]{2,4})(/\\S*)?$");
 
-	public static String getMessageFormat(IRCBot bot, IRCContext context, boolean isEmote) {
+	public static String getMessageFormat(IRCContext context, boolean isEmote) {
 		BotSettings botSettings = ConfigHelper.getBotSettings(context);
 		if(context instanceof IRCUser) {
 			if(isEmote) {

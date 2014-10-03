@@ -13,7 +13,6 @@ import net.blay09.mods.eirairc.api.event.IRCDisconnectEvent;
 import net.blay09.mods.eirairc.api.event.IRCErrorEvent;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
-import net.blay09.mods.eirairc.config.settings.BotSettings;
 import net.blay09.mods.eirairc.config.settings.GeneralBooleanComponent;
 import net.blay09.mods.eirairc.config.settings.GeneralSettings;
 import net.blay09.mods.eirairc.irc.IRCReplyCodes;
@@ -36,7 +35,7 @@ public class IRCConnectionHandler {
 		Utils.addMessageToChat(mcMessage);
 		ServerConfig serverConfig = ConfigHelper.getServerConfig(event.connection);
 		if(serverConfig.getAddress().equals(Globals.TWITCH_SERVER) && serverConfig.getNick() != null) {
-			serverConfig.getChannelConfig("#" + serverConfig.getNick());
+			serverConfig.getOrCreateChannelConfig("#" + serverConfig.getNick());
 		}
 		Utils.doNickServ(event.connection, serverConfig);
 		for(ChannelConfig channelConfig : serverConfig.getChannelConfigs()) {

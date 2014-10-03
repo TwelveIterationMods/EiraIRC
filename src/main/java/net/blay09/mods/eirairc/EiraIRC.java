@@ -62,10 +62,8 @@ public class EiraIRC {
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-		ConfigurationHandler.loadServices(new File(event.getModConfigurationDirectory(), "eirairc"));
-		ConfigurationHandler.load(event.getSuggestedConfigurationFile());
-		ConfigurationHandler.loadDisplayFormats(new File(event.getModConfigurationDirectory(), "eirairc/formats"));
-		ConfigurationHandler.loadBotProfiles(new File(event.getModConfigurationDirectory(), "eirairc/bots"));
+		ConfigurationHandler.load(event.getModConfigurationDirectory());
+
 
 		FMLInterModComms.sendRuntimeMessage(this, "VersionChecker", "addVersionCheck", Globals.UPDATE_URL);
 	}

@@ -16,6 +16,8 @@ import net.blay09.mods.eirairc.api.bot.IRCBot;
 import net.blay09.mods.eirairc.config.base.BotProfileImpl;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
+import net.blay09.mods.eirairc.config.settings.BotSettings;
+import net.blay09.mods.eirairc.config.settings.BotStringComponent;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.irc.IRCConnectionImpl;
 import net.blay09.mods.eirairc.util.ConfigHelper;
@@ -92,11 +94,12 @@ public class IRCBotImpl implements IRCBot {
 
 	public void updateProfiles() {
 		ServerConfig serverConfig = ConfigHelper.getServerConfig(connection);
-		mainProfile = ConfigurationHandler.getBotProfile(serverConfig.getBotProfile());
+		mainProfile = ConfigurationHandler.getBotProfile(serverConfig.getBotSettings().getString(BotStringComponent.BotProfile));
 		profiles.clear();
 		for(ChannelConfig channelConfig : serverConfig.getChannelConfigs()) {
-			if(!channelConfig.getBotProfile().equals(mainProfile.getName()) && !channelConfig.getBotProfile().equals(BotProfile.INHERIT)) {
-				profiles.put(channelConfig.getName().toLowerCase(), ConfigurationHandler.getBotProfile(channelConfig.getBotProfile()));
+			String botProfile = channelConfig.getBotSettings().getString(BotStringComponent.BotProfile);
+			if(!botProfile.equals(mainProfile.getName()) && !botProfile.equals(BotProfile.INHERIT)) {
+				profiles.put(channelConfig.getName().toLowerCase(), ConfigurationHandler.getBotProfile(botProfile));
 			}
 		}
 	}

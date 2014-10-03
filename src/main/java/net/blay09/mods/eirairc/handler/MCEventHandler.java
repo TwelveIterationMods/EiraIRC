@@ -291,10 +291,8 @@ public class MCEventHandler {
 
 	private void relayChatServer(ICommandSender sender, String message, boolean isEmote, boolean isNotice, IRCContext target) {
 		if(target != null) {
-			IRCConnection connection = target.getConnection();
-			IRCBot bot = connection.getBot();
 			if(!ConfigHelper.getGeneralSettings(target).isReadOnly()) {
-				String format = MessageFormat.getMessageFormat(bot, target, isEmote);
+				String format = MessageFormat.getMessageFormat(target, isEmote);
 				String ircMessage = MessageFormat.formatMessage(format, target, sender, message, MessageFormat.Target.IRC, (isEmote ? MessageFormat.Mode.Emote : MessageFormat.Mode.Message));
 				if(isEmote) {
 					ircMessage = IRCConnectionImpl.EMOTE_START + ircMessage + IRCConnectionImpl.EMOTE_END;
@@ -307,9 +305,8 @@ public class MCEventHandler {
 			}
 		} else {
 			for(IRCConnection connection : EiraIRC.instance.getConnections()) {
-				IRCBot bot = connection.getBot();
 				for(IRCChannel channel : connection.getChannels()) {
-					String format = MessageFormat.getMessageFormat(bot, channel, isEmote);
+					String format = MessageFormat.getMessageFormat(channel, isEmote);
 					String ircMessage = MessageFormat.formatMessage(format, channel, sender, message, MessageFormat.Target.IRC, (isEmote ? MessageFormat.Mode.Emote : MessageFormat.Mode.Message));
 					if(isEmote) {
 						ircMessage = IRCConnectionImpl.EMOTE_START + ircMessage + IRCConnectionImpl.EMOTE_END;

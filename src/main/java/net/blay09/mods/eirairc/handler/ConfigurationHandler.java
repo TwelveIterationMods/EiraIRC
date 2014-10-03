@@ -3,8 +3,7 @@
 
 package net.blay09.mods.eirairc.handler;
 
-import java.io.File;
-import java.io.FilenameFilter;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -12,8 +11,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import net.blay09.mods.eirairc.config.ChannelConfig;
+import net.blay09.mods.eirairc.config.ClientGlobalConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
+import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.config.base.BotProfileImpl;
 import net.blay09.mods.eirairc.config.base.MessageFormatConfig;
 import net.blay09.mods.eirairc.config.base.ServiceConfig;
@@ -24,39 +27,40 @@ import net.minecraftforge.common.config.Configuration;
 
 public class ConfigurationHandler {
 
-	private static String CONFIG_VERSION = "2";
-	public static final String CATEGORY_GLOBAL = "global";
-
-	public static final String CATEGORY_DISPLAY = "display";
-	public static final String CATEGORY_FORMATS = "formats";
-	public static final String CATEGORY_SERVERONLY = "serveronly";
-	public static final String CATEGORY_CLIENTONLY = "clientonly";
-	public static final String CATEGORY_KEYBINDS = "keybinds";
-	public static final String CATEGORY_SERVERS = "servers";
-	public static final String CATEGORY_CHANNELS = "channels";
-	public static final String CATEGORY_COMPAT = "compatibility";
-	public static final String CATEGORY_NOTIFICATIONS = "notifications";
-	public static final String CATEGORY_NETWORK = "network";
-	public static final String PREFIX_SERVER = "server";
-	public static final String PREFIX_CHANNEL = "channel";
-	
 	private static final Map<String, ServerConfig> serverConfigs = new HashMap<String, ServerConfig>();
-
-	private static File configFile;
-	private static Configuration config;
-	private static Map<String, BotProfileImpl> botProfiles = new HashMap<String, BotProfileImpl>();
-	private static List<BotProfileImpl> botProfileList = new ArrayList<BotProfileImpl>();
-	private static BotProfileImpl defaultBotProfile;
-	private static File botProfileDir;
+	private static final Map<String, BotProfileImpl> botProfiles = new HashMap<String, BotProfileImpl>();
+	private static final List<BotProfileImpl> botProfileList = new ArrayList<BotProfileImpl>();
 	private static final Map<String, MessageFormatConfig> displayFormats = new HashMap<String, MessageFormatConfig>();
-	private static List<MessageFormatConfig> displayFormatList = new ArrayList<MessageFormatConfig>();
+	private static final List<MessageFormatConfig> displayFormatList = new ArrayList<MessageFormatConfig>();
+
+	private static File baseConfigDir;
+	private static File botProfileDir;
+	private static BotProfileImpl defaultBotProfile;
 	private static MessageFormatConfig defaultDisplayFormat;
-	
-	public static void loadBotProfiles(File profileDir) {
+
+	public static void findDefaultBotProfile() {
+		defaultBotProfile = botProfiles.get("Client");
+		if(defaultBotProfile == null) {
+			for(BotProfileImpl botProfile : botProfiles.values()) {
+				if(botProfile.isDefaultProfile()) {
+					defaultBotProfile = botProfile;
+					return;
+				}
+			}
+			if(defaultBotProfile == null) {
+				Iterator<BotProfileImpl> it = botProfiles.values().iterator();
+				defaultBotProfile = it.next();
+			}
+		}
+	}
+
+	private static void loadBotProfiles(File profileDir) {
 		botProfiles.clear();
 		botProfileList.clear();
 		if(!profileDir.exists()) {
-			profileDir.mkdirs();
+			if(!profileDir.mkdirs()) {
+				return;
+			}
 		}
 		botProfileDir = profileDir;
 		BotProfileImpl.setupDefaultProfiles(profileDir);
@@ -74,28 +78,14 @@ public class ConfigurationHandler {
 		}
 		findDefaultBotProfile();
 	}
-	
-	public static void findDefaultBotProfile() {
-		defaultBotProfile = botProfiles.get("Client");
-		if(defaultBotProfile == null) {
-			for(BotProfileImpl botProfile : botProfiles.values()) {
-				if(botProfile.isDefaultProfile()) {
-					defaultBotProfile = botProfile;
-					return;
-				}
-			}
-			if(defaultBotProfile == null) {
-				Iterator<BotProfileImpl> it = botProfiles.values().iterator();
-				defaultBotProfile = it.next();
-			}
-		}
-	}
-	
-	public static void loadDisplayFormats(File formatDir) {
+
+	private static void loadDisplayFormats(File formatDir) {
 		displayFormats.clear();
 		displayFormatList.clear();
 		if(!formatDir.exists()) {
-			formatDir.mkdirs();
+			if(!formatDir.mkdirs()) {
+				return;
+			}
 		}
 		MessageFormatConfig.setupDefaultFormats(formatDir);
 		File[] files = formatDir.listFiles(new FilenameFilter() {
@@ -112,24 +102,56 @@ public class ConfigurationHandler {
 		}
 		defaultDisplayFormat = displayFormats.get(MessageFormatConfig.DEFAULT_FORMAT);
 	}
-	
-	public static void loadServices(File configDir) {
+
+	private static void loadServices(File configDir) {
 		if(!configDir.exists()) {
-			configDir.mkdirs();
+			if(!configDir.mkdirs()) {
+				return;
+			}
 		}
 		Configuration serviceConfig = new Configuration(new File(configDir, "services.cfg"));
 		ServiceConfig.setupDefaultServices(serviceConfig);
 		ServiceConfig.load(serviceConfig);
 	}
-	
-	public static void load(File configFile) {
-		ConfigurationHandler.configFile = configFile;
-		config = new Configuration(configFile);
 
-		config.save();
+	private static void loadServers(File configDir) {
+		if(!configDir.exists()) {
+			if(!configDir.mkdirs()) {
+				return;
+			}
+		}
+		Gson gson = new Gson();
+		try {
+			Reader reader = new InputStreamReader(new FileInputStream(new File(configDir, "servers.json")));
+			JsonArray serverArray = gson.fromJson(reader, JsonArray.class);
+			for(int i = 0; i < serverArray.size(); i++) {
+				addServerConfig(ServerConfig.loadFromJson(serverArray.getAsJsonObject()));
+			}
+			reader.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void load(File baseConfigDir) {
+		ConfigurationHandler.baseConfigDir = baseConfigDir;
+
+		File configDir = new File(baseConfigDir, "eirairc");
+
+		loadServices(configDir);
+
+		SharedGlobalConfig.load(baseConfigDir);
+		ClientGlobalConfig.load(baseConfigDir);
+
+		loadDisplayFormats(new File(configDir, "formats"));
+		loadBotProfiles(new File(configDir, "bots"));
+
+		loadServers(configDir);
 	}
 	
 	public static void save() {
+		SharedGlobalConfig.save();
+		ClientGlobalConfig.save();
 	}
 	
 	public static ServerConfig getServerConfig(String host) {
@@ -204,14 +226,6 @@ public class ConfigurationHandler {
 		}
 	}
 
-	public static ServerConfig getDefaultServerConfig() {
-		Iterator<ServerConfig> it = serverConfigs.values().iterator();
-		if(it.hasNext()) {
-			return it.next();
-		}
-		return null;
-	}
-
 	public static void addOptionsToList(List<String> list) {
 	}
 
@@ -268,7 +282,7 @@ public class ConfigurationHandler {
 	}
 
 	public static void reload() {
-		load(configFile);
+		load(baseConfigDir);
 	}
 
 }

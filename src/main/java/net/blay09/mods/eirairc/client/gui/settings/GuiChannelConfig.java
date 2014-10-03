@@ -9,7 +9,6 @@ import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.IRCConnection;
 import net.blay09.mods.eirairc.bot.IRCBotImpl;
 import net.blay09.mods.eirairc.client.gui.GuiAdvancedTextField;
-import net.blay09.mods.eirairc.client.gui.GuiToggleButton;
 import net.blay09.mods.eirairc.config.base.BotProfileImpl;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
@@ -110,7 +109,6 @@ public class GuiChannelConfig extends GuiScreen {
 	}
 	
 	public void setBotProfile(String profileName) {
-		config.setBotProfile(profileName);
 	}
 	
 	@Override
@@ -177,9 +175,7 @@ public class GuiChannelConfig extends GuiScreen {
 		if(config != null) {
 			txtName.setText(config.getName());
 			txtChannelPassword.setText(config.getPassword() != null ? config.getPassword() : "");
-			currentProfile = config.getBotProfile();
 		} else {
-			currentProfile = serverConfig.getBotProfile();
 		}
 		for(int i = 0; i < profileList.size(); i++) {
 			if(profileList.get(i).getName().equals(currentProfile)) {
@@ -195,10 +191,9 @@ public class GuiChannelConfig extends GuiScreen {
 			if(config != null) {
 				serverConfig.removeChannelConfig(config.getName());
 			}
-			config = serverConfig.getChannelConfig(txtName.getText());
+			config = serverConfig.getOrCreateChannelConfig(txtName.getText());
 		}
 		config.setPassword(txtChannelPassword.getText());
-		config.setBotProfile(currentProfile);
 		IRCConnection connection = EiraIRC.instance.getConnection(serverConfig.getAddress());
 		if(connection != null) {
 			IRCBotImpl bot = (IRCBotImpl) connection.getBot();
