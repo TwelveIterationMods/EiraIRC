@@ -6,8 +6,8 @@ package net.blay09.mods.eirairc.config.settings;
 public enum GeneralBooleanComponent {
 	AutoJoin("autoJoin", true, "If set to true, EiraIRC will automatically join this server / channel on startup."),
 	AutoWho("autoWho", false, "If set to true, EiraIRC will automatically print a list of all IRC users to the chat."),
-	ReadOnly("readOnly", false, "If set to true, EiraIRC will only read messages from IRC, but never send any."),
-	Muted("muted", false, "If set to true, EiraIRC will not show messages from IRC in chat.");
+	ReadOnly("readOnly", false, "If set to true, EiraIRC will only read messages from IRC, but never send any to this IRC context."),
+	Muted("muted", false, "If set to true, EiraIRC will not show messages from this IRC context in chat at all.");
 
 	public static final GeneralBooleanComponent[] values = values();
 

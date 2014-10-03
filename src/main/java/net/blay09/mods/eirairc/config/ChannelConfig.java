@@ -26,7 +26,7 @@ public class ChannelConfig {
 	private final BotSettings botSettings;
 	private final ThemeSettings theme;
 
-	private String password;
+	private String password = "";
 
 	public ChannelConfig(ServerConfig serverConfig, String name) {
 		this.serverConfig = serverConfig;

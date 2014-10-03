@@ -104,11 +104,12 @@ public class BotSettings {
 		if(category != null) {
 			strings.put(BotStringComponent.Description, Utils.unquote(legacyConfig.get(category, "description", BotStringComponent.Description.defaultValue).getString()));
 			strings.put(BotStringComponent.Ident, Utils.unquote(legacyConfig.get(category, "ident", BotStringComponent.Ident.defaultValue).getString()));
-			if (legacyConfig.hasKey(category, "quitMessage")) {
-				strings.put(BotStringComponent.QuitMessage, Utils.unquote(legacyConfig.get(category, "quitMessage", BotStringComponent.QuitMessage.defaultValue).getString()));
+			String quitMessage = Utils.unquote(legacyConfig.get(category, "quitMessage", "").getString());
+			if(!quitMessage.isEmpty()) {
+				strings.put(BotStringComponent.QuitMessage, quitMessage);
 			}
 		} else {
-			strings.put(BotStringComponent.NickFormat, Utils.quote(Utils.unquote(legacyConfig.get("serveronly", "nickPrefix", "").getString()) + "%s" + Utils.unquote(legacyConfig.get("serveronly", "nickSuffix", "").getString())));
+			strings.put(BotStringComponent.NickFormat, Utils.unquote(legacyConfig.get("serveronly", "nickPrefix", "").getString()) + "%s" + Utils.unquote(legacyConfig.get("serveronly", "nickSuffix", "").getString()));
 			booleans.put(BotBooleanComponent.HideNotices, legacyConfig.get("display", "hideNotices", BotBooleanComponent.HideNotices.defaultValue).getBoolean());
 			booleans.put(BotBooleanComponent.ConvertColors, legacyConfig.get("display", "enableIRCColors", BotBooleanComponent.ConvertColors.defaultValue).getBoolean());
 		}
