@@ -72,7 +72,7 @@ public class MCEventHandler {
 				}
 				String mcAlias = Utils.getNickGame((EntityPlayer) event.sender);
 				IChatComponent chatComponent = new ChatComponentText("* " + mcAlias + " " + emote);
-				EnumChatFormatting emoteColor = Utils.getColorFormatting(SharedGlobalConfig.theme.getColor(ThemeColorComponent.emoteTextColor));
+				EnumChatFormatting emoteColor = SharedGlobalConfig.theme.getColor(ThemeColorComponent.emoteTextColor);
 				if(emoteColor != null) {
 					chatComponent.getChatStyle().setColor(emoteColor);
 				}
@@ -167,7 +167,7 @@ public class MCEventHandler {
 					return true;
 				}
 				context = targetChannel;
-				emoteColor = Utils.getColorFormatting(ConfigHelper.getTheme(targetChannel).getColor(ThemeColorComponent.emoteTextColor));
+				emoteColor = ConfigHelper.getTheme(targetChannel).getColor(ThemeColorComponent.emoteTextColor);
 				BotSettings botSettings = ConfigHelper.getBotSettings(context);
 				chatComponent = MessageFormat.formatChatComponent(botSettings.getMessageFormat().mcSendChannelEmote, context, sender, text, MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
 			} else {
@@ -176,7 +176,7 @@ public class MCEventHandler {
 					return true;
 				}
 				context = targetUser;
-				emoteColor = Utils.getColorFormatting(ConfigHelper.getTheme(targetUser).getColor(ThemeColorComponent.emoteTextColor));
+				emoteColor = ConfigHelper.getTheme(targetUser).getColor(ThemeColorComponent.emoteTextColor);
 				BotSettings botSettings = ConfigHelper.getBotSettings(context);
 				chatComponent = MessageFormat.formatChatComponent(botSettings.getMessageFormat().mcSendPrivateEmote, context, sender, text, MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
 			}

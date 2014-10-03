@@ -226,28 +226,28 @@ public class Utils {
 			return Utils.getColorFormatting(colorName);
 		} else if(isOP) {
 			if(theme.hasColor(ThemeColorComponent.mcOpNameColor)) {
-				return Utils.getColorFormatting(theme.getColor(ThemeColorComponent.mcOpNameColor));
+				return theme.getColor(ThemeColorComponent.mcOpNameColor);
 			}
 		}
-		return Utils.getColorFormatting(theme.getColor(ThemeColorComponent.mcNameColor));
+		return theme.getColor(ThemeColorComponent.mcNameColor);
 	}
 
 	@Nullable
 	public static EnumChatFormatting getColorFormattingForUser(IRCChannel channel, IRCUser user) {
 		ThemeSettings theme = ConfigHelper.getTheme(channel);
 		if(channel == null) {
-			return Utils.getColorFormatting(theme.getColor(ThemeColorComponent.ircPrivateNameColor));
+			return theme.getColor(ThemeColorComponent.ircPrivateNameColor);
 		}
 		if(user.isOperator(channel)) {
 			if(theme.hasColor(ThemeColorComponent.ircOpNameColor)) {
-				return Utils.getColorFormatting(theme.getColor(ThemeColorComponent.ircOpNameColor));
+				return theme.getColor(ThemeColorComponent.ircOpNameColor);
 			}
 		} else if(user.hasVoice(channel)) {
 			if(theme.hasColor(ThemeColorComponent.ircVoiceNameColor)) {
-				return Utils.getColorFormatting(theme.getColor(ThemeColorComponent.ircVoiceNameColor));
+				return theme.getColor(ThemeColorComponent.ircVoiceNameColor);
 			}
 		}
-		return Utils.getColorFormatting(theme.getColor(ThemeColorComponent.ircNameColor));
+		return theme.getColor(ThemeColorComponent.ircNameColor);
 	}
 
 	public static void addValidColorsToList(List<String> list) {

@@ -247,7 +247,6 @@ public class ScreenshotManager {
 			String[] target = chatTarget.split("/");
 			IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(target[0]);
 			if(connection != null) {
-				IRCBot bot = connection.getBot();
 				EnumChatFormatting emoteColor;
 				IChatComponent chatComponent;
 				if (target[1].startsWith("#")) {
@@ -256,7 +255,7 @@ public class ScreenshotManager {
 						return;
 					}
 					BotSettings botSettings = ConfigHelper.getBotSettings(targetChannel);
-					emoteColor = Utils.getColorFormatting(ConfigHelper.getTheme(targetChannel).getColor(ThemeColorComponent.emoteTextColor));
+					emoteColor = ConfigHelper.getTheme(targetChannel).getColor(ThemeColorComponent.emoteTextColor);
 					chatComponent = MessageFormat.formatChatComponent(botSettings.getMessageFormat().mcSendChannelEmote, targetChannel, sender, text, MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
 				} else {
 					IRCUser targetUser = connection.getUser(target[1]);
@@ -264,7 +263,7 @@ public class ScreenshotManager {
 						return;
 					}
 					BotSettings botSettings = ConfigHelper.getBotSettings(targetUser);
-					emoteColor = Utils.getColorFormatting(ConfigHelper.getTheme(targetUser).getColor(ThemeColorComponent.emoteTextColor));
+					emoteColor = ConfigHelper.getTheme(targetUser).getColor(ThemeColorComponent.emoteTextColor);
 					chatComponent = MessageFormat.formatChatComponent(botSettings.getMessageFormat().mcSendPrivateEmote, targetUser, sender, text, MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
 				}
 				if (emoteColor != null) {

@@ -120,8 +120,8 @@ public class IRCEventHandler {
 		EiraIRC.proxy.publishNotification(NotificationType.PrivateMessage, notifyMsg);
 		EiraIRC.instance.getChatSessionHandler().addTargetUser(event.sender);
 		ThemeSettings theme = ConfigHelper.getTheme(event.sender);
-		EnumChatFormatting emoteColor = Utils.getColorFormatting(theme.getColor(ThemeColorComponent.emoteTextColor));
-		EnumChatFormatting noticeColor = Utils.getColorFormatting(theme.getColor(ThemeColorComponent.ircNoticeTextColor));
+		EnumChatFormatting emoteColor = theme.getColor(ThemeColorComponent.emoteTextColor);
+		EnumChatFormatting noticeColor = theme.getColor(ThemeColorComponent.ircNoticeTextColor);
 		if(event.isEmote && emoteColor != null) {
 			chatComponent.getChatStyle().setColor(emoteColor);
 		} else if(event.isNotice && noticeColor != null) {
@@ -169,8 +169,8 @@ public class IRCEventHandler {
 			return;
 		}
 		ThemeSettings theme = ConfigHelper.getTheme(event.channel);
-		EnumChatFormatting emoteColor = Utils.getColorFormatting(theme.getColor(ThemeColorComponent.emoteTextColor));
-		EnumChatFormatting noticeColor = Utils.getColorFormatting(theme.getColor(ThemeColorComponent.ircNoticeTextColor));
+		EnumChatFormatting emoteColor = theme.getColor(ThemeColorComponent.emoteTextColor);
+		EnumChatFormatting noticeColor = theme.getColor(ThemeColorComponent.ircNoticeTextColor);
 		if(event.isEmote && emoteColor != null) {
 			chatComponent.getChatStyle().setColor(emoteColor);
 		} else if(event.isNotice && noticeColor != null) {
