@@ -199,6 +199,17 @@ public class ConfigurationHandler {
 
 		saveServers(new File(baseConfigDir, "eirairc"));
 	}
+
+	public static void reload() {
+		load(baseConfigDir);
+	}
+
+	public static void lightReload() {
+		File configDir = new File(baseConfigDir, "eirairc");
+
+		SharedGlobalConfig.load(configDir);
+		ClientGlobalConfig.load(configDir);
+	}
 	
 	public static ServerConfig getServerConfig(String host) {
 		ServerConfig serverConfig = serverConfigs.get(host.toLowerCase());
@@ -325,10 +336,6 @@ public class ConfigurationHandler {
 
 	public static BotProfileImpl getDefaultBotProfile() {
 		return defaultBotProfile;
-	}
-
-	public static void reload() {
-		load(baseConfigDir);
 	}
 
 }

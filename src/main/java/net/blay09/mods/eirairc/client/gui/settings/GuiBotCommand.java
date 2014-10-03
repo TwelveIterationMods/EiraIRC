@@ -4,8 +4,8 @@
 package net.blay09.mods.eirairc.client.gui.settings;
 
 import net.blay09.mods.eirairc.bot.BotCommandCustom;
-import net.blay09.mods.eirairc.client.gui.GuiAdvancedTextField;
-import net.blay09.mods.eirairc.client.gui.GuiToggleButton;
+import net.blay09.mods.eirairc.client.gui.base.GuiAdvancedTextField;
+import net.blay09.mods.eirairc.client.gui.base.GuiToggleButton;
 import net.blay09.mods.eirairc.config.base.BotProfileImpl;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;

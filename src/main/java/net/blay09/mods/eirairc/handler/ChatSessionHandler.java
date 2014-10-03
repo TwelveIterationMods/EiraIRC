@@ -97,7 +97,7 @@ public class ChatSessionHandler {
 		}
 		int sepIdx = chatTarget.indexOf('/');
 		String targetHost = chatTarget.substring(0, sepIdx);
-		IRCConnection connection = EiraIRC.instance.getConnection(targetHost);
+		IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(targetHost);
 		if(connection == null) {
 			return null;
 		}

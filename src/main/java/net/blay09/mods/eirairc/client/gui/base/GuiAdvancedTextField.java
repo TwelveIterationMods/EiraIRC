@@ -1,7 +1,7 @@
 // Copyright (c) 2014, Christopher "blay09" Baker
 // All rights reserved.
 
-package net.blay09.mods.eirairc.client.gui;
+package net.blay09.mods.eirairc.client.gui.base;
 
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiTextField;

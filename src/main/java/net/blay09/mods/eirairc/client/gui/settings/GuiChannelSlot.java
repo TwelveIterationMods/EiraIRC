@@ -52,9 +52,9 @@ public class GuiChannelSlot extends GuiSlot {
 	protected void drawSlot(int i, int x, int y, int l, Tessellator tessellator, int k, int j) {
 		ServerConfig serverConfig = parentGui.getServerConfig();
 		ChannelConfig channelConfig = parentGui.getChannelConfig(i);
-		String joinedString = null;
-		if(EiraIRC.instance.isConnectedTo(serverConfig.getAddress())) {
-			if(EiraIRC.instance.getConnection(serverConfig.getAddress()).getChannel(channelConfig.getName()) != null) {
+		String joinedString;
+		if(EiraIRC.instance.getConnectionManager().isConnectedTo(serverConfig.getAddress())) {
+			if(EiraIRC.instance.getConnectionManager().getConnection(serverConfig.getAddress()).getChannel(channelConfig.getName()) != null) {
 				joinedString = Utils.getLocalizedMessage("irc.gui.channelList.joined");
 			} else {
 				joinedString = Utils.getLocalizedMessage("irc.gui.channelList.notJoined");

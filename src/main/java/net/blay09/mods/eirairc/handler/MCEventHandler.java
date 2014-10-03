@@ -43,7 +43,7 @@ public class MCEventHandler {
 
 	@SubscribeEvent
 	public void onPlayerLogin(PlayerLoggedInEvent event) {
-		for(IRCConnection connection : EiraIRC.instance.getConnections()) {
+		for(IRCConnection connection : EiraIRC.instance.getConnectionManager().getConnections()) {
 			for(IRCChannel channel : connection.getChannels()) {
 				GeneralSettings generalSettings = ConfigHelper.getGeneralSettings(channel);
 				BotSettings botSettings = ConfigHelper.getBotSettings(channel);
@@ -83,7 +83,7 @@ public class MCEventHandler {
 				event.setCanceled(true);
 			}
 		} else if(event.command instanceof CommandBroadcast) {
-			for(IRCConnection connection : EiraIRC.instance.getConnections()) {
+			for(IRCConnection connection : EiraIRC.instance.getConnectionManager().getConnections()) {
 				for(IRCChannel channel : connection.getChannels()) {
 					GeneralSettings generalSettings = ConfigHelper.getGeneralSettings(channel);
 					BotSettings botSettings = ConfigHelper.getBotSettings(channel);
@@ -105,7 +105,7 @@ public class MCEventHandler {
 			return false;
 		}
 		EntityPlayer sender = Minecraft.getMinecraft().thePlayer;
-		if(EiraIRC.instance.getConnectionCount() > 0 && IRCCommandHandler.onChatCommand(sender, text, false)) {
+		if(EiraIRC.instance.getConnectionManager().getConnectionCount() > 0 && IRCCommandHandler.onChatCommand(sender, text, false)) {
 			return true;
 		}
 		if(ClientGlobalConfig.clientBridge) {
@@ -117,7 +117,7 @@ public class MCEventHandler {
 			return false;
 		}
 		String[] target = chatTarget.split("/");
-		IRCConnection connection = EiraIRC.instance.getConnection(target[0]);
+		IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(target[0]);
 		if(connection != null) {
 			IRCContext context;
 			IChatComponent chatComponent;
@@ -156,7 +156,7 @@ public class MCEventHandler {
 			return false;
 		}
 		String[] target = chatTarget.split("/");
-		IRCConnection connection = EiraIRC.instance.getConnection(target[0]);
+		IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(target[0]);
 		if(connection != null) {
 			IRCContext context;
 			EnumChatFormatting emoteColor;
@@ -234,7 +234,7 @@ public class MCEventHandler {
 				if(!ClientGlobalConfig.clientBridgeMessageToken.isEmpty()) {
 					ircMessage = ircMessage + " " + ClientGlobalConfig.clientBridgeMessageToken;
 				}
-				for(IRCConnection connection : EiraIRC.instance.getConnections()) {
+				for(IRCConnection connection : EiraIRC.instance.getConnectionManager().getConnections()) {
 					for(IRCChannel channel : connection.getChannels()) {
 						if(!ConfigHelper.getGeneralSettings(channel).isReadOnly()) {
 							if(isNotice) {
@@ -251,7 +251,7 @@ public class MCEventHandler {
 					return;
 				}
 				String[] targetArr = chatTarget.split("/");
-				IRCConnection connection = EiraIRC.instance.getConnection(targetArr[0]);
+				IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(targetArr[0]);
 				if(connection != null) {
 					IRCContext context;
 					if(targetArr[1].startsWith("#")) {
@@ -304,7 +304,7 @@ public class MCEventHandler {
 				}
 			}
 		} else {
-			for(IRCConnection connection : EiraIRC.instance.getConnections()) {
+			for(IRCConnection connection : EiraIRC.instance.getConnectionManager().getConnections()) {
 				for(IRCChannel channel : connection.getChannels()) {
 					String format = MessageFormat.getMessageFormat(channel, isEmote);
 					String ircMessage = MessageFormat.formatMessage(format, channel, sender, message, MessageFormat.Target.IRC, (isEmote ? MessageFormat.Mode.Emote : MessageFormat.Mode.Message));
@@ -326,7 +326,7 @@ public class MCEventHandler {
 	@SubscribeEvent
 	public void onPlayerDeath(LivingDeathEvent event) {
 		if(event.entityLiving instanceof EntityPlayer) {
-			for(IRCConnection connection : EiraIRC.instance.getConnections()) {
+			for(IRCConnection connection : EiraIRC.instance.getConnectionManager().getConnections()) {
 				for(IRCChannel channel : connection.getChannels()) {
 					GeneralSettings generalSettings = ConfigHelper.getGeneralSettings(channel);
 					BotSettings botSettings = ConfigHelper.getBotSettings(channel);
@@ -349,7 +349,7 @@ public class MCEventHandler {
 	
 	@SubscribeEvent
 	public void onPlayerLogout(PlayerLoggedOutEvent event) {
-		for(IRCConnection connection : EiraIRC.instance.getConnections()) {
+		for(IRCConnection connection : EiraIRC.instance.getConnectionManager().getConnections()) {
 			for(IRCChannel channel : connection.getChannels()) {
 				GeneralSettings generalSettings = ConfigHelper.getGeneralSettings(channel);
 				BotSettings botSettings = ConfigHelper.getBotSettings(channel);
@@ -365,7 +365,7 @@ public class MCEventHandler {
 	public void onPlayerNickChange(String oldNick, String newNick) {
 		String message = Utils.getLocalizedMessage("irc.display.mc.nickChange", oldNick, newNick);
 		Utils.addMessageToChat(message);
-		for(IRCConnection connection : EiraIRC.instance.getConnections()) {
+		for(IRCConnection connection : EiraIRC.instance.getConnectionManager().getConnections()) {
 			for(IRCChannel channel : connection.getChannels()) {
 				if(!ConfigHelper.getGeneralSettings(channel).isReadOnly()) {
 					channel.message(message);

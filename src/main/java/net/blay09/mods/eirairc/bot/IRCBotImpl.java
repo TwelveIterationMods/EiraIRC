@@ -16,7 +16,6 @@ import net.blay09.mods.eirairc.api.bot.IRCBot;
 import net.blay09.mods.eirairc.config.base.BotProfileImpl;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
-import net.blay09.mods.eirairc.config.settings.BotSettings;
 import net.blay09.mods.eirairc.config.settings.BotStringComponent;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.irc.IRCConnectionImpl;
@@ -50,11 +49,6 @@ public class IRCBotImpl implements IRCBot {
 		return getProfile(channel.getName());
 	}
 	
-	@Override
-	public BotProfile getMainProfile() {
-		return mainProfile;
-	}
-
 	@Override
 	public IRCConnection getConnection() {
 		return connection;

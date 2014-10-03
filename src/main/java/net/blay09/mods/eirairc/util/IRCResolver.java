@@ -26,13 +26,13 @@ public class IRCResolver {
 		if(serverIdx != -1) {
 			server = path.substring(0, serverIdx);
 			path = path.substring(serverIdx + 1);
-			connection = EiraIRC.instance.getConnection(server);
+			connection = EiraIRC.instance.getConnectionManager().getConnection(server);
 			if(connection == null) {
 				return IRCTargetError.NotConnected;
 			}
 		} else {
 			IRCConnection foundConnection = null;
-			for(IRCConnection con : EiraIRC.instance.getConnections()) {
+			for(IRCConnection con : EiraIRC.instance.getConnectionManager().getConnections()) {
 				if(con.getChannel(path) != null || con.getUser(path) != null) {
 					if(foundConnection != null) {
 						return IRCTargetError.SpecifyServer;
@@ -85,7 +85,7 @@ public class IRCResolver {
 			server = path.substring(0, serverIdx);
 		} else {
 			if(path.startsWith("#")) {
-				for(IRCConnection connection : EiraIRC.instance.getConnections()) {
+				for(IRCConnection connection : EiraIRC.instance.getConnectionManager().getConnections()) {
 					if(connection.getChannel(path) != null) {
 						return connection;
 					}
@@ -94,7 +94,7 @@ public class IRCResolver {
 				server = path;
 			}
 		}
-		return EiraIRC.instance.getConnection(server);
+		return EiraIRC.instance.getConnectionManager().getConnection(server);
 	}
 	
 	public static ServerConfig resolveServerConfig(String target, short flags) {

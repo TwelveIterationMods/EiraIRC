@@ -63,7 +63,7 @@ public class CommandWho extends SubCommand {
 				Utils.sendUserList(sender, connection, channel);
 			}
 		} else {
-			for(IRCConnection con : EiraIRC.instance.getConnections()) {
+			for(IRCConnection con : EiraIRC.instance.getConnectionManager().getConnections()) {
 				for(IRCChannel channel : con.getChannels()) {
 					Utils.sendUserList(sender, con, channel);
 				}

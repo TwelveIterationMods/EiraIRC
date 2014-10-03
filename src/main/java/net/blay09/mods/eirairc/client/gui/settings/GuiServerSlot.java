@@ -50,7 +50,7 @@ public class GuiServerSlot extends GuiSlot {
 	@Override
 	protected void drawSlot(int i, int x, int y, int l, Tessellator tessellator, int k, int j) {
 		ServerConfig config = parentGui.getServerConfig(i);
-		String connectedString = EiraIRC.instance.isConnectedTo(config.getAddress()) ? Utils.getLocalizedMessage("irc.gui.serverList.connected") :  Utils.getLocalizedMessage("irc.gui.serverList.notConnected");
+		String connectedString = EiraIRC.instance.getConnectionManager().isConnectedTo(config.getAddress()) ? Utils.getLocalizedMessage("irc.gui.serverList.connected") :  Utils.getLocalizedMessage("irc.gui.serverList.notConnected");
 		
 		parentGui.drawString(parentGui.getFontRenderer(), config.getAddress(), x + 2, y + 1, Globals.TEXT_COLOR);
 		parentGui.drawString(parentGui.getFontRenderer(), connectedString, x + 4, y + 11, Globals.TEXT_COLOR);

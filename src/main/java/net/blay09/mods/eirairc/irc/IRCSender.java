@@ -33,7 +33,7 @@ public class IRCSender implements Runnable {
 			stop();
 		}
 		running = true;
-		thread = new Thread(this);
+		thread = new Thread(this, "IRCSender");
 		thread.start();
 	}
 

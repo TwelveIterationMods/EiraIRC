@@ -48,7 +48,7 @@ public class CommandNick extends SubCommand {
 			String nick = args[0];
 			Utils.sendLocalizedMessage(sender, "irc.basic.changingNick", serverConfig.getAddress(), nick);
 			serverConfig.setNick(nick);
-			IRCConnection connection = EiraIRC.instance.getConnection(serverConfig.getAddress());
+			IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(serverConfig.getAddress());
 			if(connection != null) {
 				connection.nick(nick);
 			}
@@ -61,7 +61,7 @@ public class CommandNick extends SubCommand {
 						continue;
 					}
 					if(serverConfig.getNick() == null || serverConfig.getNick().isEmpty()) {
-						IRCConnection connection = EiraIRC.instance.getConnection(serverConfig.getAddress());
+						IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(serverConfig.getAddress());
 						if(connection != null) {
 							connection.nick(ConfigHelper.formatNick(nick));
 						}

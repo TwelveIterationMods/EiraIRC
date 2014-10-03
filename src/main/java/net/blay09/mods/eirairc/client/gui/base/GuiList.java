@@ -1,4 +1,4 @@
-package net.blay09.mods.eirairc.client.gui;
+package net.blay09.mods.eirairc.client.gui.base;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -270,7 +270,7 @@ public class Utils {
 	}
 
 	public static void addConnectionsToList(List<String> list) {
-		for(IRCConnection connection : EiraIRC.instance.getConnections()) {
+		for(IRCConnection connection : EiraIRC.instance.getConnectionManager().getConnections()) {
 			list.add(connection.getHost());
 		}		
 	}
@@ -376,7 +376,7 @@ public class Utils {
 	public static IRCContext getSuggestedTarget() {
 		IRCContext result = EiraIRC.instance.getChatSessionHandler().getIRCTarget();
 		if(result == null) {
-			IRCConnection connection = EiraIRC.instance.getDefaultConnection();
+			IRCConnection connection = EiraIRC.instance.getConnectionManager().getDefaultConnection();
 			if(connection != null) {
 				if(connection.getChannels().size() == 1) {
 					return connection.getChannels().iterator().next();

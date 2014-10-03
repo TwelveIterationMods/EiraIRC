@@ -46,12 +46,12 @@ public class CommandDisconnect extends SubCommand {
 		}
 		if(target.equals(TARGET_ALL)) {
 			Utils.sendLocalizedMessage(sender, "irc.basic.disconnecting", "IRC");
-			for(IRCConnection connection : EiraIRC.instance.getConnections()) {
+			for(IRCConnection connection : EiraIRC.instance.getConnectionManager().getConnections()) {
 				connection.disconnect(ConfigHelper.getQuitMessage(connection));
 			}
-			EiraIRC.instance.clearConnections();
+			EiraIRC.instance.getConnectionManager().clearConnections();
 		} else {
-			IRCConnection connection = EiraIRC.instance.getConnection(target);
+			IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(target);
 			if(connection == null) {
 				Utils.sendLocalizedMessage(sender, "irc.general.notConnected", target);
 				return true;

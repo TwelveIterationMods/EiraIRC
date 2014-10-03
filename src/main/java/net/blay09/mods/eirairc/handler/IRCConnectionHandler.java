@@ -26,7 +26,7 @@ public class IRCConnectionHandler {
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void onConnecting(IRCConnectingEvent event) {
-		EiraIRC.instance.addConnection(event.connection);
+		EiraIRC.instance.getConnectionManager().addConnection(event.connection);
 	}
 	
 	@SubscribeEvent(priority = EventPriority.LOWEST)
@@ -53,7 +53,7 @@ public class IRCConnectionHandler {
 		for(IRCChannel channel : event.connection.getChannels()) {
 			EiraIRC.instance.getChatSessionHandler().removeTargetChannel(channel);
 		}
-		EiraIRC.instance.removeConnection(event.connection);
+		EiraIRC.instance.getConnectionManager().removeConnection(event.connection);
 	}
 	
 	@SubscribeEvent(priority = EventPriority.LOWEST)

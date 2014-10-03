@@ -35,7 +35,7 @@ public class CommandTwitch extends SubCommand {
 
 	@Override
 	public boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) {
-		if(EiraIRC.instance.isConnectedTo(Globals.TWITCH_SERVER)) {
+		if(EiraIRC.instance.getConnectionManager().isConnectedTo(Globals.TWITCH_SERVER)) {
 			Utils.sendLocalizedMessage(sender, "irc.general.alreadyConnected", "Twitch");
 			return true;
 		}

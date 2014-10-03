@@ -127,8 +127,8 @@ public class EiraTickHandler {
 	
 	@SubscribeEvent
 	public void worldJoined(FMLNetworkEvent.ClientConnectedToServerEvent event) {
-		if(!EiraIRC.instance.isIRCRunning()) {
-			EiraIRC.instance.startIRC();
+		if(!EiraIRC.instance.getConnectionManager().isIRCRunning()) {
+			EiraIRC.instance.getConnectionManager().startIRC();
 		}
 	}
 	

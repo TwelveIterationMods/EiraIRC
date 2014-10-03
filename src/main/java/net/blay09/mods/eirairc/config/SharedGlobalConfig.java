@@ -5,6 +5,7 @@ import net.blay09.mods.eirairc.config.settings.GeneralSettings;
 import net.blay09.mods.eirairc.config.settings.ThemeSettings;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
+import net.minecraft.client.resources.I18n;
 import net.minecraftforge.common.config.Configuration;
 
 import java.io.File;
@@ -16,13 +17,13 @@ import java.util.List;
  */
 public class SharedGlobalConfig {
 
-	private static final String GENERAL = "general";
-	private static final String NETWORK = "network";
-	private static final String THEME = "theme";
-	private static final String BOT = "bot";
-	private static final String SETTINGS = "settings";
+	public static final String GENERAL = "general";
+	public static final String NETWORK = "network";
+	public static final String THEME = "theme";
+	public static final String BOT = "bot";
+	public static final String SETTINGS = "settings";
 
-	private static Configuration thisConfig;
+	public static Configuration thisConfig;
 
 	// General
 	public static boolean enablePlayerAliases = false;
@@ -46,26 +47,28 @@ public class SharedGlobalConfig {
 	public static final GeneralSettings generalSettings = new GeneralSettings(null);
 
 	public static void load(File configDir) {
-		thisConfig = new Configuration(new File(configDir, "shared.cfg"));
+		if(thisConfig == null) {
+			thisConfig = new Configuration(new File(configDir, "shared.cfg"));
+		}
 
 		// General
-		enablePlayerAliases = thisConfig.getBoolean("enablePlayerAliases", GENERAL, enablePlayerAliases, "");
-		enablePlayerColors = thisConfig.getBoolean("enablePlayerColors", GENERAL, enablePlayerColors, "");
-		String[] colorBlacklistArray = thisConfig.getStringList("colorBlackList", GENERAL, Globals.DEFAULT_COLOR_BLACKLIST, "");
+		enablePlayerAliases = thisConfig.getBoolean("enablePlayerAliases", GENERAL, enablePlayerAliases, "", "eirairc:config.property.enablePlayerAliases");
+		enablePlayerColors = thisConfig.getBoolean("enablePlayerColors", GENERAL, enablePlayerColors, "", "eirairc:config.property.enablePlayerColors");
+		String[] colorBlacklistArray = thisConfig.getStringList("colorBlacklist", GENERAL, Globals.DEFAULT_COLOR_BLACKLIST, "", null, "eirairc:config.property.colorBlacklist");
 		for(String entry : colorBlacklistArray) {
 			colorBlacklist.add(entry);
 		}
-		registerShortCommands = thisConfig.getBoolean("registerShortCommands", GENERAL, registerShortCommands, "");
-		hidePlayerTags = thisConfig.getBoolean("hidePlayerTags", GENERAL, hidePlayerTags, "");
-		debugMode = thisConfig.getBoolean("debugMode", GENERAL, debugMode, "");
+		registerShortCommands = thisConfig.getBoolean("registerShortCommands", GENERAL, registerShortCommands, "", "eirairc:config.property.registerShortCommands");
+		hidePlayerTags = thisConfig.getBoolean("hidePlayerTags", GENERAL, hidePlayerTags, "", "eirairc:config.property.hidePlayerTags");
+		debugMode = thisConfig.getBoolean("debugMode", GENERAL, debugMode, "", "eirairc:config.property.debugMode");
 
 		// Network
-		sslTrustAllCerts = thisConfig.getBoolean("sslTrustAllCerts", NETWORK, sslTrustAllCerts, "");
-		sslCustomTrustStore = thisConfig.getString("sslCustomTrustStore", NETWORK, sslCustomTrustStore, "");
-		sslDisableDiffieHellman = thisConfig.getBoolean("sslDisableDiffieHellman", NETWORK, sslDisableDiffieHellman, "");
-		proxyHost = thisConfig.getString("proxyHost", NETWORK, proxyHost, "");
-		proxyUsername = thisConfig.getString("proxyUsername", NETWORK, proxyUsername, "");
-		proxyPassword = thisConfig.getString("proxyPassword", NETWORK, proxyPassword, "");
+		sslTrustAllCerts = thisConfig.getBoolean("sslTrustAllCerts", NETWORK, sslTrustAllCerts, "", "eirairc:config.property.sslTrustAllCerts");
+		sslCustomTrustStore = thisConfig.getString("sslCustomTrustStore", NETWORK, sslCustomTrustStore, "", "eirairc:config.property.sslCustomTrustStore");
+		sslDisableDiffieHellman = thisConfig.getBoolean("sslDisableDiffieHellman", NETWORK, sslDisableDiffieHellman, "", "eirairc:config.property.sslDisableDiffieHellman");
+		proxyHost = thisConfig.getString("proxyHost", NETWORK, proxyHost, "", "eirairc:config.property.proxyHost");
+		proxyUsername = thisConfig.getString("proxyUsername", NETWORK, proxyUsername, "", "eirairc:config.property.proxyUsername");
+		proxyPassword = thisConfig.getString("proxyPassword", NETWORK, proxyPassword, "", "eirairc:config.property.proxyPassword");
 
 		// Default Settings
 		theme.load(thisConfig, THEME, true);
@@ -75,27 +78,27 @@ public class SharedGlobalConfig {
 
 	public static void save() {
 		// Category Comments
-		thisConfig.setCategoryComment(GENERAL, "Global EiraIRC settings");
-		thisConfig.setCategoryComment(NETWORK, "Advanced network settings to configure SSL usage and proxies");
-		thisConfig.setCategoryComment(THEME, "Color settings for names and text in chat. Can be overridden by servers and channels.");
-		thisConfig.setCategoryComment(BOT, "Bot settings and behaviour for the IRC chat. Can be overridden by servers and channels.");
-		thisConfig.setCategoryComment(SETTINGS, "General settings for IRC connections. Can be overridden by servers and channels.");
+		thisConfig.setCategoryComment(GENERAL, I18n.format("eirairc:config.category.general"));
+		thisConfig.setCategoryComment(NETWORK, I18n.format("eirairc:config.category.network"));
+		thisConfig.setCategoryComment(THEME, I18n.format("eirairc:config.category.theme"));
+		thisConfig.setCategoryComment(BOT, I18n.format("eirairc:config.category.bot"));
+		thisConfig.setCategoryComment(SETTINGS, I18n.format("eirairc:config.category.settings"));
 
 		// General
-		thisConfig.get(GENERAL, "enablePlayerAliases", false, "[Deprecated] If set to true, OPs can assign an alias for a MC nick that will be used instead.").set(enablePlayerAliases);
-		thisConfig.get(GENERAL, "enablePlayerColors", false, "If set to true, players can use the '/irc color' command to set a color for their MC nick. See also: colorBlackList").set(enablePlayerColors);
-		thisConfig.get(GENERAL, "colorBlackList", new String[0], "A list of colors that players are not allowed to use as name colors when using the '/irc color' command.").set(colorBlacklist.toArray(new String[colorBlacklist.size()]));
-		thisConfig.get(GENERAL, "registerShortCommands", false, "If set to true, EiraIRC will link commands such as /join, /msg or /nick to it's /irc <command> variants for quicker usage.").set(registerShortCommands);
-		thisConfig.get(GENERAL, "hidePlayerTags", false, "If set to true, EiraIRC will attempt to strip player name tags such as [Admin] (that were added by other mods) when sending to IRC.").set(hidePlayerTags);
-		thisConfig.get(GENERAL, "debugMode", false, "[Advanced] If set to true, raw IRC messages will be printed into the log for investigation purposes.").set(debugMode);
+		thisConfig.get(GENERAL, "enablePlayerAliases", false, I18n.format("eirairc:config.property.enablePlayerAliases.tooltip")).set(enablePlayerAliases);
+		thisConfig.get(GENERAL, "enablePlayerColors", false, I18n.format("eirairc:config.property.enablePlayerColors.tooltip")).set(enablePlayerColors);
+		thisConfig.get(GENERAL, "colorBlacklist", new String[0], I18n.format("eirairc:config.property.colorBlacklist.tooltip")).set(colorBlacklist.toArray(new String[colorBlacklist.size()]));
+		thisConfig.get(GENERAL, "registerShortCommands", false, I18n.format("eirairc:config.property.registerShortCommands.tooltip")).set(registerShortCommands);
+		thisConfig.get(GENERAL, "hidePlayerTags", false, I18n.format("eirairc:config.property.hidePlayerTags.tooltip")).set(hidePlayerTags);
+		thisConfig.get(GENERAL, "debugMode", false, I18n.format("eirairc:config.property.debugMode.tooltip")).set(debugMode);
 
 		// Network
-		thisConfig.get(NETWORK, "sslTrustAllCerts", false, "[Advanced] If set to true, EiraIRC will accept all SSL certificates without checking the truststore.").set(sslTrustAllCerts);
-		thisConfig.get(NETWORK, "sslCustomTrustStore", "[Advanced] The path to a custom SSL truststore.").set(sslCustomTrustStore);
-		thisConfig.get(NETWORK, "sslDisableDiffieHellman", false, "[Advanced] If set to true, disables DiffieHellman encryption for SSL connections to fix a Java issue.").set(sslDisableDiffieHellman);
-		thisConfig.get(NETWORK, "proxyHost", "", "[Advanced] The address to a proxy you want connections to go through.").set(proxyHost);
-		thisConfig.get(NETWORK, "proxyUsername", "", "[Advanced] The username to authenticate with the proxy, if necessary.").set(proxyUsername);
-		thisConfig.get(NETWORK, "proxyPassword", "", "[Advanced] The password to authenticate with the proxy, if necessary.").set(proxyPassword);
+		thisConfig.get(NETWORK, "sslTrustAllCerts", false, I18n.format("eirairc:config.property.sslTrustAllCerts.tooltip")).set(sslTrustAllCerts);
+		thisConfig.get(NETWORK, "sslCustomTrustStore", I18n.format("eirairc:config.property.sslCustomTrustStore.tooltip")).set(sslCustomTrustStore);
+		thisConfig.get(NETWORK, "sslDisableDiffieHellman", false, I18n.format("eirairc:config.property.sslDisableDiffieHellman.tooltip")).set(sslDisableDiffieHellman);
+		thisConfig.get(NETWORK, "proxyHost", "", I18n.format("eirairc:config.property.proxyHost.tooltip")).set(proxyHost);
+		thisConfig.get(NETWORK, "proxyUsername", "", I18n.format("eirairc:config.property.proxyUsername.tooltip")).set(proxyUsername);
+		thisConfig.get(NETWORK, "proxyPassword", "", I18n.format("eirairc:config.property.proxyPassword.tooltip")).set(proxyPassword);
 
 		// Default Settings
 		theme.save(thisConfig, THEME);

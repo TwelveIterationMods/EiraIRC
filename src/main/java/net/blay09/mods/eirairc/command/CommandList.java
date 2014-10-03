@@ -32,12 +32,12 @@ public class CommandList extends SubCommand {
 
 	@Override
 	public boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) {
-		if(EiraIRC.instance.getConnectionCount() == 0) {
+		if(EiraIRC.instance.getConnectionManager().getConnectionCount() == 0) {
 			Utils.sendLocalizedMessage(sender, "irc.general.notConnected", "IRC");
 			return true;
 		}
 		Utils.sendLocalizedMessage(sender, "irc.list.activeConnections");
-		for(IRCConnection connection : EiraIRC.instance.getConnections()) {
+		for(IRCConnection connection : EiraIRC.instance.getConnectionManager().getConnections()) {
 			StringBuilder sb = new StringBuilder();
 			for(IRCChannel channel : connection.getChannels()) {
 				if(sb.length() > 0) {

@@ -5,8 +5,8 @@ package net.blay09.mods.eirairc.client.gui.settings;
 
 import java.util.List;
 
-import net.blay09.mods.eirairc.client.gui.GuiAdvancedTextField;
-import net.blay09.mods.eirairc.client.gui.GuiToggleButton;
+import net.blay09.mods.eirairc.client.gui.base.GuiAdvancedTextField;
+import net.blay09.mods.eirairc.client.gui.base.GuiToggleButton;
 import net.blay09.mods.eirairc.config.base.BotProfileImpl;
 import net.blay09.mods.eirairc.config.base.MessageFormatConfig;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;

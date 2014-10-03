@@ -61,7 +61,7 @@ public class GuiServerList extends GuiScreen implements GuiYesNoCallback {
 		if(button == btnBack) {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiSettings());
 		} else if(button == btnConnect) {
-			IRCConnection connection = EiraIRC.instance.getConnection(configs[selectedElement].getAddress());
+			IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(configs[selectedElement].getAddress());
 			if(connection != null) {
 				connection.disconnect(ConfigHelper.getQuitMessage(connection));
 			} else {
@@ -85,7 +85,7 @@ public class GuiServerList extends GuiScreen implements GuiYesNoCallback {
 			Minecraft.getMinecraft().displayGuiScreen(this);
 			return;
 		}
-		IRCConnection connection = EiraIRC.instance.getConnection(configs[serverIdx].getAddress());
+		IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(configs[serverIdx].getAddress());
 		if(connection != null) {
 			connection.disconnect(ConfigHelper.getQuitMessage(connection));
 		}
@@ -114,7 +114,7 @@ public class GuiServerList extends GuiScreen implements GuiYesNoCallback {
 	}
 	
 	public void onElementClicked(int i) {
-		if(EiraIRC.instance.isConnectedTo(configs[i].getAddress())) {
+		if(EiraIRC.instance.getConnectionManager().isConnectedTo(configs[i].getAddress())) {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiChannelList(this, configs[i]));
 		} else {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiServerConfig(configs[i]));
@@ -130,7 +130,7 @@ public class GuiServerList extends GuiScreen implements GuiYesNoCallback {
 		btnEdit.enabled = true;
 		btnDelete.enabled = true;
 		btnChannels.enabled = true;
-		if(EiraIRC.instance.isConnectedTo(configs[i].getAddress())) {
+		if(EiraIRC.instance.getConnectionManager().isConnectedTo(configs[i].getAddress())) {
 			btnConnect.displayString = Utils.getLocalizedMessage("irc.gui.serverList.disconnect");
 		} else {
 			btnConnect.displayString = Utils.getLocalizedMessage("irc.gui.serverList.connect");

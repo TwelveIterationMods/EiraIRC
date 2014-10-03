@@ -60,7 +60,7 @@ public class CommandQuote extends SubCommand {
 	@Override
 	public void addTabCompletionOptions(List<String> list, ICommandSender sender, String[] args) {
 		if(args.length == 0) {
-			for(IRCConnection connection : EiraIRC.instance.getConnections()) {
+			for(IRCConnection connection : EiraIRC.instance.getConnectionManager().getConnections()) {
 				list.add(connection.getHost());
 			}
 		}

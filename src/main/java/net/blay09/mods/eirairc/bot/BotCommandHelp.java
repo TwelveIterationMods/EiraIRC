@@ -39,7 +39,7 @@ public class BotCommandHelp implements IBotCommand {
 			user.notice("Visit http://blay09.net/?page_id=63 for more information on this bot.");
 			user.notice(" ");
 			user.notice("The following commands are available:");
-			for(IBotCommand command : bot.getMainProfile().getCommands()) {
+			for(IBotCommand command : bot.getProfile(null).getCommands()) {
 				user.notice(command.getCommandName().toUpperCase() + " : " + command.getCommandDescription());
 			}
 			user.notice("***** End of Help *****");

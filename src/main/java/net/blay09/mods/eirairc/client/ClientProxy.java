@@ -35,9 +35,6 @@ public class ClientProxy extends CommonProxy {
 		recLiveGUI= new OverlayRecLive();
 		ScreenshotManager.create();
 		FMLCommonHandler.instance().bus().register(new EiraTickHandler(eiraChat));
-
-		UploadManager.registerUploadHoster(new DirectUploadHoster());
-		UploadManager.registerUploadHoster(new ImgurHoster());
 		
 		EiraIRC.instance.registerCommands(ClientCommandHandler.instance, false);
 	}

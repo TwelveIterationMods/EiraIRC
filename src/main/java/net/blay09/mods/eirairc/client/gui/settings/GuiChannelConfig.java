@@ -8,7 +8,7 @@ import java.util.List;
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.IRCConnection;
 import net.blay09.mods.eirairc.bot.IRCBotImpl;
-import net.blay09.mods.eirairc.client.gui.GuiAdvancedTextField;
+import net.blay09.mods.eirairc.client.gui.base.GuiAdvancedTextField;
 import net.blay09.mods.eirairc.config.base.BotProfileImpl;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
@@ -194,7 +194,7 @@ public class GuiChannelConfig extends GuiScreen {
 			config = serverConfig.getOrCreateChannelConfig(txtName.getText());
 		}
 		config.setPassword(txtChannelPassword.getText());
-		IRCConnection connection = EiraIRC.instance.getConnection(serverConfig.getAddress());
+		IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(serverConfig.getAddress());
 		if(connection != null) {
 			IRCBotImpl bot = (IRCBotImpl) connection.getBot();
 			bot.updateProfiles();

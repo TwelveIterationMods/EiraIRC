@@ -41,9 +41,9 @@ public class CommandConfig extends SubCommand {
 		String target = args[0];
 		if(target.equals("reload")) {
 			Utils.sendLocalizedMessage(sender, "irc.config.reload");
-			EiraIRC.instance.stopIRC();
+			EiraIRC.instance.getConnectionManager().stopIRC();
 			ConfigurationHandler.reload();
-			EiraIRC.instance.startIRC();
+			EiraIRC.instance.getConnectionManager().startIRC();
 			return true;
 		}
 		if(args.length < 2) {

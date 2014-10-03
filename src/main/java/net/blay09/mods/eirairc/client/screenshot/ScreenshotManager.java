@@ -245,7 +245,7 @@ public class ScreenshotManager {
 				return;
 			}
 			String[] target = chatTarget.split("/");
-			IRCConnection connection = EiraIRC.instance.getConnection(target[0]);
+			IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(target[0]);
 			if(connection != null) {
 				IRCBot bot = connection.getBot();
 				EnumChatFormatting emoteColor;

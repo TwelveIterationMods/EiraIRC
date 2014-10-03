@@ -27,8 +27,6 @@ public class ImgurHoster implements IUploadHoster {
 	private static final String IMAGE_BASE_URL = "https://imgur.com/";
 	private static final String API_CLIENT_ID = "d47c0303c944643";
 	
-	private static final int BUFFER_SIZE = 1024;
-	
 	@Override
 	public UploadedFile uploadFile(File file) {
 		if(!file.exists()) {

@@ -5,9 +5,9 @@ package net.blay09.mods.eirairc.client.gui.settings;
 
 import net.blay09.mods.eirairc.api.bot.IBotCommand;
 import net.blay09.mods.eirairc.bot.BotCommandCustom;
-import net.blay09.mods.eirairc.client.gui.GuiAdvancedTextField;
-import net.blay09.mods.eirairc.client.gui.GuiList;
-import net.blay09.mods.eirairc.client.gui.GuiListTextEntry;
+import net.blay09.mods.eirairc.client.gui.base.GuiAdvancedTextField;
+import net.blay09.mods.eirairc.client.gui.base.GuiList;
+import net.blay09.mods.eirairc.client.gui.base.GuiListTextEntry;
 import net.blay09.mods.eirairc.config.base.BotProfileImpl;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;

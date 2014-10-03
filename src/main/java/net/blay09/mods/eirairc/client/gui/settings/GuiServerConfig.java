@@ -8,8 +8,8 @@ import java.util.List;
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.IRCConnection;
 import net.blay09.mods.eirairc.bot.IRCBotImpl;
-import net.blay09.mods.eirairc.client.gui.GuiAdvancedTextField;
-import net.blay09.mods.eirairc.client.gui.GuiToggleButton;
+import net.blay09.mods.eirairc.client.gui.base.GuiAdvancedTextField;
+import net.blay09.mods.eirairc.client.gui.base.GuiToggleButton;
 import net.blay09.mods.eirairc.config.base.BotProfileImpl;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
@@ -205,7 +205,7 @@ public class GuiServerConfig extends GuiScreen {
 	public void actionPerformed(GuiButton button) {
 		if(button == btnSave) {
 			saveToConfig();
-			if(btnAutoConnect.getState() && !EiraIRC.instance.isConnectedTo(config.getAddress())) {
+			if(btnAutoConnect.getState() && !EiraIRC.instance.getConnectionManager().isConnectedTo(config.getAddress())) {
 				Utils.connectTo(config);
 			}
 			Minecraft.getMinecraft().displayGuiScreen(new GuiServerList());
@@ -265,7 +265,7 @@ public class GuiServerConfig extends GuiScreen {
 		config.setNick(txtNick.getText());
 		config.setNickServ(txtNickServName.getText(), txtNickServPassword.getText());
 		config.setServerPassword(txtServerPassword.getText());
-		IRCConnection connection = EiraIRC.instance.getConnection(config.getAddress());
+		IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(config.getAddress());
 		if(connection != null) {
 			IRCBotImpl bot = (IRCBotImpl) connection.getBot();
 			bot.updateProfiles();
