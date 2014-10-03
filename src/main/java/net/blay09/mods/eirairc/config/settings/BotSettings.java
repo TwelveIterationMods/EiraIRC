@@ -77,6 +77,20 @@ public class BotSettings {
 		}
 	}
 
+	public JsonObject toJsonObject() {
+		if(strings.isEmpty() && booleans.isEmpty()) {
+			return null;
+		}
+		JsonObject object = new JsonObject();
+		for(Map.Entry<BotStringComponent, String> entry : strings.entrySet()) {
+			object.addProperty(entry.getKey().name, entry.getValue());
+		}
+		for(Map.Entry<BotBooleanComponent, Boolean> entry : booleans.entrySet()) {
+			object.addProperty(entry.getKey().name, entry.getValue());
+		}
+		return object;
+	}
+
 	public void save(Configuration config, String category) {
 		for(Map.Entry<BotStringComponent, String> entry : strings.entrySet()) {
 			config.get(category, entry.getKey().name, "", entry.getKey().comment).set(entry.getValue());
@@ -88,10 +102,10 @@ public class BotSettings {
 
 	public void loadLegacy(Configuration legacyConfig, String category) {
 		if(category != null) {
-			strings.put(BotStringComponent.Description, legacyConfig.get(category, "description", BotStringComponent.Description.defaultValue).getString());
-			strings.put(BotStringComponent.Ident, legacyConfig.get(category, "ident", BotStringComponent.Ident.defaultValue).getString());
+			strings.put(BotStringComponent.Description, Utils.unquote(legacyConfig.get(category, "description", BotStringComponent.Description.defaultValue).getString()));
+			strings.put(BotStringComponent.Ident, Utils.unquote(legacyConfig.get(category, "ident", BotStringComponent.Ident.defaultValue).getString()));
 			if (legacyConfig.hasKey(category, "quitMessage")) {
-				strings.put(BotStringComponent.QuitMessage, legacyConfig.get(category, "quitMessage", BotStringComponent.QuitMessage.defaultValue).getString());
+				strings.put(BotStringComponent.QuitMessage, Utils.unquote(legacyConfig.get(category, "quitMessage", BotStringComponent.QuitMessage.defaultValue).getString()));
 			}
 		}
 		strings.put(BotStringComponent.NickFormat, Utils.quote(Utils.unquote(legacyConfig.get("serveronly", "nickPrefix", "").getString()) + "%s" + Utils.unquote(legacyConfig.get("serveronly", "nickSuffix", "").getString())));

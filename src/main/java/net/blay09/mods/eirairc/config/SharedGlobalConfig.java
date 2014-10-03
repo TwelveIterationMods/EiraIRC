@@ -4,6 +4,7 @@ import net.blay09.mods.eirairc.config.settings.BotSettings;
 import net.blay09.mods.eirairc.config.settings.GeneralSettings;
 import net.blay09.mods.eirairc.config.settings.ThemeSettings;
 import net.blay09.mods.eirairc.util.Globals;
+import net.blay09.mods.eirairc.util.Utils;
 import net.minecraftforge.common.config.Configuration;
 
 import java.io.File;
@@ -105,7 +106,7 @@ public class SharedGlobalConfig {
 		enablePlayerColors = legacyConfig.getBoolean("enableNameColors", "display", enablePlayerColors, "");
 		String[] colorBlacklistArray = legacyConfig.getStringList("colorBlackList", "serveronly", new String[0], "");
 		for(String entry : colorBlacklistArray) {
-			colorBlacklist.add(entry);
+			colorBlacklist.add(Utils.unquote(entry));
 		}
 		registerShortCommands = legacyConfig.getBoolean("registerShortCommands", "global", registerShortCommands, "");
 		debugMode = legacyConfig.getBoolean("debugMode", "global", debugMode, "");
@@ -113,11 +114,11 @@ public class SharedGlobalConfig {
 
 		// Network
 		sslTrustAllCerts = legacyConfig.getBoolean("sslTrustAllCerts", "network", sslTrustAllCerts, "");
-		sslCustomTrustStore = legacyConfig.getString("sslCustomTrustStore", "network", sslCustomTrustStore, "");
+		sslCustomTrustStore = Utils.unquote(legacyConfig.getString("sslCustomTrustStore", "network", sslCustomTrustStore, ""));
 		sslDisableDiffieHellman = legacyConfig.getBoolean("sslDisableDiffieHellman", "network", sslDisableDiffieHellman, "");
-		proxyHost = legacyConfig.getString("proxyHost", "network", proxyHost, "");
-		proxyUsername = legacyConfig.getString("proxyUsername", "network", proxyUsername, "");
-		proxyPassword = legacyConfig.getString("proxyPassword", "network", proxyPassword, "");
+		proxyHost = Utils.unquote(legacyConfig.getString("proxyHost", "network", proxyHost, ""));
+		proxyUsername = Utils.unquote(legacyConfig.getString("proxyUsername", "network", proxyUsername, ""));
+		proxyPassword = Utils.unquote(legacyConfig.getString("proxyPassword", "network", proxyPassword, ""));
 
 		// Theme
 		theme.loadLegacy(legacyConfig);

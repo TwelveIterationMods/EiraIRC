@@ -17,16 +17,15 @@ import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 
 public class ConfigHelper {
 	
-	public static String formatNick(String nickFormate) {
-		String result = nickFormate.replace("%USERNAME%", Utils.getUsername());
-		return result;
+	public static String formatNick(String format) {
+		return format.replace("%USERNAME%", Utils.getUsername());
 	}
 	
 	public static String getNick(ServerConfig serverConfig) {
 		if(serverConfig.getNick() != null && !serverConfig.getNick().isEmpty()) {
 			return serverConfig.getNick();
 		}
-		return "Baly-chan";
+		return Globals.DEFAULT_NICK;
 	}
 
 	public static String getFormattedNick(ServerConfig serverConfig) {

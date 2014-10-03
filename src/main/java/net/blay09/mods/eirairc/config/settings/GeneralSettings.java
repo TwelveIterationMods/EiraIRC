@@ -53,6 +53,17 @@ public class GeneralSettings {
 		}
 	}
 
+	public JsonObject toJsonObject() {
+		if(booleans.isEmpty()) {
+			return null;
+		}
+		JsonObject object = new JsonObject();
+		for(Map.Entry<GeneralBooleanComponent, Boolean> entry : booleans.entrySet()) {
+			object.addProperty(entry.getKey().name, entry.getValue());
+		}
+		return object;
+	}
+
 	public void save(Configuration config, String category) {
 		for(Map.Entry<GeneralBooleanComponent, Boolean> entry : booleans.entrySet()) {
 			config.get(category, entry.getKey().name, false, entry.getKey().comment).set(entry.getValue());

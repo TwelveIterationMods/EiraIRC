@@ -1,6 +1,7 @@
 package net.blay09.mods.eirairc.config;
 
 import net.blay09.mods.eirairc.api.upload.UploadManager;
+import net.blay09.mods.eirairc.util.Utils;
 import net.minecraftforge.common.config.Configuration;
 import org.lwjgl.input.Keyboard;
 
@@ -133,7 +134,7 @@ public class ClientGlobalConfig {
 		persistentConnection = legacyConfig.get("clientonly", "persistentConnection", persistentConnection).getBoolean();
 
 		// Screenshots
-		screenshotHoster = legacyConfig.get("clientonly", "screenshotHoster", screenshotHoster).getString();
+		screenshotHoster = Utils.unquote(legacyConfig.get("clientonly", "screenshotHoster", screenshotHoster).getString());
 		screenshotAction = ScreenshotAction.values[legacyConfig.get("clientonly", "screenshotAction", screenshotAction.ordinal()).getInt()];
 		uploadBufferSize = legacyConfig.get("clientonly", "uploadBufferSize", uploadBufferSize).getInt();
 
@@ -146,7 +147,7 @@ public class ClientGlobalConfig {
 		keyOpenScreenshots = legacyConfig.get("keybinds", "keyOpenScreenshots", keyOpenScreenshots).getInt();
 
 		// Notifications
-		notificationSound = legacyConfig.get("notifications", "sound", notificationSound).getString();
+		notificationSound = Utils.unquote(legacyConfig.get("notifications", "sound", notificationSound).getString());
 		notificationSoundVolume = (float) legacyConfig.get("notifications", "soundVolume", notificationSoundVolume).getDouble();
 		notificationSoundPitch = (float) legacyConfig.get("notifications", "soundPitch", notificationSoundPitch).getDouble();
 		ntfyFriendJoined = NotificationStyle.values[legacyConfig.get("notifications", "notifyFriendJoined", ntfyFriendJoined.ordinal()).getInt()];
@@ -156,8 +157,8 @@ public class ClientGlobalConfig {
 
 		// Compatibility
 		clientBridge = legacyConfig.get("compatibility", "clientBridge", clientBridge).getBoolean();
-		clientBridgeMessageToken = legacyConfig.get("compatibility", "clientBridgeMessageToken", clientBridgeMessageToken).getString();
-		clientBridgeNickToken = legacyConfig.get("compatibility", "clientBridgeNickToken", clientBridgeNickToken).getString();
+		clientBridgeMessageToken = Utils.unquote(legacyConfig.get("compatibility", "clientBridgeMessageToken", clientBridgeMessageToken).getString());
+		clientBridgeNickToken = Utils.unquote(legacyConfig.get("compatibility", "clientBridgeNickToken", clientBridgeNickToken).getString());
 		disableChatToggle = legacyConfig.get("compatibility", "disableChatToggle", disableChatToggle).getBoolean();
 		vanillaChat = legacyConfig.get("compatibility", "vanillaChat", vanillaChat).getBoolean();
 	}

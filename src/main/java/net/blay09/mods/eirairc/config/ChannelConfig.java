@@ -5,6 +5,7 @@ package net.blay09.mods.eirairc.config;
 
 import java.util.List;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.blay09.mods.eirairc.config.base.BotProfileImpl;
 import net.blay09.mods.eirairc.config.settings.BotSettings;
@@ -63,6 +64,27 @@ public class ChannelConfig {
 			config.generalSettings.load(object.getAsJsonObject("settings"));
 		}
 		return config;
+	}
+
+	public JsonObject toJsonObject() {
+		JsonObject object = new JsonObject();
+		object.addProperty("name", name);
+		if(!password.isEmpty()) {
+			object.addProperty("password", password);
+		}
+		JsonObject botSettingsObject = botSettings.toJsonObject();
+		if(botSettingsObject != null) {
+			object.add("bot", botSettingsObject);
+		}
+		JsonObject themeObject = theme.toJsonObject();
+		if(themeObject != null) {
+			object.add("theme", themeObject);
+		}
+		JsonObject generalSettingsObject = generalSettings.toJsonObject();
+		if(generalSettingsObject != null) {
+			object.add("settings", generalSettingsObject);
+		}
+		return object;
 	}
 
 	public void loadLegacy(Configuration config, ConfigCategory category) {

@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.blay09.mods.eirairc.api.IRCChannel;
 import net.blay09.mods.eirairc.config.base.BotProfileImpl;
@@ -32,7 +33,7 @@ public class ServerConfig {
 	private final ThemeSettings theme = new ThemeSettings(SharedGlobalConfig.theme);
 
 	private final String address;
-	private String charset = "UTF-8";
+	private String charset = Globals.DEFAULT_CHARSET;
 	private String nick = "";
 	private String serverPassword = "";
 	private String nickServName = "";
@@ -118,16 +119,15 @@ public class ServerConfig {
 
 	public void loadLegacy(Configuration legacyConfig, ConfigCategory category) {
 		String categoryName = category.getQualifiedName();
-		if(legacyConfig.hasKey(categoryName, "nick")) {
-			nick = Utils.unquote(legacyConfig.get(categoryName, "nick", "").getString());
-		} else {
-			nick = Utils.unquote(legacyConfig.get("global", "nick", "%USERNAME").getString());
+		nick = Utils.unquote(legacyConfig.get(categoryName, "nick", "").getString());
+		if(nick.isEmpty()) {
+			nick = Utils.unquote(legacyConfig.get("global", "nick", Globals.DEFAULT_NICK).getString());
 		}
 		nickServName = Utils.unquote(legacyConfig.get(categoryName, "nickServName", "").getString());
 		nickServPassword = Utils.unquote(legacyConfig.get(categoryName, "nickServPassword", "").getString());
 		serverPassword = Utils.unquote(legacyConfig.get(categoryName, "serverPassword", "").getString());
 		isSSL = legacyConfig.get(categoryName, "secureConnection", isSSL).getBoolean(isSSL);
-		charset = legacyConfig.get("global", "charset", charset).getString();
+		charset = Utils.unquote(legacyConfig.get("global", "charset", charset).getString());
 		
 		String channelsCategoryName = categoryName + Configuration.CATEGORY_SPLITTER + "channels";
 		ConfigCategory channelsCategory = legacyConfig.getCategory(channelsCategoryName);
@@ -175,6 +175,45 @@ public class ServerConfig {
 		return config;
 	}
 
+	public JsonObject toJsonObject() {
+		JsonObject object = new JsonObject();
+		object.addProperty("address", address);
+		object.addProperty("nick", nick);
+		if(!serverPassword.isEmpty()) {
+			object.addProperty("serverPassword", serverPassword);
+		}
+		if(!charset.equals(Globals.DEFAULT_CHARSET)) {
+			object.addProperty("charset", charset);
+		}
+		if(isSSL) {
+			object.addProperty("isSSL", true);
+		}
+		if(!nickServName.isEmpty() || !nickServPassword.isEmpty()) {
+			JsonObject nickServObject = new JsonObject();
+			nickServObject.addProperty("username", nickServName);
+			nickServObject.addProperty("password", nickServPassword);
+			object.add("nickserv", nickServObject);
+		}
+		JsonObject botSettingsObject = botSettings.toJsonObject();
+		if(botSettingsObject != null) {
+			object.add("bot", botSettingsObject);
+		}
+		JsonObject themeObject = theme.toJsonObject();
+		if(themeObject != null) {
+			object.add("theme", themeObject);
+		}
+		JsonObject generalSettingsObject = generalSettings.toJsonObject();
+		if(generalSettingsObject != null) {
+			object.add("settings", generalSettingsObject);
+		}
+		JsonArray channelArray = new JsonArray();
+		for(ChannelConfig channelConfig : channels.values()) {
+			channelArray.add(channelConfig.toJsonObject());
+		}
+		object.add("channels", channelArray);
+		return object;
+	}
+
 	public void handleConfigCommand(ICommandSender sender, String key) {
 		String value = null;
 		if(value != null) {
@@ -183,7 +222,7 @@ public class ServerConfig {
 			Utils.sendLocalizedMessage(sender, "irc.config.invalidOption", address, key);
 		}
 	}
-	
+
 	public void handleConfigCommand(ICommandSender sender, String key, String value) {
 		if(true) {
 			Utils.sendLocalizedMessage(sender, "irc.config.invalidOption", address, key, value);
@@ -192,7 +231,7 @@ public class ServerConfig {
 		Utils.sendLocalizedMessage(sender, "irc.config.change", address, key, value);
 		ConfigurationHandler.save();
 	}
-	
+
 	public static void addOptionstoList(List<String> list) {
 	}
 

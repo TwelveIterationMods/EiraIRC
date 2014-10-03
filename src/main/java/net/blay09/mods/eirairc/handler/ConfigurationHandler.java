@@ -13,6 +13,7 @@ import java.util.Map;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
+import com.google.gson.stream.JsonWriter;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.ClientGlobalConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
@@ -123,12 +124,28 @@ public class ConfigurationHandler {
 		}
 		Gson gson = new Gson();
 		try {
-			Reader reader = new InputStreamReader(new FileInputStream(new File(configDir, "servers.json")));
+			Reader reader = new FileReader(new File(configDir, "servers.json"));
 			JsonArray serverArray = gson.fromJson(reader, JsonArray.class);
 			for(int i = 0; i < serverArray.size(); i++) {
 				addServerConfig(ServerConfig.loadFromJson(serverArray.get(i).getAsJsonObject()));
 			}
 			reader.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private static void saveServers(File configDir) {
+		Gson gson = new Gson();
+		try {
+			JsonArray serverArray = new JsonArray();
+			for(ServerConfig serverConfig : serverConfigs.values()) {
+				serverArray.add(serverConfig.toJsonObject());
+			}
+			JsonWriter writer = new JsonWriter(new FileWriter(new File(configDir, "servers.json")));
+			writer.setIndent("  ");
+			gson.toJson(serverArray, writer);
+			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -172,6 +189,8 @@ public class ConfigurationHandler {
 	public static void save() {
 		SharedGlobalConfig.save();
 		ClientGlobalConfig.save();
+
+		saveServers(new File(baseConfigDir, "eirairc"));
 	}
 	
 	public static ServerConfig getServerConfig(String host) {
