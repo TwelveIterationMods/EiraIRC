@@ -9,7 +9,6 @@ import net.blay09.mods.eirairc.client.gui.settings.GuiSettings;
 import net.blay09.mods.eirairc.client.screenshot.ScreenshotManager;
 import net.blay09.mods.eirairc.config.ClientGlobalConfig;
 import net.blay09.mods.eirairc.config.ScreenshotAction;
-import net.blay09.mods.eirairc.config.TempPlaceholder;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;

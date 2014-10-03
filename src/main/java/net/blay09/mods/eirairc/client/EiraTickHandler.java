@@ -15,7 +15,6 @@ import net.blay09.mods.eirairc.client.screenshot.Screenshot;
 import net.blay09.mods.eirairc.client.screenshot.ScreenshotManager;
 import net.blay09.mods.eirairc.config.ClientGlobalConfig;
 import net.blay09.mods.eirairc.config.ScreenshotAction;
-import net.blay09.mods.eirairc.config.TempPlaceholder;
 import net.blay09.mods.eirairc.net.EiraPlayerInfo;
 import net.blay09.mods.eirairc.net.PacketHandler;
 import net.blay09.mods.eirairc.net.message.MessageRecLiveState.CMessageRecLiveState;

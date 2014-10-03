@@ -8,9 +8,10 @@ import net.blay09.mods.eirairc.api.IRCConnection;
 import net.blay09.mods.eirairc.api.IRCContext;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
-import net.blay09.mods.eirairc.config.TempPlaceholder;
 import net.blay09.mods.eirairc.config.base.DisplayFormatConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
+import net.blay09.mods.eirairc.config.settings.BotSettings;
+import net.blay09.mods.eirairc.config.settings.BotStringComponent;
 import net.blay09.mods.eirairc.config.settings.ThemeSettings;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 
@@ -33,11 +34,7 @@ public class ConfigHelper {
 	}
 
 	public static String getQuitMessage(IRCConnection connection) {
-		ServerConfig serverConfig = ConfigurationHandler.getServerConfig(connection.getHost());
-		if(serverConfig.getQuitMessage() != null && !serverConfig.getQuitMessage().isEmpty()) {
-			return serverConfig.getQuitMessage();
-		}
-		return TempPlaceholder.quitMessage;
+		return ConfigurationHandler.getServerConfig(connection.getHost()).getBotSettings().getString(BotStringComponent.QuitMessage);
 	}
 
 	public static ServerConfig getServerConfig(IRCConnection connection) {
@@ -57,5 +54,12 @@ public class ConfigHelper {
 			return getChannelConfig((IRCChannel) context).getTheme();
 		}
 		return SharedGlobalConfig.theme;
+	}
+
+	public static BotSettings getBotSettings(IRCContext context) {
+		if(context instanceof IRCChannel) {
+			return getChannelConfig((IRCChannel) context).getBotSettings();
+		}
+		return SharedGlobalConfig.botSettings;
 	}
 }

@@ -13,7 +13,8 @@ import net.blay09.mods.eirairc.api.event.IRCUserLeaveEvent;
 import net.blay09.mods.eirairc.api.event.IRCUserNickChangeEvent;
 import net.blay09.mods.eirairc.api.event.IRCUserQuitEvent;
 import net.blay09.mods.eirairc.config.ClientGlobalConfig;
-import net.blay09.mods.eirairc.config.TempPlaceholder;
+import net.blay09.mods.eirairc.config.settings.BotBooleanComponent;
+import net.blay09.mods.eirairc.config.settings.BotSettings;
 import net.blay09.mods.eirairc.config.settings.ThemeColorComponent;
 import net.blay09.mods.eirairc.config.settings.ThemeSettings;
 import net.blay09.mods.eirairc.irc.IRCConnectionImpl;
@@ -109,7 +110,8 @@ public class IRCEventHandler {
 			format = ConfigHelper.getDisplayFormat(event.bot.getDisplayFormat(event.sender)).mcPrivateMessage;
 		}
 		IChatComponent chatComponent = MessageFormat.formatChatComponent(format, event.connection, null, event.sender, message, MessageFormat.Target.Minecraft, (event.isEmote ? MessageFormat.Mode.Emote : MessageFormat.Mode.Message));
-		if(event.isNotice && TempPlaceholder.hideNotices) {
+		BotSettings botSettings = ConfigHelper.getBotSettings(event.sender);
+		if(event.isNotice && botSettings.getBoolean(BotBooleanComponent.HideNotices)) {
 			System.out.println(chatComponent.getUnformattedText());
 			return;
 		}
@@ -163,11 +165,12 @@ public class IRCEventHandler {
 			format = ConfigHelper.getDisplayFormat(event.bot.getDisplayFormat(event.channel)).mcChannelMessage;
 		}
 		IChatComponent chatComponent = MessageFormat.formatChatComponent(format, event.connection, event.channel, event.sender, message, MessageFormat.Target.Minecraft, event.isEmote ? MessageFormat.Mode.Emote : MessageFormat.Mode.Message);
-		if(event.isNotice && TempPlaceholder.hideNotices) {
+		BotSettings botSettings = ConfigHelper.getBotSettings(event.channel);
+		if(event.isNotice && botSettings.getBoolean(BotBooleanComponent.HideNotices)) {
 			System.out.println(chatComponent.getUnformattedText());
 			return;
 		}
-		ThemeSettings theme = ConfigHelper.getTheme(event.sender);
+		ThemeSettings theme = ConfigHelper.getTheme(event.channel);
 		EnumChatFormatting emoteColor = Utils.getColorFormatting(theme.getColor(ThemeColorComponent.emoteTextColor));
 		EnumChatFormatting noticeColor = Utils.getColorFormatting(theme.getColor(ThemeColorComponent.ircNoticeTextColor));
 		if(event.isEmote && emoteColor != null) {

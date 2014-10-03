@@ -135,7 +135,7 @@ public class Utils {
 	}
 	
 	public static String getNickIRC(EntityPlayer player) {
-		return MessageFormat.addPreSuffix(getAliasForPlayer(player));
+		return MessageFormat.formatNick(getAliasForPlayer(player));
 	}
 	
 	public static String getNickGame(EntityPlayer player) {

@@ -13,6 +13,8 @@ import net.blay09.mods.eirairc.api.bot.IRCBot;
 import net.blay09.mods.eirairc.api.event.RelayChat;
 import net.blay09.mods.eirairc.command.base.IRCCommandHandler;
 import net.blay09.mods.eirairc.config.*;
+import net.blay09.mods.eirairc.config.settings.BotBooleanComponent;
+import net.blay09.mods.eirairc.config.settings.BotSettings;
 import net.blay09.mods.eirairc.config.settings.ThemeColorComponent;
 import net.blay09.mods.eirairc.irc.IRCConnectionImpl;
 import net.blay09.mods.eirairc.util.ConfigHelper;
@@ -335,12 +337,13 @@ public class MCEventHandler {
 			String name = Utils.getNickIRC((EntityPlayer) event.entityLiving);
 			String ircMessage = event.entityLiving.func_110142_aN().func_151521_b().getUnformattedText();
 			ircMessage = ircMessage.replaceAll(event.entityLiving.getCommandSenderName(), name);
-			ircMessage = IRCFormatting.toIRC(ircMessage, !TempPlaceholder.convertColors);
 			for(IRCConnection connection : EiraIRC.instance.getConnections()) {
 				IRCBot bot = connection.getBot();
 				for(IRCChannel channel : connection.getChannels()) {
+					BotSettings botSettings = ConfigHelper.getBotSettings(channel);
+					String thisIrcMessage = IRCFormatting.toIRC(ircMessage, !botSettings.getBoolean(BotBooleanComponent.ConvertColors));
 					if(!bot.isReadOnly(channel) && bot.getBoolean(channel, BotProfile.KEY_RELAYDEATHMESSAGES, false)) {
-						channel.message(ircMessage);
+						channel.message(thisIrcMessage);
 					}
 				}
 			}

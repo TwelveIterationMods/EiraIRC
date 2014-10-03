@@ -34,7 +34,6 @@ import net.blay09.mods.eirairc.api.upload.IUploadHoster;
 import net.blay09.mods.eirairc.api.upload.UploadManager;
 import net.blay09.mods.eirairc.config.ClientGlobalConfig;
 import net.blay09.mods.eirairc.config.ScreenshotAction;
-import net.blay09.mods.eirairc.config.TempPlaceholder;
 import net.blay09.mods.eirairc.config.settings.ThemeColorComponent;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.MessageFormat;
