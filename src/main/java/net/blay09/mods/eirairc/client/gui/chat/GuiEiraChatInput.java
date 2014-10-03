@@ -86,7 +86,7 @@ public class GuiEiraChatInput extends GuiScreen {
 	
 	@Override
 	protected void keyTyped(char unicode, int keyCode) {
-		if(keyCode == ClientGlobalConfig.keyToggleTarget && !ClientGlobalConfig.disableChatToggle) {
+		if(keyCode == ClientGlobalConfig.keyToggleTarget.getKeyCode() && !ClientGlobalConfig.disableChatToggle) {
 			if(Keyboard.isRepeatEvent()) {
 				if(System.currentTimeMillis() - lastToggleTarget >= 1000) {
 					parentChat.getChatSession().setChatTarget((String) null);

@@ -3,6 +3,7 @@
 
 package net.blay09.mods.eirairc.client;
 
+import cpw.mods.fml.client.registry.ClientRegistry;
 import net.blay09.mods.eirairc.CommonProxy;
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.upload.UploadManager;
@@ -17,16 +18,28 @@ import net.blay09.mods.eirairc.config.NotificationStyle;
 import net.blay09.mods.eirairc.util.NotificationType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.ClientCommandHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
+import org.lwjgl.input.Keyboard;
+import org.omg.PortableInterceptor.ClientRequestInfo;
 
 public class ClientProxy extends CommonProxy {
 
 	private GuiEiraChat eiraChat;
 	private OverlayNotification notificationGUI;
 	private OverlayRecLive recLiveGUI;
-	
+
+	private static final KeyBinding[] keyBindings = new KeyBinding[] {
+		ClientGlobalConfig.keyScreenshotShare,
+		ClientGlobalConfig.keyOpenScreenshots,
+		ClientGlobalConfig.keyToggleRecording,
+		ClientGlobalConfig.keyToggleLive,
+		ClientGlobalConfig.keyToggleTarget,
+		ClientGlobalConfig.keyOpenMenu
+	};
+
 	@Override
 	public void setupClient() {
 		eiraChat = new GuiEiraChat();
@@ -35,6 +48,10 @@ public class ClientProxy extends CommonProxy {
 		recLiveGUI= new OverlayRecLive();
 		ScreenshotManager.create();
 		FMLCommonHandler.instance().bus().register(new EiraTickHandler(eiraChat));
+
+		for(int i = 0; i < keyBindings.length; i++) {
+			ClientRegistry.registerKeyBinding(keyBindings[i]);
+		}
 		
 		EiraIRC.instance.registerCommands(ClientCommandHandler.instance, false);
 	}

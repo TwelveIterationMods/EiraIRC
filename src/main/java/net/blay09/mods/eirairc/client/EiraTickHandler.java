@@ -9,7 +9,6 @@ import net.blay09.mods.eirairc.client.gui.chat.GuiChatExtended;
 import net.blay09.mods.eirairc.client.gui.chat.GuiEiraChat;
 import net.blay09.mods.eirairc.client.gui.chat.GuiEiraChatInput;
 import net.blay09.mods.eirairc.client.gui.screenshot.GuiScreenshotList;
-import net.blay09.mods.eirairc.client.gui.settings.GuiKeybinds;
 import net.blay09.mods.eirairc.client.gui.settings.GuiSettings;
 import net.blay09.mods.eirairc.client.screenshot.Screenshot;
 import net.blay09.mods.eirairc.client.screenshot.ScreenshotManager;
@@ -23,6 +22,7 @@ import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiScreen;
 
+import net.minecraft.client.settings.KeyBinding;
 import org.lwjgl.input.Keyboard;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -51,11 +51,11 @@ public class EiraTickHandler {
 		keyCommand = Minecraft.getMinecraft().gameSettings.keyBindCommand.getKeyCode();
 	}
 
-	private boolean isKeyPressed(int keyCode, int keyIdx) {
-		if(keyCode == -1) {
+	private boolean isKeyPressed(KeyBinding keyBinding, int keyIdx) {
+		if(keyBinding.getKeyCode() <= 0) {
 			return false;
 		}
-		if(Keyboard.isKeyDown(keyCode)) {
+		if(Keyboard.isKeyDown(keyBinding.getKeyCode())) {
 			if(!keyState[keyIdx]) {
 				keyState[keyIdx] = true;
 				return true;
@@ -67,9 +67,6 @@ public class EiraTickHandler {
 	}
 	
 	private void handleKeyInput() {
-		if(Minecraft.getMinecraft().currentScreen instanceof GuiKeybinds) {
-			return;
-		}
 		if(isKeyPressed(ClientGlobalConfig.keyOpenMenu, KEY_IDX_OPENSETTINGS)) {
 			if(Minecraft.getMinecraft().currentScreen == null) {
 				Minecraft.getMinecraft().displayGuiScreen(new GuiSettings());

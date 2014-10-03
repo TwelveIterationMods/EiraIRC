@@ -3,13 +3,10 @@
 
 package net.blay09.mods.eirairc.client.gui.settings;
 
-import java.util.List;
-
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.IRCConnection;
 import net.blay09.mods.eirairc.bot.IRCBotImpl;
 import net.blay09.mods.eirairc.client.gui.base.GuiAdvancedTextField;
-import net.blay09.mods.eirairc.config.base.BotProfileImpl;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
@@ -32,28 +29,19 @@ public class GuiChannelConfig extends GuiScreen {
 	private ChannelConfig config;
 	private GuiButton btnCancel;
 	private GuiButton btnSave;
-	private GuiButton btnProfilePrev;
-	private GuiButton btnProfile;
-	private GuiButton btnProfileNext;
 
 	private GuiTextField txtName;
 	private GuiAdvancedTextField txtChannelPassword;
 	
-	private List<BotProfileImpl> profileList;
-	private int currentProfileIdx;
-	private String currentProfile;
-	
 	public GuiChannelConfig(GuiScreen listParentScreen, ServerConfig serverConfig) {
 		this.listParentScreen = listParentScreen;
 		this.serverConfig = serverConfig;
-		profileList = ConfigurationHandler.getBotProfiles();
 	}
 	
 	public GuiChannelConfig(GuiScreen listParentScreen, ChannelConfig config) {
 		this.listParentScreen = listParentScreen;
 		this.config = config;
 		serverConfig = config.getServerConfig();
-		profileList = ConfigurationHandler.getBotProfiles();
 	}
 	
 	@Override
@@ -66,15 +54,6 @@ public class GuiChannelConfig extends GuiScreen {
 		txtName = new GuiTextField(fontRendererObj, leftX, topY, 140, 15);
 		txtChannelPassword = new GuiAdvancedTextField(fontRendererObj, rightX, topY, 140, 15);
 		txtChannelPassword.setDefaultPasswordChar();
-		
-		btnProfilePrev = new GuiButton(4, leftX, topY + 25, 18, 20, "<");
-		buttonList.add(btnProfilePrev);
-		
-		btnProfile = new GuiButton(5, leftX + 20, topY + 25, 100, 20, "");
-		buttonList.add(btnProfile);
-		
-		btnProfileNext = new GuiButton(6, leftX + 122, topY + 25, 18, 20, ">");
-		buttonList.add(btnProfileNext);
 		
 		btnSave = new GuiButton(1, rightX, topY + 160, 100, BUTTON_HEIGHT, Utils.getLocalizedMessage("irc.gui.save"));
 		buttonList.add(btnSave);
@@ -95,20 +74,6 @@ public class GuiChannelConfig extends GuiScreen {
 		super.updateScreen();
 		txtName.updateCursorCounter();
 		txtChannelPassword.updateCursorCounter();
-	}
-	
-	private void nextProfile(int dir) {
-		currentProfileIdx += dir;
-		if(currentProfileIdx >= profileList.size()) {
-			currentProfileIdx = 0;
-		} else if(currentProfileIdx < 0) {
-			currentProfileIdx = profileList.size() - 1;
-		}
-		currentProfile = profileList.get(currentProfileIdx).getName();
-		updateButtons();
-	}
-	
-	public void setBotProfile(String profileName) {
 	}
 	
 	@Override
@@ -151,7 +116,6 @@ public class GuiChannelConfig extends GuiScreen {
 		} else {
 			btnSave.enabled = false;
 		}
-		btnProfile.displayString = currentProfile;
 	}
 	
 	@Override
@@ -161,13 +125,6 @@ public class GuiChannelConfig extends GuiScreen {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiChannelList(listParentScreen, serverConfig));
 		} else if(button == btnCancel) {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiChannelList(listParentScreen, serverConfig));
-		} else if(button == btnProfilePrev) {
-			nextProfile(-1);
-		} else if(button == btnProfileNext) {
-			nextProfile(1);
-		} else if(button == btnProfile) {
-			saveToConfig();
-			Minecraft.getMinecraft().displayGuiScreen(new GuiBotProfiles(this, txtName.getText().isEmpty() ? config.getName() : txtName.getText(), ConfigurationHandler.getBotProfile(currentProfile)));
 		}
 	}
 	
@@ -176,12 +133,6 @@ public class GuiChannelConfig extends GuiScreen {
 			txtName.setText(config.getName());
 			txtChannelPassword.setText(config.getPassword() != null ? config.getPassword() : "");
 		} else {
-		}
-		for(int i = 0; i < profileList.size(); i++) {
-			if(profileList.get(i).getName().equals(currentProfile)) {
-				currentProfileIdx = i;
-				break;
-			}
 		}
 		updateButtons();
 	}

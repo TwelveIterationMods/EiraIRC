@@ -1,4 +1,4 @@
-package net.blay09.mods.eirairc.client.gui.config2;
+package net.blay09.mods.eirairc.client.gui;
 
 import cpw.mods.fml.client.config.*;
 import net.blay09.mods.eirairc.config.ClientGlobalConfig;

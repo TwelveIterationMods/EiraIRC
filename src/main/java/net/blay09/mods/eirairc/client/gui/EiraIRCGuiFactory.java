@@ -1,7 +1,6 @@
 package net.blay09.mods.eirairc.client.gui;
 
 import cpw.mods.fml.client.IModGuiFactory;
-import net.blay09.mods.eirairc.client.gui.config2.EiraIRCConfigGUI;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 

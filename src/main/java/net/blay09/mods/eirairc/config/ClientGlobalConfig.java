@@ -3,6 +3,7 @@ package net.blay09.mods.eirairc.config;
 import net.blay09.mods.eirairc.api.upload.UploadManager;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.common.config.Configuration;
 import org.lwjgl.input.Keyboard;
 
@@ -15,7 +16,6 @@ public class ClientGlobalConfig {
 
 	public static final String GENERAL = "general";
 	public static final String SCREENSHOTS = "screenshots";
-	private static final String KEYBINDS = "keybinds";
 	public static final String NOTIFICATIONS = "notifications";
 	public static final String COMPATIBILITY = "compatibility";
 
@@ -31,13 +31,14 @@ public class ClientGlobalConfig {
 	public static int uploadBufferSize = 1024;
 
 	// Keybinds
-	public static int keyScreenshotShare = -1;
-	public static int keyOpenScreenshots = -1;
-	public static int keyToggleRecording = -1;
-	public static int keyToggleLive = -1;
-	public static int keyToggleTarget = Keyboard.KEY_TAB;
-	public static int keyOpenMenu = Keyboard.KEY_I;
+	public static final KeyBinding keyScreenshotShare = new KeyBinding("key.irc.screenshotShare", 0, "key.categories.irc");
+	public static final KeyBinding keyOpenScreenshots = new KeyBinding("key.irc.openScreenshots", 0, "key.categories.irc");
+	public static final KeyBinding keyToggleRecording = new KeyBinding("key.irc.toggleRecording", 0, "key.categories.irc");
+	public static final KeyBinding keyToggleLive = new KeyBinding("key.irc.toggleLive", 0, "key.categories.irc");
+	public static final KeyBinding keyToggleTarget = new KeyBinding("key.irc.toggleTarget", Keyboard.KEY_TAB, "key.categories.irc");
+	public static final KeyBinding keyOpenMenu = new KeyBinding("key.irc.openMenu", Keyboard.KEY_I, "key.categories.irc");
 
+	// Notifications
 	public static String notificationSound = "note.harp";
 	public static float notificationSoundVolume = 1f;
 	public static float notificationSoundPitch = 1f;
@@ -67,14 +68,6 @@ public class ClientGlobalConfig {
 		screenshotAction = ScreenshotAction.valueOf(thisConfig.getString("autoAction", SCREENSHOTS, screenshotAction.name(), "", ScreenshotAction.NAMES, "eirairc:config.property.autoAction"));
 		uploadBufferSize = thisConfig.getInt("uploadBufferSize", SCREENSHOTS, uploadBufferSize, 256, 4096, "", "eirairc:config.property.uploadBufferSize");
 
-		// Keybinds
-		keyScreenshotShare = thisConfig.getInt("screenshotShare", KEYBINDS, keyScreenshotShare, -1, Integer.MAX_VALUE, "", "eirairc:config.property.screenshotShare");
-		keyOpenScreenshots = thisConfig.getInt("openScreenshots", KEYBINDS, keyOpenScreenshots, -1, Integer.MAX_VALUE, "", "eirairc:config.property.openScreenshots");
-		keyToggleRecording = thisConfig.getInt("toggleRecording", KEYBINDS, keyToggleRecording, -1, Integer.MAX_VALUE, "", "eirairc:config.property.toggleRecording");
-		keyToggleLive = thisConfig.getInt("toggleLive", KEYBINDS, keyToggleLive, -1, Integer.MAX_VALUE, "", "eirairc:config.property.toggleLive");
-		keyToggleTarget = thisConfig.getInt("toggleTarget", KEYBINDS, keyToggleTarget, -1, Integer.MAX_VALUE, "", "eirairc:config.property.toggleTarget");
-		keyOpenMenu = thisConfig.getInt("openMenu", KEYBINDS, keyOpenMenu, -1, Integer.MAX_VALUE, "", "eirairc:config.property.openMenu");
-
 		// Notifications
 		notificationSound = thisConfig.getString("soundName", NOTIFICATIONS, notificationSound, "", "eirairc:config.property.soundName");
 		notificationSoundVolume = thisConfig.getFloat("soundVolume", NOTIFICATIONS, notificationSoundVolume, 0f, 1f, "", "eirairc:config.property.soundVolume");
@@ -96,7 +89,6 @@ public class ClientGlobalConfig {
 		// Category Comments
 		thisConfig.setCategoryComment(GENERAL, I18n.format("eirairc:config.category.general.tooltip"));
 		thisConfig.setCategoryComment(SCREENSHOTS, I18n.format("eirairc:config.category.screenshots.tooltip"));
-		thisConfig.setCategoryComment(KEYBINDS, I18n.format("eirairc:config.category.keybinds.tooltip"));
 		thisConfig.setCategoryComment(NOTIFICATIONS, I18n.format("eirairc:config.category.notifications.tooltip"));
 		thisConfig.setCategoryComment(COMPATIBILITY, I18n.format("eirairc:config.category.compatibility.tooltip"));
 
@@ -108,14 +100,6 @@ public class ClientGlobalConfig {
 		thisConfig.get(SCREENSHOTS, "uploadHoster", "", I18n.format("eirairc:config.property.uploadHoster")).set(screenshotHoster);
 		thisConfig.get(SCREENSHOTS, "autoAction", "", I18n.format("eirairc:config.property.autoAction")).set(screenshotAction.name());
 		thisConfig.get(SCREENSHOTS, "uploadBufferSize", 0, I18n.format("eirairc:config.property.uploadBufferSize")).set(uploadBufferSize);
-
-		// Keybinds
-		thisConfig.get(KEYBINDS, "screenshotShare", -1, I18n.format("eirairc:config.property.screenshotShare")).set(keyScreenshotShare);
-		thisConfig.get(KEYBINDS, "openScreenshots", -1, I18n.format("eirairc:config.property.openScreenshots")).set(keyOpenScreenshots);
-		thisConfig.get(KEYBINDS, "toggleRecording", -1, I18n.format("eirairc:config.property.toggleRecording")).set(keyToggleRecording);
-		thisConfig.get(KEYBINDS, "toggleLive", -1, I18n.format("eirairc:config.property.toggleLive")).set(keyToggleLive);
-		thisConfig.get(KEYBINDS, "toggleTarget", -1, I18n.format("eirairc:config.property.toggleTarget")).set(keyToggleTarget);
-		thisConfig.get(KEYBINDS, "openMenu", -1, I18n.format("eirairc:config.property.openMenu")).set(keyOpenMenu);
 
 		// Notifications
 		thisConfig.get(NOTIFICATIONS, "soundName", "", I18n.format("eirairc:config.property.soundName")).set(notificationSound);
@@ -149,12 +133,12 @@ public class ClientGlobalConfig {
 		uploadBufferSize = legacyConfig.get("clientonly", "uploadBufferSize", uploadBufferSize).getInt();
 
 		// Keybinds
-		keyOpenMenu = legacyConfig.get("keybinds", "keyMenu", keyOpenMenu).getInt();
-		keyToggleTarget = legacyConfig.get("keybinds", "keyToggleTarget", keyToggleTarget).getInt();
-		keyToggleLive = legacyConfig.get("keybinds", "keyToggleLive", keyToggleLive).getInt();
-		keyToggleRecording = legacyConfig.get("keybinds", "keyToggleRecording", keyToggleRecording).getInt();
-		keyScreenshotShare = legacyConfig.get("keybinds", "keyScreenshotShare", keyScreenshotShare).getInt();
-		keyOpenScreenshots = legacyConfig.get("keybinds", "keyOpenScreenshots", keyOpenScreenshots).getInt();
+		keyOpenMenu.setKeyCode(legacyConfig.get("keybinds", "keyMenu", keyOpenMenu.getKeyCodeDefault()).getInt());
+		keyToggleTarget.setKeyCode(legacyConfig.get("keybinds", "keyToggleTarget", keyToggleTarget.getKeyCodeDefault()).getInt());
+		keyToggleLive.setKeyCode(legacyConfig.get("keybinds", "keyToggleLive", keyToggleLive.getKeyCodeDefault()).getInt());
+		keyToggleRecording.setKeyCode(legacyConfig.get("keybinds", "keyToggleRecording", keyToggleRecording.getKeyCodeDefault()).getInt());
+		keyScreenshotShare.setKeyCode(legacyConfig.get("keybinds", "keyScreenshotShare", keyScreenshotShare.getKeyCodeDefault()).getInt());
+		keyOpenScreenshots.setKeyCode(legacyConfig.get("keybinds", "keyOpenScreenshots", keyOpenScreenshots.getKeyCodeDefault()).getInt());
 
 		// Notifications
 		notificationSound = Utils.unquote(legacyConfig.get("notifications", "sound", notificationSound).getString());

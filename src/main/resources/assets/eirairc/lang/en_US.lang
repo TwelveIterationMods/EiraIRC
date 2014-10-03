@@ -477,3 +477,13 @@ eirairc:config.property.emoteTextColor=Text Color (Emote)
 eirairc:config.property.emoteTextColor.tooltip=Color for emote messages.
 
 #######################################################################################################################
+
+# Keybindings
+
+key.categories.irc=EiraIRC
+key.irc.screenshotShare=Share Screenshot
+key.irc.toggleRecording=Recording Notification
+key.irc.toggleLive=Livestream Notification
+key.irc.toggleTarget=Toggle Chat Target
+key.irc.openScreenshots=Open Screenshot Archive
+key.irc.openMenu=Open EiraIRC Menu

@@ -3,14 +3,11 @@
 
 package net.blay09.mods.eirairc.client.gui.settings;
 
-import java.util.List;
-
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.IRCConnection;
 import net.blay09.mods.eirairc.bot.IRCBotImpl;
 import net.blay09.mods.eirairc.client.gui.base.GuiAdvancedTextField;
 import net.blay09.mods.eirairc.client.gui.base.GuiToggleButton;
-import net.blay09.mods.eirairc.config.base.BotProfileImpl;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.Globals;
@@ -29,9 +26,6 @@ public class GuiServerConfig extends GuiScreen {
 	private GuiButton btnCancel;
 	private GuiButton btnSave;
 	private GuiToggleButton btnAutoConnect;
-	private GuiButton btnProfilePrev;
-	private GuiButton btnProfile;
-	private GuiButton btnProfileNext;
 	private GuiTextField txtHost;
 	private GuiTextField txtNick;
 	private GuiAdvancedTextField txtIdent;
@@ -40,17 +34,10 @@ public class GuiServerConfig extends GuiScreen {
 	private GuiAdvancedTextField txtNickServPassword;
 	private GuiAdvancedTextField txtServerPassword;
 	
-	private List<BotProfileImpl> profileList;
-	private int currentProfileIdx;
-	private String currentProfile;
-	
-	public GuiServerConfig() {
-		profileList = ConfigurationHandler.getBotProfiles();
-	}
+	public GuiServerConfig() {}
 	
 	public GuiServerConfig(ServerConfig config) {
 		this.config = config;
-		profileList = ConfigurationHandler.getBotProfiles();
 	}
 	
 	@Override
@@ -76,15 +63,6 @@ public class GuiServerConfig extends GuiScreen {
 		
 		btnChannels = new GuiButton(4, width / 2 - 10, height / 2 + 50, 130, 20, Utils.getLocalizedMessage("irc.gui.serverList.channels"));
 		buttonList.add(btnChannels);
-		
-		btnProfilePrev = new GuiButton(5, width / 2 - 10, height / 2, 18, 20, "<");
-		buttonList.add(btnProfilePrev);
-		
-		btnProfile = new GuiButton(6, width / 2 + 10, height / 2, 90, 20, "");
-		buttonList.add(btnProfile);
-		
-		btnProfileNext = new GuiButton(7, width / 2 + 102, height / 2, 18, 20, ">");
-		buttonList.add(btnProfileNext);
 		
 		btnSave = new GuiButton(1, width / 2 + 3, height / 2 + 95, 100, 20, Utils.getLocalizedMessage("irc.gui.save"));
 		buttonList.add(btnSave);
@@ -198,7 +176,6 @@ public class GuiServerConfig extends GuiScreen {
 			btnSave.enabled = false;
 			btnChannels.enabled = false;
 		}
-		btnProfile.displayString = currentProfile;
 	}
 	
 	@Override
@@ -214,25 +191,7 @@ public class GuiServerConfig extends GuiScreen {
 		} else if(button == btnChannels) {
 			saveToConfig();
 			Minecraft.getMinecraft().displayGuiScreen(new GuiChannelList(this, config));
-		} else if(button == btnProfilePrev) {
-			nextProfile(-1);
-		} else if(button == btnProfileNext) {
-			nextProfile(1);
-		} else if(button == btnProfile) {
-			saveToConfig();
-			Minecraft.getMinecraft().displayGuiScreen(new GuiBotProfiles(this, txtHost.getText().isEmpty() ? config.getAddress() : txtHost.getText(), ConfigurationHandler.getBotProfile(currentProfile)));
 		}
-	}
-	
-	private void nextProfile(int dir) {
-		currentProfileIdx += dir;
-		if(currentProfileIdx >= profileList.size()) {
-			currentProfileIdx = 0;
-		} else if(currentProfileIdx < 0) {
-			currentProfileIdx = profileList.size() - 1;
-		}
-		currentProfile = profileList.get(currentProfileIdx).getName();
-		updateButtons();
 	}
 	
 	public void loadFromConfig() {
@@ -244,13 +203,6 @@ public class GuiServerConfig extends GuiScreen {
 			txtNickServPassword.setText(config.getNickServPassword());
 		} else {
 			btnAutoConnect.setState(true);
-			currentProfile = ConfigurationHandler.getDefaultBotProfile().getName();
-		}
-		for(int i = 0; i < profileList.size(); i++) {
-			if(profileList.get(i).getName().equals(currentProfile)) {
-				currentProfileIdx = i;
-				break;
-			}
 		}
 		updateButtons();
 	}
