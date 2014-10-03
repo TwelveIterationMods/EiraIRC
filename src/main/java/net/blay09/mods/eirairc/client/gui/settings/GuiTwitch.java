@@ -23,7 +23,6 @@ public class GuiTwitch extends GuiScreen implements GuiYesNoCallback {
 	private GuiTextField txtUsername;
 	private GuiAdvancedTextField txtPassword;
 	private GuiButton btnOAuthHelp;
-	private GuiButton btnConnectOnStartup;
 	private GuiButton btnBack;
 	
 	public GuiTwitch(GuiScreen parentScreen) {
@@ -44,9 +43,6 @@ public class GuiTwitch extends GuiScreen implements GuiYesNoCallback {
 		btnOAuthHelp = new GuiButton(1, width / 2 + 94, height / 2 - 42, 20, 20, "?");
 		buttonList.add(btnOAuthHelp);
 		
-		btnConnectOnStartup = new GuiButton(0, width / 2 - 100, height / 2 - 15, "");
-		buttonList.add(btnConnectOnStartup);
-		
 		btnBack = new GuiButton(2, width / 2 - 100, height / 2 + 30, Utils.getLocalizedMessage("irc.gui.back"));
 		buttonList.add(btnBack);
 		
@@ -65,13 +61,12 @@ public class GuiTwitch extends GuiScreen implements GuiYesNoCallback {
 	}
 	
 	public void updateButtonText() {
-		btnConnectOnStartup.displayString = Utils.getLocalizedMessage("irc.gui.config.connectStartup", Utils.getLocalizedMessage(config.isAutoConnect() ? "irc.gui.yes" : "irc.gui.no"));
 	}
 	
 	@Override
 	public void actionPerformed(GuiButton button) {
 		if(button == btnBack) {
-			if(config.isAutoConnect() || EiraIRC.instance.isConnectedTo(Globals.TWITCH_SERVER)) {
+			if(EiraIRC.instance.isConnectedTo(Globals.TWITCH_SERVER)) {
 				IRCConnection connection = EiraIRC.instance.getConnection(Globals.TWITCH_SERVER);
 				if(connection != null) {
 					connection.disconnect(ConfigHelper.getQuitMessage(connection));
@@ -86,9 +81,6 @@ public class GuiTwitch extends GuiScreen implements GuiYesNoCallback {
 				}
 			}
 			Minecraft.getMinecraft().displayGuiScreen(parentScreen);
-		} else if(button == btnConnectOnStartup) {
-			config.setAutoConnect(!config.isAutoConnect());
-			updateButtonText();
 		} else if(button == btnOAuthHelp) {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiConfirmOpenLink(this, Globals.TWITCH_OAUTH, 0, false));
 		}

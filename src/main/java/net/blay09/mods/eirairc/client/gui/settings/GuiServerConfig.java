@@ -243,9 +243,6 @@ public class GuiServerConfig extends GuiScreen {
 			txtServerPassword.setText(config.getServerPassword());
 			txtNickServName.setText(config.getNickServName());
 			txtNickServPassword.setText(config.getNickServPassword());
-			txtIdent.setText(config.getIdent());
-			txtDescription.setText(config.getDescription());
-			btnAutoConnect.setState(config.isAutoConnect());
 			currentProfile = config.getBotProfile();
 		} else {
 			btnAutoConnect.setState(true);
@@ -270,9 +267,6 @@ public class GuiServerConfig extends GuiScreen {
 		config.setNick(txtNick.getText());
 		config.setNickServ(txtNickServName.getText(), txtNickServPassword.getText());
 		config.setServerPassword(txtServerPassword.getText());
-		config.setAutoConnect(btnAutoConnect.getState());
-		config.setIdent(!txtIdent.getText().isEmpty() ? txtIdent.getText() : Globals.DEFAULT_IDENT);
-		config.setDescription(!txtDescription.getText().isEmpty() ? txtDescription.getText() : Globals.DEFAULT_DESCRIPTION);
 		config.setBotProfile(currentProfile);
 		IRCConnection connection = EiraIRC.instance.getConnection(config.getAddress());
 		if(connection != null) {

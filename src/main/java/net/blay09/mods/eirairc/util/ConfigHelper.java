@@ -8,10 +8,10 @@ import net.blay09.mods.eirairc.api.IRCConnection;
 import net.blay09.mods.eirairc.api.IRCContext;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
-import net.blay09.mods.eirairc.config.base.DisplayFormatConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.settings.BotSettings;
 import net.blay09.mods.eirairc.config.settings.BotStringComponent;
+import net.blay09.mods.eirairc.config.settings.GeneralSettings;
 import net.blay09.mods.eirairc.config.settings.ThemeSettings;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 
@@ -45,10 +45,6 @@ public class ConfigHelper {
 		return getServerConfig(channel.getConnection()).getChannelConfig(channel);
 	}
 
-	public static DisplayFormatConfig getDisplayFormat(String displayFormat) {
-		return ConfigurationHandler.getDisplayFormat(displayFormat);
-	}
-
 	public static ThemeSettings getTheme(IRCContext context) {
 		if(context instanceof IRCChannel) {
 			return getChannelConfig((IRCChannel) context).getTheme();
@@ -61,5 +57,12 @@ public class ConfigHelper {
 			return getChannelConfig((IRCChannel) context).getBotSettings();
 		}
 		return SharedGlobalConfig.botSettings;
+	}
+
+	public static GeneralSettings getGeneralSettings(IRCContext context) {
+		if(context instanceof IRCChannel) {
+			return getChannelConfig((IRCChannel) context).getGeneralSettings();
+		}
+		return SharedGlobalConfig.generalSettings;
 	}
 }

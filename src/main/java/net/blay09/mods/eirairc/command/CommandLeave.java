@@ -65,7 +65,6 @@ public class CommandLeave extends SubCommand {
 			Utils.sendLocalizedMessage(sender, "irc.basic.leavingChannel", "<all>", connection.getHost());
 		} else {
 			Utils.sendLocalizedMessage(sender, "irc.basic.leavingChannel", channelName, connection.getHost());
-			ConfigHelper.getServerConfig(connection).getChannelConfig(channelName).setAutoJoin(false);
 			connection.part(channelName);
 		}
 		return true;

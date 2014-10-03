@@ -55,7 +55,6 @@ public class CommandJoin extends SubCommand {
 		ServerConfig serverConfig = ConfigHelper.getServerConfig(connection);
 		String channelName = IRCResolver.stripPath(args[0]);
 		ChannelConfig channelConfig = serverConfig.getChannelConfig(channelName);
-		channelConfig.setAutoJoin(true);
 		if(args.length >= 2) {
 			channelConfig.setPassword(args[2]);
 		}

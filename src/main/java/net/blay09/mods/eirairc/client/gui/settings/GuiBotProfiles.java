@@ -8,7 +8,7 @@ import java.util.List;
 import net.blay09.mods.eirairc.client.gui.GuiAdvancedTextField;
 import net.blay09.mods.eirairc.client.gui.GuiToggleButton;
 import net.blay09.mods.eirairc.config.base.BotProfileImpl;
-import net.blay09.mods.eirairc.config.base.DisplayFormatConfig;
+import net.blay09.mods.eirairc.config.base.MessageFormatConfig;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
@@ -40,7 +40,6 @@ public class GuiBotProfiles extends GuiScreen {
 		@Override
 		public void setState(boolean state) {
 			super.setState(state);
-			currentProfile.setBoolean(option, state);
 		}
 		
 	}
@@ -53,20 +52,11 @@ public class GuiBotProfiles extends GuiScreen {
 	private GuiButton btnDeleteProfile;
 	private GuiButton btnCopyProfile;
 	
-	private GuiBotProfileToggleButton btnRelayDeathMessages;
-	private GuiBotProfileToggleButton btnRelayMCJoinLeave;
-	private GuiBotProfileToggleButton btnRelayIRCJoinLeave;
-	private GuiBotProfileToggleButton btnRelayNickChanges;
-	private GuiBotProfileToggleButton btnRelayBroadcasts;
-	private GuiBotProfileToggleButton btnLinkFilter;
-	private GuiBotProfileToggleButton btnAllowPrivateMessages;
-	private GuiBotProfileToggleButton btnAutoPlayers;
 	private GuiButton btnMuted;
 	private GuiButton btnReadOnly;
 	private GuiButton btnDisplayFormat;
 	
 	private GuiButton btnCommands;
-	private GuiButton btnMacros;
 	private GuiButton btnBack;
 	
 	private final GuiScreen parentScreen;
@@ -75,7 +65,7 @@ public class GuiBotProfiles extends GuiScreen {
 	private BotProfileImpl currentProfile;
 	private int currentIdx;
 	
-	private final List<DisplayFormatConfig> displayFormatList;
+	private final List<MessageFormatConfig> displayFormatList;
 	private int currentDisplayFormatIdx;
 	
 	public GuiBotProfiles(GuiScreen parentScreen) {
@@ -140,23 +130,6 @@ public class GuiBotProfiles extends GuiScreen {
 		btnCopyProfile = new GuiButton(6, width / 2 + 96, height / 2 - 90, 20, BUTTON_HEIGHT, "*");
 		buttonList.add(btnCopyProfile);
 		
-		// Relay Options
-		
-		btnRelayDeathMessages = new GuiBotProfileToggleButton(7, leftX, topY, BUTTON_WIDTH, BUTTON_HEIGHT, "irc.gui.config.relayDeathMessages", BotProfileImpl.KEY_RELAYDEATHMESSAGES);
-		buttonList.add(btnRelayDeathMessages);
-		
-		btnRelayMCJoinLeave = new GuiBotProfileToggleButton(8, leftX, topY + 25, BUTTON_WIDTH, BUTTON_HEIGHT, "irc.gui.config.relayMinecraftJoins", BotProfileImpl.KEY_RELAYMCJOINLEAVE);
-		buttonList.add(btnRelayMCJoinLeave);
-		
-		btnRelayBroadcasts = new GuiBotProfileToggleButton(9, leftX, topY + 50, BUTTON_WIDTH, BUTTON_HEIGHT, "irc.gui.config.relayBroadcasts", BotProfileImpl.KEY_RELAYBROADCASTS);
-		buttonList.add(btnRelayBroadcasts);
-		
-		btnRelayIRCJoinLeave = new GuiBotProfileToggleButton(10, leftX, topY + 75, BUTTON_WIDTH, BUTTON_HEIGHT, "irc.gui.config.relayIRCJoins", BotProfileImpl.KEY_RELAYIRCJOINLEAVE);
-		buttonList.add(btnRelayIRCJoinLeave);
-		
-		btnRelayNickChanges = new GuiBotProfileToggleButton(11, leftX, topY + 100, BUTTON_WIDTH, BUTTON_HEIGHT, "irc.gui.config.relayNickChanges", BotProfileImpl.KEY_RELAYNICKCHANGES);
-		buttonList.add(btnRelayNickChanges);
-		
 		// Other Options
 		
 		btnMuted = new GuiButton(17, leftX, topY - 25, BUTTON_WIDTH, BUTTON_HEIGHT, "");
@@ -164,15 +137,6 @@ public class GuiBotProfiles extends GuiScreen {
 		
 		btnReadOnly = new GuiButton(18, rightX, topY - 25, BUTTON_WIDTH, BUTTON_HEIGHT, "");
 		buttonList.add(btnReadOnly);
-		
-		btnLinkFilter = new GuiBotProfileToggleButton(12, rightX, topY, BUTTON_WIDTH, BUTTON_HEIGHT, "irc.gui.config.linkFilter", BotProfileImpl.KEY_LINKFILTER);
-		buttonList.add(btnLinkFilter);
-		
-		btnAutoPlayers = new GuiBotProfileToggleButton(13, rightX, topY + 25, BUTTON_WIDTH, BUTTON_HEIGHT, "irc.gui.config.autoPlayers", BotProfileImpl.KEY_AUTOPLAYERS);
-		buttonList.add(btnAutoPlayers);
-		
-		btnAllowPrivateMessages = new GuiBotProfileToggleButton(14, rightX, topY + 50, BUTTON_WIDTH, BUTTON_HEIGHT, "irc.gui.config.privateMessages", BotProfileImpl.KEY_ALLOWPRIVMSG);
-		buttonList.add(btnAllowPrivateMessages);
 		
 		btnDisplayFormat = new GuiButton(15, rightX, topY + 75, BUTTON_WIDTH, BUTTON_HEIGHT, "Display Format: ???");
 		buttonList.add(btnDisplayFormat);
@@ -189,9 +153,6 @@ public class GuiBotProfiles extends GuiScreen {
 	}
 	
 	private void updateButtonText() {
-		btnMuted.displayString = Utils.getLocalizedMessage("irc.gui.config.muted", Utils.getLocalizedMessage((currentProfile.isMuted() ? "irc.gui.yes" : "irc.gui.no")));
-		btnReadOnly.displayString = Utils.getLocalizedMessage("irc.gui.config.readOnly", Utils.getLocalizedMessage((currentProfile.isReadOnly() ? "irc.gui.yes" : "irc.gui.no")));
-		btnDisplayFormat.displayString = Utils.getLocalizedMessage("irc.gui.config.messageDisplay", currentProfile.getDisplayFormat());
 	}
 	
 	@Override
@@ -242,14 +203,11 @@ public class GuiBotProfiles extends GuiScreen {
 			if(currentDisplayFormatIdx >= displayFormatList.size()) {
 				currentDisplayFormatIdx = 0;
 			}
-			currentProfile.setDisplayFormat(displayFormatList.get(currentDisplayFormatIdx).getName());
 		} else if(button == btnCommands) {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiBotCommands(this, currentProfile));
 			return;
 		} else if(button == btnMuted) {
-			currentProfile.setMuted(!currentProfile.isMuted());
 		} else if(button == btnReadOnly) {
-			currentProfile.setReadOnly(!currentProfile.isReadOnly());
 		} else if(currentProfile != null && currentProfile.isDefaultProfile()) {
 			currentIdx = profileList.size();
 			currentProfile = new BotProfileImpl(currentProfile, currentProfile.getName() + "_copy");
@@ -285,19 +243,7 @@ public class GuiBotProfiles extends GuiScreen {
 		btnCurrentProfile.enabled = !profile.isDefaultProfile();
 		btnDeleteProfile.enabled = !profile.isDefaultProfile();
 		for(int i = 0; i < displayFormatList.size(); i++) {
-			if(displayFormatList.get(i).getName().equals(profile.getDisplayFormat())) {
-				currentDisplayFormatIdx = i;
-				break;
-			}
 		}
-		btnRelayDeathMessages.setState(currentProfile.getBoolean(BotProfileImpl.KEY_RELAYDEATHMESSAGES, false));
-		btnRelayMCJoinLeave.setState(currentProfile.getBoolean(BotProfileImpl.KEY_RELAYMCJOINLEAVE, false));
-		btnRelayIRCJoinLeave.setState(currentProfile.getBoolean(BotProfileImpl.KEY_RELAYIRCJOINLEAVE, true));
-		btnRelayNickChanges.setState(currentProfile.getBoolean(BotProfileImpl.KEY_RELAYNICKCHANGES, true));
-		btnRelayBroadcasts.setState(currentProfile.getBoolean(BotProfileImpl.KEY_RELAYBROADCASTS, false));
-		btnLinkFilter.setState(currentProfile.getBoolean(BotProfileImpl.KEY_LINKFILTER, false));
-		btnAllowPrivateMessages.setState(currentProfile.getBoolean(BotProfileImpl.KEY_ALLOWPRIVMSG, true));
-		btnAutoPlayers.setState(currentProfile.getBoolean(BotProfileImpl.KEY_AUTOPLAYERS, false));
 		updateButtonText();
 	}
 	

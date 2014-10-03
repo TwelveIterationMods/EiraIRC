@@ -24,8 +24,6 @@ public class ChannelConfig {
 	private final BotSettings botSettings;
 	private final ThemeSettings theme;
 	private String password;
-	private boolean autoWho; // server
-	private boolean autoJoin = true; // server
 	private String botProfile; // bot
 
 	public ChannelConfig(ServerConfig serverConfig, String name) {
@@ -49,26 +47,14 @@ public class ChannelConfig {
 		return password;
 	}
 	
-	public void setAutoJoin(boolean autoJoin) {
-		this.autoJoin = autoJoin;
-	}
-	
-	public boolean isAutoJoin() {
-		return autoJoin;
-	}
-
 	public void loadLegacy(Configuration config, ConfigCategory category) {
 		String categoryName = category.getQualifiedName();
 		password = Utils.unquote(config.get(categoryName, "password", "").getString());
-		autoJoin = config.get(categoryName, "autoJoin", autoJoin).getBoolean(autoJoin);
-		autoWho = config.get(categoryName, "autoWho", autoWho).getBoolean(autoWho);
 		botProfile = Utils.unquote(config.get(categoryName, "botProfile", "").getString());
 	}
 
 	public void handleConfigCommand(ICommandSender sender, String key) {
 		String value = null;
-		if(key.equals("autoJoin")) value = String.valueOf(autoJoin);
-		else if(key.equals("autoWho")) value = String.valueOf(autoWho);
 		if(value != null) {
 			Utils.sendLocalizedMessage(sender, "irc.config.lookup", name, key, value);
 		} else {
@@ -77,11 +63,7 @@ public class ChannelConfig {
 	}
 	
 	public void handleConfigCommand(ICommandSender sender, String key, String value) {
-		if(key.equals("autoJoin")) {
-			autoJoin = Boolean.parseBoolean(value);
-		} else if(key.equals("autoWho")) {
-			autoWho = Boolean.parseBoolean(value);
-		} else {
+		if(true) {
 			Utils.sendLocalizedMessage(sender, "irc.config.invalidOption", name, key, value);
 			return;
 		}
@@ -90,8 +72,6 @@ public class ChannelConfig {
 	}
 
 	public static void addOptionsToList(List<String> list) {
-		list.add("autoJoin");
-		list.add("autoWho");
 	}
 	
 	public ServerConfig getServerConfig() {
@@ -102,18 +82,7 @@ public class ChannelConfig {
 		this.password = password;
 	}
 
-	public void setAutoWho(boolean autoWho) {
-		this.autoWho = autoWho;
-	}
-	
-	public boolean isAutoWho() {
-		return autoWho;
-	}
-	
 	public static void addValuesToList(List<String> list, String option) {
-		if(option.equals("autoJoin") || option.equals("autoWho")) {
-			Utils.addBooleansToList(list);
-		}
 	}
 
 	public String getBotProfile() {

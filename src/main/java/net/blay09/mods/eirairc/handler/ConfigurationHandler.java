@@ -15,7 +15,7 @@ import java.util.Map;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.base.BotProfileImpl;
-import net.blay09.mods.eirairc.config.base.DisplayFormatConfig;
+import net.blay09.mods.eirairc.config.base.MessageFormatConfig;
 import net.blay09.mods.eirairc.config.base.ServiceConfig;
 import net.blay09.mods.eirairc.util.IRCResolver;
 import net.blay09.mods.eirairc.util.Utils;
@@ -48,9 +48,9 @@ public class ConfigurationHandler {
 	private static List<BotProfileImpl> botProfileList = new ArrayList<BotProfileImpl>();
 	private static BotProfileImpl defaultBotProfile;
 	private static File botProfileDir;
-	private static final Map<String, DisplayFormatConfig> displayFormats = new HashMap<String, DisplayFormatConfig>();
-	private static List<DisplayFormatConfig> displayFormatList = new ArrayList<DisplayFormatConfig>();
-	private static DisplayFormatConfig defaultDisplayFormat;
+	private static final Map<String, MessageFormatConfig> displayFormats = new HashMap<String, MessageFormatConfig>();
+	private static List<MessageFormatConfig> displayFormatList = new ArrayList<MessageFormatConfig>();
+	private static MessageFormatConfig defaultDisplayFormat;
 	
 	public static void loadBotProfiles(File profileDir) {
 		botProfiles.clear();
@@ -97,7 +97,7 @@ public class ConfigurationHandler {
 		if(!formatDir.exists()) {
 			formatDir.mkdirs();
 		}
-		DisplayFormatConfig.setupDefaultFormats(formatDir);
+		MessageFormatConfig.setupDefaultFormats(formatDir);
 		File[] files = formatDir.listFiles(new FilenameFilter() {
 			@Override
 			public boolean accept(File file, String name) {
@@ -105,12 +105,12 @@ public class ConfigurationHandler {
 			}
 		});
 		for(int i = 0; i < files.length; i++) {
-			DisplayFormatConfig dfc = new DisplayFormatConfig(files[i]);
+			MessageFormatConfig dfc = new MessageFormatConfig(files[i]);
 			dfc.loadFormats();
 			displayFormats.put(dfc.getName(), dfc);
 			displayFormatList.add(dfc);
 		}
-		defaultDisplayFormat = displayFormats.get(DisplayFormatConfig.DEFAULT_FORMAT);
+		defaultDisplayFormat = displayFormats.get(MessageFormatConfig.DEFAULT_FORMAT);
 	}
 	
 	public static void loadServices(File configDir) {
@@ -230,8 +230,8 @@ public class ConfigurationHandler {
 		return botProfileList;
 	}
 
-	public static DisplayFormatConfig getDisplayFormat(String displayMode) {
-		DisplayFormatConfig displayFormat = displayFormats.get(displayMode);
+	public static MessageFormatConfig getMessageFormat(String displayMode) {
+		MessageFormatConfig displayFormat = displayFormats.get(displayMode);
 		if(displayFormat == null) {
 			return defaultDisplayFormat;
 		}
@@ -242,7 +242,7 @@ public class ConfigurationHandler {
 		return botProfileDir;
 	}
 	
-	public static List<DisplayFormatConfig> getDisplayFormats() {
+	public static List<MessageFormatConfig> getDisplayFormats() {
 		return displayFormatList;
 	}
 

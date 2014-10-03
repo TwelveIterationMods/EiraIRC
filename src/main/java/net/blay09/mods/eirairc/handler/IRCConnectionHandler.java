@@ -13,6 +13,9 @@ import net.blay09.mods.eirairc.api.event.IRCDisconnectEvent;
 import net.blay09.mods.eirairc.api.event.IRCErrorEvent;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
+import net.blay09.mods.eirairc.config.settings.BotSettings;
+import net.blay09.mods.eirairc.config.settings.GeneralBooleanComponent;
+import net.blay09.mods.eirairc.config.settings.GeneralSettings;
 import net.blay09.mods.eirairc.irc.IRCReplyCodes;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Globals;
@@ -33,12 +36,12 @@ public class IRCConnectionHandler {
 		Utils.addMessageToChat(mcMessage);
 		ServerConfig serverConfig = ConfigHelper.getServerConfig(event.connection);
 		if(serverConfig.getAddress().equals(Globals.TWITCH_SERVER) && serverConfig.getNick() != null) {
-			ChannelConfig twitchChannel = serverConfig.getChannelConfig("#" + serverConfig.getNick());
-			twitchChannel.setAutoJoin(true);
+			serverConfig.getChannelConfig("#" + serverConfig.getNick());
 		}
 		Utils.doNickServ(event.connection, serverConfig);
 		for(ChannelConfig channelConfig : serverConfig.getChannelConfigs()) {
-			if(channelConfig.isAutoJoin()) {
+			GeneralSettings generalSettings = channelConfig.getGeneralSettings();
+			if(generalSettings.getBoolean(GeneralBooleanComponent.AutoJoin)) {
 				event.connection.join(channelConfig.getName(), channelConfig.getPassword());
 			}
 		}
@@ -81,7 +84,7 @@ public class IRCConnectionHandler {
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void onChannelJoined(IRCChannelJoinedEvent event) {
 		EiraIRC.instance.getChatSessionHandler().addTargetChannel(event.channel);
-		if(event.bot.getBoolean(event.channel, "autoWho", false)) {
+		if(ConfigHelper.getGeneralSettings(event.channel).getBoolean(GeneralBooleanComponent.AutoWho)) {
 			Utils.sendUserList(null, event.connection, event.channel);
 		}
 	}

@@ -22,7 +22,7 @@ buildscript {
 apply plugin: 'curseforge'
 apply plugin: 'forge'
 
-version = "mc1.7.10-v1.8." + BUILD_NUMBER
+version = "mc1.7.10-v2.8." + BUILD_NUMBER
 group = "net.blay09.mods" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "eirairc"
 

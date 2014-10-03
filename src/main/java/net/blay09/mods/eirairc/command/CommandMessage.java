@@ -10,8 +10,10 @@ import net.blay09.mods.eirairc.api.bot.BotProfile;
 import net.blay09.mods.eirairc.api.bot.IRCBot;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
+import net.blay09.mods.eirairc.config.settings.BotBooleanComponent;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.irc.IRCUserImpl;
+import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.IRCResolver;
 import net.blay09.mods.eirairc.util.IRCTargetError;
 import net.blay09.mods.eirairc.util.Utils;
@@ -51,8 +53,7 @@ public class CommandMessage extends SubCommand {
 			Utils.sendLocalizedMessage(sender, target.getName(), args[0]);
 			return true;
 		} else if(target instanceof IRCUserImpl) {
-			IRCBot bot = target.getConnection().getBot();
-			if(bot.getBoolean(target, BotProfile.KEY_ALLOWPRIVMSG, true)) {
+			if(ConfigHelper.getBotSettings(context).getBoolean(BotBooleanComponent.AllowPrivateMessages)) {
 				Utils.sendLocalizedMessage(sender, "irc.msg.disabled");
 				return true;
 			}
@@ -63,7 +64,7 @@ public class CommandMessage extends SubCommand {
 		}
 		String ircMessage = message;
 		if(serverSide) {
-			ircMessage = "<" + Utils.getNickIRC((EntityPlayer) sender) + "> " + ircMessage;
+			ircMessage = "<" + Utils.getNickIRC((EntityPlayer) sender, context) + "> " + ircMessage;
 		}
 		target.message(ircMessage);
 		String mcMessage = "[-> " + target.getName() + "] <" + Utils.getNickGame((EntityPlayer) sender) + "> " + message;

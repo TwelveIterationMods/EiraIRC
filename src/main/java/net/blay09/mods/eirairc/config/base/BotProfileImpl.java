@@ -30,8 +30,7 @@ public class BotProfileImpl implements BotProfile {
 
 	private static final String CATEGORY_SETTINGS = "settings";
 	private static final String CATEGORY_COMMANDS = "commands";
-	private static final String CATEGORY_MACROS = "macros";
-	
+
 	private static final String DEFAULT_CLIENT_FILE = "default_client";
 	private static final String DEFAULT_SERVER_FILE = "default_server";
 	private static final String DEFAULT_TWITCH_FILE = "default_twitch";
@@ -46,9 +45,6 @@ public class BotProfileImpl implements BotProfile {
 	private final Configuration config;
 	
 	private String name;
-	private boolean muted; // server
-	private boolean readOnly; // server
-	private String displayFormat; // server
 	private String[] disabledNativeCommands;
 	private String[] disabledInterOpCommands;
 	private boolean interOp;
@@ -84,11 +80,8 @@ public class BotProfileImpl implements BotProfile {
 	
 	private void load() {
 		name = Utils.unquote(config.get(CATEGORY_SETTINGS, "name", name).getString());
-		muted = config.get(CATEGORY_SETTINGS, "muted", false).getBoolean(false);
-		readOnly = config.get(CATEGORY_SETTINGS, "readOnly", false).getBoolean(false);
 		isDefaultProfile = config.get(CATEGORY_SETTINGS, "isDefaultProfile", false).getBoolean(false);
-		displayFormat = Utils.unquote(config.get(CATEGORY_SETTINGS, "displayFormat", "S-Light").getString());
-		
+
 		disabledNativeCommands = config.get(CATEGORY_COMMANDS, "disabledNativeCommands", new String[0]).getStringList();
 		disabledInterOpCommands = config.get(CATEGORY_COMMANDS, "disabledInterOpCommands", new String[0]).getStringList();
 		
@@ -140,25 +133,6 @@ public class BotProfileImpl implements BotProfile {
 		}
 	}
 	
-	@Override
-	public boolean getBoolean(String key, boolean defaultVal) {
-		return config.get(CATEGORY_SETTINGS, key, defaultVal).getBoolean(defaultVal);
-	}
-	
-	public void setBoolean(String key, boolean value) {
-		config.get(CATEGORY_SETTINGS, key, value).set(value);
-	}
-
-	@Override
-	public boolean isMuted() {
-		return muted;
-	}
-	
-	@Override
-	public boolean isReadOnly() {
-		return readOnly;
-	}
-
 	public String getName() {
 		return name;
 	}
@@ -170,11 +144,7 @@ public class BotProfileImpl implements BotProfile {
 	public void defaultClient() {
 		config.get(CATEGORY_SETTINGS, "name", "").set("Client");
 		config.get(CATEGORY_SETTINGS, "isDefaultProfile", true).set(true);
-		config.get(CATEGORY_SETTINGS, KEY_ALLOWPRIVMSG, true).set(true);
-		config.get(CATEGORY_SETTINGS, KEY_AUTOPLAYERS, false).set(false);
-		config.get(CATEGORY_SETTINGS, KEY_RELAYIRCJOINLEAVE, true).set(true);
-		config.get(CATEGORY_SETTINGS, KEY_RELAYNICKCHANGES, true).set(true);
-		
+
 		config.get(CATEGORY_COMMANDS, "disabledNativeCommands", new String[0]).set(new String[] {
 			Utils.quote("*")
 		});
@@ -183,22 +153,11 @@ public class BotProfileImpl implements BotProfile {
 	public void defaultServer() {
 		config.get(CATEGORY_SETTINGS, "name", "").set("Server");
 		config.get(CATEGORY_SETTINGS, "isDefaultProfile", true).set(true);
-		config.get(CATEGORY_SETTINGS, KEY_ALLOWPRIVMSG, false).set(false);
-		config.get(CATEGORY_SETTINGS, KEY_AUTOPLAYERS, true).set(true);
-		config.get(CATEGORY_SETTINGS, KEY_RELAYIRCJOINLEAVE, true).set(true);
-		config.get(CATEGORY_SETTINGS, KEY_RELAYNICKCHANGES, true).set(true);
-		config.get(CATEGORY_SETTINGS, KEY_RELAYBROADCASTS, true).set(true);
-		config.get(CATEGORY_SETTINGS, KEY_RELAYDEATHMESSAGES, true).set(true);
-		config.get(CATEGORY_SETTINGS, KEY_RELAYMCJOINLEAVE, true).set(true);
 	}
 	
 	public void defaultTwitch() {
 		config.get(CATEGORY_SETTINGS, "name", "").set("Twitch");
 		config.get(CATEGORY_SETTINGS, "isDefaultProfile", true).set(true);
-		config.get(CATEGORY_SETTINGS, KEY_ALLOWPRIVMSG, false).set(false);
-		config.get(CATEGORY_SETTINGS, KEY_AUTOPLAYERS, false).set(false);
-		config.get(CATEGORY_SETTINGS, KEY_RELAYIRCJOINLEAVE, false).set(false);
-		config.get(CATEGORY_SETTINGS, KEY_RELAYNICKCHANGES, false).set(false);
 		config.get(CATEGORY_SETTINGS, "displayFormat", "").set("Twitch");
 
 		config.get(CATEGORY_COMMANDS, "disabledNativeCommands", new String[0]).set(new String[] {
@@ -235,11 +194,6 @@ public class BotProfileImpl implements BotProfile {
 	}
 
 	@Override
-	public String getDisplayFormat() {
-		return displayFormat;
-	}
-
-	@Override
 	public boolean isInterOpAuth(String authName) {
 		return interOpAuthList.contains(authName);
 	}
@@ -252,11 +206,6 @@ public class BotProfileImpl implements BotProfile {
 	public void setName(String name) {
 		this.name = name;
 		config.get(CATEGORY_SETTINGS, "name", "").set(name);
-	}
-	
-	public void setDisplayFormat(String displayFormat) {
-		this.displayFormat = displayFormat;
-		config.get(CATEGORY_SETTINGS, "displayFormat", "").set(displayFormat);
 	}
 	
 	public String[] getInterOpBlacklist() {
@@ -311,14 +260,6 @@ public class BotProfileImpl implements BotProfile {
 
 	public String[] getDisabledNativeCommands() {
 		return disabledNativeCommands;
-	}
-
-	public void setMuted(boolean muted) {
-		this.muted = muted;
-	}
-	
-	public void setReadOnly(boolean readOnly) {
-		this.readOnly = readOnly;
 	}
 
 }

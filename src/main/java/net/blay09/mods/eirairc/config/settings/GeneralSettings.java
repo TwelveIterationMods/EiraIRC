@@ -43,13 +43,15 @@ public class GeneralSettings {
 	}
 
 	public void loadLegacy(Configuration legacyConfig, String category) {
-		if(legacyConfig.hasKey(category, "autoConnect")) {
-			booleans.put(GeneralBooleanComponent.AutoJoin, legacyConfig.get(category, "autoConnect", GeneralBooleanComponent.AutoJoin.defaultValue).getBoolean());
-		} else if(legacyConfig.hasKey(category, "autoJoin")) {
-			booleans.put(GeneralBooleanComponent.AutoJoin, legacyConfig.get(category, "autoJoin", GeneralBooleanComponent.AutoJoin.defaultValue).getBoolean());
-		}
-		if(legacyConfig.hasKey(category, "autoWho")) {
-			booleans.put(GeneralBooleanComponent.AutoWho, legacyConfig.get(category, "autoWho", GeneralBooleanComponent.AutoWho.defaultValue).getBoolean());
+		if(category != null) {
+			if (legacyConfig.hasKey(category, "autoConnect")) {
+				booleans.put(GeneralBooleanComponent.AutoJoin, legacyConfig.get(category, "autoConnect", GeneralBooleanComponent.AutoJoin.defaultValue).getBoolean());
+			} else if (legacyConfig.hasKey(category, "autoJoin")) {
+				booleans.put(GeneralBooleanComponent.AutoJoin, legacyConfig.get(category, "autoJoin", GeneralBooleanComponent.AutoJoin.defaultValue).getBoolean());
+			}
+			if (legacyConfig.hasKey(category, "autoWho")) {
+				booleans.put(GeneralBooleanComponent.AutoWho, legacyConfig.get(category, "autoWho", GeneralBooleanComponent.AutoWho.defaultValue).getBoolean());
+			}
 		}
 	}
 }

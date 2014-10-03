@@ -34,14 +34,9 @@ public class ServerConfig {
 	private String serverPassword = "";
 	private String nickServName = "";
 	private String nickServPassword = "";
-
 	private boolean isSSL = false;
 
-	private boolean autoConnect = true; // channelsettings: autoJoin
 	private String botProfile = ""; // bot
-	private String ident = Globals.DEFAULT_IDENT; // bot
-	private String description = Globals.DEFAULT_DESCRIPTION; // bot
-	private String quitMessage = ""; // bot
 
 	public ServerConfig(String address) {
 		this.address = address;
@@ -85,26 +80,6 @@ public class ServerConfig {
 		return nickServPassword;
 	}
 	
-	public void setIdent(@NotNull String ident) {
-		this.ident = ident;
-	}
-	
-	public String getIdent() {
-		return ident;
-	}
-	
-	public void setDescription(@NotNull String description) {
-		this.description = description;
-	}
-	
-	public String getDescription() {
-		return description;
-	}
-	
-	public boolean isAutoConnect() {
-		return autoConnect;
-	}
-	
 	public ChannelConfig getChannelConfig(String channelName) {
 		ChannelConfig channelConfig = channels.get(channelName.toLowerCase());
 		if(channelConfig == null) {
@@ -125,10 +100,6 @@ public class ServerConfig {
 		this.nickServPassword = nickServPassword;
 	}
 
-	public void setAutoConnect(boolean autoConnect) {
-		this.autoConnect = autoConnect;
-	}
-
 	public void addChannelConfig(@NotNull ChannelConfig channelConfig) {
 		channels.put(channelConfig.getName().toLowerCase(), channelConfig);
 	}
@@ -141,10 +112,6 @@ public class ServerConfig {
 		return channels.containsKey(channelName.toLowerCase());
 	}
 
-	public String getQuitMessage() {
-		return quitMessage;
-	}
-	
 	public Collection<ChannelConfig> getChannelConfigs() {
 		return channels.values();
 	}
@@ -152,13 +119,9 @@ public class ServerConfig {
 	public void loadLegacy(Configuration config, ConfigCategory category) {
 		String categoryName = category.getQualifiedName();
 		nick = Utils.unquote(config.get(categoryName, "nick", "").getString());
-		ident = Utils.unquote(config.get(categoryName, "ident", Globals.DEFAULT_IDENT).getString());
-		description = Utils.unquote(config.get(categoryName, "description", Globals.DEFAULT_DESCRIPTION).getString());
-		quitMessage = Utils.unquote(config.get(categoryName, "quitMessage", "").getString());
 		nickServName = Utils.unquote(config.get(categoryName, "nickServName", "").getString());
 		nickServPassword = Utils.unquote(config.get(categoryName, "nickServPassword", "").getString());
 		serverPassword = Utils.unquote(config.get(categoryName, "serverPassword", "").getString());
-		autoConnect = config.get(categoryName, "autoConnect", autoConnect).getBoolean(autoConnect);
 		botProfile = Utils.unquote(config.get(categoryName, "botProfile", "").getString());
 		isSSL = config.get(categoryName, "secureConnection", isSSL).getBoolean(isSSL);
 		
@@ -173,8 +136,6 @@ public class ServerConfig {
 
 	public void handleConfigCommand(ICommandSender sender, String key) {
 		String value = null;
-		if(key.equals("quitMessage")) value = quitMessage;
-		else if(key.equals("autoConnect")) value = String.valueOf(autoConnect);
 		if(value != null) {
 			Utils.sendLocalizedMessage(sender, "irc.config.lookup", address, key, value);
 		} else {
@@ -183,11 +144,7 @@ public class ServerConfig {
 	}
 	
 	public void handleConfigCommand(ICommandSender sender, String key, String value) {
-		if(key.equals("quitMessage")) {
-			quitMessage = value;
-		} else if(key.equals("autoConnect")) {
-			autoConnect = Boolean.parseBoolean(value);
-		} else {
+		if(true) {
 			Utils.sendLocalizedMessage(sender, "irc.config.invalidOption", address, key, value);
 			return;
 		}
@@ -196,7 +153,6 @@ public class ServerConfig {
 	}
 	
 	public static void addOptionstoList(List<String> list) {
-		list.add("quitMessage");
 		list.add("autoConnect");
 	}
 

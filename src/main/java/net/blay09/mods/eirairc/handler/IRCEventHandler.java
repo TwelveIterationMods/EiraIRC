@@ -4,7 +4,6 @@
 package net.blay09.mods.eirairc.handler;
 
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.api.bot.BotProfile;
 import net.blay09.mods.eirairc.api.event.IRCChannelChatEvent;
 import net.blay09.mods.eirairc.api.event.IRCChannelTopicEvent;
 import net.blay09.mods.eirairc.api.event.IRCPrivateChatEvent;
@@ -13,10 +12,8 @@ import net.blay09.mods.eirairc.api.event.IRCUserLeaveEvent;
 import net.blay09.mods.eirairc.api.event.IRCUserNickChangeEvent;
 import net.blay09.mods.eirairc.api.event.IRCUserQuitEvent;
 import net.blay09.mods.eirairc.config.ClientGlobalConfig;
-import net.blay09.mods.eirairc.config.settings.BotBooleanComponent;
-import net.blay09.mods.eirairc.config.settings.BotSettings;
-import net.blay09.mods.eirairc.config.settings.ThemeColorComponent;
-import net.blay09.mods.eirairc.config.settings.ThemeSettings;
+import net.blay09.mods.eirairc.config.SharedGlobalConfig;
+import net.blay09.mods.eirairc.config.settings.*;
 import net.blay09.mods.eirairc.irc.IRCConnectionImpl;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.MessageFormat;
@@ -34,7 +31,7 @@ public class IRCEventHandler {
 		if(event.bot.isMuted(null)) {
 			return;
 		}
-		if(event.bot.getBoolean(null, BotProfile.KEY_RELAYNICKCHANGES, true)) {
+		if(SharedGlobalConfig.botSettings.getBoolean(BotBooleanComponent.RelayNickChanges)) {
 			String mcMessage = Utils.getLocalizedMessage("irc.display.irc.nickChange", event.connection.getHost(), event.oldNick, event.newNick);
 			Utils.addMessageToChat(mcMessage);
 		}
@@ -45,11 +42,12 @@ public class IRCEventHandler {
 		if(event.bot.isMuted(event.channel)) {
 			return;
 		}
-		if(event.bot.getBoolean(event.channel, BotProfile.KEY_RELAYIRCJOINLEAVE, true)) {
+		BotSettings botSettings = ConfigHelper.getBotSettings(event.channel);
+		if(botSettings.getBoolean(BotBooleanComponent.RelayIRCJoinLeave)) {
 			String mcMessage = Utils.getLocalizedMessage("irc.display.irc.joinMsg", event.channel.getName(), event.user.getName());
 			Utils.addMessageToChat(mcMessage);
 		}
-		if(event.bot.getBoolean(event.channel, BotProfile.KEY_AUTOPLAYERS, false)) {
+		if(botSettings.getBoolean(BotBooleanComponent.SendAutoWho)) {
 			Utils.sendPlayerList(event.user);
 		}
 	}
@@ -59,7 +57,7 @@ public class IRCEventHandler {
 		if(event.bot.isMuted(event.channel)) {
 			return;
 		}
-		if(event.bot.getBoolean(event.channel, BotProfile.KEY_RELAYIRCJOINLEAVE, true)) {
+		if(ConfigHelper.getBotSettings(event.channel).getBoolean(BotBooleanComponent.RelayIRCJoinLeave)) {
 			String mcMessage = Utils.getLocalizedMessage("irc.display.irc.partMsg", event.channel.getName(), event.user.getName());
 			Utils.addMessageToChat(mcMessage);
 		}
@@ -70,7 +68,7 @@ public class IRCEventHandler {
 		if(event.bot.isMuted(null)) {
 			return;
 		}
-		if(event.bot.getBoolean(null, BotProfile.KEY_RELAYIRCJOINLEAVE, true)) {
+		if(SharedGlobalConfig.botSettings.getBoolean(BotBooleanComponent.RelayIRCJoinLeave)) {
 			String mcMessage = Utils.getLocalizedMessage("irc.display.irc.quitMsg", event.connection.getHost(), event.user.getName(), event.message);
 			Utils.addMessageToChat(mcMessage);
 		}
@@ -88,29 +86,29 @@ public class IRCEventHandler {
 				}
 			}
 		}
+		BotSettings botSettings = ConfigHelper.getBotSettings(null);
 		if(event.bot.isMuted(event.sender)) {
 			return;
 		}
-		if(!event.bot.getBoolean(event.sender, "allowPrivateMessages", true)) {
+		if(!botSettings.getBoolean(BotBooleanComponent.AllowPrivateMessages)) {
 			if(!event.isNotice) {
 				event.sender.notice(Utils.getLocalizedMessage("irc.msg.disabled"));
 			}
 			return;
 		}
 		String message = event.message;
-		if(event.bot.getBoolean(event.sender, BotProfile.KEY_LINKFILTER, false)) {
+		if(botSettings.getBoolean(BotBooleanComponent.FilterLinks)) {
 			message = MessageFormat.filterLinks(message);
 		}
 		String format;
 		if(event.isNotice) {
-			format = ConfigHelper.getDisplayFormat(event.bot.getDisplayFormat(event.sender)).mcPrivateNotice;
+			format = botSettings.getMessageFormat().mcPrivateNotice;
 		} else if(event.isEmote) {
-			format = ConfigHelper.getDisplayFormat(event.bot.getDisplayFormat(event.sender)).mcPrivateEmote;
+			format = botSettings.getMessageFormat().mcPrivateEmote;
 		} else {
-			format = ConfigHelper.getDisplayFormat(event.bot.getDisplayFormat(event.sender)).mcPrivateMessage;
+			format = botSettings.getMessageFormat().mcPrivateMessage;
 		}
 		IChatComponent chatComponent = MessageFormat.formatChatComponent(format, event.connection, null, event.sender, message, MessageFormat.Target.Minecraft, (event.isEmote ? MessageFormat.Mode.Emote : MessageFormat.Mode.Message));
-		BotSettings botSettings = ConfigHelper.getBotSettings(event.sender);
 		if(event.isNotice && botSettings.getBoolean(BotBooleanComponent.HideNotices)) {
 			System.out.println(chatComponent.getUnformattedText());
 			return;
@@ -153,19 +151,19 @@ public class IRCEventHandler {
 				}
 			}
 		}
-		if(event.bot.getBoolean(event.sender, BotProfile.KEY_LINKFILTER, false)) {
+		BotSettings botSettings = ConfigHelper.getBotSettings(event.channel);
+		if(botSettings.getBoolean(BotBooleanComponent.FilterLinks)) {
 			message = MessageFormat.filterLinks(message);
 		}
 		String format;
 		if(event.isNotice) {
-			format = ConfigHelper.getDisplayFormat(event.bot.getDisplayFormat(event.channel)).mcChannelNotice;
+			format = botSettings.getMessageFormat().mcChannelNotice;
 		} else if(event.isEmote) {
-			format = ConfigHelper.getDisplayFormat(event.bot.getDisplayFormat(event.channel)).mcChannelEmote;
+			format = botSettings.getMessageFormat().mcChannelEmote;
 		} else {
-			format = ConfigHelper.getDisplayFormat(event.bot.getDisplayFormat(event.channel)).mcChannelMessage;
+			format = botSettings.getMessageFormat().mcChannelMessage;
 		}
 		IChatComponent chatComponent = MessageFormat.formatChatComponent(format, event.connection, event.channel, event.sender, message, MessageFormat.Target.Minecraft, event.isEmote ? MessageFormat.Mode.Emote : MessageFormat.Mode.Message);
-		BotSettings botSettings = ConfigHelper.getBotSettings(event.channel);
 		if(event.isNotice && botSettings.getBoolean(BotBooleanComponent.HideNotices)) {
 			System.out.println(chatComponent.getUnformattedText());
 			return;

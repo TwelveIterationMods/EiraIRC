@@ -11,6 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.sun.media.sound.AutoConnectSequencer;
 import cpw.mods.fml.common.event.*;
 import net.blay09.mods.eirairc.api.IRCConnection;
 import net.blay09.mods.eirairc.command.base.CommandIRC;
@@ -19,6 +20,7 @@ import net.blay09.mods.eirairc.command.base.IRCCommandHandler;
 import net.blay09.mods.eirairc.command.base.IgnoreCommand;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
+import net.blay09.mods.eirairc.config.settings.GeneralBooleanComponent;
 import net.blay09.mods.eirairc.handler.ChatSessionHandler;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.handler.IRCConnectionHandler;
@@ -110,7 +112,7 @@ public class EiraIRC {
 	
 	public void startIRC() {
 		for(ServerConfig serverConfig : ConfigurationHandler.getServerConfigs()) {
-			if(serverConfig.isAutoConnect()) {
+			if(serverConfig.getGeneralSettings().getBoolean(GeneralBooleanComponent.AutoJoin)) {
 				Utils.connectTo(serverConfig);
 			}
 		}

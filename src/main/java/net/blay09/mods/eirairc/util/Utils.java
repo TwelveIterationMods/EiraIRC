@@ -28,6 +28,8 @@ import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.config.base.ServiceConfig;
 import net.blay09.mods.eirairc.config.base.ServiceSettings;
+import net.blay09.mods.eirairc.config.settings.BotSettings;
+import net.blay09.mods.eirairc.config.settings.BotStringComponent;
 import net.blay09.mods.eirairc.config.settings.ThemeColorComponent;
 import net.blay09.mods.eirairc.config.settings.ThemeSettings;
 import net.blay09.mods.eirairc.irc.IRCConnectionImpl;
@@ -134,10 +136,10 @@ public class Utils {
 		return "\"" + s + "\"";
 	}
 	
-	public static String getNickIRC(EntityPlayer player) {
-		return MessageFormat.formatNick(getAliasForPlayer(player));
+	public static String getNickIRC(EntityPlayer player, IRCContext context) {
+		return MessageFormat.formatNick(getAliasForPlayer(player), context, MessageFormat.Target.IRC, MessageFormat.Mode.Message);
 	}
-	
+
 	public static String getNickGame(EntityPlayer player) {
 		return getAliasForPlayer(player);
 	}
@@ -280,10 +282,11 @@ public class Utils {
 
 	public static IRCConnectionImpl connectTo(ServerConfig config) {
 		IRCConnectionImpl connection;
+		BotSettings botSettings = config.getBotSettings();
 		if(config.isSSL()) {
-			connection = new IRCConnectionSSLImpl(config.getAddress(), config.getServerPassword(), ConfigHelper.getFormattedNick(config), config.getIdent(), config.getDescription());
+			connection = new IRCConnectionSSLImpl(config.getAddress(), config.getServerPassword(), ConfigHelper.getFormattedNick(config), botSettings.getString(BotStringComponent.Ident), botSettings.getString(BotStringComponent.Description));
 		} else {
-			connection = new IRCConnectionImpl(config.getAddress(), config.getServerPassword(), ConfigHelper.getFormattedNick(config), config.getIdent(), config.getDescription());
+			connection = new IRCConnectionImpl(config.getAddress(), config.getServerPassword(), ConfigHelper.getFormattedNick(config), botSettings.getString(BotStringComponent.Ident), botSettings.getString(BotStringComponent.Description));
 		}
 		connection.setCharset(config.getCharset());
 		connection.setBot(new IRCBotImpl(connection));
@@ -355,7 +358,7 @@ public class Utils {
 		String s = " * ";
 		for(int i = 0; i < playerList.size(); i++) {
 			EntityPlayer entityPlayer = playerList.get(i);
-			String alias = getNickIRC(entityPlayer);
+			String alias = getNickIRC(entityPlayer, null);
 			if(s.length() + alias.length() > Globals.CHAT_MAX_LENGTH) {
 				user.notice(s);
 				s = " * ";

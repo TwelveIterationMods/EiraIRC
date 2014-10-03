@@ -16,6 +16,7 @@ import net.blay09.mods.eirairc.api.bot.IRCBot;
 import net.blay09.mods.eirairc.config.base.BotProfileImpl;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
+import net.blay09.mods.eirairc.config.settings.GeneralBooleanComponent;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.irc.IRCConnectionImpl;
 import net.blay09.mods.eirairc.util.ConfigHelper;
@@ -86,28 +87,18 @@ public class IRCBotImpl implements IRCBot {
 	}
 
 	@Override
-	public boolean getBoolean(IRCContext context, String key, boolean defaultVal) {
-		return mainProfile.getBoolean(key, defaultVal) && (context != null ? getProfile(context).getBoolean(key, defaultVal) : true);
-	}
-
-	@Override
 	public boolean isMuted(IRCContext context) {
-		return mainProfile.isMuted() || (context != null ? getProfile(context).isMuted() : false);
+		return ConfigHelper.getGeneralSettings(context).getBoolean(GeneralBooleanComponent.Muted);
 	}
 
 	@Override
 	public boolean isReadOnly(IRCContext context) {
-		return mainProfile.isReadOnly() || (context != null ? getProfile(context).isReadOnly() : false);
+		return ConfigHelper.getGeneralSettings(context).getBoolean(GeneralBooleanComponent.ReadOnly);
 	}
 
 	@Override
 	public boolean isServerSide() {
 		return Utils.isServerSide();
-	}
-
-	@Override
-	public String getDisplayFormat(IRCContext context) {
-		return (context != null ? getProfile(context).getDisplayFormat() : mainProfile.getDisplayFormat());
 	}
 
 	public void updateProfiles() {

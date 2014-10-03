@@ -37,17 +37,18 @@ public class MessageFormat {
 	private static final Pattern urlPattern = Pattern.compile("^(?:(https?)://)?([-\\w_\\.]{2,}\\.[a-z]{2,4})(/\\S*)?$");
 
 	public static String getMessageFormat(IRCBot bot, IRCContext context, boolean isEmote) {
+		BotSettings botSettings = ConfigHelper.getBotSettings(context);
 		if(context instanceof IRCUser) {
 			if(isEmote) {
-				return ConfigHelper.getDisplayFormat(bot.getDisplayFormat(context)).ircPrivateEmote;
+				return botSettings.getMessageFormat().ircPrivateEmote;
 			} else {
-				return ConfigHelper.getDisplayFormat(bot.getDisplayFormat(context)).ircPrivateMessage;
+				return botSettings.getMessageFormat().ircPrivateMessage;
 			}
 		} else {
 			if(isEmote) {
-				return ConfigHelper.getDisplayFormat(bot.getDisplayFormat(context)).ircChannelEmote;
+				return botSettings.getMessageFormat().ircChannelEmote;
 			} else {
-				return ConfigHelper.getDisplayFormat(bot.getDisplayFormat(context)).ircChannelMessage;
+				return botSettings.getMessageFormat().ircChannelMessage;
 			}
 		}
 	}
@@ -77,7 +78,7 @@ public class MessageFormat {
 		return sb.toString();
 	}
 
-	private static String formatNick(String nick, IRCContext context, Target target, Mode mode) {
+	public static String formatNick(String nick, IRCContext context, Target target, Mode mode) {
 		if(target == Target.IRC) {
 			if (SharedGlobalConfig.hidePlayerTags) {
 				nick = filterPlayerTags(nick);

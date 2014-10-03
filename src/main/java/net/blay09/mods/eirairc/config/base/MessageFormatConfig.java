@@ -8,7 +8,7 @@ import java.io.File;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraftforge.common.config.Configuration;
 
-public class DisplayFormatConfig {
+public class MessageFormatConfig {
 
 	private static final String CATEGORY_GENERAL = "general";
 	private static final String CATEGORY_FORMAT = "format";
@@ -43,7 +43,7 @@ public class DisplayFormatConfig {
 	public String ircPlayerNickChange;
 	public String ircBroadcastMessage;
 	
-	public DisplayFormatConfig(File file) {
+	public MessageFormatConfig(File file) {
 		config = new Configuration(file);
 		name = Utils.unquote(config.get(CATEGORY_GENERAL, "name", file.getName().substring(0, file.getName().length() - 4)).getString());
 	}

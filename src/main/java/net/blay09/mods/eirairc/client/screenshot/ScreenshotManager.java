@@ -34,6 +34,7 @@ import net.blay09.mods.eirairc.api.upload.IUploadHoster;
 import net.blay09.mods.eirairc.api.upload.UploadManager;
 import net.blay09.mods.eirairc.config.ClientGlobalConfig;
 import net.blay09.mods.eirairc.config.ScreenshotAction;
+import net.blay09.mods.eirairc.config.settings.BotSettings;
 import net.blay09.mods.eirairc.config.settings.ThemeColorComponent;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.MessageFormat;
@@ -254,15 +255,17 @@ public class ScreenshotManager {
 					if (targetChannel == null) {
 						return;
 					}
+					BotSettings botSettings = ConfigHelper.getBotSettings(targetChannel);
 					emoteColor = Utils.getColorFormatting(ConfigHelper.getTheme(targetChannel).getColor(ThemeColorComponent.emoteTextColor));
-					chatComponent = MessageFormat.formatChatComponent(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetChannel)).mcSendChannelEmote, targetChannel, sender, text, MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
+					chatComponent = MessageFormat.formatChatComponent(botSettings.getMessageFormat().mcSendChannelEmote, targetChannel, sender, text, MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
 				} else {
 					IRCUser targetUser = connection.getUser(target[1]);
 					if (targetUser == null) {
 						return;
 					}
+					BotSettings botSettings = ConfigHelper.getBotSettings(targetUser);
 					emoteColor = Utils.getColorFormatting(ConfigHelper.getTheme(targetUser).getColor(ThemeColorComponent.emoteTextColor));
-					chatComponent = MessageFormat.formatChatComponent(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetUser)).mcSendPrivateEmote, targetUser, sender, text, MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
+					chatComponent = MessageFormat.formatChatComponent(botSettings.getMessageFormat().mcSendPrivateEmote, targetUser, sender, text, MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
 				}
 				if (emoteColor != null) {
 					chatComponent.getChatStyle().setColor(emoteColor);

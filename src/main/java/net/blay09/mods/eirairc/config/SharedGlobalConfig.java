@@ -121,8 +121,8 @@ public class SharedGlobalConfig {
 
 		// Theme
 		theme.loadLegacy(legacyConfig);
-		botSettings.loadLegacy(legacyConfig);
-		generalSettings.loadLegacy(legacyConfig);
+		botSettings.loadLegacy(legacyConfig, null);
+		generalSettings.loadLegacy(legacyConfig, null);
 
 		save();
 	}

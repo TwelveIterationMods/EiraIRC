@@ -10,6 +10,7 @@ import net.blay09.mods.eirairc.api.IRCUser;
 import net.blay09.mods.eirairc.api.bot.IBotCommand;
 import net.blay09.mods.eirairc.api.bot.IRCBot;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
+import net.blay09.mods.eirairc.util.MessageFormat;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
@@ -35,7 +36,7 @@ public class BotCommandAlias implements IBotCommand {
 		String alias = args[0];
 		List<EntityPlayer> playerEntityList = MinecraftServer.getServer().getConfigurationManager().playerEntityList;
 		for(EntityPlayer entity : playerEntityList) {
-			if(Utils.getNickGame(entity).equals(alias) || Utils.getNickIRC(entity).equals(alias)) {
+			if(Utils.getNickGame(entity).equals(alias) || Utils.getNickIRC(entity, channel).equals(alias)) {
 				user.notice(Utils.getLocalizedMessage("irc.alias.lookup", alias, entity.getCommandSenderName()));
 				return;
 			}

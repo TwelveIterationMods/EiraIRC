@@ -11,7 +11,9 @@ public enum BotBooleanComponent {
 	FilterLinks("filterLinks", false, ""),
 	HideNotices("hideNotices", false, ""),
 	ConvertColors("convertColors", true, ""),
-	AllowPrivateMessages("allowPrivateMessages", true, "");
+	AllowPrivateMessages("allowPrivateMessages", true, ""),
+	SendAutoWho("sendAutoWho", false, ""),
+	RelayBroadcasts("relayBroadcasts", true, "");
 
 	public static final BotBooleanComponent[] values = values();
 

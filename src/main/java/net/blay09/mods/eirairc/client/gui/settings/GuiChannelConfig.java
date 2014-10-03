@@ -36,9 +36,7 @@ public class GuiChannelConfig extends GuiScreen {
 	private GuiButton btnProfilePrev;
 	private GuiButton btnProfile;
 	private GuiButton btnProfileNext;
-	private GuiToggleButton btnAutoJoin;
-	private GuiToggleButton btnAutoWho;
-	
+
 	private GuiTextField txtName;
 	private GuiAdvancedTextField txtChannelPassword;
 	
@@ -69,12 +67,6 @@ public class GuiChannelConfig extends GuiScreen {
 		txtName = new GuiTextField(fontRendererObj, leftX, topY, 140, 15);
 		txtChannelPassword = new GuiAdvancedTextField(fontRendererObj, rightX, topY, 140, 15);
 		txtChannelPassword.setDefaultPasswordChar();
-		
-		btnAutoJoin = new GuiToggleButton(2, rightX, topY + 25, BUTTON_WIDTH, BUTTON_HEIGHT, "irc.gui.config.joinStartup");
-		buttonList.add(btnAutoJoin);
-		
-		btnAutoWho = new GuiToggleButton(3, rightX, topY + 50, BUTTON_WIDTH, BUTTON_HEIGHT, "irc.gui.config.autoWho");
-		buttonList.add(btnAutoWho);
 		
 		btnProfilePrev = new GuiButton(4, leftX, topY + 25, 18, 20, "<");
 		buttonList.add(btnProfilePrev);
@@ -168,9 +160,6 @@ public class GuiChannelConfig extends GuiScreen {
 	public void actionPerformed(GuiButton button) {
 		if(button == btnSave) {
 			saveToConfig();
-			if(btnAutoJoin.getState() && EiraIRC.instance.isConnectedTo(serverConfig.getAddress())) {
-				EiraIRC.instance.getConnection(serverConfig.getAddress()).join(config.getName(), config.getPassword());
-			}
 			Minecraft.getMinecraft().displayGuiScreen(new GuiChannelList(listParentScreen, serverConfig));
 		} else if(button == btnCancel) {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiChannelList(listParentScreen, serverConfig));
@@ -188,12 +177,8 @@ public class GuiChannelConfig extends GuiScreen {
 		if(config != null) {
 			txtName.setText(config.getName());
 			txtChannelPassword.setText(config.getPassword() != null ? config.getPassword() : "");
-			btnAutoJoin.setState(config.isAutoJoin());
-			btnAutoWho.setState(config.isAutoWho());
 			currentProfile = config.getBotProfile();
 		} else {
-			btnAutoJoin.setState(true);
-			btnAutoWho.setState(false);
 			currentProfile = serverConfig.getBotProfile();
 		}
 		for(int i = 0; i < profileList.size(); i++) {
@@ -213,8 +198,6 @@ public class GuiChannelConfig extends GuiScreen {
 			config = serverConfig.getChannelConfig(txtName.getText());
 		}
 		config.setPassword(txtChannelPassword.getText());
-		config.setAutoJoin(btnAutoJoin.getState());
-		config.setAutoWho(btnAutoWho.getState());
 		config.setBotProfile(currentProfile);
 		IRCConnection connection = EiraIRC.instance.getConnection(serverConfig.getAddress());
 		if(connection != null) {

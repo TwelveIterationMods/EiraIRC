@@ -1,5 +1,7 @@
 package net.blay09.mods.eirairc.config.settings;
 
+import net.blay09.mods.eirairc.config.base.MessageFormatConfig;
+import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.minecraftforge.common.config.Configuration;
 
 import java.util.EnumMap;
@@ -39,6 +41,10 @@ public class BotSettings {
 		return booleans.get(component);
 	}
 
+	public MessageFormatConfig getMessageFormat() {
+		return ConfigurationHandler.getMessageFormat(getString(BotStringComponent.MessageFormat));
+	}
+
 	public void load(Configuration config, String category, boolean defaultValues) {
 		for(int i = 0; i < BotStringComponent.values().length; i++) {
 			if(defaultValues || config.hasKey(category, BotStringComponent.values[i].name)) {
@@ -62,12 +68,14 @@ public class BotSettings {
 	}
 
 	public void loadLegacy(Configuration legacyConfig, String category) {
-		strings.put(BotStringComponent.Description, legacyConfig.get(category, "description", BotStringComponent.Description.defaultValue).getString());
-		strings.put(BotStringComponent.Ident, legacyConfig.get(category, "ident", BotStringComponent.Ident.defaultValue).getString());
-		if(legacyConfig.hasKey(category, "quitMessage")) {
-			strings.put(BotStringComponent.QuitMessage, legacyConfig.get(category, "quitMessage", BotStringComponent.QuitMessage.defaultValue).getString());
+		if(category != null) {
+			strings.put(BotStringComponent.Description, legacyConfig.get(category, "description", BotStringComponent.Description.defaultValue).getString());
+			strings.put(BotStringComponent.Ident, legacyConfig.get(category, "ident", BotStringComponent.Ident.defaultValue).getString());
+			if (legacyConfig.hasKey(category, "quitMessage")) {
+				strings.put(BotStringComponent.QuitMessage, legacyConfig.get(category, "quitMessage", BotStringComponent.QuitMessage.defaultValue).getString());
+			}
 		}
-		strings.put(BotStringComponent.NickFormat, legacyConfig.get(category, "nickPrefix", "").getString() + "%s" + legacyConfig.get(category, "nickSuffix", "").getString());
+		strings.put(BotStringComponent.NickFormat, legacyConfig.get("serveronly", "nickPrefix", "").getString() + "%s" + legacyConfig.get("serveronly", "nickSuffix", "").getString());
 		booleans.put(BotBooleanComponent.HideNotices, legacyConfig.get("display", "hideNotices", BotBooleanComponent.HideNotices.defaultValue).getBoolean());
 		booleans.put(BotBooleanComponent.ConvertColors, legacyConfig.get("display", "enableIRCColors", BotBooleanComponent.ConvertColors.defaultValue).getBoolean());
 	}
