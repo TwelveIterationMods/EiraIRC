@@ -14,8 +14,6 @@ public interface IRCBot {
 	public boolean processCommand(IRCChannel channel, IRCUser sender, String message);
 	public BotProfile getMainProfile();
 	public BotProfile getProfile(IRCContext context);
-	public boolean isMuted(IRCContext context);
-	public boolean isReadOnly(IRCContext context);
 	public boolean isServerSide();
 	
 }

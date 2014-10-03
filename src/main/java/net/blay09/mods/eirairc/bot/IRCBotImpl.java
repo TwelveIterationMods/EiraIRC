@@ -16,7 +16,6 @@ import net.blay09.mods.eirairc.api.bot.IRCBot;
 import net.blay09.mods.eirairc.config.base.BotProfileImpl;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
-import net.blay09.mods.eirairc.config.settings.GeneralBooleanComponent;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.irc.IRCConnectionImpl;
 import net.blay09.mods.eirairc.util.ConfigHelper;
@@ -84,16 +83,6 @@ public class IRCBotImpl implements IRCBot {
 		String[] shiftedArgs = Utils.shiftArgs(args, 1);
 		botCommand.processCommand(this, channel, sender, shiftedArgs);
 		return true;
-	}
-
-	@Override
-	public boolean isMuted(IRCContext context) {
-		return ConfigHelper.getGeneralSettings(context).getBoolean(GeneralBooleanComponent.Muted);
-	}
-
-	@Override
-	public boolean isReadOnly(IRCContext context) {
-		return ConfigHelper.getGeneralSettings(context).getBoolean(GeneralBooleanComponent.ReadOnly);
 	}
 
 	@Override

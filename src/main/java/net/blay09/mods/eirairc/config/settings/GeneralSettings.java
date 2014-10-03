@@ -28,6 +28,14 @@ public class GeneralSettings {
 		return booleans.get(component);
 	}
 
+	public boolean isReadOnly() {
+		return getBoolean(GeneralBooleanComponent.ReadOnly);
+	}
+
+	public boolean isMuted() {
+		return isMuted();
+	}
+
 	public void load(Configuration config, String category, boolean defaultValues) {
 		for(int i = 0; i < GeneralBooleanComponent.values().length; i++) {
 			if(defaultValues || config.hasKey(category, GeneralBooleanComponent.values[i].name)) {

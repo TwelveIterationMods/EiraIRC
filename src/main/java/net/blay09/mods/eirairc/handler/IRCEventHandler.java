@@ -28,7 +28,7 @@ public class IRCEventHandler {
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void onNickChange(IRCUserNickChangeEvent event) {
-		if(event.bot.isMuted(null)) {
+		if(ConfigHelper.getGeneralSettings(event.user).isMuted()) {
 			return;
 		}
 		if(SharedGlobalConfig.botSettings.getBoolean(BotBooleanComponent.RelayNickChanges)) {
@@ -39,7 +39,7 @@ public class IRCEventHandler {
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void onUserJoin(IRCUserJoinEvent event) {
-		if(event.bot.isMuted(event.channel)) {
+		if(ConfigHelper.getGeneralSettings(event.channel).isMuted()) {
 			return;
 		}
 		BotSettings botSettings = ConfigHelper.getBotSettings(event.channel);
@@ -54,7 +54,7 @@ public class IRCEventHandler {
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void onUserLeave(IRCUserLeaveEvent event) {
-		if(event.bot.isMuted(event.channel)) {
+		if(ConfigHelper.getGeneralSettings(event.channel).isMuted()) {
 			return;
 		}
 		if(ConfigHelper.getBotSettings(event.channel).getBoolean(BotBooleanComponent.RelayIRCJoinLeave)) {
@@ -65,7 +65,7 @@ public class IRCEventHandler {
 	
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void onUserQuit(IRCUserQuitEvent event) {
-		if(event.bot.isMuted(null)) {
+		if(ConfigHelper.getGeneralSettings(event.user).isMuted()) {
 			return;
 		}
 		if(SharedGlobalConfig.botSettings.getBoolean(BotBooleanComponent.RelayIRCJoinLeave)) {
@@ -87,7 +87,7 @@ public class IRCEventHandler {
 			}
 		}
 		BotSettings botSettings = ConfigHelper.getBotSettings(null);
-		if(event.bot.isMuted(event.sender)) {
+		if(ConfigHelper.getGeneralSettings(event.sender).isMuted()) {
 			return;
 		}
 		if(!botSettings.getBoolean(BotBooleanComponent.AllowPrivateMessages)) {
@@ -135,7 +135,7 @@ public class IRCEventHandler {
 		if(!event.isNotice && event.message.startsWith("!") && event.bot.processCommand(event.channel, event.sender, event.message.substring(1))) {
 			return;
 		}
-		if(event.bot.isMuted(event.channel)) {
+		if(ConfigHelper.getGeneralSettings(event.channel).isMuted()) {
 			return;
 		}
 		String message = event.message;
@@ -181,7 +181,7 @@ public class IRCEventHandler {
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void onTopicChange(IRCChannelTopicEvent event) {
-		if(event.bot.isMuted(event.channel)) {
+		if(ConfigHelper.getGeneralSettings(event.channel).isMuted()) {
 			return;
 		}
 		if(event.user == null) {
