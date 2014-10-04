@@ -19,7 +19,6 @@ public class GuiTwitch extends EiraGuiScreen implements GuiYesNoCallback {
 
 	private static final ResourceLocation twitchLogo = new ResourceLocation("eirairc", "gfx/Twitch_Logo_White.png");
 
-	private GuiScreen parentScreen;
 	private ServerConfig config;
 	private GuiTextField txtUsername;
 	private GuiAdvancedTextField txtPassword;
@@ -27,7 +26,7 @@ public class GuiTwitch extends EiraGuiScreen implements GuiYesNoCallback {
 	private GuiButton btnConnect;
 
 	public GuiTwitch(GuiScreen parentScreen) {
-		this.parentScreen = parentScreen;
+		super(parentScreen);
 		config = ConfigurationHandler.getOrCreateServerConfig(Globals.TWITCH_SERVER);
 	}
 

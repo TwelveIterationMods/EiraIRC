@@ -18,7 +18,7 @@ public class EiraIRCGuiFactory implements IModGuiFactory {
 
 	@Override
 	public Class<? extends GuiScreen> mainConfigGuiClass() {
-		return EiraIRCConfigGUI.class;
+		return GuiEiraIRCConfig.class;
 	}
 
 	@Override

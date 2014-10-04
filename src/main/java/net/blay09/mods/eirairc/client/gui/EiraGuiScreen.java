@@ -1,7 +1,7 @@
 package net.blay09.mods.eirairc.client.gui;
 
 import net.blay09.mods.eirairc.client.gui.base.GuiLabel;
-import net.blay09.mods.eirairc.client.gui.base.MenuButton;
+import net.blay09.mods.eirairc.client.gui.base.GuiMenuButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.Tessellator;
@@ -17,17 +17,40 @@ public class EiraGuiScreen extends GuiScreen {
 
 	private static final ResourceLocation menuBG = new ResourceLocation("eirairc", "gfx/menubg.png");
 
-	protected final List<MenuButton> menuButtonList = new ArrayList<MenuButton>();
+	protected final GuiScreen parentScreen;
+	protected final List<GuiMenuButton> menuButtonList = new ArrayList<GuiMenuButton>();
 	protected final List<GuiTextField> textFieldList = new ArrayList<GuiTextField>();
 	protected final List<GuiLabel> labelList = new ArrayList<GuiLabel>();
+
+	protected int menuX;
+	protected int menuY;
+	protected int menuWidth;
+	protected int menuHeight;
+
+	public EiraGuiScreen() {
+		this(null);
+	}
+
+	public EiraGuiScreen(GuiScreen parentScreen) {
+		this.parentScreen = parentScreen;
+	}
 
 	@Override
 	public void initGui() {
 		super.initGui();
 
+		setupMenuSize(300, 200);
+
 		menuButtonList.clear();
 		textFieldList.clear();
 		labelList.clear();
+	}
+
+	public void setupMenuSize(int menuWidth, int menuHeight) {
+		this.menuWidth = menuWidth;
+		this.menuHeight = menuHeight;
+		menuX = width / 2 - menuWidth / 2;
+		menuY = height / 2 - menuHeight / 2;
 	}
 
 	@Override
@@ -38,6 +61,14 @@ public class EiraGuiScreen extends GuiScreen {
 		}
 		for(int i = 0; i < textFieldList.size(); i++) {
 			textFieldList.get(i).mouseClicked(mouseX, mouseY, mouseButton);
+		}
+
+
+
+		if(mouseX >= menuX && mouseX < menuX + menuWidth && mouseY >= menuY && mouseY < menuY + menuHeight) {
+			super.mouseClicked(mouseX, mouseY, mouseButton);
+		} else {
+			mc.displayGuiScreen(parentScreen);
 		}
 	}
 
@@ -61,7 +92,7 @@ public class EiraGuiScreen extends GuiScreen {
 		}
 	}
 
-	public void actionPerformed (MenuButton menuButton){}
+	public void actionPerformed (GuiMenuButton menuButton){}
 
 	@Override
 	public void drawScreen ( int mouseX, int mouseY, float p_73863_3_){
@@ -82,14 +113,14 @@ public class EiraGuiScreen extends GuiScreen {
 
 	public void drawLightBackground(int x, int y, int width, int height) {
 		mc.renderEngine.bindTexture(menuBG);
-		drawTexturedRect(x, y, width, height, 0, 0, width, height, 300, 200);
+		drawTexturedRect(x, y, width, height, 0, 0, 300, 200, 300, 200);
 	}
 
 	public void drawTexturedRect(int x, int y, int width, int height, int texCoordX, int texCoordY, int regionWidth, int regionHeight, int texWidth, int texHeight) {
-		float u = texCoordX / texWidth;
-		float v = texCoordY / texHeight;
-		float u2 = texCoordX + regionWidth / texWidth;
-		float v2 = texCoordY + regionHeight / texHeight;
+		float u = (float) texCoordX / (float) texWidth;
+		float v = (float) texCoordY / (float) texHeight;
+		float u2 = (float) (texCoordX + regionWidth) / (float) texWidth;
+		float v2 = (float) (texCoordY + regionHeight) / (float) texHeight;
 
 		Tessellator tessellator = Tessellator.instance;
 		tessellator.startDrawingQuads();

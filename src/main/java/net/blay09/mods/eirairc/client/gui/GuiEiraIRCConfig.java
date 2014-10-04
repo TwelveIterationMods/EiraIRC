@@ -16,9 +16,9 @@ import java.util.List;
 /**
  * Created by Blay09 on 03.10.2014.
  */
-public class EiraIRCConfigGUI extends GuiConfig {
+public class GuiEiraIRCConfig extends GuiConfig {
 
-	public EiraIRCConfigGUI(GuiScreen parentScreen) {
+	public GuiEiraIRCConfig(GuiScreen parentScreen) {
 		super(parentScreen, getCategories(), Globals.MOD_ID, false, false, "EiraIRC Config");
 	}
 

@@ -11,7 +11,7 @@ import org.lwjgl.opengl.GL11;
 /**
  * Created by Blay09 on 04.10.2014.
  */
-public class MenuButton extends Gui {
+public class GuiMenuButton extends Gui {
 
 	private static final ResourceLocation menuIcons = new ResourceLocation("eirairc", "gfx/menu.png");
 	private static final int BUTTON_SIZE = 64;
@@ -23,7 +23,7 @@ public class MenuButton extends Gui {
 	private final int xPos;
 	private final int yPos;
 
-	public MenuButton(String title, int xPos, int yPos, int texCoordX, int texCoordY) {
+	public GuiMenuButton(String title, int xPos, int yPos, int texCoordX, int texCoordY) {
 		this.mc = Minecraft.getMinecraft();
 		this.title = title;
 		this.xPos = xPos;
