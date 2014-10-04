@@ -32,11 +32,13 @@ public class MenuButton extends Gui {
 		this.texCoordY = texCoordY;
 	}
 
-	public void mouseClicked(int mouseX, int mouseY) {
-		if(mouseX >= xPos && mouseX < xPos + BUTTON_SIZE && mouseY >= yPos && mouseY < yPos + BUTTON_SIZE) {
-			mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0f));
-			if(mc.currentScreen instanceof GuiEiraIRCMenu) {
-				((GuiEiraIRCMenu) mc.currentScreen).actionPerformed(this);
+	public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
+		if(mouseButton == 0) {
+			if (mouseX >= xPos && mouseX < xPos + BUTTON_SIZE && mouseY >= yPos && mouseY < yPos + BUTTON_SIZE) {
+				mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0f));
+				if (mc.currentScreen instanceof GuiEiraIRCMenu) {
+					((GuiEiraIRCMenu) mc.currentScreen).actionPerformed(this);
+				}
 			}
 		}
 	}
