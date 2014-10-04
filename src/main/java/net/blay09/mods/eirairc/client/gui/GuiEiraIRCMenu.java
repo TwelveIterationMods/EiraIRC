@@ -80,7 +80,8 @@ public class GuiEiraIRCMenu extends GuiScreen {
 		final int menuHeight = 200;
 		final int menuX = width / 2 - menuWidth / 2;
 		final int menuY = height / 2 - menuHeight / 2;
-		drawGradientRect(menuX, menuY, menuX + menuWidth, menuY + menuHeight, -1072689136, -804253680);
+
+		drawGradientRect(menuX, menuY, menuX + menuWidth, menuY + menuHeight, -16509940, -535818224);
 
 		for(int i = 0; i < buttonList.size(); i++) {
 			buttonList.get(i).draw(mouseX, mouseY);
