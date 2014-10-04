@@ -3,6 +3,7 @@
 
 package net.blay09.mods.eirairc.client.gui.settings;
 
+import net.blay09.mods.eirairc.client.gui.GuiEiraIRCMenu;
 import net.blay09.mods.eirairc.config.ClientGlobalConfig;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
@@ -39,7 +40,7 @@ public class GuiDisplaySettings extends GuiScreen {
 	@Override
 	public void actionPerformed(GuiButton button) {
 		if(button == btnBack) {
-			Minecraft.getMinecraft().displayGuiScreen(new GuiSettings());
+			Minecraft.getMinecraft().displayGuiScreen(new GuiEiraIRCMenu());
 		} else if(button == btnRecordingHUD) {
 			ClientGlobalConfig.hudRecState = !ClientGlobalConfig.hudRecState;
 			updateButtonText();

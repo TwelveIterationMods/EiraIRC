@@ -3,6 +3,7 @@
 
 package net.blay09.mods.eirairc.client.gui.settings;
 
+import net.blay09.mods.eirairc.client.gui.GuiEiraIRCMenu;
 import net.blay09.mods.eirairc.config.ClientGlobalConfig;
 import net.blay09.mods.eirairc.config.NotificationStyle;
 import net.blay09.mods.eirairc.util.Globals;
@@ -51,7 +52,7 @@ public class GuiNotifications extends GuiScreen {
 	@Override
 	public void actionPerformed(GuiButton button) {
 		if(button == btnBack) {
-			Minecraft.getMinecraft().displayGuiScreen(new GuiSettings());
+			Minecraft.getMinecraft().displayGuiScreen(new GuiEiraIRCMenu());
 		} else if(button == btnFriendJoined) {
 			ClientGlobalConfig.ntfyFriendJoined = getNextValue(ClientGlobalConfig.ntfyFriendJoined);
 		} else if(button == btnNameMentioned) {

@@ -48,7 +48,7 @@ eirairc:irc.cmdlist.special=§eSpecial Commands: §ftwitch, color, alias
 ## General
 eirairc:irc.gui.options=Options
 eirairc:irc.gui.chatTarget=Chatting to: %s
-eirairc:irc.gui.back=Back
+eirairc:gui.back=Back
 eirairc:irc.gui.yes=Yes
 eirairc:irc.gui.no=No
 eirairc:irc.gui.add=Add %s
@@ -91,19 +91,13 @@ eirairc:irc.gui.editServer.nickServPassword=NickServ Password:
 eirairc:irc.gui.editServer.ident=Ident:
 eirairc:irc.gui.editServer.description=Description:
 
-## Settings
-eirairc:irc.gui.settings=EiraIRC Settings
-eirairc:irc.gui.settings.client=Client
-eirairc:irc.gui.settings.server=Server
-eirairc:irc.gui.settings.global=Global Settings
+## Menu
+eirairc:gui.menu.title=EiraIRC Menu
+eirairc:gui.settings=Settings
 eirairc:irc.gui.settings.serverList=Server List
 eirairc:irc.gui.settings.friendsIgnoreList=Friends / Ignore List
 eirairc:irc.gui.settings.twitch=Twitch Chat
-eirairc:irc.gui.settings.screenshots=Screenshots
-eirairc:irc.gui.settings.displaySettings=Display Settings
-eirairc:irc.gui.settings.botSettings=Bot Profiles
-eirairc:irc.gui.settings.notifications=Notifications
-eirairc:irc.gui.settings.keybinds=Keybinds
+eirairc:irc.gui.settings.screenshots=Screenshot Archive
 
 ## Twitch Config
 eirairc:irc.gui.twitch=EiraIRC - Twitch Chat
@@ -487,3 +481,5 @@ key.irc.toggleLive=Livestream Notification
 key.irc.toggleTarget=Toggle Chat Target
 key.irc.openScreenshots=Open Screenshot Archive
 key.irc.openMenu=Open EiraIRC Menu
+
+#######################################################################################################################

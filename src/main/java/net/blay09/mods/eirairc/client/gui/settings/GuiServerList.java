@@ -5,6 +5,7 @@ package net.blay09.mods.eirairc.client.gui.settings;
 
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.IRCConnection;
+import net.blay09.mods.eirairc.client.gui.GuiEiraIRCMenu;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.ConfigHelper;
@@ -59,7 +60,7 @@ public class GuiServerList extends GuiScreen implements GuiYesNoCallback {
 	@Override
 	public void actionPerformed(GuiButton button) {
 		if(button == btnBack) {
-			Minecraft.getMinecraft().displayGuiScreen(new GuiSettings());
+			Minecraft.getMinecraft().displayGuiScreen(new GuiEiraIRCMenu());
 		} else if(button == btnConnect) {
 			IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(configs[selectedElement].getAddress());
 			if(connection != null) {

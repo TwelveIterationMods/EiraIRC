@@ -9,7 +9,7 @@ import net.blay09.mods.eirairc.client.gui.chat.GuiChatExtended;
 import net.blay09.mods.eirairc.client.gui.chat.GuiEiraChat;
 import net.blay09.mods.eirairc.client.gui.chat.GuiEiraChatInput;
 import net.blay09.mods.eirairc.client.gui.screenshot.GuiScreenshotList;
-import net.blay09.mods.eirairc.client.gui.settings.GuiSettings;
+import net.blay09.mods.eirairc.client.gui.GuiEiraIRCMenu;
 import net.blay09.mods.eirairc.client.screenshot.Screenshot;
 import net.blay09.mods.eirairc.client.screenshot.ScreenshotManager;
 import net.blay09.mods.eirairc.config.ClientGlobalConfig;
@@ -69,7 +69,7 @@ public class EiraTickHandler {
 	private void handleKeyInput() {
 		if(isKeyPressed(ClientGlobalConfig.keyOpenMenu, KEY_IDX_OPENSETTINGS)) {
 			if(Minecraft.getMinecraft().currentScreen == null) {
-				Minecraft.getMinecraft().displayGuiScreen(new GuiSettings());
+				Minecraft.getMinecraft().displayGuiScreen(new GuiEiraIRCMenu());
 			}
 		}
 		EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;

@@ -4,7 +4,7 @@
 package net.blay09.mods.eirairc.client.gui.chat;
 
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.client.gui.settings.GuiSettings;
+import net.blay09.mods.eirairc.client.gui.GuiEiraIRCMenu;
 import net.blay09.mods.eirairc.config.ClientGlobalConfig;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
@@ -80,7 +80,7 @@ public class GuiEiraChatInput extends GuiScreen {
 	public void actionPerformed(GuiButton button) {
 		super.actionPerformed(button);
 		if(button == btnOptions) {
-			Minecraft.getMinecraft().displayGuiScreen(new GuiSettings());
+			Minecraft.getMinecraft().displayGuiScreen(new GuiEiraIRCMenu());
 		}
 	}
 	
