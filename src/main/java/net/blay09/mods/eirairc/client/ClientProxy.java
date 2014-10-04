@@ -6,13 +6,9 @@ package net.blay09.mods.eirairc.client;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import net.blay09.mods.eirairc.CommonProxy;
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.api.upload.UploadManager;
 import net.blay09.mods.eirairc.client.gui.chat.GuiEiraChat;
 import net.blay09.mods.eirairc.client.gui.overlay.OverlayNotification;
-import net.blay09.mods.eirairc.client.gui.overlay.OverlayRecLive;
 import net.blay09.mods.eirairc.client.screenshot.ScreenshotManager;
-import net.blay09.mods.eirairc.client.upload.DirectUploadHoster;
-import net.blay09.mods.eirairc.client.upload.ImgurHoster;
 import net.blay09.mods.eirairc.config.ClientGlobalConfig;
 import net.blay09.mods.eirairc.config.NotificationStyle;
 import net.blay09.mods.eirairc.util.NotificationType;
@@ -22,14 +18,11 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.ClientCommandHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
-import org.lwjgl.input.Keyboard;
-import org.omg.PortableInterceptor.ClientRequestInfo;
 
 public class ClientProxy extends CommonProxy {
 
 	private GuiEiraChat eiraChat;
 	private OverlayNotification notificationGUI;
-	private OverlayRecLive recLiveGUI;
 
 	private static final KeyBinding[] keyBindings = new KeyBinding[] {
 		ClientGlobalConfig.keyScreenshotShare,
@@ -45,7 +38,6 @@ public class ClientProxy extends CommonProxy {
 		eiraChat = new GuiEiraChat();
 		
 		notificationGUI = new OverlayNotification();
-		recLiveGUI= new OverlayRecLive();
 		ScreenshotManager.create();
 		FMLCommonHandler.instance().bus().register(new EiraTickHandler(eiraChat));
 
@@ -59,7 +51,6 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void renderTick(float delta) {
 		notificationGUI.updateAndRender(delta);
-		recLiveGUI.updateAndRender(delta);
 	}
 	
 	@Override
