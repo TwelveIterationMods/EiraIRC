@@ -49,7 +49,7 @@ public class CommandGhost extends SubCommand {
 			}
 			connection = context.getConnection();
 		}
-		ServerConfig serverConfig = ConfigurationHandler.getServerConfig(connection.getHost());
+		ServerConfig serverConfig = ConfigurationHandler.getOrCreateServerConfig(connection.getHost());
 		ServiceSettings settings = ServiceConfig.getSettings(connection.getHost(), connection.getServerType());
 		if(settings.hasGhostCommand()) {
 			connection.irc(settings.getGhostCommand(serverConfig.getNickServName(), serverConfig.getNickServPassword()));

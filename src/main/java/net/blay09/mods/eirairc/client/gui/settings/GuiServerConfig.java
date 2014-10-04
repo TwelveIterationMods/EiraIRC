@@ -212,7 +212,7 @@ public class GuiServerConfig extends GuiScreen {
 			if(config != null) {
 				ConfigurationHandler.removeServerConfig(config.getAddress());
 			}
-			config = ConfigurationHandler.getServerConfig(txtHost.getText());
+			config = ConfigurationHandler.getOrCreateServerConfig(txtHost.getText());
 		}
 		config.setNick(txtNick.getText());
 		config.setNickServ(txtNickServName.getText(), txtNickServPassword.getText());

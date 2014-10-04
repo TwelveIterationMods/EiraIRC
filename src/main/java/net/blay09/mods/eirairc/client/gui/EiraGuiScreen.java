@@ -1,8 +1,11 @@
 package net.blay09.mods.eirairc.client.gui;
 
+import net.blay09.mods.eirairc.client.gui.base.GuiLabel;
 import net.blay09.mods.eirairc.client.gui.base.MenuButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,8 +15,11 @@ import java.util.List;
  */
 public class EiraGuiScreen extends GuiScreen {
 
+	private static final ResourceLocation menuBG = new ResourceLocation("eirairc", "gfx/menubg.png");
+
 	protected final List<MenuButton> menuButtonList = new ArrayList<MenuButton>();
 	protected final List<GuiTextField> textFieldList = new ArrayList<GuiTextField>();
+	protected final List<GuiLabel> labelList = new ArrayList<GuiLabel>();
 
 	@Override
 	public void initGui() {
@@ -21,6 +27,7 @@ public class EiraGuiScreen extends GuiScreen {
 
 		menuButtonList.clear();
 		textFieldList.clear();
+		labelList.clear();
 	}
 
 	@Override
@@ -54,25 +61,43 @@ public class EiraGuiScreen extends GuiScreen {
 		}
 	}
 
-	public void actionPerformed (MenuButton menuButton){
-	}
-
+	public void actionPerformed (MenuButton menuButton){}
 
 	@Override
 	public void drawScreen ( int mouseX, int mouseY, float p_73863_3_){
 		super.drawScreen(mouseX, mouseY, p_73863_3_);
 
-		for(int i = 0; i < menuButtonList.size(); i++) {
-			menuButtonList.get(i).draw(mouseX, mouseY);
+		for(int i = 0; i < labelList.size(); i++) {
+			labelList.get(i).drawLabel();
 		}
 
 		for(int i = 0; i < textFieldList.size(); i++) {
 			textFieldList.get(i).drawTextBox();
 		}
+
+		for(int i = 0; i < menuButtonList.size(); i++) {
+			menuButtonList.get(i).draw(mouseX, mouseY);
+		}
 	}
 
 	public void drawLightBackground(int x, int y, int width, int height) {
-		drawGradientRect(x, y, x + width, y + height, -16509940, -535818224);
+		mc.renderEngine.bindTexture(menuBG);
+		drawTexturedRect(x, y, width, height, 0, 0, width, height, 300, 200);
+	}
+
+	public void drawTexturedRect(int x, int y, int width, int height, int texCoordX, int texCoordY, int regionWidth, int regionHeight, int texWidth, int texHeight) {
+		float u = texCoordX / texWidth;
+		float v = texCoordY / texHeight;
+		float u2 = texCoordX + regionWidth / texWidth;
+		float v2 = texCoordY + regionHeight / texHeight;
+
+		Tessellator tessellator = Tessellator.instance;
+		tessellator.startDrawingQuads();
+		tessellator.addVertexWithUV(x, y + height, this.zLevel, u, v2);
+		tessellator.addVertexWithUV(x + width, y + height, this.zLevel, u2, v2);
+		tessellator.addVertexWithUV(x + width, y, this.zLevel, u2, v);
+		tessellator.addVertexWithUV(x, y, this.zLevel, u, v);
+		tessellator.draw();
 	}
 
 }

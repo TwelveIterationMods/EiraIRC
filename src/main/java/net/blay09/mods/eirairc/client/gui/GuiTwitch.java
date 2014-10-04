@@ -1,7 +1,9 @@
 package net.blay09.mods.eirairc.client.gui;
 
 import net.blay09.mods.eirairc.client.gui.base.GuiAdvancedTextField;
+import net.blay09.mods.eirairc.client.gui.base.GuiLabel;
 import net.blay09.mods.eirairc.config.ServerConfig;
+import net.blay09.mods.eirairc.config.settings.BotStringComponent;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
@@ -22,10 +24,11 @@ public class GuiTwitch extends EiraGuiScreen implements GuiYesNoCallback {
 	private GuiTextField txtUsername;
 	private GuiAdvancedTextField txtPassword;
 	private GuiButton btnOAuthHelp;
+	private GuiButton btnConnect;
 
 	public GuiTwitch(GuiScreen parentScreen) {
 		this.parentScreen = parentScreen;
-		config = ConfigurationHandler.getServerConfig(Globals.TWITCH_SERVER);
+		config = ConfigurationHandler.getOrCreateServerConfig(Globals.TWITCH_SERVER);
 	}
 
 	@Override
@@ -33,25 +36,54 @@ public class GuiTwitch extends EiraGuiScreen implements GuiYesNoCallback {
 		super.initGui();
 		Keyboard.enableRepeatEvents(true);
 
-		txtUsername = new GuiTextField(fontRendererObj, width / 2 - 90, height / 2, 180, 15);
+		final int topX = height / 2 - 30;
+
+		labelList.add(new GuiLabel("Twitch Username", width / 2 - 90, topX, Globals.TEXT_COLOR));
+
+		String oldText;
+		if(txtUsername != null) {
+			oldText = txtUsername.getText();
+		} else {
+			oldText = config.getNick();
+		}
+		txtUsername = new GuiTextField(fontRendererObj, width / 2 - 90, topX + 15, 180, 15);
 		txtUsername.setMaxStringLength(Integer.MAX_VALUE);
-		txtUsername.setText(config.getNick());
+		txtUsername.setText(oldText);
 		textFieldList.add(txtUsername);
 
-		txtPassword = new GuiAdvancedTextField(fontRendererObj, width / 2 - 90, height / 2 + 40, 180, 15);
+		labelList.add(new GuiLabel("O-Auth Token", width / 2 - 90, topX + 40, Globals.TEXT_COLOR));
+
+		if(txtPassword != null) {
+			oldText = txtPassword.getText();
+		} else {
+			oldText = config.getServerPassword();
+		}
+		txtPassword = new GuiAdvancedTextField(fontRendererObj, width / 2 - 90, topX + 55, 180, 15);
 		txtPassword.setMaxStringLength(Integer.MAX_VALUE);
 		txtPassword.setDefaultPasswordChar();
-		txtPassword.setText(config.getServerPassword());
+		txtPassword.setText(oldText);
 		textFieldList.add(txtPassword);
 
-		btnOAuthHelp = new GuiButton(1, width / 2 + 94, height / 2 + 37, 20, 20, "?");
+		btnOAuthHelp = new GuiButton(0, width / 2 + 94, topX + 52, 20, 20, "?");
 		buttonList.add(btnOAuthHelp);
+
+		btnConnect = new GuiButton(1, width / 2 - 100, topX + 90, "Connect");
+		buttonList.add(btnConnect);
 	}
 
 	@Override
 	public void actionPerformed(GuiButton button) {
 		if(button == btnOAuthHelp) {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiConfirmOpenLink(this, Globals.TWITCH_OAUTH, 0, true));
+		} else if(button == btnConnect) {
+			config.setNick(txtUsername.getText());
+			config.setServerPassword(txtPassword.getText());
+			if(!config.getNick().isEmpty() && !config.getServerPassword().isEmpty()) {
+				config.getBotSettings().setString(BotStringComponent.BotProfile, "Twitch");
+				config.getOrCreateChannelConfig(config.getNick().toLowerCase());
+				ConfigurationHandler.addServerConfig(config);
+				Utils.connectTo(config);
+			}
 		}
 	}
 

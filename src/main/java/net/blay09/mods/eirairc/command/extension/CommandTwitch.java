@@ -42,7 +42,7 @@ public class CommandTwitch extends SubCommand {
 		if(args.length == 0) {
 			if(ConfigurationHandler.hasServerConfig(Globals.TWITCH_SERVER)) {
 				Utils.sendLocalizedMessage(sender, "irc.basic.connecting", "Twitch");
-				ServerConfig serverConfig = ConfigurationHandler.getServerConfig(Globals.TWITCH_SERVER);
+				ServerConfig serverConfig = ConfigurationHandler.getOrCreateServerConfig(Globals.TWITCH_SERVER);
 				Utils.connectTo(serverConfig);
 				return true;
 			} else {
@@ -57,7 +57,7 @@ public class CommandTwitch extends SubCommand {
 			if(args.length < 2 && !ConfigurationHandler.hasServerConfig(Globals.TWITCH_SERVER)) {
 				throw new WrongUsageException(Globals.MOD_ID + ":irc.commands.twitch");
 			}
-			ServerConfig serverConfig = ConfigurationHandler.getServerConfig(Globals.TWITCH_SERVER);
+			ServerConfig serverConfig = ConfigurationHandler.getOrCreateServerConfig(Globals.TWITCH_SERVER);
 			serverConfig.setNick(args[0]);
 			serverConfig.setServerPassword(args[1]);
 			String userChannel = "#" + args[0];

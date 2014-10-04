@@ -57,7 +57,7 @@ public class CommandNickServ extends SubCommand {
 			}
 			connection = context.getConnection();
 		}
-		ServerConfig serverConfig = ConfigurationHandler.getServerConfig(connection.getHost());
+		ServerConfig serverConfig = ConfigurationHandler.getOrCreateServerConfig(connection.getHost());
 		serverConfig.setNickServ(args[argidx], args[argidx + 1]);
 		ConfigurationHandler.save();
 		Utils.doNickServ(connection, serverConfig);

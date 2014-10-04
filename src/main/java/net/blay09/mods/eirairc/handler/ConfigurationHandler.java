@@ -211,7 +211,7 @@ public class ConfigurationHandler {
 		ClientGlobalConfig.load(configDir);
 	}
 	
-	public static ServerConfig getServerConfig(String host) {
+	public static ServerConfig getOrCreateServerConfig(String host) {
 		ServerConfig serverConfig = serverConfigs.get(host.toLowerCase());
 		if(serverConfig == null) {
 			serverConfig = new ServerConfig(host);

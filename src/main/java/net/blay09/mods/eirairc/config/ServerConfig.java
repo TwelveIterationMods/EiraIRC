@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.blay09.mods.eirairc.api.IRCChannel;
 import net.blay09.mods.eirairc.config.base.BotProfileImpl;
@@ -261,4 +260,5 @@ public class ServerConfig {
 	public BotSettings getBotSettings() {
 		return botSettings;
 	}
+
 }

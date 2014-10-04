@@ -41,7 +41,7 @@ public class CommandConnect extends SubCommand {
 			return true;
 		}
 		Utils.sendLocalizedMessage(sender, "irc.basic.connecting", host);
-		ServerConfig serverConfig = ConfigurationHandler.getServerConfig(host);
+		ServerConfig serverConfig = ConfigurationHandler.getOrCreateServerConfig(host);
 		if(args.length >= 2) {
 			serverConfig.setServerPassword(args[1]);
 		}

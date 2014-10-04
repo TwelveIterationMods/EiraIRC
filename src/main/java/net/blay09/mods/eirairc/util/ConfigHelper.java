@@ -33,11 +33,11 @@ public class ConfigHelper {
 	}
 
 	public static String getQuitMessage(IRCConnection connection) {
-		return ConfigurationHandler.getServerConfig(connection.getHost()).getBotSettings().getString(BotStringComponent.QuitMessage);
+		return ConfigurationHandler.getOrCreateServerConfig(connection.getHost()).getBotSettings().getString(BotStringComponent.QuitMessage);
 	}
 
 	public static ServerConfig getServerConfig(IRCConnection connection) {
-		return ConfigurationHandler.getServerConfig(connection.getHost());
+		return ConfigurationHandler.getOrCreateServerConfig(connection.getHost());
 	}
 	
 	public static ChannelConfig getChannelConfig(IRCChannel channel) {
