@@ -48,8 +48,17 @@ public class GuiTabContainer extends EiraGuiScreen {
 		}
 
 		if(!pages.isEmpty()) {
-			currentTab = pages.get(0);
+			setCurrentTab(pages.get(0));
 		}
+	}
+
+	public void setCurrentTab(GuiTabPage tabPage) {
+		if(currentTab != null) {
+			currentTab.onGuiClosed();
+		}
+		currentTab = tabPage;
+		currentTab.setWorldAndResolution(mc, width, height);
+		currentTab.initGui();
 	}
 
 	@Override
@@ -60,8 +69,21 @@ public class GuiTabContainer extends EiraGuiScreen {
 			GuiTabHeader header = headers.get(i);
 
 			if(mouseX >= header.x && mouseX < header.x + header.width - 8 && mouseY >= header.y && mouseY < header.y + header.height) {
-				header.tabPage.tabClicked();
+				header.tabPage.tabClicked(this);
 			}
+		}
+
+		if(currentTab != null) {
+			currentTab.mouseClicked(mouseX, mouseY, mouseButton);
+		}
+	}
+
+	@Override
+	public void keyTyped(char unicode, int keyCode) {
+		super.keyTyped(unicode, keyCode);
+
+		if(currentTab != null) {
+			currentTab.keyTyped(unicode, keyCode);
 		}
 	}
 
@@ -77,31 +99,23 @@ public class GuiTabContainer extends EiraGuiScreen {
 		drawTexturedRect(menuX + panelWidth - 16, menuY + 8, 16, 16, 16, 16, 16, 16, 256, 256);
 
 		if(currentTab != null) {
-//			currentTab.drawScreen(mouseX, mouseY, par3);
+			currentTab.drawScreen(mouseX, mouseY, par3);
 		}
 
+		GuiTabHeader currentHeader = null;
 		for(int i = headers.size() - 1; i >= 0; i--) {
 			GuiTabHeader header = headers.get(i);
 
-			boolean hovered = false;
-			if(mouseX >= header.x && mouseX < header.x + header.width - 8 && mouseY >= header.y && mouseY < header.y + header.height) {
-				hovered = true;
-			}
-
-			if(currentTab == header.tabPage) {
-				GL11.glColor4f(1f, 1f, 1f, 1f);
+			if(header.tabPage != currentTab) {
+				header.draw(mouseX, mouseY, false);
 			} else {
-				GL11.glColor4f(0.5f, 0.5f, 0.5f, 1f);
+				currentHeader = header;
 			}
-			GL11.glEnable(GL11.GL_BLEND);
-			mc.renderEngine.bindTexture(tabHeader);
-			drawTexturedRect(header.x, header.y, 16, 16, 0, 0, 16, 16, 256, 256);
-			drawTexturedRect(header.x + 16, header.y, header.width - 32, 16, 16, 0, 16, 16, 256, 256);
-			drawTexturedRect(header.x + header.width - 16, header.y, 16, 16, 32, 0, 16, 16, 256, 256);
-			GL11.glDisable(GL11.GL_BLEND);
-
-			drawString(fontRendererObj, header.tabPage.getTitle(), header.x + 8, header.y + 8 - fontRendererObj.FONT_HEIGHT / 2, hovered ? -12345678 : Globals.TEXT_COLOR);
 		}
+		if(currentHeader != null) {
+			currentHeader.draw(mouseX, mouseY, true);
+		}
+
 	}
 
 }

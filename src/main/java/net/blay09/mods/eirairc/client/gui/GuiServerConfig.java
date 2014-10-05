@@ -1,6 +1,7 @@
 package net.blay09.mods.eirairc.client.gui;
 
 import net.blay09.mods.eirairc.client.gui.base.GuiLabel;
+import net.blay09.mods.eirairc.client.gui.base.tab.GuiTabContainer;
 import net.blay09.mods.eirairc.client.gui.base.tab.GuiTabPage;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.util.Globals;
@@ -18,6 +19,10 @@ public class GuiServerConfig extends GuiTabPage {
 	private GuiTextField txtAddress;
 	private GuiTextField txtNick;
 	private GuiButton btnAdvanced;
+
+	public GuiServerConfig() {
+		super("<new>");
+	}
 
 	public GuiServerConfig(ServerConfig config) {
 		super(config.getAddress());
@@ -72,13 +77,6 @@ public class GuiServerConfig extends GuiTabPage {
 	public void onGuiClosed() {
 		super.onGuiClosed();
 		Keyboard.enableRepeatEvents(false);
-	}
-
-	@Override
-	public void drawScreen(int mouseX, int mouseY, float par3) {
-		drawLightBackground(menuX, menuY, menuWidth, menuHeight);
-
-		super.drawScreen(mouseX, mouseY, par3);
 	}
 
 }

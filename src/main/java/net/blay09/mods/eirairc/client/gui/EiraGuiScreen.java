@@ -64,11 +64,10 @@ public class EiraGuiScreen extends GuiScreen {
 		}
 
 
-
-		if(mouseX >= menuX && mouseX < menuX + menuWidth && mouseY >= menuY && mouseY < menuY + menuHeight) {
-			super.mouseClicked(mouseX, mouseY, mouseButton);
-		} else {
+		if(mouseX < menuX || mouseX >= menuX + menuWidth) {
 			mc.displayGuiScreen(parentScreen);
+		} else {
+			super.mouseClicked(mouseX, mouseY, mouseButton);
 		}
 	}
 

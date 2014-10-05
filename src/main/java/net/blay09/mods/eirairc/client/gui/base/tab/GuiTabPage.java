@@ -13,8 +13,13 @@ public abstract class GuiTabPage extends EiraGuiScreen {
 		this.title = title;
 	}
 
-	public void tabClicked() {
+	@Override
+	public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
+		super.mouseClicked(mouseX, mouseY, mouseButton);
+	}
 
+	public void tabClicked(GuiTabContainer tabContainer) {
+		tabContainer.setCurrentTab(this);
 	}
 
 	public String getTitle() {

@@ -10,6 +10,6 @@ public abstract class DummyTabPage extends GuiTabPage {
 	}
 
 	@Override
-	public abstract void tabClicked();
+	public abstract void tabClicked(GuiTabContainer tabContainer);
 
 }

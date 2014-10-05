@@ -25,18 +25,15 @@ public class GuiServerConfigContainer extends GuiTabContainer {
 
 		pages.add(new DummyTabPage("+") {
 			@Override
-			public void tabClicked() {
-				System.out.println("Adding new server");
+			public void tabClicked(GuiTabContainer tabContainer) {
+				GuiServerConfig newTab = new GuiServerConfig();
+				pages.add(pages.size() - 1, newTab);
+				buildHeaders();
+				setCurrentTab(newTab);
 			}
 		});
 
 		buildHeaders();
 	}
 
-	@Override
-	public void drawScreen(int mouseX, int mouseY, float p_73863_3_) {
-//		drawLightBackground(menuX, menuY, menuWidth, menuHeight);
-
-		super.drawScreen(mouseX, mouseY, p_73863_3_);
-	}
 }
