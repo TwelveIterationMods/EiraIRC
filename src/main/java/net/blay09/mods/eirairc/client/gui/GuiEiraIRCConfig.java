@@ -19,7 +19,7 @@ import java.util.List;
 public class GuiEiraIRCConfig extends GuiConfig {
 
 	public GuiEiraIRCConfig(GuiScreen parentScreen) {
-		super(parentScreen, getCategories(), Globals.MOD_ID, false, false, "EiraIRC Config");
+		super(parentScreen, getCategories(), Globals.MOD_ID, "global", false, false, "EiraIRC Config");
 	}
 
 	@SuppressWarnings("unchecked")
@@ -28,7 +28,7 @@ public class GuiEiraIRCConfig extends GuiConfig {
 		list.add(new DummyConfigElement.DummyCategoryElement(I18n.format("eirairc:config.category.general.shared"), "eirairc:config.category.general", getGeneralConfigElements(SharedGlobalConfig.thisConfig.getCategory(SharedGlobalConfig.GENERAL), ClientGlobalConfig.thisConfig.getCategory(ClientGlobalConfig.GENERAL))));
 		list.add(new DummyConfigElement.DummyCategoryElement(I18n.format("eirairc:config.category.screenshots"), "eirairc:config.category.screenshots", new ConfigElement(ClientGlobalConfig.thisConfig.getCategory(ClientGlobalConfig.SCREENSHOTS)).getChildElements()));
 		list.add(new DummyConfigElement.DummyCategoryElement(I18n.format("eirairc:config.category.notifications"), "eirairc:config.category.notifications", new ConfigElement(ClientGlobalConfig.thisConfig.getCategory(ClientGlobalConfig.NOTIFICATIONS)).getChildElements()));
-		list.add(new DummyConfigElement.DummyCategoryElement(I18n.format("eirairc:config.category.theme"), "eirairc:config.category.theme", getThemeConfigElements(SharedGlobalConfig.thisConfig.getCategory(SharedGlobalConfig.THEME))));
+		list.add(new DummyConfigElement.DummyCategoryElement(I18n.format("eirairc:config.category.theme"), "eirairc:config.category.theme", getThemeConfigElements(SharedGlobalConfig.thisConfig.getCategory(SharedGlobalConfig.THEME), true)));
 		list.add(new DummyConfigElement.DummyCategoryElement(I18n.format("eirairc:config.category.bot"), "eirairc:config.category.bot", new ConfigElement(SharedGlobalConfig.thisConfig.getCategory(SharedGlobalConfig.BOT)).getChildElements()));
 		list.add(new DummyConfigElement.DummyCategoryElement(I18n.format("eirairc:config.category.settings"), "eirairc:config.category.settings", new ConfigElement(SharedGlobalConfig.thisConfig.getCategory(SharedGlobalConfig.SETTINGS)).getChildElements()));
 		list.add(new DummyConfigElement.DummyCategoryElement(I18n.format("eirairc:config.category.compatibility"), "eirairc:config.category.compatibility", new ConfigElement(ClientGlobalConfig.thisConfig.getCategory(ClientGlobalConfig.COMPATIBILITY)).getChildElements()));
@@ -44,10 +44,12 @@ public class GuiEiraIRCConfig extends GuiConfig {
 		return list;
 	}
 
-	public static List<IConfigElement> getThemeConfigElements(ConfigCategory ctgy) {
+	public static List<IConfigElement> getThemeConfigElements(ConfigCategory ctgy, boolean isGlobal) {
 		List<IConfigElement> list = new ArrayList<IConfigElement>();
-		list.add(new ConfigColorElement(ctgy.get("mcNameColor")));
-		list.add(new ConfigColorElement(ctgy.get("mcOpNameColor")));
+		if(isGlobal) {
+			list.add(new ConfigColorElement(ctgy.get("mcNameColor")));
+			list.add(new ConfigColorElement(ctgy.get("mcOpNameColor")));
+		}
 		list.add(new ConfigColorElement(ctgy.get("ircNameColor")));
 		list.add(new ConfigColorElement(ctgy.get("ircOpNameColor")));
 		list.add(new ConfigColorElement(ctgy.get("ircVoiceNameColor")));

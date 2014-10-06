@@ -31,13 +31,16 @@ public class ServerConfig {
 	private final BotSettings botSettings = new BotSettings(SharedGlobalConfig.botSettings);
 	private final ThemeSettings theme = new ThemeSettings(SharedGlobalConfig.theme);
 
-	private final String address;
+	private String address = "";
 	private String charset = Globals.DEFAULT_CHARSET;
 	private String nick = "";
 	private String serverPassword = "";
 	private String nickServName = "";
 	private String nickServPassword = "";
 	private boolean isSSL = false;
+
+	public ServerConfig() {
+	}
 
 	public ServerConfig(String address) {
 		this.address = address;
@@ -52,35 +55,39 @@ public class ServerConfig {
 			botSettings.setString(BotStringComponent.BotProfile, BotProfileImpl.DEFAULT_CLIENT);
 		}
 	}
-	
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
 	public String getAddress() {
 		return address;
 	}
-	
+
 	public void setNick(@NotNull String nick) {
 		this.nick = nick;
 	}
-	
+
 	public String getNick() {
 		return nick;
 	}
-	
+
 	public String getServerPassword() {
 		return serverPassword;
 	}
-	
+
 	public void setServerPassword(@NotNull String serverPassword) {
 		this.serverPassword = serverPassword;
 	}
-	
+
 	public String getNickServName() {
 		return nickServName;
 	}
-	
+
 	public String getNickServPassword() {
 		return nickServPassword;
 	}
-	
+
 	public ChannelConfig getOrCreateChannelConfig(String channelName) {
 		ChannelConfig channelConfig = channels.get(channelName.toLowerCase());
 		if(channelConfig == null) {
@@ -90,7 +97,7 @@ public class ServerConfig {
 		}
 		return channelConfig;
 	}
-	
+
 	public ChannelConfig getOrCreateChannelConfig(IRCChannel channel) {
 		return getOrCreateChannelConfig(channel.getName());
 	}
@@ -103,7 +110,7 @@ public class ServerConfig {
 	public void addChannelConfig(@NotNull ChannelConfig channelConfig) {
 		channels.put(channelConfig.getName().toLowerCase(), channelConfig);
 	}
-	
+
 	public void removeChannelConfig(@NotNull String channelName) {
 		channels.remove(channelName.toLowerCase());
 	}
@@ -127,7 +134,7 @@ public class ServerConfig {
 		serverPassword = Utils.unquote(legacyConfig.get(categoryName, "serverPassword", "").getString());
 		isSSL = legacyConfig.get(categoryName, "secureConnection", isSSL).getBoolean(isSSL);
 		charset = Utils.unquote(legacyConfig.get("global", "charset", charset).getString());
-		
+
 		String channelsCategoryName = categoryName + Configuration.CATEGORY_SPLITTER + "channels";
 		ConfigCategory channelsCategory = legacyConfig.getCategory(channelsCategoryName);
 		for(ConfigCategory channelCategory : channelsCategory.getChildren()) {
@@ -260,5 +267,4 @@ public class ServerConfig {
 	public BotSettings getBotSettings() {
 		return botSettings;
 	}
-
 }

@@ -5,6 +5,7 @@ package net.blay09.mods.eirairc.client.gui;
 
 import net.blay09.mods.eirairc.client.gui.base.GuiMenuButton;
 import net.blay09.mods.eirairc.client.gui.screenshot.GuiScreenshotList;
+import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
 
 public class GuiEiraIRCMenu extends EiraGuiScreen {
@@ -54,6 +55,8 @@ public class GuiEiraIRCMenu extends EiraGuiScreen {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiScreenshotList(this));
 		} else if(button == btnSettings) {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiEiraIRCConfig(this));
+		} else if(button == btnPlaceholder) {
+			Utils.openWebpage("https://www.youtube.com/results?search_query=Cute+Cat+Videos+:3");
 		}
 	}
 

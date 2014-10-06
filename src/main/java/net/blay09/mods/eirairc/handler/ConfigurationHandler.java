@@ -139,14 +139,14 @@ public class ConfigurationHandler {
 		}
 	}
 
-	private static void saveServers(File configDir) {
+	public static void saveServers() {
 		Gson gson = new Gson();
 		try {
 			JsonArray serverArray = new JsonArray();
 			for(ServerConfig serverConfig : serverConfigs.values()) {
 				serverArray.add(serverConfig.toJsonObject());
 			}
-			JsonWriter writer = new JsonWriter(new FileWriter(new File(configDir, "servers.json")));
+			JsonWriter writer = new JsonWriter(new FileWriter(new File(baseConfigDir, "eirairc/servers.json")));
 			writer.setIndent("  ");
 			gson.toJson(serverArray, writer);
 			writer.close();
@@ -197,7 +197,7 @@ public class ConfigurationHandler {
 		SharedGlobalConfig.save();
 		ClientGlobalConfig.save();
 
-		saveServers(new File(baseConfigDir, "eirairc"));
+		saveServers();
 	}
 
 	public static void reload() {

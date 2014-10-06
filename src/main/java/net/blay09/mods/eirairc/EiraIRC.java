@@ -14,6 +14,7 @@ import net.blay09.mods.eirairc.command.base.CommandServIRC;
 import net.blay09.mods.eirairc.command.base.IRCCommandHandler;
 import net.blay09.mods.eirairc.command.base.IgnoreCommand;
 import net.blay09.mods.eirairc.config.ClientGlobalConfig;
+import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.handler.ChatSessionHandler;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
@@ -107,13 +108,19 @@ public class EiraIRC {
 	@SubscribeEvent
 	public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
 		if(event.modID.equals(Globals.MOD_ID)) {
-			ConfigurationHandler.lightReload();
+			if(event.configID.equals("global")) {
+				ConfigurationHandler.lightReload();
 
-			if(SharedGlobalConfig.thisConfig.hasChanged()) {
-				SharedGlobalConfig.thisConfig.save();
-			}
-			if(ClientGlobalConfig.thisConfig.hasChanged()) {
-				ClientGlobalConfig.thisConfig.save();
+				if (SharedGlobalConfig.thisConfig.hasChanged()) {
+					SharedGlobalConfig.thisConfig.save();
+				}
+				if (ClientGlobalConfig.thisConfig.hasChanged()) {
+					ClientGlobalConfig.thisConfig.save();
+				}
+			} else if(event.configID.startsWith("server:")) {
+				ServerConfig serverConfig = ConfigurationHandler.getOrCreateServerConfig(event.configID.substring(7));
+				serverConfig.getTheme().pushDummyConfig();
+				ConfigurationHandler.saveServers();
 			}
 		}
 	}

@@ -32,6 +32,7 @@ public class GuiTabContainer extends EiraGuiScreen {
 		super.initGui();
 
 		pages.clear();
+		currentTab = null;
 
 		panelWidth = 300;
 		panelHeight = 190;
@@ -46,14 +47,13 @@ public class GuiTabContainer extends EiraGuiScreen {
 			headers.add(new GuiTabHeader(pages.get(i), curX, headerY, titleWidth + 32, 16));
 			curX += titleWidth + 24;
 		}
-
-		if(!pages.isEmpty()) {
-			setCurrentTab(pages.get(0));
-		}
 	}
 
 	public void setCurrentTab(GuiTabPage tabPage) {
 		if(currentTab != null) {
+			if(!currentTab.requestClose()) {
+				return;
+			}
 			currentTab.onGuiClosed();
 		}
 		currentTab = tabPage;
@@ -69,7 +69,7 @@ public class GuiTabContainer extends EiraGuiScreen {
 			GuiTabHeader header = headers.get(i);
 
 			if(mouseX >= header.x && mouseX < header.x + header.width - 8 && mouseY >= header.y && mouseY < header.y + header.height) {
-				header.tabPage.tabClicked(this);
+				header.tabPage.tabClicked();
 			}
 		}
 

@@ -20,13 +20,13 @@ public class GuiServerConfigContainer extends GuiTabContainer {
 		super.initGui();
 
 		for(ServerConfig config : ConfigurationHandler.getServerConfigs()) {
-			pages.add(new GuiServerConfig(config));
+			pages.add(new GuiServerConfig(this, config));
 		}
 
-		pages.add(new DummyTabPage("+") {
+		pages.add(new DummyTabPage(this, "+") {
 			@Override
-			public void tabClicked(GuiTabContainer tabContainer) {
-				GuiServerConfig newTab = new GuiServerConfig();
+			public void tabClicked() {
+				GuiServerConfig newTab = new GuiServerConfig(GuiServerConfigContainer.this);
 				pages.add(pages.size() - 1, newTab);
 				buildHeaders();
 				setCurrentTab(newTab);
@@ -34,6 +34,7 @@ public class GuiServerConfigContainer extends GuiTabContainer {
 		});
 
 		buildHeaders();
+		setCurrentTab(pages.get(0));
 	}
 
 }

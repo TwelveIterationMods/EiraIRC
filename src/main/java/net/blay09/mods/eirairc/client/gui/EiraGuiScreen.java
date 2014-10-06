@@ -26,6 +26,7 @@ public class EiraGuiScreen extends GuiScreen {
 	protected int menuY;
 	protected int menuWidth;
 	protected int menuHeight;
+	protected boolean allowSideClickClose = true;
 
 	public EiraGuiScreen() {
 		this(null);
@@ -63,11 +64,12 @@ public class EiraGuiScreen extends GuiScreen {
 			textFieldList.get(i).mouseClicked(mouseX, mouseY, mouseButton);
 		}
 
-
-		if(mouseX < menuX || mouseX >= menuX + menuWidth) {
-			mc.displayGuiScreen(parentScreen);
-		} else {
-			super.mouseClicked(mouseX, mouseY, mouseButton);
+		if(allowSideClickClose) {
+			if (mouseX < menuX || mouseX >= menuX + menuWidth) {
+				mc.displayGuiScreen(parentScreen);
+			} else {
+				super.mouseClicked(mouseX, mouseY, mouseButton);
+			}
 		}
 	}
 

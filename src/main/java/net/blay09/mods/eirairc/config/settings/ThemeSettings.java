@@ -1,10 +1,15 @@
 package net.blay09.mods.eirairc.config.settings;
 
 import com.google.gson.JsonObject;
+import cpw.mods.fml.client.event.ConfigChangedEvent;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.config.Property;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -15,7 +20,6 @@ import java.util.Map;
 public class ThemeSettings {
 
 	private static final String[] VALID_COLOR_CODES = new String[] {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"};
-
 	private static EnumChatFormatting getColorFromCode(char code) {
 		switch(code) {
 			case '0': return EnumChatFormatting.BLACK;
@@ -41,6 +45,9 @@ public class ThemeSettings {
 	private final ThemeSettings parent;
 	private final EnumMap<ThemeColorComponent, EnumChatFormatting> colors = new EnumMap<ThemeColorComponent, EnumChatFormatting>(ThemeColorComponent.class);
 
+	private Configuration dummyConfig;
+	private String dummyConfigId;
+
 	public ThemeSettings(ThemeSettings parent) {
 		this.parent = parent;
 	}
@@ -55,6 +62,26 @@ public class ThemeSettings {
 
 	public boolean hasColor(ThemeColorComponent component) {
 		return colors.containsKey(component);
+	}
+
+	public void pushDummyConfig() {
+		if(dummyConfig != null) {
+			load(dummyConfig, "theme", false);
+			dummyConfig = null;
+		}
+	}
+
+	public Configuration pullDummyConfig(String id) {
+		dummyConfig = new Configuration();
+		for(int i = 0; i < ThemeColorComponent.values().length; i++) {
+			Property property = dummyConfig.get("theme", ThemeColorComponent.values[i].name, "");
+			property.setLanguageKey(ThemeColorComponent.values[i].langKey);
+			property.setValidValues(VALID_COLOR_CODES);
+			if(colors.containsKey(ThemeColorComponent.values[i])) {
+				property.set(String.valueOf(colors.get(ThemeColorComponent.values[i]).getFormattingCode()));
+			}
+		}
+		return dummyConfig;
 	}
 
 	public void load(Configuration config, String category, boolean defaultValues) {
@@ -114,4 +141,5 @@ public class ThemeSettings {
 			colors.put(ThemeColorComponent.ircNoticeTextColor, Utils.getColorFormatting(Utils.unquote(legacyConfig.get("display", "ircNoticeColor", "gray").getString())));
 		}
 	}
+
 }
