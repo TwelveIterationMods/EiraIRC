@@ -120,6 +120,7 @@ public class EiraIRC {
 			} else if(event.configID.startsWith("server:")) {
 				ServerConfig serverConfig = ConfigurationHandler.getOrCreateServerConfig(event.configID.substring(7));
 				serverConfig.getTheme().pushDummyConfig();
+				serverConfig.getBotSettings().pushDummyConfig();
 				ConfigurationHandler.saveServers();
 			}
 		}

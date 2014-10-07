@@ -6,6 +6,7 @@ import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.config.Property;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -19,6 +20,8 @@ public class BotSettings {
 
 	private final EnumMap<BotStringComponent, String> strings = new EnumMap<BotStringComponent, String>(BotStringComponent.class);
 	private final EnumMap<BotBooleanComponent, Boolean> booleans = new EnumMap<BotBooleanComponent, Boolean>(BotBooleanComponent.class);
+
+	private Configuration dummyConfig;
 
 	public BotSettings(BotSettings parent) {
 		this.parent = parent;
@@ -53,16 +56,50 @@ public class BotSettings {
 	}
 
 	public void load(Configuration config, String category, boolean defaultValues) {
+		strings.clear();
 		for(int i = 0; i < BotStringComponent.values().length; i++) {
 			if(defaultValues || config.hasKey(category, BotStringComponent.values[i].name)) {
-				strings.put(BotStringComponent.values[i], config.getString(BotStringComponent.values[i].name, category, BotStringComponent.values[i].defaultValue, "", BotStringComponent.values[i].langKey));
+				String value = config.getString(BotStringComponent.values[i].name, category, BotStringComponent.values[i].defaultValue, "", BotStringComponent.values[i].langKey);
+				if(defaultValues || !value.equals(parent.getString(BotStringComponent.values[i]))) {
+					strings.put(BotStringComponent.values[i], value);
+				}
+			}
+		}
+		booleans.clear();
+		for(int i = 0; i < BotBooleanComponent.values().length; i++) {
+			if(defaultValues || config.hasKey(category, BotBooleanComponent.values[i].name)) {
+				boolean value = config.getBoolean(BotBooleanComponent.values[i].name, category, BotBooleanComponent.values[i].defaultValue, "", BotBooleanComponent.values[i].langKey);
+				if(defaultValues || value != parent.getBoolean(BotBooleanComponent.values[i])) {
+					booleans.put(BotBooleanComponent.values[i], value);
+				}
+			}
+		}
+	}
+
+	public void pushDummyConfig() {
+		if(dummyConfig != null) {
+			load(dummyConfig, "bot", false);
+			dummyConfig = null;
+		}
+	}
+
+	public Configuration pullDummyConfig() {
+		dummyConfig = new Configuration();
+		for(int i = 0; i < BotStringComponent.values().length; i++) {
+			Property property = dummyConfig.get("bot", BotStringComponent.values[i].name, parent.getString(BotStringComponent.values[i]));
+			property.setLanguageKey(BotStringComponent.values[i].langKey);
+			if(strings.containsKey(BotStringComponent.values[i])) {
+				property.set(strings.get(BotStringComponent.values[i]));
 			}
 		}
 		for(int i = 0; i < BotBooleanComponent.values().length; i++) {
-			if(defaultValues || config.hasKey(category, BotBooleanComponent.values[i].name)) {
-				booleans.put(BotBooleanComponent.values[i], config.getBoolean(BotBooleanComponent.values[i].name, category, BotBooleanComponent.values[i].defaultValue, "", BotBooleanComponent.values[i].langKey));
+			Property property = dummyConfig.get("bot", BotBooleanComponent.values[i].name, parent.getBoolean(BotBooleanComponent.values[i]));
+			property.setLanguageKey(BotBooleanComponent.values[i].langKey);
+			if(booleans.containsKey(BotBooleanComponent.values[i])) {
+				property.set(booleans.get(BotBooleanComponent.values[i]));
 			}
 		}
+		return dummyConfig;
 	}
 
 	public void load(JsonObject object) {

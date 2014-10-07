@@ -88,6 +88,16 @@ public class GuiTabContainer extends EiraGuiScreen {
 	}
 
 	@Override
+	public void onGuiClosed() {
+		super.onGuiClosed();
+
+		if(currentTab != null) {
+			currentTab.requestClose();
+			currentTab.onGuiClosed();
+		}
+	}
+
+	@Override
 	public void drawScreen(int mouseX, int mouseY, float par3) {
 		super.drawScreen(mouseX, mouseY, par3);
 		mc.renderEngine.bindTexture(tabHeader);

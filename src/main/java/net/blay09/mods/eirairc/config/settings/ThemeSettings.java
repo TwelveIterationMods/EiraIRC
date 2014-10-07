@@ -46,7 +46,6 @@ public class ThemeSettings {
 	private final EnumMap<ThemeColorComponent, EnumChatFormatting> colors = new EnumMap<ThemeColorComponent, EnumChatFormatting>(ThemeColorComponent.class);
 
 	private Configuration dummyConfig;
-	private String dummyConfigId;
 
 	public ThemeSettings(ThemeSettings parent) {
 		this.parent = parent;
@@ -71,10 +70,10 @@ public class ThemeSettings {
 		}
 	}
 
-	public Configuration pullDummyConfig(String id) {
+	public Configuration pullDummyConfig() {
 		dummyConfig = new Configuration();
 		for(int i = 0; i < ThemeColorComponent.values().length; i++) {
-			Property property = dummyConfig.get("theme", ThemeColorComponent.values[i].name, "");
+			Property property = dummyConfig.get("theme", ThemeColorComponent.values[i].name, String.valueOf(parent.getColor(ThemeColorComponent.values[i]).getFormattingCode()));
 			property.setLanguageKey(ThemeColorComponent.values[i].langKey);
 			property.setValidValues(VALID_COLOR_CODES);
 			if(colors.containsKey(ThemeColorComponent.values[i])) {
@@ -85,11 +84,15 @@ public class ThemeSettings {
 	}
 
 	public void load(Configuration config, String category, boolean defaultValues) {
+		colors.clear();
 		for(int i = 0; i < ThemeColorComponent.values().length; i++) {
 			if(defaultValues || config.hasKey(category, ThemeColorComponent.values[i].name)) {
 				String value = config.getString(ThemeColorComponent.values[i].name, category, String.valueOf(ThemeColorComponent.values[i].defaultValue.getFormattingCode()), "", VALID_COLOR_CODES, ThemeColorComponent.values[i].langKey);
 				if(!value.isEmpty()) {
-					colors.put(ThemeColorComponent.values[i], getColorFromCode(value.charAt(0)));
+					EnumChatFormatting colorValue = getColorFromCode(value.charAt(0));
+					if(defaultValues || colorValue != parent.getColor(ThemeColorComponent.values[i])) {
+						colors.put(ThemeColorComponent.values[i], colorValue);
+					}
 				}
 			}
 		}

@@ -8,6 +8,7 @@ import net.blay09.mods.eirairc.client.gui.base.GuiLabel;
 import net.blay09.mods.eirairc.client.gui.base.tab.GuiTabContainer;
 import net.blay09.mods.eirairc.client.gui.base.tab.GuiTabPage;
 import net.blay09.mods.eirairc.config.ServerConfig;
+import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
@@ -20,19 +21,21 @@ import org.lwjgl.input.Keyboard;
 /**
  * Created by Blay09 on 04.10.2014.
  */
-public class GuiServerConfig extends GuiTabPage {
+public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 
 	private ServerConfig config;
 	private GuiTextField txtAddress;
 	private GuiTextField txtNick;
 	private GuiButton btnTheme;
 	private GuiButton btnBotSettings;
-	private GuiButton btnGeneral;
-	private GuiButton btnAdvanced;
+	private GuiButton btnDelete;
+
+	private boolean isNew;
 
 	public GuiServerConfig(GuiTabContainer tabContainer) {
 		super(tabContainer, "<new>");
 		this.config = new ServerConfig();
+		isNew = true;
 	}
 
 	public GuiServerConfig(GuiTabContainer tabContainer, ServerConfig config) {
@@ -73,11 +76,17 @@ public class GuiServerConfig extends GuiTabPage {
 		txtNick.setText(oldText);
 		textFieldList.add(txtNick);
 
-		btnAdvanced = new GuiButton(0, rightX - 210, topX + 150, 100, 20, "Advanced");
-		buttonList.add(btnAdvanced);
+		labelList.add(new GuiLabel("Channels", rightX - 100, topX, Globals.TEXT_COLOR));
 
-		btnTheme = new GuiButton(1, rightX - 210, topX + 100, 100, 20, "Configure Theme");
+		btnDelete = new GuiButton(0, leftX, topX + 150, 100, 20, "Delete");
+		btnDelete.packedFGColour = -65536;
+		buttonList.add(btnDelete);
+
+		btnTheme = new GuiButton(1, leftX, topX + 75, 100, 20, "Configure Theme...");
 		buttonList.add(btnTheme);
+
+		btnBotSettings = new GuiButton(2, leftX, topX + 100, 100, 20, "Configure Bot...");
+		buttonList.add(btnBotSettings);
 	}
 
 	@Override
@@ -87,6 +96,7 @@ public class GuiServerConfig extends GuiTabPage {
 				ConfigurationHandler.removeServerConfig(config.getAddress());
 				config.setAddress(txtAddress.getText());
 				ConfigurationHandler.addServerConfig(config);
+				isNew = false;
 			}
 			config.setNick(txtNick.getText());
 		}
@@ -97,17 +107,25 @@ public class GuiServerConfig extends GuiTabPage {
 	@SuppressWarnings("unchecked")
 	public void actionPerformed(GuiButton button) {
 		if(button == btnTheme) {
-			String configId = "server:" + config.getAddress();
-			mc.displayGuiScreen(new GuiConfig(tabContainer, GuiEiraIRCConfig.getThemeConfigElements(config.getTheme().pullDummyConfig(configId).getCategory("theme"), false), "eirairc", configId, false, false, "Theme (" + config.getAddress() + ")"));
+			mc.displayGuiScreen(new GuiConfig(tabContainer, GuiEiraIRCConfig.getThemeConfigElements(config.getTheme().pullDummyConfig().getCategory("theme"), false), Globals.MOD_ID, "server:" + config.getAddress(), false, false, "Theme (" + config.getAddress() + ")"));
+		} else if(button == btnBotSettings) {
+			mc.displayGuiScreen(new GuiConfig(tabContainer, new ConfigElement(config.getBotSettings().pullDummyConfig().getCategory("bot")).getChildElements(), Globals.MOD_ID, "server:" + config.getAddress(), false, false, "Bot Settings (" + config.getAddress() + ")"));
+		} else if(button == btnDelete) {
+			if(isNew) {
+				tabContainer.initGui();
+			} else {
+				mc.displayGuiScreen(new GuiYesNo(this, "Do you really want to delete this server configuration?", "This can't be undone, so be careful!", 0));
+			}
 		}
 	}
 
 	@Override
 	public void confirmClicked(boolean result, int id) {
 		if(result) {
-			Utils.openWebpage(Globals.TWITCH_OAUTH);
+			ConfigurationHandler.removeServerConfig(config.getAddress());
+			ConfigurationHandler.saveServers();
 		}
-		Minecraft.getMinecraft().displayGuiScreen(this);
+		Minecraft.getMinecraft().displayGuiScreen(tabContainer);
 	}
 
 	@Override
