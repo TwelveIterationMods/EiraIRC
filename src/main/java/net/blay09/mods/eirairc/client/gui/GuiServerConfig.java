@@ -5,6 +5,7 @@ import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.blay09.mods.eirairc.client.gui.base.GuiLabel;
+import net.blay09.mods.eirairc.client.gui.base.GuiList;
 import net.blay09.mods.eirairc.client.gui.base.tab.GuiTabContainer;
 import net.blay09.mods.eirairc.client.gui.base.tab.GuiTabPage;
 import net.blay09.mods.eirairc.config.ServerConfig;
@@ -26,6 +27,7 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 	private ServerConfig config;
 	private GuiTextField txtAddress;
 	private GuiTextField txtNick;
+	private GuiList lstChannels;
 	private GuiButton btnTheme;
 	private GuiButton btnBotSettings;
 	private GuiButton btnDelete;
@@ -51,41 +53,44 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 
 		final int leftX = width / 2 - 130;
 		final int rightX = width / 2 + 130;
-		final int topX = height / 2 - 80;
+		final int topY = height / 2 - 80;
 		String oldText;
 
-		labelList.add(new GuiLabel("Address", leftX, topX, Globals.TEXT_COLOR));
+		labelList.add(new GuiLabel("Address", leftX, topY, Globals.TEXT_COLOR));
 
 		if(txtAddress != null) {
 			oldText = txtAddress.getText();
 		} else {
 			oldText = config.getAddress();
 		}
-		txtAddress = new GuiTextField(fontRendererObj, leftX, topX + 15, 100, 15);
+		txtAddress = new GuiTextField(fontRendererObj, leftX, topY + 15, 100, 15);
 		txtAddress.setText(oldText);
 		textFieldList.add(txtAddress);
 
-		labelList.add(new GuiLabel("Nick", leftX, topX + 40, Globals.TEXT_COLOR));
+		labelList.add(new GuiLabel("Nick", leftX, topY + 40, Globals.TEXT_COLOR));
 
 		if(txtNick != null) {
 			oldText = txtNick.getText();
 		} else {
 			oldText = config.getNick();
 		}
-		txtNick = new GuiTextField(fontRendererObj, leftX, topX + 55, 100, 15);
+		txtNick = new GuiTextField(fontRendererObj, leftX, topY + 55, 100, 15);
 		txtNick.setText(oldText);
 		textFieldList.add(txtNick);
 
-		labelList.add(new GuiLabel("Channels", rightX - 100, topX, Globals.TEXT_COLOR));
+		labelList.add(new GuiLabel("Channels", rightX - 100, topY, Globals.TEXT_COLOR));
 
-		btnDelete = new GuiButton(0, leftX, topX + 150, 100, 20, "Delete");
+		lstChannels = new GuiList(rightX - 100, topY + 15, 100, 80, 15);
+		listList.add(lstChannels);
+
+		btnDelete = new GuiButton(0, leftX, topY + 150, 100, 20, "Delete");
 		btnDelete.packedFGColour = -65536;
 		buttonList.add(btnDelete);
 
-		btnTheme = new GuiButton(1, leftX, topX + 75, 100, 20, "Configure Theme...");
+		btnTheme = new GuiButton(1, leftX, topY + 75, 100, 20, "Configure Theme...");
 		buttonList.add(btnTheme);
 
-		btnBotSettings = new GuiButton(2, leftX, topX + 100, 100, 20, "Configure Bot...");
+		btnBotSettings = new GuiButton(2, leftX, topY + 100, 100, 20, "Configure Bot...");
 		buttonList.add(btnBotSettings);
 	}
 
@@ -97,10 +102,19 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 				config.setAddress(txtAddress.getText());
 				ConfigurationHandler.addServerConfig(config);
 				isNew = false;
+				title = config.getAddress();
+				tabContainer.initGui();
 			}
 			config.setNick(txtNick.getText());
+		} else {
+			tabContainer.removePage(this);
+			tabContainer.initGui();
 		}
 		return true;
+	}
+
+	public boolean isNew() {
+		return isNew;
 	}
 
 	@Override

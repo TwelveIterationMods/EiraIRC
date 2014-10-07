@@ -1,6 +1,7 @@
 package net.blay09.mods.eirairc.client.gui;
 
 import net.blay09.mods.eirairc.client.gui.base.GuiLabel;
+import net.blay09.mods.eirairc.client.gui.base.GuiList;
 import net.blay09.mods.eirairc.client.gui.base.GuiMenuButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
@@ -21,6 +22,7 @@ public class EiraGuiScreen extends GuiScreen {
 	protected final List<GuiMenuButton> menuButtonList = new ArrayList<GuiMenuButton>();
 	protected final List<GuiTextField> textFieldList = new ArrayList<GuiTextField>();
 	protected final List<GuiLabel> labelList = new ArrayList<GuiLabel>();
+	protected final List<GuiList> listList = new ArrayList<GuiList>();
 
 	protected int menuX;
 	protected int menuY;
@@ -45,6 +47,7 @@ public class EiraGuiScreen extends GuiScreen {
 		menuButtonList.clear();
 		textFieldList.clear();
 		labelList.clear();
+		listList.clear();
 	}
 
 	public void setupMenuSize(int menuWidth, int menuHeight) {
@@ -62,6 +65,9 @@ public class EiraGuiScreen extends GuiScreen {
 		}
 		for(int i = 0; i < textFieldList.size(); i++) {
 			textFieldList.get(i).mouseClicked(mouseX, mouseY, mouseButton);
+		}
+		for(int i = 0; i < listList.size(); i++) {
+			listList.get(i).mouseClicked(mouseX, mouseY, mouseButton);
 		}
 
 		if(allowSideClickClose) {
@@ -105,6 +111,10 @@ public class EiraGuiScreen extends GuiScreen {
 
 		for(int i = 0; i < textFieldList.size(); i++) {
 			textFieldList.get(i).drawTextBox();
+		}
+
+		for(int i = 0; i < listList.size(); i++) {
+			listList.get(i).drawList();
 		}
 
 		for(int i = 0; i < menuButtonList.size(); i++) {

@@ -7,7 +7,7 @@ import net.blay09.mods.eirairc.client.gui.EiraGuiScreen;
  */
 public abstract class GuiTabPage extends EiraGuiScreen {
 
-	private String title;
+	protected String title;
 	protected GuiTabContainer tabContainer;
 
 	public GuiTabPage(GuiTabContainer tabContainer, String title) {
@@ -25,7 +25,6 @@ public abstract class GuiTabPage extends EiraGuiScreen {
 	}
 
 	public void tabClicked() {
-
 		tabContainer.setCurrentTab(this);
 	}
 

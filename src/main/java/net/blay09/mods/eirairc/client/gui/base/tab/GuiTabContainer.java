@@ -1,6 +1,7 @@
 package net.blay09.mods.eirairc.client.gui.base.tab;
 
 import net.blay09.mods.eirairc.client.gui.EiraGuiScreen;
+import net.blay09.mods.eirairc.client.gui.GuiServerConfig;
 import net.blay09.mods.eirairc.util.Globals;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
@@ -31,11 +32,13 @@ public class GuiTabContainer extends EiraGuiScreen {
 	public void initGui() {
 		super.initGui();
 
-		pages.clear();
-		currentTab = null;
-
 		panelWidth = 300;
 		panelHeight = 190;
+
+		if(currentTab != null) {
+			currentTab.setWorldAndResolution(mc, width, height);
+			currentTab.initGui();
+		}
 	}
 
 	protected void buildHeaders() {
@@ -50,6 +53,9 @@ public class GuiTabContainer extends EiraGuiScreen {
 	}
 
 	public void setCurrentTab(GuiTabPage tabPage) {
+		if(currentTab == tabPage) {
+			return;
+		}
 		if(currentTab != null) {
 			if(!currentTab.requestClose()) {
 				return;
@@ -128,4 +134,7 @@ public class GuiTabContainer extends EiraGuiScreen {
 
 	}
 
+	public void removePage(GuiTabPage tabPage) {
+		pages.remove(tabPage);
+	}
 }
