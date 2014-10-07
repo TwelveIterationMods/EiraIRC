@@ -26,7 +26,7 @@ public class GuiServerConfigContainer extends GuiTabContainer {
 					GuiTabPage tabPage = pages.get(i);
 					if(tabPage instanceof GuiServerConfig) {
 						if(((GuiServerConfig) tabPage).isNew()) {
-							setCurrentTab(tabPage);
+							setCurrentTab(tabPage, false);
 							return;
 						}
 					}
@@ -34,7 +34,7 @@ public class GuiServerConfigContainer extends GuiTabContainer {
 				GuiServerConfig newTab = new GuiServerConfig(GuiServerConfigContainer.this);
 				pages.add(pages.size() - 1, newTab);
 				buildHeaders();
-				setCurrentTab(newTab);
+				setCurrentTab(newTab, false);
 			}
 		});
 

@@ -25,7 +25,7 @@ public abstract class GuiTabPage extends EiraGuiScreen {
 	}
 
 	public void tabClicked() {
-		tabContainer.setCurrentTab(this);
+		tabContainer.setCurrentTab(this, false);
 	}
 
 	public String getTitle() {

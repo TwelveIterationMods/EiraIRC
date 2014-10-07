@@ -52,19 +52,21 @@ public class GuiTabContainer extends EiraGuiScreen {
 		}
 	}
 
-	public void setCurrentTab(GuiTabPage tabPage) {
+	public void setCurrentTab(GuiTabPage tabPage, boolean forceClose) {
 		if(currentTab == tabPage) {
 			return;
 		}
 		if(currentTab != null) {
-			if(!currentTab.requestClose()) {
+			if(!forceClose && !currentTab.requestClose()) {
 				return;
 			}
 			currentTab.onGuiClosed();
 		}
 		currentTab = tabPage;
-		currentTab.setWorldAndResolution(mc, width, height);
-		currentTab.initGui();
+		if(currentTab != null) {
+			currentTab.setWorldAndResolution(mc, width, height);
+			currentTab.initGui();
+		}
 	}
 
 	@Override
@@ -136,5 +138,12 @@ public class GuiTabContainer extends EiraGuiScreen {
 
 	public void removePage(GuiTabPage tabPage) {
 		pages.remove(tabPage);
+		if(tabPage == currentTab) {
+			if(pages.size() > 0) {
+				setCurrentTab(pages.get(0), true);
+			} else {
+				setCurrentTab(null, true);
+			}
+		}
 	}
 }

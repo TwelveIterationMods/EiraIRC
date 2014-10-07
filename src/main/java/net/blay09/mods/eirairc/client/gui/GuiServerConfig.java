@@ -30,6 +30,8 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 	private GuiList lstChannels;
 	private GuiButton btnTheme;
 	private GuiButton btnBotSettings;
+	private GuiButton btnOtherSettings;
+	private GuiButton btnAdvanced;
 	private GuiButton btnDelete;
 
 	private boolean isNew;
@@ -87,26 +89,16 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 		btnDelete.packedFGColour = -65536;
 		buttonList.add(btnDelete);
 
-		btnTheme = new GuiButton(1, leftX, topY + 75, 100, 20, "Configure Theme...");
+		btnTheme = new GuiButton(1, leftX, topY + 85, 100, 20, "Configure Theme...");
 		buttonList.add(btnTheme);
 
-		btnBotSettings = new GuiButton(2, leftX, topY + 100, 100, 20, "Configure Bot...");
+		btnBotSettings = new GuiButton(2, leftX, topY + 110, 100, 20, "Configure Bot...");
 		buttonList.add(btnBotSettings);
 	}
 
 	@Override
 	public boolean requestClose() {
-		if(!txtAddress.getText().isEmpty()) {
-			if(!txtAddress.getText().equals(config.getAddress())) {
-				ConfigurationHandler.removeServerConfig(config.getAddress());
-				config.setAddress(txtAddress.getText());
-				ConfigurationHandler.addServerConfig(config);
-				isNew = false;
-				title = config.getAddress();
-				tabContainer.initGui();
-			}
-			config.setNick(txtNick.getText());
-		} else {
+		if(txtAddress.getText().isEmpty() && isNew) {
 			tabContainer.removePage(this);
 			tabContainer.initGui();
 		}
@@ -126,6 +118,7 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 			mc.displayGuiScreen(new GuiConfig(tabContainer, new ConfigElement(config.getBotSettings().pullDummyConfig().getCategory("bot")).getChildElements(), Globals.MOD_ID, "server:" + config.getAddress(), false, false, "Bot Settings (" + config.getAddress() + ")"));
 		} else if(button == btnDelete) {
 			if(isNew) {
+				tabContainer.removePage(this);
 				tabContainer.initGui();
 			} else {
 				mc.displayGuiScreen(new GuiYesNo(this, "Do you really want to delete this server configuration?", "This can't be undone, so be careful!", 0));
@@ -138,6 +131,7 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 		if(result) {
 			ConfigurationHandler.removeServerConfig(config.getAddress());
 			ConfigurationHandler.saveServers();
+			tabContainer.removePage(this);
 		}
 		Minecraft.getMinecraft().displayGuiScreen(tabContainer);
 	}
@@ -146,6 +140,16 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 	public void onGuiClosed() {
 		super.onGuiClosed();
 		Keyboard.enableRepeatEvents(false);
+		if(!txtAddress.getText().isEmpty() && !txtAddress.getText().equals(config.getAddress())) {
+			ConfigurationHandler.removeServerConfig(config.getAddress());
+			config.setAddress(txtAddress.getText());
+			ConfigurationHandler.addServerConfig(config);
+			isNew = false;
+		}
+		config.setNick(txtNick.getText());
+		ConfigurationHandler.saveServers();
+		title = config.getAddress();
+		tabContainer.initGui();
 	}
 
 }

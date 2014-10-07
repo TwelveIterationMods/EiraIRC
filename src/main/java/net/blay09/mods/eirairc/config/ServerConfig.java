@@ -33,7 +33,7 @@ public class ServerConfig {
 
 	private String address = "";
 	private String charset = Globals.DEFAULT_CHARSET;
-	private String nick = "";
+	private String nick = Globals.DEFAULT_NICK;
 	private String serverPassword = "";
 	private String nickServName = "";
 	private String nickServPassword = "";
