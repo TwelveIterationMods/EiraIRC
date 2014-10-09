@@ -121,6 +121,7 @@ public class EiraIRC {
 				ServerConfig serverConfig = ConfigurationHandler.getOrCreateServerConfig(event.configID.substring(7));
 				serverConfig.getTheme().pushDummyConfig();
 				serverConfig.getBotSettings().pushDummyConfig();
+				serverConfig.getGeneralSettings().pushDummyConfig();
 				ConfigurationHandler.saveServers();
 			}
 		}

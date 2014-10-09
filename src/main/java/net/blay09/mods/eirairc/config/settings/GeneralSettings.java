@@ -3,6 +3,7 @@ package net.blay09.mods.eirairc.config.settings;
 import com.google.gson.JsonObject;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.config.Property;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -12,9 +13,10 @@ import java.util.Map;
  */
 public class GeneralSettings {
 
+	private final EnumMap<GeneralBooleanComponent, Boolean> booleans = new EnumMap<GeneralBooleanComponent, Boolean>(GeneralBooleanComponent.class);
 	private final GeneralSettings parent;
 
-	private final EnumMap<GeneralBooleanComponent, Boolean> booleans = new EnumMap<GeneralBooleanComponent, Boolean>(GeneralBooleanComponent.class);
+	private Configuration dummyConfig;
 
 	public GeneralSettings(GeneralSettings parent) {
 		this.parent = parent;
@@ -38,10 +40,32 @@ public class GeneralSettings {
 		return getBoolean(GeneralBooleanComponent.Muted);
 	}
 
+	public void pushDummyConfig() {
+		if(dummyConfig != null) {
+			load(dummyConfig, "settings", false);
+			dummyConfig = null;
+		}
+	}
+
+	public Configuration pullDummyConfig() {
+		dummyConfig = new Configuration();
+		for(int i = 0; i < GeneralBooleanComponent.values().length; i++) {
+			Property property = dummyConfig.get("settings", GeneralBooleanComponent.values[i].name, parent.getBoolean(GeneralBooleanComponent.values[i]));
+			property.setLanguageKey(GeneralBooleanComponent.values[i].langKey);
+			if(booleans.containsKey(GeneralBooleanComponent.values[i])) {
+				property.set(booleans.get(GeneralBooleanComponent.values[i]));
+			}
+		}
+		return dummyConfig;
+	}
+
 	public void load(Configuration config, String category, boolean defaultValues) {
 		for(int i = 0; i < GeneralBooleanComponent.values().length; i++) {
 			if(defaultValues || config.hasKey(category, GeneralBooleanComponent.values[i].name)) {
-				booleans.put(GeneralBooleanComponent.values[i], config.getBoolean(GeneralBooleanComponent.values[i].name, category, GeneralBooleanComponent.values[i].defaultValue, "", GeneralBooleanComponent.values[i].langKey));
+				boolean value = config.getBoolean(GeneralBooleanComponent.values[i].name, category, GeneralBooleanComponent.values[i].defaultValue, "", GeneralBooleanComponent.values[i].langKey);
+				if(defaultValues || value != parent.getBoolean(GeneralBooleanComponent.values[i])) {
+					booleans.put(GeneralBooleanComponent.values[i], value);
+				}
 			}
 		}
 	}

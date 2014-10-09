@@ -52,6 +52,7 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 		super.initGui();
 		Keyboard.enableRepeatEvents(true);
 		allowSideClickClose = false;
+		title = config.getAddress().isEmpty() ? "<new>" : config.getAddress();
 
 		final int leftX = width / 2 - 130;
 		final int rightX = width / 2 + 130;
@@ -85,7 +86,7 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 		lstChannels = new GuiList(rightX - 100, topY + 15, 100, 80, 15);
 		listList.add(lstChannels);
 
-		btnDelete = new GuiButton(0, leftX, topY + 150, 100, 20, "Delete");
+		btnDelete = new GuiButton(0, rightX - 100, topY + 150, 100, 20, "Delete");
 		btnDelete.packedFGColour = -65536;
 		buttonList.add(btnDelete);
 
@@ -94,6 +95,12 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 
 		btnBotSettings = new GuiButton(2, leftX, topY + 110, 100, 20, "Configure Bot...");
 		buttonList.add(btnBotSettings);
+
+		btnOtherSettings = new GuiButton(3, leftX, topY + 135, 100, 20, "Other Settings...");
+		buttonList.add(btnOtherSettings);
+
+		btnAdvanced = new GuiButton(4, rightX - 100, topY + 125, 100, 20, "Advanced");
+		buttonList.add(btnAdvanced);
 	}
 
 	@Override
@@ -116,6 +123,10 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 			mc.displayGuiScreen(new GuiConfig(tabContainer, GuiEiraIRCConfig.getThemeConfigElements(config.getTheme().pullDummyConfig().getCategory("theme"), false), Globals.MOD_ID, "server:" + config.getAddress(), false, false, "Theme (" + config.getAddress() + ")"));
 		} else if(button == btnBotSettings) {
 			mc.displayGuiScreen(new GuiConfig(tabContainer, new ConfigElement(config.getBotSettings().pullDummyConfig().getCategory("bot")).getChildElements(), Globals.MOD_ID, "server:" + config.getAddress(), false, false, "Bot Settings (" + config.getAddress() + ")"));
+		} else if(button == btnOtherSettings) {
+			mc.displayGuiScreen(new GuiConfig(tabContainer, new ConfigElement(config.getGeneralSettings().pullDummyConfig().getCategory("settings")).getChildElements(), Globals.MOD_ID, "server:" + config.getAddress(), false, false, "Other Settings (" + config.getAddress() + ")"));
+		} else if(button == btnAdvanced) {
+			tabContainer.setCurrentTab(new GuiServerConfigAdvanced(tabContainer, this), false);
 		} else if(button == btnDelete) {
 			if(isNew) {
 				tabContainer.removePage(this);
@@ -140,6 +151,14 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 	public void onGuiClosed() {
 		super.onGuiClosed();
 		Keyboard.enableRepeatEvents(false);
+		applyChanges();
+	}
+
+	public ServerConfig getServerConfig() {
+		return config;
+	}
+
+	public void applyChanges() {
 		if(!txtAddress.getText().isEmpty() && !txtAddress.getText().equals(config.getAddress())) {
 			ConfigurationHandler.removeServerConfig(config.getAddress());
 			config.setAddress(txtAddress.getText());
@@ -151,5 +170,4 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 		title = config.getAddress();
 		tabContainer.initGui();
 	}
-
 }
