@@ -4,6 +4,7 @@ import cpw.mods.fml.client.config.GuiConfig;
 import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.blay09.mods.eirairc.client.gui.base.GuiAdvancedTextField;
 import net.blay09.mods.eirairc.client.gui.base.GuiLabel;
 import net.blay09.mods.eirairc.client.gui.base.GuiList;
 import net.blay09.mods.eirairc.client.gui.base.tab.GuiTabContainer;
@@ -26,7 +27,7 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 
 	private ServerConfig config;
 	private GuiTextField txtAddress;
-	private GuiTextField txtNick;
+	private GuiAdvancedTextField txtNick;
 	private GuiList lstChannels;
 	private GuiButton btnTheme;
 	private GuiButton btnBotSettings;
@@ -77,7 +78,8 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 		} else {
 			oldText = config.getNick();
 		}
-		txtNick = new GuiTextField(fontRendererObj, leftX, topY + 55, 100, 15);
+		txtNick = new GuiAdvancedTextField(fontRendererObj, leftX, topY + 55, 100, 15);
+		txtNick.setDefaultText(Globals.DEFAULT_NICK, false);
 		txtNick.setText(oldText);
 		textFieldList.add(txtNick);
 
@@ -165,7 +167,7 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 			ConfigurationHandler.addServerConfig(config);
 			isNew = false;
 		}
-		config.setNick(txtNick.getText());
+		config.setNick(txtNick.getTextOrDefault());
 		ConfigurationHandler.saveServers();
 		title = config.getAddress();
 		tabContainer.initGui();

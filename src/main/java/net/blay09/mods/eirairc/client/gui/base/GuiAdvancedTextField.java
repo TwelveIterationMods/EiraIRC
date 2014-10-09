@@ -34,7 +34,15 @@ public class GuiAdvancedTextField extends GuiTextField {
 		}
 		return result;
 	}
-	
+
+	@Override
+	public void setFocused(boolean focused) {
+		super.setFocused(focused);
+		if(focused && isDefaultText()) {
+			setText("");
+		}
+	}
+
 	@Override
 	public void setText(String text) {
 		super.setText(text);
@@ -43,25 +51,19 @@ public class GuiAdvancedTextField extends GuiTextField {
 			textOffsetX = getWidth() / 2 - textWidth / 2;
 		}
 	}
-	
-	@Override
-	public void setFocused(boolean focused) {
-		super.setFocused(focused);
-		if(defaultText != null && !defaultTextDisplayOnly) {
-			if(!focused) {
-				if(getText().isEmpty() || getText().equals(defaultText)) {
-					setText(defaultText);
-					setTextColor(COLOR_DISABLED);
-				}
-			} else {
-				if(getText().equals(defaultText)) {
-					setText("");
-				}
-				setTextColor(COLOR_ENABLED);
-			}
-		}
+
+	private boolean isDefaultText() {
+		return defaultText != null && (getText().isEmpty() || getText().equals(defaultText));
 	}
-	
+
+	public String getTextOrDefault() {
+		String text = super.getText();
+		if(!defaultTextDisplayOnly && isDefaultText()) {
+			return defaultText;
+		}
+		return text;
+	}
+
 	@Override
 	public void drawTextBox() {
 		String oldText = getText();
@@ -71,13 +73,13 @@ public class GuiAdvancedTextField extends GuiTextField {
 				sb.append(passwordChar);
 			}
 			setText(sb.toString());
-		} else if(oldText.isEmpty() && defaultTextDisplayOnly && !isFocused()) {
+		} else if(!isFocused() && isDefaultText()) {
 			setText(defaultText);
 			setTextColor(COLOR_DISABLED);
 		}
 		super.drawTextBox();
 		setText(oldText);
-		if(oldText.isEmpty() && defaultTextDisplayOnly && !isFocused()) {
+		if(!isFocused() && isDefaultText()) {
 			setTextColor(COLOR_ENABLED);
 		}
 	}
@@ -97,10 +99,6 @@ public class GuiAdvancedTextField extends GuiTextField {
 	public void setDefaultText(String defaultText, boolean displayOnly) {
 		this.defaultText = defaultText;
 		this.defaultTextDisplayOnly = displayOnly;
-		if(!displayOnly && getText().isEmpty()) {
-			setText(defaultText);
-			setTextColor(COLOR_DISABLED);
-		}
 	}
 	
 	public String getDefaultText() {

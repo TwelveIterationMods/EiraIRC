@@ -267,4 +267,12 @@ public class ServerConfig {
 	public BotSettings getBotSettings() {
 		return botSettings;
 	}
+
+	public void setIsSSL(boolean isSSL) {
+		this.isSSL = isSSL;
+	}
+
+	public void setCharset(String charset) {
+		this.charset = charset;
+	}
 }

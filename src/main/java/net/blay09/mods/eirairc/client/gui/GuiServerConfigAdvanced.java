@@ -1,5 +1,6 @@
 package net.blay09.mods.eirairc.client.gui;
 
+import cpw.mods.fml.client.config.GuiCheckBox;
 import net.blay09.mods.eirairc.client.gui.base.GuiAdvancedTextField;
 import net.blay09.mods.eirairc.client.gui.base.GuiLabel;
 import net.blay09.mods.eirairc.client.gui.base.tab.GuiTabContainer;
@@ -14,6 +15,8 @@ import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.gui.GuiYesNoCallback;
 import org.lwjgl.input.Keyboard;
 
+import java.nio.charset.Charset;
+
 /**
  * Created by Blay09 on 04.10.2014.
  */
@@ -23,10 +26,12 @@ public class GuiServerConfigAdvanced extends GuiTabPage implements GuiYesNoCallb
 	private final ServerConfig config;
 
 	private GuiTextField txtAddress;
-	private GuiTextField txtNick;
-	private GuiAdvancedTextField txtServerPassword;
+	private GuiAdvancedTextField txtNick;
 	private GuiTextField txtNickServName;
 	private GuiAdvancedTextField txtNickServPassword;
+	private GuiAdvancedTextField txtServerPassword;
+	private GuiAdvancedTextField txtCharset;
+	private GuiCheckBox chkSSL;
 	private GuiButton btnBack;
 	private GuiButton btnDelete;
 
@@ -65,7 +70,8 @@ public class GuiServerConfigAdvanced extends GuiTabPage implements GuiYesNoCallb
 		} else {
 			oldText = config.getNick();
 		}
-		txtNick = new GuiTextField(fontRendererObj, leftX, topY + 55, 100, 15);
+		txtNick = new GuiAdvancedTextField(fontRendererObj, leftX, topY + 55, 100, 15);
+		txtNick.setDefaultText(Globals.DEFAULT_NICK, false);
 		txtNick.setText(oldText);
 		textFieldList.add(txtNick);
 
@@ -104,12 +110,43 @@ public class GuiServerConfigAdvanced extends GuiTabPage implements GuiYesNoCallb
 		txtServerPassword.setDefaultPasswordChar();
 		textFieldList.add(txtServerPassword);
 
+		labelList.add(new GuiLabel("Charset", rightX - 100, topY + 40, Globals.TEXT_COLOR));
+
+		if(txtCharset != null) {
+			oldText = txtCharset.getText();
+		} else {
+			oldText = config.getCharset();
+		}
+		txtCharset = new GuiAdvancedTextField(fontRendererObj, rightX - 100, topY + 55, 100, 15);
+		txtCharset.setDefaultText(Globals.DEFAULT_CHARSET, false);
+		txtCharset.setText(oldText);
+		textFieldList.add(txtCharset);
+
+		boolean oldState;
+		if(chkSSL != null) {
+			oldState = chkSSL.isChecked();
+		} else {
+			oldState = config.isSSL();
+		}
+		chkSSL = new GuiCheckBox(2, rightX - 100, topY + 80, " Use SSL", oldState);
+		buttonList.add(chkSSL);
+
 		btnDelete = new GuiButton(0, rightX - 100, topY + 150, 100, 20, "Delete");
 		btnDelete.packedFGColour = -65536;
 		buttonList.add(btnDelete);
 
 		btnBack = new GuiButton(1, rightX - 100, topY + 125, 100, 20, "Back");
 		buttonList.add(btnBack);
+	}
+
+	@Override
+	public boolean requestClose() {
+		if(!Charset.isSupported(txtCharset.getTextOrDefault())) {
+			txtCharset.setFocused(true);
+			txtCharset.setTextColor(-65536);
+			return false;
+		}
+		return true;
 	}
 
 	@Override
@@ -141,9 +178,11 @@ public class GuiServerConfigAdvanced extends GuiTabPage implements GuiYesNoCallb
 			config.setAddress(txtAddress.getText());
 			ConfigurationHandler.addServerConfig(config);
 		}
-		config.setNick(txtNick.getText());
+		config.setNick(txtNick.getTextOrDefault());
 		config.setNickServ(txtNickServName.getText(), txtNickServPassword.getText());
 		config.setServerPassword(txtServerPassword.getText());
+		config.setIsSSL(chkSSL.isChecked());
+		config.setCharset(txtCharset.getTextOrDefault());
 		ConfigurationHandler.saveServers();
 		tabContainer.initGui();
 	}
