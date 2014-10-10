@@ -200,7 +200,6 @@ public class ScreenshotManager {
 
 	public void deleteScreenshot(Screenshot screenshot) {
 		screenshot.getFile().delete();
-		screenshot.getThumbnail().getFile().delete();
 		screenshots.remove(screenshot);
 	}
 

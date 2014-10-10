@@ -8,8 +8,8 @@ import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.client.gui.chat.GuiChatExtended;
 import net.blay09.mods.eirairc.client.gui.chat.GuiEiraChat;
 import net.blay09.mods.eirairc.client.gui.chat.GuiEiraChatInput;
-import net.blay09.mods.eirairc.client.gui.screenshot.GuiScreenshotList;
 import net.blay09.mods.eirairc.client.gui.GuiEiraIRCMenu;
+import net.blay09.mods.eirairc.client.gui.screenshot.GuiScreenshots;
 import net.blay09.mods.eirairc.client.screenshot.Screenshot;
 import net.blay09.mods.eirairc.client.screenshot.ScreenshotManager;
 import net.blay09.mods.eirairc.config.ClientGlobalConfig;
@@ -93,7 +93,7 @@ public class EiraTickHandler {
 		}
 		if(isKeyPressed(ClientGlobalConfig.keyOpenScreenshots, KEY_IDX_OPENSCREENSHOTS)) {
 			if(Minecraft.getMinecraft().currentScreen == null) {
-				Minecraft.getMinecraft().displayGuiScreen(new GuiScreenshotList(null));
+				Minecraft.getMinecraft().displayGuiScreen(new GuiScreenshots(null));
 			}
 		}
 	}
