@@ -5,17 +5,17 @@ package net.blay09.mods.eirairc.client.screenshot;
 
 import java.io.File;
 
+import com.google.gson.JsonObject;
 import net.minecraft.client.Minecraft;
 
 public class Screenshot {
 
-	private File file;
-	private String uploadURL;
-	private String deleteURL;
-	private String hoster;
+	private final File file;
+	private final JsonObject metadata;
 
-	public Screenshot(File file) {
+	public Screenshot(File file, JsonObject metadata) {
 		this.file = file;
+		this.metadata = metadata != null ? metadata : new JsonObject();
 	}
 
 	public String getName() {
@@ -23,34 +23,18 @@ public class Screenshot {
 	}
 
 	public boolean isUploaded() {
-		return uploadURL != null;
-	}
-
-	public void setURL(String url) {
-		this.uploadURL = url;
-	}
-	
-	public void setDeleteURL(String url) {
-		this.deleteURL = url;
-	}
-
-	public void setHoster(String hoster) {
-		this.hoster = hoster;
-	}
-	
-	public String getUploadURL() {
-		return uploadURL;
+		return metadata.has("uploadURL");
 	}
 
 	public File getFile() {
 		return file;
 	}
-	
-	public String getDeleteURL() {
-		return deleteURL;
+
+	public JsonObject getMetadata() {
+		return metadata;
 	}
 
-	public String getHoster() {
-		return hoster;
+	public String getUploadURL() {
+		return metadata.get("uploadURL").getAsString();
 	}
 }

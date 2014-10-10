@@ -4,31 +4,25 @@
 package net.blay09.mods.eirairc.client.screenshot;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FilenameFilter;
-import java.io.IOException;
+import java.io.*;
 import java.nio.IntBuffer;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.Properties;
 
 import javax.imageio.ImageIO;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.stream.JsonWriter;
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.IRCChannel;
 import net.blay09.mods.eirairc.api.IRCConnection;
 import net.blay09.mods.eirairc.api.IRCUser;
-import net.blay09.mods.eirairc.api.bot.IRCBot;
 import net.blay09.mods.eirairc.api.event.RelayChat;
 import net.blay09.mods.eirairc.api.upload.IUploadHoster;
 import net.blay09.mods.eirairc.api.upload.UploadManager;
@@ -65,13 +59,11 @@ public class ScreenshotManager {
 	}
 
 	private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss");
-	private static final String PROPERTY_DELETE_URL = "_delete";
-	private static final String PROPERTY_HOSTER = "_hoster";
+	private static final Gson gson = new Gson();
 	private static IntBuffer intBuffer;
 	private static int[] buffer;
 	
 	private final File screenshotDir = new File(Minecraft.getMinecraft().mcDataDir, "screenshots");
-	private final File thumbnailDir = new File(screenshotDir, "thumbnails");
 	private final List<Screenshot> screenshots = new ArrayList<Screenshot>();
 	private final Comparator<Screenshot> comparator = new Comparator<Screenshot>() {
 		@Override
@@ -90,19 +82,13 @@ public class ScreenshotManager {
 	private final List<AsyncUploadScreenshot> uploadTasks = new ArrayList<AsyncUploadScreenshot>();
 	private long lastScreenshotScan;
 	
-	public ScreenshotManager() {
-		thumbnailDir.mkdirs();
-	}
-
 	public void load() {
-		Properties prop = new Properties();
+		JsonObject metadataObject;
 		try {
-			FileInputStream in = new FileInputStream(new File(screenshotDir, "eirairc.properties"));
-			prop.load(in);
-			in.close();
+			Reader reader = new FileReader(new File(screenshotDir, "eirairc_metadata.json"));
+			metadataObject = gson.fromJson(reader, JsonObject.class);
 		} catch (FileNotFoundException e) {
-		} catch (IOException e) {
-			e.printStackTrace();
+			metadataObject = new JsonObject();
 		}
 		File[] screenshotFiles = screenshotDir.listFiles(new FilenameFilter() {
 			@Override
@@ -112,11 +98,7 @@ public class ScreenshotManager {
 		});
 		if (screenshotFiles != null) {
 			for (int i = 0; i < screenshotFiles.length; i++) {
-				Screenshot screenshot = new Screenshot(screenshotFiles[i]);
-				screenshot.setURL(prop.getProperty(screenshot.getName()));
-				screenshot.setDeleteURL(prop.getProperty(screenshot.getName() + PROPERTY_DELETE_URL));
-				screenshot.setHoster(prop.getProperty(screenshot.getName() + PROPERTY_HOSTER));
-				screenshots.add(screenshot);
+				screenshots.add(new Screenshot(screenshotFiles[i], metadataObject.getAsJsonObject(screenshotFiles[i].getName())));
 			}
 		}
 		lastScreenshotScan = System.currentTimeMillis();
@@ -124,19 +106,18 @@ public class ScreenshotManager {
 	}
 
 	public void save() {
-		Properties prop = new Properties();
-		for (int i = 0; i < screenshots.size(); i++) {
+		JsonObject metadataObject = new JsonObject();
+		for(int i = 0; i < screenshots.size(); i++) {
 			Screenshot screenshot = screenshots.get(i);
-			if (screenshot.isUploaded()) {
-				prop.setProperty(screenshot.getName(), screenshot.getUploadURL());
-				prop.setProperty(screenshot.getName() + PROPERTY_DELETE_URL, screenshot.getDeleteURL() != null ? screenshot.getDeleteURL() : "");
-				prop.setProperty(screenshot.getName() + PROPERTY_HOSTER, screenshot.getHoster() != null ? screenshot.getHoster() : "");
+			if(screenshot.getMetadata().entrySet().size() > 0) {
+				metadataObject.add(screenshot.getFile().getName(), screenshot.getMetadata());
 			}
 		}
 		try {
-			FileOutputStream out = new FileOutputStream(new File(screenshotDir, "eirairc.properties"));
-			prop.store(out, null);
-			out.close();
+			JsonWriter writer = new JsonWriter(new FileWriter(new File(screenshotDir, "eirairc_metadata.json")));
+			writer.setIndent("  ");
+			gson.toJson(metadataObject, writer);
+			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -161,7 +142,7 @@ public class ScreenshotManager {
 			bufferedImage.setRGB(0, 0, width, height, buffer, 0, width);
 			File screenshotFile = new File(screenshotDir, getScreenshotName(screenshotDir));
 			ImageIO.write(bufferedImage, "png", screenshotFile);
-			Screenshot screenshot = new Screenshot(screenshotFile);
+			Screenshot screenshot = new Screenshot(screenshotFile, null);
 			screenshots.add(screenshot);
 			Collections.sort(screenshots, comparator);
 			return screenshot;
@@ -297,7 +278,7 @@ public class ScreenshotManager {
 		});
 		if (screenshotFiles != null) {
 			for (int i = 0; i < screenshotFiles.length; i++) {
-				Screenshot screenshot = new Screenshot(screenshotFiles[i]);
+				Screenshot screenshot = new Screenshot(screenshotFiles[i], null);
 				if (autoAction) {
 					handleNewScreenshot(screenshot);
 				}
@@ -306,10 +287,6 @@ public class ScreenshotManager {
 		}
 		Collections.sort(screenshots, comparator);
 		lastScreenshotScan = System.currentTimeMillis();
-	}
-
-	public File getThumbnailDir() {
-		return thumbnailDir;
 	}
 
 }

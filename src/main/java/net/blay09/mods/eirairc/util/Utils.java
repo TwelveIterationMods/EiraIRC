@@ -9,6 +9,8 @@ import java.awt.Desktop;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
+import java.io.File;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -40,13 +42,10 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IChatComponent;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.lwjgl.Sys;
 
 public class Utils {
 
@@ -395,7 +394,31 @@ public class Utils {
 		}
 		return username;
 	}
-	
+
+	public static void openDirectory(File dir) {
+		if (Util.getOSType() == Util.EnumOS.OSX) {
+			try {
+				Runtime.getRuntime().exec(new String[] {"/usr/bin/open", dir.getAbsolutePath()});
+				return;
+			} catch (IOException ignored) {}
+		} else if (Util.getOSType() == Util.EnumOS.WINDOWS) {
+			try {
+				Runtime.getRuntime().exec(String.format("cmd.exe /C start \"Open file\" \"%s\"", dir.getAbsolutePath()));
+				return;
+			} catch (IOException ignored) {}
+		}
+		Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+		if(desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
+			try {
+				desktop.browse(dir.toURI());
+				return;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		Sys.openURL("file://" + dir.getAbsolutePath());
+	}
+
 	public static void openWebpage(String url) {
 		try {
 			openWebpage(new URL(url).toURI());
