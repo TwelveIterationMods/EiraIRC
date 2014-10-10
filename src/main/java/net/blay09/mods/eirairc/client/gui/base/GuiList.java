@@ -12,7 +12,8 @@ public class GuiList<T extends GuiListEntry> extends Gui {
 	private static final int BACKGROUND_COLOR = -16777216;
 	private static final int BORDER_COLOR = Integer.MAX_VALUE;
 	private static final int SELECTION_COLOR = Integer.MAX_VALUE;
-	
+	private static final int DOUBLE_CLICK_TIME = 250;
+
 	private final List<T> entries = new ArrayList<T>();
 	
 	private int xPosition;
@@ -24,6 +25,9 @@ public class GuiList<T extends GuiListEntry> extends Gui {
 	private int scrollOffset;
 	
 	private int selectedIdx = -1;
+
+	private int lastClickIdx = -1;
+	private long lastClickTime = 0;
 	
 	public GuiList(int x, int y, int width, int height, int entryHeight) {
 		this.xPosition = x;
@@ -43,12 +47,20 @@ public class GuiList<T extends GuiListEntry> extends Gui {
 			int clickedIdx = relY / entryHeight;
 			if(clickedIdx >= 0 && clickedIdx < entries.size()) {
 				setSelectedIdx(relY / entryHeight);
+				long now = System.currentTimeMillis();
+				if(lastClickIdx == clickedIdx) {
+					if (now - lastClickTime <= DOUBLE_CLICK_TIME) {
+						getSelectedItem().onDoubleClick();
+					}
+				}
+				lastClickTime = now;
+				lastClickIdx = clickedIdx;
 			} else {
 				setSelectedIdx(-1);
 			}
 		}
 	}
-	
+
 	public void setSelectedIdx(int idx) {
 		if(selectedIdx != -1) {
 			entries.get(selectedIdx).setSelected(false);

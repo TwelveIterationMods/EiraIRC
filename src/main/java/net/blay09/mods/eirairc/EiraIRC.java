@@ -13,6 +13,7 @@ import net.blay09.mods.eirairc.command.base.CommandIRC;
 import net.blay09.mods.eirairc.command.base.CommandServIRC;
 import net.blay09.mods.eirairc.command.base.IRCCommandHandler;
 import net.blay09.mods.eirairc.command.base.IgnoreCommand;
+import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.ClientGlobalConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
@@ -24,6 +25,7 @@ import net.blay09.mods.eirairc.handler.MCEventHandler;
 import net.blay09.mods.eirairc.net.EiraNetHandler;
 import net.blay09.mods.eirairc.net.PacketHandler;
 import net.blay09.mods.eirairc.util.Globals;
+import net.blay09.mods.eirairc.util.IRCResolver;
 import net.blay09.mods.eirairc.util.Localization;
 import net.minecraft.command.CommandHandler;
 import net.minecraft.server.MinecraftServer;
@@ -122,6 +124,12 @@ public class EiraIRC {
 				serverConfig.getTheme().pushDummyConfig();
 				serverConfig.getBotSettings().pushDummyConfig();
 				serverConfig.getGeneralSettings().pushDummyConfig();
+				ConfigurationHandler.saveServers();
+			} else if(event.configID.startsWith("channel:")) {
+				ChannelConfig channelConfig = IRCResolver.resolveChannelConfig(event.configID.substring(8), IRCResolver.FLAGS_NONE);
+				channelConfig.getTheme().pushDummyConfig();
+				channelConfig.getBotSettings().pushDummyConfig();
+				channelConfig.getGeneralSettings().pushDummyConfig();
 				ConfigurationHandler.saveServers();
 			}
 		}

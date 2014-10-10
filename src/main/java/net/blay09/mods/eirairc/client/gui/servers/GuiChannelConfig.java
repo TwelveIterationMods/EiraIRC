@@ -93,13 +93,13 @@ public class GuiChannelConfig extends GuiTabPage implements GuiYesNoCallback {
 		btnDelete.packedFGColour = -65536;
 		buttonList.add(btnDelete);
 
-		btnTheme = new GuiButton(1, leftX, topY + 85, 100, 20, "Configure Theme...");
+		btnTheme = new GuiButton(1, rightX - 100, topY + 15, 100, 20, "Configure Theme...");
 		buttonList.add(btnTheme);
 
-		btnBotSettings = new GuiButton(2, leftX, topY + 110, 100, 20, "Configure Bot...");
+		btnBotSettings = new GuiButton(2, rightX - 100, topY + 40, 100, 20, "Configure Bot...");
 		buttonList.add(btnBotSettings);
 
-		btnOtherSettings = new GuiButton(3, leftX, topY + 135, 100, 20, "Other Settings...");
+		btnOtherSettings = new GuiButton(3, rightX - 100, topY + 65, 100, 20, "Other Settings...");
 		buttonList.add(btnOtherSettings);
 	}
 
@@ -147,6 +147,18 @@ public class GuiChannelConfig extends GuiTabPage implements GuiYesNoCallback {
 
 	public void applyChanges() {
 		if(!txtName.getText().isEmpty() && !txtName.getText().equals(config.getName())) {
+			char prefix = txtName.getText().charAt(0);
+			switch(prefix) {
+				case '&':
+				case '#':
+				case '!':
+				case '+':
+				case '.':
+				case '~':
+					break;
+				default:
+					txtName.setText("#" + txtName.getText());
+			}
 			serverConfig.removeChannelConfig(config.getName());
 			config.setName(txtName.getText());
 			serverConfig.addChannelConfig(config);

@@ -130,16 +130,15 @@ public class GuiTabContainer extends EiraGuiScreen {
 		for(int i = headers.size() - 1; i >= 0; i--) {
 			GuiTabHeader header = headers.get(i);
 
-			if(header.tabPage != currentTab) {
-				header.draw(mouseX, mouseY, false);
-			} else {
+			if(currentTab != null && (header.tabPage == currentTab || header.tabPage == currentTab.getParentScreen())) {
 				currentHeader = header;
+			} else {
+				header.draw(mouseX, mouseY, false);
 			}
 		}
 		if(currentHeader != null) {
 			currentHeader.draw(mouseX, mouseY, true);
 		}
-
 	}
 
 	public void removePage(GuiTabPage tabPage) {
