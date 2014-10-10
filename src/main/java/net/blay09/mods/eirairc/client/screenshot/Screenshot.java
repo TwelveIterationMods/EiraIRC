@@ -6,6 +6,7 @@ package net.blay09.mods.eirairc.client.screenshot;
 import java.io.File;
 
 import com.google.gson.JsonObject;
+import net.blay09.mods.eirairc.api.upload.UploadedFile;
 import net.minecraft.client.Minecraft;
 
 public class Screenshot {
@@ -36,5 +37,10 @@ public class Screenshot {
 
 	public String getUploadURL() {
 		return metadata.get("uploadURL").getAsString();
+	}
+
+	public void setUploadedFile(UploadedFile uploadedFile) {
+		metadata.addProperty("uploadURL", uploadedFile.url);
+		metadata.addProperty("deleteURL", uploadedFile.deleteURL);
 	}
 }

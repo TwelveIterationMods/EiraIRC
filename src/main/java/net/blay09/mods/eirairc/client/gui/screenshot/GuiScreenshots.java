@@ -77,7 +77,7 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 		btnClipboard.enabled = false;
 		buttonList.add(btnClipboard);
 
-		btnDelete = new GuiButton(3, rightX - 100, topY + 155, 100, 20, "Delete");
+		btnDelete = new GuiButton(3, rightX - 150, topY + 155, 100, 20, "Delete");
 		buttonList.add(btnDelete);
 
 		updateScreenshot();
