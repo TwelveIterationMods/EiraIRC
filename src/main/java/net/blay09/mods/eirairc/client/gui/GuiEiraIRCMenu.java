@@ -5,10 +5,17 @@ package net.blay09.mods.eirairc.client.gui;
 
 import net.blay09.mods.eirairc.client.gui.base.GuiMenuButton;
 import net.blay09.mods.eirairc.client.gui.screenshot.GuiScreenshotList;
+import net.blay09.mods.eirairc.config.ClientGlobalConfig;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.util.ResourceLocation;
+
+import java.util.Random;
 
 public class GuiEiraIRCMenu extends EiraGuiScreen {
+
+	private static final ResourceLocation meow = new ResourceLocation("mob.cat.meow");
 
 	private static final int BUTTON_SIZE = 64;
 
@@ -18,6 +25,8 @@ public class GuiEiraIRCMenu extends EiraGuiScreen {
 	private GuiMenuButton btnFriends;
 	private GuiMenuButton btnScreenshots;
 	private GuiMenuButton btnSettings;
+
+	private int catCount;
 
 	@Override
 	public void initGui() {
@@ -33,6 +42,7 @@ public class GuiEiraIRCMenu extends EiraGuiScreen {
 		menuButtonList.add(btnTwitch);
 
 		btnPlaceholder = new GuiMenuButton("???", buttonCenterX + 64, buttonCenterY - 95, BUTTON_SIZE, BUTTON_SIZE);
+		btnPlaceholder.setPlayButtonSound(false);
 		menuButtonList.add(btnPlaceholder);
 
 		btnFriends = new GuiMenuButton("Friends", buttonCenterX - 132, buttonCenterY, BUTTON_SIZE * 3, 0);
@@ -56,7 +66,12 @@ public class GuiEiraIRCMenu extends EiraGuiScreen {
 		} else if(button == btnSettings) {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiEiraIRCConfig(this));
 		} else if(button == btnPlaceholder) {
-			Utils.openWebpage("https://www.youtube.com/results?search_query=Cute+Cat+Videos+:3");
+			catCount++;
+			Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(meow, 1f));
+			if(catCount >= 4) {
+				Utils.openWebpage("https://www.youtube.com/results?search_query=Cute+Cat+Videos+:3");
+				catCount = Integer.MIN_VALUE;
+			}
 		}
 	}
 

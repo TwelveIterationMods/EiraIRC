@@ -5,6 +5,7 @@ import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.blay09.mods.eirairc.client.gui.base.GuiAdvancedTextField;
+import net.blay09.mods.eirairc.client.gui.base.GuiImageButton;
 import net.blay09.mods.eirairc.client.gui.base.GuiLabel;
 import net.blay09.mods.eirairc.client.gui.base.GuiList;
 import net.blay09.mods.eirairc.client.gui.base.tab.GuiTabContainer;
@@ -29,6 +30,8 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 	private GuiTextField txtAddress;
 	private GuiAdvancedTextField txtNick;
 	private GuiList lstChannels;
+	private GuiButton btnChannelAdd;
+	private GuiButton btnChannelDelete;
 	private GuiButton btnTheme;
 	private GuiButton btnBotSettings;
 	private GuiButton btnOtherSettings;
@@ -87,6 +90,12 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 
 		lstChannels = new GuiList(rightX - 100, topY + 15, 100, 80, 15);
 		listList.add(lstChannels);
+
+		btnChannelAdd = new GuiImageButton(5, rightX - 95, topY + 100, EiraGui.tab, 32, 16, 10, 10);
+		buttonList.add(btnChannelAdd);
+
+		btnChannelDelete = new GuiImageButton(6, rightX - 75, topY + 100, EiraGui.tab, 32, 32, 10, 10);
+		buttonList.add(btnChannelDelete);
 
 		btnDelete = new GuiButton(0, rightX - 100, topY + 150, 100, 20, "Delete");
 		btnDelete.packedFGColour = -65536;

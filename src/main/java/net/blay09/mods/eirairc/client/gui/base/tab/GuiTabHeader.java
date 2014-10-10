@@ -39,7 +39,7 @@ public class GuiTabHeader extends Gui {
 		if(active) {
 			GL11.glColor4f(1f, 1f, 1f, 1f);
 		} else {
-			GL11.glColor4f(0.5f, 0.5f, 0.5f, 1f);
+			GL11.glColor4f(0f, 0f, 0f, 1f);
 		}
 		GL11.glEnable(GL11.GL_BLEND);
 		mc.renderEngine.bindTexture(tabHeader);

@@ -22,6 +22,7 @@ public class GuiMenuButton extends Gui {
 	private final int texCoordY;
 	private final int xPos;
 	private final int yPos;
+	private boolean playButtonSound = true;
 
 	public GuiMenuButton(String title, int xPos, int yPos, int texCoordX, int texCoordY) {
 		this.mc = Minecraft.getMinecraft();
@@ -35,7 +36,9 @@ public class GuiMenuButton extends Gui {
 	public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
 		if(mouseButton == 0) {
 			if (mouseX >= xPos && mouseX < xPos + BUTTON_SIZE && mouseY >= yPos && mouseY < yPos + BUTTON_SIZE) {
-				mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0f));
+				if(playButtonSound) {
+					mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0f));
+				}
 				if (mc.currentScreen instanceof GuiEiraIRCMenu) {
 					((GuiEiraIRCMenu) mc.currentScreen).actionPerformed(this);
 				}
@@ -63,5 +66,9 @@ public class GuiMenuButton extends Gui {
 		GL11.glDisable(GL11.GL_BLEND);
 
 		drawCenteredString(mc.fontRenderer, (hovered ? "\u00a7n" : "") + title, xPos + BUTTON_SIZE / 2, yPos + BUTTON_SIZE + 5, !hovered ? Globals.TEXT_COLOR : 16777115);
+	}
+
+	public void setPlayButtonSound(boolean playButtonSound) {
+		this.playButtonSound = playButtonSound;
 	}
 }
