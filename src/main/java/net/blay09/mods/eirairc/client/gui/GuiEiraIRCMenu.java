@@ -5,13 +5,11 @@ package net.blay09.mods.eirairc.client.gui;
 
 import net.blay09.mods.eirairc.client.gui.base.GuiMenuButton;
 import net.blay09.mods.eirairc.client.gui.screenshot.GuiScreenshotList;
-import net.blay09.mods.eirairc.config.ClientGlobalConfig;
+import net.blay09.mods.eirairc.client.gui.servers.GuiServerConfigContainer;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.util.ResourceLocation;
-
-import java.util.Random;
 
 public class GuiEiraIRCMenu extends EiraGuiScreen {
 

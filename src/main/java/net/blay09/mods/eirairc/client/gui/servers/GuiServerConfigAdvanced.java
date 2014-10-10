@@ -1,4 +1,4 @@
-package net.blay09.mods.eirairc.client.gui;
+package net.blay09.mods.eirairc.client.gui.servers;
 
 import cpw.mods.fml.client.config.GuiCheckBox;
 import net.blay09.mods.eirairc.client.gui.base.GuiAdvancedTextField;
@@ -36,7 +36,7 @@ public class GuiServerConfigAdvanced extends GuiTabPage implements GuiYesNoCallb
 	private GuiButton btnDelete;
 
 	public GuiServerConfigAdvanced(GuiTabContainer tabContainer, GuiServerConfig parent) {
-		super(tabContainer, parent.getTitle());
+		super(tabContainer, parent);
 		this.parent = parent;
 		config = parent.getServerConfig();
 	}

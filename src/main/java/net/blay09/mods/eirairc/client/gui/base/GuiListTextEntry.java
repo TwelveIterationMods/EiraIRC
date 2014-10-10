@@ -15,7 +15,6 @@ public abstract class GuiListTextEntry extends GuiListEntry {
 		this.height = height;
 		this.textColor = textColor;
 	}
-	
 
 	@Override
 	public void drawEntry(int x, int y) {

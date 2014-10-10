@@ -1,11 +1,8 @@
 package net.blay09.mods.eirairc.client.gui.base.tab;
 
 import net.blay09.mods.eirairc.client.gui.EiraGuiScreen;
-import net.blay09.mods.eirairc.client.gui.GuiServerConfig;
-import net.blay09.mods.eirairc.util.Globals;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,6 +80,15 @@ public class GuiTabContainer extends EiraGuiScreen {
 
 		if(currentTab != null) {
 			currentTab.mouseClicked(mouseX, mouseY, mouseButton);
+		}
+	}
+
+	@Override
+	public void gotoPrevious() {
+		if(currentTab.getParentScreen() instanceof GuiTabPage) {
+			setCurrentTab((GuiTabPage) currentTab.getParentScreen(), false);
+		} else {
+			super.gotoPrevious();
 		}
 	}
 

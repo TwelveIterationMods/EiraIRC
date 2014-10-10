@@ -1,4 +1,4 @@
-package net.blay09.mods.eirairc.client.gui;
+package net.blay09.mods.eirairc.client.gui.servers;
 
 import net.blay09.mods.eirairc.client.gui.base.tab.DummyTabPage;
 import net.blay09.mods.eirairc.client.gui.base.tab.GuiTabContainer;

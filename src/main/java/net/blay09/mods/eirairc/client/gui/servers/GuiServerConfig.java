@@ -1,24 +1,19 @@
-package net.blay09.mods.eirairc.client.gui;
+package net.blay09.mods.eirairc.client.gui.servers;
 
 import cpw.mods.fml.client.config.GuiConfig;
-import cpw.mods.fml.client.event.ConfigChangedEvent;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import net.blay09.mods.eirairc.client.gui.base.GuiAdvancedTextField;
-import net.blay09.mods.eirairc.client.gui.base.GuiImageButton;
+import net.blay09.mods.eirairc.client.gui.EiraGui;
+import net.blay09.mods.eirairc.client.gui.GuiEiraIRCConfig;
+import net.blay09.mods.eirairc.client.gui.base.*;
 import net.blay09.mods.eirairc.client.gui.base.GuiLabel;
-import net.blay09.mods.eirairc.client.gui.base.GuiList;
 import net.blay09.mods.eirairc.client.gui.base.tab.GuiTabContainer;
 import net.blay09.mods.eirairc.client.gui.base.tab.GuiTabPage;
+import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
-import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.Globals;
-import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
 import net.minecraftforge.common.config.ConfigElement;
-import net.minecraftforge.common.config.Configuration;
 import org.lwjgl.input.Keyboard;
 
 /**
@@ -29,7 +24,7 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 	private ServerConfig config;
 	private GuiTextField txtAddress;
 	private GuiAdvancedTextField txtNick;
-	private GuiList lstChannels;
+	private GuiList<GuiListEntryChannel> lstChannels;
 	private GuiButton btnChannelAdd;
 	private GuiButton btnChannelDelete;
 	private GuiButton btnTheme;
@@ -39,6 +34,7 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 	private GuiButton btnDelete;
 
 	private boolean isNew;
+	private ChannelConfig deleteChannel;
 
 	public GuiServerConfig(GuiTabContainer tabContainer) {
 		super(tabContainer, "<new>");
@@ -88,7 +84,10 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 
 		labelList.add(new GuiLabel("Channels", rightX - 100, topY, Globals.TEXT_COLOR));
 
-		lstChannels = new GuiList(rightX - 100, topY + 15, 100, 80, 15);
+		lstChannels = new GuiList<GuiListEntryChannel>(rightX - 100, topY + 15, 100, 80, 20);
+		for(ChannelConfig channelConfig : config.getChannelConfigs()) {
+			lstChannels.addEntry(new GuiListEntryChannel(this, fontRendererObj, channelConfig, lstChannels.getEntryHeight()));
+		}
 		listList.add(lstChannels);
 
 		btnChannelAdd = new GuiImageButton(5, rightX - 95, topY + 100, EiraGui.tab, 32, 16, 10, 10);
@@ -138,6 +137,13 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 			mc.displayGuiScreen(new GuiConfig(tabContainer, new ConfigElement(config.getGeneralSettings().pullDummyConfig().getCategory("settings")).getChildElements(), Globals.MOD_ID, "server:" + config.getAddress(), false, false, "Other Settings (" + config.getAddress() + ")"));
 		} else if(button == btnAdvanced) {
 			tabContainer.setCurrentTab(new GuiServerConfigAdvanced(tabContainer, this), false);
+		} else if(button == btnChannelAdd) {
+			tabContainer.setCurrentTab(new GuiChannelConfig(tabContainer, this), false);
+		} else if(button == btnChannelDelete) {
+			if(lstChannels.hasSelection()) {
+				deleteChannel = lstChannels.getSelectedItem().getConfig();
+				mc.displayGuiScreen(new GuiYesNo(this, "Do you really want to delete this channel configuration?", "This can't be undone, so be careful!", 1));
+			}
 		} else if(button == btnDelete) {
 			if(isNew) {
 				tabContainer.removePage(this);
@@ -148,12 +154,21 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 		}
 	}
 
+	public void channelClicked(ChannelConfig config) {
+		tabContainer.setCurrentTab(new GuiChannelConfig(tabContainer, this, config), false);
+	}
+
 	@Override
 	public void confirmClicked(boolean result, int id) {
 		if(result) {
-			ConfigurationHandler.removeServerConfig(config.getAddress());
-			ConfigurationHandler.saveServers();
-			tabContainer.removePage(this);
+			if(id == 0) {
+				ConfigurationHandler.removeServerConfig(config.getAddress());
+				ConfigurationHandler.saveServers();
+				tabContainer.removePage(this);
+			} else if(id == 1) {
+				config.removeChannelConfig(deleteChannel.getName());
+				ConfigurationHandler.saveServers();
+			}
 		}
 		Minecraft.getMinecraft().displayGuiScreen(tabContainer);
 	}

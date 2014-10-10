@@ -91,7 +91,8 @@ public class ServerConfig {
 	public ChannelConfig getOrCreateChannelConfig(String channelName) {
 		ChannelConfig channelConfig = channels.get(channelName.toLowerCase());
 		if(channelConfig == null) {
-			channelConfig = new ChannelConfig(this, channelName);
+			channelConfig = new ChannelConfig(this);
+			channelConfig.setName(channelName);
 			channels.put(channelConfig.getName().toLowerCase(), channelConfig);
 			ConfigurationHandler.save();
 		}
@@ -138,7 +139,7 @@ public class ServerConfig {
 		String channelsCategoryName = categoryName + Configuration.CATEGORY_SPLITTER + "channels";
 		ConfigCategory channelsCategory = legacyConfig.getCategory(channelsCategoryName);
 		for(ConfigCategory channelCategory : channelsCategory.getChildren()) {
-			ChannelConfig channelConfig = new ChannelConfig(this, Utils.unquote(legacyConfig.get(channelCategory.getQualifiedName(), "name", "").getString()));
+			ChannelConfig channelConfig = new ChannelConfig(this);
 			channelConfig.loadLegacy(legacyConfig, channelCategory);
 			addChannelConfig(channelConfig);
 		}

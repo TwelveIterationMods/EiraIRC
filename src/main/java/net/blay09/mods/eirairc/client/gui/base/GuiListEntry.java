@@ -4,7 +4,17 @@ import net.minecraft.client.gui.Gui;
 
 public abstract class GuiListEntry extends Gui {
 
-	public abstract void setSelected(boolean selected);
+	private boolean selected;
+
+	public void setSelected(boolean selected){
+		this.selected = selected;
+		if(selected) {
+			onSelected();
+		}
+	}
+
+	public void onSelected() {}
+	public void onDoubleClick() {}
 	public abstract void drawEntry(int x, int y);
 	
 }

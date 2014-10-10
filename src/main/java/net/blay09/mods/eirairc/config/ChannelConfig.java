@@ -21,19 +21,21 @@ import net.minecraftforge.common.config.Configuration;
 public class ChannelConfig {
 
 	private final ServerConfig serverConfig;
-	private final String name;
 	private final GeneralSettings generalSettings;
 	private final BotSettings botSettings;
 	private final ThemeSettings theme;
 
+	private String name = "";
 	private String password = "";
 
-	public ChannelConfig(ServerConfig serverConfig, String name) {
+	public ChannelConfig(ServerConfig serverConfig) {
 		this.serverConfig = serverConfig;
 		generalSettings = new GeneralSettings(serverConfig.getGeneralSettings());
 		botSettings = new BotSettings(serverConfig.getBotSettings());
 		theme = new ThemeSettings(serverConfig.getTheme());
+	}
 
+	public void setName(String name) {
 		if(serverConfig.getAddress().equals(Globals.TWITCH_SERVER)) {
 			this.name = name.toLowerCase();
 		} else {
@@ -50,7 +52,8 @@ public class ChannelConfig {
 	}
 
 	public static ChannelConfig loadFromJson(ServerConfig serverConfig, JsonObject object) {
-		ChannelConfig config = new ChannelConfig(serverConfig, object.get("name").getAsString());
+		ChannelConfig config = new ChannelConfig(serverConfig);
+		config.setName(object.get("name").getAsString());
 		if(object.has("password")) {
 			config.password = object.get("password").getAsString();
 		}
@@ -89,6 +92,7 @@ public class ChannelConfig {
 
 	public void loadLegacy(Configuration config, ConfigCategory category) {
 		String categoryName = category.getQualifiedName();
+		name = Utils.unquote(config.get(categoryName, "name", "").getString());
 		password = Utils.unquote(config.get(categoryName, "password", "").getString());
 	}
 
@@ -134,5 +138,9 @@ public class ChannelConfig {
 
 	public BotSettings getBotSettings() {
 		return botSettings;
+	}
+
+	public String getIdentifier() {
+		return serverConfig.getAddress() + "/" + name;
 	}
 }

@@ -72,11 +72,15 @@ public class EiraGuiScreen extends GuiScreen {
 
 		if(allowSideClickClose) {
 			if (mouseX < menuX || mouseX >= menuX + menuWidth) {
-				mc.displayGuiScreen(parentScreen);
+				gotoPrevious();
 			} else {
 				super.mouseClicked(mouseX, mouseY, mouseButton);
 			}
 		}
+	}
+
+	public void gotoPrevious() {
+		mc.displayGuiScreen(parentScreen);
 	}
 
 	@Override

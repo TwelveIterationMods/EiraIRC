@@ -28,8 +28,12 @@ public class GuiImageButton extends GuiButton {
 	public void drawButton(Minecraft mc, int mouseX, int mouseY) {
 		if(this.visible) {
 			mc.renderEngine.bindTexture(res);
-			if(mouseX >= xPosition && mouseY >= yPosition && mouseX < xPosition + width && mouseY < yPosition + height) {
-				GL11.glColor4f(1f, 1f, 1f, 1f);
+			if(enabled) {
+				if (mouseX >= xPosition && mouseY >= yPosition && mouseX < xPosition + width && mouseY < yPosition + height) {
+					GL11.glColor4f(1f, 1f, 1f, 1f);
+				} else {
+					GL11.glColor4f(1f, 1f, 1f, 0.5f);
+				}
 			} else {
 				GL11.glColor4f(1f, 1f, 1f, 0.25f);
 			}

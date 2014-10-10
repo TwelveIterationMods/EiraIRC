@@ -3,16 +3,17 @@ package net.blay09.mods.eirairc.client.gui.base;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.blay09.mods.eirairc.client.gui.servers.GuiListEntryChannel;
 import net.minecraft.client.gui.Gui;
 
-public class GuiList extends Gui {
+public class GuiList<T extends GuiListEntry> extends Gui {
 
 	private static final int BACKGROUND_COLOR_TRANSPARENT = Integer.MIN_VALUE;
 	private static final int BACKGROUND_COLOR = -16777216;
 	private static final int BORDER_COLOR = Integer.MAX_VALUE;
 	private static final int SELECTION_COLOR = Integer.MAX_VALUE;
 	
-	private final List<GuiListEntry> entries = new ArrayList<GuiListEntry>();
+	private final List<T> entries = new ArrayList<T>();
 	
 	private int xPosition;
 	private int yPosition;
@@ -57,7 +58,18 @@ public class GuiList extends Gui {
 			entries.get(selectedIdx).setSelected(true);
 		}
 	}
-	
+
+	public T getSelectedItem() {
+		if(selectedIdx >= 0 && selectedIdx < entries.size()) {
+			return entries.get(selectedIdx);
+		}
+		return null;
+	}
+
+	public int getSelectedIdx() {
+		return selectedIdx;
+	}
+
 	public void drawList() {
 		drawBackground();
 		drawEntries();
@@ -89,11 +101,22 @@ public class GuiList extends Gui {
 		drawVerticalLine(this.xPosition + this.width - 1, this.yPosition + 1 + selectedIdx * entryHeight, this.yPosition + entryHeight + 1 + selectedIdx * entryHeight, SELECTION_COLOR);
 	}
 
-	public void addEntry(GuiListEntry entry) {
+	public void addEntry(T entry) {
 		entries.add(entry);
+	}
+
+	public void removeEntry(T entry) {
+		if(getSelectedItem() == entry) {
+			selectedIdx = -1;
+		}
+		entries.remove(entry);
 	}
 
 	public int getEntryHeight() {
 		return entryHeight;
+	}
+
+	public boolean hasSelection() {
+		return (selectedIdx >= 0 && selectedIdx < entries.size());
 	}
 }
