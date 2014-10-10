@@ -5,6 +5,7 @@ import net.blay09.mods.eirairc.client.gui.EiraGui;
 import net.blay09.mods.eirairc.client.gui.GuiEiraIRCConfig;
 import net.blay09.mods.eirairc.client.gui.base.*;
 import net.blay09.mods.eirairc.client.gui.base.GuiLabel;
+import net.blay09.mods.eirairc.client.gui.base.list.GuiList;
 import net.blay09.mods.eirairc.client.gui.base.tab.GuiTabContainer;
 import net.blay09.mods.eirairc.client.gui.base.tab.GuiTabPage;
 import net.blay09.mods.eirairc.config.ChannelConfig;

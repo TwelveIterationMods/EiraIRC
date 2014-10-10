@@ -4,7 +4,7 @@
 package net.blay09.mods.eirairc.client.gui;
 
 import net.blay09.mods.eirairc.client.gui.base.GuiMenuButton;
-import net.blay09.mods.eirairc.client.gui.screenshot.GuiScreenshotList;
+import net.blay09.mods.eirairc.client.gui.screenshot.GuiScreenshots;
 import net.blay09.mods.eirairc.client.gui.servers.GuiServerConfigContainer;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
@@ -60,7 +60,7 @@ public class GuiEiraIRCMenu extends EiraGuiScreen {
 		} else if(button == btnServers) {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiServerConfigContainer(this));
 		} else if(button == btnScreenshots) {
-			Minecraft.getMinecraft().displayGuiScreen(new GuiScreenshotList(this));
+			Minecraft.getMinecraft().displayGuiScreen(new GuiScreenshots(this));
 		} else if(button == btnSettings) {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiEiraIRCConfig(this));
 		} else if(button == btnPlaceholder) {

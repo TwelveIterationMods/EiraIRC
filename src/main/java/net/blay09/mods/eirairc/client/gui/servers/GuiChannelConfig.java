@@ -1,12 +1,9 @@
 package net.blay09.mods.eirairc.client.gui.servers;
 
 import cpw.mods.fml.client.config.GuiConfig;
-import net.blay09.mods.eirairc.client.gui.EiraGui;
 import net.blay09.mods.eirairc.client.gui.GuiEiraIRCConfig;
 import net.blay09.mods.eirairc.client.gui.base.GuiAdvancedTextField;
-import net.blay09.mods.eirairc.client.gui.base.GuiImageButton;
 import net.blay09.mods.eirairc.client.gui.base.GuiLabel;
-import net.blay09.mods.eirairc.client.gui.base.GuiList;
 import net.blay09.mods.eirairc.client.gui.base.tab.GuiTabContainer;
 import net.blay09.mods.eirairc.client.gui.base.tab.GuiTabPage;
 import net.blay09.mods.eirairc.config.ChannelConfig;

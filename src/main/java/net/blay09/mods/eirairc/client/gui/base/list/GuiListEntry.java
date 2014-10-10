@@ -1,4 +1,4 @@
-package net.blay09.mods.eirairc.client.gui.base;
+package net.blay09.mods.eirairc.client.gui.base.list;
 
 import net.minecraft.client.gui.Gui;
 

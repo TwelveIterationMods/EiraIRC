@@ -194,7 +194,7 @@ public class ScreenshotManager {
 		}
 	}
 
-	public Collection<Screenshot> getScreenshots() {
+	public List<Screenshot> getScreenshots() {
 		return screenshots;
 	}
 

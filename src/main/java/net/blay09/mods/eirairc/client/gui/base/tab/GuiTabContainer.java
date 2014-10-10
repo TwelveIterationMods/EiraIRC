@@ -129,7 +129,6 @@ public class GuiTabContainer extends EiraGuiScreen {
 		GuiTabHeader currentHeader = null;
 		for(int i = headers.size() - 1; i >= 0; i--) {
 			GuiTabHeader header = headers.get(i);
-
 			if(currentTab != null && (header.tabPage == currentTab || header.tabPage == currentTab.getParentScreen())) {
 				currentHeader = header;
 			} else {

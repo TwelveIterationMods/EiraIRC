@@ -1,6 +1,6 @@
 package net.blay09.mods.eirairc.client.gui.servers;
 
-import net.blay09.mods.eirairc.client.gui.base.GuiListTextEntry;
+import net.blay09.mods.eirairc.client.gui.base.list.GuiListTextEntry;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.util.Globals;
 import net.minecraft.client.gui.FontRenderer;

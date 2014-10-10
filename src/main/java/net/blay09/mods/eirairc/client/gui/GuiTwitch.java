@@ -105,11 +105,6 @@ public class GuiTwitch extends EiraGuiScreen implements GuiYesNoCallback {
 
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float par3) {
-		final int menuWidth = 300;
-		final int menuHeight = 200;
-		final int menuX = width / 2 - menuWidth / 2;
-		final int menuY = height / 2 - menuHeight / 2;
-
 		drawLightBackground(menuX, menuY, menuWidth, menuHeight);
 
 		mc.renderEngine.bindTexture(twitchLogo);

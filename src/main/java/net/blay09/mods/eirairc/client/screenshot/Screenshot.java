@@ -13,11 +13,9 @@ public class Screenshot {
 	private String uploadURL;
 	private String deleteURL;
 	private String hoster;
-	private ScreenshotThumbnail thumbnail;
-	
+
 	public Screenshot(File file) {
 		this.file = file;
-		loadThumbnail();
 	}
 
 	public String getName() {
@@ -48,15 +46,6 @@ public class Screenshot {
 		return file;
 	}
 	
-	public ScreenshotThumbnail getThumbnail() {
-		return thumbnail;
-	}
-	
-	public void loadThumbnail() {
-		thumbnail = new ScreenshotThumbnail(file);
-		Minecraft.getMinecraft().getTextureManager().loadTexture(thumbnail.getResourceLocation(), thumbnail);
-	}
-
 	public String getDeleteURL() {
 		return deleteURL;
 	}
