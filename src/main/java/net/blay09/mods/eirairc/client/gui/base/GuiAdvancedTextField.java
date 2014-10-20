@@ -19,7 +19,8 @@ public class GuiAdvancedTextField extends GuiTextField {
 	private boolean textCentered;
 	private int textOffsetX;
 	private boolean enabled;
-	
+	private boolean emptyOnRightClick;
+
 	public GuiAdvancedTextField(FontRenderer par1FontRenderer, int par2, int par3, int par4, int par5) {
 		super(par1FontRenderer, par2, par3, par4, par5);
 		this.fontRenderer = par1FontRenderer;
@@ -33,6 +34,14 @@ public class GuiAdvancedTextField extends GuiTextField {
 			textOffsetX = getWidth() / 2 - textWidth / 2;
 		}
 		return result;
+	}
+
+	@Override
+	public void mouseClicked(int mouseX, int mouseY, int button) {
+		if(emptyOnRightClick && button == 1) {
+			setText("");
+		}
+		super.mouseClicked(mouseX, mouseY, button);
 	}
 
 	@Override
@@ -124,5 +133,13 @@ public class GuiAdvancedTextField extends GuiTextField {
 
 	public void setDefaultPasswordChar() {
 		setPasswordChar(DEFAULT_PASSWORD_CHAR);
+	}
+
+	public void setEmptyOnRightClick(boolean emptyOnRightClick) {
+		this.emptyOnRightClick = emptyOnRightClick;
+	}
+
+	public boolean isEmptyOnRightClick() {
+		return emptyOnRightClick;
 	}
 }

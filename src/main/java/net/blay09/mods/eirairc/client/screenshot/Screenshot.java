@@ -11,12 +11,20 @@ import net.minecraft.client.Minecraft;
 
 public class Screenshot {
 
+	private static final String METADATA_ORIGINALNAME = "originalName";
+	private static final String METADATA_UPLOADURL = "uploadURL";
+	private static final String METADATA_DELETEURL = "deleteURL";
+	private static final String METADATA_TIMESTAP = "timestamp";
+
 	private final File file;
 	private final JsonObject metadata;
 
 	public Screenshot(File file, JsonObject metadata) {
 		this.file = file;
 		this.metadata = metadata != null ? metadata : new JsonObject();
+		if(metadata == null) {
+			this.metadata.addProperty(METADATA_ORIGINALNAME, file.getName().substring(0, file.getName().length() - 4));
+		}
 	}
 
 	public String getName() {
@@ -24,7 +32,7 @@ public class Screenshot {
 	}
 
 	public boolean isUploaded() {
-		return metadata.has("uploadURL");
+		return metadata.has(METADATA_UPLOADURL);
 	}
 
 	public File getFile() {
@@ -36,11 +44,15 @@ public class Screenshot {
 	}
 
 	public String getUploadURL() {
-		return metadata.get("uploadURL").getAsString();
+		return metadata.get(METADATA_UPLOADURL).getAsString();
+	}
+
+	public String getOriginalName() {
+		return metadata.get(METADATA_ORIGINALNAME).getAsString();
 	}
 
 	public void setUploadedFile(UploadedFile uploadedFile) {
-		metadata.addProperty("uploadURL", uploadedFile.url);
-		metadata.addProperty("deleteURL", uploadedFile.deleteURL);
+		metadata.addProperty(METADATA_UPLOADURL, uploadedFile.url);
+		metadata.addProperty(METADATA_DELETEURL, uploadedFile.deleteURL);
 	}
 }

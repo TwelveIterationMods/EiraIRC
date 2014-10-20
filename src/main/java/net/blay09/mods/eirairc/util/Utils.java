@@ -412,9 +412,7 @@ public class Utils {
 			try {
 				desktop.browse(dir.toURI());
 				return;
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			} catch (Exception ignored) {}
 		}
 		Sys.openURL("file://" + dir.getAbsolutePath());
 	}

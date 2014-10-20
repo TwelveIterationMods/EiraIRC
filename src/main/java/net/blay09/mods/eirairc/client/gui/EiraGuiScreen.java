@@ -70,12 +70,8 @@ public class EiraGuiScreen extends GuiScreen {
 			listList.get(i).mouseClicked(mouseX, mouseY, mouseButton);
 		}
 
-		if(allowSideClickClose) {
-			if (mouseX < menuX || mouseX >= menuX + menuWidth) {
-				gotoPrevious();
-			} else {
-				super.mouseClicked(mouseX, mouseY, mouseButton);
-			}
+		if(allowSideClickClose && mouseX < menuX || mouseX >= menuX + menuWidth) {
+			gotoPrevious();
 		}
 	}
 

@@ -25,19 +25,17 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 
 	private final List<Screenshot> screenshotList;
 
+	private GuiAdvancedTextField txtSearch;
 	private GuiButton btnOpenFolder;
 	private GuiAdvancedTextField txtName;
-	private GuiButton btnUpload;
-	private GuiButton btnClipboard;
-	private GuiButton btnDelete;
 
 	private int currentIdx;
 	private Screenshot currentScreenshot;
 	private GuiImage imgPreview;
 	private int imgX;
 	private int imgY;
-	private final int imgWidth = 200;
-	private final int imgHeight = 113;
+	private final int imgWidth = 285;
+	private final int imgHeight = 160;
 
 	public GuiScreenshots(GuiScreen parentScreen) {
 		super(parentScreen);
@@ -52,7 +50,8 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 				imgPreview.loadTexture();
 				currentScreenshot = screenshot;
 			}
-			txtName.setDefaultText(screenshot.getName(), false);
+			txtName.setDefaultText(screenshot.getOriginalName(), false);
+			txtName.setText(screenshot.getName());
 		}
 	}
 
@@ -64,48 +63,35 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 		final int rightX = width / 2 + 145;
 		final int topY = height / 2 - 80;
 
-		btnOpenFolder = new GuiButton(0, leftX, topY + 155, 85, 20, "Open Folder");
+		txtSearch = new GuiAdvancedTextField(fontRendererObj, leftX + 2, topY - 10, 200, 16);
+		txtSearch.setEmptyOnRightClick(true);
+		txtSearch.setDefaultText("Search...", true);
+		textFieldList.add(txtSearch);
+
+		btnOpenFolder = new GuiButton(0, rightX - 85, topY - 12, 85, 20, "Open Folder");
 		buttonList.add(btnOpenFolder);
 
-		txtName = new GuiAdvancedTextField(fontRendererObj, rightX - 202, topY + 105, 200, 15);
+		txtName = new GuiAdvancedTextField(fontRendererObj, width / 2 - 100, topY + 152, 200, 15);
 		textFieldList.add(txtName);
-
-		btnUpload = new GuiButton(1, rightX - 202, topY + 125, 100, 20, "Upload");
-		buttonList.add(btnUpload);
-
-		btnClipboard = new GuiButton(2, rightX - 100, topY + 125, 100, 20, "To Clipboard");
-		btnClipboard.enabled = false;
-		buttonList.add(btnClipboard);
-
-		btnDelete = new GuiButton(3, rightX - 150, topY + 155, 100, 20, "Delete");
-		buttonList.add(btnDelete);
 
 		updateScreenshot();
 
-		imgX = menuX + menuWidth - 207;
-		imgY = menuY + 7;
-	}
-
-	@Override
-	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) {
-		super.mouseClicked(mouseX, mouseY, mouseButton);
-
-		if(mouseX >= imgX && mouseX < imgX + imgWidth && mouseY >= imgY && mouseY < imgY + imgHeight) {
-			mc.displayGuiScreen(new GuiScreenshotBigPreview(this, imgPreview));
-		}
+		imgX = leftX + 2;
+		imgY = topY + 10;
 	}
 
 	@Override
 	public void actionPerformed(GuiButton button) {
 		if(button == btnOpenFolder) {
 			Utils.openDirectory(new File(mc.mcDataDir, "screenshots"));
-		} else if(button == btnDelete) {
-			mc.displayGuiScreen(new GuiYesNo(this, "Do you really want to delete this screenshot?", "This can't be undone, so be careful!", currentIdx));
-		} else if(button == btnClipboard) {
-			Utils.setClipboardString(currentScreenshot.getUploadURL());
-		} else if(button == btnUpload) {
-			ScreenshotManager.getInstance().uploadScreenshot(currentScreenshot, ScreenshotAction.None);
 		}
+//		} else if(button == btnDelete) {
+//			mc.displayGuiScreen(new GuiYesNo(this, "Do you really want to delete this screenshot?", "This can't be undone, so be careful!", currentIdx));
+//		} else if(button == btnClipboard) {
+//			Utils.setClipboardString(currentScreenshot.getUploadURL());
+//		} else if(button == btnUpload) {
+//			ScreenshotManager.getInstance().uploadScreenshot(currentScreenshot, ScreenshotAction.None);
+//		}
 	}
 
 	@Override
@@ -123,10 +109,10 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 		if(imgPreview != null) {
 			imgPreview.draw(imgX, imgY, imgWidth, imgHeight, zLevel);
 
-			if(mouseX >= imgX && mouseX < imgX + imgWidth && mouseY >= imgY && mouseY < imgY + imgHeight) {
-				mc.renderEngine.bindTexture(EiraGui.tab);
-				GuiUtils.drawTexturedModalRect(imgX + imgWidth - 32, imgY + imgHeight - 32, 0, 48, 32, 32, zLevel);
-			}
+//			if(mouseX >= imgX && mouseX < imgX + imgWidth && mouseY >= imgY && mouseY < imgY + imgHeight) {
+//				mc.renderEngine.bindTexture(EiraGui.tab);
+//				GuiUtils.drawTexturedModalRect(imgX + imgWidth - 32, imgY + imgHeight - 32, 0, 48, 32, 32, zLevel);
+//			}
 		}
 
 		super.drawScreen(mouseX, mouseY, par3);
