@@ -91,10 +91,10 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 		}
 		listList.add(lstChannels);
 
-		btnChannelAdd = new GuiImageButton(5, rightX - 95, topY + 100, EiraGui.tab, 32, 16, 10, 10);
+		btnChannelAdd = new GuiImageButton(5, rightX - 95, topY + 100, EiraGui.texMenu, 32, 144, 10, 10);
 		buttonList.add(btnChannelAdd);
 
-		btnChannelDelete = new GuiImageButton(6, rightX - 75, topY + 100, EiraGui.tab, 32, 32, 10, 10);
+		btnChannelDelete = new GuiImageButton(6, rightX - 75, topY + 100, EiraGui.texMenu, 32, 160, 10, 10);
 		buttonList.add(btnChannelDelete);
 
 		btnDelete = new GuiButton(0, rightX - 100, topY + 150, 100, 20, "Delete");

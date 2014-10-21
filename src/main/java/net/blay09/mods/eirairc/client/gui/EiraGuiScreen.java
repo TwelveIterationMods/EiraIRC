@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class EiraGuiScreen extends GuiScreen {
 
-	private static final ResourceLocation menuBG = new ResourceLocation("eirairc", "gfx/menubg.png");
+	private static final ResourceLocation texMenuBackground = new ResourceLocation("eirairc", "gfx/menubg.png");
 
 	protected final GuiScreen parentScreen;
 	protected final List<GuiMenuButton> menuButtonList = new ArrayList<GuiMenuButton>();
@@ -123,23 +123,8 @@ public class EiraGuiScreen extends GuiScreen {
 	}
 
 	public void drawLightBackground(int x, int y, int width, int height) {
-		mc.renderEngine.bindTexture(menuBG);
-		drawTexturedRect(x, y, width, height, 0, 0, 300, 200, 300, 200);
-	}
-
-	public void drawTexturedRect(int x, int y, int width, int height, int texCoordX, int texCoordY, int regionWidth, int regionHeight, int texWidth, int texHeight) {
-		float u = (float) texCoordX / (float) texWidth;
-		float v = (float) texCoordY / (float) texHeight;
-		float u2 = (float) (texCoordX + regionWidth) / (float) texWidth;
-		float v2 = (float) (texCoordY + regionHeight) / (float) texHeight;
-
-		Tessellator tessellator = Tessellator.instance;
-		tessellator.startDrawingQuads();
-		tessellator.addVertexWithUV(x, y + height, this.zLevel, u, v2);
-		tessellator.addVertexWithUV(x + width, y + height, this.zLevel, u2, v2);
-		tessellator.addVertexWithUV(x + width, y, this.zLevel, u2, v);
-		tessellator.addVertexWithUV(x, y, this.zLevel, u, v);
-		tessellator.draw();
+		mc.renderEngine.bindTexture(texMenuBackground);
+		EiraGui.drawTexturedRect(x, y, width, height, 0, 0, 300, 200, zLevel, 300, 200);
 	}
 
 }

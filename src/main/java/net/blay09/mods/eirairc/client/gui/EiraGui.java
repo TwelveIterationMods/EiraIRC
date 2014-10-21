@@ -8,9 +8,13 @@ import net.minecraft.util.ResourceLocation;
  */
 public class EiraGui {
 
-	public static final ResourceLocation tab = new net.minecraft.util.ResourceLocation("eirairc", "gfx/tab.png");
+	public static final ResourceLocation texMenu = new net.minecraft.util.ResourceLocation("eirairc", "gfx/menu.png");
 
-	public static void drawTexturedRect(int x, int y, int width, int height, int texCoordX, int texCoordY, int regionWidth, int regionHeight, int texWidth, int texHeight) {
+	public static void drawTexturedRect256(int x, int y, int width, int height, int texCoordX, int texCoordY, int regionWidth, int regionHeight, float zLevel) {
+		drawTexturedRect(x, y, width, height, texCoordX, texCoordY, regionWidth, regionHeight, zLevel, 256, 256);
+	}
+
+	public static void drawTexturedRect(int x, int y, int width, int height, int texCoordX, int texCoordY, int regionWidth, int regionHeight, float zLevel, int texWidth, int texHeight) {
 		float u = (float) texCoordX / (float) texWidth;
 		float v = (float) texCoordY / (float) texHeight;
 		float u2 = (float) (texCoordX + regionWidth) / (float) texWidth;

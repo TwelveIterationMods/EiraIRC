@@ -67,7 +67,7 @@ public class GuiEiraIRCMenu extends EiraGuiScreen {
 			catCount++;
 			Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(meow, 1f));
 			if(catCount >= 4) {
-				Utils.openWebpage("https://www.youtube.com/results?search_query=Cute+Cat+Videos+:3");
+				Utils.openWebpage("https://www.youtube.com/results?search_query=Cute+Cat+Videos");
 				catCount = Integer.MIN_VALUE;
 			}
 		}

@@ -17,7 +17,7 @@ import org.lwjgl.input.Keyboard;
  */
 public class GuiTwitch extends EiraGuiScreen implements GuiYesNoCallback {
 
-	private static final ResourceLocation twitchLogo = new ResourceLocation("eirairc", "gfx/Twitch_Logo_White.png");
+	private static final ResourceLocation twitchLogo = new ResourceLocation("eirairc", "gfx/twitch_logo.png");
 
 	private ServerConfig config;
 	private GuiTextField txtUsername;
@@ -108,7 +108,7 @@ public class GuiTwitch extends EiraGuiScreen implements GuiYesNoCallback {
 		drawLightBackground(menuX, menuY, menuWidth, menuHeight);
 
 		mc.renderEngine.bindTexture(twitchLogo);
-		drawTexturedModalRect(menuX + menuWidth / 2 - 64, menuY + 10, 0, 0, 128, 43);
+		EiraGui.drawTexturedRect(menuX + menuWidth / 2 - 64, menuY + 10, 128, 43, 0, 0, 128, 43, zLevel, 128, 43);
 
 		super.drawScreen(mouseX, mouseY, par3);
 	}

@@ -1,5 +1,6 @@
 package net.blay09.mods.eirairc.client.gui.base;
 
+import net.blay09.mods.eirairc.client.gui.EiraGui;
 import net.blay09.mods.eirairc.client.gui.GuiEiraIRCMenu;
 import net.blay09.mods.eirairc.util.Globals;
 import net.minecraft.client.Minecraft;
@@ -11,9 +12,9 @@ import org.lwjgl.opengl.GL11;
 /**
  * Created by Blay09 on 04.10.2014.
  */
+// TODO make it extend GuiButton
 public class GuiMenuButton extends Gui {
 
-	private static final ResourceLocation menuIcons = new ResourceLocation("eirairc", "gfx/menu.png");
 	private static final int BUTTON_SIZE = 64;
 
 	private final Minecraft mc;
@@ -58,7 +59,7 @@ public class GuiMenuButton extends Gui {
 			GL11.glPushMatrix();
 			GL11.glTranslatef(0.95f, 0.95f, 0.95f);
 		}
-		mc.getTextureManager().bindTexture(menuIcons);
+		mc.getTextureManager().bindTexture(EiraGui.texMenu);
 		drawTexturedModalRect(xPos, yPos, texCoordX, texCoordY, BUTTON_SIZE, BUTTON_SIZE);
 		if(hovered) {
 			GL11.glPopMatrix();

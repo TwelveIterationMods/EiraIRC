@@ -1,8 +1,8 @@
 package net.blay09.mods.eirairc.client.gui.base.tab;
 
+import net.blay09.mods.eirairc.client.gui.EiraGui;
 import net.blay09.mods.eirairc.client.gui.EiraGuiScreen;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.util.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,8 +11,6 @@ import java.util.List;
  * Created by Blay09 on 04.10.2014.
  */
 public class GuiTabContainer extends EiraGuiScreen {
-
-	private static final ResourceLocation tabHeader = new ResourceLocation("eirairc", "gfx/tab.png");
 
 	private final List<GuiTabHeader> headers = new ArrayList<GuiTabHeader>();
 	protected final List<GuiTabPage> pages = new ArrayList<GuiTabPage>();
@@ -114,13 +112,13 @@ public class GuiTabContainer extends EiraGuiScreen {
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float par3) {
 		super.drawScreen(mouseX, mouseY, par3);
-		mc.renderEngine.bindTexture(tabHeader);
-		drawTexturedRect(menuX, menuY + 8, panelWidth - 16, panelHeight - 16, 0, 16, 16, 16, 256, 256);
-		drawTexturedRect(menuX + 16, menuY + 8 + panelHeight - 16, panelWidth - 32, 16, 0, 16, 16, 16, 256, 256);
-		drawTexturedRect(menuX + panelWidth - 16, menuY + 24, 16, panelHeight - 32, 0, 16, 16, 16, 256, 256);
-		drawTexturedRect(menuX, menuY + 8 + panelHeight - 16, 16, 16, 0, 32, 16, 16, 256, 256);
-		drawTexturedRect(menuX + panelWidth - 16, menuY + 8 + panelHeight - 16, 16, 16, 16, 32, 16, 16, 256, 256);
-		drawTexturedRect(menuX + panelWidth - 16, menuY + 8, 16, 16, 16, 16, 16, 16, 256, 256);
+		mc.renderEngine.bindTexture(EiraGui.texMenu);
+		EiraGui.drawTexturedRect256(menuX, menuY + 8, panelWidth - 16, panelHeight - 16, 0, 144, 16, 16, zLevel);
+		EiraGui.drawTexturedRect256(menuX + 16, menuY + 8 + panelHeight - 16, panelWidth - 32, 16, 0, 144, 16, 16, zLevel);
+		EiraGui.drawTexturedRect256(menuX + panelWidth - 16, menuY + 24, 16, panelHeight - 32, 0, 144, 16, 16, zLevel);
+		EiraGui.drawTexturedRect256(menuX, menuY + 8 + panelHeight - 16, 16, 16, 0, 160, 16, 16, zLevel);
+		EiraGui.drawTexturedRect256(menuX + panelWidth - 16, menuY + 8 + panelHeight - 16, 16, 16, 16, 160, 16, 16, zLevel);
+		EiraGui.drawTexturedRect256(menuX + panelWidth - 16, menuY + 8, 16, 16, 16, 144, 16, 16, zLevel);
 
 		if(currentTab != null) {
 			currentTab.drawScreen(mouseX, mouseY, par3);

@@ -12,8 +12,6 @@ import org.lwjgl.opengl.GL11;
  */
 public class GuiTabHeader extends Gui {
 
-	private static final ResourceLocation tabHeader = new ResourceLocation("eirairc", "gfx/tab.png");
-
 	private Minecraft mc;
 	public final GuiTabPage tabPage;
 	public final int x;
@@ -42,10 +40,10 @@ public class GuiTabHeader extends Gui {
 			GL11.glColor4f(0f, 0f, 0f, 1f);
 		}
 		GL11.glEnable(GL11.GL_BLEND);
-		mc.renderEngine.bindTexture(tabHeader);
-		EiraGui.drawTexturedRect(x, y, 16, 16, 0, 0, 16, 16, 256, 256);
-		EiraGui.drawTexturedRect(x + 16, y, width - 32, 16, 16, 0, 16, 16, 256, 256);
-		EiraGui.drawTexturedRect(x + width - 16, y, 16, 16, 32, 0, 16, 16, 256, 256);
+		mc.renderEngine.bindTexture(EiraGui.texMenu);
+		EiraGui.drawTexturedRect256(x, y, 16, 16, 0, 128, 16, 16, zLevel);
+		EiraGui.drawTexturedRect256(x + 16, y, width - 32, 16, 16, 128, 16, 16, zLevel);
+		EiraGui.drawTexturedRect256(x + width - 16, y, 16, 16, 32, 128, 16, 16, zLevel);
 		GL11.glDisable(GL11.GL_BLEND);
 
 		drawString(mc.fontRenderer, tabPage.getTitle(), x + 8, y + 8 - mc.fontRenderer.FONT_HEIGHT / 2, hovered ? -12345678 : Globals.TEXT_COLOR);
