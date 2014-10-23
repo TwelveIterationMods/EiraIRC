@@ -65,7 +65,7 @@ public class MessageFormat {
 	}
 
 	public static String addPreSuffix(String name) {
-		return GlobalConfig.nickPrefix + name + GlobalConfig.nickSuffix;
+		return GlobalConfig.nickPrefix + name.substring(0, 1) + Character.toString((char)0x0081) + name.substring(1) + GlobalConfig.nickSuffix;
 	}
 
 	private static String filterAllowedCharacters(String message) {
