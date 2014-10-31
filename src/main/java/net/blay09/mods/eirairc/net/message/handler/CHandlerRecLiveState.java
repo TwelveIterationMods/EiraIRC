@@ -20,7 +20,7 @@ public class CHandlerRecLiveState implements IMessageHandler<CMessageRecLiveStat
 	@Override
 	public IMessage onMessage(CMessageRecLiveState message, MessageContext ctx) {
 		EntityPlayer entityPlayer = ctx.getServerHandler().playerEntity;
-		if(!entityPlayer.getCommandSenderName().equals(message.getUsername())) {
+		if(!entityPlayer.getName().equals(message.getUsername())) {
 			return null;
 		}
 		EiraPlayerInfo playerInfo = EiraIRC.instance.getNetHandler().getPlayerInfo(message.getUsername());

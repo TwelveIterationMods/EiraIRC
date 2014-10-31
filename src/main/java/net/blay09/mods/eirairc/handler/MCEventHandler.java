@@ -192,7 +192,7 @@ public class MCEventHandler {
 	
 	@SubscribeEvent
 	public void onServerChat(ServerChatEvent event) {
-		IChatComponent senderComponent = event.player.func_145748_c_();
+		IChatComponent senderComponent = event.player.getDisplayName();
 		EnumChatFormatting nameColor = Utils.getColorFormattingForPlayer(event.player);
 		if(nameColor != null) {
 			senderComponent.getChatStyle().setColor(nameColor);
@@ -335,8 +335,8 @@ public class MCEventHandler {
 	public void onPlayerDeath(LivingDeathEvent event) {
 		if(event.entityLiving instanceof EntityPlayer) {
 			String name = Utils.getNickIRC((EntityPlayer) event.entityLiving);
-			String ircMessage = event.entityLiving.func_110142_aN().func_151521_b().getUnformattedText();
-			ircMessage = ircMessage.replaceAll(event.entityLiving.getCommandSenderName(), name);
+			String ircMessage = event.entityLiving.getCombatTracker().func_151521_b().getUnformattedText();
+			ircMessage = ircMessage.replaceAll(event.entityLiving.getName(), name);
 			ircMessage = IRCFormatting.toIRC(ircMessage, !DisplayConfig.enableIRCColors);
 			for(IRCConnection connection : EiraIRC.instance.getConnections()) {
 				IRCBot bot = connection.getBot();

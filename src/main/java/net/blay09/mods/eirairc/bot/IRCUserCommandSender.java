@@ -2,11 +2,11 @@ package net.blay09.mods.eirairc.bot;
 
 import net.blay09.mods.eirairc.api.IRCChannel;
 import net.blay09.mods.eirairc.api.IRCUser;
+import net.minecraft.command.CommandResultStats;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.Entity;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChunkCoordinates;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
 
 public class IRCUserCommandSender implements ICommandSender {
@@ -24,13 +24,13 @@ public class IRCUserCommandSender implements ICommandSender {
 	}
 	
 	@Override
-	public String getCommandSenderName() {
+	public String getName() {
 		return "[EiraIRC] " + user.getName();
 	}
 
 	@Override
-	public IChatComponent func_145748_c_() {
-		return new ChatComponentText(this.getCommandSenderName());
+	public IChatComponent getDisplayName() {
+		return new ChatComponentText(this.getName());
 	}
 
 	@Override
@@ -48,13 +48,32 @@ public class IRCUserCommandSender implements ICommandSender {
 	}
 
 	@Override
-	public ChunkCoordinates getPlayerCoordinates() {
-		return new ChunkCoordinates(0, 0, 0);
+	public BlockPos getPosition() {
+		return new BlockPos(0, 0, 0);
+	}
+
+	@Override
+	public Vec3 getPositionVector() {
+		return new Vec3(0, 0, 0);
 	}
 
 	@Override
 	public World getEntityWorld() {
 		return MinecraftServer.getServer().getEntityWorld();
+	}
+
+	@Override
+	public Entity getCommandSenderEntity() {
+		return null;
+	}
+
+	@Override
+	public boolean sendCommandFeedback() {
+		return true;
+	}
+
+	@Override
+	public void func_174794_a(CommandResultStats.Type p_174794_1_, int p_174794_2_) {
 	}
 
 }

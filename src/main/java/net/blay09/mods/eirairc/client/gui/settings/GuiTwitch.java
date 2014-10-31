@@ -16,6 +16,8 @@ import net.minecraft.client.gui.*;
 
 import org.lwjgl.input.Keyboard;
 
+import java.io.IOException;
+
 public class GuiTwitch extends GuiScreen implements GuiYesNoCallback {
 
 	private GuiScreen parentScreen;
@@ -35,9 +37,9 @@ public class GuiTwitch extends GuiScreen implements GuiYesNoCallback {
 	public void initGui() {
 		Keyboard.enableRepeatEvents(true);
 		
-		txtUsername = new GuiTextField(fontRendererObj, width / 2 - 90, height / 2 - 80, 180, 15);
+		txtUsername = new GuiTextField(0, fontRendererObj, width / 2 - 90, height / 2 - 80, 180, 15);
 		txtUsername.setMaxStringLength(Integer.MAX_VALUE);
-		txtPassword = new GuiAdvancedTextField(fontRendererObj, width / 2 - 90, height / 2 - 40, 180, 15);
+		txtPassword = new GuiAdvancedTextField(1, fontRendererObj, width / 2 - 90, height / 2 - 40, 180, 15);
 		txtPassword.setMaxStringLength(Integer.MAX_VALUE);
 		txtPassword.setDefaultPasswordChar();
 		
@@ -103,7 +105,7 @@ public class GuiTwitch extends GuiScreen implements GuiYesNoCallback {
 	}
 	
 	@Override
-	public void keyTyped(char unicode, int keyCode) {
+	public void keyTyped(char unicode, int keyCode) throws IOException {
 		super.keyTyped(unicode, keyCode);
 		if(txtUsername.textboxKeyTyped(unicode, keyCode)) {
 			config.setNick(txtUsername.getText());
@@ -115,7 +117,7 @@ public class GuiTwitch extends GuiScreen implements GuiYesNoCallback {
 	}
 	
 	@Override
-	public void mouseClicked(int par1, int par2, int par3) {
+	public void mouseClicked(int par1, int par2, int par3) throws IOException {
 		super.mouseClicked(par1, par2, par3);
 		txtUsername.mouseClicked(par1, par2, par3);
 		txtPassword.mouseClicked(par1, par2, par3);

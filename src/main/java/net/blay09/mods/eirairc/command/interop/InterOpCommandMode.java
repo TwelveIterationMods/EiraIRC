@@ -10,8 +10,10 @@ import net.blay09.mods.eirairc.command.SubCommand;
 import net.blay09.mods.eirairc.util.IRCResolver;
 import net.blay09.mods.eirairc.util.IRCTargetError;
 import net.blay09.mods.eirairc.util.Utils;
+import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
+import net.minecraft.util.BlockPos;
 
 public class InterOpCommandMode extends SubCommand {
 
@@ -31,7 +33,7 @@ public class InterOpCommandMode extends SubCommand {
 	}
 	
 	@Override
-	public boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) {
+	public boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) throws CommandException {
 		if(args.length < 2) {
 			throw new WrongUsageException(getCommandUsage(sender));
 		}
@@ -78,7 +80,7 @@ public class InterOpCommandMode extends SubCommand {
 	}
 
 	@Override
-	public void addTabCompletionOptions(List<String> list, ICommandSender sender, String[] args) {
+	public void addTabCompletionOptions(List<String> list, ICommandSender sender, String[] args, BlockPos pos) {
 	}
 
 }

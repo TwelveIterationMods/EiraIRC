@@ -3,6 +3,7 @@
 
 package net.blay09.mods.eirairc.client.gui.settings;
 
+import java.io.IOException;
 import java.util.List;
 
 import net.blay09.mods.eirairc.EiraIRC;
@@ -66,8 +67,8 @@ public class GuiChannelConfig extends GuiScreen {
 		int topY = height / 2 - 85;
 		
 		Keyboard.enableRepeatEvents(true);
-		txtName = new GuiTextField(fontRendererObj, leftX, topY, 140, 15);
-		txtChannelPassword = new GuiAdvancedTextField(fontRendererObj, rightX, topY, 140, 15);
+		txtName = new GuiTextField(0, fontRendererObj, leftX, topY, 140, 15);
+		txtChannelPassword = new GuiAdvancedTextField(1, fontRendererObj, rightX, topY, 140, 15);
 		txtChannelPassword.setDefaultPasswordChar();
 		
 		btnAutoJoin = new GuiToggleButton(2, rightX, topY + 25, BUTTON_WIDTH, BUTTON_HEIGHT, "irc.gui.config.joinStartup");
@@ -133,7 +134,7 @@ public class GuiChannelConfig extends GuiScreen {
 	}
 	
 	@Override
-	public void keyTyped(char unicode, int keyCode) {
+	public void keyTyped(char unicode, int keyCode) throws IOException {
 		super.keyTyped(unicode, keyCode);
 		if(txtName.textboxKeyTyped(unicode, keyCode)) {
 			if(txtName.getText().length() > 0) {
@@ -149,7 +150,7 @@ public class GuiChannelConfig extends GuiScreen {
 	}
 	
 	@Override
-	public void mouseClicked(int par1, int par2, int par3) {
+	public void mouseClicked(int par1, int par2, int par3) throws IOException {
 		super.mouseClicked(par1, par2, par3);
 		txtName.mouseClicked(par1, par2, par3);
 		txtChannelPassword.mouseClicked(par1, par2, par3);

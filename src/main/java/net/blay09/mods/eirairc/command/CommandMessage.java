@@ -15,9 +15,11 @@ import net.blay09.mods.eirairc.irc.IRCUserImpl;
 import net.blay09.mods.eirairc.util.IRCResolver;
 import net.blay09.mods.eirairc.util.IRCTargetError;
 import net.blay09.mods.eirairc.util.Utils;
+import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 
 public class CommandMessage extends SubCommand {
@@ -38,7 +40,7 @@ public class CommandMessage extends SubCommand {
 	}
 
 	@Override
-	public boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) {
+	public boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) throws CommandException {
 		if(args.length < 2) {
 			throw new WrongUsageException(getCommandUsage(sender));
 		}
@@ -77,7 +79,7 @@ public class CommandMessage extends SubCommand {
 	}
 
 	@Override
-	public void addTabCompletionOptions(List<String> list, ICommandSender sender, String[] args) {
+	public void addTabCompletionOptions(List<String> list, ICommandSender sender, String[] args, BlockPos pos) {
 		if(args.length == 0) {
 			for(ServerConfig serverConfig : ConfigurationHandler.getServerConfigs()) {
 				for(ChannelConfig channelConfig : serverConfig.getChannelConfigs()) {

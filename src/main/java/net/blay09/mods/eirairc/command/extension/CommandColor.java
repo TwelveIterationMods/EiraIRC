@@ -11,10 +11,12 @@ import net.blay09.mods.eirairc.config.DisplayConfig;
 import net.blay09.mods.eirairc.config.GlobalConfig;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
+import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.BlockPos;
 
 public class CommandColor extends SubCommand {
 
@@ -36,7 +38,7 @@ public class CommandColor extends SubCommand {
 	}
 
 	@Override
-	public boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) {
+	public boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) throws CommandException {
 		if(!(sender instanceof EntityPlayer)) {
 			return true;
 		}
@@ -81,7 +83,7 @@ public class CommandColor extends SubCommand {
 	}
 
 	@Override
-	public void addTabCompletionOptions(List<String> list, ICommandSender sender, String[] args) {
+	public void addTabCompletionOptions(List<String> list, ICommandSender sender, String[] args, BlockPos pos) {
 		list.add(COLOR_NONE);
 		Utils.addValidColorsToList(list);
 	}

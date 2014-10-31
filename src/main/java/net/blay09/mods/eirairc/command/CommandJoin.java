@@ -13,8 +13,10 @@ import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.IRCResolver;
 import net.blay09.mods.eirairc.util.Utils;
+import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
+import net.minecraft.util.BlockPos;
 
 public class CommandJoin extends SubCommand {
 
@@ -34,7 +36,7 @@ public class CommandJoin extends SubCommand {
 	}
 
 	@Override
-	public boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) {
+	public boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) throws CommandException {
 		if(args.length < 1) {
 			throw new WrongUsageException(getCommandUsage(sender));
 		}
@@ -70,7 +72,7 @@ public class CommandJoin extends SubCommand {
 	}
 
 	@Override
-	public void addTabCompletionOptions(List<String> list, ICommandSender sender, String[] args) {
+	public void addTabCompletionOptions(List<String> list, ICommandSender sender, String[] args, BlockPos pos) {
 		if(args.length == 0) {
 			for(ServerConfig serverConfig : ConfigurationHandler.getServerConfigs()) {
 				for(ChannelConfig channelConfig : serverConfig.getChannelConfigs()) {

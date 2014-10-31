@@ -29,10 +29,12 @@ import net.blay09.mods.eirairc.command.interop.InterOpCommandMode;
 import net.blay09.mods.eirairc.command.interop.InterOpCommandTopic;
 import net.blay09.mods.eirairc.command.interop.InterOpCommandUserModeBase;
 import net.blay09.mods.eirairc.util.Utils;
+import net.minecraft.command.CommandException;
 import net.minecraft.command.CommandHandler;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
@@ -96,7 +98,7 @@ public class IRCCommandHandler {
 		return false;
 	}
 
-	public static List<String> addTabCompletionOptions(ICommandSender sender, String[] args) {
+	public static List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
 		if(args.length == 0) {
 			List<String> list = new ArrayList<String>();
 			list.addAll(commands.keySet());
@@ -105,12 +107,12 @@ public class IRCCommandHandler {
 		SubCommand cmd = commands.get(args[0]);
 		if(cmd != null) {
 			String[] shiftedArgs = Utils.shiftArgs(args, 1);
-			return cmd.addTabCompletionOptions(sender, shiftedArgs);
+			return cmd.addTabCompletionOptions(sender, shiftedArgs, pos);
 		}
 		return null;
 	}
 
-	public static boolean processCommand(ICommandSender sender, String[] args, boolean serverSide) {
+	public static boolean processCommand(ICommandSender sender, String[] args, boolean serverSide) throws CommandException {
 		SubCommand cmd = commands.get(args[0]);
 		if(cmd == null) {
 			sendUsageHelp(sender);
@@ -134,7 +136,7 @@ public class IRCCommandHandler {
 		Utils.sendLocalizedMessage(sender, "irc.cmdlist.special");
 	}
 
-	public static boolean onChatCommand(EntityPlayer sender, String text, boolean serverSide) {
+	public static boolean onChatCommand(EntityPlayer sender, String text, boolean serverSide) throws CommandException {
 		if(!text.startsWith("!")) {
 			return false;
 		}

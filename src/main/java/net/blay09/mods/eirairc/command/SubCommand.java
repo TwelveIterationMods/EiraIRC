@@ -9,14 +9,17 @@ import java.util.List;
 import net.blay09.mods.eirairc.api.IRCContext;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
+import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.command.WrongUsageException;
+import net.minecraft.util.BlockPos;
 
 public abstract class SubCommand implements ICommand {
 
 	public abstract boolean hasQuickCommand();
 	
-	public abstract boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide);
+	public abstract boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) throws CommandException;
 	
 	public abstract String getUsageString(ICommandSender sender);
 	
@@ -49,17 +52,17 @@ public abstract class SubCommand implements ICommand {
 	@Override
 	public abstract boolean isUsernameIndex(String[] args, int idx);
 	
-	public abstract void addTabCompletionOptions(List<String> list, ICommandSender sender, String[] args);
+	public abstract void addTabCompletionOptions(List<String> list, ICommandSender sender, String[] args, BlockPos pos);
 	
 	@Override
-	public void processCommand(ICommandSender sender, String[] args) {
+	public void processCommand(ICommandSender sender, String[] args) throws CommandException {
 		processCommand(sender, Utils.getSuggestedTarget(), args, Utils.isServerSide());
 	}
 
 	@Override
-	public List addTabCompletionOptions(ICommandSender sender, String[] args) {
+	public List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
 		List<String> list = new ArrayList<String>();
-		addTabCompletionOptions(list, sender, args);
+		addTabCompletionOptions(list, sender, args, pos);
 		return list;
 	}
 

@@ -12,6 +12,8 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 
+import java.io.IOException;
+
 public class GuiGlobalSettings extends GuiScreen {
 	
 	private static final int BUTTON_WIDTH = 190;
@@ -28,7 +30,7 @@ public class GuiGlobalSettings extends GuiScreen {
 		int leftX = width / 2 - BUTTON_WIDTH - BUTTON_GAP;
 		int rightX = width / 2 + BUTTON_GAP;
 		
-		txtNick = new GuiTextField(fontRendererObj, width / 2 - 50, height / 2 - 85, 100, 15);
+		txtNick = new GuiTextField(0, fontRendererObj, width / 2 - 50, height / 2 - 85, 100, 15);
 		
 		btnPersistentConnections = new GuiButton(1, leftX, height / 2 - 65, BUTTON_WIDTH, BUTTON_HEIGHT, "");
 		buttonList.add(btnPersistentConnections);
@@ -69,7 +71,7 @@ public class GuiGlobalSettings extends GuiScreen {
 	}
 	
 	@Override
-	public void keyTyped(char unicode, int keyCode) {
+	public void keyTyped(char unicode, int keyCode) throws IOException {
 		super.keyTyped(unicode, keyCode);
 		if(txtNick.textboxKeyTyped(unicode, keyCode)) {
 			GlobalConfig.nick = txtNick.getText();
@@ -78,7 +80,7 @@ public class GuiGlobalSettings extends GuiScreen {
 	}
 	
 	@Override
-	public void mouseClicked(int par1, int par2, int par3) {
+	public void mouseClicked(int par1, int par2, int par3) throws IOException {
 		super.mouseClicked(par1, par2, par3);
 		txtNick.mouseClicked(par1, par2, par3);
 	}

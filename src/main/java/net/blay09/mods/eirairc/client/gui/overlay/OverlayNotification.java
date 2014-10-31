@@ -86,7 +86,7 @@ public class OverlayNotification extends Gui {
 		GL11.glDisable(GL11.GL_LIGHTING);
 		// TODO render icon here
 		drawTexturedModalRect(x, y, 96, 202, WIDTH, HEIGHT);
-		theGame.fontRenderer.drawSplitString(text, x + 30, y + 32 / 2 - theGame.fontRenderer.FONT_HEIGHT * 2 / 2, WIDTH - 36, Globals.TEXT_COLOR);
+		theGame.fontRendererObj.drawSplitString(text, x + 30, y + 32 / 2 - theGame.fontRendererObj.FONT_HEIGHT * 2 / 2, WIDTH - 36, Globals.TEXT_COLOR);
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glEnable(GL11.GL_LIGHTING);
 	}

@@ -115,13 +115,13 @@ public class MessageFormat {
 					if(token.equals("SERVER")) {
 						component = new ChatComponentText(Utils.getCurrentServerName());
 					} else if(token.equals("USER")) {
-						component = new ChatComponentText(sender.getCommandSenderName());
+						component = new ChatComponentText(sender.getName());
 					} else if(token.equals("CHANNEL")) {
 						component = new ChatComponentText(context != null ? context.getName() : "");
 					} else if(token.equals("NICK")) {
 						if(sender instanceof EntityPlayer) {
 							EntityPlayer player = (EntityPlayer) sender;
-							component = player.func_145748_c_().createCopy();
+							component = player.getDisplayName().createCopy();
 							String displayName = component.getUnformattedText();
 							displayName = formatNick(displayName, target, mode);
 							component = new ChatComponentText(displayName);
@@ -132,7 +132,7 @@ public class MessageFormat {
 								}
 							}
 						} else {
-							component = new ChatComponentText(sender.getCommandSenderName());
+							component = new ChatComponentText(sender.getName());
 						}
 					} else if(token.equals("MESSAGE")) {
 						if(target == Target.Minecraft) {

@@ -11,6 +11,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiSlot;
 import net.minecraft.client.renderer.Tessellator;
 
+import net.minecraft.client.renderer.WorldRenderer;
 import org.lwjgl.opengl.GL11;
 
 public class GuiScreenshotSlot extends GuiSlot {
@@ -52,20 +53,21 @@ public class GuiScreenshotSlot extends GuiSlot {
 	}
 
 	@Override
-	protected void drawSlot(int i, int x, int y, int l, Tessellator tess, int k, int j) {
+	protected void drawSlot(int i, int x, int y, int l, int k, int j) {
 		Screenshot screenshot = parentGui.getScreenshot(i);
 		float f = 0.00390625F * 2;
-        float f1 = 0.00390625F * 4;
-        int thumbWidth = 64;
-        int thumbHeight = 32;
+		float f1 = 0.00390625F * 4;
+		int thumbWidth = 64;
+		int thumbHeight = 32;
 		mc.getTextureManager().bindTexture(screenshot.getThumbnail().getResourceLocation());
 		GL11.glColor4f(1f, 1f, 1f, 1f);
-		tess.startDrawingQuads();
-		tess.addVertexWithUV(x, y + thumbHeight, 0, 0, ScreenshotThumbnail.HEIGHT * f1);
-		tess.addVertexWithUV(x + thumbWidth, y + thumbHeight, 0, ScreenshotThumbnail.WIDTH * f, ScreenshotThumbnail.HEIGHT * f1);
-		tess.addVertexWithUV(x + thumbWidth, y, 0, ScreenshotThumbnail.WIDTH * f, 0);
-		tess.addVertexWithUV(x, y, 0, 0, 0);
-		tess.draw();
+		WorldRenderer renderer = Tessellator.getInstance().getWorldRenderer();
+		renderer.startDrawingQuads();
+		renderer.addVertexWithUV(x, y + thumbHeight, 0, 0, ScreenshotThumbnail.HEIGHT * f1);
+		renderer.addVertexWithUV(x + thumbWidth, y + thumbHeight, 0, ScreenshotThumbnail.WIDTH * f, ScreenshotThumbnail.HEIGHT * f1);
+		renderer.addVertexWithUV(x + thumbWidth, y, 0, ScreenshotThumbnail.WIDTH * f, 0);
+		renderer.addVertexWithUV(x, y, 0, 0, 0);
+		renderer.draw();
 		parentGui.drawString(parentGui.getFontRenderer(), screenshot.getName(), x + thumbWidth + 6, y + 1, Globals.TEXT_COLOR);
 		String sharedString = Utils.getLocalizedMessage("irc.gui.screenshots.local");
 		if(screenshot.isUploaded()) {

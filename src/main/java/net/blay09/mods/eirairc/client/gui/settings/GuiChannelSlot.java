@@ -49,7 +49,7 @@ public class GuiChannelSlot extends GuiSlot {
 	}
 
 	@Override
-	protected void drawSlot(int i, int x, int y, int l, Tessellator tessellator, int k, int j) {
+	protected void drawSlot(int i, int x, int y, int l, int k, int j) {
 		ServerConfig serverConfig = parentGui.getServerConfig();
 		ChannelConfig channelConfig = parentGui.getChannelConfig(i);
 		String joinedString = null;
@@ -62,7 +62,7 @@ public class GuiChannelSlot extends GuiSlot {
 		} else {
 			joinedString = Utils.getLocalizedMessage("irc.gui.channelList.notConnected");
 		}
-		
+
 		parentGui.drawString(parentGui.getFontRenderer(), channelConfig.getName(), x + 2, y + 1, Globals.TEXT_COLOR);
 		parentGui.drawString(parentGui.getFontRenderer(), joinedString, x + 4, y + 11, Globals.TEXT_COLOR);
 	}

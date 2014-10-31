@@ -10,6 +10,7 @@ import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
+import net.minecraft.util.BlockPos;
 
 public class IgnoreCommand implements ICommand {
 
@@ -50,7 +51,7 @@ public class IgnoreCommand implements ICommand {
 	}
 
 	@Override
-	public List addTabCompletionOptions(ICommandSender sender, String[] args) {
+	public List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
 		return null;
 	}
 

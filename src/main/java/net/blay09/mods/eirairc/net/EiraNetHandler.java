@@ -40,7 +40,7 @@ public class EiraNetHandler {
 	@SubscribeEvent
 	public void onPlayerLogout(PlayerLoggedOutEvent event) {
 		synchronized(playerInfoMap) {
-			playerInfoMap.remove(event.player.getCommandSenderName());
+			playerInfoMap.remove(event.player.getName());
 		}
 	}
 	

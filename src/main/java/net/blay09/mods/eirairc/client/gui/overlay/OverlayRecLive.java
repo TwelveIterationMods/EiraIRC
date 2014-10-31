@@ -66,8 +66,8 @@ public class OverlayRecLive extends Gui {
 			return;	
 		}
 		updateGuiScale();
-		int liveWidth = theGame.fontRenderer.getStringWidth(LIVE);
-		ScoreObjective scoreobjective = theGame.theWorld.getScoreboard().func_96539_a(0);
+		int liveWidth = theGame.fontRendererObj.getStringWidth(LIVE);
+		ScoreObjective scoreobjective = theGame.theWorld.getScoreboard().getObjectiveInDisplaySlot(0);
 		NetHandlerPlayClient handler = theGame.thePlayer.sendQueue;
 		if (theGame.gameSettings.keyBindPlayerList.getIsKeyPressed() && (!theGame.isIntegratedServerRunning() || handler.playerInfoList.size() > 1 || scoreobjective != null)) {
 			List players = handler.playerInfoList;
@@ -91,7 +91,7 @@ public class OverlayRecLive extends Gui {
 					if(playerInfo.isLive) {
 						theGame.getTextureManager().bindTexture(icons);
 						drawTexturedModalRect(xPos + columnWidth - 12 - SMALL_WIDTH - liveWidth - 4, yPos, WIDTH, 0, SMALL_WIDTH, SMALL_HEIGHT);
-						drawString(theGame.fontRenderer, LIVE, xPos + columnWidth - 12 - liveWidth - 2, yPos, Globals.TEXT_COLOR);
+						drawString(theGame.fontRendererObj, LIVE, xPos + columnWidth - 12 - liveWidth - 2, yPos, Globals.TEXT_COLOR);
 					} else if(playerInfo.isRecording) {
 						theGame.getTextureManager().bindTexture(icons);
 						drawTexturedModalRect(xPos + columnWidth - 12 - SMALL_WIDTH - liveWidth, yPos, WIDTH, 0, SMALL_WIDTH, SMALL_HEIGHT);
@@ -106,7 +106,7 @@ public class OverlayRecLive extends Gui {
 			GL11.glDisable(GL11.GL_LIGHTING);
 			if (playerInfo.isLive) {
 				drawTexturedModalRect(windowWidth - WIDTH - MARGIN * 2 - liveWidth, MARGIN, 0, 0, WIDTH, HEIGHT);
-				drawString(theGame.fontRenderer, LIVE, windowWidth - liveWidth - MARGIN, MARGIN + theGame.fontRenderer.FONT_HEIGHT / 2, Globals.TEXT_COLOR);
+				drawString(theGame.fontRendererObj, LIVE, windowWidth - liveWidth - MARGIN, MARGIN + theGame.fontRendererObj.FONT_HEIGHT / 2, Globals.TEXT_COLOR);
 			} else if (playerInfo.isRecording) {
 				drawTexturedModalRect(windowWidth - WIDTH - MARGIN, MARGIN, 0, 0, WIDTH, HEIGHT);
 			}

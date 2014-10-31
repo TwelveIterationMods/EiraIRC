@@ -20,15 +20,22 @@ buildscript {
 }
 
 apply plugin: 'curseforge'
-apply plugin: 'forge'
+apply plugin: 'fml'
 
-version = "mc1.7.10-v1.7." + BUILD_NUMBER
+version = "mc1.8-v1.7." + BUILD_NUMBER
 group = "net.blay09.mods" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "eirairc"
 
 minecraft {
-    version = "1.7.10-10.13.0.1180"
-    runDir = "eclipse/assets"
+    version = "1.8-8.0.7.1014-1.8"
+    runDir = "eclipse"
+    
+    // the mappings can be changed at any time, and must be in the following format.
+    // snapshot_YYYYMMDD   snapshot are built nightly.
+    // stable_#            stables are built at the discretion of the MCP team.
+    // Use non-default mappings at your own risk. they may not allways work.
+    // simply re-run your setup task after changing the mappings to update your workspace.
+    mappings = "snapshot_nodoc_20140930"
 }
 
 curse {
@@ -44,6 +51,10 @@ curse {
 
 processResources
 {
+    // this will ensure that this task is redone when the versions change.
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+
     // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'

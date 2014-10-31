@@ -20,7 +20,7 @@ import net.blay09.mods.eirairc.net.EiraPlayerInfo;
 import net.blay09.mods.eirairc.net.PacketHandler;
 import net.blay09.mods.eirairc.net.message.MessageRecLiveState.CMessageRecLiveState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityClientPlayerMP;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiScreen;
 
@@ -28,7 +28,6 @@ import org.lwjgl.input.Keyboard;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
-import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.RenderTickEvent;
 
@@ -70,17 +69,17 @@ public class EiraTickHandler {
 				Minecraft.getMinecraft().displayGuiScreen(new GuiSettings());
 			}
 		}
-		EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
+		EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
 		if(player != null) {
 			if(isKeyPressed(KeyConfig.toggleRecording, KeyConfig.IDX_TOGGLERECORDING)) {
-				EiraPlayerInfo playerInfo = EiraIRC.instance.getNetHandler().getPlayerInfo(player.getCommandSenderName());
+				EiraPlayerInfo playerInfo = EiraIRC.instance.getNetHandler().getPlayerInfo(player.getName());
 				playerInfo.isRecording = !playerInfo.isRecording;
-				PacketHandler.INSTANCE.sendToServer(new CMessageRecLiveState(player.getCommandSenderName(), playerInfo.isRecording, playerInfo.isLive));
+				PacketHandler.INSTANCE.sendToServer(new CMessageRecLiveState(player.getName(), playerInfo.isRecording, playerInfo.isLive));
 			}
 			if(isKeyPressed(KeyConfig.toggleLive, KeyConfig.IDX_TOGGLELIVE)) {
-				EiraPlayerInfo playerInfo = EiraIRC.instance.getNetHandler().getPlayerInfo(player.getCommandSenderName());
+				EiraPlayerInfo playerInfo = EiraIRC.instance.getNetHandler().getPlayerInfo(player.getName());
 				playerInfo.isLive = !playerInfo.isLive;
-				PacketHandler.INSTANCE.sendToServer(new CMessageRecLiveState(player.getCommandSenderName(), playerInfo.isRecording, playerInfo.isLive));
+				PacketHandler.INSTANCE.sendToServer(new CMessageRecLiveState(player.getName(), playerInfo.isRecording, playerInfo.isLive));
 			}
 		}
 		if(isKeyPressed(KeyConfig.screenshotShare, KeyConfig.IDX_SCREENSHOTSHARE)) {

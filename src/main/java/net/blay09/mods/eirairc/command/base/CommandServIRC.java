@@ -8,10 +8,11 @@ import java.util.List;
 
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
+import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.command.WrongUsageException;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
@@ -52,7 +53,7 @@ public class CommandServIRC implements ICommand {
 		}
 		try {
 			IRCCommandHandler.processCommand(sender, args, false);
-		} catch (WrongUsageException e) {
+		} catch (CommandException e) {
 			IChatComponent chatComponent = new ChatComponentTranslation("commands.generic.usage", Utils.getLocalizedMessageNoPrefix(e.getMessage(), e.getErrorOjbects()));
 			chatComponent.getChatStyle().setColor(EnumChatFormatting.RED);
 			sender.addChatMessage(chatComponent);
@@ -65,8 +66,8 @@ public class CommandServIRC implements ICommand {
 	}
 
 	@Override
-	public List addTabCompletionOptions(ICommandSender sender, String[] args) {
-		return IRCCommandHandler.addTabCompletionOptions(sender, args);
+	public List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
+		return IRCCommandHandler.addTabCompletionOptions(sender, args, pos);
 	}
 
 	@Override

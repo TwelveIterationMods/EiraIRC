@@ -13,8 +13,10 @@ import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
+import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
+import net.minecraft.util.BlockPos;
 
 public class CommandTwitch extends SubCommand {
 
@@ -34,7 +36,7 @@ public class CommandTwitch extends SubCommand {
 	}
 
 	@Override
-	public boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) {
+	public boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) throws CommandException {
 		if(EiraIRC.instance.isConnectedTo(Globals.TWITCH_SERVER)) {
 			Utils.sendLocalizedMessage(sender, "irc.general.alreadyConnected", "Twitch");
 			return true;
@@ -79,7 +81,7 @@ public class CommandTwitch extends SubCommand {
 	}
 
 	@Override
-	public void addTabCompletionOptions(List<String> list, ICommandSender sender, String[] args) {
+	public void addTabCompletionOptions(List<String> list, ICommandSender sender, String[] args, BlockPos pos) {
 	}
 
 	@Override

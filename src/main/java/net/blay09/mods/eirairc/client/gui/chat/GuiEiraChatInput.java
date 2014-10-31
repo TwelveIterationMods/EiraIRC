@@ -17,6 +17,8 @@ import net.minecraftforge.client.ClientCommandHandler;
 
 import org.lwjgl.input.Keyboard;
 
+import java.io.IOException;
+
 public class GuiEiraChatInput extends GuiScreen {
 
 	private GuiEiraChat parentChat;
@@ -47,7 +49,7 @@ public class GuiEiraChatInput extends GuiScreen {
 	}
 	
 	private void buildInputField() {
-		txtInput = new GuiTextField(this.fontRendererObj, 4, this.height - 12, this.width - 4, 12);
+		txtInput = new GuiTextField(0, this.fontRendererObj, 4, this.height - 12, this.width - 4, 12);
 		txtInput.setMaxStringLength(100);
         txtInput.setEnableBackgroundDrawing(false);
         txtInput.setFocused(true);
@@ -78,7 +80,7 @@ public class GuiEiraChatInput extends GuiScreen {
     }
 	
 	@Override
-	public void actionPerformed(GuiButton button) {
+	public void actionPerformed(GuiButton button) throws IOException {
 		super.actionPerformed(button);
 		if(button == btnOptions) {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiSettings());

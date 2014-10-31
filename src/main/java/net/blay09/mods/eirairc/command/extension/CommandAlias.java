@@ -11,12 +11,14 @@ import net.blay09.mods.eirairc.command.SubCommand;
 import net.blay09.mods.eirairc.config.GlobalConfig;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
+import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.BlockPos;
 
 public class CommandAlias extends SubCommand {
 
@@ -38,7 +40,7 @@ public class CommandAlias extends SubCommand {
 	}
 
 	@Override
-	public boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) {
+	public boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) throws CommandException {
 		if(!GlobalConfig.enableAliases) {
 			Utils.sendLocalizedMessage(sender, "irc.alias.disabled");
 			return true;
@@ -52,7 +54,7 @@ public class CommandAlias extends SubCommand {
 			for(int i = 0; i < playerEntityList.size(); i++) {
 				EntityPlayerMP playerEntity = playerEntityList.get(i);
 				if(playerEntity.getEntityData().getCompoundTag(Globals.NBT_EIRAIRC).getString(Globals.NBT_ALIAS).equals(alias)) {
-					Utils.sendLocalizedMessage(sender, "irc.alias.lookup", alias, playerEntity.getCommandSenderName());
+					Utils.sendLocalizedMessage(sender, "irc.alias.lookup", alias, playerEntity.getName());
 					return true;
 				}
 			}
@@ -60,7 +62,7 @@ public class CommandAlias extends SubCommand {
 		} else {
 			String username = args[0];
 			String alias = args[1];
-			EntityPlayerMP entityPlayer = MinecraftServer.getServer().getConfigurationManager().func_152612_a(username); // getPlayerForUsername
+			EntityPlayerMP entityPlayer = MinecraftServer.getServer().getConfigurationManager().getPlayerByUsername(username);
 			if(entityPlayer == null) {
 				for(int i = 0; i < playerEntityList.size(); i++) {
 					EntityPlayerMP playerEntity = playerEntityList.get(i);
@@ -104,7 +106,7 @@ public class CommandAlias extends SubCommand {
 	}
 
 	@Override
-	public void addTabCompletionOptions(List<String> list, ICommandSender sender, String[] args) {
+	public void addTabCompletionOptions(List<String> list, ICommandSender sender, String[] args, BlockPos pos) {
 		list.add(ALIAS_NONE);
 	}
 

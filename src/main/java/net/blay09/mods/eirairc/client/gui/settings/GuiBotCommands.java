@@ -19,6 +19,8 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.input.Keyboard;
 
+import java.io.IOException;
+
 public class GuiBotCommands extends GuiScreen {
 
 	private static final int BUTTON_WIDTH = 150;
@@ -50,9 +52,9 @@ public class GuiBotCommands extends GuiScreen {
 		btnInterOp.enabled = false;
 		buttonList.add(btnInterOp);
 
-		txtDisabledInterOpCommands = new GuiAdvancedTextField(fontRendererObj, rightX, topY + 2, BUTTON_WIDTH, 16);
+		txtDisabledInterOpCommands = new GuiAdvancedTextField(0, fontRendererObj, rightX, topY + 2, BUTTON_WIDTH, 16);
 		txtDisabledInterOpCommands.setEnabled(false);
-		txtDisabledCommands = new GuiAdvancedTextField(fontRendererObj, rightX, topY + 42, BUTTON_WIDTH, 16);
+		txtDisabledCommands = new GuiAdvancedTextField(1, fontRendererObj, rightX, topY + 42, BUTTON_WIDTH, 16);
 		txtDisabledCommands.setDefaultText("Example: who, players", true);
 		
 		listCommands = new GuiList(leftX, topY + 40, BUTTON_WIDTH, 100, 18);
@@ -84,7 +86,7 @@ public class GuiBotCommands extends GuiScreen {
 					@Override
 					public void setSelected(boolean selected) {
 						Minecraft.getMinecraft().displayGuiScreen(new GuiBotCommand(GuiBotCommands.this, botProfile, customCommand));
-						Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0f));
+						Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.createPositionedSoundRecord(new ResourceLocation("gui.button.press"), 1.0f));
 					}
 				});
 			}
@@ -93,7 +95,7 @@ public class GuiBotCommands extends GuiScreen {
 			@Override
 			public void setSelected(boolean selected) {
 				Minecraft.getMinecraft().displayGuiScreen(new GuiBotCommand(GuiBotCommands.this, botProfile, new BotCommandCustom()));
-				Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0f));
+				Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.createPositionedSoundRecord(new ResourceLocation("gui.button.press"), 1.0f));
 			}
 		});
 	}
@@ -120,7 +122,7 @@ public class GuiBotCommands extends GuiScreen {
 	}
 	
 	@Override
-	public void mouseClicked(int par1, int par2, int par3) {
+	public void mouseClicked(int par1, int par2, int par3) throws IOException {
 		super.mouseClicked(par1, par2, par3);
 		txtDisabledCommands.mouseClicked(par1, par2, par3);
 		if(txtDisabledInterOpCommands.isEnabled()) {
@@ -130,7 +132,7 @@ public class GuiBotCommands extends GuiScreen {
 	}
 	
 	@Override
-	public void keyTyped(char unicode, int keyCode) {
+	public void keyTyped(char unicode, int keyCode) throws IOException {
 		super.keyTyped(unicode, keyCode);
 		if(txtDisabledCommands.textboxKeyTyped(unicode, keyCode)) {
 			return;

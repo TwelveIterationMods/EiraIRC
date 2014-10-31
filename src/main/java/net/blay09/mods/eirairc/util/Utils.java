@@ -56,7 +56,7 @@ public class Utils {
 	private static final String ENCODING = "UTF-8";
 	
 	public static void sendLocalizedMessage(ICommandSender sender, String key, Object... args) {
-		EiraPlayerInfo playerInfo = EiraIRC.instance.getNetHandler().getPlayerInfo(sender.getCommandSenderName());
+		EiraPlayerInfo playerInfo = EiraIRC.instance.getNetHandler().getPlayerInfo(sender.getName());
 		if(playerInfo.modInstalled) {
 			sender.addChatMessage(getLocalizedChatMessage(key, args));
 		} else {
@@ -147,11 +147,11 @@ public class Utils {
 
 	public static String getAliasForPlayer(EntityPlayer player) {
 		if(!GlobalConfig.enableAliases) {
-			return player.getCommandSenderName();
+			return player.getName();
 		}
 		String name = player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getCompoundTag(Globals.NBT_EIRAIRC).getString(Globals.NBT_ALIAS);
 		if(name.isEmpty()) {
-			name = player.getCommandSenderName();
+			name = player.getName();
 		}
 		return name;
 	}
@@ -161,7 +161,7 @@ public class Utils {
 			return true;
 		}
 		if(sender instanceof EntityPlayer) {
-			return MinecraftServer.getServer().getConfigurationManager().func_152603_m().func_152700_a(sender.getCommandSenderName().toLowerCase()) != null; // isPlayerOpped
+			return MinecraftServer.getServer().getConfigurationManager().getOppedPlayers().getGameProfileFromName(sender.getName().toLowerCase()) != null; // isPlayerOpped
 		}
 		return true;
 	}

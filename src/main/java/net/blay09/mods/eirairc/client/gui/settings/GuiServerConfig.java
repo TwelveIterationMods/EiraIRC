@@ -3,6 +3,7 @@
 
 package net.blay09.mods.eirairc.client.gui.settings;
 
+import java.io.IOException;
 import java.util.List;
 
 import net.blay09.mods.eirairc.EiraIRC;
@@ -56,18 +57,18 @@ public class GuiServerConfig extends GuiScreen {
 	@Override
 	public void initGui() {
 		Keyboard.enableRepeatEvents(true);
-		txtHost = new GuiTextField(fontRendererObj, width / 2 - 120, height / 2 - 85, 100, 15);
-		txtNick = new GuiTextField(fontRendererObj, width / 2 - 120, height / 2 - 45, 100, 15);
-		txtServerPassword = new GuiAdvancedTextField(fontRendererObj, width / 2 + 5, height / 2 - 85, 100, 15);
+		txtHost = new GuiTextField(0, fontRendererObj, width / 2 - 120, height / 2 - 85, 100, 15);
+		txtNick = new GuiTextField(1, fontRendererObj, width / 2 - 120, height / 2 - 45, 100, 15);
+		txtServerPassword = new GuiAdvancedTextField(2, fontRendererObj, width / 2 + 5, height / 2 - 85, 100, 15);
 		txtServerPassword.setMaxStringLength(Integer.MAX_VALUE);
 		txtServerPassword.setDefaultPasswordChar();
-		txtIdent = new GuiAdvancedTextField(fontRendererObj, width / 2 + 5, height / 2 - 45, 100, 15);
+		txtIdent = new GuiAdvancedTextField(3, fontRendererObj, width / 2 + 5, height / 2 - 45, 100, 15);
 		txtIdent.setDefaultText(Globals.DEFAULT_IDENT, false);
-		txtDescription = new GuiAdvancedTextField(fontRendererObj, width / 2 - 120, height / 2 - 5, 100, 15);
+		txtDescription = new GuiAdvancedTextField(4, fontRendererObj, width / 2 - 120, height / 2 - 5, 100, 15);
 		txtDescription.setDefaultText(Globals.DEFAULT_DESCRIPTION, false);
-		txtNickServName = new GuiTextField(fontRendererObj, width / 2 - 120, height / 2 + 35, 100, 15);
+		txtNickServName = new GuiTextField(5, fontRendererObj, width / 2 - 120, height / 2 + 35, 100, 15);
 		txtNickServName.setMaxStringLength(Integer.MAX_VALUE);
-		txtNickServPassword = new GuiAdvancedTextField(fontRendererObj, width / 2 - 120, height / 2 + 75, 100, 15);
+		txtNickServPassword = new GuiAdvancedTextField(6, fontRendererObj, width / 2 - 120, height / 2 + 75, 100, 15);
 		txtNickServPassword.setMaxStringLength(Integer.MAX_VALUE);
 		txtNickServPassword.setDefaultPasswordChar();
 		
@@ -147,7 +148,7 @@ public class GuiServerConfig extends GuiScreen {
 	}
 	
 	@Override
-	public void keyTyped(char unicode, int keyCode) {
+	public void keyTyped(char unicode, int keyCode) throws IOException {
 		super.keyTyped(unicode, keyCode);
 		if(txtHost.textboxKeyTyped(unicode, keyCode)) {
 			if(txtHost.getText().length() > 0) {
@@ -180,7 +181,7 @@ public class GuiServerConfig extends GuiScreen {
 	}
 	
 	@Override
-	public void mouseClicked(int par1, int par2, int par3) {
+	public void mouseClicked(int par1, int par2, int par3) throws IOException {
 		super.mouseClicked(par1, par2, par3);
 		txtHost.mouseClicked(par1, par2, par3);
 		txtNick.mouseClicked(par1, par2, par3);

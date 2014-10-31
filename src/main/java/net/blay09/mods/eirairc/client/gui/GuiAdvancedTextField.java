@@ -20,9 +20,9 @@ public class GuiAdvancedTextField extends GuiTextField {
 	private int textOffsetX;
 	private boolean enabled;
 	
-	public GuiAdvancedTextField(FontRenderer par1FontRenderer, int par2, int par3, int par4, int par5) {
-		super(par1FontRenderer, par2, par3, par4, par5);
-		this.fontRenderer = par1FontRenderer;
+	public GuiAdvancedTextField(int id, FontRenderer fontRenderer, int par2, int par3, int par4, int par5) {
+		super(id, fontRenderer, par2, par3, par4, par5);
+		this.fontRenderer = fontRenderer;
 	}
 
 	@Override
