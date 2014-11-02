@@ -9,6 +9,7 @@ import net.blay09.mods.eirairc.client.gui.servers.GuiServerConfigContainer;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiEiraIRCMenu extends EiraGuiScreen {
@@ -33,28 +34,28 @@ public class GuiEiraIRCMenu extends EiraGuiScreen {
 		final int buttonCenterX = width / 2;
 		final int buttonCenterY = height / 2;
 
-		btnServers = new GuiMenuButton("Servers", buttonCenterX - 132, buttonCenterY - 95, 0, BUTTON_SIZE);
-		menuButtonList.add(btnServers);
+		btnServers = new GuiMenuButton(0, "Servers", buttonCenterX - 132, buttonCenterY - 95, BUTTON_SIZE, BUTTON_SIZE, 0, BUTTON_SIZE);
+		buttonList.add(btnServers);
 
-		btnTwitch = new GuiMenuButton("Twitch", buttonCenterX - 32, buttonCenterY - 95, 0, 0);
-		menuButtonList.add(btnTwitch);
+		btnTwitch = new GuiMenuButton(1, "Twitch", buttonCenterX - 32, buttonCenterY - 95, BUTTON_SIZE, BUTTON_SIZE, 0, 0);
+		buttonList.add(btnTwitch);
 
-		btnPlaceholder = new GuiMenuButton("???", buttonCenterX + 64, buttonCenterY - 95, BUTTON_SIZE, BUTTON_SIZE);
+		btnPlaceholder = new GuiMenuButton(2, "???", buttonCenterX + 64, buttonCenterY - 95, BUTTON_SIZE, BUTTON_SIZE, BUTTON_SIZE, BUTTON_SIZE);
 		btnPlaceholder.setPlayButtonSound(false);
-		menuButtonList.add(btnPlaceholder);
+		buttonList.add(btnPlaceholder);
 
-		btnFriends = new GuiMenuButton("Friends", buttonCenterX - 132, buttonCenterY, BUTTON_SIZE * 3, 0);
-		menuButtonList.add(btnFriends);
+		btnFriends = new GuiMenuButton(3, "Friends", buttonCenterX - 132, buttonCenterY, BUTTON_SIZE, BUTTON_SIZE, BUTTON_SIZE * 3, 0);
+		buttonList.add(btnFriends);
 
-		btnScreenshots = new GuiMenuButton("Screenshots", buttonCenterX - 32, buttonCenterY, BUTTON_SIZE, 0);
-		menuButtonList.add(btnScreenshots);
+		btnScreenshots = new GuiMenuButton(4, "Screenshots", buttonCenterX - 32, buttonCenterY, BUTTON_SIZE, BUTTON_SIZE, BUTTON_SIZE, 0);
+		buttonList.add(btnScreenshots);
 
-		btnSettings = new GuiMenuButton("Settings", buttonCenterX + 64, buttonCenterY, BUTTON_SIZE * 2, 0);
-		menuButtonList.add(btnSettings);
+		btnSettings = new GuiMenuButton(5, "Settings", buttonCenterX + 64, buttonCenterY, BUTTON_SIZE, BUTTON_SIZE, BUTTON_SIZE * 2, 0);
+		buttonList.add(btnSettings);
 	}
 
 	@Override
-	public void actionPerformed(GuiMenuButton button) {
+	public void actionPerformed(GuiButton button) {
 		if(button == btnTwitch) {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiTwitch(this));
 		} else if(button == btnServers) {

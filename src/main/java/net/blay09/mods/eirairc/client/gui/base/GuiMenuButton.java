@@ -5,51 +5,46 @@ import net.blay09.mods.eirairc.client.gui.GuiEiraIRCMenu;
 import net.blay09.mods.eirairc.util.Globals;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 /**
  * Created by Blay09 on 04.10.2014.
  */
-// TODO make it extend GuiButton
-public class GuiMenuButton extends Gui {
-
-	private static final int BUTTON_SIZE = 64;
+public class GuiMenuButton extends GuiButton {
 
 	private final Minecraft mc;
-	private final String title;
 	private final int texCoordX;
 	private final int texCoordY;
 	private final int xPos;
 	private final int yPos;
 	private boolean playButtonSound = true;
 
-	public GuiMenuButton(String title, int xPos, int yPos, int texCoordX, int texCoordY) {
+	public GuiMenuButton(int id, String title, int xPos, int yPos, int width, int height, int texCoordX, int texCoordY) {
+		super(id, xPos, yPos, title);
 		this.mc = Minecraft.getMinecraft();
-		this.title = title;
 		this.xPos = xPos;
 		this.yPos = yPos;
+		this.width = width;
+		this.height = height;
 		this.texCoordX = texCoordX;
 		this.texCoordY = texCoordY;
 	}
 
-	public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
-		if(mouseButton == 0) {
-			if (mouseX >= xPos && mouseX < xPos + BUTTON_SIZE && mouseY >= yPos && mouseY < yPos + BUTTON_SIZE) {
-				if(playButtonSound) {
-					mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0f));
-				}
-				if (mc.currentScreen instanceof GuiEiraIRCMenu) {
-					((GuiEiraIRCMenu) mc.currentScreen).actionPerformed(this);
-				}
-			}
+	@Override
+	public void func_146113_a(SoundHandler soundHandler) { // playButtonSound
+		if(playButtonSound) {
+			super.func_146113_a(soundHandler);
 		}
 	}
 
-	public void draw(int mouseX, int mouseY) {
+	@Override
+	public void drawButton(Minecraft mc, int mouseX, int mouseY) {
 		boolean hovered = false;
-		if(mouseX >= xPos && mouseX < xPos + BUTTON_SIZE && mouseY >= yPos && mouseY < yPos + BUTTON_SIZE) {
+		if(mouseX >= xPos && mouseX < xPos + width && mouseY >= yPos && mouseY < yPos + height) {
 			hovered = true;
 		}
 
@@ -60,13 +55,13 @@ public class GuiMenuButton extends Gui {
 			GL11.glTranslatef(0.95f, 0.95f, 0.95f);
 		}
 		mc.getTextureManager().bindTexture(EiraGui.texMenu);
-		drawTexturedModalRect(xPos, yPos, texCoordX, texCoordY, BUTTON_SIZE, BUTTON_SIZE);
+		drawTexturedModalRect(xPos, yPos, texCoordX, texCoordY, width, height);
 		if(hovered) {
 			GL11.glPopMatrix();
 		}
 		GL11.glDisable(GL11.GL_BLEND);
 
-		drawCenteredString(mc.fontRenderer, (hovered ? "\u00a7n" : "") + title, xPos + BUTTON_SIZE / 2, yPos + BUTTON_SIZE + 5, !hovered ? Globals.TEXT_COLOR : 16777115);
+		drawCenteredString(mc.fontRenderer, (hovered ? "\u00a7n" : "") + displayString, xPos + width / 2, yPos + height + 5, !hovered ? Globals.TEXT_COLOR : 16777115);
 	}
 
 	public void setPlayButtonSound(boolean playButtonSound) {

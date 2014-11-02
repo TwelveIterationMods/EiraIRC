@@ -19,7 +19,6 @@ public class EiraGuiScreen extends GuiScreen {
 	private static final ResourceLocation texMenuBackground = new ResourceLocation("eirairc", "gfx/menubg.png");
 
 	protected final GuiScreen parentScreen;
-	protected final List<GuiMenuButton> menuButtonList = new ArrayList<GuiMenuButton>();
 	protected final List<GuiTextField> textFieldList = new ArrayList<GuiTextField>();
 	protected final List<GuiLabel> labelList = new ArrayList<GuiLabel>();
 	protected final List<GuiList> listList = new ArrayList<GuiList>();
@@ -44,7 +43,6 @@ public class EiraGuiScreen extends GuiScreen {
 
 		setupMenuSize(300, 200);
 
-		menuButtonList.clear();
 		textFieldList.clear();
 		labelList.clear();
 		listList.clear();
@@ -60,9 +58,6 @@ public class EiraGuiScreen extends GuiScreen {
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) {
 		super.mouseClicked(mouseX, mouseY, mouseButton);
-		for(int i = 0; i < menuButtonList.size(); i++) {
-			menuButtonList.get(i).mouseClicked(mouseX, mouseY, mouseButton);
-		}
 		for(int i = 0; i < textFieldList.size(); i++) {
 			textFieldList.get(i).mouseClicked(mouseX, mouseY, mouseButton);
 		}
@@ -99,8 +94,6 @@ public class EiraGuiScreen extends GuiScreen {
 		}
 	}
 
-	public void actionPerformed (GuiMenuButton menuButton){}
-
 	@Override
 	public void drawScreen ( int mouseX, int mouseY, float p_73863_3_){
 		super.drawScreen(mouseX, mouseY, p_73863_3_);
@@ -115,10 +108,6 @@ public class EiraGuiScreen extends GuiScreen {
 
 		for(int i = 0; i < listList.size(); i++) {
 			listList.get(i).drawList();
-		}
-
-		for(int i = 0; i < menuButtonList.size(); i++) {
-			menuButtonList.get(i).draw(mouseX, mouseY);
 		}
 	}
 
