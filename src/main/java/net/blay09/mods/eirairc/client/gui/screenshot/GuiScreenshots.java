@@ -6,6 +6,7 @@ import net.blay09.mods.eirairc.client.gui.base.image.GuiFileImage;
 import net.blay09.mods.eirairc.client.gui.base.image.GuiImage;
 import net.blay09.mods.eirairc.client.screenshot.Screenshot;
 import net.blay09.mods.eirairc.client.screenshot.ScreenshotManager;
+import net.blay09.mods.eirairc.config.ScreenshotAction;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
@@ -24,6 +25,17 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 	private GuiButton btnOpenFolder;
 	private GuiAdvancedTextField txtName;
 
+	private GuiImageButton btnGoToFirst;
+	private GuiImageButton btnGoToPrevious;
+	private GuiImageButton btnGoToNext;
+	private GuiImageButton btnGoToLast;
+	private GuiImageButton btnZoom;
+	private GuiImageButton btnUpload;
+	private GuiImageButton btnClipboard;
+	private GuiImageButton btnFavorite;
+	private GuiImageButton btnDelete;
+
+	private boolean buttonsVisible;
 	private int currentIdx;
 	private Screenshot currentScreenshot;
 	private GuiImage imgPreview;
@@ -34,7 +46,7 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 
 	public GuiScreenshots(GuiScreen parentScreen) {
 		super(parentScreen);
-		screenshotList = ScreenshotManager.getInstance().getScreenshots();
+		screenshotList = ScreenshotManager.getInstance().getScreenshots(); // TODO will be set by the category tabs
 	}
 
 	public void updateScreenshot() {
@@ -69,6 +81,9 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 		txtName = new GuiAdvancedTextField(fontRendererObj, width / 2 - 100, topY + 152, 200, 15);
 		textFieldList.add(txtName);
 
+		// TODO initialize buttons
+//		btnGoToFirst = new GuiImageButton();
+
 		updateScreenshot();
 
 		imgX = leftX + 2;
@@ -77,16 +92,35 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 
 	@Override
 	public void actionPerformed(GuiButton button) {
-		if(button == btnOpenFolder) {
+		if(button == btnGoToFirst) {
+			currentIdx = 0;
+			updateScreenshot();
+		} else if(button == btnGoToPrevious) {
+			if(currentIdx > 0) {
+				currentIdx--;
+				updateScreenshot();
+			}
+		} else if(button == btnGoToNext) {
+			if(currentIdx < screenshotList.size() - 1) {
+				currentIdx++;
+				updateScreenshot();
+			}
+		} else if(button == btnGoToLast) {
+			currentIdx = screenshotList.size() - 1;
+			updateScreenshot();
+		} else if(button == btnOpenFolder) {
 			Utils.openDirectory(new File(mc.mcDataDir, "screenshots"));
+		} else if(button == btnDelete) {
+			mc.displayGuiScreen(new GuiYesNo(this, "Do you really want to delete this screenshot?", "This can't be undone, so be careful!", currentIdx));
+		} else if(button == btnClipboard) {
+			Utils.setClipboardString(currentScreenshot.getUploadURL());
+		} else if(button == btnUpload) {
+			ScreenshotManager.getInstance().uploadScreenshot(currentScreenshot, ScreenshotAction.None);
+		} else if(button == btnFavorite) {
+			// TODO implement screenshot favorites
+		} else if(button == btnZoom) {
+			mc.displayGuiScreen(new GuiScreenshotBigPreview(this, imgPreview));
 		}
-//		} else if(button == btnDelete) {
-//			mc.displayGuiScreen(new GuiYesNo(this, "Do you really want to delete this screenshot?", "This can't be undone, so be careful!", currentIdx));
-//		} else if(button == btnClipboard) {
-//			Utils.setClipboardString(currentScreenshot.getUploadURL());
-//		} else if(button == btnUpload) {
-//			ScreenshotManager.getInstance().uploadScreenshot(currentScreenshot, ScreenshotAction.None);
-//		}
 	}
 
 	@Override
@@ -102,12 +136,31 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 		drawLightBackground(menuX, menuY, menuWidth, menuHeight);
 
 		if(imgPreview != null) {
-			imgPreview.draw(imgX, imgY, imgWidth, imgHeight, zLevel);
+			// Fade all image buttons in/out on hover of image
+			if(mouseX >= imgX && mouseX < imgX + imgWidth && mouseY >= imgY && mouseY < imgY + imgHeight) {
+				if(!buttonsVisible) {
+					for (int i = 0; i < buttonList.size(); i++) {
+						GuiButton button = (GuiButton) buttonList.get(i);
+						if (button instanceof GuiImageButton) {
+							((GuiImageButton) button).setFadeMode(1);
+						}
+					}
+					buttonsVisible = true;
+				}
+			} else {
+				if(buttonsVisible) {
+					for (int i = 0; i < buttonList.size(); i++) {
+						GuiButton button = (GuiButton) buttonList.get(i);
+						if (button instanceof GuiImageButton) {
+							((GuiImageButton) button).setFadeMode(-1);
+						}
+					}
+					buttonsVisible = false;
+				}
+			}
 
-//			if(mouseX >= imgX && mouseX < imgX + imgWidth && mouseY >= imgY && mouseY < imgY + imgHeight) {
-//				mc.renderEngine.bindTexture(EiraGui.tab);
-//				GuiUtils.drawTexturedModalRect(imgX + imgWidth - 32, imgY + imgHeight - 32, 0, 48, 32, 32, zLevel);
-//			}
+			// Render the screenshot preview image
+			imgPreview.draw(imgX, imgY, imgWidth, imgHeight, zLevel);
 		}
 
 		super.drawScreen(mouseX, mouseY, par3);

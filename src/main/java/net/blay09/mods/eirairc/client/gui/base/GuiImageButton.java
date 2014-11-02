@@ -11,9 +11,13 @@ import org.lwjgl.opengl.GL11;
  */
 public class GuiImageButton extends GuiButton {
 
+	private static final float FADE_PER_FRAME = 0.01f;
+
 	private final ResourceLocation res;
 	private final int texCoordX;
 	private final int texCoordY;
+	private float alphaFade = 1f;
+	private int fadeMode;
 
 	public GuiImageButton(int id, int xPos, int yPos, ResourceLocation res, int texCoordX, int texCoordY, int texWidth, int texHeight) {
 		super(id, xPos, yPos, "");
@@ -24,18 +28,35 @@ public class GuiImageButton extends GuiButton {
 		height = texHeight;
 	}
 
+	public void setFadeMode(int fadeMode) {
+		this.fadeMode = fadeMode;
+	}
+
 	@Override
 	public void drawButton(Minecraft mc, int mouseX, int mouseY) {
 		if(this.visible) {
+			// Fade button alpha in or out
+			if(fadeMode > 0) {
+				alphaFade = Math.min(1f, alphaFade + FADE_PER_FRAME);
+				if(alphaFade == 1f) {
+					fadeMode = 0;
+				}
+			} else if(fadeMode < 0) {
+				alphaFade = Math.max(0f, alphaFade - FADE_PER_FRAME);
+				if(alphaFade == 0f) {
+					fadeMode = 0;
+				}
+			}
+			// Render the button with fade alpha and hover effect
 			mc.renderEngine.bindTexture(res);
 			if(enabled) {
 				if (mouseX >= xPosition && mouseY >= yPosition && mouseX < xPosition + width && mouseY < yPosition + height) {
-					GL11.glColor4f(1f, 1f, 1f, 1f);
+					GL11.glColor4f(1f, 1f, 1f, 1f * alphaFade);
 				} else {
-					GL11.glColor4f(1f, 1f, 1f, 0.5f);
+					GL11.glColor4f(1f, 1f, 1f, 0.5f * alphaFade);
 				}
 			} else {
-				GL11.glColor4f(1f, 1f, 1f, 0.25f);
+				GL11.glColor4f(1f, 1f, 1f, 0.25f * alphaFade);
 			}
 			GuiUtils.drawTexturedModalRect(xPosition, yPosition, texCoordX, texCoordY, width, height, this.zLevel);
 		}
