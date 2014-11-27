@@ -36,14 +36,14 @@ public abstract class SubCommand implements ICommand {
 	@Override
 	public final List<String> getCommandAliases() {
 		String[] aliases = getAliases();
+		List<String> list = new ArrayList<String>();
 		if(aliases != null) {
-			List<String> list = new ArrayList<String>();
 			for(int i = 0; i < aliases.length; i++) {
 				list.add(aliases[i]);
 			}
 			return list;
 		}
-		return null;
+		return list;
 	}
 	
 	@Override

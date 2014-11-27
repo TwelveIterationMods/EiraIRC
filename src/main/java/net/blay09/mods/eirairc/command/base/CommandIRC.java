@@ -3,6 +3,7 @@
 
 package net.blay09.mods.eirairc.command.base;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.blay09.mods.eirairc.util.Globals;
@@ -32,7 +33,7 @@ public class CommandIRC implements ICommand {
 
 	@Override
 	public List getCommandAliases() {
-		return null;
+		return new ArrayList();
 	}
 
 	@Override

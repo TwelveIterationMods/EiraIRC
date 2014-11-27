@@ -66,14 +66,35 @@ public enum IRCFormatting {
 			while(matcher.find()) {
 				String colorMatch = matcher.group(1);
 				int colorCode = Integer.parseInt(colorMatch);
-				EnumChatFormatting colorFormat = IRCFormatting.getColorFromIRCColorCode(colorCode);
-				result = result.replaceFirst(Matcher.quoteReplacement(matcher.group()), MC_FORMATTING_PREFIX + colorFormat.getFormattingCode());
+				result = result.replaceFirst(Matcher.quoteReplacement(matcher.group()), MC_FORMATTING_PREFIX + IRCFormatting.getColorFromIRCColorCode(colorCode));
 			}
 		}
 		return result;
 	}
 
-	public static EnumChatFormatting getColorFromIRCColorCode(int code) {
+	public static char getColorFromIRCColorCode(int code) {
+		switch(code) {
+			case 0: return 'f'; // WHITE
+			case 1: return '0'; // BLACK
+			case 2: return '1'; // DARK_BLUE
+			case 3: return '2'; // DARK_GREEN
+			case 4: return 'c'; // RED
+			case 5: return '4'; // DARK_RED
+			case 6: return '5'; // DARK_PURPLE
+			case 7: return '6'; // GOLD
+			case 8: return 'e'; // YELLOW
+			case 9: return 'a'; // GREEN
+			case 10: return 'b'; // AQUA
+			case 11: return '9'; // BLUE
+			case 12: return '3'; // DARK_AQUA
+			case 13: return 'd'; // LIGHT_PURPLE
+			case 14: return '8'; // DARK_GRAY
+			case 15: return '7'; // GRAY
+		}
+		return 'f';
+	}
+
+	public static EnumChatFormatting getColorFormattingFromIRCColorCode(int code) {
 		switch(code) {
 			case 0: return EnumChatFormatting.WHITE;
 			case 1: return EnumChatFormatting.BLACK;
