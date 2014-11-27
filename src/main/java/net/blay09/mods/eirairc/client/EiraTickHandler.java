@@ -3,7 +3,7 @@
 
 package net.blay09.mods.eirairc.client;
 
-import cpw.mods.fml.common.network.FMLNetworkEvent;
+import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.client.gui.chat.GuiChatExtended;
 import net.blay09.mods.eirairc.client.gui.chat.GuiEiraChat;
@@ -26,10 +26,10 @@ import net.minecraft.client.gui.GuiScreen;
 
 import org.lwjgl.input.Keyboard;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
-import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
-import cpw.mods.fml.common.gameevent.TickEvent.RenderTickEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.RenderTickEvent;
 
 public class EiraTickHandler {
 

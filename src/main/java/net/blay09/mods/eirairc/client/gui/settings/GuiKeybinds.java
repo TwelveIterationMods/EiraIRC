@@ -13,6 +13,8 @@ import net.minecraft.client.gui.GuiScreen;
 
 import org.lwjgl.input.Keyboard;
 
+import java.io.IOException;
+
 public class GuiKeybinds extends GuiScreen {
 	
 	private static final int BUTTON_WIDTH = 190;
@@ -78,7 +80,7 @@ public class GuiKeybinds extends GuiScreen {
 	}
 	
 	@Override
-	protected void keyTyped(char unicode, int keyCode) {
+	protected void keyTyped(char unicode, int keyCode) throws IOException {
 		if(currentKeyIdx != -1) {
 			if(keyCode == Keyboard.KEY_ESCAPE) {
 				keyCode = -1;

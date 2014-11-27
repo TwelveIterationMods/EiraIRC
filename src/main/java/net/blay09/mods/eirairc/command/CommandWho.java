@@ -16,6 +16,7 @@ import net.blay09.mods.eirairc.irc.IRCChannelImpl;
 import net.blay09.mods.eirairc.util.IRCResolver;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.util.BlockPos;
 
 public class CommandWho extends SubCommand {
 
@@ -78,7 +79,7 @@ public class CommandWho extends SubCommand {
 	}
 
 	@Override
-	public void addTabCompletionOptions(List<String> list, ICommandSender sender, String[] args) {
+	public void addTabCompletionOptions(List<String> list, ICommandSender sender, String[] args, BlockPos pos) {
 		if(args.length == 0) {
 			for(ServerConfig serverConfig : ConfigurationHandler.getServerConfigs()) {
 				for(ChannelConfig channelConfig : serverConfig.getChannelConfigs()) {

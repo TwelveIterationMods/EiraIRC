@@ -17,8 +17,10 @@ import net.minecraftforge.client.ClientCommandHandler;
 
 import org.lwjgl.input.Keyboard;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.io.IOException;
 
 @SideOnly(Side.CLIENT)
 public class GuiChatExtended extends GuiChat {
@@ -51,7 +53,7 @@ public class GuiChatExtended extends GuiChat {
 	}
 
 	@Override
-	public void actionPerformed(GuiButton button) {
+	public void actionPerformed(GuiButton button) throws IOException {
 		super.actionPerformed(button);
 		if(button == btnOptions) {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiSettings());
@@ -59,7 +61,7 @@ public class GuiChatExtended extends GuiChat {
 	}
 	
 	@Override
-	protected void keyTyped(char unicode, int keyCode) {
+	protected void keyTyped(char unicode, int keyCode) throws IOException {
 		if(keyCode == KeyConfig.toggleTarget && !CompatibilityConfig.disableChatToggle && !CompatibilityConfig.clientBridge && !inputField.getText().startsWith("/")) {
 			if(Keyboard.isRepeatEvent()) {
 				if(System.currentTimeMillis() - lastToggleTarget >= 1000) {

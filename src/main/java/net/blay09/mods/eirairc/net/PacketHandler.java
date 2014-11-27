@@ -9,9 +9,9 @@ import net.blay09.mods.eirairc.net.message.handler.HandlerHello;
 import net.blay09.mods.eirairc.net.message.handler.HandlerNotification;
 import net.blay09.mods.eirairc.net.message.handler.SHandlerRecLiveState;
 import net.blay09.mods.eirairc.util.Globals;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import cpw.mods.fml.relauncher.Side;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import net.minecraftforge.fml.relauncher.Side;
 
 public class PacketHandler {
 

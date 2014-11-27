@@ -136,7 +136,7 @@ public class IRCCommandHandler {
 		Utils.sendLocalizedMessage(sender, "irc.cmdlist.special");
 	}
 
-	public static boolean onChatCommand(EntityPlayer sender, String text, boolean serverSide) throws CommandException {
+	public static boolean onChatCommand(EntityPlayer sender, String text, boolean serverSide) {
 		if(!text.startsWith("!")) {
 			return false;
 		}
@@ -145,6 +145,9 @@ public class IRCCommandHandler {
 			return processCommand(sender, params, serverSide);
 		} catch (WrongUsageException e) {
 			sender.addChatMessage(Utils.getLocalizedChatMessage("irc.general.usage", Utils.getLocalizedMessageNoPrefix(e.getMessage())));
+			return true;
+		} catch (CommandException e) {
+			sender.addChatMessage(new ChatComponentText(e.getMessage()));
 			return true;
 		}
 	}

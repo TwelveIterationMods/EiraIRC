@@ -3,6 +3,7 @@
 
 package net.blay09.mods.eirairc.client.gui.settings;
 
+import java.io.IOException;
 import java.util.List;
 
 import net.blay09.mods.eirairc.client.gui.GuiAdvancedTextField;
@@ -120,7 +121,7 @@ public class GuiBotProfiles extends GuiScreen {
 		btnCurrentProfile.enabled = true;
 		buttonList.add(btnCurrentProfile);
 		
-		txtCurrentProfile = new GuiAdvancedTextField(fontRendererObj, btnCurrentProfile.xPosition + 5, btnCurrentProfile.yPosition + BUTTON_HEIGHT / 2 - fontRendererObj.FONT_HEIGHT / 2, 100, BUTTON_HEIGHT);
+		txtCurrentProfile = new GuiAdvancedTextField(0, fontRendererObj, btnCurrentProfile.xPosition + 5, btnCurrentProfile.yPosition + BUTTON_HEIGHT / 2 - fontRendererObj.FONT_HEIGHT / 2, 100, BUTTON_HEIGHT);
 		txtCurrentProfile.setEnableBackgroundDrawing(false);
 		txtCurrentProfile.setTextCentered(true);
 		txtCurrentProfile.setEnabled(false);
@@ -325,7 +326,7 @@ public class GuiBotProfiles extends GuiScreen {
 	}
 	
 	@Override
-	public void mouseClicked(int par1, int par2, int par3) {
+	public void mouseClicked(int par1, int par2, int par3) throws IOException {
 		txtCurrentProfile.mouseClicked(par1, par2, par3);
 		if(txtCurrentProfile.isEnabled() && !txtCurrentProfile.isFocused()) {
 			enableNameEdit(false);
@@ -334,7 +335,7 @@ public class GuiBotProfiles extends GuiScreen {
 	}
 	
 	@Override
-	public void keyTyped(char unicode, int keyCode) {
+	public void keyTyped(char unicode, int keyCode) throws IOException {
 		super.keyTyped(unicode, keyCode);
 		if(keyCode == Keyboard.KEY_RETURN) {
 			enableNameEdit(false);

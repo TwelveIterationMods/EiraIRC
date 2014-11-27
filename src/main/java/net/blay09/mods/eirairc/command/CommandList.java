@@ -11,6 +11,7 @@ import net.blay09.mods.eirairc.api.IRCConnection;
 import net.blay09.mods.eirairc.api.IRCContext;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 
 public class CommandList extends SubCommand {
@@ -56,7 +57,7 @@ public class CommandList extends SubCommand {
 	}
 
 	@Override
-	public void addTabCompletionOptions(List<String> list, ICommandSender sender, String[] args) {
+	public void addTabCompletionOptions(List<String> list, ICommandSender sender, String[] args, BlockPos pos) {
 	}
 
 	@Override

@@ -15,6 +15,8 @@ import net.minecraft.client.gui.GuiScreen;
 
 import org.lwjgl.input.Keyboard;
 
+import java.io.IOException;
+
 public class GuiBotCommand extends GuiScreen {
 
 	private static final int BUTTON_WIDTH = 150;
@@ -52,10 +54,10 @@ public class GuiBotCommand extends GuiScreen {
 		int rightX = width / 2 + 20;
 		int topY = height / 2 - 60;
 		
-		txtCommand = new GuiAdvancedTextField(fontRendererObj, leftX, topY, 100, 15);
+		txtCommand = new GuiAdvancedTextField(0, fontRendererObj, leftX, topY, 100, 15);
 		txtCommand.setDefaultText("Example: whitelist", true);
 		txtCommand.setMaxStringLength(Integer.MAX_VALUE);
-		txtMinecraftCommand = new GuiAdvancedTextField(fontRendererObj, leftX, topY + 40, 150, 15);
+		txtMinecraftCommand = new GuiAdvancedTextField(1, fontRendererObj, leftX, topY + 40, 150, 15);
 		txtMinecraftCommand.setDefaultText("Example: whitelist add", true);
 		txtMinecraftCommand.setMaxStringLength(Integer.MAX_VALUE);
 		
@@ -139,14 +141,14 @@ public class GuiBotCommand extends GuiScreen {
 	}
 	
 	@Override
-	public void mouseClicked(int par1, int par2, int par3) {
+	public void mouseClicked(int par1, int par2, int par3) throws IOException {
 		super.mouseClicked(par1, par2, par3);
 		txtCommand.mouseClicked(par1, par2, par3);
 		txtMinecraftCommand.mouseClicked(par1, par2, par3);
 	}
 	
 	@Override
-	public void keyTyped(char unicode, int keyCode) {
+	public void keyTyped(char unicode, int keyCode) throws IOException {
 		super.keyTyped(unicode, keyCode);
 		if(unicode != ' ' && unicode != '!' && txtCommand.textboxKeyTyped(unicode, keyCode)) {
 			updateSaveButton();

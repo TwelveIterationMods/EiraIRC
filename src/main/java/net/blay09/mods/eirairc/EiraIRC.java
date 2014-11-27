@@ -11,7 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import cpw.mods.fml.common.event.*;
+import net.minecraftforge.fml.common.event.*;
 import net.blay09.mods.eirairc.api.IRCConnection;
 import net.blay09.mods.eirairc.command.base.CommandIRC;
 import net.blay09.mods.eirairc.command.base.CommandServIRC;
@@ -33,11 +33,11 @@ import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.CommandHandler;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.Mod.Instance;
+import net.minecraftforge.fml.common.SidedProxy;
 
 @Mod(modid = EiraIRC.MOD_ID, acceptableRemoteVersions="*")
 public class EiraIRC {

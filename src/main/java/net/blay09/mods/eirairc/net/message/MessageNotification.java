@@ -9,9 +9,9 @@ import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.util.NotificationType;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.entity.player.EntityPlayer;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class MessageNotification implements IMessage {
 

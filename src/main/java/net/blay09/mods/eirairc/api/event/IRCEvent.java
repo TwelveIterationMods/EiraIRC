@@ -5,7 +5,7 @@ package net.blay09.mods.eirairc.api.event;
 
 import net.blay09.mods.eirairc.api.IRCConnection;
 import net.blay09.mods.eirairc.api.bot.IRCBot;
-import cpw.mods.fml.common.eventhandler.Event;
+import net.minecraftforge.fml.common.eventhandler.Event;
 
 public abstract class IRCEvent extends Event {
 

@@ -11,6 +11,7 @@ import net.blay09.mods.eirairc.api.IRCContext;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.util.BlockPos;
 
 public class CommandDisconnect extends SubCommand {
 
@@ -73,7 +74,7 @@ public class CommandDisconnect extends SubCommand {
 	}
 
 	@Override
-	public void addTabCompletionOptions(List<String> list, ICommandSender sender, String[] args) {
+	public void addTabCompletionOptions(List<String> list, ICommandSender sender, String[] args, BlockPos pos) {
 		list.add(TARGET_ALL);
 		Utils.addConnectionsToList(list);
 	}

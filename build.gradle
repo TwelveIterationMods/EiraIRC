@@ -20,14 +20,14 @@ buildscript {
 }
 
 apply plugin: 'curseforge'
-apply plugin: 'fml'
+apply plugin: 'forge'
 
 version = "mc1.8-v1.7." + BUILD_NUMBER
 group = "net.blay09.mods" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "eirairc"
 
 minecraft {
-    version = "1.8-8.0.7.1014-1.8"
+    version = "1.8-11.14.0.1239-1.8"
     runDir = "eclipse"
     
     // the mappings can be changed at any time, and must be in the following format.
