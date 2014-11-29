@@ -52,7 +52,7 @@ public class CommandMessage extends SubCommand {
 			return true;
 		} else if(target instanceof IRCUserImpl) {
 			IRCBot bot = target.getConnection().getBot();
-			if(bot.getBoolean(target, BotProfile.KEY_ALLOWPRIVMSG, true)) {
+			if(!bot.getBoolean(target, BotProfile.KEY_ALLOWPRIVMSG, true)) {
 				Utils.sendLocalizedMessage(sender, "irc.msg.disabled");
 				return true;
 			}
