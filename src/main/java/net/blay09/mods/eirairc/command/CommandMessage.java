@@ -53,7 +53,7 @@ public class CommandMessage extends SubCommand {
 			Utils.sendLocalizedMessage(sender, target.getName(), args[0]);
 			return true;
 		} else if(target instanceof IRCUserImpl) {
-			if(ConfigHelper.getBotSettings(context).getBoolean(BotBooleanComponent.AllowPrivateMessages)) {
+			if(!ConfigHelper.getBotSettings(context).getBoolean(BotBooleanComponent.AllowPrivateMessages)) {
 				Utils.sendLocalizedMessage(sender, "irc.msg.disabled");
 				return true;
 			}
