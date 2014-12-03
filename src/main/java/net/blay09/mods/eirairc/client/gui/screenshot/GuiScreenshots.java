@@ -1,5 +1,6 @@
 package net.blay09.mods.eirairc.client.gui.screenshot;
 
+import net.blay09.mods.eirairc.client.gui.EiraGui;
 import net.blay09.mods.eirairc.client.gui.EiraGuiScreen;
 import net.blay09.mods.eirairc.client.gui.base.*;
 import net.blay09.mods.eirairc.client.gui.base.image.GuiFileImage;
@@ -12,6 +13,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,6 +21,7 @@ import java.util.List;
  */
 public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 
+	private static final float TOOLTIP_TIME = 30;
 	private final List<Screenshot> screenshotList;
 
 	private GuiAdvancedTextField txtSearch;
@@ -32,17 +35,22 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 	private GuiImageButton btnZoom;
 	private GuiImageButton btnUpload;
 	private GuiImageButton btnClipboard;
+	private GuiImageButton btnReupload;
 	private GuiImageButton btnFavorite;
 	private GuiImageButton btnDelete;
 
-	private boolean buttonsVisible;
 	private int currentIdx;
 	private Screenshot currentScreenshot;
 	private GuiImage imgPreview;
+
 	private int imgX;
 	private int imgY;
 	private final int imgWidth = 285;
 	private final int imgHeight = 160;
+
+	private boolean buttonsVisible;
+	private float hoverTime;
+	private GuiImageButton hoverObject;
 
 	public GuiScreenshots(GuiScreen parentScreen) {
 		super(parentScreen);
@@ -81,8 +89,45 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 		txtName = new GuiAdvancedTextField(fontRendererObj, width / 2 - 100, topY + 152, 200, 15);
 		textFieldList.add(txtName);
 
-		// TODO initialize buttons
-//		btnGoToFirst = new GuiImageButton();
+		btnGoToFirst = new GuiImageButton(1, width / 2 - 39, topY + 12, EiraGui.texMenu, 32, 192, 16, 16);
+		buttonList.add(btnGoToFirst);
+
+		btnGoToPrevious = new GuiImageButton(2, width / 2 - 13, topY + 12, EiraGui.texMenu, 32, 176, 8, 16);
+		buttonList.add(btnGoToPrevious);
+
+		btnGoToNext = new GuiImageButton(3, width / 2 + 5, topY + 12, EiraGui.texMenu, 40, 176, 8, 16);
+		buttonList.add(btnGoToNext);
+
+		btnGoToLast = new GuiImageButton(4, width / 2 + 23, topY + 12, EiraGui.texMenu, 48, 192, 16, 16);
+		buttonList.add(btnGoToLast);
+
+		btnFavorite = new GuiImageButton(5, rightX - 37, topY + 12, EiraGui.texMenu, 0, 208, 32, 32);
+		btnFavorite.setTooltipText("Favorite");
+		buttonList.add(btnFavorite);
+
+		btnUpload = new GuiImageButton(6, rightX - 37, topY + 50, EiraGui.texMenu, 32, 208, 32, 32);
+		btnUpload.setTooltipText("Upload");
+		buttonList.add(btnUpload);
+
+		btnClipboard = new GuiImageButton(7, rightX - 37, topY + 50, EiraGui.texMenu, 32, 208, 32, 32); // TODO clipboard icon
+		btnClipboard.visible = false;
+		btnClipboard.setTooltipText("To Clipboard");
+		buttonList.add(btnClipboard);
+
+		btnZoom = new GuiImageButton(8, rightX - 37, topY + 135, EiraGui.texMenu, 0, 176, 32, 32);
+		btnZoom.setTooltipText("Zoom");
+		buttonList.add(btnZoom);
+
+		btnDelete = new GuiImageButton(9, leftX + 5, topY + 12, EiraGui.texMenu, 0, 176, 32, 32); // TODO delete icon
+		btnDelete.setTooltipText("Delete");
+		buttonList.add(btnDelete);
+
+		btnReupload = new GuiImageButton(10, leftX + 5, topY + 50, EiraGui.texMenu, 32, 208, 32, 32);
+		btnReupload.visible = false;
+		btnReupload.setTooltipText("Re-Upload");
+		buttonList.add(btnReupload);
+
+		// clipboard button
 
 		updateScreenshot();
 
@@ -131,10 +176,12 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 		Minecraft.getMinecraft().displayGuiScreen(this);
 	}
 
+	private static final List<String> tooltipList = new ArrayList<String>();
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float par3) {
 		drawLightBackground(menuX, menuY, menuWidth, menuHeight);
 
+		// TODO add a background panel to the buttons
 		if(imgPreview != null) {
 			// Fade all image buttons in/out on hover of image
 			if(mouseX >= imgX && mouseX < imgX + imgWidth && mouseY >= imgY && mouseY < imgY + imgHeight) {
@@ -164,6 +211,26 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 		}
 
 		super.drawScreen(mouseX, mouseY, par3);
+
+		for (int i = 0; i < buttonList.size(); i++) {
+			GuiButton button = (GuiButton) buttonList.get(i);
+			if (button instanceof GuiImageButton) {
+				GuiImageButton imageButton = (GuiImageButton) button;
+				if(imageButton.isInside(mouseX, mouseY) && imageButton.getTooltipText() != null) {
+					if(imageButton != hoverObject) {
+						hoverObject = imageButton;
+						hoverTime = 0f;
+					}
+					hoverTime++;
+					if(hoverTime > TOOLTIP_TIME) {
+						tooltipList.clear();
+						tooltipList.add(imageButton.getTooltipText());
+						func_146283_a(tooltipList, mouseX, mouseY);
+					}
+					break;
+				}
+			}
+		}
 	}
 
 }
