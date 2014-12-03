@@ -1,23 +1,33 @@
 {
 	"versionList": [
 		{
+			"mcVersion":"1.8",
+			"modVersion":"mc1.8-v1.7.2",
+			"changeLog": [
+				"Updated to Minecraft 1.8"
+			],
+			"updateURL":"http://minecraft.curseforge.com/mc-mods/68420-eirairc/files/2219844/download",
+			"isDirectLink":"true",
+			"newFileName":""
+		},
+		{
 			"mcVersion":"1.7.10",
 			"modVersion":"mc1.7.10-v1.7.52",
 			"changeLog": [
-                "Fixed SSL connections not working at all."
-                "Fixed crashes on invalid color config settings."
+                "Fixed SSL connections not working at all.",
+                "Fixed crashes on invalid color config settings.",
                 "Fixed crashes on no color config settings."
 			],
 			"updateURL":"http://minecraft.curseforge.com/mc-mods/68420-eirairc/files/2217853/download",
 			"isDirectLink":"true",
 			"newFileName":""
-		}
+		},
         {
             "mcVersion":"1.7.2",
             "modVersion":"mc1.7.2-v1.7.22",
             "changeLog": [
-                "Fixed SSL connections not working at all."
-                "Fixed crashes on invalid color config settings."
+                "Fixed SSL connections not working at all.",
+                "Fixed crashes on invalid color config settings.",
                 "Fixed crashes on no color config settings."
             ],
             "updateURL":"http://minecraft.curseforge.com/mc-mods/68420-eirairc/files/2217852",
