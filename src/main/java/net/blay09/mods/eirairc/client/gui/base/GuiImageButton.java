@@ -1,8 +1,10 @@
 package net.blay09.mods.eirairc.client.gui.base;
 
 import cpw.mods.fml.client.config.GuiUtils;
+import net.blay09.mods.eirairc.client.gui.EiraGui;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
@@ -11,13 +13,14 @@ import org.lwjgl.opengl.GL11;
  */
 public class GuiImageButton extends GuiButton {
 
-	private static final float FADE_PER_FRAME = 0.01f;
+	private static final float FADE_PER_FRAME = 0.05f;
 
 	private final ResourceLocation res;
 	private final int texCoordX;
 	private final int texCoordY;
 	private float alphaFade = 1f;
 	private int fadeMode;
+	private String tooltipText;
 
 	public GuiImageButton(int id, int xPos, int yPos, ResourceLocation res, int texCoordX, int texCoordY, int texWidth, int texHeight) {
 		super(id, xPos, yPos, "");
@@ -26,6 +29,14 @@ public class GuiImageButton extends GuiButton {
 		this.texCoordY = texCoordY;
 		width = texWidth;
 		height = texHeight;
+	}
+
+	public String getTooltipText() {
+		return tooltipText;
+	}
+
+	public void setTooltipText(String tooltipText) {
+		this.tooltipText = tooltipText;
 	}
 
 	public void setFadeMode(int fadeMode) {
@@ -49,21 +60,34 @@ public class GuiImageButton extends GuiButton {
 			}
 			// Render the button with fade alpha and hover effect
 			mc.renderEngine.bindTexture(res);
+			boolean hovered = false;
 			if(enabled) {
 				if (mouseX >= xPosition && mouseY >= yPosition && mouseX < xPosition + width && mouseY < yPosition + height) {
 					GL11.glColor4f(1f, 1f, 1f, 1f * alphaFade);
+					hovered = true;
 				} else {
-					GL11.glColor4f(1f, 1f, 1f, 0.5f * alphaFade);
+					GL11.glColor4f(1f, 1f, 1f, 0.75f * alphaFade);
 				}
 			} else {
 				GL11.glColor4f(1f, 1f, 1f, 0.25f * alphaFade);
 			}
+			if(hovered) {
+				GL11.glPushMatrix();
+				GL11.glTranslatef(0.5f, 0.5f, 0.5f);
+			}
 			GuiUtils.drawTexturedModalRect(xPosition, yPosition, texCoordX, texCoordY, width, height, this.zLevel);
+			if(hovered) {
+				GL11.glPopMatrix();
+			}
 		}
 	}
 
 	@Override
 	public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
-		return (enabled && visible && mouseX >= xPosition && mouseY >= yPosition && mouseX < xPosition + width && mouseY < yPosition + height);
+		return (enabled && visible && isInside(mouseX, mouseY));
+	}
+
+	public boolean isInside(int x, int y) {
+		return (x >= xPosition && y >= yPosition && x < xPosition + width && y < yPosition + height);
 	}
 }
