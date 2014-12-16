@@ -1,5 +1,6 @@
 package net.blay09.mods.eirairc.client.gui.servers;
 
+import cpw.mods.fml.client.config.GuiCheckBox;
 import cpw.mods.fml.client.config.GuiConfig;
 import net.blay09.mods.eirairc.client.gui.GuiEiraIRCConfig;
 import net.blay09.mods.eirairc.client.gui.base.GuiAdvancedTextField;
@@ -8,6 +9,7 @@ import net.blay09.mods.eirairc.client.gui.base.tab.GuiTabContainer;
 import net.blay09.mods.eirairc.client.gui.base.tab.GuiTabPage;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
+import net.blay09.mods.eirairc.config.settings.GeneralBooleanComponent;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.Globals;
 import net.minecraft.client.Minecraft;
@@ -29,6 +31,7 @@ public class GuiChannelConfig extends GuiTabPage implements GuiYesNoCallback {
 
 	private GuiTextField txtName;
 	private GuiAdvancedTextField txtPassword;
+	private GuiCheckBox chkAutoJoin;
 
 	private GuiButton btnTheme;
 	private GuiButton btnBotSettings;
@@ -86,9 +89,20 @@ public class GuiChannelConfig extends GuiTabPage implements GuiYesNoCallback {
 		txtPassword.setDefaultPasswordChar();
 		textFieldList.add(txtPassword);
 
+		boolean oldState;
+		if(chkAutoJoin != null) {
+			oldState = chkAutoJoin.isChecked();
+		} else {
+			oldState = config.getGeneralSettings().getBoolean(GeneralBooleanComponent.AutoJoin);
+		}
+		chkAutoJoin = new GuiCheckBox(4, leftX, topY + 60, " Auto Join", oldState);
+		buttonList.add(chkAutoJoin);
+
 		btnDelete = new GuiButton(0, rightX - 100, topY + 150, 100, 20, "Delete");
 		btnDelete.packedFGColour = -65536;
 		buttonList.add(btnDelete);
+
+		labelList.add(new GuiLabel("Override Settings", rightX - 100, topY + 5, Globals.TEXT_COLOR));
 
 		btnTheme = new GuiButton(1, rightX - 100, topY + 15, 100, 20, "Configure Theme...");
 		buttonList.add(btnTheme);
@@ -158,6 +172,8 @@ public class GuiChannelConfig extends GuiTabPage implements GuiYesNoCallback {
 			}
 			serverConfig.removeChannelConfig(config.getName());
 			config.setName(txtName.getText());
+			config.setPassword(txtPassword.getText());
+			config.getGeneralSettings().setBoolean(GeneralBooleanComponent.AutoJoin, chkAutoJoin.isChecked());
 			serverConfig.addChannelConfig(config);
 			isNew = false;
 		}

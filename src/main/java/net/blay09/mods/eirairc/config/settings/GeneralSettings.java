@@ -32,6 +32,14 @@ public class GeneralSettings {
 		return booleans.get(component);
 	}
 
+	public void setBoolean(GeneralBooleanComponent component, boolean value) {
+		if(parent.getBoolean(component) == value) {
+			booleans.remove(component);
+		} else {
+			booleans.put(component, value);
+		}
+	}
+
 	public boolean isReadOnly() {
 		return getBoolean(GeneralBooleanComponent.ReadOnly);
 	}

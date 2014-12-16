@@ -181,31 +181,30 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 	public void drawScreen(int mouseX, int mouseY, float par3) {
 		drawLightBackground(menuX, menuY, menuWidth, menuHeight);
 
-		// TODO add a background panel to the buttons
-		if(imgPreview != null) {
-			// Fade all image buttons in/out on hover of image
-			if(mouseX >= imgX && mouseX < imgX + imgWidth && mouseY >= imgY && mouseY < imgY + imgHeight) {
-				if(!buttonsVisible) {
-					for (int i = 0; i < buttonList.size(); i++) {
-						GuiButton button = (GuiButton) buttonList.get(i);
-						if (button instanceof GuiImageButton) {
-							((GuiImageButton) button).setFadeMode(1);
-						}
+		// Fade all image buttons in/out on hover of image
+		if(imgPreview != null && mouseX >= imgX && mouseX < imgX + imgWidth && mouseY >= imgY && mouseY < imgY + imgHeight) {
+			if(!buttonsVisible) {
+				for (int i = 0; i < buttonList.size(); i++) {
+					GuiButton button = (GuiButton) buttonList.get(i);
+					if (button instanceof GuiImageButton) {
+						((GuiImageButton) button).setFadeMode(1);
 					}
-					buttonsVisible = true;
 				}
-			} else {
-				if(buttonsVisible) {
-					for (int i = 0; i < buttonList.size(); i++) {
-						GuiButton button = (GuiButton) buttonList.get(i);
-						if (button instanceof GuiImageButton) {
-							((GuiImageButton) button).setFadeMode(-1);
-						}
-					}
-					buttonsVisible = false;
-				}
+				buttonsVisible = true;
 			}
+		} else {
+			if (buttonsVisible) {
+				for (int i = 0; i < buttonList.size(); i++) {
+					GuiButton button = (GuiButton) buttonList.get(i);
+					if (button instanceof GuiImageButton) {
+						((GuiImageButton) button).setFadeMode(-1);
+					}
+				}
+				buttonsVisible = false;
+			}
+		}
 
+		if(imgPreview != null) {
 			// Render the screenshot preview image
 			imgPreview.draw(imgX, imgY, imgWidth, imgHeight, zLevel);
 		}

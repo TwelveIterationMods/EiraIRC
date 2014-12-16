@@ -6,6 +6,7 @@ import net.blay09.mods.eirairc.client.gui.base.GuiLabel;
 import net.blay09.mods.eirairc.client.gui.base.tab.GuiTabContainer;
 import net.blay09.mods.eirairc.client.gui.base.tab.GuiTabPage;
 import net.blay09.mods.eirairc.config.ServerConfig;
+import net.blay09.mods.eirairc.config.settings.GeneralBooleanComponent;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.Globals;
 import net.minecraft.client.Minecraft;
@@ -32,6 +33,7 @@ public class GuiServerConfigAdvanced extends GuiTabPage implements GuiYesNoCallb
 	private GuiAdvancedTextField txtServerPassword;
 	private GuiAdvancedTextField txtCharset;
 	private GuiCheckBox chkSSL;
+	private GuiCheckBox chkAutoConnect;
 	private GuiButton btnBack;
 	private GuiButton btnDelete;
 
@@ -131,6 +133,14 @@ public class GuiServerConfigAdvanced extends GuiTabPage implements GuiYesNoCallb
 		chkSSL = new GuiCheckBox(2, rightX - 100, topY + 80, " Use SSL", oldState);
 		buttonList.add(chkSSL);
 
+		if(chkAutoConnect != null) {
+			oldState = chkAutoConnect.isChecked();
+		} else {
+			oldState = config.getGeneralSettings().getBoolean(GeneralBooleanComponent.AutoJoin);
+		}
+		chkAutoConnect = new GuiCheckBox(3, rightX - 100, topY + 100, " Auto Connect", oldState);
+		buttonList.add(chkAutoConnect);
+
 		btnDelete = new GuiButton(0, rightX - 100, topY + 150, 100, 20, "Delete");
 		btnDelete.packedFGColour = -65536;
 		buttonList.add(btnDelete);
@@ -182,6 +192,7 @@ public class GuiServerConfigAdvanced extends GuiTabPage implements GuiYesNoCallb
 		config.setNickServ(txtNickServName.getText(), txtNickServPassword.getText());
 		config.setServerPassword(txtServerPassword.getText());
 		config.setIsSSL(chkSSL.isChecked());
+		config.getGeneralSettings().setBoolean(GeneralBooleanComponent.AutoJoin, chkAutoConnect.isChecked());
 		config.setCharset(txtCharset.getTextOrDefault());
 		ConfigurationHandler.saveServers();
 		tabContainer.initGui();

@@ -101,13 +101,15 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 		btnDelete.packedFGColour = -65536;
 		buttonList.add(btnDelete);
 
-		btnTheme = new GuiButton(1, leftX, topY + 85, 100, 20, "Configure Theme...");
+		labelList.add(new GuiLabel("Override Settings", leftX, topY + 85, Globals.TEXT_COLOR));
+
+		btnTheme = new GuiButton(1, leftX, topY + 95, 100, 20, "Configure Theme...");
 		buttonList.add(btnTheme);
 
-		btnBotSettings = new GuiButton(2, leftX, topY + 110, 100, 20, "Configure Bot...");
+		btnBotSettings = new GuiButton(2, leftX, topY + 120, 100, 20, "Configure Bot...");
 		buttonList.add(btnBotSettings);
 
-		btnOtherSettings = new GuiButton(3, leftX, topY + 135, 100, 20, "Other Settings...");
+		btnOtherSettings = new GuiButton(3, leftX, topY + 145, 100, 20, "Other Settings...");
 		buttonList.add(btnOtherSettings);
 
 		btnAdvanced = new GuiButton(4, rightX - 100, topY + 125, 100, 20, "Advanced");
@@ -152,6 +154,21 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 			} else {
 				mc.displayGuiScreen(new GuiYesNo(this, "Do you really want to delete this server configuration?", "This can't be undone, so be careful!", 0));
 			}
+		}
+	}
+
+	@Override
+	public void keyTyped(char unicode, int keyCode) {
+		super.keyTyped(unicode, keyCode);
+		if(txtAddress.isFocused()) {
+			boolean enabled = txtAddress.getText().length() > 0;
+			btnBotSettings.enabled = enabled;
+			btnAdvanced.enabled = enabled;
+			btnDelete.enabled = enabled;
+			btnOtherSettings.enabled = enabled;
+			btnTheme.enabled = enabled;
+			btnChannelAdd.enabled = enabled;
+			btnChannelDelete.enabled = enabled;
 		}
 	}
 

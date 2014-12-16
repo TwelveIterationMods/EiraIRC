@@ -15,10 +15,18 @@ public class GuiServerConfigContainer extends GuiTabContainer {
 	public GuiServerConfigContainer(GuiScreen parentScreen) {
 		super(parentScreen);
 
+		// Create a tab page for every server configuration
 		for(ServerConfig config : ConfigurationHandler.getServerConfigs()) {
 			pages.add(new GuiServerConfig(this, config));
 		}
 
+		// If no servers are set up yet, start on an empty server form by default
+		if(pages.size() == 0) {
+			GuiServerConfig newTab = new GuiServerConfig(this);
+			pages.add(newTab);
+		}
+
+		// Add a dummy tab that allows adding of new server configurations
 		pages.add(new DummyTabPage(this, "+") {
 			@Override
 			public void tabClicked() {
@@ -38,6 +46,7 @@ public class GuiServerConfigContainer extends GuiTabContainer {
 			}
 		});
 
+		// Select the first tab on startup
 		currentTab = pages.get(0);
 	}
 

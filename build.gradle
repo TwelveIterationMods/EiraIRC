@@ -67,3 +67,9 @@ task cleanBuildDir(type: Delete) {
 }
 
 build.shouldRunAfter(cleanBuildDir)
+
+sourceSets {
+    main {
+        output.resourcesDir = output.classesDir
+    }
+}
