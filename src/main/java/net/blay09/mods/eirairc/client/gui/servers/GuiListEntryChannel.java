@@ -24,6 +24,15 @@ public class GuiListEntryChannel extends GuiListTextEntry {
 	}
 
 	@Override
+	public void setSelected(boolean selected) {
+		super.setSelected(selected);
+
+		if(selected) {
+			parent.channelSelected(config);
+		}
+	}
+
+	@Override
 	public void onDoubleClick() {
 		parent.channelClicked(config);
 	}

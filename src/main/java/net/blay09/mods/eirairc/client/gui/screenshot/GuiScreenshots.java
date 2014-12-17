@@ -109,7 +109,7 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 		btnUpload.setTooltipText("Upload");
 		buttonList.add(btnUpload);
 
-		btnClipboard = new GuiImageButton(7, rightX - 37, topY + 50, EiraGui.texMenu, 32, 208, 32, 32); // TODO clipboard icon
+		btnClipboard = new GuiImageButton(7, rightX - 37, topY + 50, EiraGui.texMenu, 128, 208, 32, 32);
 		btnClipboard.visible = false;
 		btnClipboard.setTooltipText("To Clipboard");
 		buttonList.add(btnClipboard);
@@ -118,7 +118,7 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 		btnZoom.setTooltipText("Zoom");
 		buttonList.add(btnZoom);
 
-		btnDelete = new GuiImageButton(9, leftX + 5, topY + 12, EiraGui.texMenu, 0, 176, 32, 32); // TODO delete icon
+		btnDelete = new GuiImageButton(9, leftX + 5, topY + 12, EiraGui.texMenu, 96, 208, 32, 32);
 		btnDelete.setTooltipText("Delete");
 		buttonList.add(btnDelete);
 
@@ -215,7 +215,7 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 			GuiButton button = (GuiButton) buttonList.get(i);
 			if (button instanceof GuiImageButton) {
 				GuiImageButton imageButton = (GuiImageButton) button;
-				if(imageButton.isInside(mouseX, mouseY) && imageButton.getTooltipText() != null) {
+				if(imageButton.isInside(mouseX, mouseY) && imageButton.isAlphaVisible() && imageButton.getTooltipText() != null) {
 					if(imageButton != hoverObject) {
 						hoverObject = imageButton;
 						hoverTime = 0f;

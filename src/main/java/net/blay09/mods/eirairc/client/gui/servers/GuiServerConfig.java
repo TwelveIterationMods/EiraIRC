@@ -1,6 +1,8 @@
 package net.blay09.mods.eirairc.client.gui.servers;
 
 import cpw.mods.fml.client.config.GuiConfig;
+import net.blay09.mods.eirairc.EiraIRC;
+import net.blay09.mods.eirairc.api.IRCConnection;
 import net.blay09.mods.eirairc.client.gui.EiraGui;
 import net.blay09.mods.eirairc.client.gui.GuiEiraIRCConfig;
 import net.blay09.mods.eirairc.client.gui.base.*;
@@ -12,6 +14,7 @@ import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.Globals;
+import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
 import net.minecraftforge.common.config.ConfigElement;
@@ -26,8 +29,9 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 	private GuiTextField txtAddress;
 	private GuiAdvancedTextField txtNick;
 	private GuiList<GuiListEntryChannel> lstChannels;
-	private GuiButton btnChannelAdd;
-	private GuiButton btnChannelDelete;
+	private GuiImageButton btnChannelAdd;
+	private GuiImageButton btnChannelDelete;
+	private GuiImageButton btnChannelJoinLeave;
 	private GuiButton btnTheme;
 	private GuiButton btnBotSettings;
 	private GuiButton btnOtherSettings;
@@ -91,10 +95,13 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 		}
 		listList.add(lstChannels);
 
-		btnChannelAdd = new GuiImageButton(5, rightX - 95, topY + 100, EiraGui.texMenu, 32, 144, 10, 10);
+		btnChannelJoinLeave = new GuiImageButton(7, rightX - 95, topY + 100, EiraGui.texMenu, 48, 144, 16, 16);
+		buttonList.add(btnChannelJoinLeave);
+
+		btnChannelAdd = new GuiImageButton(5, rightX - 75, topY + 100, EiraGui.texMenu, 32, 144, 10, 10);
 		buttonList.add(btnChannelAdd);
 
-		btnChannelDelete = new GuiImageButton(6, rightX - 75, topY + 100, EiraGui.texMenu, 32, 160, 10, 10);
+		btnChannelDelete = new GuiImageButton(6, rightX - 55, topY + 100, EiraGui.texMenu, 32, 160, 10, 10);
 		buttonList.add(btnChannelDelete);
 
 		btnDelete = new GuiButton(0, rightX - 100, topY + 150, 100, 20, "Delete");
@@ -143,9 +150,25 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 		} else if(button == btnChannelAdd) {
 			tabContainer.setCurrentTab(new GuiChannelConfig(tabContainer, this), false);
 		} else if(button == btnChannelDelete) {
-			if(lstChannels.hasSelection()) {
+			if (lstChannels.hasSelection()) {
 				deleteChannel = lstChannels.getSelectedItem().getConfig();
 				mc.displayGuiScreen(new GuiYesNo(this, "Do you really want to delete this channel configuration?", "This can't be undone, so be careful!", 1));
+			}
+		} else if(button == btnChannelJoinLeave) {
+			applyChanges();
+			if(lstChannels.hasSelection()) {
+				IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(config.getAddress());
+				if(connection == null) {
+					connection = Utils.connectTo(config);
+				}
+				ChannelConfig channelConfig = lstChannels.getSelectedItem().getConfig();
+				if(connection.getChannel(channelConfig.getName()) != null) {
+					connection.part(channelConfig.getName());
+					setChannelJoinLeaveButtonState(false);
+				} else {
+					connection.join(channelConfig.getName(), channelConfig.getPassword());
+					setChannelJoinLeaveButtonState(true);
+				}
 			}
 		} else if(button == btnDelete) {
 			if(isNew) {
@@ -169,11 +192,29 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 			btnTheme.enabled = enabled;
 			btnChannelAdd.enabled = enabled;
 			btnChannelDelete.enabled = enabled;
+			btnChannelJoinLeave.enabled = enabled;
 		}
 	}
 
-	public void channelClicked(ChannelConfig config) {
-		tabContainer.setCurrentTab(new GuiChannelConfig(tabContainer, this, config), false);
+	private void setChannelJoinLeaveButtonState(boolean state) {
+		if(state) {
+			btnChannelJoinLeave.setTextureRegion(48, 160, 16, 16);
+		} else {
+			btnChannelJoinLeave.setTextureRegion(48, 144, 16, 16);
+		}
+	}
+
+	public void channelSelected(ChannelConfig channelConfig) {
+		IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(config.getAddress());
+		if(connection != null && connection.getChannel(channelConfig.getName()) != null) {
+			setChannelJoinLeaveButtonState(true);
+		} else {
+			setChannelJoinLeaveButtonState(false);
+		}
+	}
+
+	public void channelClicked(ChannelConfig channelConfig) {
+		tabContainer.setCurrentTab(new GuiChannelConfig(tabContainer, this, channelConfig), false);
 	}
 
 	@Override

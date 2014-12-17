@@ -95,7 +95,7 @@ public class GuiChannelConfig extends GuiTabPage implements GuiYesNoCallback {
 		} else {
 			oldState = config.getGeneralSettings().getBoolean(GeneralBooleanComponent.AutoJoin);
 		}
-		chkAutoJoin = new GuiCheckBox(4, leftX, topY + 60, " Auto Join", oldState);
+		chkAutoJoin = new GuiCheckBox(4, leftX, topY + 75, " Auto Join", oldState);
 		buttonList.add(chkAutoJoin);
 
 		btnDelete = new GuiButton(0, rightX - 100, topY + 150, 100, 20, "Delete");

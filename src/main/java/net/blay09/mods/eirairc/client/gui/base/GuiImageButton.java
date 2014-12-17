@@ -16,8 +16,8 @@ public class GuiImageButton extends GuiButton {
 	private static final float FADE_PER_FRAME = 0.05f;
 
 	private final ResourceLocation res;
-	private final int texCoordX;
-	private final int texCoordY;
+	private int texCoordX;
+	private int texCoordY;
 	private float alphaFade = 1f;
 	private int fadeMode;
 	private String tooltipText;
@@ -41,6 +41,17 @@ public class GuiImageButton extends GuiButton {
 
 	public void setFadeMode(int fadeMode) {
 		this.fadeMode = fadeMode;
+	}
+
+	public void setTextureRegion(int texCoordX, int texCoordY, int texWidth, int texHeight) {
+		this.texCoordX = texCoordX;
+		this.texCoordY = texCoordY;
+		width = texWidth;
+		height = texHeight;
+	}
+
+	public boolean isAlphaVisible() {
+		return alphaFade > 0;
 	}
 
 	@Override
