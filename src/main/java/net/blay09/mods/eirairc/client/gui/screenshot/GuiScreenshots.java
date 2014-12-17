@@ -162,7 +162,8 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 		} else if(button == btnUpload) {
 			ScreenshotManager.getInstance().uploadScreenshot(currentScreenshot, ScreenshotAction.None);
 		} else if(button == btnFavorite) {
-			// TODO implement screenshot favorites
+			currentScreenshot.setFavorited(!currentScreenshot.isFavorited());
+			setFavoriteButtonState(currentScreenshot.isFavorited());
 		} else if(button == btnZoom) {
 			mc.displayGuiScreen(new GuiScreenshotBigPreview(this, imgPreview));
 		}
@@ -232,4 +233,11 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 		}
 	}
 
+	public void setFavoriteButtonState(boolean state) {
+		if(state) {
+			btnFavorite.setTextureRegion(0, 208, 32, 32);
+		} else {
+			btnFavorite.setTextureRegion(64, 208, 32, 32);
+		}
+	}
 }

@@ -164,9 +164,11 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 				ChannelConfig channelConfig = lstChannels.getSelectedItem().getConfig();
 				if(connection.getChannel(channelConfig.getName()) != null) {
 					connection.part(channelConfig.getName());
+					lstChannels.getSelectedItem().setJoined(true);
 					setChannelJoinLeaveButtonState(false);
 				} else {
 					connection.join(channelConfig.getName(), channelConfig.getPassword());
+					lstChannels.getSelectedItem().setJoined(false);
 					setChannelJoinLeaveButtonState(true);
 				}
 			}
