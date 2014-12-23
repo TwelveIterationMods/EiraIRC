@@ -13,7 +13,8 @@ import net.blay09.mods.eirairc.config.settings.BotSettings;
 import net.blay09.mods.eirairc.config.settings.BotStringComponent;
 import net.blay09.mods.eirairc.config.settings.GeneralSettings;
 import net.blay09.mods.eirairc.config.settings.ThemeSettings;
-import net.blay09.mods.eirairc.handler.ConfigurationHandler;
+import net.blay09.mods.eirairc.config.ConfigurationHandler;
+import net.blay09.mods.eirairc.irc.IRCConnectionImpl;
 
 public class ConfigHelper {
 	
@@ -37,7 +38,7 @@ public class ConfigHelper {
 	}
 
 	public static ServerConfig getServerConfig(IRCConnection connection) {
-		return ConfigurationHandler.getOrCreateServerConfig(connection.getHost());
+		return ((IRCConnectionImpl) connection).getServerConfig();
 	}
 	
 	public static ChannelConfig getChannelConfig(IRCChannel channel) {

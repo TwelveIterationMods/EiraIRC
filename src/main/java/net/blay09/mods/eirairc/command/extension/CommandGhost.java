@@ -11,7 +11,7 @@ import net.blay09.mods.eirairc.command.SubCommand;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.base.ServiceConfig;
 import net.blay09.mods.eirairc.config.base.ServiceSettings;
-import net.blay09.mods.eirairc.handler.ConfigurationHandler;
+import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.IRCResolver;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;

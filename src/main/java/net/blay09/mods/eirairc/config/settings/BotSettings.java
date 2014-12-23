@@ -2,7 +2,7 @@ package net.blay09.mods.eirairc.config.settings;
 
 import com.google.gson.JsonObject;
 import net.blay09.mods.eirairc.config.base.MessageFormatConfig;
-import net.blay09.mods.eirairc.handler.ConfigurationHandler;
+import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.common.config.Configuration;

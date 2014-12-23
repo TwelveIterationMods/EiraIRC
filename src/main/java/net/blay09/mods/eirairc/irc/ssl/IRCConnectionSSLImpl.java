@@ -2,6 +2,7 @@
 
 package net.blay09.mods.eirairc.irc.ssl;
 
+import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.irc.*;
 import net.blay09.mods.eirairc.util.Utils;
@@ -20,8 +21,8 @@ public class IRCConnectionSSLImpl extends IRCConnectionImpl {
 
 	private SSLSocket sslSocket;
 
-	public IRCConnectionSSLImpl(String host, String password, String nick, String ident, String description) {
-		super(host, password, nick, ident, description);
+	public IRCConnectionSSLImpl(ServerConfig serverConfig, String nick) {
+		super(serverConfig, nick);
 	}
 
 	@Override
@@ -58,8 +59,8 @@ public class IRCConnectionSSLImpl extends IRCConnectionImpl {
 				System.out.println("Couldn't connect to " + host + " at port " + port + ": untrusted certificate");
 				return null;
 			}
-			writer = new BufferedWriter(new OutputStreamWriter(sslSocket.getOutputStream(), charset));
-			reader = new BufferedReader(new InputStreamReader(sslSocket.getInputStream(), charset));
+			writer = new BufferedWriter(new OutputStreamWriter(sslSocket.getOutputStream(), serverConfig.getCharset()));
+			reader = new BufferedReader(new InputStreamReader(sslSocket.getInputStream(), serverConfig.getCharset()));
 			sender.setWriter(writer);
 		} catch (UnknownHostException e) {
 			e.printStackTrace();

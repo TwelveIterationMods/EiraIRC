@@ -26,6 +26,7 @@ import net.blay09.mods.eirairc.api.IRCConnection;
 import net.blay09.mods.eirairc.api.IRCContext;
 import net.blay09.mods.eirairc.api.IRCUser;
 import net.blay09.mods.eirairc.bot.IRCBotImpl;
+import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.config.base.ServiceConfig;
@@ -38,6 +39,7 @@ import net.blay09.mods.eirairc.irc.IRCConnectionImpl;
 import net.blay09.mods.eirairc.irc.ssl.IRCConnectionSSLImpl;
 import net.blay09.mods.eirairc.net.EiraPlayerInfo;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -153,7 +155,23 @@ public class Utils {
 		}
 		return name;
 	}
-	
+
+	public static String getServerName() {
+		ServerData serverData = Minecraft.getMinecraft().func_147104_D(); // getServerData
+		if(serverData != null) {
+			return serverData.serverName;
+		}
+		return null;
+	}
+
+	public static String getServerAddress() {
+		ServerData serverData = Minecraft.getMinecraft().func_147104_D(); // getServerData
+		if(serverData != null) {
+			return serverData.serverIP;
+		}
+		return null;
+	}
+
 	public static boolean isOP(ICommandSender sender) {
 		if(MinecraftServer.getServer() == null || MinecraftServer.getServer().isSinglePlayer()) {
 			return true;
@@ -279,24 +297,32 @@ public class Utils {
 		list.add("false");		
 	}
 
-	public static void redirectTo(ServerConfig config) {
-		IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(config.getAddress());
-		if(connection == null) {
-			connection = connectTo(config);
-		} else {
-			
+	public static boolean redirectTo(ServerConfig serverConfig, boolean solo) {
+		IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(serverConfig.getAddress());
+		if(connection != null && solo) {
+			connection.disconnect("Redirected by " + Utils.getCurrentServerName());
+			connection = null;
 		}
+		if(connection == null) {
+			connection = connectTo(serverConfig);
+			if(connection == null) {
+				return false;
+			}
+		} else {
+			for(ChannelConfig channelConfig : serverConfig.getChannelConfigs()) {
+				connection.join(channelConfig.getName(), channelConfig.getPassword());
+			}
+		}
+		return true;
 	}
 
 	public static IRCConnectionImpl connectTo(ServerConfig config) {
 		IRCConnectionImpl connection;
-		BotSettings botSettings = config.getBotSettings();
 		if(config.isSSL()) {
-			connection = new IRCConnectionSSLImpl(config.getAddress(), config.getServerPassword(), ConfigHelper.getFormattedNick(config), botSettings.getString(BotStringComponent.Ident), botSettings.getString(BotStringComponent.Description));
+			connection = new IRCConnectionSSLImpl(config, ConfigHelper.getFormattedNick(config));
 		} else {
-			connection = new IRCConnectionImpl(config.getAddress(), config.getServerPassword(), ConfigHelper.getFormattedNick(config), botSettings.getString(BotStringComponent.Ident), botSettings.getString(BotStringComponent.Description));
+			connection = new IRCConnectionImpl(config, ConfigHelper.getFormattedNick(config));
 		}
-		connection.setCharset(config.getCharset());
 		connection.setBot(new IRCBotImpl(connection));
 		if(connection.start()) {
 			return connection;
