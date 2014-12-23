@@ -26,6 +26,7 @@ public class SharedGlobalConfig {
 	public static Configuration thisConfig;
 
 	// General
+	public static String defaultChat = "Minecraft";
 	public static boolean enablePlayerAliases = false;
 	public static boolean enablePlayerColors = true;
 	public static final List<String> colorBlacklist = new ArrayList<String>();
@@ -53,6 +54,7 @@ public class SharedGlobalConfig {
 		}
 
 		// General
+		defaultChat = thisConfig.getString("defaultChat", GENERAL, defaultChat, "", "eirairc:config.property.defaultChat");
 		enablePlayerAliases = thisConfig.getBoolean("enablePlayerAliases", GENERAL, enablePlayerAliases, "", "eirairc:config.property.enablePlayerAliases");
 		enablePlayerColors = thisConfig.getBoolean("enablePlayerColors", GENERAL, enablePlayerColors, "", "eirairc:config.property.enablePlayerColors");
 		String[] colorBlacklistArray = thisConfig.getStringList("colorBlacklist", GENERAL, Globals.DEFAULT_COLOR_BLACKLIST, "", null, "eirairc:config.property.colorBlacklist");
@@ -87,6 +89,7 @@ public class SharedGlobalConfig {
 		thisConfig.setCategoryComment(SETTINGS, I18n.format("eirairc:config.category.settings.tooltip"));
 
 		// General
+		thisConfig.get(GENERAL, "defaultChat", "", I18n.format("eirairc:config.property.defaultChat")).set(defaultChat);
 		thisConfig.get(GENERAL, "enablePlayerAliases", false, I18n.format("eirairc:config.property.enablePlayerAliases.tooltip")).set(enablePlayerAliases);
 		thisConfig.get(GENERAL, "enablePlayerColors", false, I18n.format("eirairc:config.property.enablePlayerColors.tooltip")).set(enablePlayerColors);
 		thisConfig.get(GENERAL, "colorBlacklist", new String[0], I18n.format("eirairc:config.property.colorBlacklist.tooltip")).set(colorBlacklist.toArray(new String[colorBlacklist.size()]));

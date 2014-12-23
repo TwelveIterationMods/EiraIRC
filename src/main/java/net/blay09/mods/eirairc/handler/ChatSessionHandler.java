@@ -11,6 +11,7 @@ import net.blay09.mods.eirairc.api.IRCChannel;
 import net.blay09.mods.eirairc.api.IRCConnection;
 import net.blay09.mods.eirairc.api.IRCContext;
 import net.blay09.mods.eirairc.api.IRCUser;
+import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.irc.IRCChannelImpl;
 import net.blay09.mods.eirairc.irc.IRCUserImpl;
 
@@ -21,51 +22,41 @@ public class ChatSessionHandler {
 	private final List<IRCUser> validTargetUsers = new ArrayList<IRCUser>();
 	private int targetChannelIdx = 0;
 	private int targetUserIdx = -1;
-	
-	public String getChatTarget() {
-		return chatTarget;
+
+	public ChatSessionHandler() {
+		if(!SharedGlobalConfig.defaultChat.equals("Minecraft")) {
+			chatTarget = SharedGlobalConfig.defaultChat;
+		}
 	}
-	
+
 	public void addTargetUser(IRCUser user) {
 		if(!validTargetUsers.contains(user)) {
 			validTargetUsers.add(user);
 		}
 	}
-	
+
 	public void addTargetChannel(IRCChannel channel) {
 		if(!validTargetChannels.contains(channel)) {
 			validTargetChannels.add(channel);
 		}
 	}
-	
+
 	public void removeTargetUser(IRCUser user) {
 		validTargetUsers.remove(user);
 	}
-	
+
 	public void removeTargetChannel(IRCChannel channel) {
 		validTargetChannels.remove(channel);
 	}
-	
+
 	public void setChatTarget(String chatTarget) {
 		this.chatTarget = chatTarget;
 	}
-	
-	public void setChatTarget(IRCUserImpl user) {
-		this.chatTarget = user.getIdentifier();
+
+	public String getChatTarget() {
+		return chatTarget;
 	}
-	
-	public void setChatTarget(IRCChannelImpl channel) {
-		this.chatTarget = channel.getIdentifier();
-	}
-	
-	public boolean isChannelTarget() {
-		return chatTarget.contains("#");
-	}
-	
-	public boolean isUserTarget() {
-		return !isChannelTarget();
-	}
-	
+
 	public String getNextTarget(boolean users) {
 		if(users) {
 			if(validTargetUsers.isEmpty()) {
@@ -101,12 +92,20 @@ public class ChatSessionHandler {
 		if(connection == null) {
 			return null;
 		}
-		String target = chatTarget.substring(sepIdx + 1); 
+		String target = chatTarget.substring(sepIdx + 1);
 		if(isChannelTarget()) {
 			return connection.getChannel(target);
 		} else {
 			return connection.getUser(target);
 		}
+	}
+
+	public boolean isChannelTarget() {
+		return chatTarget != null && chatTarget.contains("#");
+	}
+
+	public boolean isUserTarget() {
+		return !isChannelTarget();
 	}
 
 	public boolean isMinecraftTarget() {

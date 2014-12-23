@@ -62,7 +62,7 @@ public class GuiChatExtended extends GuiChat {
 		if(keyCode == ClientGlobalConfig.keyToggleTarget.getKeyCode() && !ClientGlobalConfig.disableChatToggle && !ClientGlobalConfig.clientBridge && !inputField.getText().startsWith("/")) {
 			if(Keyboard.isRepeatEvent()) {
 				if(System.currentTimeMillis() - lastToggleTarget >= 1000) {
-					chatSession.setChatTarget((String) null);
+					chatSession.setChatTarget(null);
 				}
 			} else {
 				boolean users = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);

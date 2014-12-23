@@ -361,6 +361,8 @@ eirairc:config.property.proxyPassword=[Proxy] Password
 eirairc:config.property.proxyPassword.tooltip=[Advanced] The password to authenticate with the proxy, if necessary.
 eirairc:config.property.bindIP=Bind to IP
 eirairc:config.property.bindIP.tooltip=[Advanced] The IP address to use for outgoing connections.
+eirairc:config.property.defaultChat=Default Chat
+eirairc:config.property.defaultChat.tooltip=The default chat target to select when opening the chat for the first time.
 
 ## Properties (Client)
 eirairc:config.property.hudRecState=Show Red/Green Dot
