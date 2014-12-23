@@ -38,6 +38,7 @@ public class ServerConfig {
 	private String nickServName = "";
 	private String nickServPassword = "";
 	private boolean isSSL = false;
+	private boolean isRedirect = false;
 
 	public ServerConfig() {
 	}
