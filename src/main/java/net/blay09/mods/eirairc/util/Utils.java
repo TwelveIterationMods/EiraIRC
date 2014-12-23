@@ -279,6 +279,15 @@ public class Utils {
 		list.add("false");		
 	}
 
+	public static void redirectTo(ServerConfig config) {
+		IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(config.getAddress());
+		if(connection == null) {
+			connection = connectTo(config);
+		} else {
+			
+		}
+	}
+
 	public static IRCConnectionImpl connectTo(ServerConfig config) {
 		IRCConnectionImpl connection;
 		BotSettings botSettings = config.getBotSettings();
