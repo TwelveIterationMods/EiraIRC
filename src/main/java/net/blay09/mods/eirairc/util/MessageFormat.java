@@ -6,9 +6,7 @@ import net.blay09.mods.eirairc.api.IRCContext;
 import net.blay09.mods.eirairc.api.IRCUser;
 import net.blay09.mods.eirairc.api.bot.IRCBot;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
-import net.blay09.mods.eirairc.config.settings.BotBooleanComponent;
-import net.blay09.mods.eirairc.config.settings.BotSettings;
-import net.blay09.mods.eirairc.config.settings.BotStringComponent;
+import net.blay09.mods.eirairc.config.settings.*;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
@@ -78,12 +76,21 @@ public class MessageFormat {
 		return sb.toString();
 	}
 
-	public static String formatNick(String nick, IRCContext context, Target target, Mode mode) {
+	public static String formatNick(String nick, IRCContext context, Target target, Mode mode, IRCUser ircUser) {
 		if(target == Target.IRC) {
 			if (SharedGlobalConfig.hidePlayerTags) {
 				nick = filterPlayerTags(nick);
 			}
 			nick = String.format(ConfigHelper.getBotSettings(context).getString(BotStringComponent.NickFormat), nick);
+		} else if(target == Target.Minecraft && context instanceof IRCChannel) {
+			GeneralSettings settings = ConfigHelper.getGeneralSettings(context);
+			if(settings.getBoolean(GeneralBooleanComponent.ShowNameFlags)) {
+				if(ircUser.isOperator((IRCChannel) context)) {
+					nick = "@" + nick;
+				} else if(ircUser.hasVoice((IRCChannel) context)) {
+					nick = "+" + nick;
+				}
+			}
 		}
 		return nick;
 	}
@@ -123,7 +130,7 @@ public class MessageFormat {
 							EntityPlayer player = (EntityPlayer) sender;
 							component = player.func_145748_c_().createCopy();
 							String displayName = component.getUnformattedText();
-							displayName = formatNick(displayName, context, target, mode);
+							displayName = formatNick(displayName, context, target, mode, null);
 							component = new ChatComponentText(displayName);
 							if(mode != Mode.Emote) {
 								EnumChatFormatting nameColor = Utils.getColorFormattingForPlayer(player);
@@ -203,7 +210,7 @@ public class MessageFormat {
 					} else if(token.equals("NICK")) {
 						if(user != null) {
 							String displayName = user.getName();
-							displayName = formatNick(displayName, channel, target, mode);
+							displayName = formatNick(displayName, channel, target, mode, user);
 							component = new ChatComponentText(displayName);
 							if(mode != Mode.Emote) {
 								EnumChatFormatting nameColor = Utils.getColorFormattingForUser(channel, user);

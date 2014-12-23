@@ -469,6 +469,8 @@ eirairc:config.property.ircNoticeTextColor=Text Color (IRC Notice)
 eirairc:config.property.ircNoticeTextColor.tooltip=Color for IRC NOTICE messages.
 eirairc:config.property.emoteTextColor=Text Color (Emote)
 eirairc:config.property.emoteTextColor.tooltip=Color for emote messages.
+eirairc:config.property.showNameFlags=Show Name Flags
+eirairc:config.property.showNameFlags.tooltip=Should names be prefixed with @ for OPs and + for voice?
 
 #######################################################################################################################
 

@@ -136,7 +136,7 @@ public class Utils {
 	}
 	
 	public static String getNickIRC(EntityPlayer player, IRCContext context) {
-		return MessageFormat.formatNick(getAliasForPlayer(player), context, MessageFormat.Target.IRC, MessageFormat.Mode.Message);
+		return MessageFormat.formatNick(getAliasForPlayer(player), context, MessageFormat.Target.IRC, MessageFormat.Mode.Message, null);
 	}
 
 	public static String getNickGame(EntityPlayer player) {

@@ -6,6 +6,7 @@ package net.blay09.mods.eirairc.config.settings;
 public enum GeneralBooleanComponent {
 	AutoJoin("autoJoin", true, "eirairc:config.property.autoJoin"),
 	AutoWho("autoWho", false, "eirairc:config.property.autoWho"),
+	ShowNameFlags("showNameFlags", false, "eirairc:config.property.showNameFlags"),
 	ReadOnly("readOnly", false, "eirairc:config.property.readOnly"),
 	Muted("muted", false, "eirairc:config.property.muted");
 
