@@ -169,6 +169,9 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 				newSocket = new Socket();
 			}
 
+			if(!SharedGlobalConfig.bindIP.isEmpty()) {
+				newSocket.bind(new InetSocketAddress(SharedGlobalConfig.bindIP, port));
+			}
 			newSocket.connect(targetAddr);
 			writer = new BufferedWriter(new OutputStreamWriter(newSocket.getOutputStream(), charset));
 			reader = new BufferedReader(new InputStreamReader(newSocket.getInputStream(), charset));

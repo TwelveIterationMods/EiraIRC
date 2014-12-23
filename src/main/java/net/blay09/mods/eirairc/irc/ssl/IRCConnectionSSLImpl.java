@@ -46,6 +46,9 @@ public class IRCConnectionSSLImpl extends IRCConnectionImpl {
 			} else {
 				sslSocket = (SSLSocket) socketFactory.createSocket(host, port);
 			}
+			if(!SharedGlobalConfig.bindIP.isEmpty()) {
+				sslSocket.bind(new InetSocketAddress(SharedGlobalConfig.bindIP, port));
+			}
 			try {
 				if(SharedGlobalConfig.sslDisableDiffieHellman) {
 					disableDiffieHellman(sslSocket);

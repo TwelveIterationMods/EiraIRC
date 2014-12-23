@@ -34,6 +34,7 @@ public class SharedGlobalConfig {
 	public static boolean debugMode = false;
 
 	// Network Settings
+	public static String bindIP = "";
 	public static boolean sslTrustAllCerts = false;
 	public static String sslCustomTrustStore = "";
 	public static boolean sslDisableDiffieHellman = true;
@@ -63,6 +64,7 @@ public class SharedGlobalConfig {
 		debugMode = thisConfig.getBoolean("debugMode", GENERAL, debugMode, "", "eirairc:config.property.debugMode");
 
 		// Network
+		bindIP = thisConfig.getString("bindIP", NETWORK, bindIP, "", "eirairc:config.property.bindIP");
 		sslTrustAllCerts = thisConfig.getBoolean("sslTrustAllCerts", NETWORK, sslTrustAllCerts, "", "eirairc:config.property.sslTrustAllCerts");
 		sslCustomTrustStore = thisConfig.getString("sslCustomTrustStore", NETWORK, sslCustomTrustStore, "", "eirairc:config.property.sslCustomTrustStore");
 		sslDisableDiffieHellman = thisConfig.getBoolean("sslDisableDiffieHellman", NETWORK, sslDisableDiffieHellman, "", "eirairc:config.property.sslDisableDiffieHellman");
@@ -93,6 +95,7 @@ public class SharedGlobalConfig {
 		thisConfig.get(GENERAL, "debugMode", false, I18n.format("eirairc:config.property.debugMode.tooltip")).set(debugMode);
 
 		// Network
+		thisConfig.get(NETWORK, "bindIP", "", I18n.format("eirairc:config.property.bindIP.toooltip")).set(bindIP);
 		thisConfig.get(NETWORK, "sslTrustAllCerts", false, I18n.format("eirairc:config.property.sslTrustAllCerts.tooltip")).set(sslTrustAllCerts);
 		thisConfig.get(NETWORK, "sslCustomTrustStore", I18n.format("eirairc:config.property.sslCustomTrustStore.tooltip")).set(sslCustomTrustStore);
 		thisConfig.get(NETWORK, "sslDisableDiffieHellman", false, I18n.format("eirairc:config.property.sslDisableDiffieHellman.tooltip")).set(sslDisableDiffieHellman);
