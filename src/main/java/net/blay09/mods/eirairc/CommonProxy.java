@@ -3,10 +3,15 @@
 
 package net.blay09.mods.eirairc;
 
+import net.blay09.mods.eirairc.config.ClientGlobalConfig;
+import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.net.PacketHandler;
 import net.blay09.mods.eirairc.net.message.MessageNotification;
 import net.blay09.mods.eirairc.util.NotificationType;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.common.config.Configuration;
+
+import java.io.File;
 
 public class CommonProxy {
 
@@ -32,4 +37,11 @@ public class CommonProxy {
 	public void renderTick(float delta) {
 	}
 
+	public void loadConfig(File configDir) {
+		SharedGlobalConfig.load(configDir);
+	}
+
+	public void loadLegacyConfig(File configDir, Configuration legacyConfig) {
+		SharedGlobalConfig.loadLegacy(configDir, legacyConfig);
+	}
 }

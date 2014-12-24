@@ -18,6 +18,9 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.ClientCommandHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
+import net.minecraftforge.common.config.Configuration;
+
+import java.io.File;
 
 public class ClientProxy extends CommonProxy {
 
@@ -80,5 +83,15 @@ public class ClientProxy extends CommonProxy {
 	public boolean isIngame() {
 		return Minecraft.getMinecraft().theWorld != null;
 	}
-	
+
+	@Override
+	public void loadLegacyConfig(File configDir, Configuration legacyConfig) {
+		super.loadLegacyConfig(configDir, legacyConfig);
+		ClientGlobalConfig.loadLegacy(configDir, legacyConfig);
+	}
+
+	@Override
+	public void loadConfig(File configDir) {
+		ClientGlobalConfig.load(configDir);
+	}
 }
