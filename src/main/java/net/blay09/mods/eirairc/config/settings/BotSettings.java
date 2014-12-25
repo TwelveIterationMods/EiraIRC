@@ -3,6 +3,7 @@ package net.blay09.mods.eirairc.config.settings;
 import com.google.gson.JsonObject;
 import net.blay09.mods.eirairc.config.base.MessageFormatConfig;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
+import net.blay09.mods.eirairc.util.I19n;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.command.ICommandSender;
@@ -61,7 +62,7 @@ public class BotSettings {
 		strings.clear();
 		for(int i = 0; i < BotStringComponent.values().length; i++) {
 			if(defaultValues || config.hasKey(category, BotStringComponent.values[i].name)) {
-				String value = config.getString(BotStringComponent.values[i].name, category, BotStringComponent.values[i].defaultValue, "", BotStringComponent.values[i].langKey);
+				String value = config.getString(BotStringComponent.values[i].name, category, BotStringComponent.values[i].defaultValue, I19n.format(BotStringComponent.values[i].langKey + ".tooltip"), BotStringComponent.values[i].langKey);
 				if(defaultValues || !value.equals(parent.getString(BotStringComponent.values[i]))) {
 					strings.put(BotStringComponent.values[i], value);
 				}
@@ -70,7 +71,7 @@ public class BotSettings {
 		booleans.clear();
 		for(int i = 0; i < BotBooleanComponent.values().length; i++) {
 			if(defaultValues || config.hasKey(category, BotBooleanComponent.values[i].name)) {
-				boolean value = config.getBoolean(BotBooleanComponent.values[i].name, category, BotBooleanComponent.values[i].defaultValue, "", BotBooleanComponent.values[i].langKey);
+				boolean value = config.getBoolean(BotBooleanComponent.values[i].name, category, BotBooleanComponent.values[i].defaultValue, I19n.format(BotBooleanComponent.values[i].langKey + ".tooltip"), BotBooleanComponent.values[i].langKey);
 				if(defaultValues || value != parent.getBoolean(BotBooleanComponent.values[i])) {
 					booleans.put(BotBooleanComponent.values[i], value);
 				}

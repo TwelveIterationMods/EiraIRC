@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.blay09.mods.eirairc.util.I19n;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.command.ICommandSender;
@@ -89,7 +90,7 @@ public class ThemeSettings {
 		colors.clear();
 		for(int i = 0; i < ThemeColorComponent.values().length; i++) {
 			if(defaultValues || config.hasKey(category, ThemeColorComponent.values[i].name)) {
-				String value = config.getString(ThemeColorComponent.values[i].name, category, String.valueOf(ThemeColorComponent.values[i].defaultValue.getFormattingCode()), "", VALID_COLOR_CODES, ThemeColorComponent.values[i].langKey);
+				String value = config.getString(ThemeColorComponent.values[i].name, category, String.valueOf(ThemeColorComponent.values[i].defaultValue.getFormattingCode()), I19n.format(ThemeColorComponent.values[i].langKey + ".tooltip"), VALID_COLOR_CODES, ThemeColorComponent.values[i].langKey);
 				if(!value.isEmpty()) {
 					EnumChatFormatting colorValue = getColorFromCode(value.charAt(0));
 					if(defaultValues || colorValue != parent.getColor(ThemeColorComponent.values[i])) {
