@@ -10,7 +10,7 @@ import net.blay09.mods.eirairc.client.gui.base.tab.GuiTabPage;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.settings.GeneralBooleanComponent;
-import net.blay09.mods.eirairc.handler.ConfigurationHandler;
+import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.Globals;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;

@@ -6,18 +6,22 @@ package net.blay09.mods.eirairc.client;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import net.blay09.mods.eirairc.CommonProxy;
 import net.blay09.mods.eirairc.EiraIRC;
+import net.blay09.mods.eirairc.client.gui.GuiEiraIRCRedirect;
 import net.blay09.mods.eirairc.client.gui.chat.GuiEiraChat;
 import net.blay09.mods.eirairc.client.gui.overlay.OverlayNotification;
 import net.blay09.mods.eirairc.client.screenshot.ScreenshotManager;
-import net.blay09.mods.eirairc.config.ClientGlobalConfig;
-import net.blay09.mods.eirairc.config.NotificationStyle;
+import net.blay09.mods.eirairc.config.*;
 import net.blay09.mods.eirairc.util.NotificationType;
+import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.ClientCommandHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
+import net.minecraftforge.common.config.Configuration;
+
+import java.io.File;
 
 public class ClientProxy extends CommonProxy {
 
@@ -80,5 +84,25 @@ public class ClientProxy extends CommonProxy {
 	public boolean isIngame() {
 		return Minecraft.getMinecraft().theWorld != null;
 	}
-	
+
+	@Override
+	public void loadLegacyConfig(File configDir, Configuration legacyConfig) {
+		super.loadLegacyConfig(configDir, legacyConfig);
+		ClientGlobalConfig.loadLegacy(configDir, legacyConfig);
+	}
+
+	@Override
+	public void loadConfig(File configDir) {
+		ClientGlobalConfig.load(configDir);
+	}
+
+	@Override
+	public void handleRedirect(ServerConfig serverConfig) {
+		TrustedServer server = ConfigurationHandler.getOrCreateTrustedServer(Utils.getServerAddress());
+		if(server.isAllowRedirect()) {
+			Utils.redirectTo(serverConfig, server.isRedirectSolo());
+		} else {
+			Minecraft.getMinecraft().displayGuiScreen(new GuiEiraIRCRedirect(serverConfig));
+		}
+	}
 }

@@ -1,5 +1,7 @@
 package net.blay09.mods.eirairc.config;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.blay09.mods.eirairc.api.upload.UploadManager;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.resources.I18n;
@@ -12,6 +14,7 @@ import java.io.File;
 /**
  * Created by Blay09 on 29.09.2014.
  */
+@SideOnly(Side.CLIENT)
 public class ClientGlobalConfig {
 
 	public static final String GENERAL = "general";

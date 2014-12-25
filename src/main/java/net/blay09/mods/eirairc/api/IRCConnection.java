@@ -29,5 +29,5 @@ public interface IRCConnection {
 	public IRCBot getBot();
 	public String getIdentifier();
 	public String getNick();
-	
+
 }

@@ -10,7 +10,7 @@ import net.blay09.mods.eirairc.api.IRCContext;
 import net.blay09.mods.eirairc.command.SubCommand;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
-import net.blay09.mods.eirairc.handler.ConfigurationHandler;
+import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;

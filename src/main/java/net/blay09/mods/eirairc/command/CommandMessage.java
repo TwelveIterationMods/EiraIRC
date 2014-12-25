@@ -6,12 +6,10 @@ package net.blay09.mods.eirairc.command;
 import java.util.List;
 
 import net.blay09.mods.eirairc.api.IRCContext;
-import net.blay09.mods.eirairc.api.bot.BotProfile;
-import net.blay09.mods.eirairc.api.bot.IRCBot;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.settings.BotBooleanComponent;
-import net.blay09.mods.eirairc.handler.ConfigurationHandler;
+import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.irc.IRCUserImpl;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.IRCResolver;

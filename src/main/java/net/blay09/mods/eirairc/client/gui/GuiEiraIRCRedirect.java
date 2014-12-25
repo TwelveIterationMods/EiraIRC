@@ -6,7 +6,9 @@ package net.blay09.mods.eirairc.client.gui;
 import cpw.mods.fml.client.config.GuiCheckBox;
 import net.blay09.mods.eirairc.client.gui.base.GuiLabel;
 import net.blay09.mods.eirairc.config.ChannelConfig;
+import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.ServerConfig;
+import net.blay09.mods.eirairc.config.TrustedServer;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.gui.GuiButton;
@@ -64,7 +66,12 @@ public class GuiEiraIRCRedirect extends EiraGuiScreen {
 		} else if(button == btnReject) {
 			mc.displayGuiScreen(null);
 		} else if(button == btnAllow) {
-			Utils.redirectTo(serverConfig);
+			if(chkAlwaysAllow.isChecked()) {
+				TrustedServer server = ConfigurationHandler.getOrCreateTrustedServer(Utils.getServerAddress());
+				server.setAllowRedirect(true);
+				ConfigurationHandler.addTrustedServer(server);
+			}
+			Utils.redirectTo(serverConfig, false);
 			mc.displayGuiScreen(null);
 		}
 	}

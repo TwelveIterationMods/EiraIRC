@@ -4,7 +4,7 @@ import net.blay09.mods.eirairc.client.gui.base.tab.DummyTabPage;
 import net.blay09.mods.eirairc.client.gui.base.tab.GuiTabContainer;
 import net.blay09.mods.eirairc.client.gui.base.tab.GuiTabPage;
 import net.blay09.mods.eirairc.config.ServerConfig;
-import net.blay09.mods.eirairc.handler.ConfigurationHandler;
+import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.minecraft.client.gui.GuiScreen;
 
 /**

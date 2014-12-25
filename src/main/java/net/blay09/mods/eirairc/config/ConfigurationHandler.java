@@ -1,7 +1,7 @@
 // Copyright (c) 2014, Christopher "blay09" Baker
 // All rights reserved.
 
-package net.blay09.mods.eirairc.handler;
+package net.blay09.mods.eirairc.config;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -14,10 +14,7 @@ import java.util.Map;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.stream.JsonWriter;
-import net.blay09.mods.eirairc.config.ChannelConfig;
-import net.blay09.mods.eirairc.config.ClientGlobalConfig;
-import net.blay09.mods.eirairc.config.ServerConfig;
-import net.blay09.mods.eirairc.config.SharedGlobalConfig;
+import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.config.base.BotProfileImpl;
 import net.blay09.mods.eirairc.config.base.MessageFormatConfig;
 import net.blay09.mods.eirairc.config.base.ServiceConfig;
@@ -38,6 +35,7 @@ public class ConfigurationHandler {
 	private static final List<BotProfileImpl> botProfileList = new ArrayList<BotProfileImpl>();
 	private static final Map<String, MessageFormatConfig> displayFormats = new HashMap<String, MessageFormatConfig>();
 	private static final List<MessageFormatConfig> displayFormatList = new ArrayList<MessageFormatConfig>();
+	private static final Map<String, TrustedServer> trustedServers = new HashMap<String, TrustedServer>();
 
 	private static File baseConfigDir;
 	private static File botProfileDir;
@@ -109,6 +107,36 @@ public class ConfigurationHandler {
 		defaultDisplayFormat = displayFormats.get(MessageFormatConfig.DEFAULT_FORMAT);
 	}
 
+	private static void loadTrustedServers(File configDir) {
+		Gson gson = new Gson();
+		try {
+			Reader reader = new FileReader(new File(configDir, "trusted_servers.json"));
+			JsonArray serverArray = gson.fromJson(reader, JsonArray.class);
+			for(int i = 0; i < serverArray.size(); i++) {
+				addTrustedServer(TrustedServer.loadFromJson(serverArray.get(i).getAsJsonObject()));
+			}
+			reader.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private static void saveTrustedServers() {
+		Gson gson = new Gson();
+		try {
+			JsonArray serverArray = new JsonArray();
+			for(TrustedServer trustedServer : trustedServers.values()) {
+				serverArray.add(trustedServer.toJsonObject());
+			}
+			JsonWriter writer = new JsonWriter(new FileWriter(new File(baseConfigDir, "eirairc/trusted_servers.json")));
+			writer.setIndent("  ");
+			gson.toJson(serverArray, writer);
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	private static void loadServices(File configDir) {
 		if(!configDir.exists()) {
 			if(!configDir.mkdirs()) {
@@ -156,8 +184,7 @@ public class ConfigurationHandler {
 	}
 
 	private static void loadLegacy(File configDir, Configuration legacyConfig) {
-		SharedGlobalConfig.loadLegacy(configDir, legacyConfig);
-		ClientGlobalConfig.loadLegacy(configDir, legacyConfig);
+		EiraIRC.proxy.loadLegacyConfig(configDir, legacyConfig);
 
 		ConfigCategory serversCategory = legacyConfig.getCategory("servers");
 		for(ConfigCategory serverCategory : serversCategory.getChildren()) {
@@ -183,14 +210,14 @@ public class ConfigurationHandler {
 				logger.error("Couldn't get rid of old 'eirairc.cfg' file. Config will REGENERATE unless you delete it yourself.");
 			}
 		} else {
-			SharedGlobalConfig.load(configDir);
-			ClientGlobalConfig.load(configDir);
+			EiraIRC.proxy.loadConfig(configDir);
 		}
 
 		loadDisplayFormats(new File(configDir, "formats"));
 		loadBotProfiles(new File(configDir, "bots"));
 
 		loadServers(configDir);
+		loadTrustedServers(configDir);
 	}
 	
 	public static void save() {
@@ -198,6 +225,7 @@ public class ConfigurationHandler {
 		ClientGlobalConfig.save();
 
 		saveServers();
+		saveTrustedServers();
 	}
 
 	public static void reload() {
@@ -234,6 +262,18 @@ public class ConfigurationHandler {
 
 	public static boolean hasServerConfig(String host) {
 		return serverConfigs.containsKey(host.toLowerCase());
+	}
+
+	public static void addTrustedServer(TrustedServer server) {
+		trustedServers.put(server.getAddress(), server);
+	}
+
+	public static TrustedServer getOrCreateTrustedServer(String address) {
+		TrustedServer server = trustedServers.get(address.toLowerCase());
+		if(server == null) {
+			server = new TrustedServer(address);
+		}
+		return server;
 	}
 
 	public static void handleConfigCommand(ICommandSender sender, String target, String key, String value) {

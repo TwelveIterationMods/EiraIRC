@@ -4,10 +4,8 @@ import net.blay09.mods.eirairc.net.message.MessageHello;
 import net.blay09.mods.eirairc.net.message.MessageNotification;
 import net.blay09.mods.eirairc.net.message.MessageRecLiveState.CMessageRecLiveState;
 import net.blay09.mods.eirairc.net.message.MessageRecLiveState.SMessageRecLiveState;
-import net.blay09.mods.eirairc.net.message.handler.CHandlerRecLiveState;
-import net.blay09.mods.eirairc.net.message.handler.HandlerHello;
-import net.blay09.mods.eirairc.net.message.handler.HandlerNotification;
-import net.blay09.mods.eirairc.net.message.handler.SHandlerRecLiveState;
+import net.blay09.mods.eirairc.net.message.MessageRedirect;
+import net.blay09.mods.eirairc.net.message.handler.*;
 import net.blay09.mods.eirairc.util.Globals;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
@@ -22,5 +20,6 @@ public class PacketHandler {
 		INSTANCE.registerMessage(HandlerNotification.class, MessageNotification.class, 1, Side.CLIENT);
 		INSTANCE.registerMessage(SHandlerRecLiveState.class, SMessageRecLiveState.class, 2, Side.CLIENT);
 		INSTANCE.registerMessage(CHandlerRecLiveState.class, CMessageRecLiveState.class, 3, Side.SERVER);
+		INSTANCE.registerMessage(HandlerRedirect.class, MessageRedirect.class, 4, Side.SERVER);
 	}
 }
