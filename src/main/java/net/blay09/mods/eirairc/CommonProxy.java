@@ -4,6 +4,7 @@
 package net.blay09.mods.eirairc;
 
 import net.blay09.mods.eirairc.config.ClientGlobalConfig;
+import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.net.PacketHandler;
 import net.blay09.mods.eirairc.net.message.MessageNotification;
@@ -43,5 +44,9 @@ public class CommonProxy {
 
 	public void loadLegacyConfig(File configDir, Configuration legacyConfig) {
 		SharedGlobalConfig.loadLegacy(configDir, legacyConfig);
+	}
+
+	public void handleRedirect(ServerConfig serverConfig) {
+
 	}
 }
