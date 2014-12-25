@@ -3,7 +3,6 @@
 
 package net.blay09.mods.eirairc;
 
-import net.blay09.mods.eirairc.config.ClientGlobalConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.net.PacketHandler;
@@ -20,11 +19,11 @@ public class CommonProxy {
 	}
 
 	public void sendNotification(EntityPlayerMP entityPlayer, NotificationType type, String text) {
-		PacketHandler.INSTANCE.sendTo(new MessageNotification(type, text), entityPlayer);
+		PacketHandler.instance.sendTo(new MessageNotification(type, text), entityPlayer);
 	}
 	
 	public void publishNotification(NotificationType type, String text) {
-		PacketHandler.INSTANCE.sendToAll(new MessageNotification(type, text));
+		PacketHandler.instance.sendToAll(new MessageNotification(type, text));
 	}
 	
 	public String getUsername() {

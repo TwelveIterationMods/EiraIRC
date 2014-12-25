@@ -32,7 +32,7 @@ public class EiraNetHandler {
 		EntityPlayerMP entityPlayerMP = (EntityPlayerMP) event.player;
 		synchronized(playerInfoMap) {
 			for(EiraPlayerInfo playerInfo : playerInfoMap.values()) {
-				PacketHandler.INSTANCE.sendTo(new SMessageRecLiveState(playerInfo.getUsername(), playerInfo.isRecording, playerInfo.isLive), entityPlayerMP);
+				PacketHandler.instance.sendTo(new SMessageRecLiveState(playerInfo.getUsername(), playerInfo.isRecording, playerInfo.isLive), entityPlayerMP);
 			}
 		}
 	}

@@ -30,21 +30,13 @@ public class ServerConfig {
 	private final BotSettings botSettings = new BotSettings(SharedGlobalConfig.botSettings);
 	private final ThemeSettings theme = new ThemeSettings(SharedGlobalConfig.theme);
 
-
-
-	public static enum RedirectType {
-		None,
-		Redirect,
-		RedirectSolo;
-	}
 	private String address = "";
-
 	private String charset = Globals.DEFAULT_CHARSET;
 	private String nick = Globals.DEFAULT_NICK;
 	private String serverPassword = "";
 	private String nickServName = "";
 	private String nickServPassword = "";
-	private RedirectType redirectType = RedirectType.None;
+	private boolean isRedirect;
 	private boolean isSSL = false;
 	private boolean isRemote = false;
 	public ServerConfig() {
@@ -168,12 +160,8 @@ public class ServerConfig {
 		if(object.has("charset")) {
 			config.charset = object.get("charset").getAsString();
 		}
-		if(object.has("redirectType")) {
-			try {
-				config.redirectType = RedirectType.valueOf(object.get("redirectType").getAsString());
-			} catch (IllegalArgumentException e) {
-				config.redirectType = RedirectType.None;
-			}
+		if(object.has("isRedirect")) {
+			config.isRedirect = object.get("isRedirect").getAsBoolean();
 		}
 		if(object.has("isSSL")) {
 			config.isSSL = object.get("isSSL").getAsBoolean();
@@ -214,8 +202,8 @@ public class ServerConfig {
 		if(isSSL) {
 			object.addProperty("isSSL", true);
 		}
-		if(redirectType != RedirectType.None) {
-			object.addProperty("redirectType", redirectType.name());
+		if(isRedirect) {
+			object.addProperty("isRedirect", true);
 		}
 		if(!nickServName.isEmpty() || !nickServPassword.isEmpty()) {
 			JsonObject nickServObject = new JsonObject();
@@ -301,5 +289,9 @@ public class ServerConfig {
 
 	public void setCharset(String charset) {
 		this.charset = charset;
+	}
+
+	public boolean isRedirect() {
+		return isRedirect;
 	}
 }

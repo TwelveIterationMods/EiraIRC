@@ -32,7 +32,7 @@ public class CHandlerRecLiveState implements IMessageHandler<CMessageRecLiveStat
 		}
 		playerInfo.isLive = message.getLiveState();
 		playerInfo.isRecording = message.getRecState();
-		PacketHandler.INSTANCE.sendToAll(new SMessageRecLiveState(message.getUsername(), message.getRecState(), message.getLiveState()));
+		PacketHandler.instance.sendToAll(new SMessageRecLiveState(message.getUsername(), message.getRecState(), message.getLiveState()));
 		return null;
 	}
 

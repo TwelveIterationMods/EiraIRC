@@ -8,12 +8,13 @@ import net.blay09.mods.eirairc.api.IRCChannel;
 import net.blay09.mods.eirairc.api.IRCConnection;
 import net.blay09.mods.eirairc.api.IRCContext;
 import net.blay09.mods.eirairc.api.IRCUser;
-import net.blay09.mods.eirairc.api.bot.IRCBot;
 import net.blay09.mods.eirairc.api.event.RelayChat;
 import net.blay09.mods.eirairc.command.base.IRCCommandHandler;
 import net.blay09.mods.eirairc.config.*;
 import net.blay09.mods.eirairc.config.settings.*;
 import net.blay09.mods.eirairc.irc.IRCConnectionImpl;
+import net.blay09.mods.eirairc.net.PacketHandler;
+import net.blay09.mods.eirairc.net.message.MessageRedirect;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.IRCFormatting;
 import net.blay09.mods.eirairc.util.MessageFormat;
@@ -23,6 +24,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.command.server.CommandBroadcast;
 import net.minecraft.command.server.CommandEmote;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
@@ -66,6 +68,16 @@ public class MCEventHandler {
 				}
 			}
 		}
+
+		// Send redirect configurations to client
+		if(MinecraftServer.getServer() != null && MinecraftServer.getServer().isDedicatedServer()) {
+			for (ServerConfig serverConfig : ConfigurationHandler.getServerConfigs()) {
+				if (serverConfig.isRedirect()) {
+					PacketHandler.instance.sendTo(new MessageRedirect(serverConfig.toJsonObject().toString()), (EntityPlayerMP) event.player);
+				}
+			}
+		}
+
 	}
 
 	@SubscribeEvent

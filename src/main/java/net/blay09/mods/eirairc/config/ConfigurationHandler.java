@@ -121,7 +121,7 @@ public class ConfigurationHandler {
 		}
 	}
 
-	private static void saveTrustedServers() {
+	public static void saveTrustedServers() {
 		Gson gson = new Gson();
 		try {
 			JsonArray serverArray = new JsonArray();

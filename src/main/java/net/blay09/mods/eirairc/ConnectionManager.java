@@ -20,7 +20,7 @@ public class ConnectionManager {
 
 	public void startIRC() {
 		for(ServerConfig serverConfig : ConfigurationHandler.getServerConfigs()) {
-			if(serverConfig.getGeneralSettings().getBoolean(GeneralBooleanComponent.AutoJoin)) {
+			if(serverConfig.getGeneralSettings().getBoolean(GeneralBooleanComponent.AutoJoin) && !serverConfig.isRedirect()) {
 				Utils.connectTo(serverConfig);
 			}
 		}

@@ -26,12 +26,12 @@ public class MessageHello implements IMessage {
 
 	@Override
 	public void fromBytes(ByteBuf buf) {
-//		version = Utils.readString(buf);
+		version = Utils.readString(buf);
 	}
 
 	@Override
 	public void toBytes(ByteBuf buf) {
-//		Utils.writeString(buf, version);
+		Utils.writeString(buf, version);
 	}
 
 	public String getVersion() {

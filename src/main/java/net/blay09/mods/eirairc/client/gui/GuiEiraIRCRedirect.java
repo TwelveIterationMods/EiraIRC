@@ -32,9 +32,14 @@ public class GuiEiraIRCRedirect extends EiraGuiScreen {
 		final int centerX = width / 2;
 		final int centerY = height / 2;
 
-		labelList.add(new GuiLabel("The server wants to redirect your EiraIRC to the following channel(s):", centerX, centerY, Globals.TEXT_COLOR));
+		GuiLabel lblTitle = new GuiLabel("The server would like to redirect EiraIRC:", 0, centerY - 70, Globals.TEXT_COLOR);
+		lblTitle.setHAlignment(GuiLabel.HAlignment.Center, width);
+		labelList.add(lblTitle);
 
-		labelList.add(new GuiLabel("Server: " + serverConfig.getAddress(), centerX, centerY, Globals.TEXT_COLOR));
+		GuiLabel lblServer = new GuiLabel("Server: " + serverConfig.getAddress(), 0, centerY - 40, Globals.TEXT_COLOR);
+		lblServer.setHAlignment(GuiLabel.HAlignment.Center, width);
+		labelList.add(lblServer);
+
 		StringBuilder sb = new StringBuilder();
 		if(serverConfig.getChannelConfigs().size() == 0) {
 			sb.append("None");
@@ -46,15 +51,17 @@ public class GuiEiraIRCRedirect extends EiraGuiScreen {
 				sb.append(channelConfig.getName());
 			}
 		}
-		labelList.add(new GuiLabel("Channel: " + sb.toString(), centerX, centerY, Globals.TEXT_COLOR));
+		GuiLabel lblChannels = new GuiLabel("Channel(s):\n" + sb.toString(), 0, centerY - 20, Globals.TEXT_COLOR);
+		lblChannels.setHAlignment(GuiLabel.HAlignment.Center, width);
+		labelList.add(lblChannels);
 
-		chkAlwaysAllow = new GuiCheckBox(0, centerX, centerY, "Always allow this server to redirect me", false);
+		chkAlwaysAllow = new GuiCheckBox(0, centerX - 105, centerY + 30, "Always allow this server to redirect me", false);
 		buttonList.add(chkAlwaysAllow);
 
-		btnAllow = new GuiButton(1, centerX, centerY, "Allow");
+		btnAllow = new GuiButton(1, centerX + 5, centerY + 50, 100, 20, "Allow");
 		buttonList.add(btnAllow);
 
-		btnReject = new GuiButton(2, centerX, centerY, "Reject");
+		btnReject = new GuiButton(2, centerX - 105, centerY + 50, 100, 20, "Reject");
 		buttonList.add(btnReject);
 
 	}
@@ -70,6 +77,7 @@ public class GuiEiraIRCRedirect extends EiraGuiScreen {
 				TrustedServer server = ConfigurationHandler.getOrCreateTrustedServer(Utils.getServerAddress());
 				server.setAllowRedirect(true);
 				ConfigurationHandler.addTrustedServer(server);
+				ConfigurationHandler.saveTrustedServers();
 			}
 			Utils.redirectTo(serverConfig, false);
 			mc.displayGuiScreen(null);
