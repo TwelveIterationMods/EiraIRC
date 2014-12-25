@@ -63,9 +63,15 @@ public class CommandWho extends SubCommand {
 				Utils.sendUserList(sender, connection, channel);
 			}
 		} else {
-			for(IRCConnection con : EiraIRC.instance.getConnectionManager().getConnections()) {
-				for(IRCChannel channel : con.getChannels()) {
-					Utils.sendUserList(sender, con, channel);
+			for(ServerConfig serverConfig : ConfigurationHandler.getServerConfigs()) {
+				IRCConnection con = EiraIRC.instance.getConnectionManager().getConnection(serverConfig.getAddress());
+				if(con != null) {
+					for (ChannelConfig channelConfig : serverConfig.getChannelConfigs()) {
+						IRCChannel channel = con.getChannel(channelConfig.getName());
+						if (channel != null) {
+							Utils.sendUserList(sender, con, channel);
+						}
+					}
 				}
 			}
 		}
