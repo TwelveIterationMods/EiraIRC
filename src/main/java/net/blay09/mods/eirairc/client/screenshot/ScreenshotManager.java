@@ -179,8 +179,11 @@ public class ScreenshotManager {
 		return screenshots;
 	}
 
-	public void deleteScreenshot(Screenshot screenshot) {
+	public void deleteScreenshot(Screenshot screenshot, boolean keepUploaded) {
 		screenshot.getFile().delete();
+		if(!keepUploaded && screenshot.hasDeleteURL()) {
+			Utils.openWebpage(screenshot.getDeleteURL());
+		}
 		screenshots.remove(screenshot);
 	}
 

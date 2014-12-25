@@ -64,4 +64,12 @@ public class Screenshot {
 	public void setFavorited(boolean favorited) {
 		metadata.addProperty(METADATA_FAVORITE, favorited);
 	}
+
+	public boolean hasDeleteURL() {
+		return metadata.has(METADATA_DELETEURL);
+	}
+
+	public String getDeleteURL() {
+		return metadata.get(METADATA_DELETEURL).getAsString();
+	}
 }

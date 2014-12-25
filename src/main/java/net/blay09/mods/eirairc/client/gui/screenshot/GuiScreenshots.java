@@ -172,7 +172,7 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 	@Override
 	public void confirmClicked(boolean result, int id) {
 		if(result) {
-			ScreenshotManager.getInstance().deleteScreenshot(currentScreenshot);
+			ScreenshotManager.getInstance().deleteScreenshot(currentScreenshot, false);
 		}
 		Minecraft.getMinecraft().displayGuiScreen(this);
 	}
