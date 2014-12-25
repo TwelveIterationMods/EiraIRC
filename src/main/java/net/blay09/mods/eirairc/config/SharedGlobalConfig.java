@@ -4,8 +4,8 @@ import net.blay09.mods.eirairc.config.settings.BotSettings;
 import net.blay09.mods.eirairc.config.settings.GeneralSettings;
 import net.blay09.mods.eirairc.config.settings.ThemeSettings;
 import net.blay09.mods.eirairc.util.Globals;
+import net.blay09.mods.eirairc.util.I19n;
 import net.blay09.mods.eirairc.util.Utils;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.command.ICommandSender;
 import net.minecraftforge.common.config.Configuration;
 
@@ -55,25 +55,25 @@ public class SharedGlobalConfig {
 		}
 
 		// General
-		defaultChat = thisConfig.getString("defaultChat", GENERAL, defaultChat, "", "eirairc:config.property.defaultChat");
-		enablePlayerAliases = thisConfig.getBoolean("enablePlayerAliases", GENERAL, enablePlayerAliases, "", "eirairc:config.property.enablePlayerAliases");
-		enablePlayerColors = thisConfig.getBoolean("enablePlayerColors", GENERAL, enablePlayerColors, "", "eirairc:config.property.enablePlayerColors");
-		String[] colorBlacklistArray = thisConfig.getStringList("colorBlacklist", GENERAL, Globals.DEFAULT_COLOR_BLACKLIST, "", null, "eirairc:config.property.colorBlacklist");
+		defaultChat = thisConfig.getString("defaultChat", GENERAL, defaultChat, I19n.format("eirairc:config.property.defaultChat.tooltip"), "eirairc:config.property.defaultChat");
+		enablePlayerAliases = thisConfig.getBoolean("enablePlayerAliases", GENERAL, enablePlayerAliases, I19n.format("eirairc:config.property.enablePlayerAliases.tooltip"), "eirairc:config.property.enablePlayerAliases");
+		enablePlayerColors = thisConfig.getBoolean("enablePlayerColors", GENERAL, enablePlayerColors, I19n.format("eirairc:config.property.enablePlayerColors.tooltip"), "eirairc:config.property.enablePlayerColors");
+		String[] colorBlacklistArray = thisConfig.getStringList("colorBlacklist", GENERAL, Globals.DEFAULT_COLOR_BLACKLIST, I19n.format("eirairc:config.property.colorBlacklist.tooltip"), null, "eirairc:config.property.colorBlacklist");
 		for(String entry : colorBlacklistArray) {
 			colorBlacklist.add(entry);
 		}
-		registerShortCommands = thisConfig.getBoolean("registerShortCommands", GENERAL, registerShortCommands, "", "eirairc:config.property.registerShortCommands");
-		hidePlayerTags = thisConfig.getBoolean("hidePlayerTags", GENERAL, hidePlayerTags, "", "eirairc:config.property.hidePlayerTags");
-		debugMode = thisConfig.getBoolean("debugMode", GENERAL, debugMode, "", "eirairc:config.property.debugMode");
+		registerShortCommands = thisConfig.getBoolean("registerShortCommands", GENERAL, registerShortCommands, I19n.format("eirairc:config.property.registerShortCommands.tooltip"), "eirairc:config.property.registerShortCommands");
+		hidePlayerTags = thisConfig.getBoolean("hidePlayerTags", GENERAL, hidePlayerTags, I19n.format("eirairc:config.property.hidePlayerTags.tooltip"), "eirairc:config.property.hidePlayerTags");
+		debugMode = thisConfig.getBoolean("debugMode", GENERAL, debugMode, I19n.format("eirairc:config.property.debugMode.tooltip"), "eirairc:config.property.debugMode");
 
 		// Network
-		bindIP = thisConfig.getString("bindIP", NETWORK, bindIP, "", "eirairc:config.property.bindIP");
-		sslTrustAllCerts = thisConfig.getBoolean("sslTrustAllCerts", NETWORK, sslTrustAllCerts, "", "eirairc:config.property.sslTrustAllCerts");
-		sslCustomTrustStore = thisConfig.getString("sslCustomTrustStore", NETWORK, sslCustomTrustStore, "", "eirairc:config.property.sslCustomTrustStore");
-		sslDisableDiffieHellman = thisConfig.getBoolean("sslDisableDiffieHellman", NETWORK, sslDisableDiffieHellman, "", "eirairc:config.property.sslDisableDiffieHellman");
-		proxyHost = thisConfig.getString("proxyHost", NETWORK, proxyHost, "", "eirairc:config.property.proxyHost");
-		proxyUsername = thisConfig.getString("proxyUsername", NETWORK, proxyUsername, "", "eirairc:config.property.proxyUsername");
-		proxyPassword = thisConfig.getString("proxyPassword", NETWORK, proxyPassword, "", "eirairc:config.property.proxyPassword");
+		bindIP = thisConfig.getString("bindIP", NETWORK, bindIP, I19n.format("eirairc:config.property.bindIP.tooltip"), "eirairc:config.property.bindIP");
+		sslTrustAllCerts = thisConfig.getBoolean("sslTrustAllCerts", NETWORK, sslTrustAllCerts, I19n.format("eirairc:config.property.sslTrustAllCerts.tooltip"), "eirairc:config.property.sslTrustAllCerts");
+		sslCustomTrustStore = thisConfig.getString("sslCustomTrustStore", NETWORK, sslCustomTrustStore, I19n.format("eirairc:config.property.sslCustomTrustStore.tooltip"), "eirairc:config.property.sslCustomTrustStore");
+		sslDisableDiffieHellman = thisConfig.getBoolean("sslDisableDiffieHellman", NETWORK, sslDisableDiffieHellman, I19n.format("eirairc:config.property.sslDisableDiffieHellman.tooltip"), "eirairc:config.property.sslDisableDiffieHellman");
+		proxyHost = thisConfig.getString("proxyHost", NETWORK, proxyHost, I19n.format("eirairc:config.property.proxyHost.tooltip"), "eirairc:config.property.proxyHost");
+		proxyUsername = thisConfig.getString("proxyUsername", NETWORK, proxyUsername, I19n.format("eirairc:config.property.proxyUsername.tooltip"), "eirairc:config.property.proxyUsername");
+		proxyPassword = thisConfig.getString("proxyPassword", NETWORK, proxyPassword, I19n.format("eirairc:config.property.proxyPassword.tooltip"), "eirairc:config.property.proxyPassword");
 
 		// Default Settings
 		theme.load(thisConfig, THEME, true);
@@ -83,29 +83,29 @@ public class SharedGlobalConfig {
 
 	public static void save() {
 		// Category Comments
-		thisConfig.setCategoryComment(GENERAL, I18n.format("eirairc:config.category.general.tooltip"));
-		thisConfig.setCategoryComment(NETWORK, I18n.format("eirairc:config.category.network.tooltip"));
-		thisConfig.setCategoryComment(THEME, I18n.format("eirairc:config.category.theme.tooltip"));
-		thisConfig.setCategoryComment(BOT, I18n.format("eirairc:config.category.bot.tooltip"));
-		thisConfig.setCategoryComment(SETTINGS, I18n.format("eirairc:config.category.settings.tooltip"));
+		thisConfig.setCategoryComment(GENERAL, I19n.format("eirairc:config.category.general.tooltip"));
+		thisConfig.setCategoryComment(NETWORK, I19n.format("eirairc:config.category.network.tooltip"));
+		thisConfig.setCategoryComment(THEME, I19n.format("eirairc:config.category.theme.tooltip"));
+		thisConfig.setCategoryComment(BOT, I19n.format("eirairc:config.category.bot.tooltip"));
+		thisConfig.setCategoryComment(SETTINGS, I19n.format("eirairc:config.category.settings.tooltip"));
 
 		// General
-		thisConfig.get(GENERAL, "defaultChat", "", I18n.format("eirairc:config.property.defaultChat")).set(defaultChat);
-		thisConfig.get(GENERAL, "enablePlayerAliases", false, I18n.format("eirairc:config.property.enablePlayerAliases.tooltip")).set(enablePlayerAliases);
-		thisConfig.get(GENERAL, "enablePlayerColors", false, I18n.format("eirairc:config.property.enablePlayerColors.tooltip")).set(enablePlayerColors);
-		thisConfig.get(GENERAL, "colorBlacklist", new String[0], I18n.format("eirairc:config.property.colorBlacklist.tooltip")).set(colorBlacklist.toArray(new String[colorBlacklist.size()]));
-		thisConfig.get(GENERAL, "registerShortCommands", false, I18n.format("eirairc:config.property.registerShortCommands.tooltip")).set(registerShortCommands);
-		thisConfig.get(GENERAL, "hidePlayerTags", false, I18n.format("eirairc:config.property.hidePlayerTags.tooltip")).set(hidePlayerTags);
-		thisConfig.get(GENERAL, "debugMode", false, I18n.format("eirairc:config.property.debugMode.tooltip")).set(debugMode);
+		thisConfig.get(GENERAL, "defaultChat", "", I19n.format("eirairc:config.property.defaultChat")).set(defaultChat);
+		thisConfig.get(GENERAL, "enablePlayerAliases", false, I19n.format("eirairc:config.property.enablePlayerAliases.tooltip")).set(enablePlayerAliases);
+		thisConfig.get(GENERAL, "enablePlayerColors", false, I19n.format("eirairc:config.property.enablePlayerColors.tooltip")).set(enablePlayerColors);
+		thisConfig.get(GENERAL, "colorBlacklist", new String[0], I19n.format("eirairc:config.property.colorBlacklist.tooltip")).set(colorBlacklist.toArray(new String[colorBlacklist.size()]));
+		thisConfig.get(GENERAL, "registerShortCommands", false, I19n.format("eirairc:config.property.registerShortCommands.tooltip")).set(registerShortCommands);
+		thisConfig.get(GENERAL, "hidePlayerTags", false, I19n.format("eirairc:config.property.hidePlayerTags.tooltip")).set(hidePlayerTags);
+		thisConfig.get(GENERAL, "debugMode", false, I19n.format("eirairc:config.property.debugMode.tooltip")).set(debugMode);
 
 		// Network
-		thisConfig.get(NETWORK, "bindIP", "", I18n.format("eirairc:config.property.bindIP.tooltip")).set(bindIP);
-		thisConfig.get(NETWORK, "sslTrustAllCerts", false, I18n.format("eirairc:config.property.sslTrustAllCerts.tooltip")).set(sslTrustAllCerts);
-		thisConfig.get(NETWORK, "sslCustomTrustStore", I18n.format("eirairc:config.property.sslCustomTrustStore.tooltip")).set(sslCustomTrustStore);
-		thisConfig.get(NETWORK, "sslDisableDiffieHellman", false, I18n.format("eirairc:config.property.sslDisableDiffieHellman.tooltip")).set(sslDisableDiffieHellman);
-		thisConfig.get(NETWORK, "proxyHost", "", I18n.format("eirairc:config.property.proxyHost.tooltip")).set(proxyHost);
-		thisConfig.get(NETWORK, "proxyUsername", "", I18n.format("eirairc:config.property.proxyUsername.tooltip")).set(proxyUsername);
-		thisConfig.get(NETWORK, "proxyPassword", "", I18n.format("eirairc:config.property.proxyPassword.tooltip")).set(proxyPassword);
+		thisConfig.get(NETWORK, "bindIP", "", I19n.format("eirairc:config.property.bindIP.tooltip")).set(bindIP);
+		thisConfig.get(NETWORK, "sslTrustAllCerts", false, I19n.format("eirairc:config.property.sslTrustAllCerts.tooltip")).set(sslTrustAllCerts);
+		thisConfig.get(NETWORK, "sslCustomTrustStore", I19n.format("eirairc:config.property.sslCustomTrustStore.tooltip")).set(sslCustomTrustStore);
+		thisConfig.get(NETWORK, "sslDisableDiffieHellman", false, I19n.format("eirairc:config.property.sslDisableDiffieHellman.tooltip")).set(sslDisableDiffieHellman);
+		thisConfig.get(NETWORK, "proxyHost", "", I19n.format("eirairc:config.property.proxyHost.tooltip")).set(proxyHost);
+		thisConfig.get(NETWORK, "proxyUsername", "", I19n.format("eirairc:config.property.proxyUsername.tooltip")).set(proxyUsername);
+		thisConfig.get(NETWORK, "proxyPassword", "", I19n.format("eirairc:config.property.proxyPassword.tooltip")).set(proxyPassword);
 
 		// Default Settings
 		theme.save(thisConfig, THEME);

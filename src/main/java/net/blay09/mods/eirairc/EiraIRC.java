@@ -26,7 +26,7 @@ import net.blay09.mods.eirairc.net.EiraNetHandler;
 import net.blay09.mods.eirairc.net.PacketHandler;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.IRCResolver;
-import net.blay09.mods.eirairc.util.Localization;
+import net.blay09.mods.eirairc.util.I19n;
 import net.minecraft.command.CommandHandler;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
@@ -83,7 +83,7 @@ public class EiraIRC {
 		MinecraftForge.EVENT_BUS.register(ircConnectionHandler);
 		FMLCommonHandler.instance().bus().register(netHandler);
 		
-		Localization.init();
+		I19n.init();
 		PacketHandler.init();
 	}
 	

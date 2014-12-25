@@ -3,8 +3,8 @@ package net.blay09.mods.eirairc.config;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.blay09.mods.eirairc.api.upload.UploadManager;
+import net.blay09.mods.eirairc.util.I19n;
 import net.blay09.mods.eirairc.util.Utils;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.command.ICommandSender;
 import net.minecraftforge.common.config.Configuration;
@@ -65,62 +65,62 @@ public class ClientGlobalConfig {
 		}
 
 		// General
-		hudRecState = thisConfig.getBoolean("hudRecState", GENERAL, hudRecState, "", "eirairc:config.property.hudRecState");
-		persistentConnection = thisConfig.getBoolean("persistentConnection", GENERAL, persistentConnection, "", "eirairc:config.property.persistentConnection");
+		hudRecState = thisConfig.getBoolean("hudRecState", GENERAL, hudRecState, I19n.format("eirairc:config.property.hudRecState"), "eirairc:config.property.hudRecState");
+		persistentConnection = thisConfig.getBoolean("persistentConnection", GENERAL, persistentConnection, I19n.format("eirairc:config.property.persistentConnection"), "eirairc:config.property.persistentConnection");
 
 		// Screenshots
-		screenshotHoster = thisConfig.getString("uploadHoster", SCREENSHOTS, screenshotHoster, "", UploadManager.getAvailableHosters(), "eirairc:config.property.uploadHoster");
-		screenshotAction = ScreenshotAction.valueOf(thisConfig.getString("autoAction", SCREENSHOTS, screenshotAction.name(), "", ScreenshotAction.NAMES, "eirairc:config.property.autoAction"));
-		uploadBufferSize = thisConfig.getInt("uploadBufferSize", SCREENSHOTS, uploadBufferSize, 256, 4096, "", "eirairc:config.property.uploadBufferSize");
+		screenshotHoster = thisConfig.getString("uploadHoster", SCREENSHOTS, screenshotHoster, I19n.format("eirairc:config.property.uploadHoster"), UploadManager.getAvailableHosters(), "eirairc:config.property.uploadHoster");
+		screenshotAction = ScreenshotAction.valueOf(thisConfig.getString("autoAction", SCREENSHOTS, screenshotAction.name(), I19n.format("eirairc:config.property.autoAction"), ScreenshotAction.NAMES, "eirairc:config.property.autoAction"));
+		uploadBufferSize = thisConfig.getInt("uploadBufferSize", SCREENSHOTS, uploadBufferSize, 256, 4096, I19n.format("eirairc:config.property.uploadBufferSize"), "eirairc:config.property.uploadBufferSize");
 
 		// Notifications
-		notificationSound = thisConfig.getString("soundName", NOTIFICATIONS, notificationSound, "", "eirairc:config.property.soundName");
-		notificationSoundVolume = thisConfig.getFloat("soundVolume", NOTIFICATIONS, notificationSoundVolume, 0f, 1f, "", "eirairc:config.property.soundVolume");
-		notificationSoundPitch = thisConfig.getFloat("soundPitch", NOTIFICATIONS, notificationSoundPitch, 0.5f, 2f, "", "eirairc:config.property.soundPitch");
-		ntfyFriendJoined = NotificationStyle.valueOf(thisConfig.getString("friendJoined", NOTIFICATIONS, ntfyFriendJoined.name(), "", NotificationStyle.NAMES, "eirairc:config.property.friendJoined"));
-		ntfyNameMentioned = NotificationStyle.valueOf(thisConfig.getString("nameMentioned", NOTIFICATIONS, ntfyNameMentioned.name(), "", NotificationStyle.NAMES, "eirairc:config.property.nameMentioned"));
-		ntfyUserRecording = NotificationStyle.valueOf(thisConfig.getString("userRecording", NOTIFICATIONS, ntfyUserRecording.name(), "", NotificationStyle.NAMES, "eirairc:config.property.userRecording"));
-		ntfyPrivateMessage = NotificationStyle.valueOf(thisConfig.getString("privateMessage", NOTIFICATIONS, ntfyPrivateMessage.name(), "", NotificationStyle.NAMES, "eirairc:config.property.privateMessage"));
+		notificationSound = thisConfig.getString("soundName", NOTIFICATIONS, notificationSound, I19n.format("eirairc:config.property.soundName"), "eirairc:config.property.soundName");
+		notificationSoundVolume = thisConfig.getFloat("soundVolume", NOTIFICATIONS, notificationSoundVolume, 0f, 1f, I19n.format("eirairc:config.property.soundVolume"), "eirairc:config.property.soundVolume");
+		notificationSoundPitch = thisConfig.getFloat("soundPitch", NOTIFICATIONS, notificationSoundPitch, 0.5f, 2f, I19n.format("eirairc:config.property.soundPitch"), "eirairc:config.property.soundPitch");
+		ntfyFriendJoined = NotificationStyle.valueOf(thisConfig.getString("friendJoined", NOTIFICATIONS, ntfyFriendJoined.name(), I19n.format("eirairc:config.property.friendJoined"), NotificationStyle.NAMES, "eirairc:config.property.friendJoined"));
+		ntfyNameMentioned = NotificationStyle.valueOf(thisConfig.getString("nameMentioned", NOTIFICATIONS, ntfyNameMentioned.name(), I19n.format("eirairc:config.property.nameMentioned"), NotificationStyle.NAMES, "eirairc:config.property.nameMentioned"));
+		ntfyUserRecording = NotificationStyle.valueOf(thisConfig.getString("userRecording", NOTIFICATIONS, ntfyUserRecording.name(), I19n.format("eirairc:config.property.userRecording"), NotificationStyle.NAMES, "eirairc:config.property.userRecording"));
+		ntfyPrivateMessage = NotificationStyle.valueOf(thisConfig.getString("privateMessage", NOTIFICATIONS, ntfyPrivateMessage.name(), I19n.format("eirairc:config.property.privateMessage"), NotificationStyle.NAMES, "eirairc:config.property.privateMessage"));
 
 		// Compatibility
-		clientBridge = thisConfig.getBoolean("clientBridge", COMPATIBILITY, clientBridge, "", "eirairc:config.property.clientBridge");
-		clientBridgeMessageToken = thisConfig.getString("clientBridgeMessageToken", COMPATIBILITY, clientBridgeMessageToken, "", "eirairc:config.property.clientBridgeMessageToken");
-		clientBridgeNickToken = thisConfig.getString("clientBridgeNickToken", COMPATIBILITY, clientBridgeNickToken, "", "eirairc:config.property.clientBridgeNickToken");
-		disableChatToggle = thisConfig.getBoolean("disableChatToggle", COMPATIBILITY, disableChatToggle, "", "eirairc:config.property.disableChatToggle");
-		vanillaChat = thisConfig.getBoolean("vanillaChat", COMPATIBILITY, vanillaChat, "", "eirairc:config.property.vanillaChat");
+		clientBridge = thisConfig.getBoolean("clientBridge", COMPATIBILITY, clientBridge, I19n.format("eirairc:config.property.clientBridge"), "eirairc:config.property.clientBridge");
+		clientBridgeMessageToken = thisConfig.getString("clientBridgeMessageToken", COMPATIBILITY, clientBridgeMessageToken, I19n.format("eirairc:config.property.clientBridgeMessageToken"), "eirairc:config.property.clientBridgeMessageToken");
+		clientBridgeNickToken = thisConfig.getString("clientBridgeNickToken", COMPATIBILITY, clientBridgeNickToken, I19n.format("eirairc:config.property.clientBridgeNickToken"), "eirairc:config.property.clientBridgeNickToken");
+		disableChatToggle = thisConfig.getBoolean("disableChatToggle", COMPATIBILITY, disableChatToggle, I19n.format("eirairc:config.property.disableChatToggle"), "eirairc:config.property.disableChatToggle");
+		vanillaChat = thisConfig.getBoolean("vanillaChat", COMPATIBILITY, vanillaChat, I19n.format("eirairc:config.property.vanillaChat"), "eirairc:config.property.vanillaChat");
 	}
 
 	public static void save() {
 		// Category Comments
-		thisConfig.setCategoryComment(GENERAL, I18n.format("eirairc:config.category.general.tooltip"));
-		thisConfig.setCategoryComment(SCREENSHOTS, I18n.format("eirairc:config.category.screenshots.tooltip"));
-		thisConfig.setCategoryComment(NOTIFICATIONS, I18n.format("eirairc:config.category.notifications.tooltip"));
-		thisConfig.setCategoryComment(COMPATIBILITY, I18n.format("eirairc:config.category.compatibility.tooltip"));
+		thisConfig.setCategoryComment(GENERAL, I19n.format("eirairc:config.category.general.tooltip"));
+		thisConfig.setCategoryComment(SCREENSHOTS, I19n.format("eirairc:config.category.screenshots.tooltip"));
+		thisConfig.setCategoryComment(NOTIFICATIONS, I19n.format("eirairc:config.category.notifications.tooltip"));
+		thisConfig.setCategoryComment(COMPATIBILITY, I19n.format("eirairc:config.category.compatibility.tooltip"));
 
 		// General
-		thisConfig.get(GENERAL, "hudRecState", false, I18n.format("eirairc:config.property.hudRecState")).set(hudRecState);
-		thisConfig.get(GENERAL, "persistentConnection", false, I18n.format("eirairc:config.property.persistentConnection")).set(persistentConnection);
+		thisConfig.get(GENERAL, "hudRecState", false, I19n.format("eirairc:config.property.hudRecState")).set(hudRecState);
+		thisConfig.get(GENERAL, "persistentConnection", false, I19n.format("eirairc:config.property.persistentConnection")).set(persistentConnection);
 
 		// Screenshots
-		thisConfig.get(SCREENSHOTS, "uploadHoster", "", I18n.format("eirairc:config.property.uploadHoster")).set(screenshotHoster);
-		thisConfig.get(SCREENSHOTS, "autoAction", "", I18n.format("eirairc:config.property.autoAction")).set(screenshotAction.name());
-		thisConfig.get(SCREENSHOTS, "uploadBufferSize", 0, I18n.format("eirairc:config.property.uploadBufferSize")).set(uploadBufferSize);
+		thisConfig.get(SCREENSHOTS, "uploadHoster", "", I19n.format("eirairc:config.property.uploadHoster")).set(screenshotHoster);
+		thisConfig.get(SCREENSHOTS, "autoAction", "", I19n.format("eirairc:config.property.autoAction")).set(screenshotAction.name());
+		thisConfig.get(SCREENSHOTS, "uploadBufferSize", 0, I19n.format("eirairc:config.property.uploadBufferSize")).set(uploadBufferSize);
 
 		// Notifications
-		thisConfig.get(NOTIFICATIONS, "soundName", "", I18n.format("eirairc:config.property.soundName")).set(notificationSound);
-		thisConfig.get(NOTIFICATIONS, "soundVolume", 0f, I18n.format("eirairc:config.property.soundVolume")).set(notificationSoundVolume);
-		thisConfig.get(NOTIFICATIONS, "soundPitch", 0f, I18n.format("eirairc:config.property.soundPitch")).set(notificationSoundPitch);
-		thisConfig.get(NOTIFICATIONS, "friendJoined", "", I18n.format("eirairc:config.property.friendJoined")).set(ntfyFriendJoined.name());
-		thisConfig.get(NOTIFICATIONS, "nameMentioned", "", I18n.format("eirairc:config.property.nameMentioned")).set(ntfyNameMentioned.name());
-		thisConfig.get(NOTIFICATIONS, "userRecording", "", I18n.format("eirairc:config.property.userRecording")).set(ntfyUserRecording.name());
-		thisConfig.get(NOTIFICATIONS, "privateMessage", "", I18n.format("eirairc:config.property.privateMessage")).set(ntfyPrivateMessage.name());
+		thisConfig.get(NOTIFICATIONS, "soundName", "", I19n.format("eirairc:config.property.soundName")).set(notificationSound);
+		thisConfig.get(NOTIFICATIONS, "soundVolume", 0f, I19n.format("eirairc:config.property.soundVolume")).set(notificationSoundVolume);
+		thisConfig.get(NOTIFICATIONS, "soundPitch", 0f, I19n.format("eirairc:config.property.soundPitch")).set(notificationSoundPitch);
+		thisConfig.get(NOTIFICATIONS, "friendJoined", "", I19n.format("eirairc:config.property.friendJoined")).set(ntfyFriendJoined.name());
+		thisConfig.get(NOTIFICATIONS, "nameMentioned", "", I19n.format("eirairc:config.property.nameMentioned")).set(ntfyNameMentioned.name());
+		thisConfig.get(NOTIFICATIONS, "userRecording", "", I19n.format("eirairc:config.property.userRecording")).set(ntfyUserRecording.name());
+		thisConfig.get(NOTIFICATIONS, "privateMessage", "", I19n.format("eirairc:config.property.privateMessage")).set(ntfyPrivateMessage.name());
 
 		// Compatibility
-		thisConfig.get(COMPATIBILITY, "clientBridge", false, I18n.format("eirairc:config.property.clientBridge")).set(clientBridge);
-		thisConfig.get(COMPATIBILITY, "clientBridgeMessageToken", I18n.format("eirairc:config.property.clientBridgeMessageToken")).set(clientBridgeMessageToken);
-		thisConfig.get(COMPATIBILITY, "clientBridgeNickToken", I18n.format("eirairc:config.property.clientBridgeNickToken")).set(clientBridgeNickToken);
-		thisConfig.get(COMPATIBILITY, "disableChatToggle", false, I18n.format("eirairc:config.property.disableChatToggle")).set(disableChatToggle);
-		thisConfig.get(COMPATIBILITY, "vanillaChat", false, I18n.format("eirairc:config.property.vanillaChat")).set(vanillaChat);
+		thisConfig.get(COMPATIBILITY, "clientBridge", false, I19n.format("eirairc:config.property.clientBridge")).set(clientBridge);
+		thisConfig.get(COMPATIBILITY, "clientBridgeMessageToken", I19n.format("eirairc:config.property.clientBridgeMessageToken")).set(clientBridgeMessageToken);
+		thisConfig.get(COMPATIBILITY, "clientBridgeNickToken", I19n.format("eirairc:config.property.clientBridgeNickToken")).set(clientBridgeNickToken);
+		thisConfig.get(COMPATIBILITY, "disableChatToggle", false, I19n.format("eirairc:config.property.disableChatToggle")).set(disableChatToggle);
+		thisConfig.get(COMPATIBILITY, "vanillaChat", false, I19n.format("eirairc:config.property.vanillaChat")).set(vanillaChat);
 
 		thisConfig.save();
 	}
