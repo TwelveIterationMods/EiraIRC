@@ -13,6 +13,7 @@ import java.util.Map;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.config.base.BotProfileImpl;
@@ -152,6 +153,7 @@ public class ConfigurationHandler {
 				return;
 			}
 		}
+		createExample();
 		Gson gson = new Gson();
 		try {
 			Reader reader = new FileReader(new File(configDir, "servers.json"));
@@ -160,6 +162,51 @@ public class ConfigurationHandler {
 				addServerConfig(ServerConfig.loadFromJson(serverArray.get(i).getAsJsonObject()));
 			}
 			reader.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private static void createExample() {
+		JsonArray root = new JsonArray();
+		JsonObject server = new JsonObject();
+		server.addProperty("address", "irc.esper.net");
+		server.addProperty("serverPassword", "");
+		server.addProperty("nick", "%USERNAME%");
+		server.addProperty("charset", "UTF-8");
+		server.addProperty("isRedirect", false);
+		server.addProperty("isSSL", false);
+		JsonObject nickserv = new JsonObject();
+		nickserv.addProperty("username", "");
+		nickserv.addProperty("password", "");
+		server.add("nickserv", nickserv);
+		JsonArray channelArray = new JsonArray();
+		JsonObject channel1 = new JsonObject();
+		channel1.addProperty("name", "#EiraIRC");
+		channelArray.add(channel1);
+		JsonObject channel2 = new JsonObject();
+		channel2.addProperty("name", "#minecraft");
+		channel2.addProperty("password", "");
+		channelArray.add(channel2);
+		server.add("channels", channelArray);
+		JsonObject botSettings = new JsonObject();
+		botSettings.addProperty("relayDeathMessages", false);
+		botSettings.addProperty("(more)", "(see shared.cfg for more options)");
+		server.add("bot", botSettings);
+		JsonObject genSettings = new JsonObject();
+		genSettings.addProperty("autoJoin", true);
+		genSettings.addProperty("(more)", "(see shared.cfg for more options)");
+		server.add("general", genSettings);
+		JsonObject themeSettings = new JsonObject();
+		themeSettings.addProperty("ircNameColor", "c");
+		themeSettings.addProperty("(more)", "(see shared.cfg for more options)");
+		root.add(server);
+		Gson gson = new Gson();
+		try {
+			JsonWriter writer = new JsonWriter(new FileWriter(new File(baseConfigDir, "eirairc/servers.json.example.txt")));
+			writer.setIndent("  ");
+			gson.toJson(root, writer);
+			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

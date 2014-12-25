@@ -95,6 +95,7 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public void loadConfig(File configDir) {
+		super.loadConfig(configDir);
 		ClientGlobalConfig.load(configDir);
 	}
 

@@ -99,7 +99,7 @@ public class SharedGlobalConfig {
 		thisConfig.get(GENERAL, "debugMode", false, I18n.format("eirairc:config.property.debugMode.tooltip")).set(debugMode);
 
 		// Network
-		thisConfig.get(NETWORK, "bindIP", "", I18n.format("eirairc:config.property.bindIP.toooltip")).set(bindIP);
+		thisConfig.get(NETWORK, "bindIP", "", I18n.format("eirairc:config.property.bindIP.tooltip")).set(bindIP);
 		thisConfig.get(NETWORK, "sslTrustAllCerts", false, I18n.format("eirairc:config.property.sslTrustAllCerts.tooltip")).set(sslTrustAllCerts);
 		thisConfig.get(NETWORK, "sslCustomTrustStore", I18n.format("eirairc:config.property.sslCustomTrustStore.tooltip")).set(sslCustomTrustStore);
 		thisConfig.get(NETWORK, "sslDisableDiffieHellman", false, I18n.format("eirairc:config.property.sslDisableDiffieHellman.tooltip")).set(sslDisableDiffieHellman);
