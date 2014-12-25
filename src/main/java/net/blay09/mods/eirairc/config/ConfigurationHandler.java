@@ -38,7 +38,6 @@ public class ConfigurationHandler {
 	private static final Map<String, TrustedServer> trustedServers = new HashMap<String, TrustedServer>();
 
 	private static File baseConfigDir;
-	private static File botProfileDir;
 	private static BotProfileImpl defaultBotProfile;
 	private static MessageFormatConfig defaultDisplayFormat;
 
@@ -66,7 +65,6 @@ public class ConfigurationHandler {
 				return;
 			}
 		}
-		botProfileDir = profileDir;
 		BotProfileImpl.setupDefaultProfiles(profileDir);
 		File[] files = profileDir.listFiles(new FilenameFilter() {
 			@Override
@@ -252,10 +250,14 @@ public class ConfigurationHandler {
 		return serverConfigs.values();
 	}
 
+	public static ServerConfig getServerConfig(String address) {
+		return serverConfigs.get(address.toLowerCase());
+	}
+
 	public static void addServerConfig(ServerConfig serverConfig) {
 		serverConfigs.put(serverConfig.getAddress().toLowerCase(), serverConfig);
 	}
-	
+
 	public static void removeServerConfig(String host) {
 		serverConfigs.remove(host.toLowerCase());
 	}
@@ -278,7 +280,7 @@ public class ConfigurationHandler {
 
 	public static void handleConfigCommand(ICommandSender sender, String target, String key, String value) {
 		if(target.equals("global")) {
-			boolean result = false;
+			boolean result = EiraIRC.proxy.handleConfigCommand(sender, key, value);
 			if(result) {
 				Utils.sendLocalizedMessage(sender, "irc.config.change", "Global", key, value);
 				ConfigurationHandler.save();
@@ -299,10 +301,10 @@ public class ConfigurationHandler {
 			}
 		}
 	}
-	
+
 	public static void handleConfigCommand(ICommandSender sender, String target, String key) {
 		if(target.equals("global")) {
-			String result = null;
+			String result = EiraIRC.proxy.handleConfigCommand(sender, key);
 			if(result != null) {
 				Utils.sendLocalizedMessage(sender, "irc.config.lookup", "Global", key, result);
 			} else {
@@ -323,10 +325,8 @@ public class ConfigurationHandler {
 		}
 	}
 
-	public static void addOptionsToList(List<String> list) {
-	}
-
-	public static void addValuesToList(List<String> list, String option) {
+	public static void addOptionsToList(List<String> list, String option) {
+		EiraIRC.proxy.addConfigOptionsToList(list, option);
 	}
 
 	public static BotProfileImpl getBotProfile(String name) {
@@ -336,10 +336,6 @@ public class ConfigurationHandler {
 		}
 		return botProfile;
 	}
-	
-	public static List<BotProfileImpl> getBotProfiles() {
-		return botProfileList;
-	}
 
 	public static MessageFormatConfig getMessageFormat(String displayMode) {
 		MessageFormatConfig displayFormat = displayFormats.get(displayMode);
@@ -347,35 +343,6 @@ public class ConfigurationHandler {
 			return defaultDisplayFormat;
 		}
 		return displayFormat;
-	}
-
-	public static File getBotProfileDir() {
-		return botProfileDir;
-	}
-	
-	public static List<MessageFormatConfig> getDisplayFormats() {
-		return displayFormatList;
-	}
-
-	public static void addBotProfile(BotProfileImpl botProfile) {
-		botProfiles.put(botProfile.getName(), botProfile);
-		botProfileList.add(botProfile);
-	}
-	
-	public static void renameBotProfile(BotProfileImpl botProfile, String newName) {
-		botProfiles.remove(botProfile.getName());
-		botProfile.setName(newName);
-		botProfiles.put(botProfile.getName(), botProfile);
-	}
-
-	public static void removeBotProfile(BotProfileImpl botProfile) {
-		botProfiles.remove(botProfile.getName());
-		botProfileList.remove(botProfile);
-		botProfile.getFile().delete();
-	}
-
-	public static BotProfileImpl getDefaultBotProfile() {
-		return defaultBotProfile;
 	}
 
 }

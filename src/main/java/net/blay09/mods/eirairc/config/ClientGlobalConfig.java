@@ -6,10 +6,12 @@ import net.blay09.mods.eirairc.api.upload.UploadManager;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.command.ICommandSender;
 import net.minecraftforge.common.config.Configuration;
 import org.lwjgl.input.Keyboard;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * Created by Blay09 on 29.09.2014.
@@ -160,4 +162,56 @@ public class ClientGlobalConfig {
 		vanillaChat = legacyConfig.get("compatibility", "vanillaChat", vanillaChat).getBoolean();
 	}
 
+	public static String handleConfigCommand(ICommandSender sender, String key) {
+		if(key.equals("persistentConnection")) {
+			return String.valueOf(persistentConnection);
+		} else if(key.equals("uploadHoster")) {
+			return screenshotHoster;
+		} else if(key.equals("clientBridge")) {
+			return String.valueOf(clientBridge);
+		} else if(key.equals("clientBridgeMessageToken")) {
+			return clientBridgeMessageToken;
+		} else if(key.equals("clientBridgeNickToken")) {
+			return clientBridgeNickToken;
+		} else if(key.equals("disableChatToggle")) {
+			return String.valueOf(disableChatToggle);
+		}
+		return null;
+	}
+
+	public static boolean handleConfigCommand(ICommandSender sender, String key, String value) {
+		boolean result = true;
+		if(key.equals("persistentConnection")) {
+			persistentConnection = Boolean.parseBoolean(value);
+		} else if(key.equals("uploadHoster")) {
+			if(UploadManager.isValidHoster(value)) {
+				screenshotHoster = value;
+			}
+		} else if(key.equals("clientBridge")) {
+			clientBridge = Boolean.parseBoolean(value);
+		} else if(key.equals("clientBridgeMessageToken")) {
+			clientBridgeMessageToken = value;
+		} else if(key.equals("clientBridgeNickToken")) {
+			clientBridgeNickToken = value;
+		} else if(key.equals("disableChatToggle")) {
+			disableChatToggle = Boolean.parseBoolean(value);
+		} else {
+			result = false;
+		}
+		return result;
+	}
+
+
+	public static void addOptionsToList(List<String> list, String option) {
+		if(option == null) {
+			list.add("persistentConnection");
+			list.add("uploadHoster");
+			list.add("clientBridge");
+			list.add("clientBridgeMessageToken");
+			list.add("clientBridgeNickToken");
+			list.add("disableChatToggle");
+		} else if(option.equals("persistentConnection") || option.equals("clientBridge") || option.equals("disableChatToggle")) {
+			Utils.addBooleansToList(list);
+		}
+	}
 }

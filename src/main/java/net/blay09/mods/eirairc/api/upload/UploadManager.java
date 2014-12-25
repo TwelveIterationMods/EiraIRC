@@ -30,4 +30,8 @@ public class UploadManager {
 		}
 		return availableHosters;
 	}
+
+	public static boolean isValidHoster(String name) {
+		return uploadHosters.containsKey(name);
+	}
 }

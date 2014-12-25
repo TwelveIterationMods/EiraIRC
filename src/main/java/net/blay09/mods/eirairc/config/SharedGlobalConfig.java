@@ -6,6 +6,7 @@ import net.blay09.mods.eirairc.config.settings.ThemeSettings;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.command.ICommandSender;
 import net.minecraftforge.common.config.Configuration;
 
 import java.io.File;
@@ -144,4 +145,90 @@ public class SharedGlobalConfig {
 		generalSettings.load(thisConfig, SETTINGS, true);
 		generalSettings.loadLegacy(legacyConfig, null);
 	}
+
+	public static boolean handleConfigCommand(ICommandSender sender, String key, String value) {
+		boolean result = true;
+		if(key.equals("defaultChat")) {
+			defaultChat = value;
+		} else if(key.equals("enablePlayerColors")) {
+			enablePlayerColors = Boolean.parseBoolean(value);
+		} else if(key.equals("enablePlayerAliases")) {
+			enablePlayerAliases = Boolean.parseBoolean(value);
+		} else if(key.equals("registerShortCommands")) {
+			registerShortCommands = Boolean.parseBoolean(value);
+		} else if(key.equals("hidePlayerTags")) {
+			hidePlayerTags = Boolean.parseBoolean(value);
+		} else if(key.equals("debugMode")) {
+			debugMode = Boolean.parseBoolean(value);
+		} else if(key.equals("bindIP")) {
+			bindIP = value;
+		} else if(key.equals("sslTrustAllCerts")) {
+			sslTrustAllCerts = Boolean.parseBoolean(value);
+		} else if(key.equals("sslDisableDiffieHellman")) {
+			sslDisableDiffieHellman = Boolean.parseBoolean(value);
+		} else if(key.equals("sslCustomTrustStore")) {
+			sslCustomTrustStore = value;
+		} else if(theme.handleConfigCommand(sender, key, value)) {
+		} else if(botSettings.handleConfigCommand(sender, key, value)) {
+		} else if(generalSettings.handleConfigCommand(sender, key, value)) {
+		} else {
+			result = false;
+		}
+		return result;
+	}
+
+	public static String handleConfigCommand(ICommandSender sender, String key) {
+		String value = null;
+		if(key.equals("defaultChat")) {
+			value = defaultChat;
+		} else if(key.equals("enablePlayerColors")) {
+			value = String.valueOf(enablePlayerColors);
+		} else if(key.equals("enablePlayerAliases")) {
+			value = String.valueOf(enablePlayerAliases);
+		} else if(key.equals("registerShortCommands")) {
+			value = String.valueOf(registerShortCommands);
+		} else if(key.equals("hidePlayerTags")) {
+			value = String.valueOf(hidePlayerTags);
+		} else if(key.equals("debugMode")) {
+			value = String.valueOf(debugMode);
+		} else if(key.equals("bindIP")) {
+			value = bindIP;
+		} else if(key.equals("sslTrustAllCerts")) {
+			value = String.valueOf(sslTrustAllCerts);
+		} else if(key.equals("sslDisableDiffieHellman")) {
+			value = String.valueOf(sslDisableDiffieHellman);
+		} else if(key.equals("sslCustomTrustStore")) {
+			value = sslCustomTrustStore;
+		}
+		if(value == null) {
+			value = theme.handleConfigCommand(sender, key);
+		}
+		if(value == null) {
+			value = botSettings.handleConfigCommand(sender, key);
+		}
+		if(value == null) {
+			value = generalSettings.handleConfigCommand(sender, key);
+		}
+		return value;
+	}
+
+	public static void addOptionsToList(List<String> list, String option) {
+		if(option == null) {
+			list.add("defaultChat");
+			list.add("enablePlayerColors");
+			list.add("registerShortCommands");
+			list.add("hidePlayerTags");
+			list.add("debugMode");
+			list.add("bindIP");
+			list.add("sslCustomTrustStore");
+			list.add("sslTrustAllCerts");
+			list.add("sslDisableDiffieHellman");
+		} else if(option.equals("enablePlayerColors") || option.equals("registerShortCommands") || option.equals("hidePlayerTags") || option.equals("sslTrustAllCerts") || option.equals("sslDisableDiffieHellman")) {
+			Utils.addBooleansToList(list);
+		}
+		ThemeSettings.addOptionsToList(list, option);
+		GeneralSettings.addOptionsToList(list, option);
+		BotSettings.addOptionsToList(list, option);
+	}
+
 }

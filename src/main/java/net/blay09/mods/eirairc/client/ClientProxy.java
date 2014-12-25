@@ -16,12 +16,14 @@ import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.ClientCommandHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraftforge.common.config.Configuration;
 
 import java.io.File;
+import java.util.List;
 
 public class ClientProxy extends CommonProxy {
 
@@ -104,5 +106,29 @@ public class ClientProxy extends CommonProxy {
 		} else {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiEiraIRCRedirect(serverConfig));
 		}
+	}
+
+	@Override
+	public boolean handleConfigCommand(ICommandSender sender, String key, String value) {
+		if(!super.handleConfigCommand(sender, key, value)) {
+			return ClientGlobalConfig.handleConfigCommand(sender, key, value);
+		} else {
+			return true;
+		}
+	}
+
+	@Override
+	public String handleConfigCommand(ICommandSender sender, String key) {
+		if(super.handleConfigCommand(sender, key) == null) {
+			return ClientGlobalConfig.handleConfigCommand(sender, key);
+		} else {
+			return null;
+		}
+	}
+
+	@Override
+	public void addConfigOptionsToList(List<String> list, String option) {
+		super.addConfigOptionsToList(list, option);
+		ClientGlobalConfig.addOptionsToList(list, option);
 	}
 }

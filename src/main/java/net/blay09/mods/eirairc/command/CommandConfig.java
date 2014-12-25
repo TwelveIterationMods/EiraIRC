@@ -80,22 +80,22 @@ public class CommandConfig extends SubCommand {
 				return;
 			}
 			if(args[0].equals(TARGET_GLOBAL)) {
-				ConfigurationHandler.addOptionsToList(list);
+				ConfigurationHandler.addOptionsToList(list, null);
 			} else if(args[0].contains("#")) {
-				ChannelConfig.addOptionsToList(list);
+				ChannelConfig.addOptionsToList(list, null);
 			} else {
-				ServerConfig.addOptionstoList(list);
+				ServerConfig.addOptionsToList(list, null);
 			}
 		} else if(args.length == 3) {
 			if(args[0].equals("reload")) {
 				return;
 			}
 			if(args[0].equals(TARGET_GLOBAL)) {
-				ConfigurationHandler.addValuesToList(list, args[1]);
+				ConfigurationHandler.addOptionsToList(list, args[1]);
 			} else if(args[0].contains("#")) {
-				ChannelConfig.addValuesToList(list, args[1]);
+				ChannelConfig.addOptionsToList(list, args[1]);
 			} else {
-				ServerConfig.addValuesToList(list, args[1]);
+				ServerConfig.addOptionsToList(list, args[1]);
 			}
 		}
 	}

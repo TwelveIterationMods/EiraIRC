@@ -267,6 +267,12 @@ public class Utils {
 		return theme.getColor(ThemeColorComponent.ircNameColor);
 	}
 
+	public static void addMCColorsToList(List<String> list) {
+		for(EnumChatFormatting formatting : EnumChatFormatting.values()) {
+			list.add(formatting.name());
+		}
+	}
+
 	public static void addValidColorsToList(List<String> list) {
 		list.add("black");
 		list.add("darkblue");

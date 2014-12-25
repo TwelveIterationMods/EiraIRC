@@ -111,7 +111,10 @@ public class ChannelConfig {
 		ConfigurationHandler.save();
 	}
 
-	public static void addOptionsToList(List<String> list) {
+	public static void addOptionsToList(List<String> list, String option) {
+		ThemeSettings.addOptionsToList(list, option);
+		BotSettings.addOptionsToList(list, option);
+		GeneralSettings.addOptionsToList(list, option);
 	}
 
 	public ServerConfig getServerConfig() {
@@ -120,9 +123,6 @@ public class ChannelConfig {
 
 	public void setPassword(String password) {
 		this.password = password;
-	}
-
-	public static void addValuesToList(List<String> list, String option) {
 	}
 
 	public ThemeSettings getTheme() {

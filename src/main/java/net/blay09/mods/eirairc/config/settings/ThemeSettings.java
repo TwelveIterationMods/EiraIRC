@@ -6,12 +6,14 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -145,4 +147,38 @@ public class ThemeSettings {
 		}
 	}
 
+	public String handleConfigCommand(ICommandSender sender, String key) {
+		try {
+			ThemeColorComponent component = ThemeColorComponent.valueOf(key);
+			if (colors.containsKey(component)) {
+				return colors.get(component).name();
+			} else {
+				return "<inherit>";
+			}
+		} catch (IllegalArgumentException ignored) {}
+		return null;
+	}
+
+	public boolean handleConfigCommand(ICommandSender sender, String key, String value) {
+		try {
+			ThemeColorComponent component = ThemeColorComponent.valueOf(key);
+			colors.put(component, EnumChatFormatting.getValueByName(value));
+			return true;
+		} catch (IllegalArgumentException e) {
+			return false;
+		}
+	}
+
+	public static void addOptionsToList(List<String> list, String option) {
+		if(option == null) {
+			for(ThemeColorComponent component : ThemeColorComponent.values) {
+				list.add(component.name);
+			}
+		} else {
+			try {
+				ThemeColorComponent.valueOf(option);
+				Utils.addMCColorsToList(list);
+			} catch (IllegalArgumentException ignored) {}
+		}
+	}
 }

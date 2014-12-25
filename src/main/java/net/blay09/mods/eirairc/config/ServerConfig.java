@@ -120,6 +120,10 @@ public class ServerConfig {
 		return channels.containsKey(channelName.toLowerCase());
 	}
 
+	public ChannelConfig getChannelConfig(String channelName) {
+		return channels.get(channelName.toLowerCase());
+	}
+
 	public Collection<ChannelConfig> getChannelConfigs() {
 		return channels.values();
 	}
@@ -232,7 +236,14 @@ public class ServerConfig {
 	}
 
 	public void handleConfigCommand(ICommandSender sender, String key) {
-		String value = null;
+		String value;
+		value = generalSettings.handleConfigCommand(sender, key);
+		if(value == null) {
+			value = botSettings.handleConfigCommand(sender, key);
+		}
+		if(value == null) {
+			value = theme.handleConfigCommand(sender, key);
+		}
 		if(value != null) {
 			Utils.sendLocalizedMessage(sender, "irc.config.lookup", address, key, value);
 		} else {
@@ -241,7 +252,10 @@ public class ServerConfig {
 	}
 
 	public void handleConfigCommand(ICommandSender sender, String key, String value) {
-		if(true) {
+		if(generalSettings.handleConfigCommand(sender, key, value)) {
+		} else if(botSettings.handleConfigCommand(sender, key, value)) {
+		} else if(theme.handleConfigCommand(sender, key, value)) {
+		} else {
 			Utils.sendLocalizedMessage(sender, "irc.config.invalidOption", address, key, value);
 			return;
 		}
@@ -249,10 +263,10 @@ public class ServerConfig {
 		ConfigurationHandler.save();
 	}
 
-	public static void addOptionstoList(List<String> list) {
-	}
-
-	public static void addValuesToList(List<String> list, String option) {
+	public static void addOptionsToList(List<String> list, String option) {
+		GeneralSettings.addOptionsToList(list, option);
+		BotSettings.addOptionsToList(list, option);
+		ThemeSettings.addOptionsToList(list, option);
 	}
 
 	public boolean isRemote() {

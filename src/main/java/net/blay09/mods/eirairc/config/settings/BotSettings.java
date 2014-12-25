@@ -5,10 +5,12 @@ import net.blay09.mods.eirairc.config.base.MessageFormatConfig;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.command.ICommandSender;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -152,4 +154,55 @@ public class BotSettings {
 			booleans.put(BotBooleanComponent.ConvertColors, legacyConfig.get("display", "enableIRCColors", BotBooleanComponent.ConvertColors.defaultValue).getBoolean());
 		}
 	}
+
+	public String handleConfigCommand(ICommandSender sender, String key) {
+		try {
+			BotBooleanComponent component = BotBooleanComponent.valueOf(key);
+			if (booleans.containsKey(component)) {
+				return String.valueOf(booleans.get(component));
+			} else {
+				return "<inherit>";
+			}
+		} catch (IllegalArgumentException ignored) {}
+		try {
+			BotStringComponent component = BotStringComponent.valueOf(key);
+			if (strings.containsKey(component)) {
+				return strings.get(component);
+			} else {
+				return "<inherit>";
+			}
+		} catch (IllegalArgumentException ignored) {}
+		return null;
+	}
+
+	public boolean handleConfigCommand(ICommandSender sender, String key, String value) {
+		try {
+			BotBooleanComponent component = BotBooleanComponent.valueOf(key);
+			booleans.put(component, Boolean.parseBoolean(value));
+			return true;
+		} catch (IllegalArgumentException ignored) {}
+		try {
+			BotStringComponent component = BotStringComponent.valueOf(key);
+			strings.put(component, value);
+			return true;
+		} catch (IllegalArgumentException ignored) {}
+		return false;
+	}
+
+	public static void addOptionsToList(List<String> list, String option) {
+		if(option == null) {
+			for(BotBooleanComponent component : BotBooleanComponent.values) {
+				list.add(component.name);
+			}
+			for(BotStringComponent component : BotStringComponent.values) {
+				list.add(component.name);
+			}
+		} else {
+			try {
+				BotBooleanComponent.valueOf(option);
+				Utils.addBooleansToList(list);
+			} catch (IllegalArgumentException ignored) {}
+		}
+	}
+
 }

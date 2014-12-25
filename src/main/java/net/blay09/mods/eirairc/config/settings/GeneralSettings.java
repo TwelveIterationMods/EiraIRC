@@ -1,11 +1,15 @@
 package net.blay09.mods.eirairc.config.settings;
 
 import com.google.gson.JsonObject;
+import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -113,6 +117,41 @@ public class GeneralSettings {
 			if (legacyConfig.hasKey(category, "autoWho")) {
 				booleans.put(GeneralBooleanComponent.AutoWho, legacyConfig.get(category, "autoWho", GeneralBooleanComponent.AutoWho.defaultValue).getBoolean());
 			}
+		}
+	}
+
+	public String handleConfigCommand(ICommandSender sender, String key) {
+		try {
+			GeneralBooleanComponent component = GeneralBooleanComponent.valueOf(key);
+			if (booleans.containsKey(component)) {
+				return String.valueOf(booleans.get(component));
+			} else {
+				return "<inherit>";
+			}
+		} catch (IllegalArgumentException ignored) {}
+		return null;
+	}
+
+	public boolean handleConfigCommand(ICommandSender sender, String key, String value) {
+		try {
+			GeneralBooleanComponent component = GeneralBooleanComponent.valueOf(key);
+			booleans.put(component, Boolean.parseBoolean(value));
+			return true;
+		} catch (IllegalArgumentException e) {
+			return false;
+		}
+	}
+
+	public static void addOptionsToList(List<String> list, String option) {
+		if(option == null) {
+			for(GeneralBooleanComponent component : GeneralBooleanComponent.values) {
+				list.add(component.name);
+			}
+		} else {
+			try {
+				GeneralBooleanComponent.valueOf(option);
+				Utils.addMCColorsToList(list);
+			} catch (IllegalArgumentException ignored) {}
 		}
 	}
 }

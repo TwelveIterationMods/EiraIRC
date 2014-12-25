@@ -8,10 +8,12 @@ import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.net.PacketHandler;
 import net.blay09.mods.eirairc.net.message.MessageNotification;
 import net.blay09.mods.eirairc.util.NotificationType;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.config.Configuration;
 
 import java.io.File;
+import java.util.List;
 
 public class CommonProxy {
 
@@ -47,5 +49,17 @@ public class CommonProxy {
 
 	public void handleRedirect(ServerConfig serverConfig) {
 
+	}
+
+	public boolean handleConfigCommand(ICommandSender sender, String key, String value) {
+		return SharedGlobalConfig.handleConfigCommand(sender, key, value);
+	}
+
+	public String handleConfigCommand(ICommandSender sender, String key) {
+		return SharedGlobalConfig.handleConfigCommand(sender, key);
+	}
+
+	public void addConfigOptionsToList(List<String> list, String option) {
+		SharedGlobalConfig.addOptionsToList(list, option);
 	}
 }

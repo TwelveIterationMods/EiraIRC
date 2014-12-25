@@ -9,6 +9,7 @@ import net.blay09.mods.eirairc.api.IRCConnection;
 import net.blay09.mods.eirairc.api.IRCContext;
 import net.blay09.mods.eirairc.api.IRCUser;
 import net.blay09.mods.eirairc.config.ChannelConfig;
+import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.ServerConfig;
 
 public class IRCResolver {
@@ -98,10 +99,29 @@ public class IRCResolver {
 	}
 	
 	public static ServerConfig resolveServerConfig(String target, short flags) {
-		return null;
+		int pathSplitIndex = target.indexOf('/');
+		if(pathSplitIndex != -1) {
+			target = target.substring(0, pathSplitIndex - 1);
+		}
+		return ConfigurationHandler.getServerConfig(target);
 	}
 	
 	public static ChannelConfig resolveChannelConfig(String target, short flags) {
+		int pathSplitIndex = target.indexOf('/');
+		ServerConfig serverConfig = null;
+		if(pathSplitIndex != -1) {
+			serverConfig = ConfigurationHandler.getServerConfig(target.substring(0, pathSplitIndex - 1));
+			target = target.substring(pathSplitIndex + 1);
+		}
+		if(serverConfig != null) {
+			return serverConfig.getChannelConfig(target);
+		} else {
+			for(ServerConfig config : ConfigurationHandler.getServerConfigs()) {
+				if(config.hasChannelConfig(target)) {
+					return config.getChannelConfig(target);
+				}
+			}
+		}
 		return null;
 	}
 
