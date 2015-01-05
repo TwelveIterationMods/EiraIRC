@@ -3,9 +3,7 @@ package net.blay09.mods.eirairc.config.settings;
 import com.google.gson.JsonObject;
 import net.blay09.mods.eirairc.util.I19n;
 import net.blay09.mods.eirairc.util.Utils;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 
@@ -75,7 +73,7 @@ public class GeneralSettings {
 	public void load(Configuration config, String category, boolean defaultValues) {
 		for(int i = 0; i < GeneralBooleanComponent.values().length; i++) {
 			if(defaultValues || config.hasKey(category, GeneralBooleanComponent.values[i].name)) {
-				boolean value = config.getBoolean(GeneralBooleanComponent.values[i].name, category, GeneralBooleanComponent.values[i].defaultValue, I18n.format(GeneralBooleanComponent.values[i].langKey + ".tooltip"), GeneralBooleanComponent.values[i].langKey);
+				boolean value = config.getBoolean(GeneralBooleanComponent.values[i].name, category, GeneralBooleanComponent.values[i].defaultValue, I19n.format(GeneralBooleanComponent.values[i].langKey + ".tooltip"), GeneralBooleanComponent.values[i].langKey);
 				if(defaultValues || value != parent.getBoolean(GeneralBooleanComponent.values[i])) {
 					booleans.put(GeneralBooleanComponent.values[i], value);
 				}
@@ -104,7 +102,7 @@ public class GeneralSettings {
 
 	public void save(Configuration config, String category) {
 		for(Map.Entry<GeneralBooleanComponent, Boolean> entry : booleans.entrySet()) {
-			config.get(category, entry.getKey().name, false, I18n.format(entry.getKey().langKey + ".tooltip")).set(entry.getValue());
+			config.get(category, entry.getKey().name, false, I19n.format(entry.getKey().langKey + ".tooltip")).set(entry.getValue());
 		}
 	}
 

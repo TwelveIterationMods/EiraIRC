@@ -1,15 +1,10 @@
 package net.blay09.mods.eirairc.config.settings;
 
 import com.google.gson.JsonObject;
-import cpw.mods.fml.client.event.ConfigChangedEvent;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.blay09.mods.eirairc.util.I19n;
 import net.blay09.mods.eirairc.util.Utils;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 
@@ -122,7 +117,7 @@ public class ThemeSettings {
 
 	public void save(Configuration config, String category) {
 		for(Map.Entry<ThemeColorComponent, EnumChatFormatting> entry : colors.entrySet()) {
-			config.get(category, entry.getKey().name, "", I18n.format(entry.getKey().langKey + ".tooltip")).set(entry.getValue().getFormattingCode());
+			config.get(category, entry.getKey().name, "", I19n.format(entry.getKey().langKey + ".tooltip")).set(entry.getValue().getFormattingCode());
 		}
 	}
 

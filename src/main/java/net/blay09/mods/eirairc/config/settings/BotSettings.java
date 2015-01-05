@@ -5,7 +5,6 @@ import net.blay09.mods.eirairc.config.base.MessageFormatConfig;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.I19n;
 import net.blay09.mods.eirairc.util.Utils;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.command.ICommandSender;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
@@ -134,10 +133,10 @@ public class BotSettings {
 
 	public void save(Configuration config, String category) {
 		for(Map.Entry<BotStringComponent, String> entry : strings.entrySet()) {
-			config.get(category, entry.getKey().name, "", I18n.format(entry.getKey().langKey + ".tooltip")).set(entry.getValue());
+			config.get(category, entry.getKey().name, "", I19n.format(entry.getKey().langKey + ".tooltip")).set(entry.getValue());
 		}
 		for(Map.Entry<BotBooleanComponent, Boolean> entry : booleans.entrySet()) {
-			config.get(category, entry.getKey().name, false, I18n.format(entry.getKey().langKey + ".tooltip")).set(entry.getValue());
+			config.get(category, entry.getKey().name, false, I19n.format(entry.getKey().langKey + ".tooltip")).set(entry.getValue());
 		}
 	}
 
