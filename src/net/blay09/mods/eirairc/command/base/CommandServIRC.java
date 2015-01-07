@@ -19,7 +19,7 @@ public class CommandServIRC implements ICommand {
 
 	@Override
 	public int compareTo(Object o) {
-		return 0;
+		return getCommandName().compareTo(((ICommand) o).getCommandName());
 	}
 
 	@Override
