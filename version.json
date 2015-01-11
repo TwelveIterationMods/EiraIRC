@@ -2,23 +2,23 @@
 	"versionList": [
 		{
 			"mcVersion":"1.8",
-			"modVersion":"mc1.8-v1.7.2",
+			"modVersion":"mc1.8-v1.7.5",
 			"changeLog": [
-				"Updated to Minecraft 1.8"
+				"Fix private messages not being allowed even when enabled.",
+                "Fix vanilla's /help not working under certain circumstances."
 			],
-			"updateURL":"http://minecraft.curseforge.com/mc-mods/68420-eirairc/files/2219844/download",
+			"updateURL":"http://minecraft.curseforge.com/mc-mods/68420-eirairc/files/2224258/download",
 			"isDirectLink":"true",
 			"newFileName":""
 		},
 		{
 			"mcVersion":"1.7.10",
-			"modVersion":"mc1.7.10-v1.7.52",
+			"modVersion":"mc1.7.10-v1.7.56",
 			"changeLog": [
-                "Fixed SSL connections not working at all.",
-                "Fixed crashes on invalid color config settings.",
-                "Fixed crashes on no color config settings."
+                "Fix private messages not being allowed even when enabled.",
+                "Fix vanilla's /help not working under certain circumstances."
 			],
-			"updateURL":"http://minecraft.curseforge.com/mc-mods/68420-eirairc/files/2217853/download",
+			"updateURL":"http://minecraft.curseforge.com/mc-mods/68420-eirairc/files/2224258/download",
 			"isDirectLink":"true",
 			"newFileName":""
 		},
