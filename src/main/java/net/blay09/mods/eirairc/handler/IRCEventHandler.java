@@ -11,7 +11,6 @@ import net.blay09.mods.eirairc.api.event.IRCUserJoinEvent;
 import net.blay09.mods.eirairc.api.event.IRCUserLeaveEvent;
 import net.blay09.mods.eirairc.api.event.IRCUserNickChangeEvent;
 import net.blay09.mods.eirairc.api.event.IRCUserQuitEvent;
-import net.blay09.mods.eirairc.config.ClientGlobalConfig;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.config.settings.*;
 import net.blay09.mods.eirairc.irc.IRCConnectionImpl;
@@ -138,19 +137,10 @@ public class IRCEventHandler {
 		if(ConfigHelper.getGeneralSettings(event.channel).isMuted()) {
 			return;
 		}
-		String message = event.message;
-		if(ClientGlobalConfig.clientBridge) {
-			if(!ClientGlobalConfig.clientBridgeMessageToken.isEmpty()) {
-				if (message.endsWith(ClientGlobalConfig.clientBridgeMessageToken) || message.endsWith(ClientGlobalConfig.clientBridgeMessageToken + IRCConnectionImpl.EMOTE_END)) {
-					return;
-				}
-			}
-			if(!ClientGlobalConfig.clientBridgeNickToken.isEmpty()) {
-				if (event.sender.getName().endsWith(ClientGlobalConfig.clientBridgeNickToken)) {
-					return;
-				}
-			}
+		if(EiraIRC.proxy.checkClientBridge(event)) {
+			return;
 		}
+		String message = event.message;
 		BotSettings botSettings = ConfigHelper.getBotSettings(event.channel);
 		if(botSettings.getBoolean(BotBooleanComponent.FilterLinks)) {
 			message = MessageFormat.filterLinks(message);

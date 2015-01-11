@@ -13,12 +13,8 @@ import net.blay09.mods.eirairc.command.base.CommandIRC;
 import net.blay09.mods.eirairc.command.base.CommandServIRC;
 import net.blay09.mods.eirairc.command.base.IRCCommandHandler;
 import net.blay09.mods.eirairc.command.base.IgnoreCommand;
-import net.blay09.mods.eirairc.config.ChannelConfig;
-import net.blay09.mods.eirairc.config.ClientGlobalConfig;
-import net.blay09.mods.eirairc.config.ServerConfig;
-import net.blay09.mods.eirairc.config.SharedGlobalConfig;
+import net.blay09.mods.eirairc.config.*;
 import net.blay09.mods.eirairc.handler.ChatSessionHandler;
-import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.handler.IRCConnectionHandler;
 import net.blay09.mods.eirairc.handler.IRCEventHandler;
 import net.blay09.mods.eirairc.handler.MCEventHandler;
@@ -112,13 +108,7 @@ public class EiraIRC {
 		if(event.modID.equals(Globals.MOD_ID)) {
 			if(event.configID.equals("global")) {
 				ConfigurationHandler.lightReload();
-
-				if (SharedGlobalConfig.thisConfig.hasChanged()) {
-					SharedGlobalConfig.thisConfig.save();
-				}
-				if (ClientGlobalConfig.thisConfig.hasChanged()) {
-					ClientGlobalConfig.thisConfig.save();
-				}
+				proxy.saveConfig();
 			} else if(event.configID.startsWith("server:")) {
 				ServerConfig serverConfig = ConfigurationHandler.getOrCreateServerConfig(event.configID.substring(7));
 				serverConfig.getTheme().pushDummyConfig();

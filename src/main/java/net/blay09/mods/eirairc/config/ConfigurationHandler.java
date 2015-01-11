@@ -190,6 +190,7 @@ public class ConfigurationHandler {
 		channelArray.add(channel2);
 		server.add("channels", channelArray);
 		JsonObject botSettings = new JsonObject();
+		botSettings.addProperty("botProfile", "Server");
 		botSettings.addProperty("relayDeathMessages", false);
 		botSettings.addProperty("(more)", "(see shared.cfg for more options)");
 		server.add("bot", botSettings);
@@ -266,8 +267,7 @@ public class ConfigurationHandler {
 	}
 	
 	public static void save() {
-		SharedGlobalConfig.save();
-		ClientGlobalConfig.save();
+		EiraIRC.proxy.saveConfig();
 
 		saveServers();
 		saveTrustedServers();
@@ -280,8 +280,7 @@ public class ConfigurationHandler {
 	public static void lightReload() {
 		File configDir = new File(baseConfigDir, "eirairc");
 
-		SharedGlobalConfig.load(configDir);
-		ClientGlobalConfig.load(configDir);
+		EiraIRC.proxy.loadConfig(configDir);
 	}
 	
 	public static ServerConfig getOrCreateServerConfig(String host) {

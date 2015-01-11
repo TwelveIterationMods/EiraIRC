@@ -236,6 +236,7 @@ public class MCEventHandler {
 		relayChatClient(event.message, event.isEmote, event.isNotice, event.target, ClientGlobalConfig.clientBridge);
 	}
 
+	@SideOnly(Side.CLIENT)
 	private void relayChatClient(String message, boolean isEmote, boolean isNotice, IRCContext target, boolean clientBridge) {
 		if(target != null) {
 			if(!ConfigHelper.getGeneralSettings(target).isReadOnly()) {
