@@ -73,4 +73,5 @@ public class CommonProxy {
 			SharedGlobalConfig.thisConfig.save();
 		}
 	}
+
 }

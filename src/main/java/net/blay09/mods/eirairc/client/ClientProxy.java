@@ -11,6 +11,7 @@ import net.blay09.mods.eirairc.client.gui.GuiEiraIRCRedirect;
 import net.blay09.mods.eirairc.client.gui.chat.GuiEiraChat;
 import net.blay09.mods.eirairc.client.gui.overlay.OverlayNotification;
 import net.blay09.mods.eirairc.client.screenshot.ScreenshotManager;
+import net.blay09.mods.eirairc.command.base.IRCCommandHandler;
 import net.blay09.mods.eirairc.config.*;
 import net.blay09.mods.eirairc.irc.IRCConnectionImpl;
 import net.blay09.mods.eirairc.util.NotificationType;
@@ -54,6 +55,9 @@ public class ClientProxy extends CommonProxy {
 		}
 		
 		EiraIRC.instance.registerCommands(ClientCommandHandler.instance, false);
+		if(ClientGlobalConfig.registerShortCommands) {
+			IRCCommandHandler.registerQuickCommands(ClientCommandHandler.instance);
+		}
 	}
 	
 	@Override

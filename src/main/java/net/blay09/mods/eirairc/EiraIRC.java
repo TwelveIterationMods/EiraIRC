@@ -149,9 +149,6 @@ public class EiraIRC {
 			handler.registerCommand(new CommandIRC());
 		}
 		IRCCommandHandler.registerCommands();
-		if(SharedGlobalConfig.registerShortCommands) {
-			IRCCommandHandler.registerQuickCommands(handler);
-		}
 	}
 
 	public ConnectionManager getConnectionManager() {

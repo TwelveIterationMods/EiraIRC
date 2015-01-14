@@ -31,7 +31,6 @@ public class SharedGlobalConfig {
 	public static boolean enablePlayerAliases = false;
 	public static boolean enablePlayerColors = true;
 	public static final List<String> colorBlacklist = new ArrayList<String>();
-	public static boolean registerShortCommands = true;
 	public static boolean hidePlayerTags = false;
 	public static boolean debugMode = false;
 
@@ -62,7 +61,6 @@ public class SharedGlobalConfig {
 		for(String entry : colorBlacklistArray) {
 			colorBlacklist.add(entry);
 		}
-		registerShortCommands = thisConfig.getBoolean("registerShortCommands", GENERAL, registerShortCommands, I19n.format("eirairc:config.property.registerShortCommands.tooltip"), "eirairc:config.property.registerShortCommands");
 		hidePlayerTags = thisConfig.getBoolean("hidePlayerTags", GENERAL, hidePlayerTags, I19n.format("eirairc:config.property.hidePlayerTags.tooltip"), "eirairc:config.property.hidePlayerTags");
 		debugMode = thisConfig.getBoolean("debugMode", GENERAL, debugMode, I19n.format("eirairc:config.property.debugMode.tooltip"), "eirairc:config.property.debugMode");
 
@@ -94,7 +92,6 @@ public class SharedGlobalConfig {
 		thisConfig.get(GENERAL, "enablePlayerAliases", false, I19n.format("eirairc:config.property.enablePlayerAliases.tooltip")).set(enablePlayerAliases);
 		thisConfig.get(GENERAL, "enablePlayerColors", false, I19n.format("eirairc:config.property.enablePlayerColors.tooltip")).set(enablePlayerColors);
 		thisConfig.get(GENERAL, "colorBlacklist", new String[0], I19n.format("eirairc:config.property.colorBlacklist.tooltip")).set(colorBlacklist.toArray(new String[colorBlacklist.size()]));
-		thisConfig.get(GENERAL, "registerShortCommands", false, I19n.format("eirairc:config.property.registerShortCommands.tooltip")).set(registerShortCommands);
 		thisConfig.get(GENERAL, "hidePlayerTags", false, I19n.format("eirairc:config.property.hidePlayerTags.tooltip")).set(hidePlayerTags);
 		thisConfig.get(GENERAL, "debugMode", false, I19n.format("eirairc:config.property.debugMode.tooltip")).set(debugMode);
 
@@ -125,7 +122,6 @@ public class SharedGlobalConfig {
 		for(String entry : colorBlacklistArray) {
 			colorBlacklist.add(Utils.unquote(entry));
 		}
-		registerShortCommands = legacyConfig.getBoolean("registerShortCommands", "global", registerShortCommands, "");
 		debugMode = legacyConfig.getBoolean("debugMode", "global", debugMode, "");
 		hidePlayerTags = legacyConfig.getBoolean("hidePlayerTags", "display", hidePlayerTags, "");
 
@@ -154,8 +150,6 @@ public class SharedGlobalConfig {
 			enablePlayerColors = Boolean.parseBoolean(value);
 		} else if(key.equals("enablePlayerAliases")) {
 			enablePlayerAliases = Boolean.parseBoolean(value);
-		} else if(key.equals("registerShortCommands")) {
-			registerShortCommands = Boolean.parseBoolean(value);
 		} else if(key.equals("hidePlayerTags")) {
 			hidePlayerTags = Boolean.parseBoolean(value);
 		} else if(key.equals("debugMode")) {
@@ -185,8 +179,6 @@ public class SharedGlobalConfig {
 			value = String.valueOf(enablePlayerColors);
 		} else if(key.equals("enablePlayerAliases")) {
 			value = String.valueOf(enablePlayerAliases);
-		} else if(key.equals("registerShortCommands")) {
-			value = String.valueOf(registerShortCommands);
 		} else if(key.equals("hidePlayerTags")) {
 			value = String.valueOf(hidePlayerTags);
 		} else if(key.equals("debugMode")) {
@@ -216,7 +208,6 @@ public class SharedGlobalConfig {
 		if(option == null) {
 			list.add("defaultChat");
 			list.add("enablePlayerColors");
-			list.add("registerShortCommands");
 			list.add("hidePlayerTags");
 			list.add("debugMode");
 			list.add("bindIP");

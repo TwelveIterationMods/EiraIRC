@@ -58,6 +58,7 @@ public class ClientGlobalConfig {
 	public static String clientBridgeNickToken = "";
 	public static boolean disableChatToggle = false;
 	public static boolean vanillaChat = true;
+	public static boolean registerShortCommands = true;
 
 	public static void load(File configDir) {
 		if(thisConfig == null) {
@@ -65,6 +66,7 @@ public class ClientGlobalConfig {
 		}
 
 		// General
+		registerShortCommands = thisConfig.getBoolean("registerShortCommands", GENERAL, registerShortCommands, I19n.format("eirairc:config.property.registerShortCommands.tooltip"), "eirairc:config.property.registerShortCommands");
 		hudRecState = thisConfig.getBoolean("hudRecState", GENERAL, hudRecState, I19n.format("eirairc:config.property.hudRecState"), "eirairc:config.property.hudRecState");
 		persistentConnection = thisConfig.getBoolean("persistentConnection", GENERAL, persistentConnection, I19n.format("eirairc:config.property.persistentConnection"), "eirairc:config.property.persistentConnection");
 
@@ -98,6 +100,7 @@ public class ClientGlobalConfig {
 		thisConfig.setCategoryComment(COMPATIBILITY, I19n.format("eirairc:config.category.compatibility.tooltip"));
 
 		// General
+		thisConfig.get(GENERAL, "registerShortCommands", false, I19n.format("eirairc:config.property.registerShortCommands.tooltip")).set(registerShortCommands);
 		thisConfig.get(GENERAL, "hudRecState", false, I19n.format("eirairc:config.property.hudRecState")).set(hudRecState);
 		thisConfig.get(GENERAL, "persistentConnection", false, I19n.format("eirairc:config.property.persistentConnection")).set(persistentConnection);
 
@@ -129,6 +132,7 @@ public class ClientGlobalConfig {
 		thisConfig = new Configuration(new File(configDir, "client.cfg"));
 
 		// General
+		registerShortCommands = legacyConfig.getBoolean("registerShortCommands", "global", registerShortCommands, "");
 		hudRecState = legacyConfig.get("display", "hudRecState", hudRecState).getBoolean();
 		persistentConnection = legacyConfig.get("clientonly", "persistentConnection", persistentConnection).getBoolean();
 
@@ -165,6 +169,8 @@ public class ClientGlobalConfig {
 	public static String handleConfigCommand(ICommandSender sender, String key) {
 		if(key.equals("persistentConnection")) {
 			return String.valueOf(persistentConnection);
+		} else if(key.equals("registerShortCommands")) {
+			return String.valueOf(registerShortCommands);
 		} else if(key.equals("uploadHoster")) {
 			return screenshotHoster;
 		} else if(key.equals("clientBridge")) {
@@ -183,6 +189,8 @@ public class ClientGlobalConfig {
 		boolean result = true;
 		if(key.equals("persistentConnection")) {
 			persistentConnection = Boolean.parseBoolean(value);
+		} else if(key.equals("registerShortCommands")) {
+			registerShortCommands = Boolean.parseBoolean(value);
 		} else if(key.equals("uploadHoster")) {
 			if(UploadManager.isValidHoster(value)) {
 				screenshotHoster = value;
@@ -204,6 +212,7 @@ public class ClientGlobalConfig {
 
 	public static void addOptionsToList(List<String> list, String option) {
 		if(option == null) {
+			list.add("registerShortCommands");
 			list.add("persistentConnection");
 			list.add("uploadHoster");
 			list.add("clientBridge");
