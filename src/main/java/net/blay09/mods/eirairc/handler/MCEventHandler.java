@@ -220,7 +220,7 @@ public class MCEventHandler {
 		if(nameColor != null) {
 			senderComponent.getChatStyle().setColor(nameColor);
 		}
-		event.component = new ChatComponentTranslation("chat.type.text", senderComponent, event.message);
+		event.component = new ChatComponentTranslation("chat.type.text", senderComponent, MessageFormat.createChatComponentWithFixedLinks(event.message));
 		if(!MinecraftServer.getServer().isSinglePlayer()) {
 			if(IRCCommandHandler.onChatCommand(event.player, event.message, true)) {
 				event.setCanceled(true);

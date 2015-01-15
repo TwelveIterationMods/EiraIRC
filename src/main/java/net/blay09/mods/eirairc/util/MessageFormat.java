@@ -4,14 +4,12 @@ import net.blay09.mods.eirairc.api.IRCChannel;
 import net.blay09.mods.eirairc.api.IRCConnection;
 import net.blay09.mods.eirairc.api.IRCContext;
 import net.blay09.mods.eirairc.api.IRCUser;
-import net.blay09.mods.eirairc.api.bot.IRCBot;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.config.settings.*;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.event.ClickEvent;
+import net.minecraft.util.*;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -32,23 +30,66 @@ public class MessageFormat {
 	}
 
 	private static final Pattern playerTagPattern = Pattern.compile("[\\[][^\\]]+[\\]]");
-	private static final Pattern urlPattern = Pattern.compile("^(?:(https?)://)?([-\\w_\\.]{2,}\\.[a-z]{2,4})(/\\S*)?$");
+	public static final Pattern urlPattern = Pattern.compile("(?:(https?)://)?([-\\w_\\.]{2,}\\.[a-z]{2,4})(/\\S*)?");
 
 	public static String getMessageFormat(IRCContext context, boolean isEmote) {
 		BotSettings botSettings = ConfigHelper.getBotSettings(context);
-		if(context instanceof IRCUser) {
-			if(isEmote) {
+		if (context instanceof IRCUser) {
+			if (isEmote) {
 				return botSettings.getMessageFormat().ircPrivateEmote;
 			} else {
 				return botSettings.getMessageFormat().ircPrivateMessage;
 			}
 		} else {
-			if(isEmote) {
+			if (isEmote) {
 				return botSettings.getMessageFormat().ircChannelEmote;
 			} else {
 				return botSettings.getMessageFormat().ircChannelMessage;
 			}
 		}
+	}
+
+	public static IChatComponent createChatComponentWithFixedLinks(String text) {
+		ChatComponentText fixedComponent = null;
+		Matcher matcher = urlPattern.matcher(text);
+		int startIndex;
+		int lastEndIndex = 0;
+		while(matcher.find()) {
+			startIndex = matcher.start();
+
+			// Add any normal text before the next link to the component
+			if(startIndex > lastEndIndex) {
+				String textBefore = text.substring(lastEndIndex, startIndex);
+				if(fixedComponent == null) {
+					fixedComponent = new ChatComponentText(textBefore);
+				} else {
+					fixedComponent.appendText(textBefore);
+				}
+			}
+
+			// Add a link component for this URL
+			if(fixedComponent == null) {
+				fixedComponent = new ChatComponentText("");
+			}
+			String linkText = matcher.group();
+			ChatComponentText linkComponent = new ChatComponentText(linkText);
+			if(!linkText.startsWith("http")) {
+				linkText = "http://" + linkText;
+			}
+			linkComponent.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, linkText));
+			fixedComponent.appendSibling(linkComponent);
+
+			lastEndIndex = matcher.end();
+		}
+		if(lastEndIndex < text.length()) {
+			String textAfter = text.substring(lastEndIndex, text.length());
+			if(fixedComponent == null) {
+				fixedComponent = new ChatComponentText(textAfter);
+			} else {
+				fixedComponent.appendText(textAfter);
+			}
+		}
+		return fixedComponent;
 	}
 
 	public static String filterLinks(String message) {
@@ -149,7 +190,7 @@ public class MessageFormat {
 						} else if(target == Target.IRC) {
 							message = IRCFormatting.toIRC(message, !botSettings.getBoolean(BotBooleanComponent.ConvertColors));
 						}
-						component = new ChatComponentText(message);
+						component = createChatComponentWithFixedLinks(message);
 					} else {
 						validToken = false;
 					}
@@ -229,7 +270,7 @@ public class MessageFormat {
 						} else if(target == Target.IRC) {
 							message = IRCFormatting.toIRC(message, !botSettings.getBoolean(BotBooleanComponent.ConvertColors));
 						}
-						component = new ChatComponentText(message);
+						component = createChatComponentWithFixedLinks(message);
 					} else {
 						validToken = false;
 					}

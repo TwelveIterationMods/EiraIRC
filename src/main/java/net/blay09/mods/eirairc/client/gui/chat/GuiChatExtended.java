@@ -8,19 +8,26 @@ import net.blay09.mods.eirairc.client.gui.GuiEiraIRCMenu;
 import net.blay09.mods.eirairc.config.ClientGlobalConfig;
 import net.blay09.mods.eirairc.handler.ChatSessionHandler;
 import net.blay09.mods.eirairc.util.Globals;
+import net.blay09.mods.eirairc.util.MessageFormat;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiChat;
+import net.minecraft.client.gui.*;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.IChatComponent;
+import net.minecraft.util.MathHelper;
 import net.minecraftforge.client.ClientCommandHandler;
 
 import org.lwjgl.input.Keyboard;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import org.lwjgl.input.Mouse;
+
+import java.util.Iterator;
+import java.util.regex.Matcher;
 
 @SideOnly(Side.CLIENT)
-public class GuiChatExtended extends GuiChat {
+public class GuiChatExtended extends GuiChat implements GuiYesNoCallback {
 
 	public static final int COLOR_BACKGROUND = Integer.MIN_VALUE;
 	
@@ -29,7 +36,7 @@ public class GuiChatExtended extends GuiChat {
 	private GuiButton btnOptions;
 	
 	private long lastToggleTarget;
-	
+
 	public GuiChatExtended() {
 		this("");
 	}
@@ -46,7 +53,7 @@ public class GuiChatExtended extends GuiChat {
 		String s = Utils.getLocalizedMessage("irc.gui.options");
 		int bw = fontRendererObj.getStringWidth(s) + 20;
 		btnOptions = new GuiButton(0, this.width - bw, 0, bw, 20, s);
-		this.buttonList.add(btnOptions);
+		buttonList.add(btnOptions);
 	}
 
 	@Override
@@ -56,7 +63,7 @@ public class GuiChatExtended extends GuiChat {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiEiraIRCMenu());
 		}
 	}
-	
+
 	@Override
 	protected void keyTyped(char unicode, int keyCode) {
 		if(keyCode == ClientGlobalConfig.keyToggleTarget.getKeyCode() && !ClientGlobalConfig.disableChatToggle && !ClientGlobalConfig.clientBridge && !inputField.getText().startsWith("/")) {
