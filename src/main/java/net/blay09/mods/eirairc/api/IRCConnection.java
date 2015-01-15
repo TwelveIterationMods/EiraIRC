@@ -20,6 +20,7 @@ public interface IRCConnection {
 	public void disconnect(String quitMessage);
 	
 	public String getServerType();
+	public String getChannelTypes();
 	public Collection<IRCChannel> getChannels();
 	public IRCChannel getChannel(String name);
 	public IRCUser getUser(String name);

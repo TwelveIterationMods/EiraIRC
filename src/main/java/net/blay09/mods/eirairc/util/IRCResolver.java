@@ -21,9 +21,9 @@ public class IRCResolver {
 	public static final short FLAG_USERONCHANNEL = 512;
 
 	public static IRCContext resolveTarget(String path, short flags) {
-		String server = null;
+		String server;
 		int serverIdx = path.indexOf('/');
-		IRCConnection connection = null;
+		IRCConnection connection;
 		if(serverIdx != -1) {
 			server = path.substring(0, serverIdx);
 			path = path.substring(serverIdx + 1);
@@ -46,7 +46,7 @@ public class IRCResolver {
 			}
 			connection = foundConnection;
 		}
-		if(path.startsWith("#")) {
+		if(connection.getChannelTypes().indexOf(path.charAt(0)) != -1) {
 			if((flags & FLAG_CHANNEL) == 0) {
 				return IRCTargetError.InvalidTarget;
 			}
@@ -85,9 +85,9 @@ public class IRCResolver {
 		if(serverIdx != -1) {
 			server = path.substring(0, serverIdx);
 		} else {
-			if(path.startsWith("#")) {
-				for(IRCConnection connection : EiraIRC.instance.getConnectionManager().getConnections()) {
-					if(connection.getChannel(path) != null) {
+			if(!Character.isAlphabetic(path.charAt(0))) {
+				for (IRCConnection connection : EiraIRC.instance.getConnectionManager().getConnections()) {
+					if (connection.getChannel(path) != null) {
 						return connection;
 					}
 				}
@@ -128,5 +128,12 @@ public class IRCResolver {
 	public static boolean hasServerPrefix(String path) {
 		return path.indexOf('/') != -1;
 	}
-	
+
+	public static boolean isChannel(String path) {
+		path = stripPath(path);
+		if(!Character.isAlphabetic(path.charAt(0))) {
+			return true;
+		}
+		return false;
+	}
 }

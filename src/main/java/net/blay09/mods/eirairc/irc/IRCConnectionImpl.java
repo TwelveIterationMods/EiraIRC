@@ -9,6 +9,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.*;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import net.blay09.mods.eirairc.api.IRCChannel;
 import net.blay09.mods.eirairc.api.IRCConnection;
@@ -37,7 +39,6 @@ import net.minecraftforge.common.MinecraftForge;
 public class IRCConnectionImpl implements Runnable, IRCConnection {
 
 	public static class ProxyAuthenticator extends Authenticator {
-
 		private PasswordAuthentication auth;
 
 		public ProxyAuthenticator(String username, String password) {
@@ -48,8 +49,8 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 		protected PasswordAuthentication getPasswordAuthentication() {
 			return auth;
 		}
-
 	}
+
 	public static final int DEFAULT_PORT = 6667;
 
 	public static final String EMOTE_START = "\u0001ACTION ";
@@ -65,10 +66,12 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 	protected final int port;
 	protected final String host;
 	private IRCBotImpl bot;
-	private String serverType;
 	private String nick;
 	private boolean connected;
 	private Thread thread;
+
+	private String serverType;
+	private String channelTypes = "#&";
 
 	private Socket socket;
 	protected BufferedWriter writer;
@@ -329,7 +332,13 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 			// ignore
 		} else if(numeric == IRCReplyCodes.ERR_PASSWDMISMATCH) {
 			MinecraftForge.EVENT_BUS.post(new IRCErrorEvent(this, msg.getNumericCommand(), msg.args()));
-		} else if(numeric <= 5 || numeric == 251 || numeric == 252 || numeric == 254 || numeric == 255 || numeric == 265 || numeric == 266 || numeric == 250 || numeric == 375) {
+		} else if(numeric == IRCReplyCodes.RPL_ISUPPORT) {
+			for(int i = 0; i < msg.argcount(); i++) {
+				if(msg.arg(i).startsWith("CHANTYPES=")) {
+					channelTypes = msg.arg(i).substring(10);
+				}
+			}
+		} else if(numeric <= 4 || numeric == 251 || numeric == 252 || numeric == 254 || numeric == 255 || numeric == 265 || numeric == 266 || numeric == 250 || numeric == 375) {
 			// ignore for now
 		} else {
 			System.out.println("Unhandled message code: " + msg.getCommand() + " (" + msg.argcount() + " arguments)");
@@ -350,7 +359,7 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 				message = message.substring(EMOTE_START.length(), message.length() - EMOTE_END.length());
 				isEmote = true;
 			}
-			if(target.startsWith("#")) {
+			if(channelTypes.indexOf(target.charAt(0)) != -1) {
 				MinecraftForge.EVENT_BUS.post(new IRCChannelChatEvent(this, getChannel(target), user, message, isEmote));
 			} else if(target.equals(this.nick)) {
 				MinecraftForge.EVENT_BUS.post(new IRCPrivateChatEvent(this, user, message, isEmote));
@@ -362,7 +371,7 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 			}
 			String target = msg.arg(0);
 			String message = msg.arg(1);
-			if(target.startsWith("#")) {
+			if(channelTypes.indexOf(target.charAt(0)) != -1) {
 				MinecraftForge.EVENT_BUS.post(new IRCChannelChatEvent(this, getChannel(target), user, message, false, true));
 			} else if(target.equals(this.nick)) {
 				MinecraftForge.EVENT_BUS.post(new IRCPrivateChatEvent(this, user, message, false, true));
@@ -397,7 +406,7 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 			users.put(user.getName().toLowerCase(), user);
 			MinecraftForge.EVENT_BUS.post(new IRCUserNickChangeEvent(this, user, oldNick, newNick));
 		} else if(cmd.equals("MODE")) {
-			if(!msg.arg(0).startsWith("#")) {
+			if(channelTypes.indexOf(msg.arg(0).charAt(0)) != -1) {
 				return false;
 			}
 			IRCChannelImpl channel = (IRCChannelImpl) getOrCreateChannel(msg.arg(0));
@@ -475,6 +484,11 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 	@Override
 	public String getServerType() {
 		return serverType;
+	}
+
+	@Override
+	public String getChannelTypes() {
+		return channelTypes;
 	}
 
 	@Override

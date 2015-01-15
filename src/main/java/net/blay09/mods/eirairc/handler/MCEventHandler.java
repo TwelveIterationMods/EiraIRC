@@ -145,7 +145,7 @@ public class MCEventHandler {
 		if(connection != null) {
 			IRCContext context;
 			IChatComponent chatComponent;
-			if(target[1].startsWith("#")) {
+			if(connection.getChannelTypes().indexOf(target[1].charAt(0)) != -1) {
 				IRCChannel targetChannel = connection.getChannel(target[1]);
 				if(targetChannel == null) {
 					return true;
@@ -185,7 +185,7 @@ public class MCEventHandler {
 			IRCContext context;
 			EnumChatFormatting emoteColor;
 			IChatComponent chatComponent;
-			if(target[1].startsWith("#")) {
+			if(connection.getChannelTypes().indexOf(target[1].charAt(0)) != -1) {
 				IRCChannel targetChannel = connection.getChannel(target[1]);
 				if(targetChannel == null) {
 					return true;
@@ -285,7 +285,7 @@ public class MCEventHandler {
 				IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(targetArr[0]);
 				if(connection != null) {
 					IRCContext context;
-					if(targetArr[1].startsWith("#")) {
+					if(connection.getChannelTypes().indexOf(targetArr[1].charAt(0)) != -1) {
 						IRCChannel targetChannel = connection.getChannel(targetArr[1]);
 						if(targetChannel == null) {
 							return;

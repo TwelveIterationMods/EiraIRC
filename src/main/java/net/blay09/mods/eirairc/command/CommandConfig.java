@@ -10,6 +10,7 @@ import net.blay09.mods.eirairc.api.IRCContext;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
+import net.blay09.mods.eirairc.util.IRCResolver;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
@@ -81,7 +82,7 @@ public class CommandConfig extends SubCommand {
 			}
 			if(args[0].equals(TARGET_GLOBAL)) {
 				ConfigurationHandler.addOptionsToList(list, null);
-			} else if(args[0].contains("#")) {
+			} else if(IRCResolver.isChannel(args[0])) {
 				ChannelConfig.addOptionsToList(list, null);
 			} else {
 				ServerConfig.addOptionsToList(list, null);
@@ -92,7 +93,7 @@ public class CommandConfig extends SubCommand {
 			}
 			if(args[0].equals(TARGET_GLOBAL)) {
 				ConfigurationHandler.addOptionsToList(list, args[1]);
-			} else if(args[0].contains("#")) {
+			} else if(IRCResolver.isChannel(args[0])) {
 				ChannelConfig.addOptionsToList(list, args[1]);
 			} else {
 				ServerConfig.addOptionsToList(list, args[1]);

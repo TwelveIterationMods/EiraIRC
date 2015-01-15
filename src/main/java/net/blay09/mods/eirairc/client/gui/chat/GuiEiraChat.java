@@ -15,8 +15,6 @@ public class GuiEiraChat {
 	private ChatSessionHandler chatSession;
 	private List<String> sentHistory = new ArrayList<String>();
 
-	
-	
 	public GuiEiraChat() {
 	}
 

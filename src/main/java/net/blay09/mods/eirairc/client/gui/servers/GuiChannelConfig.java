@@ -158,17 +158,8 @@ public class GuiChannelConfig extends GuiTabPage implements GuiYesNoCallback {
 
 	public void applyChanges() {
 		if(!txtName.getText().isEmpty() && !txtName.getText().equals(config.getName())) {
-			char prefix = txtName.getText().charAt(0);
-			switch(prefix) {
-				case '&':
-				case '#':
-				case '!':
-				case '+':
-				case '.':
-				case '~':
-					break;
-				default:
-					txtName.setText("#" + txtName.getText());
+			if(Character.isAlphabetic(txtName.getText().charAt(0))) {
+				txtName.setText("#" + txtName.getText());
 			}
 			serverConfig.removeChannelConfig(config.getName());
 			config.setName(txtName.getText());

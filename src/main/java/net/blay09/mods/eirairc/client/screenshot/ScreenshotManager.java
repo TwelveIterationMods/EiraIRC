@@ -232,7 +232,7 @@ public class ScreenshotManager {
 			if(connection != null) {
 				EnumChatFormatting emoteColor;
 				IChatComponent chatComponent;
-				if (target[1].startsWith("#")) {
+				if (connection.getChannelTypes().indexOf(target[1].charAt(0)) != -1) {
 					IRCChannel targetChannel = connection.getChannel(target[1]);
 					if (targetChannel == null) {
 						return;

@@ -13,7 +13,9 @@ import net.blay09.mods.eirairc.api.IRCContext;
 import net.blay09.mods.eirairc.api.IRCUser;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.irc.IRCChannelImpl;
+import net.blay09.mods.eirairc.irc.IRCReplyCodes;
 import net.blay09.mods.eirairc.irc.IRCUserImpl;
+import net.blay09.mods.eirairc.util.IRCResolver;
 
 public class ChatSessionHandler {
 
@@ -101,7 +103,7 @@ public class ChatSessionHandler {
 	}
 
 	public boolean isChannelTarget() {
-		return chatTarget != null && chatTarget.contains("#");
+		return chatTarget != null && !Character.isAlphabetic(IRCResolver.stripPath(chatTarget).charAt(0));
 	}
 
 	public boolean isUserTarget() {
