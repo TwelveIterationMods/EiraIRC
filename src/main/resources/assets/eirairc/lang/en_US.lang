@@ -365,6 +365,8 @@ eirairc:config.property.defaultChat=Default Chat
 eirairc:config.property.defaultChat.tooltip=The default chat target to select when opening the chat for the first time.
 
 ## Properties (Client)
+eirairc:config.property.imageLinkPreview=Show Image Link Preview
+eirairc:config.property.imageLinkPreview.tooltip=If set to true, clicking an image link in the chat will open a preview screen inside Minecraft.
 eirairc:config.property.hudRecState=Show Red/Green Dot
 eirairc:config.property.hudRecState.tooltip=[Deprecated] If set to true, your screen will get cool red and green dots in some locations.
 eirairc:config.property.persistentConnection=Persistent Connection

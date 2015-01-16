@@ -31,6 +31,7 @@ public class ClientGlobalConfig {
 	public static boolean persistentConnection = true;
 
 	// Screenshots
+	public static boolean imageLinkPreview = true;
 	public static String screenshotHoster = "";
 	public static ScreenshotAction screenshotAction = ScreenshotAction.None;
 	public static int uploadBufferSize = 1024;
@@ -71,6 +72,7 @@ public class ClientGlobalConfig {
 		persistentConnection = thisConfig.getBoolean("persistentConnection", GENERAL, persistentConnection, I19n.format("eirairc:config.property.persistentConnection"), "eirairc:config.property.persistentConnection");
 
 		// Screenshots
+		imageLinkPreview = thisConfig.getBoolean("imageLinkPreview", SCREENSHOTS, imageLinkPreview, I19n.format("eirairc:config.property.imageLinkPreview"), "eirairc:config.property.imageLinkPreview");
 		screenshotHoster = thisConfig.getString("uploadHoster", SCREENSHOTS, screenshotHoster, I19n.format("eirairc:config.property.uploadHoster"), UploadManager.getAvailableHosters(), "eirairc:config.property.uploadHoster");
 		screenshotAction = ScreenshotAction.valueOf(thisConfig.getString("autoAction", SCREENSHOTS, screenshotAction.name(), I19n.format("eirairc:config.property.autoAction"), ScreenshotAction.NAMES, "eirairc:config.property.autoAction"));
 		uploadBufferSize = thisConfig.getInt("uploadBufferSize", SCREENSHOTS, uploadBufferSize, 256, 4096, I19n.format("eirairc:config.property.uploadBufferSize"), "eirairc:config.property.uploadBufferSize");
@@ -105,6 +107,7 @@ public class ClientGlobalConfig {
 		thisConfig.get(GENERAL, "persistentConnection", false, I19n.format("eirairc:config.property.persistentConnection")).set(persistentConnection);
 
 		// Screenshots
+		thisConfig.get(SCREENSHOTS, "imageLinkPreview", false, I19n.format("eirairc:config.property.imageLinkPreview.tooltip")).set(imageLinkPreview);
 		thisConfig.get(SCREENSHOTS, "uploadHoster", "", I19n.format("eirairc:config.property.uploadHoster")).set(screenshotHoster);
 		thisConfig.get(SCREENSHOTS, "autoAction", "", I19n.format("eirairc:config.property.autoAction")).set(screenshotAction.name());
 		thisConfig.get(SCREENSHOTS, "uploadBufferSize", 0, I19n.format("eirairc:config.property.uploadBufferSize")).set(uploadBufferSize);
@@ -171,6 +174,8 @@ public class ClientGlobalConfig {
 			return String.valueOf(persistentConnection);
 		} else if(key.equals("registerShortCommands")) {
 			return String.valueOf(registerShortCommands);
+		} else if(key.equals("imageLinkPreview")) {
+			return String.valueOf(imageLinkPreview);
 		} else if(key.equals("uploadHoster")) {
 			return screenshotHoster;
 		} else if(key.equals("clientBridge")) {
@@ -192,9 +197,11 @@ public class ClientGlobalConfig {
 		} else if(key.equals("registerShortCommands")) {
 			registerShortCommands = Boolean.parseBoolean(value);
 		} else if(key.equals("uploadHoster")) {
-			if(UploadManager.isValidHoster(value)) {
+			if (UploadManager.isValidHoster(value)) {
 				screenshotHoster = value;
 			}
+		} else if(key.equals("imageLinkPreview")) {
+			imageLinkPreview = Boolean.parseBoolean(value);
 		} else if(key.equals("clientBridge")) {
 			clientBridge = Boolean.parseBoolean(value);
 		} else if(key.equals("clientBridgeMessageToken")) {
@@ -213,6 +220,7 @@ public class ClientGlobalConfig {
 	public static void addOptionsToList(List<String> list, String option) {
 		if(option == null) {
 			list.add("registerShortCommands");
+			list.add("imageLinkPreview");
 			list.add("persistentConnection");
 			list.add("uploadHoster");
 			list.add("clientBridge");

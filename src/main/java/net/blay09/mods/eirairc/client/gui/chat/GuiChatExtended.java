@@ -5,6 +5,7 @@ package net.blay09.mods.eirairc.client.gui.chat;
 
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.client.gui.GuiEiraIRCMenu;
+import net.blay09.mods.eirairc.client.gui.screenshot.GuiImagePreview;
 import net.blay09.mods.eirairc.config.ClientGlobalConfig;
 import net.blay09.mods.eirairc.handler.ChatSessionHandler;
 import net.blay09.mods.eirairc.util.Globals;
@@ -12,6 +13,7 @@ import net.blay09.mods.eirairc.util.MessageFormat;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
+import net.minecraft.event.ClickEvent;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.MathHelper;
@@ -23,6 +25,10 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import org.lwjgl.input.Mouse;
 
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Iterator;
 import java.util.regex.Matcher;
 
@@ -97,7 +103,28 @@ public class GuiChatExtended extends GuiChat implements GuiYesNoCallback {
 		}
 		super.keyTyped(unicode, keyCode);
 	}
-	
+
+	@Override
+	protected void mouseClicked(int mouseX, int mouseY, int button) {
+		if(ClientGlobalConfig.imageLinkPreview && button == 0 && mc.gameSettings.chatLinks) {
+			IChatComponent clickedComponent = mc.ingameGUI.getChatGUI().func_146236_a(Mouse.getX(), Mouse.getY());
+			if(clickedComponent != null) {
+				ClickEvent clickEvent = clickedComponent.getChatStyle().getChatClickEvent();
+				if(clickEvent != null) {
+					if(clickEvent.getValue().endsWith(".png") || clickEvent.getValue().endsWith(".jpg")) {
+						try {
+							mc.displayGuiScreen(new GuiImagePreview(new URL(clickEvent.getValue())));
+							return;
+						} catch (MalformedURLException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+			}
+		}
+		super.mouseClicked(mouseX, mouseY, button);
+	}
+
 	@Override
 	public void drawScreen(int i, int j, float k) {
 		super.drawScreen(i, j, k);
