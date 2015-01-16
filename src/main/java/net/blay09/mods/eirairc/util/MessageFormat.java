@@ -31,6 +31,7 @@ public class MessageFormat {
 
 	private static final Pattern playerTagPattern = Pattern.compile("[\\[][^\\]]+[\\]]");
 	public static final Pattern urlPattern = Pattern.compile("(?:(https?)://)?([-\\w_\\.]{2,}\\.[a-z]{2,4})(/\\S*)?");
+	public static final Pattern namePattern = Pattern.compile("@([^ ]+)");
 
 	public static String getMessageFormat(IRCContext context, boolean isEmote) {
 		BotSettings botSettings = ConfigHelper.getBotSettings(context);
@@ -49,47 +50,78 @@ public class MessageFormat {
 		}
 	}
 
-	public static IChatComponent createChatComponentWithFixedLinks(String text) {
-		ChatComponentText fixedComponent = null;
-		Matcher matcher = urlPattern.matcher(text);
-		int startIndex;
-		int lastEndIndex = 0;
-		while(matcher.find()) {
-			startIndex = matcher.start();
-
-			// Add any normal text before the next link to the component
-			if(startIndex > lastEndIndex) {
-				String textBefore = text.substring(lastEndIndex, startIndex);
-				if(fixedComponent == null) {
-					fixedComponent = new ChatComponentText(textBefore);
-				} else {
-					fixedComponent.appendText(textBefore);
+	public static IChatComponent createChatComponentForMessage(String message) {
+		ChatComponentText rootComponent = null;
+		StringBuilder buffer = new StringBuilder();
+		Matcher urlMatcher = urlPattern.matcher(message);
+		Matcher nameMatcher = namePattern.matcher(message);
+		int currentIndex = 0;
+		while(currentIndex < message.length()) {
+			// Find the next word in the message
+			int nextWhitespace = message.indexOf(' ', currentIndex);
+			if(nextWhitespace == -1) {
+				nextWhitespace = message.length();
+			}
+			// Update Matchers to check the correct region
+			urlMatcher.region(currentIndex, nextWhitespace);
+			nameMatcher.region(currentIndex, nextWhitespace);
+			if(urlMatcher.matches()) {
+				// Flush the buffer
+				if(buffer.length() > 0) {
+					rootComponent = appendTextToRoot(rootComponent, buffer.toString());
+					buffer = new StringBuilder();
 				}
-			}
-
-			// Add a link component for this URL
-			if(fixedComponent == null) {
-				fixedComponent = new ChatComponentText("");
-			}
-			String linkText = matcher.group();
-			ChatComponentText linkComponent = new ChatComponentText(linkText);
-			if(!linkText.startsWith("http")) {
-				linkText = "http://" + linkText;
-			}
-			linkComponent.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, linkText));
-			fixedComponent.appendSibling(linkComponent);
-
-			lastEndIndex = matcher.end();
-		}
-		if(lastEndIndex < text.length()) {
-			String textAfter = text.substring(lastEndIndex, text.length());
-			if(fixedComponent == null) {
-				fixedComponent = new ChatComponentText(textAfter);
+				// Create URL component
+				String urlText = urlMatcher.group();
+				ChatComponentText urlComponent = new ChatComponentText(urlText);
+				// Make sure a protocol is specified for the ClickEvent value to prevent NPE in GuiChat (getScheme())
+				if(!urlText.startsWith("http://") && !urlText.startsWith("https://")) {
+					urlText = "http://" + urlText;
+				}
+				urlComponent.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, urlText));
+				rootComponent = appendSiblingToRoot(rootComponent, urlComponent);
+				currentIndex = nextWhitespace;
+			} else if(nameMatcher.matches()) {
+				// Flush the buffer
+				if(buffer.length() > 0) {
+					rootComponent = appendTextToRoot(rootComponent, buffer.toString());
+					buffer = new StringBuilder();
+				}
+				// Create Name Component
+				String nameText = nameMatcher.group();
+				ChatComponentText nameComponent = new ChatComponentText(nameText);
+				nameComponent.getChatStyle().setItalic(true);
+				nameComponent.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, nameText + " "));
+				rootComponent = appendSiblingToRoot(rootComponent, nameComponent);
+				currentIndex = nextWhitespace;
 			} else {
-				fixedComponent.appendText(textAfter);
+				buffer.append(message.substring(currentIndex, Math.min(message.length(), nextWhitespace + 1)));
+				currentIndex = nextWhitespace + 1;
 			}
 		}
-		return fixedComponent;
+		// Flush the buffer
+		if(buffer.length() > 0) {
+			rootComponent = appendTextToRoot(rootComponent, buffer.toString());
+		}
+		return rootComponent;
+	}
+
+	private static ChatComponentText appendSiblingToRoot(ChatComponentText root, IChatComponent sibling) {
+		if(root == null) {
+			root = new ChatComponentText("");
+		}
+		root.appendSibling(sibling);
+		return root;
+	}
+
+	private static ChatComponentText appendTextToRoot(ChatComponentText root, String text) {
+		if(root == null) {
+			root = new ChatComponentText(text);
+			return root;
+		} else {
+			root.appendText(text);
+			return root;
+		}
 	}
 
 	public static String filterLinks(String message) {
@@ -190,7 +222,7 @@ public class MessageFormat {
 						} else if(target == Target.IRC) {
 							message = IRCFormatting.toIRC(message, !botSettings.getBoolean(BotBooleanComponent.ConvertColors));
 						}
-						component = createChatComponentWithFixedLinks(message);
+						component = createChatComponentForMessage(message);
 					} else {
 						validToken = false;
 					}
@@ -270,7 +302,7 @@ public class MessageFormat {
 						} else if(target == Target.IRC) {
 							message = IRCFormatting.toIRC(message, !botSettings.getBoolean(BotBooleanComponent.ConvertColors));
 						}
-						component = createChatComponentWithFixedLinks(message);
+						component = createChatComponentForMessage(message);
 					} else {
 						validToken = false;
 					}
