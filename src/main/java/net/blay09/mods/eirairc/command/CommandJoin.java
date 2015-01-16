@@ -38,7 +38,7 @@ public class CommandJoin extends SubCommand {
 		if(args.length < 1) {
 			throw new WrongUsageException(getCommandUsage(sender));
 		}
-		IRCConnection connection = null;
+		IRCConnection connection;
 		if(IRCResolver.hasServerPrefix(args[0])) {
 			connection = IRCResolver.resolveConnection(args[0], IRCResolver.FLAGS_NONE);
 			if(connection == null) {
@@ -56,7 +56,7 @@ public class CommandJoin extends SubCommand {
 		String channelName = IRCResolver.stripPath(args[0]);
 		ChannelConfig channelConfig = serverConfig.getOrCreateChannelConfig(channelName);
 		if(args.length >= 2) {
-			channelConfig.setPassword(args[2]);
+			channelConfig.setPassword(args[1]);
 		}
 		Utils.sendLocalizedMessage(sender, "irc.basic.joiningChannel", channelConfig.getName(), connection.getHost());
 		connection.join(channelConfig.getName(), channelConfig.getPassword());
