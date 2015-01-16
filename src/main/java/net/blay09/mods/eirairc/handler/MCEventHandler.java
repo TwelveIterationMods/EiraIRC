@@ -41,6 +41,8 @@ import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
+import java.util.regex.Pattern;
+
 public class MCEventHandler {
 
 	@SubscribeEvent
@@ -373,7 +375,7 @@ public class MCEventHandler {
 							BotSettings botSettings = ConfigHelper.getBotSettings(channel);
 							String name = Utils.getNickIRC((EntityPlayer) event.entityLiving, channel);
 							String ircMessage = event.entityLiving.func_110142_aN().func_151521_b().getUnformattedText();
-							ircMessage = ircMessage.replaceAll(event.entityLiving.getCommandSenderName(), name);
+							ircMessage = ircMessage.replaceAll(Pattern.quote(event.entityLiving.getCommandSenderName()), name);
 							ircMessage = IRCFormatting.toIRC(ircMessage, !botSettings.getBoolean(BotBooleanComponent.ConvertColors));
 							if (!generalSettings.isReadOnly() && botSettings.getBoolean(BotBooleanComponent.RelayDeathMessages)) {
 								channel.message(ircMessage);
