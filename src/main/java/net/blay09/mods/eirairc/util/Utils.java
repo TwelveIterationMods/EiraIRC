@@ -490,7 +490,11 @@ public class Utils {
 	public static void setClipboardString(String s) {
 		StringSelection selection = new StringSelection(s);
 		Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-		clipboard.setContents(selection, selection);
+		try {
+			clipboard.setContents(selection, selection);
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static String getCurrentServerName() {
