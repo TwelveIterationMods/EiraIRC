@@ -384,23 +384,35 @@ public class Utils {
 			}
 		}
 	}
-	
-	public static void sendPlayerList(IRCUser user) {
+
+	public static void sendPlayerList(IRCContext context) {
 		if(MinecraftServer.getServer() == null || MinecraftServer.getServer().isSinglePlayer()) {
 			return;
 		}
 		List<EntityPlayer> playerList = MinecraftServer.getServer().getConfigurationManager().playerEntityList;
 		if(playerList.size() == 0) {
-			user.notice(getLocalizedMessage("irc.bot.noPlayersOnline"));
+			if(context instanceof IRCUser) {
+				context.notice(getLocalizedMessage("irc.bot.noPlayersOnline"));
+			} else if(context instanceof IRCChannel) {
+				context.message(getLocalizedMessage("irc.bot.noPlayersOnline"));
+			}
 			return;
 		}
-		user.notice(getLocalizedMessage("irc.bot.playersOnline", playerList.size()));
+		if(context instanceof IRCUser) {
+			context.notice(getLocalizedMessage("irc.bot.playersOnline", playerList.size()));
+		} else if(context instanceof IRCChannel) {
+			context.message(getLocalizedMessage("irc.bot.playersOnline", playerList.size()));
+		}
 		String s = " * ";
 		for(int i = 0; i < playerList.size(); i++) {
 			EntityPlayer entityPlayer = playerList.get(i);
 			String alias = getNickIRC(entityPlayer, null);
 			if(s.length() + alias.length() > Globals.CHAT_MAX_LENGTH) {
-				user.notice(s);
+				if(context instanceof IRCUser) {
+					context.notice(s);
+				} else if(context instanceof IRCChannel) {
+					context.message(s);
+				}
 				s = " * ";
 			}
 			if(s.length() > 3) {
@@ -409,7 +421,11 @@ public class Utils {
 			s += alias;
 		}
 		if(s.length() > 3) {
-			user.notice(s);
+			if(context instanceof IRCUser) {
+				context.notice(s);
+			} else if(context instanceof IRCChannel) {
+				context.message(s);
+			}
 		}
 	}
 	
