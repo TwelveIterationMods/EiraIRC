@@ -1,6 +1,4 @@
 def BUILD_NUMBER = System.getenv("BUILD_NUMBER") ?: "0"
-def CURSEFORGE_KEY = System.getenv("CURSEFORGE_KEY") ?: project.curseforge_key
-def RELEASE_TYPE = System.getenv("RELEASE_TYPE") ?: "release"
 
 buildscript {
     repositories {
@@ -19,7 +17,6 @@ buildscript {
     }
 }
 
-apply plugin: 'curseforge'
 apply plugin: 'forge'
 
 version = "mc1.7.10-v2.8." + BUILD_NUMBER
@@ -29,17 +26,6 @@ archivesBaseName = "eirairc"
 minecraft {
     version = "1.7.10-10.13.2.1230"
     runDir = "eclipse/assets"
-}
-
-curse {
-    apiKey = CURSEFORGE_KEY
-    projectId = "68420"
-    changelog = """
-    Fixed overambitious CPU usage
-    Fixed connection crash for messages sent directly from the IRC server
-    Removed EiraIRC's /list command as it overwrote the vanilla one. Now only accessible through /irc list.
-    """
-    releaseType = RELEASE_TYPE
 }
 
 processResources
