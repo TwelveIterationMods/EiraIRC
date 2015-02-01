@@ -17,7 +17,7 @@ public class ServiceConfig {
 	
 	private static final ServiceSettings defaultSettings = new ServiceSettings("PRIVMSG NickServ IDENTIFY {USER} {PASS}", "PRIVMSG NickServ GHOST {NICK} {PASS}");
 	
-	public static final ServiceSettings getSettings(String host, String type) {
+	public static ServiceSettings getSettings(String host, String type) {
 		ServiceSettings settings = serverMap.get(host);
 		if(settings == null) {
 			settings = serverMap.get(type);
@@ -43,6 +43,7 @@ public class ServiceConfig {
 	}
 	
 	public static void load(Configuration config) {
+		serverMap.clear();
 		for(ConfigCategory category : config.getCategory(CATEGORY).getChildren()) {
 			String qname = category.getQualifiedName();
 			String cmdIdentify = Utils.unquote(config.get(qname, "cmdIdentify", "").getString());
