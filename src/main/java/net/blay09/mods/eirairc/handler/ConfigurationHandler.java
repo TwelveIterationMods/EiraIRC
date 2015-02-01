@@ -47,7 +47,8 @@ public class ConfigurationHandler {
 	private static final Map<String, DisplayFormatConfig> displayFormats = new HashMap<String, DisplayFormatConfig>();
 	private static List<DisplayFormatConfig> displayFormatList = new ArrayList<DisplayFormatConfig>();
 	private static DisplayFormatConfig defaultDisplayFormat;
-	
+	private static File configDir;
+
 	public static void loadBotProfiles(File profileDir) {
 		botProfiles.clear();
 		botProfileList.clear();
@@ -118,8 +119,12 @@ public class ConfigurationHandler {
 		ServiceConfig.load(serviceConfig);
 	}
 	
-	public static void load(File configFile) {
+	public static void load(File configDir, File configFile) {
+		ConfigurationHandler.configDir = configDir;
 		ConfigurationHandler.configFile = configFile;
+
+		loadServices(new File(configDir, "eirairc"));
+
 		config = new Configuration(configFile);
 		
 		GlobalConfig.load(config);
@@ -131,8 +136,11 @@ public class ConfigurationHandler {
 		NetworkConfig.load(config);
 		
 		config.save();
+
+		loadDisplayFormats(new File(configDir, "eirairc/formats"));
+		loadBotProfiles(new File(configDir, "eirairc/bots"));
 	}
-	
+
 	public static void save() {
 		GlobalConfig.save(config);
 		KeyConfig.save(config);
@@ -303,7 +311,7 @@ public class ConfigurationHandler {
 	}
 
 	public static void reload() {
-		load(configFile);
+		load(configDir, configFile);
 	}
 
 }

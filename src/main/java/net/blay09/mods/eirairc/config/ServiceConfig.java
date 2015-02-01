@@ -43,6 +43,7 @@ public class ServiceConfig {
 	}
 	
 	public static void load(Configuration config) {
+		serverMap.clear();
 		for(ConfigCategory category : config.getCategory(CATEGORY).getChildren()) {
 			String qname = category.getQualifiedName();
 			String cmdIdentify = Utils.unquote(config.get(qname, "cmdIdentify", "").getString());
