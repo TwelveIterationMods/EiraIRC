@@ -341,7 +341,9 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 		} else if(numeric <= 4 || numeric == 251 || numeric == 252 || numeric == 254 || numeric == 255 || numeric == 265 || numeric == 266 || numeric == 250 || numeric == 375) {
 			// ignore for now
 		} else {
-			System.out.println("Unhandled message code: " + msg.getCommand() + " (" + msg.argcount() + " arguments)");
+			if(SharedGlobalConfig.debugMode) {
+				System.out.println("Unhandled message code: " + msg.getCommand() + " (" + msg.argcount() + " arguments)");
+			}
 		}
 		return true;
 	}
