@@ -32,28 +32,30 @@ public class GuiEiraIRCRedirect extends EiraGuiScreen {
 		final int centerX = width / 2;
 		final int centerY = height / 2;
 
-		GuiLabel lblTitle = new GuiLabel("The server would like to redirect EiraIRC:", 0, centerY - 70, Globals.TEXT_COLOR);
+		GuiLabel lblTitle = new GuiLabel((serverConfig != null ? "The server would like to redirect EiraIRC:" : "The server would like to disable EiraIRC."), 0, centerY - 70, Globals.TEXT_COLOR);
 		lblTitle.setHAlignment(GuiLabel.HAlignment.Center, width);
 		labelList.add(lblTitle);
 
-		GuiLabel lblServer = new GuiLabel("Server: " + serverConfig.getAddress(), 0, centerY - 40, Globals.TEXT_COLOR);
-		lblServer.setHAlignment(GuiLabel.HAlignment.Center, width);
-		labelList.add(lblServer);
+		if(serverConfig != null) {
+			GuiLabel lblServer = new GuiLabel("Server: " + serverConfig.getAddress(), 0, centerY - 40, Globals.TEXT_COLOR);
+			lblServer.setHAlignment(GuiLabel.HAlignment.Center, width);
+			labelList.add(lblServer);
 
-		StringBuilder sb = new StringBuilder();
-		if(serverConfig.getChannelConfigs().size() == 0) {
-			sb.append("None");
-		} else {
-			for(ChannelConfig channelConfig : serverConfig.getChannelConfigs()) {
-				if(sb.length() > 0) {
-					sb.append(", ");
+			StringBuilder sb = new StringBuilder();
+			if (serverConfig.getChannelConfigs().size() == 0) {
+				sb.append("None");
+			} else {
+				for (ChannelConfig channelConfig : serverConfig.getChannelConfigs()) {
+					if (sb.length() > 0) {
+						sb.append(", ");
+					}
+					sb.append(channelConfig.getName());
 				}
-				sb.append(channelConfig.getName());
 			}
+			GuiLabel lblChannels = new GuiLabel("Channel(s):\n" + sb.toString(), 0, centerY - 20, Globals.TEXT_COLOR);
+			lblChannels.setHAlignment(GuiLabel.HAlignment.Center, width);
+			labelList.add(lblChannels);
 		}
-		GuiLabel lblChannels = new GuiLabel("Channel(s):\n" + sb.toString(), 0, centerY - 20, Globals.TEXT_COLOR);
-		lblChannels.setHAlignment(GuiLabel.HAlignment.Center, width);
-		labelList.add(lblChannels);
 
 		chkAlwaysAllow = new GuiCheckBox(0, centerX - 105, centerY + 30, "Always allow this server to redirect me", false);
 		buttonList.add(chkAlwaysAllow);

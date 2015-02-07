@@ -304,6 +304,10 @@ public class Utils {
 	}
 
 	public static boolean redirectTo(ServerConfig serverConfig, boolean solo) {
+		if(serverConfig == null) {
+			EiraIRC.instance.getConnectionManager().stopIRC();
+			return true;
+		}
 		IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(serverConfig.getAddress());
 		if(connection != null && solo) {
 			connection.disconnect("Redirected by " + Utils.getCurrentServerName());
