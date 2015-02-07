@@ -73,6 +73,12 @@ public class DynmapWebChatAddon extends DynmapCommonAPIListener {
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 
+	@Override
+	public void apiDisabled(DynmapCommonAPI api) {
+		this.api = null;
+		MinecraftForge.EVENT_BUS.unregister(this);
+	}
+
 	@Optional.Method(modid = "Dynmap")
 	@SubscribeEvent
 	public void onChannelChat(IRCChannelChatEvent event) {

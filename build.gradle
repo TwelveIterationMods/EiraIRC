@@ -44,8 +44,16 @@ processResources
     }
 }
 
+repositories {
+    maven {
+        name = "dynmap"
+        url = "http://repo.mikeprimm.com/"
+    }
+}
+
 dependencies {
     compile 'org.jetbrains:annotations:13.0'
+    compile 'us.dynmap:DynmapCoreAPI:2.1'
 }
 
 task cleanBuildDir(type: Delete) {
