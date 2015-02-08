@@ -33,7 +33,7 @@ public class DynmapWebChatAddon extends DynmapCommonAPIListener {
 
 		@Override
 		public String getCommandSenderName() {
-			return "[Dynmap] " + name;
+			return "[" + source + "]" + ((name != null && !name.isEmpty()) ? " " + name : "");
 		}
 
 		@Override
@@ -74,25 +74,26 @@ public class DynmapWebChatAddon extends DynmapCommonAPIListener {
 	}
 
 	@Override
+	@Optional.Method(modid = "Dynmap")
 	public void apiDisabled(DynmapCommonAPI api) {
 		this.api = null;
 		MinecraftForge.EVENT_BUS.unregister(this);
 	}
 
-	@Optional.Method(modid = "Dynmap")
 	@SubscribeEvent
+	@Optional.Method(modid = "Dynmap")
 	public void onChannelChat(IRCChannelChatEvent event) {
 		api.postPlayerMessageToWeb(event.sender.getName(), event.sender.getName(), event.message);
 	}
 
-	@Optional.Method(modid = "Dynmap")
 	@SubscribeEvent
+	@Optional.Method(modid = "Dynmap")
 	public void onIRCUserJoin(IRCUserJoinEvent event) {
 		api.postPlayerJoinQuitToWeb(event.user.getName(), event.user.getName(), true);
 	}
 
-	@Optional.Method(modid = "Dynmap")
 	@SubscribeEvent
+	@Optional.Method(modid = "Dynmap")
 	public void onIRCUserLeave(IRCUserLeaveEvent event) {
 		api.postPlayerJoinQuitToWeb(event.user.getName(), event.user.getName(), false);
 	}
