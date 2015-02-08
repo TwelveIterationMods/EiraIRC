@@ -77,6 +77,8 @@ public class SharedGlobalConfig {
 		theme.load(thisConfig, THEME, true);
 		botSettings.load(thisConfig, BOT, true);
 		generalSettings.load(thisConfig, SETTINGS, true);
+
+		save();
 	}
 
 	public static void save() {
@@ -140,6 +142,8 @@ public class SharedGlobalConfig {
 		botSettings.loadLegacy(legacyConfig, null);
 		generalSettings.load(thisConfig, SETTINGS, true);
 		generalSettings.loadLegacy(legacyConfig, null);
+
+		save();
 	}
 
 	public static boolean handleConfigCommand(ICommandSender sender, String key, String value) {

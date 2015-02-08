@@ -92,6 +92,8 @@ public class ClientGlobalConfig {
 		clientBridgeNickToken = thisConfig.getString("clientBridgeNickToken", COMPATIBILITY, clientBridgeNickToken, I19n.format("eirairc:config.property.clientBridgeNickToken"), "eirairc:config.property.clientBridgeNickToken");
 		disableChatToggle = thisConfig.getBoolean("disableChatToggle", COMPATIBILITY, disableChatToggle, I19n.format("eirairc:config.property.disableChatToggle"), "eirairc:config.property.disableChatToggle");
 		vanillaChat = thisConfig.getBoolean("vanillaChat", COMPATIBILITY, vanillaChat, I19n.format("eirairc:config.property.vanillaChat"), "eirairc:config.property.vanillaChat");
+
+		save();
 	}
 
 	public static void save() {
@@ -167,6 +169,8 @@ public class ClientGlobalConfig {
 		clientBridgeNickToken = Utils.unquote(legacyConfig.get("compatibility", "clientBridgeNickToken", clientBridgeNickToken).getString());
 		disableChatToggle = legacyConfig.get("compatibility", "disableChatToggle", disableChatToggle).getBoolean();
 		vanillaChat = legacyConfig.get("compatibility", "vanillaChat", vanillaChat).getBoolean();
+		
+		save();
 	}
 
 	public static String handleConfigCommand(ICommandSender sender, String key) {
