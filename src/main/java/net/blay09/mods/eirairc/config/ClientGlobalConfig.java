@@ -169,7 +169,7 @@ public class ClientGlobalConfig {
 		clientBridgeNickToken = Utils.unquote(legacyConfig.get("compatibility", "clientBridgeNickToken", clientBridgeNickToken).getString());
 		disableChatToggle = legacyConfig.get("compatibility", "disableChatToggle", disableChatToggle).getBoolean();
 		vanillaChat = legacyConfig.get("compatibility", "vanillaChat", vanillaChat).getBoolean();
-		
+
 		save();
 	}
 
