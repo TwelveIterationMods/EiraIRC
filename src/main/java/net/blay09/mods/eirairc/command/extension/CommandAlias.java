@@ -93,7 +93,7 @@ public class CommandAlias extends SubCommand {
 				Utils.sendLocalizedMessage(sender, "irc.alias.set", oldAlias, alias);
 			}
 			entityPlayer.refreshDisplayName();
-			EiraIRC.instance.getMCEventHandler().onPlayerNickChange(oldAlias, alias);
+			EiraIRC.instance.getMCEventHandler().onPlayerNickChange(entityPlayer, oldAlias);
 		}
 		return true;
 	}

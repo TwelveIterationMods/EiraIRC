@@ -55,8 +55,7 @@ public class MCEventHandler {
 					if (channel != null) {
 						GeneralSettings generalSettings = ConfigHelper.getGeneralSettings(channel);
 						BotSettings botSettings = ConfigHelper.getBotSettings(channel);
-						String name = Utils.getNickIRC(event.player, channel);
-						String ircMessage = Utils.getLocalizedMessage("irc.display.mc.joinMsg", name);
+						String ircMessage = MessageFormat.formatMessage(botSettings.getMessageFormat().ircPlayerJoin, channel, event.player, "", MessageFormat.Target.IRC, MessageFormat.Mode.Message);
 						if (!generalSettings.isReadOnly() && botSettings.getBoolean(BotBooleanComponent.RelayMinecraftJoinLeave)) {
 							channel.message(ircMessage);
 						}
@@ -356,8 +355,7 @@ public class MCEventHandler {
 					if (channel != null) {
 						GeneralSettings generalSettings = ConfigHelper.getGeneralSettings(channel);
 						BotSettings botSettings = ConfigHelper.getBotSettings(channel);
-						String name = Utils.getNickIRC(event.player, channel);
-						String ircMessage = Utils.getLocalizedMessage("irc.display.mc.partMsg", name);
+						String ircMessage = MessageFormat.formatMessage(botSettings.getMessageFormat().ircPlayerLeave, channel, event.player, "", MessageFormat.Target.IRC, MessageFormat.Mode.Message);
 						if (!generalSettings.isReadOnly() && botSettings.getBoolean(BotBooleanComponent.RelayMinecraftJoinLeave)) {
 							channel.message(ircMessage);
 						}
@@ -367,17 +365,21 @@ public class MCEventHandler {
 		}
 	}
 
-	public void onPlayerNickChange(String oldNick, String newNick) {
-		String message = Utils.getLocalizedMessage("irc.display.mc.nickChange", oldNick, newNick);
-		Utils.addMessageToChat(message);
+	public void onPlayerNickChange(EntityPlayer player, String oldNick) {
+		String format = SharedGlobalConfig.botSettings.getMessageFormat().ircPlayerNickChange;
+		format = format.replace("{OLDNICK}", oldNick);
+		IChatComponent chatComponent = MessageFormat.formatChatComponent(format, null, player, "", MessageFormat.Target.Minecraft, MessageFormat.Mode.Emote);
+		Utils.addMessageToChat(chatComponent);
 		for(ServerConfig serverConfig : ConfigurationHandler.getServerConfigs()) {
 			IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(serverConfig.getAddress());
 			if(connection != null) {
-				for (ChannelConfig channelConfig : serverConfig.getChannelConfigs()) {
+				for(ChannelConfig channelConfig : serverConfig.getChannelConfigs()) {
 					IRCChannel channel = connection.getChannel(channelConfig.getName());
-					if (channel != null) {
-						if (!ConfigHelper.getGeneralSettings(channel).isReadOnly()) {
-							channel.message(message);
+					if(channel != null) {
+						if(!ConfigHelper.getGeneralSettings(channel).isReadOnly()) {
+							format = ConfigHelper.getBotSettings(channel).getMessageFormat().ircPlayerNickChange;
+							format = format.replace("{OLDNICK}", oldNick);
+							channel.message(MessageFormat.formatMessage(format, channel, player, "", MessageFormat.Target.IRC, MessageFormat.Mode.Emote));
 						}
 					}
 				}

@@ -216,33 +216,32 @@ public class ScreenshotManager {
 		if(Minecraft.getMinecraft().thePlayer == null) {
 			return;
 		}
-		String text = Utils.getLocalizedMessage("irc.display.shareScreenshot", screenshot.getUploadURL());
-		if(EiraIRC.instance.getChatSessionHandler().isMinecraftTarget()) {
-			String mcMessage = "/me " + text;
-			Minecraft.getMinecraft().thePlayer.sendChatMessage(mcMessage);
+		IRCContext chatTarget = EiraIRC.instance.getChatSessionHandler().getChatTarget();
+		String format = ConfigHelper.getBotSettings(chatTarget).getMessageFormat().ircScreenshotUpload;
+		format = format.replace("{URL}", screenshot.getUploadURL());
+		if(chatTarget == null) {
+			format = format.replace("{NICK}", "/me");
+			format = format.replace("{USER}", "/me");
+			Minecraft.getMinecraft().thePlayer.sendChatMessage(format);
 		} else {
 			EntityPlayer sender = Minecraft.getMinecraft().thePlayer;
-			MinecraftForge.EVENT_BUS.post(new RelayChat(sender, text, true));
-			IRCContext chatTarget = EiraIRC.instance.getChatSessionHandler().getChatTarget();
-			if(chatTarget == null) {
-				return;
-			}
 			EnumChatFormatting emoteColor;
 			IChatComponent chatComponent;
 			if (chatTarget instanceof IRCChannel) {
 				BotSettings botSettings = ConfigHelper.getBotSettings(chatTarget);
 				emoteColor = ConfigHelper.getTheme(chatTarget).getColor(ThemeColorComponent.emoteTextColor);
-				chatComponent = MessageFormat.formatChatComponent(botSettings.getMessageFormat().mcSendChannelEmote, chatTarget, sender, text, MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
+				chatComponent = MessageFormat.formatChatComponent(botSettings.getMessageFormat().ircScreenshotUpload, chatTarget, sender, "", MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
 			} else if(chatTarget instanceof IRCUser) {
 				BotSettings botSettings = ConfigHelper.getBotSettings(chatTarget);
 				emoteColor = ConfigHelper.getTheme(chatTarget).getColor(ThemeColorComponent.emoteTextColor);
-				chatComponent = MessageFormat.formatChatComponent(botSettings.getMessageFormat().mcSendPrivateEmote, chatTarget, sender, text, MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
+				chatComponent = MessageFormat.formatChatComponent(botSettings.getMessageFormat().ircScreenshotUpload, chatTarget, sender, "", MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
 			} else {
 				return;
 			}
 			if (emoteColor != null) {
 				chatComponent.getChatStyle().setColor(emoteColor);
 			}
+			MinecraftForge.EVENT_BUS.post(new RelayChat(sender, chatComponent.getUnformattedText(), true));
 			Utils.addMessageToChat(chatComponent);
 		}
 	}

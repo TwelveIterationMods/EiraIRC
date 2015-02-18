@@ -31,8 +31,9 @@ public class IRCEventHandler {
 			return;
 		}
 		if(SharedGlobalConfig.botSettings.getBoolean(BotBooleanComponent.RelayNickChanges)) {
-			String mcMessage = Utils.getLocalizedMessage("irc.display.irc.nickChange", event.connection.getHost(), event.oldNick, event.newNick);
-			Utils.addMessageToChat(mcMessage);
+			String format = ConfigHelper.getBotSettings(event.user).getMessageFormat().mcUserNickChange;
+			format = format.replace("{OLDNICK}", event.oldNick);
+			Utils.addMessageToChat(MessageFormat.formatChatComponent(format, event.connection, null, event.user, "", MessageFormat.Target.Minecraft, MessageFormat.Mode.Emote));
 		}
 	}
 
@@ -43,8 +44,8 @@ public class IRCEventHandler {
 		}
 		BotSettings botSettings = ConfigHelper.getBotSettings(event.channel);
 		if(botSettings.getBoolean(BotBooleanComponent.RelayIRCJoinLeave)) {
-			String mcMessage = Utils.getLocalizedMessage("irc.display.irc.joinMsg", event.channel.getName(), event.user.getName());
-			Utils.addMessageToChat(mcMessage);
+			String format = ConfigHelper.getBotSettings(event.channel).getMessageFormat().mcUserJoin;
+			Utils.addMessageToChat(MessageFormat.formatChatComponent(format, event.connection, event.channel, event.user, "", MessageFormat.Target.Minecraft, MessageFormat.Mode.Emote));
 		}
 		if(botSettings.getBoolean(BotBooleanComponent.SendAutoWho)) {
 			Utils.sendPlayerList(event.user);
@@ -57,8 +58,8 @@ public class IRCEventHandler {
 			return;
 		}
 		if(ConfigHelper.getBotSettings(event.channel).getBoolean(BotBooleanComponent.RelayIRCJoinLeave)) {
-			String mcMessage = Utils.getLocalizedMessage("irc.display.irc.partMsg", event.channel.getName(), event.user.getName());
-			Utils.addMessageToChat(mcMessage);
+			String format = ConfigHelper.getBotSettings(event.channel).getMessageFormat().mcUserLeave;
+			Utils.addMessageToChat(MessageFormat.formatChatComponent(format, event.connection, event.channel, event.user, "", MessageFormat.Target.Minecraft, MessageFormat.Mode.Emote));
 		}
 	}
 	
@@ -68,8 +69,8 @@ public class IRCEventHandler {
 			return;
 		}
 		if(SharedGlobalConfig.botSettings.getBoolean(BotBooleanComponent.RelayIRCJoinLeave)) {
-			String mcMessage = Utils.getLocalizedMessage("irc.display.irc.quitMsg", event.connection.getHost(), event.user.getName(), event.message);
-			Utils.addMessageToChat(mcMessage);
+			String format = ConfigHelper.getBotSettings(event.user).getMessageFormat().mcUserQuit;
+			Utils.addMessageToChat(MessageFormat.formatChatComponent(format, event.connection, null, event.user, "", MessageFormat.Target.Minecraft, MessageFormat.Mode.Emote));
 		}
 	}
 	
