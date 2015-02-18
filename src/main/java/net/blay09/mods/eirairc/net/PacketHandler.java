@@ -18,8 +18,6 @@ public class PacketHandler {
 	public static void init() {
 		instance.registerMessage(HandlerHello.class, MessageHello.class, 0, Side.CLIENT);
 		instance.registerMessage(HandlerNotification.class, MessageNotification.class, 1, Side.CLIENT);
-		instance.registerMessage(SHandlerRecLiveState.class, SMessageRecLiveState.class, 2, Side.CLIENT);
-		instance.registerMessage(CHandlerRecLiveState.class, CMessageRecLiveState.class, 3, Side.SERVER);
 		instance.registerMessage(HandlerRedirect.class, MessageRedirect.class, 4, Side.CLIENT);
 	}
 }
