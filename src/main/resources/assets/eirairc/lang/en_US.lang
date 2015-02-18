@@ -447,6 +447,12 @@ eirairc:config.property.mcNickFormat=Nick Format
 eirairc:config.property.mcNickFormat.tooltip=The format to put the nick in (previously nickPrefix and nickSuffix). %s will be replaced by the nick. No effect in channels. Example: %s-IG
 eirairc:config.property.interOp=Enable InterOp
 eirairc:config.property.interOp.tooltip=Allows the usage of InterOp commands between Minecraft and IRC.
+eirairc:config.property.interOpAuthList=InterOp Auth List
+eirairc:config.property.interOpAuthList.tooltip=The list of IRC auth usernames that may run InterOp commands from IRC.
+eirairc:config.property.disabledNativeCommands=Disabled Native Commands
+eirairc:config.property.disabledNativeCommands.tooltip=The list of IRC commands (such as !who) that are disabled. Supports "*" for all.
+eirairc:config.property.disabledInterOpCommands=Disabled InterOp Commands
+eirairc:config.property.disabledInterOpCommands.tooltip=The list of minecraft commands (such as /stop) that are disabled for InterOp.
 
 ## Properties (General Settings)
 eirairc:config.property.autoJoin=Auto Join
