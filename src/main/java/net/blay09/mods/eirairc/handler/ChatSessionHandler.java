@@ -15,8 +15,8 @@ public class ChatSessionHandler {
 	private IRCContext chatTarget = null;
 	private final List<IRCChannel> validTargetChannels = new ArrayList<IRCChannel>();
 	private final List<IRCUser> validTargetUsers = new ArrayList<IRCUser>();
-	private int targetChannelIdx = 0;
-	private int targetUserIdx = -1;
+	private int targetChannelIdx = -1;
+	private int targetUserIdx = 0;
 
 	public void addTargetUser(IRCUser user) {
 		if(!validTargetUsers.contains(user)) {
@@ -41,11 +41,11 @@ public class ChatSessionHandler {
 	public void setChatTarget(IRCContext chatTarget) {
 		this.chatTarget = chatTarget;
 		if(chatTarget instanceof IRCChannel) {
-			targetUserIdx = -1;
+			targetUserIdx = 0;
 			targetChannelIdx = validTargetChannels.indexOf(chatTarget);
 		} else if(chatTarget instanceof IRCUser) {
-			targetChannelIdx = 0;
-			targetChannelIdx = validTargetUsers.indexOf(chatTarget);
+			targetChannelIdx = -1;
+			targetUserIdx = validTargetUsers.indexOf(chatTarget);
 		}
 	}
 
@@ -68,17 +68,14 @@ public class ChatSessionHandler {
 				return null;
 			}
 			targetChannelIdx++;
-			if(targetChannelIdx > validTargetChannels.size()) {
-				targetChannelIdx = 0;
+			if(targetChannelIdx >= validTargetChannels.size()) {
+				targetChannelIdx = -1;
 			}
-			if(targetChannelIdx == 0) {
+			if(targetChannelIdx == -1) {
 				return null;
 			}
-			return validTargetChannels.get(targetChannelIdx - 1);
+			return validTargetChannels.get(targetChannelIdx);
 		}
 	}
 
-	public boolean isMinecraftTarget() {
-		return chatTarget == null;
-	}
 }
