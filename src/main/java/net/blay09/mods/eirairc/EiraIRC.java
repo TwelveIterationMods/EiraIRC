@@ -70,7 +70,7 @@ public class EiraIRC {
 		ircConnectionHandler = new IRCConnectionHandler();
 		mcEventHandler = new MCEventHandler();
 
-		proxy.setupClient();
+		proxy.init();
 
 		FMLCommonHandler.instance().bus().register(this);
 		FMLCommonHandler.instance().bus().register(mcEventHandler);
@@ -86,6 +86,8 @@ public class EiraIRC {
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
 		event.buildSoftDependProxy("Dynmap", "net.blay09.mods.eirairc.addon.DynmapWebChatAddon");
+
+		proxy.postInit();
 	}
 	
 	@EventHandler

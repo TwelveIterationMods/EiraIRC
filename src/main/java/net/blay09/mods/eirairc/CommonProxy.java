@@ -18,8 +18,9 @@ import java.util.List;
 
 public class CommonProxy {
 
-	public void setupClient() {
-	}
+	public void init() {}
+
+	public void postInit() {}
 
 	public void sendNotification(EntityPlayerMP entityPlayer, NotificationType type, String text) {
 		PacketHandler.instance.sendTo(new MessageNotification(type, text), entityPlayer);

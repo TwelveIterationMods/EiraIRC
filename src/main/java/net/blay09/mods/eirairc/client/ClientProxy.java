@@ -24,6 +24,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.ClientCommandHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraftforge.common.config.Configuration;
+import org.lwjgl.input.Keyboard;
 
 import java.io.File;
 import java.util.List;
@@ -43,7 +44,7 @@ public class ClientProxy extends CommonProxy {
 	};
 
 	@Override
-	public void setupClient() {
+	public void init() {
 		eiraChat = new GuiEiraChat();
 		
 		notificationGUI = new OverlayNotification();
@@ -53,13 +54,20 @@ public class ClientProxy extends CommonProxy {
 		for(int i = 0; i < keyBindings.length; i++) {
 			ClientRegistry.registerKeyBinding(keyBindings[i]);
 		}
+
+		// Dirty hack to stop toggle target overshadowing player list key when they share the same key code (they do by default)
+		KeyBinding keyBindPlayerList = Minecraft.getMinecraft().gameSettings.keyBindPlayerList;
+		if(ClientGlobalConfig.keyToggleTarget.getKeyCode() == keyBindPlayerList.getKeyCode()) {
+			Minecraft.getMinecraft().gameSettings.keyBindPlayerList = new KeyBinding(keyBindPlayerList.getKeyDescription(), keyBindPlayerList.getKeyCodeDefault(), keyBindPlayerList.getKeyCategory());
+			Minecraft.getMinecraft().gameSettings.keyBindPlayerList.setKeyCode(keyBindPlayerList.getKeyCode());
+		}
 		
 		EiraIRC.instance.registerCommands(ClientCommandHandler.instance, false);
 		if(ClientGlobalConfig.registerShortCommands) {
 			IRCCommandHandler.registerQuickCommands(ClientCommandHandler.instance);
 		}
 	}
-	
+
 	@Override
 	public void renderTick(float delta) {
 		notificationGUI.updateAndRender(delta);
