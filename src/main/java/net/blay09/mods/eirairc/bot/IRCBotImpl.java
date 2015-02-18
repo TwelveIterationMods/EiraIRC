@@ -19,6 +19,7 @@ import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.settings.BotStringComponent;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.irc.IRCConnectionImpl;
+import net.blay09.mods.eirairc.irc.IRCUserImpl;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Utils;
 
@@ -77,7 +78,11 @@ public class IRCBotImpl implements IRCBot {
 			return false;
 		}
 		String[] shiftedArgs = Utils.shiftArgs(args, 1);
-		botCommand.processCommand(this, channel, sender, shiftedArgs);
+		if(botCommand.requiresAuth()) {
+			((IRCUserImpl) sender).queueAuthCommand(this, channel, botCommand, shiftedArgs);
+		} else {
+			botCommand.processCommand(this, channel, sender, shiftedArgs);
+		}
 		return true;
 	}
 

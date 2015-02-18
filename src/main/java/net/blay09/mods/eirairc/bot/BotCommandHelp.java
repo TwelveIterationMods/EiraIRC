@@ -47,6 +47,11 @@ public class BotCommandHelp implements IBotCommand {
 	}
 
 	@Override
+	public boolean requiresAuth() {
+		return false;
+	}
+
+	@Override
 	public String getCommandDescription() {
 		return "Prints out this command list.";
 	}

@@ -73,7 +73,8 @@ public class BotCommandCustom implements IBotCommand {
 	public boolean isRunAsOp() {
 		return runAsOp;
 	}
-	
+
+	@Override
 	public boolean requiresAuth() {
 		return requireAuth;
 	}

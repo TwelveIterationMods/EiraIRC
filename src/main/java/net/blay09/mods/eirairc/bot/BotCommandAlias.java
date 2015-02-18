@@ -45,6 +45,11 @@ public class BotCommandAlias implements IBotCommand {
 	}
 
 	@Override
+	public boolean requiresAuth() {
+		return false;
+	}
+
+	@Override
 	public String getCommandDescription() {
 		return "Look up the username of an online player.";
 	}

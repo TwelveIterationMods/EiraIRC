@@ -11,7 +11,6 @@ public interface BotProfile {
 
 	public IBotCommand getCommand(String commandName);
 	public Collection<IBotCommand> getCommands();
-	public boolean isInterOp();
 	public boolean isInterOpAuth(String authName);
 	public String[] getInterOpBlacklist();
 

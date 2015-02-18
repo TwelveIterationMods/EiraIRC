@@ -13,7 +13,8 @@ public enum BotBooleanComponent {
 	ConvertColors("convertColors", true, "eirairc:config.property.convertColors"),
 	AllowPrivateMessages("allowPrivateMessages", true, "eirairc:config.property.allowPrivateMessages"),
 	SendAutoWho("sendAutoWho", false, "eirairc:config.property.sendAutoWho"),
-	RelayBroadcasts("relayBroadcasts", true, "eirairc:config.property.relayBroadcasts");
+	RelayBroadcasts("relayBroadcasts", true, "eirairc:config.property.relayBroadcasts"),
+	InterOp("interOp", true, "eirairc:config.property.interOp");
 
 	public static final BotBooleanComponent[] values = values();
 

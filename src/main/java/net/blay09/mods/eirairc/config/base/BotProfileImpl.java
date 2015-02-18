@@ -4,7 +4,6 @@
 package net.blay09.mods.eirairc.config.base;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -14,7 +13,6 @@ import java.util.Map;
 import net.blay09.mods.eirairc.api.bot.BotProfile;
 import net.blay09.mods.eirairc.api.bot.IBotCommand;
 import net.blay09.mods.eirairc.bot.BotCommandAlias;
-import net.blay09.mods.eirairc.bot.BotCommandAuth;
 import net.blay09.mods.eirairc.bot.BotCommandCustom;
 import net.blay09.mods.eirairc.bot.BotCommandHelp;
 import net.blay09.mods.eirairc.bot.BotCommandMessage;
@@ -23,8 +21,6 @@ import net.blay09.mods.eirairc.bot.BotCommandWho;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
-
-import com.google.common.io.Files;
 
 public class BotProfileImpl implements BotProfile {
 
@@ -47,34 +43,12 @@ public class BotProfileImpl implements BotProfile {
 	private String name;
 	private String[] disabledNativeCommands;
 	private String[] disabledInterOpCommands;
-	private boolean interOp;
 	private boolean isDefaultProfile;
-	
-	public BotProfileImpl(File dir, String name) {
-		File file = findFreeFile(dir, name);
-		config = new Configuration(file);
-		this.file = file;
-		this.name = file.getName().substring(0, file.getName().length() - 4);
-		load();
-	}
 	
 	public BotProfileImpl(File file) {
 		config = new Configuration(file);
 		this.file = file;
 		name = file.getName().substring(0, file.getName().length() - 4);
-		load();
-	}
-	
-	public BotProfileImpl(BotProfileImpl copy, String name) {
-		file = findFreeFile(copy.getFile().getParentFile(), name);
-		try {
-			Files.copy(copy.getFile(), file);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		config = new Configuration(file);
-		config.get(CATEGORY_SETTINGS, "isDefaultProfile", false).set(false);
-		setName(file.getName().substring(0, file.getName().length() - 4));
 		load();
 	}
 	
@@ -85,7 +59,6 @@ public class BotProfileImpl implements BotProfile {
 		disabledNativeCommands = config.get(CATEGORY_COMMANDS, "disabledNativeCommands", new String[0]).getStringList();
 		disabledInterOpCommands = config.get(CATEGORY_COMMANDS, "disabledInterOpCommands", new String[0]).getStringList();
 		
-		interOp = config.get(CATEGORY_COMMANDS, "interOp", false).getBoolean(false);
 		String[] interOpAuthListArray = config.get(CATEGORY_COMMANDS, "interOpAuthList", new String[0]).getStringList();
 		for(int i = 0; i < interOpAuthListArray.length; i++) {
 			interOpAuthList.add(interOpAuthListArray[i]);
@@ -117,8 +90,6 @@ public class BotProfileImpl implements BotProfile {
 			}
 			commands.remove(Utils.unquote(disabledNativeCommands[i]));
 		}
-		
-		registerCommand(new BotCommandAuth());
 		
 		ConfigCategory configCategory = config.getCategory(CATEGORY_COMMANDS);
 		for(ConfigCategory subCategory : configCategory.getChildren()) {
@@ -198,11 +169,6 @@ public class BotProfileImpl implements BotProfile {
 		return interOpAuthList.contains(authName);
 	}
 
-	@Override
-	public boolean isInterOp() {
-		return interOp;
-	}
-
 	public void setName(String name) {
 		this.name = name;
 		config.get(CATEGORY_SETTINGS, "name", "").set(name);
@@ -216,50 +182,8 @@ public class BotProfileImpl implements BotProfile {
 		return file;
 	}
 
-	private static File findFreeFile(File dir, String name) {
-		File file = new File(dir, name + ".cfg");
-		int i = 1;
-		while(file.exists()) {
-			i++;
-			file = new File(dir, name + "_" + i + ".cfg");
-		}
-		return file;
-	}
-
 	public Collection<IBotCommand> getCommands() {
 		return commands.values();
-	}
-
-	public void deleteCustomCommand(BotCommandCustom botCommand) {
-		commands.remove(botCommand.getCommandName().toLowerCase());
-		if(botCommand.getCategoryName() != null) {
-			config.removeCategory(config.getCategory(botCommand.getCategoryName()));
-		}
-		save();
-	}
-
-	public void addCustomCommand(BotCommandCustom botCommand) {
-		String categoryName = botCommand.getCategoryName();
-		if(categoryName == null) {
-			categoryName = CATEGORY_COMMANDS + Configuration.CATEGORY_SPLITTER + Configuration.allowedProperties.retainFrom(botCommand.getCommandName()).replace('.', '_');
-		}
-		config.get(categoryName, "name", "").set(botCommand.getCommandName());
-		config.get(categoryName, "command", "").set(botCommand.getMinecraftCommand());
-		config.get(categoryName, "allowArgs", "").set(botCommand.allowsArgs());
-		config.get(categoryName, "runAsOp", "").set(botCommand.isRunAsOp());
-		config.get(categoryName, "broadcastResult", "").set(botCommand.isBroadcastResult());
-		config.get(categoryName, "requireAuth", "").set(botCommand.requiresAuth());
-		registerCommand(botCommand);
-		save();
-	}
-
-	public void setDisabledNativeCommands(String[] disabledCommands) {
-		this.disabledNativeCommands = disabledCommands;
-		config.get(CATEGORY_COMMANDS, "disabledNativeCommands", new String[0]).set(disabledCommands);
-	}
-
-	public String[] getDisabledNativeCommands() {
-		return disabledNativeCommands;
 	}
 
 }

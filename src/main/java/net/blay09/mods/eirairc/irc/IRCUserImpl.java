@@ -11,13 +11,31 @@ import java.util.Map;
 
 import net.blay09.mods.eirairc.api.IRCChannel;
 import net.blay09.mods.eirairc.api.IRCUser;
+import net.blay09.mods.eirairc.api.bot.IBotCommand;
+import net.blay09.mods.eirairc.api.bot.IRCBot;
+import net.blay09.mods.eirairc.bot.IRCBotImpl;
 
 public class IRCUserImpl implements IRCUser {
+
+	private static class QueuedAuthCommand {
+		public final IRCBot bot;
+		public final IRCChannel channel;
+		public final IBotCommand command;
+		public final String[] args;
+
+		public QueuedAuthCommand(IRCBot bot, IRCChannel channel, IBotCommand command, String[] args) {
+			this.bot = bot;
+			this.channel = channel;
+			this.command = command;
+			this.args = args;
+		}
+	}
 
 	private final IRCConnectionImpl connection;
 	private final Map<String, IRCChannel> channels = new HashMap<String, IRCChannel>();
 	private final List<IRCChannel> opChannels = new ArrayList<IRCChannel>();
 	private final List<IRCChannel> voiceChannels = new ArrayList<IRCChannel>();
+	private final List<QueuedAuthCommand> authCommandQueue = new ArrayList<QueuedAuthCommand>();
 	private String name;
 	private String authLogin;
 	
@@ -87,6 +105,9 @@ public class IRCUserImpl implements IRCUser {
 
 	public void setAuthLogin(String authLogin) {
 		this.authLogin = authLogin;
+		for(QueuedAuthCommand cmd : authCommandQueue) {
+			cmd.command.processCommand(cmd.bot, cmd.channel, this, cmd.args);
+		}
 	}
 	
 	public String getAuthLogin() {
@@ -108,4 +129,12 @@ public class IRCUserImpl implements IRCUser {
 		connection.message(name, message);
 	}
 
+	public void queueAuthCommand(IRCBotImpl bot, IRCChannel channel, IBotCommand botCommand, String[] args) {
+		if(authLogin == null) {
+			whois();
+			authCommandQueue.add(new QueuedAuthCommand(bot, channel, botCommand, args));
+		} else {
+			botCommand.processCommand(bot, channel, this, args);
+		}
+	}
 }

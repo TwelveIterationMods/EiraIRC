@@ -68,6 +68,11 @@ public class BotCommandMessage implements IBotCommand {
 	}
 
 	@Override
+	public boolean requiresAuth() {
+		return false;
+	}
+
+	@Override
 	public String getCommandDescription() {
 		return "Send a private message to an online player.";
 	}
