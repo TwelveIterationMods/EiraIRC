@@ -1,6 +1,8 @@
 package net.blay09.mods.eirairc.config.settings;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import net.blay09.mods.eirairc.config.base.MessageFormatConfig;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.I19n;
@@ -8,6 +10,7 @@ import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
+import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.EnumMap;
 import java.util.List;
@@ -72,6 +75,16 @@ public class BotSettings {
 		return false;
 	}
 
+	private String[] getStringList(BotStringListComponent component) {
+		if(!stringLists.containsKey(component)) {
+			if(parent != null) {
+				return parent.getStringList(component);
+			}
+			return component.defaultValue;
+		}
+		return stringLists.get(component);
+	}
+
 	public String getString(BotStringComponent component) {
 		if(!strings.containsKey(component)) {
 			if(parent != null) {
@@ -110,6 +123,15 @@ public class BotSettings {
 				}
 			}
 		}
+		stringLists.clear();
+		for(int i = 0; i < BotStringListComponent.values().length; i++) {
+			if(defaultValues || config.hasKey(category, BotStringListComponent.values[i].name)) {
+				String[] value = config.getStringList(BotStringListComponent.values[i].name, category, BotStringListComponent.values[i].defaultValue, I19n.format(BotStringListComponent.values[i].langKey + ".tooltip"), null, BotStringListComponent.values[i].langKey);
+				if(defaultValues || value.length > 0) {
+					stringLists.put(BotStringListComponent.values[i], value);
+				}
+			}
+		}
 		booleans.clear();
 		for(int i = 0; i < BotBooleanComponent.values().length; i++) {
 			if(defaultValues || config.hasKey(category, BotBooleanComponent.values[i].name)) {
@@ -137,6 +159,13 @@ public class BotSettings {
 				property.set(strings.get(BotStringComponent.values[i]));
 			}
 		}
+		for(int i = 0; i < BotStringListComponent.values().length; i++) {
+			Property property = dummyConfig.get("bot", BotStringListComponent.values[i].name, parent.getStringList(BotStringListComponent.values[i]));
+			property.setLanguageKey(BotStringListComponent.values[i].langKey);
+			if(stringLists.containsKey(BotStringListComponent.values[i])) {
+				property.set(stringLists.get(BotStringListComponent.values[i]));
+			}
+		}
 		for(int i = 0; i < BotBooleanComponent.values().length; i++) {
 			Property property = dummyConfig.get("bot", BotBooleanComponent.values[i].name, parent.getBoolean(BotBooleanComponent.values[i]));
 			property.setLanguageKey(BotBooleanComponent.values[i].langKey);
@@ -151,6 +180,16 @@ public class BotSettings {
 		for(int i = 0; i < BotStringComponent.values().length; i++) {
 			if(object.has(BotStringComponent.values[i].name)) {
 				strings.put(BotStringComponent.values[i], object.get(BotStringComponent.values[i].name).getAsString());
+			}
+		}
+		for(int i = 0; i < BotStringListComponent.values().length; i++) {
+			if(object.has(BotStringListComponent.values[i].name)) {
+				JsonArray array = object.getAsJsonArray(BotStringListComponent.values[i].name);
+				String[] values = new String[array.size()];
+				for(int j = 0; j < values.length; j++) {
+					values[j] = array.get(j).getAsString();
+				}
+				stringLists.put(BotStringListComponent.values[i], values);
 			}
 		}
 		for(int i = 0; i < BotBooleanComponent.values().length; i++) {
@@ -168,6 +207,13 @@ public class BotSettings {
 		for(Map.Entry<BotStringComponent, String> entry : strings.entrySet()) {
 			object.addProperty(entry.getKey().name, entry.getValue());
 		}
+		for(Map.Entry<BotStringListComponent, String[]> entry : stringLists.entrySet()) {
+			JsonArray array = new JsonArray();
+			for(int i = 0; i < entry.getValue().length; i++) {
+				array.add(new JsonPrimitive(entry.getValue()[i]));
+			}
+			object.add(entry.getKey().name, array);
+		}
 		for(Map.Entry<BotBooleanComponent, Boolean> entry : booleans.entrySet()) {
 			object.addProperty(entry.getKey().name, entry.getValue());
 		}
@@ -176,6 +222,9 @@ public class BotSettings {
 
 	public void save(Configuration config, String category) {
 		for(Map.Entry<BotStringComponent, String> entry : strings.entrySet()) {
+			config.get(category, entry.getKey().name, "", I19n.format(entry.getKey().langKey + ".tooltip")).set(entry.getValue());
+		}
+		for(Map.Entry<BotStringListComponent, String[]> entry : stringLists.entrySet()) {
 			config.get(category, entry.getKey().name, "", I19n.format(entry.getKey().langKey + ".tooltip")).set(entry.getValue());
 		}
 		for(Map.Entry<BotBooleanComponent, Boolean> entry : booleans.entrySet()) {
@@ -215,6 +264,14 @@ public class BotSettings {
 				return "<inherit>";
 			}
 		} catch (IllegalArgumentException ignored) {}
+		try {
+			BotStringListComponent component = BotStringListComponent.valueOf(key);
+			if (stringLists.containsKey(component)) {
+				return Utils.joinStrings(stringLists.get(component), ", ");
+			} else {
+				return "<inherit>";
+			}
+		} catch (IllegalArgumentException ignored) {}
 		return null;
 	}
 
@@ -229,6 +286,28 @@ public class BotSettings {
 			strings.put(component, value);
 			return true;
 		} catch (IllegalArgumentException ignored) {}
+		try {
+			BotStringListComponent component = BotStringListComponent.valueOf(key);
+			String[] list = stringLists.get(component);
+			if(value.startsWith("add ")) {
+				if(list == null) {
+					list = new String[] { value.substring(4) };
+				} else {
+					ArrayUtils.add(list, value.substring(4));
+				}
+			} else if(value.startsWith("remove ") && list != null) {
+				for(int i = 0; i < list.length; i++) {
+					if(list[i].equals(value.substring(7))) {
+						ArrayUtils.remove(list, i);
+						break;
+					}
+				}
+			}
+			if(list != null) {
+				stringLists.put(component, list);
+			}
+			return true;
+		} catch (IllegalArgumentException ignored) {}
 		return false;
 	}
 
@@ -238,6 +317,9 @@ public class BotSettings {
 				list.add(component.name);
 			}
 			for(BotStringComponent component : BotStringComponent.values) {
+				list.add(component.name);
+			}
+			for(BotStringListComponent component : BotStringListComponent.values) {
 				list.add(component.name);
 			}
 		} else {

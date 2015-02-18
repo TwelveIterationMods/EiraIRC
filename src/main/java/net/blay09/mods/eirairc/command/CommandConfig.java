@@ -52,7 +52,7 @@ public class CommandConfig extends SubCommand {
 		}
 		String config = args[1];
 		if(args.length > 2) {
-			ConfigurationHandler.handleConfigCommand(sender, target, config, args[2]);
+			ConfigurationHandler.handleConfigCommand(sender, target, config, Utils.joinStrings(args, " ", 2));
 		} else {
 			ConfigurationHandler.handleConfigCommand(sender, target, config);
 		}
