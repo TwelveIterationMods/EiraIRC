@@ -445,8 +445,6 @@ eirairc:config.property.messageFormat=Message Format
 eirairc:config.property.messageFormat.tooltip=The name to the message format used to display chat messages. See /eirairc/formats/.
 eirairc:config.property.mcNickFormat=Nick Format
 eirairc:config.property.mcNickFormat.tooltip=The format to put the nick in (previously nickPrefix and nickSuffix). %s will be replaced by the nick. No effect in channels. Example: %s-IG
-eirairc:config.property.botProfile=Bot Profile
-eirairc:config.property.botProfile.tooltip=[Deprecated] The bot profile to use for this connection. Only used for InterOP and custom commands. No effect in channels.
 eirairc:config.property.interOp=Enable InterOp
 eirairc:config.property.interOp.tooltip=Allows the usage of InterOp commands between Minecraft and IRC.
 

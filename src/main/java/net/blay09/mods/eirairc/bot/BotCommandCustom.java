@@ -7,6 +7,8 @@ import net.blay09.mods.eirairc.api.IRCChannel;
 import net.blay09.mods.eirairc.api.IRCUser;
 import net.blay09.mods.eirairc.api.bot.IBotCommand;
 import net.blay09.mods.eirairc.api.bot.IRCBot;
+import net.blay09.mods.eirairc.config.settings.BotStringListComponent;
+import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.server.MinecraftServer;
 
@@ -55,7 +57,7 @@ public class BotCommandCustom implements IBotCommand {
 	
 	@Override
 	public void processCommand(IRCBot bot, IRCChannel channel, IRCUser user, String[] args) {
-		if(requireAuth && (!bot.getProfile(channel).isInterOpAuth(user.getAuthLogin()))) {
+		if(requireAuth && (!ConfigHelper.getBotSettings(channel).containsString(BotStringListComponent.InterOpAuthList, user.getAuthLogin()))) {
 			user.notice(Utils.getLocalizedMessage("irc.bot.noPermission"));
 			return;
 		}

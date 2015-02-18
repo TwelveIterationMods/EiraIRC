@@ -21,12 +21,55 @@ public class BotSettings {
 	private final BotSettings parent;
 
 	private final EnumMap<BotStringComponent, String> strings = new EnumMap<BotStringComponent, String>(BotStringComponent.class);
+	private final EnumMap<BotStringListComponent, String[]> stringLists = new EnumMap<BotStringListComponent, String[]>(BotStringListComponent.class);
 	private final EnumMap<BotBooleanComponent, Boolean> booleans = new EnumMap<BotBooleanComponent, Boolean>(BotBooleanComponent.class);
 
 	private Configuration dummyConfig;
 
 	public BotSettings(BotSettings parent) {
 		this.parent = parent;
+	}
+
+	public boolean stringContains(BotStringListComponent component, String s) {
+		String[] list;
+		if(!stringLists.containsKey(component)) {
+			if(parent != null) {
+				return parent.stringContains(component, s);
+			}
+			list = component.defaultValue;
+		} else {
+			list = stringLists.get(component);
+		}
+		for(int i = 0; i < list.length; i++) {
+			if(component.allowWildcard && list[i].equals("*")) {
+				return true;
+			}
+			if(s.contains(list[i])) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean containsString(BotStringListComponent component, String s) {
+		String[] list;
+		if(!stringLists.containsKey(component)) {
+			if(parent != null) {
+				return parent.containsString(component, s);
+			}
+			list = component.defaultValue;
+		} else {
+			list = stringLists.get(component);
+		}
+		for(int i = 0; i < list.length; i++) {
+			if(component.allowWildcard && list[i].equals("*")) {
+				return true;
+			}
+			if(list[i].equals(s)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public String getString(BotStringComponent component) {

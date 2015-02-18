@@ -8,11 +8,14 @@ import net.blay09.mods.eirairc.api.IRCConnection;
 import net.blay09.mods.eirairc.api.IRCContext;
 import net.blay09.mods.eirairc.api.IRCUser;
 
+import java.util.Collection;
+
 public interface IRCBot {
 
 	public boolean processCommand(IRCChannel channel, IRCUser sender, String message);
 	public IRCConnection getConnection();
-	public BotProfile getProfile(IRCContext context);
 	public boolean isServerSide();
-	
+	public void registerCommand(IBotCommand command);
+	public Collection<IBotCommand> getCommands();
+
 }

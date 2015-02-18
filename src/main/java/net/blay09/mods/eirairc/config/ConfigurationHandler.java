@@ -7,7 +7,6 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -16,7 +15,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.config.base.BotProfileImpl;
 import net.blay09.mods.eirairc.config.base.MessageFormatConfig;
 import net.blay09.mods.eirairc.config.base.ServiceConfig;
 import net.blay09.mods.eirairc.util.IRCResolver;
@@ -32,55 +30,12 @@ public class ConfigurationHandler {
 	private static final Logger logger = LogManager.getLogger();
 
 	private static final Map<String, ServerConfig> serverConfigs = new HashMap<String, ServerConfig>();
-	private static final Map<String, BotProfileImpl> botProfiles = new HashMap<String, BotProfileImpl>();
-	private static final List<BotProfileImpl> botProfileList = new ArrayList<BotProfileImpl>();
 	private static final Map<String, MessageFormatConfig> displayFormats = new HashMap<String, MessageFormatConfig>();
 	private static final List<MessageFormatConfig> displayFormatList = new ArrayList<MessageFormatConfig>();
 	private static final Map<String, TrustedServer> trustedServers = new HashMap<String, TrustedServer>();
 
 	private static File baseConfigDir;
-	private static BotProfileImpl defaultBotProfile;
 	private static MessageFormatConfig defaultDisplayFormat;
-
-	public static void findDefaultBotProfile() {
-		defaultBotProfile = botProfiles.get("Client");
-		if(defaultBotProfile == null) {
-			for(BotProfileImpl botProfile : botProfiles.values()) {
-				if(botProfile.isDefaultProfile()) {
-					defaultBotProfile = botProfile;
-					return;
-				}
-			}
-			if(defaultBotProfile == null) {
-				Iterator<BotProfileImpl> it = botProfiles.values().iterator();
-				defaultBotProfile = it.next();
-			}
-		}
-	}
-
-	private static void loadBotProfiles(File profileDir) {
-		botProfiles.clear();
-		botProfileList.clear();
-		if(!profileDir.exists()) {
-			if(!profileDir.mkdirs()) {
-				return;
-			}
-		}
-		BotProfileImpl.setupDefaultProfiles(profileDir);
-		File[] files = profileDir.listFiles(new FilenameFilter() {
-			@Override
-			public boolean accept(File file, String name) {
-				return name.endsWith(".cfg");
-			}
-		});
-		for(int i = 0; i < files.length; i++) {
-			BotProfileImpl botProfile = new BotProfileImpl(files[i]);
-			botProfile.loadCommands();
-			botProfiles.put(botProfile.getName(), botProfile);
-			botProfileList.add(botProfile);
-		}
-		findDefaultBotProfile();
-	}
 
 	private static void loadDisplayFormats(File formatDir) {
 		displayFormats.clear();
@@ -260,7 +215,6 @@ public class ConfigurationHandler {
 		}
 
 		loadDisplayFormats(new File(configDir, "formats"));
-		loadBotProfiles(new File(configDir, "bots"));
 
 		loadServers(configDir);
 		loadTrustedServers(configDir);
@@ -287,7 +241,6 @@ public class ConfigurationHandler {
 		ServerConfig serverConfig = serverConfigs.get(host.toLowerCase());
 		if(serverConfig == null) {
 			serverConfig = new ServerConfig(host);
-			serverConfig.useDefaults(Utils.isServerSide());
 		}
 		return serverConfig;
 	}
@@ -373,14 +326,6 @@ public class ConfigurationHandler {
 
 	public static void addOptionsToList(List<String> list, String option) {
 		EiraIRC.proxy.addConfigOptionsToList(list, option);
-	}
-
-	public static BotProfileImpl getBotProfile(String name) {
-		BotProfileImpl botProfile = botProfiles.get(name);
-		if(botProfile == null) {
-			return defaultBotProfile;
-		}
-		return botProfile;
 	}
 
 	public static MessageFormatConfig getMessageFormat(String displayMode) {

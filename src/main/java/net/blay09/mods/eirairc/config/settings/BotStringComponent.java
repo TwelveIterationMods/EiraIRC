@@ -8,8 +8,7 @@ public enum BotStringComponent {
 	Description("description", "EiraIRC Bot", "eirairc:config.property.description"),
 	QuitMessage("quitMessage", "Lycopene~", "eirairc:config.property.quitMessage"),
 	MessageFormat("messageFormat", "S-Light", "eirairc:config.property.messageFormat"),
-	NickFormat("mcNickFormat", "%s", "eirairc:config.property.mcNickFormat"),
-	BotProfile("botProfile", "Inherit", "eirairc:config.property.botProfile");
+	NickFormat("mcNickFormat", "%s", "eirairc:config.property.mcNickFormat");
 
 	public static final BotStringComponent[] values = values();
 

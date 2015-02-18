@@ -13,7 +13,6 @@ import com.google.gson.JsonObject;
 import net.blay09.mods.eirairc.api.IRCChannel;
 import net.blay09.mods.eirairc.config.base.BotProfileImpl;
 import net.blay09.mods.eirairc.config.settings.BotSettings;
-import net.blay09.mods.eirairc.config.settings.BotStringComponent;
 import net.blay09.mods.eirairc.config.settings.GeneralSettings;
 import net.blay09.mods.eirairc.config.settings.ThemeSettings;
 import net.blay09.mods.eirairc.util.Globals;
@@ -44,16 +43,6 @@ public class ServerConfig {
 
 	public ServerConfig(String address) {
 		this.address = address;
-	}
-
-	public void useDefaults(boolean serverSide) {
-		if(address.equals(Globals.TWITCH_SERVER)) {
-			botSettings.setString(BotStringComponent.BotProfile, BotProfileImpl.DEFAULT_TWITCH);
-		} else if(serverSide) {
-			botSettings.setString(BotStringComponent.BotProfile, BotProfileImpl.DEFAULT_SERVER);
-		} else {
-			botSettings.setString(BotStringComponent.BotProfile, BotProfileImpl.DEFAULT_CLIENT);
-		}
 	}
 
 	public void setAddress(String address) {

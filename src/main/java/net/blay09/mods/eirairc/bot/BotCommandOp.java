@@ -8,6 +8,8 @@ import net.blay09.mods.eirairc.api.IRCUser;
 import net.blay09.mods.eirairc.api.bot.IBotCommand;
 import net.blay09.mods.eirairc.api.bot.IRCBot;
 import net.blay09.mods.eirairc.config.settings.BotBooleanComponent;
+import net.blay09.mods.eirairc.config.settings.BotSettings;
+import net.blay09.mods.eirairc.config.settings.BotStringListComponent;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.server.MinecraftServer;
@@ -26,7 +28,8 @@ public class BotCommandOp implements IBotCommand {
 
 	@Override
 	public void processCommand(IRCBot bot, IRCChannel channel, IRCUser user, String[] args) {
-		if(!ConfigHelper.getBotSettings(channel).getBoolean(BotBooleanComponent.InterOp) || !bot.getProfile(channel).isInterOpAuth(user.getAuthLogin())) {
+		BotSettings botSettings = ConfigHelper.getBotSettings(channel);
+		if(!botSettings.getBoolean(BotBooleanComponent.InterOp) || !botSettings.containsString(BotStringListComponent.InterOpAuthList, user.getAuthLogin())) {
 			user.notice(Utils.getLocalizedMessage("irc.bot.noPermission"));
 			return;
 		}
@@ -35,12 +38,9 @@ public class BotCommandOp implements IBotCommand {
 			user.notice("Usage: !op <command>");
 			return;
 		}
-		String[] commandBlacklist = bot.getProfile(channel).getInterOpBlacklist();
-		for(int i = 0; i < commandBlacklist.length; i++) {
-			if(commandBlacklist[i].equals(Utils.unquote("*")) || message.contains(Utils.unquote(commandBlacklist[i]))) {
-				user.notice(Utils.getLocalizedMessage("irc.bot.interOpBlacklist"));
-				return;
-			}
+		if(botSettings.stringContains(BotStringListComponent.DisabledInterOpCommands, message)) {
+			user.notice(Utils.getLocalizedMessage("irc.bot.interOpBlacklist"));
+			return;
 		}
 		MinecraftServer.getServer().getCommandManager().executeCommand(new IRCUserCommandSender(channel, user, false, true), message);
 	}
