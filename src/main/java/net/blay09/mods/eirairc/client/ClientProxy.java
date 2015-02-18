@@ -37,8 +37,6 @@ public class ClientProxy extends CommonProxy {
 	private static final KeyBinding[] keyBindings = new KeyBinding[] {
 		ClientGlobalConfig.keyScreenshotShare,
 		ClientGlobalConfig.keyOpenScreenshots,
-		ClientGlobalConfig.keyToggleRecording,
-		ClientGlobalConfig.keyToggleLive,
 		ClientGlobalConfig.keyToggleTarget,
 		ClientGlobalConfig.keyOpenMenu
 	};

@@ -27,7 +27,6 @@ public class ClientGlobalConfig {
 	public static Configuration thisConfig;
 
 	// General
-	public static boolean hudRecState = false;
 	public static boolean persistentConnection = true;
 
 	// Screenshots
@@ -39,8 +38,6 @@ public class ClientGlobalConfig {
 	// Keybinds
 	public static final KeyBinding keyScreenshotShare = new KeyBinding("key.irc.screenshotShare", 0, "key.categories.irc");
 	public static final KeyBinding keyOpenScreenshots = new KeyBinding("key.irc.openScreenshots", 0, "key.categories.irc");
-	public static final KeyBinding keyToggleRecording = new KeyBinding("key.irc.toggleRecording", 0, "key.categories.irc");
-	public static final KeyBinding keyToggleLive = new KeyBinding("key.irc.toggleLive", 0, "key.categories.irc");
 	public static final KeyBinding keyToggleTarget = new KeyBinding("key.irc.toggleTarget", Keyboard.KEY_TAB, "key.categories.irc");
 	public static final KeyBinding keyOpenMenu = new KeyBinding("key.irc.openMenu", Keyboard.KEY_I, "key.categories.irc");
 
@@ -68,7 +65,6 @@ public class ClientGlobalConfig {
 
 		// General
 		registerShortCommands = thisConfig.getBoolean("registerShortCommands", GENERAL, registerShortCommands, I19n.format("eirairc:config.property.registerShortCommands.tooltip"), "eirairc:config.property.registerShortCommands");
-		hudRecState = thisConfig.getBoolean("hudRecState", GENERAL, hudRecState, I19n.format("eirairc:config.property.hudRecState"), "eirairc:config.property.hudRecState");
 		persistentConnection = thisConfig.getBoolean("persistentConnection", GENERAL, persistentConnection, I19n.format("eirairc:config.property.persistentConnection"), "eirairc:config.property.persistentConnection");
 
 		// Screenshots
@@ -105,7 +101,6 @@ public class ClientGlobalConfig {
 
 		// General
 		thisConfig.get(GENERAL, "registerShortCommands", false, I19n.format("eirairc:config.property.registerShortCommands.tooltip")).set(registerShortCommands);
-		thisConfig.get(GENERAL, "hudRecState", false, I19n.format("eirairc:config.property.hudRecState")).set(hudRecState);
 		thisConfig.get(GENERAL, "persistentConnection", false, I19n.format("eirairc:config.property.persistentConnection")).set(persistentConnection);
 
 		// Screenshots
@@ -138,7 +133,6 @@ public class ClientGlobalConfig {
 
 		// General
 		registerShortCommands = legacyConfig.getBoolean("registerShortCommands", "global", registerShortCommands, "");
-		hudRecState = legacyConfig.get("display", "hudRecState", hudRecState).getBoolean();
 		persistentConnection = legacyConfig.get("clientonly", "persistentConnection", persistentConnection).getBoolean();
 
 		// Screenshots
@@ -149,8 +143,6 @@ public class ClientGlobalConfig {
 		// Keybinds
 		keyOpenMenu.setKeyCode(legacyConfig.get("keybinds", "keyMenu", keyOpenMenu.getKeyCodeDefault()).getInt());
 		keyToggleTarget.setKeyCode(legacyConfig.get("keybinds", "keyToggleTarget", keyToggleTarget.getKeyCodeDefault()).getInt());
-		keyToggleLive.setKeyCode(legacyConfig.get("keybinds", "keyToggleLive", keyToggleLive.getKeyCodeDefault()).getInt());
-		keyToggleRecording.setKeyCode(legacyConfig.get("keybinds", "keyToggleRecording", keyToggleRecording.getKeyCodeDefault()).getInt());
 		keyScreenshotShare.setKeyCode(legacyConfig.get("keybinds", "keyScreenshotShare", keyScreenshotShare.getKeyCodeDefault()).getInt());
 		keyOpenScreenshots.setKeyCode(legacyConfig.get("keybinds", "keyOpenScreenshots", keyOpenScreenshots.getKeyCodeDefault()).getInt());
 

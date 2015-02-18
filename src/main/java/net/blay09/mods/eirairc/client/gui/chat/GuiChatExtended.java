@@ -4,6 +4,7 @@
 package net.blay09.mods.eirairc.client.gui.chat;
 
 import net.blay09.mods.eirairc.EiraIRC;
+import net.blay09.mods.eirairc.api.IRCContext;
 import net.blay09.mods.eirairc.client.gui.GuiEiraIRCMenu;
 import net.blay09.mods.eirairc.client.gui.screenshot.GuiImagePreview;
 import net.blay09.mods.eirairc.config.ClientGlobalConfig;
@@ -79,7 +80,7 @@ public class GuiChatExtended extends GuiChat implements GuiYesNoCallback {
 				}
 			} else {
 				boolean users = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
-				String newTarget = chatSession.getNextTarget(users);
+				IRCContext newTarget = chatSession.getNextTarget(users);
 				if(!users) {
 					lastToggleTarget = System.currentTimeMillis();
 				}
@@ -129,14 +130,14 @@ public class GuiChatExtended extends GuiChat implements GuiYesNoCallback {
 	public void drawScreen(int i, int j, float k) {
 		super.drawScreen(i, j, k);
 		if(!ClientGlobalConfig.disableChatToggle && !ClientGlobalConfig.clientBridge) {
-			String target = chatSession.getChatTarget();
+			IRCContext target = chatSession.getChatTarget();
+			String targetName;
 			if(target == null) {
-				target = "Minecraft";
+				targetName = "Minecraft";
 			} else {
-				int sepIdx = target.indexOf("/");
-				target = target.substring(sepIdx + 1) + " (" + target.substring(0, sepIdx) + ")";
+				targetName = target.getName() + " (" + target.getConnection().getHost() + ")";
 			}
-			String text = Utils.getLocalizedMessage("irc.gui.chatTarget", target);
+			String text = Utils.getLocalizedMessage("irc.gui.chatTarget", targetName);
 			int rectWidth = Math.max(200, fontRendererObj.getStringWidth(text) + 10);
 			drawRect(0, 0, rectWidth, fontRendererObj.FONT_HEIGHT + 6, COLOR_BACKGROUND);
 			fontRendererObj.drawString(text, 5, 5, Globals.TEXT_COLOR);

@@ -138,35 +138,22 @@ public class MCEventHandler {
 			relayChatClient(text, false, false, null, true);
 			return false;
 		}
-		String chatTarget = EiraIRC.instance.getChatSessionHandler().getChatTarget();
+		IRCContext chatTarget = EiraIRC.instance.getChatSessionHandler().getChatTarget();
 		if(chatTarget == null) {
 			return false;
 		}
-		String[] target = chatTarget.split("/");
-		IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(target[0]);
-		if(connection != null) {
-			IRCContext context;
-			IChatComponent chatComponent;
-			if(connection.getChannelTypes().indexOf(target[1].charAt(0)) != -1) {
-				IRCChannel targetChannel = connection.getChannel(target[1]);
-				if(targetChannel == null) {
-					return true;
-				}
-				context = targetChannel;
-				BotSettings botSettings = ConfigHelper.getBotSettings(context);
-				chatComponent = MessageFormat.formatChatComponent(botSettings.getMessageFormat().mcSendChannelMessage, context, sender, text, MessageFormat.Target.IRC, MessageFormat.Mode.Message);
-			} else {
-				IRCUser targetUser = connection.getUser(target[1]);
-				if(targetUser == null) {
-					return true;
-				}
-				context = targetUser;
-				BotSettings botSettings = ConfigHelper.getBotSettings(context);
-				chatComponent = MessageFormat.formatChatComponent(botSettings.getMessageFormat().mcSendPrivateMessage, context, sender, text, MessageFormat.Target.IRC, MessageFormat.Mode.Message);
-			}
-			relayChatClient(text, false, false, context, false);
-			Utils.addMessageToChat(chatComponent);
+		IChatComponent chatComponent;
+		if(chatTarget instanceof IRCChannel) {
+			BotSettings botSettings = ConfigHelper.getBotSettings(chatTarget);
+			chatComponent = MessageFormat.formatChatComponent(botSettings.getMessageFormat().mcSendChannelMessage, chatTarget, sender, text, MessageFormat.Target.IRC, MessageFormat.Mode.Message);
+		} else if(chatTarget instanceof IRCUser) {
+			BotSettings botSettings = ConfigHelper.getBotSettings(chatTarget);
+			chatComponent = MessageFormat.formatChatComponent(botSettings.getMessageFormat().mcSendPrivateMessage, chatTarget, sender, text, MessageFormat.Target.IRC, MessageFormat.Mode.Message);
+		} else {
+			return false;
 		}
+		relayChatClient(text, false, false, chatTarget, false);
+		Utils.addMessageToChat(chatComponent);
 		return true;
 	}
 	
@@ -177,41 +164,28 @@ public class MCEventHandler {
 			relayChatClient(text, true, false, null, true);
 			return false;
 		}
-		String chatTarget = EiraIRC.instance.getChatSessionHandler().getChatTarget();
+		IRCContext chatTarget = EiraIRC.instance.getChatSessionHandler().getChatTarget();
 		if(chatTarget == null) {
 			return false;
 		}
-		String[] target = chatTarget.split("/");
-		IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(target[0]);
-		if(connection != null) {
-			IRCContext context;
-			EnumChatFormatting emoteColor;
-			IChatComponent chatComponent;
-			if(connection.getChannelTypes().indexOf(target[1].charAt(0)) != -1) {
-				IRCChannel targetChannel = connection.getChannel(target[1]);
-				if(targetChannel == null) {
-					return true;
-				}
-				context = targetChannel;
-				emoteColor = ConfigHelper.getTheme(targetChannel).getColor(ThemeColorComponent.emoteTextColor);
-				BotSettings botSettings = ConfigHelper.getBotSettings(context);
-				chatComponent = MessageFormat.formatChatComponent(botSettings.getMessageFormat().mcSendChannelEmote, context, sender, text, MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
-			} else {
-				IRCUser targetUser = connection.getUser(target[1]);
-				if(targetUser == null) {
-					return true;
-				}
-				context = targetUser;
-				emoteColor = ConfigHelper.getTheme(targetUser).getColor(ThemeColorComponent.emoteTextColor);
-				BotSettings botSettings = ConfigHelper.getBotSettings(context);
-				chatComponent = MessageFormat.formatChatComponent(botSettings.getMessageFormat().mcSendPrivateEmote, context, sender, text, MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
-			}
-			relayChatClient(text, true, false, context, false);
-			if(emoteColor != null) {
-				chatComponent.getChatStyle().setColor(emoteColor);
-			}
-			Utils.addMessageToChat(chatComponent);
+		EnumChatFormatting emoteColor;
+		IChatComponent chatComponent;
+		if(chatTarget instanceof IRCChannel) {
+			emoteColor = ConfigHelper.getTheme(chatTarget).getColor(ThemeColorComponent.emoteTextColor);
+			BotSettings botSettings = ConfigHelper.getBotSettings(chatTarget);
+			chatComponent = MessageFormat.formatChatComponent(botSettings.getMessageFormat().mcSendChannelEmote, chatTarget, sender, text, MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
+		} else if(chatTarget instanceof IRCUser) {
+			emoteColor = ConfigHelper.getTheme(chatTarget).getColor(ThemeColorComponent.emoteTextColor);
+			BotSettings botSettings = ConfigHelper.getBotSettings(chatTarget);
+			chatComponent = MessageFormat.formatChatComponent(botSettings.getMessageFormat().mcSendPrivateEmote, chatTarget, sender, text, MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
+		} else {
+			return false;
 		}
+		relayChatClient(text, true, false, chatTarget, false);
+		if(emoteColor != null) {
+			chatComponent.getChatStyle().setColor(emoteColor);
+		}
+		Utils.addMessageToChat(chatComponent);
 		return true;
 	}
 	
@@ -279,39 +253,19 @@ public class MCEventHandler {
 					}
 				}
 			} else {
-				String chatTarget = EiraIRC.instance.getChatSessionHandler().getChatTarget();
-				if(chatTarget == null) {
-					return;
-				}
-				String[] targetArr = chatTarget.split("/");
-				IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(targetArr[0]);
-				if(connection != null) {
-					IRCContext context;
-					if(connection.getChannelTypes().indexOf(targetArr[1].charAt(0)) != -1) {
-						IRCChannel targetChannel = connection.getChannel(targetArr[1]);
-						if(targetChannel == null) {
-							return;
-						}
-						context = targetChannel;
+				IRCContext chatTarget = EiraIRC.instance.getChatSessionHandler().getChatTarget();
+				if(chatTarget != null && !ConfigHelper.getGeneralSettings(chatTarget).isReadOnly()) {
+					String ircMessage = message;
+					if(isEmote) {
+						ircMessage = IRCConnectionImpl.EMOTE_START + ircMessage + IRCConnectionImpl.EMOTE_END;
+					}
+					if(isNotice) {
+						chatTarget.notice(ircMessage);
 					} else {
-						IRCUser targetUser = connection.getUser(targetArr[1]);
-						if (targetUser == null) {
-							return;
-						}
-						context = targetUser;
-					}
-					if(!ConfigHelper.getGeneralSettings(context).isReadOnly()) {
-						String ircMessage = message;
-						if(isEmote) {
-							ircMessage = IRCConnectionImpl.EMOTE_START + ircMessage + IRCConnectionImpl.EMOTE_END;
-						}
-						if(isNotice) {
-							context.notice(ircMessage);
-						} else {
-							context.message(ircMessage);
-						}
+						chatTarget.message(ircMessage);
 					}
 				}
+
 			}
 		}
 	}

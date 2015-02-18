@@ -22,6 +22,7 @@ import com.google.gson.stream.JsonWriter;
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.IRCChannel;
 import net.blay09.mods.eirairc.api.IRCConnection;
+import net.blay09.mods.eirairc.api.IRCContext;
 import net.blay09.mods.eirairc.api.IRCUser;
 import net.blay09.mods.eirairc.api.event.RelayChat;
 import net.blay09.mods.eirairc.api.upload.IUploadHoster;
@@ -220,40 +221,29 @@ public class ScreenshotManager {
 			String mcMessage = "/me " + text;
 			Minecraft.getMinecraft().thePlayer.sendChatMessage(mcMessage);
 		} else {
-			// TODO damn, clean up your shitty code once 1.6.4 and 1.7.2 is dropped
 			EntityPlayer sender = Minecraft.getMinecraft().thePlayer;
 			MinecraftForge.EVENT_BUS.post(new RelayChat(sender, text, true));
-			String chatTarget = EiraIRC.instance.getChatSessionHandler().getChatTarget();
+			IRCContext chatTarget = EiraIRC.instance.getChatSessionHandler().getChatTarget();
 			if(chatTarget == null) {
 				return;
 			}
-			String[] target = chatTarget.split("/");
-			IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(target[0]);
-			if(connection != null) {
-				EnumChatFormatting emoteColor;
-				IChatComponent chatComponent;
-				if (connection.getChannelTypes().indexOf(target[1].charAt(0)) != -1) {
-					IRCChannel targetChannel = connection.getChannel(target[1]);
-					if (targetChannel == null) {
-						return;
-					}
-					BotSettings botSettings = ConfigHelper.getBotSettings(targetChannel);
-					emoteColor = ConfigHelper.getTheme(targetChannel).getColor(ThemeColorComponent.emoteTextColor);
-					chatComponent = MessageFormat.formatChatComponent(botSettings.getMessageFormat().mcSendChannelEmote, targetChannel, sender, text, MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
-				} else {
-					IRCUser targetUser = connection.getUser(target[1]);
-					if (targetUser == null) {
-						return;
-					}
-					BotSettings botSettings = ConfigHelper.getBotSettings(targetUser);
-					emoteColor = ConfigHelper.getTheme(targetUser).getColor(ThemeColorComponent.emoteTextColor);
-					chatComponent = MessageFormat.formatChatComponent(botSettings.getMessageFormat().mcSendPrivateEmote, targetUser, sender, text, MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
-				}
-				if (emoteColor != null) {
-					chatComponent.getChatStyle().setColor(emoteColor);
-				}
-				Utils.addMessageToChat(chatComponent);
+			EnumChatFormatting emoteColor;
+			IChatComponent chatComponent;
+			if (chatTarget instanceof IRCChannel) {
+				BotSettings botSettings = ConfigHelper.getBotSettings(chatTarget);
+				emoteColor = ConfigHelper.getTheme(chatTarget).getColor(ThemeColorComponent.emoteTextColor);
+				chatComponent = MessageFormat.formatChatComponent(botSettings.getMessageFormat().mcSendChannelEmote, chatTarget, sender, text, MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
+			} else if(chatTarget instanceof IRCUser) {
+				BotSettings botSettings = ConfigHelper.getBotSettings(chatTarget);
+				emoteColor = ConfigHelper.getTheme(chatTarget).getColor(ThemeColorComponent.emoteTextColor);
+				chatComponent = MessageFormat.formatChatComponent(botSettings.getMessageFormat().mcSendPrivateEmote, chatTarget, sender, text, MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
+			} else {
+				return;
 			}
+			if (emoteColor != null) {
+				chatComponent.getChatStyle().setColor(emoteColor);
+			}
+			Utils.addMessageToChat(chatComponent);
 		}
 	}
 

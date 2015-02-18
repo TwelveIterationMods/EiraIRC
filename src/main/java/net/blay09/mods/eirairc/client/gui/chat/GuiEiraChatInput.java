@@ -4,6 +4,7 @@
 package net.blay09.mods.eirairc.client.gui.chat;
 
 import net.blay09.mods.eirairc.EiraIRC;
+import net.blay09.mods.eirairc.api.IRCContext;
 import net.blay09.mods.eirairc.client.gui.GuiEiraIRCMenu;
 import net.blay09.mods.eirairc.config.ClientGlobalConfig;
 import net.blay09.mods.eirairc.util.Globals;
@@ -89,11 +90,11 @@ public class GuiEiraChatInput extends GuiScreen {
 		if(keyCode == ClientGlobalConfig.keyToggleTarget.getKeyCode() && !ClientGlobalConfig.disableChatToggle) {
 			if(Keyboard.isRepeatEvent()) {
 				if(System.currentTimeMillis() - lastToggleTarget >= 1000) {
-					parentChat.getChatSession().setChatTarget((String) null);
+					parentChat.getChatSession().setChatTarget(null);
 				}
 			} else if(!txtInput.getText().startsWith("/")) {
 				boolean users = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
-				String newTarget = parentChat.getChatSession().getNextTarget(users);
+				IRCContext newTarget = parentChat.getChatSession().getNextTarget(users);
 				if(!users) {
 					lastToggleTarget = System.currentTimeMillis();
 				}
@@ -144,14 +145,14 @@ public class GuiEiraChatInput extends GuiScreen {
 	}
 	
 	private void drawTargetOverlay() {
-		String target = parentChat.getChatSession().getChatTarget();
+		IRCContext target = parentChat.getChatSession().getChatTarget();
+		String targetName;
 		if(target == null) {
-			target = "Minecraft";
+			targetName = "Minecraft";
 		} else {
-			int sepIdx = target.indexOf("/");
-			target = target.substring(sepIdx + 1) + " (" + target.substring(0, sepIdx) + ")";
+			targetName = target.getName() + " (" + target.getConnection().getHost() + ")";
 		}
-		String text = Utils.getLocalizedMessage("irc.gui.chatTarget", target);
+		String text = Utils.getLocalizedMessage("irc.gui.chatTarget", targetName);
 		int rectWidth = Math.max(200, fontRendererObj.getStringWidth(text) + 10);
 		drawRect(0, 0, rectWidth, fontRendererObj.FONT_HEIGHT + 6, GuiEiraChat.COLOR_BACKGROUND);
 		fontRendererObj.drawString(text, 5, 5, Globals.TEXT_COLOR);

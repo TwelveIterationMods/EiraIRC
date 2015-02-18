@@ -72,19 +72,6 @@ public class EiraTickHandler {
 				Minecraft.getMinecraft().displayGuiScreen(new GuiEiraIRCMenu());
 			}
 		}
-		EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
-		if(player != null) {
-			if(isKeyPressed(ClientGlobalConfig.keyToggleRecording, KEY_IDX_TOGGLERECORDING)) {
-				EiraPlayerInfo playerInfo = EiraIRC.instance.getNetHandler().getPlayerInfo(player.getCommandSenderName());
-				playerInfo.isRecording = !playerInfo.isRecording;
-				PacketHandler.instance.sendToServer(new CMessageRecLiveState(player.getCommandSenderName(), playerInfo.isRecording, playerInfo.isLive));
-			}
-			if(isKeyPressed(ClientGlobalConfig.keyToggleLive, KEY_IDX_TOGGLELIVE)) {
-				EiraPlayerInfo playerInfo = EiraIRC.instance.getNetHandler().getPlayerInfo(player.getCommandSenderName());
-				playerInfo.isLive = !playerInfo.isLive;
-				PacketHandler.instance.sendToServer(new CMessageRecLiveState(player.getCommandSenderName(), playerInfo.isRecording, playerInfo.isLive));
-			}
-		}
 		if(isKeyPressed(ClientGlobalConfig.keyScreenshotShare, KEY_IDX_SCREENSHOTSHARE)) {
 			Screenshot screenshot = ScreenshotManager.getInstance().takeScreenshot();
 			if(screenshot != null) {

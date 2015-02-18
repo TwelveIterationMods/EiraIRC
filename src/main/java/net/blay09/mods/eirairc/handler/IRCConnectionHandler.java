@@ -5,6 +5,7 @@ package net.blay09.mods.eirairc.handler;
 
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.IRCChannel;
+import net.blay09.mods.eirairc.api.IRCContext;
 import net.blay09.mods.eirairc.api.event.IRCChannelJoinedEvent;
 import net.blay09.mods.eirairc.api.event.IRCChannelLeftEvent;
 import net.blay09.mods.eirairc.api.event.IRCConnectEvent;
@@ -13,12 +14,14 @@ import net.blay09.mods.eirairc.api.event.IRCDisconnectEvent;
 import net.blay09.mods.eirairc.api.event.IRCErrorEvent;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
+import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.config.settings.GeneralBooleanComponent;
 import net.blay09.mods.eirairc.config.settings.GeneralSettings;
 import net.blay09.mods.eirairc.irc.IRCConnectionImpl;
 import net.blay09.mods.eirairc.irc.IRCReplyCodes;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Globals;
+import net.blay09.mods.eirairc.util.IRCResolver;
 import net.blay09.mods.eirairc.util.Utils;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -43,6 +46,12 @@ public class IRCConnectionHandler {
 			GeneralSettings generalSettings = channelConfig.getGeneralSettings();
 			if(generalSettings.getBoolean(GeneralBooleanComponent.AutoJoin)) {
 				event.connection.join(channelConfig.getName(), channelConfig.getPassword());
+			}
+		}
+		if(!SharedGlobalConfig.defaultChat.equals("Minecraft")) {
+			IRCContext chatTarget = IRCResolver.resolveTarget(SharedGlobalConfig.defaultChat, IRCResolver.FLAG_CHANNEL);
+			if(chatTarget != null) {
+				EiraIRC.instance.getChatSessionHandler().setChatTarget(chatTarget);
 			}
 		}
 	}

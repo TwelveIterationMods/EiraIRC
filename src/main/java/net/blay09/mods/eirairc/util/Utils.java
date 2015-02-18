@@ -434,7 +434,7 @@ public class Utils {
 	}
 	
 	public static IRCContext getSuggestedTarget() {
-		IRCContext result = EiraIRC.instance.getChatSessionHandler().getIRCTarget();
+		IRCContext result = EiraIRC.instance.getChatSessionHandler().getChatTarget();
 		if(result == null) {
 			IRCConnection connection = EiraIRC.instance.getConnectionManager().getDefaultConnection();
 			if(connection != null) {
