@@ -419,15 +419,12 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 			users.put(user.getName().toLowerCase(), user);
 			MinecraftForge.EVENT_BUS.post(new IRCUserNickChangeEvent(this, user, oldNick, newNick));
 		} else if(cmd.equals("MODE")) {
-			if(channelTypes.indexOf(msg.arg(0).charAt(0)) != -1) {
+			if(channelTypes.indexOf(msg.arg(0).charAt(0)) != -1 || msg.argcount() < 3) {
 				return false;
 			}
 			IRCChannelImpl channel = (IRCChannelImpl) getOrCreateChannel(msg.arg(0));
 			String mode = msg.arg(1);
-			String param = null;
-			if(msg.argcount() > 2) {
-				param = msg.arg(2);
-			}
+			String param = msg.arg(2);
 			boolean set = false;
 			List<Character> setList = new ArrayList<Character>();
 			List<Character> unsetList = new ArrayList<Character>();
