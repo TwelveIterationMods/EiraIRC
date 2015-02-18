@@ -327,6 +327,10 @@ public class Utils {
 	}
 
 	public static IRCConnectionImpl connectTo(ServerConfig config) {
+		IRCConnection oldConnection = EiraIRC.instance.getConnectionManager().getConnection(config.getAddress());
+		if(oldConnection != null) {
+			oldConnection.disconnect("Reconnecting...");
+		}
 		IRCConnectionImpl connection;
 		if(config.isSSL()) {
 			connection = new IRCConnectionSSLImpl(config, ConfigHelper.getFormattedNick(config));

@@ -78,4 +78,9 @@ public class ConnectionManager {
 	public void clearConnections() {
 		connections.clear();
 	}
+
+	public boolean isLatestConnection(IRCConnection connection) {
+		IRCConnection latestConnection = connections.get(connection.getIdentifier());
+		return latestConnection == null || latestConnection == connection;
+	}
 }

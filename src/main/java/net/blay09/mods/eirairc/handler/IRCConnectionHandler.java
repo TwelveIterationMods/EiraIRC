@@ -62,10 +62,12 @@ public class IRCConnectionHandler {
 	public void onDisconnected(IRCDisconnectEvent event) {
 		String mcMessage = Utils.getLocalizedMessage("irc.basic.disconnected", event.connection.getHost());
 		Utils.addMessageToChat(mcMessage);
-		for(IRCChannel channel : event.connection.getChannels()) {
-			EiraIRC.instance.getChatSessionHandler().removeTargetChannel(channel);
+		if(EiraIRC.instance.getConnectionManager().isLatestConnection(event.connection)) {
+			for(IRCChannel channel : event.connection.getChannels()) {
+				EiraIRC.instance.getChatSessionHandler().removeTargetChannel(channel);
+			}
+			EiraIRC.instance.getConnectionManager().removeConnection(event.connection);
 		}
-		EiraIRC.instance.getConnectionManager().removeConnection(event.connection);
 	}
 	
 	@SubscribeEvent(priority = EventPriority.LOWEST)
