@@ -1,5 +1,8 @@
 package net.blay09.mods.eirairc.client.gui;
 
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.blay09.mods.eirairc.api.event.IRCConnectEvent;
+import net.blay09.mods.eirairc.api.event.IRCDisconnectEvent;
 import net.blay09.mods.eirairc.client.gui.base.GuiAdvancedTextField;
 import net.blay09.mods.eirairc.client.gui.base.GuiLabel;
 import net.blay09.mods.eirairc.config.ServerConfig;
@@ -10,6 +13,7 @@ import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.input.Keyboard;
 
 /**
@@ -81,11 +85,27 @@ public class GuiTwitch extends EiraGuiScreen implements GuiYesNoCallback {
 			config.setNick(txtUsername.getText());
 			config.setServerPassword(txtPassword.getText());
 			if(!config.getNick().isEmpty() && !config.getServerPassword().isEmpty()) {
-				config.getBotSettings().setString(BotStringComponent.MessageFormat, "Twitch");
-				config.getOrCreateChannelConfig(config.getNick().toLowerCase());
+				btnConnect.enabled = false;
+				MinecraftForge.EVENT_BUS.register(this);
 				ConfigurationHandler.addServerConfig(config);
 				Utils.connectTo(config);
 			}
+		}
+	}
+
+	@SubscribeEvent
+	public void onSuccess(IRCConnectEvent event) {
+		if(event.connection.getHost().equals(Globals.TWITCH_SERVER)) {
+			MinecraftForge.EVENT_BUS.unregister(this);
+			gotoPrevious();
+		}
+	}
+
+	@SubscribeEvent
+	public void onFailure(IRCDisconnectEvent event) {
+		if(event.connection.getHost().equals(Globals.TWITCH_SERVER)) {
+			MinecraftForge.EVENT_BUS.unregister(this);
+			btnConnect.enabled = true;
 		}
 	}
 

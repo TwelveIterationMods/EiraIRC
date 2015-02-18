@@ -231,14 +231,14 @@ public class MessageFormatConfig {
 
 		config = new Configuration(new File(displayDir, "twitch.cfg"));
 		config.get(CATEGORY_GENERAL, "name", Utils.quote("Twitch"));
-		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcChannelMessage", Utils.quote("[{CHANNEL}] <{NICK}> {MESSAGE}"));
-		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcChannelEmote", Utils.quote("[{CHANNEL}] * {NICK} {MESSAGE}"));
-		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcChannelNotice", Utils.quote("[{CHANNEL}] ({NICK}) {MESSAGE}"));
+		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcChannelMessage", Utils.quote("[Twitch] <{NICK}> {MESSAGE}"));
+		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcChannelEmote", Utils.quote("[Twitch] * {NICK} {MESSAGE}"));
+		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcChannelNotice", Utils.quote("[Twitch] ({NICK}) {MESSAGE}"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcPrivateMessage", Utils.quote("[Private] <{NICK}> {MESSAGE}"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcPrivateEmote", Utils.quote("[Private] * {NICK} {MESSAGE}"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcPrivateNotice", Utils.quote("[Private] ({NICK}) {MESSAGE}"));
-		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcSendChannelMessage", Utils.quote("[{CHANNEL}] <{NICK}> {MESSAGE}"));
-		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcSendChannelEmote", Utils.quote("[{CHANNEL}] * {NICK} {MESSAGE}"));
+		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcSendChannelMessage", Utils.quote("[Twitch] <{NICK}> {MESSAGE}"));
+		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcSendChannelEmote", Utils.quote("[Twitch] * {NICK} {MESSAGE}"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcSendPrivateMessage", Utils.quote("[->{CHANNEL}] <{NICK}> {MESSAGE}"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcSendPrivateEmote", Utils.quote("[->{CHANNEL}] * {NICK} {MESSAGE}"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcUserJoin", Utils.quote("\u00a7e[{CHANNEL}] {NICK} joined the channel"));
