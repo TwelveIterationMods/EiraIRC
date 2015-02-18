@@ -21,6 +21,8 @@ public interface IRCConnection {
 	
 	public String getServerType();
 	public String getChannelTypes();
+	public String getChannelUserModes();
+	public String getChannelUserModePrefixes();
 	public Collection<IRCChannel> getChannels();
 	public IRCChannel getChannel(String name);
 	public IRCUser getUser(String name);

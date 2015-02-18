@@ -9,8 +9,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.*;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import net.blay09.mods.eirairc.api.IRCChannel;
 import net.blay09.mods.eirairc.api.IRCConnection;
@@ -72,6 +70,8 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 
 	private String serverType;
 	private String channelTypes = "#&";
+	private String channelUserModes = "ov";
+	private String channelUserModePrefixes = "@+";
 
 	private Socket socket;
 	protected BufferedWriter writer;
@@ -294,19 +294,17 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 			IRCChannelImpl channel = (IRCChannelImpl) getChannel(msg.arg(2));
 			String[] names = msg.arg(3).split(" ");
 			for (String name : names) {
-				boolean isOp = false;
-				boolean isVoice = false;
-				if (name.startsWith("@")) {
-					isOp = true;
-				} else if (name.startsWith("+")) {
-					isVoice = true;
-				}
-				if (isOp || isVoice) {
+				char firstChar = name.charAt(0);
+				int idx = channelUserModePrefixes.indexOf(firstChar);
+				IRCChannelUserMode mode = null;
+				if(idx != -1) {
+					mode = IRCChannelUserMode.fromChar(channelUserModes.charAt(idx));
 					name = name.substring(1);
 				}
 				IRCUserImpl user = (IRCUserImpl) getOrCreateUser(name);
-				user.setVoice(channel, isVoice);
-				user.setOperator(channel, isOp);
+				if(mode != null) {
+					user.setChannelUserMode(channel, mode);
+				}
 				user.addChannel(channel);
 				channel.addUser(user);
 			}
@@ -336,6 +334,19 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 			for(int i = 0; i < msg.argcount(); i++) {
 				if(msg.arg(i).startsWith("CHANTYPES=")) {
 					channelTypes = msg.arg(i).substring(10);
+				} else if(msg.arg(i).startsWith("PREFIX=")) {
+					String value = msg.arg(i).substring(7);
+					StringBuilder sb = new StringBuilder();
+					for(int j = 0; j < value.length(); j++) {
+						char c = value.charAt(j);
+						if(c == ')') {
+							channelUserModes = sb.toString();
+							sb = new StringBuilder();
+						} else if(c != '(') {
+							sb.append(c);
+						}
+					}
+					channelUserModePrefixes = sb.toString();
 				}
 			}
 		} else if(numeric <= 4 || numeric == 251 || numeric == 252 || numeric == 254 || numeric == 255 || numeric == 265 || numeric == 266 || numeric == 250 || numeric == 375) {
@@ -432,22 +443,17 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 					unsetList.add(c);
 				}
 			}
-			for (char c : setList) {
-				if (c == 'o') {
-					IRCUserImpl user = (IRCUserImpl) getOrCreateUser(param);
-					user.setOperator(channel, true);
-				} else if (c == 'v') {
-					IRCUserImpl user = (IRCUserImpl) getOrCreateUser(param);
-					user.setVoice(channel, true);
+			IRCUserImpl user = (IRCUserImpl) getOrCreateUser(param);
+			IRCChannelUserMode currentMode = user.getChannelUserMode(channel);
+			for(char c : setList) {
+				int idx = channelUserModes.indexOf(c);
+				if(idx != -1) {
+					user.setChannelUserMode(channel, IRCChannelUserMode.fromChar(c));
 				}
 			}
-			for (char c : unsetList) {
-				if (c == 'o') {
-					IRCUserImpl user = (IRCUserImpl) getOrCreateUser(param);
-					user.setOperator(channel, true);
-				} else if (c == 'v') {
-					IRCUserImpl user = (IRCUserImpl) getOrCreateUser(param);
-					user.setVoice(channel, true);
+			for(char c : unsetList) {
+				if(c == currentMode.modeChar) {
+					user.setChannelUserMode(channel, null);
 				}
 			}
 		} else if(cmd.equals("QUIT")) {
@@ -491,6 +497,16 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 	@Override
 	public String getChannelTypes() {
 		return channelTypes;
+	}
+
+	@Override
+	public String getChannelUserModes() {
+		return channelUserModes;
+	}
+
+	@Override
+	public String getChannelUserModePrefixes() {
+		return channelUserModePrefixes;
 	}
 
 	@Override

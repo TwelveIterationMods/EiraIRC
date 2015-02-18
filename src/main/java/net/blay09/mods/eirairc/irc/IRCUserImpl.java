@@ -33,8 +33,7 @@ public class IRCUserImpl implements IRCUser {
 
 	private final IRCConnectionImpl connection;
 	private final Map<String, IRCChannel> channels = new HashMap<String, IRCChannel>();
-	private final List<IRCChannel> opChannels = new ArrayList<IRCChannel>();
-	private final List<IRCChannel> voiceChannels = new ArrayList<IRCChannel>();
+	private final Map<String, IRCChannelUserMode> channelModes = new HashMap<String, IRCChannelUserMode>();
 	private final List<QueuedAuthCommand> authCommandQueue = new ArrayList<QueuedAuthCommand>();
 	private String name;
 	private String authLogin;
@@ -54,28 +53,39 @@ public class IRCUserImpl implements IRCUser {
 
 	@Override
 	public boolean isOperator(IRCChannel channel) {
-		return opChannels.contains(channel);
+		IRCChannelUserMode mode = channelModes.get(channel.getName().toLowerCase());
+		return mode != null && mode != IRCChannelUserMode.VOICE;
 	}
 	
 	@Override
 	public boolean hasVoice(IRCChannel channel) {
-		return opChannels.contains(channel) || voiceChannels.contains(channel);
+		IRCChannelUserMode mode = channelModes.get(channel.getName().toLowerCase());
+		return mode == IRCChannelUserMode.VOICE;
 	}
-	
-	public void setOperator(IRCChannelImpl channel, boolean opFlag) {
-		if(opFlag && !opChannels.contains(channel)) {
-			opChannels.add(channel);
+
+	@Override
+	public String getChannelModePrefix(IRCChannel channel) {
+		IRCChannelUserMode mode = channelModes.get(channel.getName().toLowerCase());
+		if(mode != null) {
+			int idx = channel.getConnection().getChannelUserModes().indexOf(mode.modeChar);
+			if(idx != -1) {
+				return String.valueOf(channel.getConnection().getChannelUserModePrefixes().charAt(idx));
+			}
+			return "";
+		}
+		return "";
+	}
+
+	public void setChannelUserMode(IRCChannel channel, IRCChannelUserMode mode) {
+		if(mode == null) {
+			channelModes.remove(channel.getName().toLowerCase());
 		} else {
-			opChannels.remove(channel);
+			channelModes.put(channel.getName().toLowerCase(), mode);
 		}
 	}
-	
-	public void setVoice(IRCChannelImpl channel, boolean voiceFlag) {
-		if(voiceFlag && !voiceChannels.contains(channel)) {
-			voiceChannels.add(channel);
-		} else {
-			voiceChannels.remove(channel);
-		}
+
+	public IRCChannelUserMode getChannelUserMode(IRCChannel channel) {
+		return channelModes.get(channel.getName().toLowerCase());
 	}
 	
 	public void addChannel(IRCChannelImpl channel) {

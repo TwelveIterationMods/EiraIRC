@@ -12,5 +12,6 @@ public interface IRCUser extends IRCContext {
 	public Collection<IRCChannel> getChannels();
 	public boolean isOperator(IRCChannel channel);
 	public boolean hasVoice(IRCChannel channel);
+	public String getChannelModePrefix(IRCChannel channel);
 
 }

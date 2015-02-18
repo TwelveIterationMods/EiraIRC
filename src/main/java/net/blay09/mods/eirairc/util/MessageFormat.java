@@ -158,11 +158,7 @@ public class MessageFormat {
 		} else if(target == Target.Minecraft && context instanceof IRCChannel) {
 			GeneralSettings settings = ConfigHelper.getGeneralSettings(context);
 			if(settings.getBoolean(GeneralBooleanComponent.ShowNameFlags)) {
-				if(ircUser.isOperator((IRCChannel) context)) {
-					nick = "@" + nick;
-				} else if(ircUser.hasVoice((IRCChannel) context)) {
-					nick = "+" + nick;
-				}
+				nick = ircUser.getChannelModePrefix((IRCChannel) context) + nick;
 			}
 		}
 		return nick;
