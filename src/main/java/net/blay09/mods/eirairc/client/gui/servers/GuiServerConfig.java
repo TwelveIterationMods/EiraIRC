@@ -89,10 +89,15 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 
 		labelList.add(new GuiLabel("Channels", rightX - 100, topY, Globals.TEXT_COLOR));
 
+		int oldSelectedIdx = -1;
+		if(lstChannels != null) {
+			oldSelectedIdx = lstChannels.getSelectedIdx();
+		}
 		lstChannels = new GuiList<GuiListEntryChannel>(rightX - 100, topY + 15, 100, 80, 20);
 		for(ChannelConfig channelConfig : config.getChannelConfigs()) {
 			lstChannels.addEntry(new GuiListEntryChannel(this, fontRendererObj, channelConfig, lstChannels.getEntryHeight()));
 		}
+		lstChannels.setSelectedIdx(oldSelectedIdx);
 		listList.add(lstChannels);
 
 		btnChannelJoinLeave = new GuiImageButton(7, rightX - 95, topY + 100, EiraGui.texMenu, 48, 144, 16, 16);
@@ -164,11 +169,11 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 				ChannelConfig channelConfig = lstChannels.getSelectedItem().getConfig();
 				if(connection.getChannel(channelConfig.getName()) != null) {
 					connection.part(channelConfig.getName());
-					lstChannels.getSelectedItem().setJoined(true);
+					lstChannels.getSelectedItem().setJoined(false);
 					setChannelJoinLeaveButtonState(false);
 				} else {
 					connection.join(channelConfig.getName(), channelConfig.getPassword());
-					lstChannels.getSelectedItem().setJoined(false);
+					lstChannels.getSelectedItem().setJoined(true);
 					setChannelJoinLeaveButtonState(true);
 				}
 			}
