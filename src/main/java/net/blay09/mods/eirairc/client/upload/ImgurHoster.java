@@ -56,7 +56,7 @@ public class ImgurHoster implements IUploadHoster {
 			}
 			con.disconnect();
 			if(result != null) {
-				return new UploadedFile(result, null);
+				return new UploadedFile(result, result + ".png", null);
 			} else {
 				return null;
 			}

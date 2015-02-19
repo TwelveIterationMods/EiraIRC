@@ -60,12 +60,11 @@ public class DirectUploadHoster implements IUploadHoster {
 			StringBuilder stringBuilder = new StringBuilder();
 			while ((line = reader.readLine()) != null) {
 				stringBuilder.append(line).append("\n");
-				System.out.println(line);
 			}
 			reader.close();
 			in.close();
 			con.disconnect();
-			return new UploadedFile(stringBuilder.toString(), null);
+			return new UploadedFile(stringBuilder.toString(), null, null);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
