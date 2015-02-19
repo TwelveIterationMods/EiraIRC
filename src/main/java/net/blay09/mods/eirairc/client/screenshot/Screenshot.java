@@ -12,6 +12,7 @@ import net.minecraft.client.Minecraft;
 public class Screenshot {
 
 	private static final String METADATA_ORIGINALNAME = "originalName";
+	private static final String METADATA_NAME = "name";
 	private static final String METADATA_UPLOADURL = "uploadURL";
 	private static final String METADATA_DELETEURL = "deleteURL";
 	private static final String METADATA_FAVORITE = "favorite";
@@ -29,7 +30,11 @@ public class Screenshot {
 	}
 
 	public String getName() {
-		return file.getName().substring(0, file.getName().length() - 4);
+		return metadata.has(METADATA_NAME) ? metadata.get(METADATA_NAME).getAsString() : "";
+	}
+
+	public void setName(String name) {
+		metadata.addProperty(METADATA_NAME, name);
 	}
 
 	public boolean isUploaded() {
@@ -72,4 +77,5 @@ public class Screenshot {
 	public String getDeleteURL() {
 		return metadata.get(METADATA_DELETEURL).getAsString();
 	}
+
 }

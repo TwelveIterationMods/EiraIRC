@@ -176,6 +176,15 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 		Minecraft.getMinecraft().displayGuiScreen(this);
 	}
 
+	@Override
+	public void updateScreen() {
+		super.updateScreen();
+
+		if(currentScreenshot != null) {
+			currentScreenshot.setName(txtName.getTextOrDefault());
+		}
+	}
+
 	private static final List<String> tooltipList = new ArrayList<String>();
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float par3) {
