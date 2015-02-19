@@ -48,6 +48,10 @@ public class EiraGuiScreen extends GuiScreen {
 		textFieldList.clear();
 		labelList.clear();
 		listList.clear();
+
+		if(overlay != null) {
+			overlay.setWorldAndResolution(mc, width, height);
+		}
 	}
 
 	public void setupMenuSize(int menuWidth, int menuHeight) {
@@ -70,7 +74,7 @@ public class EiraGuiScreen extends GuiScreen {
 			listList.get(i).mouseClicked(mouseX, mouseY, mouseButton);
 		}
 
-		if(allowSideClickClose && mouseX < menuX || mouseX >= menuX + menuWidth) {
+		if(overlay == null && allowSideClickClose && (mouseX < menuX || mouseX >= menuX + menuWidth)) {
 			gotoPrevious();
 		}
 	}
@@ -129,4 +133,10 @@ public class EiraGuiScreen extends GuiScreen {
 		EiraGui.drawTexturedRect(x, y, width, height, 0, 0, 300, 200, zLevel, 300, 200);
 	}
 
+	public void setOverlay(GuiOverlay overlay) {
+		this.overlay = overlay;
+		if(overlay != null) {
+			overlay.setWorldAndResolution(mc, width, height);
+		}
+	}
 }

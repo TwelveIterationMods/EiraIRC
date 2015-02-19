@@ -5,6 +5,7 @@ import net.blay09.mods.eirairc.client.gui.EiraGuiScreen;
 import net.blay09.mods.eirairc.client.gui.base.*;
 import net.blay09.mods.eirairc.client.gui.base.image.GuiFileImage;
 import net.blay09.mods.eirairc.client.gui.base.image.GuiImage;
+import net.blay09.mods.eirairc.client.gui.overlay.OverlayYesNo;
 import net.blay09.mods.eirairc.client.screenshot.Screenshot;
 import net.blay09.mods.eirairc.client.screenshot.ScreenshotManager;
 import net.blay09.mods.eirairc.config.ScreenshotAction;
@@ -70,6 +71,10 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 	}
 
 	public void updateScreenshot() {
+		if(screenshotList.isEmpty()) {
+			currentScreenshot = null;
+			imgPreview = null;
+		}
 		if(currentIdx >= 0 && currentIdx < screenshotList.size()) {
 			Screenshot screenshot = screenshotList.get(currentIdx);
 			if(currentScreenshot != screenshot) {
@@ -167,14 +172,22 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 		} else if(button == btnOpenFolder) {
 			Utils.openDirectory(new File(mc.mcDataDir, "screenshots"));
 		} else if(button == btnDelete) {
-			mc.displayGuiScreen(new GuiYesNo(this, "Do you really want to delete this screenshot?", "This can't be undone, so be careful!", currentIdx));
+			if(currentScreenshot != null) {
+				setOverlay(new OverlayYesNo(this, "Do you really want to delete this screenshot?", "This can't be undone, so be careful!", currentIdx));
+			}
 		} else if(button == btnClipboard) {
-			Utils.setClipboardString(currentScreenshot.getUploadURL());
+			if(currentScreenshot != null) {
+				Utils.setClipboardString(currentScreenshot.getUploadURL());
+			}
 		} else if(button == btnUpload) {
-			ScreenshotManager.getInstance().uploadScreenshot(currentScreenshot, ScreenshotAction.None);
+			if(currentScreenshot != null) {
+				ScreenshotManager.getInstance().uploadScreenshot(currentScreenshot, ScreenshotAction.None);
+			}
 		} else if(button == btnFavorite) {
-			currentScreenshot.setFavorited(!currentScreenshot.isFavorited());
-			setFavoriteButtonState(currentScreenshot.isFavorited());
+			if(currentScreenshot != null) {
+				currentScreenshot.setFavorited(!currentScreenshot.isFavorited());
+				setFavoriteButtonState(currentScreenshot.isFavorited());
+			}
 		} else if(button == btnZoom) {
 			mc.displayGuiScreen(new GuiScreenshotBigPreview(this, imgPreview));
 		}
@@ -184,8 +197,12 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 	public void confirmClicked(boolean result, int id) {
 		if(result) {
 			ScreenshotManager.getInstance().deleteScreenshot(currentScreenshot, false);
+			searchResults.remove(currentScreenshot);
+			if(currentIdx >= screenshotList.size()) {
+				currentIdx = Math.max(0, currentIdx - 1);
+			}
+			updateScreenshot();
 		}
-		Minecraft.getMinecraft().displayGuiScreen(this);
 	}
 
 	@Override
