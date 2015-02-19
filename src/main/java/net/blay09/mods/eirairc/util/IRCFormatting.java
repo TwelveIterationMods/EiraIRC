@@ -121,4 +121,25 @@ public enum IRCFormatting {
 		return 1;
 	}
 
+	public static EnumChatFormatting getColorFromMCColorCode(char colorCode) {
+		switch(colorCode) {
+			case '0': return EnumChatFormatting.BLACK; // black
+			case '1': return EnumChatFormatting.DARK_BLUE; // dark blue
+			case '2': return EnumChatFormatting.DARK_GREEN; // dark green
+			case '3': return EnumChatFormatting.DARK_AQUA; // dark aqua
+			case '4': return EnumChatFormatting.DARK_RED; // dark red
+			case '5': return EnumChatFormatting.DARK_PURPLE; // dark purple
+			case '6': return EnumChatFormatting.GOLD; // gold
+			case '7': return EnumChatFormatting.GRAY; // gray
+			case '8': return EnumChatFormatting.DARK_GRAY; // dark gray
+			case '9': return EnumChatFormatting.BLUE; // blue
+			case 'a': return EnumChatFormatting.GREEN; // green
+			case 'b': return EnumChatFormatting.AQUA; // aqua
+			case 'c': return EnumChatFormatting.RED; // red
+			case 'd': return EnumChatFormatting.LIGHT_PURPLE; // light purple
+			case 'e': return EnumChatFormatting.YELLOW; // yellow
+			case 'f': return EnumChatFormatting.WHITE; // white
+		}
+		return null;
+	}
 }

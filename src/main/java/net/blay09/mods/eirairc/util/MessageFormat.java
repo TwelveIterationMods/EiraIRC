@@ -177,7 +177,8 @@ public class MessageFormat {
 	}
 
 	public static IChatComponent formatChatComponent(String format, IRCContext context, ICommandSender sender, String message, Target target, Mode mode) {
-		IChatComponent root = new ChatComponentText("");
+		IChatComponent root = null;
+		EnumChatFormatting nextColor = null;
 		StringBuilder sb = new StringBuilder();
 		int currentIdx = 0;
 		while(currentIdx < format.length()) {
@@ -224,20 +225,51 @@ public class MessageFormat {
 					}
 					if(validToken) {
 						if(sb.length() > 0) {
-							root.appendSibling(new ChatComponentText(sb.toString()));
+							IChatComponent newComponent;
+							if(root == null) {
+								root = new ChatComponentText(sb.toString());
+								newComponent = root;
+							} else {
+								newComponent = new ChatComponentText(sb.toString());
+								root.appendSibling(newComponent);
+							}
+							if(nextColor != null) {
+								newComponent.getChatStyle().setColor(nextColor);
+							}
 							sb = new StringBuilder();
 						}
-						root.appendSibling(component);
+						if(root == null) {
+							root = component;
+						} else {
+							root.appendSibling(component);
+						}
+						if(nextColor != null) {
+							component.getChatStyle().setColor(nextColor);
+						}
 						currentIdx += token.length() + 2;
 						continue;
 					}
 				}
+			} else if(c == '\u00a7') {
+				nextColor = IRCFormatting.getColorFromMCColorCode(format.charAt(currentIdx + 1));
+				currentIdx += 2;
+				continue;
 			}
 			sb.append(c);
 			currentIdx++;
 		}
 		if(sb.length() > 0) {
-			root.appendSibling(new ChatComponentText(sb.toString()));
+			IChatComponent newComponent;
+			if(root == null) {
+				root = new ChatComponentText(sb.toString());
+				newComponent = root;
+			} else {
+				newComponent = new ChatComponentText(sb.toString());
+				root.appendSibling(newComponent);
+			}
+			if(nextColor != null) {
+				newComponent.getChatStyle().setColor(nextColor);
+			}
 		}
 		return root;
 	}
@@ -255,7 +287,8 @@ public class MessageFormat {
 	}
 
 	public static IChatComponent formatChatComponent(String format, IRCConnection connection, IRCChannel channel, IRCUser user, String message, Target target, Mode mode) {
-		IChatComponent root = new ChatComponentText("");
+		IChatComponent root = null;
+		EnumChatFormatting nextColor = null;
 		StringBuilder sb = new StringBuilder();
 		int currentIdx = 0;
 		while(currentIdx < format.length()) {
@@ -304,20 +337,51 @@ public class MessageFormat {
 					}
 					if(validToken) {
 						if(sb.length() > 0) {
-							root.appendSibling(new ChatComponentText(sb.toString()));
+							IChatComponent newComponent;
+							if(root == null) {
+								root = new ChatComponentText(sb.toString());
+								newComponent = root;
+							} else {
+								newComponent = new ChatComponentText(sb.toString());
+								root.appendSibling(newComponent);
+							}
+							if(nextColor != null) {
+								newComponent.getChatStyle().setColor(nextColor);
+							}
 							sb = new StringBuilder();
 						}
-						root.appendSibling(component);
+						if(root == null) {
+							root = component;
+						} else {
+							root.appendSibling(component);
+						}
+						if(nextColor != null) {
+							component.getChatStyle().setColor(nextColor);
+						}
 						currentIdx += token.length() + 2;
 						continue;
 					}
 				}
+			} else if(c == '\u00a7') {
+				nextColor = IRCFormatting.getColorFromMCColorCode(format.charAt(currentIdx + 1));
+				currentIdx += 2;
+				continue;
 			}
 			sb.append(c);
 			currentIdx++;
 		}
 		if(sb.length() > 0) {
-			root.appendSibling(new ChatComponentText(sb.toString()));
+			IChatComponent newComponent;
+			if(root == null) {
+				root = new ChatComponentText(sb.toString());
+				newComponent = root;
+			} else {
+				newComponent = new ChatComponentText(sb.toString());
+				root.appendSibling(newComponent);
+			}
+			if(nextColor != null) {
+				newComponent.getChatStyle().setColor(nextColor);
+			}
 		}
 		return root;
 	}
