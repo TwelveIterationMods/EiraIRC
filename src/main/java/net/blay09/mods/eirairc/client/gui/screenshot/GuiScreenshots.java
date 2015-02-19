@@ -22,7 +22,6 @@ import java.util.List;
 public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 
 	private static final float TOOLTIP_TIME = 30;
-	private final List<Screenshot> screenshotList;
 
 	private GuiAdvancedTextField txtSearch;
 	private GuiButton btnOpenFolder;
@@ -39,7 +38,11 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 	private GuiImageButton btnFavorite;
 	private GuiImageButton btnDelete;
 
+	private List<Screenshot> screenshotList;
+	private List<Screenshot> screenshotGroup;
 	private int currentIdx;
+	private String lastSearchText = "";
+	private final List<Screenshot> searchResults = new ArrayList<Screenshot>();
 	private Screenshot currentScreenshot;
 	private GuiImage imgPreview;
 
@@ -54,7 +57,16 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 
 	public GuiScreenshots(GuiScreen parentScreen) {
 		super(parentScreen);
-		screenshotList = ScreenshotManager.getInstance().getScreenshots(); // TODO will be set by the category tabs
+		screenshotGroup = ScreenshotManager.getInstance().getScreenshots();
+		screenshotList = screenshotGroup;
+	}
+
+	public void setScreenshotList(List<Screenshot> screenshotList) {
+		if(screenshotList.size() > 0) {
+			this.screenshotList = screenshotList;
+			currentIdx = 0;
+			updateScreenshot();
+		}
 	}
 
 	public void updateScreenshot() {
@@ -182,6 +194,21 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 
 		if(currentScreenshot != null) {
 			currentScreenshot.setName(txtName.getTextOrDefault());
+		}
+
+		if(!lastSearchText.equals(txtSearch.getText())) {
+			if(!txtSearch.getText().isEmpty()) {
+				searchResults.clear();
+				for(Screenshot screenshot : screenshotGroup) {
+					if(screenshot.getName().contains(txtSearch.getText()) || screenshot.getOriginalName().contains(txtSearch.getText())) {
+						searchResults.add(screenshot);
+					}
+				}
+				setScreenshotList(searchResults);
+			} else {
+				setScreenshotList(screenshotGroup);
+			}
+			lastSearchText = txtSearch.getText();
 		}
 	}
 
