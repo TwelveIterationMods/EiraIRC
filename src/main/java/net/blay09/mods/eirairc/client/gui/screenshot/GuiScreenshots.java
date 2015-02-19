@@ -67,6 +67,7 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 			}
 			txtName.setDefaultText(screenshot.getOriginalName(), false);
 			txtName.setText(screenshot.getName());
+			setFavoriteButtonState(screenshot.isFavorited());
 		}
 	}
 
@@ -126,8 +127,6 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 		btnReupload.visible = false;
 		btnReupload.setTooltipText("Re-Upload");
 		buttonList.add(btnReupload);
-
-		// clipboard button
 
 		updateScreenshot();
 
