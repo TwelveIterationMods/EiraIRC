@@ -10,6 +10,7 @@ import net.blay09.mods.eirairc.client.gui.base.GuiLabel;
 import net.blay09.mods.eirairc.client.gui.base.list.GuiList;
 import net.blay09.mods.eirairc.client.gui.base.tab.GuiTabContainer;
 import net.blay09.mods.eirairc.client.gui.base.tab.GuiTabPage;
+import net.blay09.mods.eirairc.client.gui.overlay.OverlayYesNo;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
@@ -157,7 +158,7 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 		} else if(button == btnChannelDelete) {
 			if (lstChannels.hasSelection()) {
 				deleteChannel = lstChannels.getSelectedItem().getConfig();
-				mc.displayGuiScreen(new GuiYesNo(this, "Do you really want to delete this channel configuration?", "This can't be undone, so be careful!", 1));
+				setOverlay(new OverlayYesNo(this, "Do you really want to delete this channel configuration?", "This can't be undone, so be careful!", 1));
 			}
 		} else if(button == btnChannelJoinLeave) {
 			applyChanges();
@@ -182,7 +183,7 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 				tabContainer.removePage(this);
 				tabContainer.initGui();
 			} else {
-				mc.displayGuiScreen(new GuiYesNo(this, "Do you really want to delete this server configuration?", "This can't be undone, so be careful!", 0));
+				setOverlay(new OverlayYesNo(this, "Do you really want to delete this server configuration?", "This can't be undone, so be careful!", 0));
 			}
 		}
 	}

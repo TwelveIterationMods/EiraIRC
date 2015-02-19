@@ -5,6 +5,7 @@ import net.blay09.mods.eirairc.client.gui.base.GuiAdvancedTextField;
 import net.blay09.mods.eirairc.client.gui.base.GuiLabel;
 import net.blay09.mods.eirairc.client.gui.base.tab.GuiTabContainer;
 import net.blay09.mods.eirairc.client.gui.base.tab.GuiTabPage;
+import net.blay09.mods.eirairc.client.gui.overlay.OverlayYesNo;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.settings.GeneralBooleanComponent;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
@@ -12,7 +13,6 @@ import net.blay09.mods.eirairc.util.Globals;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.gui.GuiYesNoCallback;
 import org.lwjgl.input.Keyboard;
 
@@ -165,7 +165,7 @@ public class GuiServerConfigAdvanced extends GuiTabPage implements GuiYesNoCallb
 		if(button == btnBack) {
 			tabContainer.setCurrentTab(parent, false);
 		} else if(button == btnDelete) {
-			mc.displayGuiScreen(new GuiYesNo(this, "Do you really want to delete this server configuration?", "This can't be undone, so be careful!", 0));
+			setOverlay(new OverlayYesNo(this, "Do you really want to delete this server configuration?", "This can't be undone, so be careful!", 0));
 		}
 	}
 
@@ -176,7 +176,6 @@ public class GuiServerConfigAdvanced extends GuiTabPage implements GuiYesNoCallb
 			ConfigurationHandler.saveServers();
 			tabContainer.removePage(this);
 		}
-		Minecraft.getMinecraft().displayGuiScreen(tabContainer);
 	}
 
 	@Override
