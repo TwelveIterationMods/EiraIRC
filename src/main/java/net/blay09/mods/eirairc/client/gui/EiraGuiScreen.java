@@ -3,6 +3,7 @@ package net.blay09.mods.eirairc.client.gui;
 import net.blay09.mods.eirairc.client.gui.base.GuiLabel;
 import net.blay09.mods.eirairc.client.gui.base.list.GuiList;
 import net.blay09.mods.eirairc.client.gui.base.GuiMenuButton;
+import net.blay09.mods.eirairc.client.gui.overlay.GuiOverlay;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.Tessellator;
@@ -23,6 +24,7 @@ public class EiraGuiScreen extends GuiScreen {
 	protected final List<GuiLabel> labelList = new ArrayList<GuiLabel>();
 	protected final List<GuiList> listList = new ArrayList<GuiList>();
 
+	protected GuiOverlay overlay;
 	protected int menuX;
 	protected int menuY;
 	protected int menuWidth;
@@ -57,6 +59,9 @@ public class EiraGuiScreen extends GuiScreen {
 
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) {
+		if(overlay != null) {
+			overlay.mouseClicked(mouseX, mouseY, mouseButton);
+		}
 		super.mouseClicked(mouseX, mouseY, mouseButton);
 		for(int i = 0; i < textFieldList.size(); i++) {
 			textFieldList.get(i).mouseClicked(mouseX, mouseY, mouseButton);
@@ -89,6 +94,10 @@ public class EiraGuiScreen extends GuiScreen {
 	public void updateScreen() {
 		super.updateScreen();
 
+		if(overlay != null) {
+			overlay.updateScreen();
+		}
+
 		for(int i = 0; i < textFieldList.size(); i++) {
 			textFieldList.get(i).updateCursorCounter();
 		}
@@ -108,6 +117,10 @@ public class EiraGuiScreen extends GuiScreen {
 
 		for(int i = 0; i < listList.size(); i++) {
 			listList.get(i).drawList();
+		}
+
+		if(overlay != null) {
+			overlay.drawScreen(mouseX, mouseY, p_73863_3_);
 		}
 	}
 
