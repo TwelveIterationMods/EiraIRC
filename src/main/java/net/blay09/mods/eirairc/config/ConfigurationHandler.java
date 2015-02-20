@@ -15,6 +15,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
 import net.blay09.mods.eirairc.EiraIRC;
+import net.blay09.mods.eirairc.api.IRCConnection;
+import net.blay09.mods.eirairc.api.bot.IBotCommand;
+import net.blay09.mods.eirairc.bot.BotCommandCustom;
+import net.blay09.mods.eirairc.bot.IRCBotImpl;
 import net.blay09.mods.eirairc.config.base.MessageFormatConfig;
 import net.blay09.mods.eirairc.config.base.ServiceConfig;
 import net.blay09.mods.eirairc.util.IRCResolver;
@@ -32,6 +36,7 @@ public class ConfigurationHandler {
 	private static final Map<String, ServerConfig> serverConfigs = new HashMap<String, ServerConfig>();
 	private static final Map<String, MessageFormatConfig> displayFormats = new HashMap<String, MessageFormatConfig>();
 	private static final List<MessageFormatConfig> displayFormatList = new ArrayList<MessageFormatConfig>();
+	private static final List<IBotCommand> customCommands = new ArrayList<IBotCommand>();
 	private static final Map<String, TrustedServer> trustedServers = new HashMap<String, TrustedServer>();
 
 	private static File baseConfigDir;
@@ -102,13 +107,83 @@ public class ConfigurationHandler {
 		ServiceConfig.load(serviceConfig);
 	}
 
+	private static void loadCommands(File configDir) {
+		if(!configDir.exists()) {
+			if(!configDir.mkdirs()) {
+				return;
+			}
+		}
+		createExampleCommands();
+		Gson gson = new Gson();
+		try {
+			File file = new File(configDir, "commands.json");
+			if(!file.exists()) {
+				JsonArray root = new JsonArray();
+				JsonObject players = new JsonObject();
+				players.addProperty("name", "players");
+				players.addProperty("override", "who");
+				players.addProperty("description", "Default alias players for the who command.");
+				root.add(players);
+				try {
+					JsonWriter writer = new JsonWriter(new FileWriter(new File(baseConfigDir, "eirairc/commands.json")));
+					writer.setIndent("  ");
+					gson.toJson(root, writer);
+					writer.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			Reader reader = new FileReader(file);
+			JsonArray commandArray = gson.fromJson(reader, JsonArray.class);
+			for(int i = 0; i < commandArray.size(); i++) {
+				customCommands.add(BotCommandCustom.loadFromJson(commandArray.get(i).getAsJsonObject()));
+			}
+			reader.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private static void createExampleCommands() {
+		JsonArray root = new JsonArray();
+		JsonObject tps = new JsonObject();
+		tps.addProperty("name", "tps");
+		tps.addProperty("command", "cofh tps");
+		tps.addProperty("broadcastResult", true);
+		tps.addProperty("runAsOp", true);
+		tps.addProperty("requireAuth", false);
+		tps.addProperty("allowArgs", false);
+		tps.addProperty("description", "Broadcasts the current TPS to the channel.");
+		root.add(tps);
+		JsonObject alias = new JsonObject();
+		alias.addProperty("name", "players");
+		alias.addProperty("override", "who");
+		alias.addProperty("description", "An alias for the who command called players.");
+		root.add(alias);
+		JsonObject override = new JsonObject();
+		override.addProperty("name", "help");
+		override.addProperty("override", "help");
+		override.addProperty("broadcastResult", true);
+		override.addProperty("description", "Changes EiraIRCs help command to broadcast into the channel instead.");
+		root.add(override);
+		Gson gson = new Gson();
+		try {
+			JsonWriter writer = new JsonWriter(new FileWriter(new File(baseConfigDir, "eirairc/commands.json.example.txt")));
+			writer.setIndent("  ");
+			gson.toJson(root, writer);
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	private static void loadServers(File configDir) {
 		if(!configDir.exists()) {
 			if(!configDir.mkdirs()) {
 				return;
 			}
 		}
-		createExample();
+		createExampleServers();
 		Gson gson = new Gson();
 		try {
 			Reader reader = new FileReader(new File(configDir, "servers.json"));
@@ -122,7 +197,7 @@ public class ConfigurationHandler {
 		}
 	}
 
-	private static void createExample() {
+	private static void createExampleServers() {
 		JsonArray root = new JsonArray();
 		JsonObject server = new JsonObject();
 		server.addProperty("address", "irc.esper.net");
@@ -216,6 +291,7 @@ public class ConfigurationHandler {
 
 		loadDisplayFormats(new File(configDir, "formats"));
 
+		loadCommands(configDir);
 		loadServers(configDir);
 		loadTrustedServers(configDir);
 	}
@@ -227,8 +303,11 @@ public class ConfigurationHandler {
 		saveTrustedServers();
 	}
 
-	public static void reload() {
+	public static void reloadAll() {
 		load(baseConfigDir);
+		for(IRCConnection connection : EiraIRC.instance.getConnectionManager().getConnections()) {
+			((IRCBotImpl) connection.getBot()).reloadCommands();
+		}
 	}
 
 	public static void lightReload() {
@@ -336,4 +415,7 @@ public class ConfigurationHandler {
 		return displayFormat;
 	}
 
+	public static List<IBotCommand> getCustomCommands() {
+		return customCommands;
+	}
 }

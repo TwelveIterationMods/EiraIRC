@@ -11,15 +11,12 @@ import net.blay09.mods.eirairc.util.Utils;
 
 public class BotCommandWho implements IBotCommand {
 
-	private String name;
-	
-	public BotCommandWho(String name) {
-		this.name = name;
+	public BotCommandWho() {
 	}
 	
 	@Override
 	public String getCommandName() {
-		return name;
+		return "who";
 	}
 
 	@Override
@@ -28,12 +25,24 @@ public class BotCommandWho implements IBotCommand {
 	}
 
 	@Override
-	public void processCommand(IRCBot bot, IRCChannel channel, IRCUser user, String[] args) {
-		Utils.sendPlayerList(channel);
+	public void processCommand(IRCBot bot, IRCChannel channel, IRCUser user, String[] args, IBotCommand commandSettings) {
+		if(commandSettings.broadcastsResult()) {
+			Utils.sendPlayerList(channel);
+		}
 	}
 
 	@Override
 	public boolean requiresAuth() {
+		return false;
+	}
+
+	@Override
+	public boolean broadcastsResult() {
+		return true;
+	}
+
+	@Override
+	public boolean allowArgs() {
 		return false;
 	}
 

@@ -22,7 +22,7 @@ public class BotCommandHelp implements IBotCommand {
 	}
 
 	@Override
-	public void processCommand(IRCBot bot, IRCChannel channel, IRCUser user, String[] args) {
+	public void processCommand(IRCBot bot, IRCChannel channel, IRCUser user, String[] args, IBotCommand commandSettings) {
 		if(channel != null) {
 			StringBuilder sb = new StringBuilder();
 			for(IBotCommand command : bot.getCommands()) {
@@ -31,7 +31,11 @@ public class BotCommandHelp implements IBotCommand {
 				}
 				sb.append(command.getCommandName());
 			}
-			user.notice(Utils.getLocalizedMessage("irc.bot.cmdlist", sb.toString()));
+			if(commandSettings.broadcastsResult()) {
+				channel.message(Utils.getLocalizedMessage("irc.bot.cmdlist", sb.toString()));
+			} else {
+				user.notice(Utils.getLocalizedMessage("irc.bot.cmdlist", sb.toString()));
+			}
 		} else {
 			user.notice("***** EiraIRC Help *****");
 			user.notice("EiraIRC connects a Minecraft client or a whole server");
@@ -48,6 +52,16 @@ public class BotCommandHelp implements IBotCommand {
 
 	@Override
 	public boolean requiresAuth() {
+		return false;
+	}
+
+	@Override
+	public boolean broadcastsResult() {
+		return false;
+	}
+
+	@Override
+	public boolean allowArgs() {
 		return false;
 	}
 

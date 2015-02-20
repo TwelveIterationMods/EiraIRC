@@ -43,7 +43,7 @@ public class CommandConfig extends SubCommand {
 		if(target.equals("reload")) {
 			Utils.sendLocalizedMessage(sender, "irc.config.reload");
 			EiraIRC.instance.getConnectionManager().stopIRC();
-			ConfigurationHandler.reload();
+			ConfigurationHandler.reloadAll();
 			EiraIRC.instance.getConnectionManager().startIRC();
 			return true;
 		}

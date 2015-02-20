@@ -34,7 +34,7 @@ public class BotCommandMessage implements IBotCommand {
 	}
 
 	@Override
-	public void processCommand(IRCBot bot, IRCChannel channel, IRCUser user, String[] args) {
+	public void processCommand(IRCBot bot, IRCChannel channel, IRCUser user, String[] args, IBotCommand commandSettings) {
 		BotSettings botSettings = ConfigHelper.getBotSettings(channel);
 		if(!botSettings.getBoolean(BotBooleanComponent.AllowPrivateMessages)) {
 			user.notice(Utils.getLocalizedMessage("irc.msg.disabled"));
@@ -70,6 +70,16 @@ public class BotCommandMessage implements IBotCommand {
 	@Override
 	public boolean requiresAuth() {
 		return false;
+	}
+
+	@Override
+	public boolean broadcastsResult() {
+		return false;
+	}
+
+	@Override
+	public boolean allowArgs() {
+		return true;
 	}
 
 	@Override

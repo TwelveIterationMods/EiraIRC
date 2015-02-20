@@ -305,6 +305,11 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 		} else if(numeric == IRCReplyCodes.RPL_IDENTIFIED) {
 			IRCUserImpl user = (IRCUserImpl) getOrCreateUser(msg.arg(1));
 			user.setAuthLogin(msg.arg(1));
+		} else if(numeric == IRCReplyCodes.RPL_ENDOFWHOIS) {
+			IRCUserImpl user = (IRCUserImpl) getOrCreateUser(msg.arg(1));
+			if(user.getAuthLogin() == null || user.getAuthLogin().isEmpty()) {
+				user.setAuthLogin(null);
+			}
 		} else if(numeric == IRCReplyCodes.ERR_NICKNAMEINUSE || numeric == IRCReplyCodes.ERR_ERRONEUSNICKNAME) {
 			MinecraftForge.EVENT_BUS.post(new IRCErrorEvent(this, msg.getNumericCommand(), msg.args()));
 		} else if(numeric == IRCReplyCodes.RPL_MOTD) {

@@ -27,13 +27,20 @@ public class BotCommandOp implements IBotCommand {
 	}
 
 	@Override
-	public void processCommand(IRCBot bot, IRCChannel channel, IRCUser user, String[] args) {
+	public void processCommand(IRCBot bot, IRCChannel channel, IRCUser user, String[] args, IBotCommand commandSettings) {
 		BotSettings botSettings = ConfigHelper.getBotSettings(channel);
-		if(!botSettings.getBoolean(BotBooleanComponent.InterOp) || !botSettings.containsString(BotStringListComponent.InterOpAuthList, user.getAuthLogin())) {
-			user.notice(Utils.getLocalizedMessage("irc.bot.noPermission"));
+		if(!botSettings.getBoolean(BotBooleanComponent.InterOp)) {
+			user.notice(Utils.getLocalizedMessage("irc.interop.disabled"));
 			return;
 		}
-		String message = Utils.joinStrings(args, " ", 0).trim();
+		String message = "";
+		if(args.length >= 1) {
+			if(commandSettings.allowArgs()) {
+				message = Utils.joinStrings(args, " ", 0).trim();
+			} else {
+				message = args[0];
+			}
+		}
 		if(message.isEmpty()) {
 			user.notice("Usage: !op <command>");
 			return;
@@ -42,11 +49,21 @@ public class BotCommandOp implements IBotCommand {
 			user.notice(Utils.getLocalizedMessage("irc.bot.interOpBlacklist"));
 			return;
 		}
-		MinecraftServer.getServer().getCommandManager().executeCommand(new IRCUserCommandSender(channel, user, false, true), message);
+		MinecraftServer.getServer().getCommandManager().executeCommand(new IRCUserCommandSender(channel, user, commandSettings.broadcastsResult(), true), message);
 	}
 
 	@Override
 	public boolean requiresAuth() {
+		return true;
+	}
+
+	@Override
+	public boolean broadcastsResult() {
+		return false;
+	}
+
+	@Override
+	public boolean allowArgs() {
 		return true;
 	}
 

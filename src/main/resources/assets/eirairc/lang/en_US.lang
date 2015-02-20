@@ -63,7 +63,8 @@ eirairc:irc.bot.unknownCommand=Unknown command. Type HELP to see a list of all a
 eirairc:irc.bot.msgSent=Message sent to %s: %s
 eirairc:irc.bot.playersOnline=%d players online:
 eirairc:irc.bot.noPlayersOnline=No players online.
-eirairc:irc.bot.noPermission=You do not have permission to use this command or you are not authenticated with EiraIRC.
+eirairc:irc.bot.noPermission=You do not have permission to use this command.
+eirairc:irc.bot.notAuthed=You are not authenticated with IRC services.
 eirairc:irc.bot.interOpBlacklist=This command has been blacklisted from InterOp.
 
 #######################################################################################################################

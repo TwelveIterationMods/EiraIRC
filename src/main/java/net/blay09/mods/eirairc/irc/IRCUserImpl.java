@@ -14,6 +14,9 @@ import net.blay09.mods.eirairc.api.IRCUser;
 import net.blay09.mods.eirairc.api.bot.IBotCommand;
 import net.blay09.mods.eirairc.api.bot.IRCBot;
 import net.blay09.mods.eirairc.bot.IRCBotImpl;
+import net.blay09.mods.eirairc.config.settings.BotStringListComponent;
+import net.blay09.mods.eirairc.util.ConfigHelper;
+import net.blay09.mods.eirairc.util.Utils;
 
 public class IRCUserImpl implements IRCUser {
 
@@ -115,9 +118,18 @@ public class IRCUserImpl implements IRCUser {
 
 	public void setAuthLogin(String authLogin) {
 		this.authLogin = authLogin;
-		for(QueuedAuthCommand cmd : authCommandQueue) {
-			cmd.command.processCommand(cmd.bot, cmd.channel, this, cmd.args);
+		if(authLogin == null || authLogin.isEmpty()) {
+			notice(Utils.getLocalizedMessage("irc.bot.notAuthed"));
+		} else {
+			for (QueuedAuthCommand cmd : authCommandQueue) {
+				if (ConfigHelper.getBotSettings(cmd.channel).containsString(BotStringListComponent.InterOpAuthList, authLogin)) {
+					cmd.command.processCommand(cmd.bot, cmd.channel, this, cmd.args, cmd.command);
+				} else {
+					notice(Utils.getLocalizedMessage("irc.bot.noPermission"));
+				}
+			}
 		}
+		authCommandQueue.clear();
 	}
 	
 	public String getAuthLogin() {
@@ -144,7 +156,11 @@ public class IRCUserImpl implements IRCUser {
 			whois();
 			authCommandQueue.add(new QueuedAuthCommand(bot, channel, botCommand, args));
 		} else {
-			botCommand.processCommand(bot, channel, this, args);
+			if(ConfigHelper.getBotSettings(channel).containsString(BotStringListComponent.InterOpAuthList, authLogin)) {
+				botCommand.processCommand(bot, channel, this, args, botCommand);
+			} else {
+				notice(Utils.getLocalizedMessage("irc.bot.noPermission"));
+			}
 		}
 	}
 }

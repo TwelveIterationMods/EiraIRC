@@ -3,18 +3,16 @@
 
 package net.blay09.mods.eirairc.bot;
 
+import com.google.gson.JsonObject;
 import net.blay09.mods.eirairc.api.IRCChannel;
 import net.blay09.mods.eirairc.api.IRCUser;
 import net.blay09.mods.eirairc.api.bot.IBotCommand;
 import net.blay09.mods.eirairc.api.bot.IRCBot;
-import net.blay09.mods.eirairc.config.settings.BotStringListComponent;
-import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.server.MinecraftServer;
 
 public class BotCommandCustom implements IBotCommand {
 
-	private String catName;
 	private String name = "";
 	private String command = "";
 	private String description;
@@ -22,25 +20,8 @@ public class BotCommandCustom implements IBotCommand {
 	private boolean runAsOp;
 	private boolean requireAuth;
 	private boolean broadcastResult;
-	
-	public BotCommandCustom() {
-	}
-	
-	public BotCommandCustom(String catName, String name, String command, String description, boolean allowArgs, boolean broadcastResult, boolean runAsOp, boolean requireAuth) {
-		this.catName = catName;
-		this.name = name;
-		this.command = command;
-		this.description = description;
-		this.allowArgs = allowArgs;
-		this.broadcastResult = broadcastResult;
-		this.runAsOp = runAsOp;
-		this.requireAuth = requireAuth;
-	}
-	
-	public String getCategoryName() {
-		return catName;
-	}
-	
+	private IBotCommand overrideCommand;
+
 	@Override
 	public String getCommandName() {
 		return name;
@@ -50,71 +31,37 @@ public class BotCommandCustom implements IBotCommand {
 	public boolean isChannelCommand() {
 		return true;
 	}
-	
+
 	public boolean runAsOp() {
 		return runAsOp;
 	}
 	
 	@Override
-	public void processCommand(IRCBot bot, IRCChannel channel, IRCUser user, String[] args) {
-		if(requireAuth && (!ConfigHelper.getBotSettings(channel).containsString(BotStringListComponent.InterOpAuthList, user.getAuthLogin()))) {
-			user.notice(Utils.getLocalizedMessage("irc.bot.noPermission"));
-			return;
+	public void processCommand(IRCBot bot, IRCChannel channel, IRCUser user, String[] args, IBotCommand commandSettings) {
+		if(overrideCommand != null) {
+			overrideCommand.processCommand(bot, channel, user, args, this);
+		} else {
+			String message = command;
+			if (commandSettings.allowArgs()) {
+				message += " " + Utils.joinStrings(args, " ", 0).trim();
+			}
+			MinecraftServer.getServer().getCommandManager().executeCommand(new IRCUserCommandSender(channel, user, commandSettings.broadcastsResult(), runAsOp), message);
 		}
-		String message = command;
-		if(allowArgs) {
-			message += " " + Utils.joinStrings(args, " ", 0).trim();
-		}
-		MinecraftServer.getServer().getCommandManager().executeCommand(new IRCUserCommandSender(channel, user, broadcastResult, runAsOp), message);
-	}
-
-	public boolean allowsArgs() {
-		return allowArgs;
-	}
-
-	public boolean isRunAsOp() {
-		return runAsOp;
 	}
 
 	@Override
 	public boolean requiresAuth() {
 		return requireAuth;
 	}
-	
-	public boolean isBroadcastResult() {
+
+	@Override
+	public boolean broadcastsResult() {
 		return broadcastResult;
 	}
 
-	public String getMinecraftCommand() {
-		return command;
-	}
-
-	public void setRequireAuth(boolean requireAuth) {
-		this.requireAuth = requireAuth;
-	}
-	
-	public void setAllowArgs(boolean allowArgs) {
-		this.allowArgs = allowArgs;
-	}
-	
-	public void setRunAsOp(boolean runAsOp) {
-		this.runAsOp = runAsOp;
-	}
-	
-	public void setBroadcastResult(boolean broadcastResult) {
-		this.broadcastResult = broadcastResult;
-	}
-
-	public void setCommandName(String name) {
-		this.name = name;
-	}
-	
-	public void setMinecraftCommand(String command) {
-		this.command = command;
-	}
-	
-	public void setCommandDescription(String description) {
-		this.description = description;
+	@Override
+	public boolean allowArgs() {
+		return allowArgs;
 	}
 
 	@Override
@@ -122,4 +69,29 @@ public class BotCommandCustom implements IBotCommand {
 		return description;
 	}
 
+	public static BotCommandCustom loadFromJson(JsonObject object) {
+		BotCommandCustom cmd = new BotCommandCustom();
+		cmd.name = object.get("name").getAsString();
+		cmd.command = object.has("command") ? object.get("command").getAsString() : "";
+		cmd.allowArgs = object.has("allowArgs") && object.get("allowArgs").getAsBoolean();
+		cmd.requireAuth = object.has("requireAuth") && object.get("requireAuth").getAsBoolean();
+		cmd.broadcastResult = object.has("broadcastResult") && object.get("broadcastResult").getAsBoolean();
+		cmd.description = object.has("description") ? object.get("description").getAsString() : "(no description set)";
+		cmd.runAsOp = object.has("runAsOp") && object.get("runAsOp").getAsBoolean();
+		if(object.has("override")) {
+			String overrideName = object.get("override").getAsString();
+			if(overrideName.equals("who")) {
+				cmd.overrideCommand = new BotCommandWho();
+			} else if(overrideName.equals("alias")) {
+				cmd.overrideCommand = new BotCommandAlias();
+			} else if(overrideName.equals("help")) {
+				cmd.overrideCommand = new BotCommandHelp();
+			} else if(overrideName.equals("msg")) {
+				cmd.overrideCommand = new BotCommandMessage();
+			} else if(overrideName.equals("op")) {
+				cmd.overrideCommand = new BotCommandOp();
+			}
+		}
+		return cmd;
+	}
 }
