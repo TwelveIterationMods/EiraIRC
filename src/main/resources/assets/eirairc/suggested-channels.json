@@ -21,6 +21,12 @@
   },
   {
     "server": "irc.esper.net",
+    "channel": "#FTB",
+    "modpack-display": "Feed The Beast",
+    "recommended": true
+  },
+  {
+    "server": "irc.esper.net",
     "channel": "#digtobuild",
     "modpack-display": "Dig to Build Servers",
     "description": "This is the channel that all the Dig To Build (www.digtobuild.com) servers connect. Why only talk to people playing the same pack, when you can all join in the fun of inter-personal-communications.",
@@ -45,5 +51,10 @@
     "modpack-display": "Direwolf20 1.7",
     "modpack-id": "DW20_1.7",
     "modpack-exclusive": true
+  },
+  {
+    "server": "apink.hanirc.org",
+    "channel": "#Pandamonium",
+    "description": "Pandamonium is a small South Korean community. We use Korean for our common communication because most of our members can't speak English."
   }
 ]
