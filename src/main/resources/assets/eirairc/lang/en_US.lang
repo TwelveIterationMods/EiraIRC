@@ -229,6 +229,8 @@ eirairc:config.property.bindIP=Bind to IP
 eirairc:config.property.bindIP.tooltip=[Advanced] The IP address to use for outgoing connections.
 eirairc:config.property.defaultChat=Default Chat
 eirairc:config.property.defaultChat.tooltip=The default chat target to select when opening the chat for the first time.
+eirairc:config.property.preventUserPing=Prevent User Ping
+eirairc:config.property.preventUserPing.tooltip=This adds an invisible character to player names sent to IRC to prevent pinging those users of the same name on IRC. Thanks to Simon Meskens!
 
 ## Properties (Client)
 eirairc:config.property.imageLinkPreview=Show Image Link Preview

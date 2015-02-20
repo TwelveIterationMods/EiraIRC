@@ -33,6 +33,7 @@ public class SharedGlobalConfig {
 	public static final List<String> colorBlacklist = new ArrayList<String>();
 	public static boolean hidePlayerTags = false;
 	public static boolean debugMode = false;
+	public static boolean preventUserPing = false;
 
 	// Network Settings
 	public static String bindIP = "";
@@ -62,6 +63,7 @@ public class SharedGlobalConfig {
 			colorBlacklist.add(entry);
 		}
 		hidePlayerTags = thisConfig.getBoolean("hidePlayerTags", GENERAL, hidePlayerTags, I19n.format("eirairc:config.property.hidePlayerTags.tooltip"), "eirairc:config.property.hidePlayerTags");
+		preventUserPing = thisConfig.getBoolean("preventUserPing", GENERAL, preventUserPing, I19n.format("eirairc:config.property.preventUserPing.tooltip"), "eirairc:config.property.preventUserPing");
 		debugMode = thisConfig.getBoolean("debugMode", GENERAL, debugMode, I19n.format("eirairc:config.property.debugMode.tooltip"), "eirairc:config.property.debugMode");
 
 		// Network
@@ -95,6 +97,7 @@ public class SharedGlobalConfig {
 		thisConfig.get(GENERAL, "enablePlayerColors", false, I19n.format("eirairc:config.property.enablePlayerColors.tooltip")).set(enablePlayerColors);
 		thisConfig.get(GENERAL, "colorBlacklist", new String[0], I19n.format("eirairc:config.property.colorBlacklist.tooltip")).set(colorBlacklist.toArray(new String[colorBlacklist.size()]));
 		thisConfig.get(GENERAL, "hidePlayerTags", false, I19n.format("eirairc:config.property.hidePlayerTags.tooltip")).set(hidePlayerTags);
+		thisConfig.get(GENERAL, "preventUserPing", false, I19n.format("eirairc:config.property.preventUserPing.tooltip")).set(preventUserPing);
 		thisConfig.get(GENERAL, "debugMode", false, I19n.format("eirairc:config.property.debugMode.tooltip")).set(debugMode);
 
 		// Network
@@ -152,6 +155,8 @@ public class SharedGlobalConfig {
 			defaultChat = value;
 		} else if(key.equals("enablePlayerColors")) {
 			enablePlayerColors = Boolean.parseBoolean(value);
+		} else if(key.equals("preventUserPing")) {
+			enablePlayerColors = Boolean.parseBoolean(value);
 		} else if(key.equals("enablePlayerAliases")) {
 			enablePlayerAliases = Boolean.parseBoolean(value);
 		} else if(key.equals("hidePlayerTags")) {
@@ -183,6 +188,8 @@ public class SharedGlobalConfig {
 			value = String.valueOf(enablePlayerColors);
 		} else if(key.equals("enablePlayerAliases")) {
 			value = String.valueOf(enablePlayerAliases);
+		} else if(key.equals("preventUserPing")) {
+			value = String.valueOf(preventUserPing);
 		} else if(key.equals("hidePlayerTags")) {
 			value = String.valueOf(hidePlayerTags);
 		} else if(key.equals("debugMode")) {
@@ -212,13 +219,14 @@ public class SharedGlobalConfig {
 		if(option == null) {
 			list.add("defaultChat");
 			list.add("enablePlayerColors");
+			list.add("preventUserPing");
 			list.add("hidePlayerTags");
 			list.add("debugMode");
 			list.add("bindIP");
 			list.add("sslCustomTrustStore");
 			list.add("sslTrustAllCerts");
 			list.add("sslDisableDiffieHellman");
-		} else if(option.equals("enablePlayerColors") || option.equals("registerShortCommands") || option.equals("hidePlayerTags") || option.equals("sslTrustAllCerts") || option.equals("sslDisableDiffieHellman")) {
+		} else if(option.equals("enablePlayerColors") || option.equals("registerShortCommands") || option.equals("hidePlayerTags") || option.equals("sslTrustAllCerts") || option.equals("sslDisableDiffieHellman") || option.equals("preventUserPing")) {
 			Utils.addBooleansToList(list);
 		}
 		ThemeSettings.addOptionsToList(list, option);

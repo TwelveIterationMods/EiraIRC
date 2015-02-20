@@ -151,10 +151,13 @@ public class MessageFormat {
 
 	public static String formatNick(String nick, IRCContext context, Target target, Mode mode, IRCUser ircUser) {
 		if(target == Target.IRC) {
-			if (SharedGlobalConfig.hidePlayerTags) {
+			if(SharedGlobalConfig.hidePlayerTags) {
 				nick = filterPlayerTags(nick);
 			}
 			nick = String.format(ConfigHelper.getBotSettings(context).getString(BotStringComponent.NickFormat), nick);
+			if(SharedGlobalConfig.preventUserPing) {
+				nick = nick.charAt(0) + '\u0081' + nick.substring(1);
+			}
 		} else if(target == Target.Minecraft && context instanceof IRCChannel) {
 			GeneralSettings settings = ConfigHelper.getGeneralSettings(context);
 			if(settings.getBoolean(GeneralBooleanComponent.ShowNameFlags)) {
