@@ -21,8 +21,6 @@ public class GuiList<T extends GuiListEntry> extends Gui {
 	private int height;
 	
 	private int entryHeight;
-	private int scrollOffset;
-	
 	private int selectedIdx = -1;
 
 	private int lastClickIdx = -1;
@@ -113,6 +111,7 @@ public class GuiList<T extends GuiListEntry> extends Gui {
 	}
 
 	public void addEntry(T entry) {
+		entry.setParentList(this);
 		entries.add(entry);
 	}
 
@@ -129,5 +128,16 @@ public class GuiList<T extends GuiListEntry> extends Gui {
 
 	public boolean hasSelection() {
 		return (selectedIdx >= 0 && selectedIdx < entries.size());
+	}
+
+	public void clear() {
+		entries.clear();
+		selectedIdx = -1;
+		lastClickIdx = -1;
+		lastClickTime = 0;
+	}
+
+	public int getWidth() {
+		return width;
 	}
 }

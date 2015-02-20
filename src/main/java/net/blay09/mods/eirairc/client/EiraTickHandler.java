@@ -10,6 +10,7 @@ import cpw.mods.fml.common.gameevent.TickEvent.RenderTickEvent;
 import cpw.mods.fml.common.network.FMLNetworkEvent;
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.client.gui.GuiEiraIRCMenu;
+import net.blay09.mods.eirairc.client.gui.GuiWelcome;
 import net.blay09.mods.eirairc.client.gui.chat.GuiChatExtended;
 import net.blay09.mods.eirairc.client.gui.chat.GuiEiraChat;
 import net.blay09.mods.eirairc.client.gui.chat.GuiEiraChatInput;
@@ -38,6 +39,7 @@ public class EiraTickHandler {
 	private boolean[] keyState = new boolean[10];
 	private final int keyChat;
 	private final int keyCommand;
+	private int openWelcomeScreen;
 
 	public EiraTickHandler(GuiEiraChat eiraChat) {
 		this.eiraChat = eiraChat;
@@ -108,10 +110,19 @@ public class EiraTickHandler {
 		if(!EiraIRC.instance.getConnectionManager().isIRCRunning()) {
 			EiraIRC.instance.getConnectionManager().startIRC();
 		}
+		if(ClientGlobalConfig.showWelcomeScreen) {
+			openWelcomeScreen = 20;
+		}
 	}
 	
 	@SubscribeEvent
 	public void clientTick(ClientTickEvent event) {
+		if(Minecraft.getMinecraft().currentScreen == null && openWelcomeScreen > 0) {
+			openWelcomeScreen--;
+			if(openWelcomeScreen <= 0) {
+				Minecraft.getMinecraft().displayGuiScreen(new GuiWelcome());
+			}
+		}
 		if(Keyboard.isKeyDown(Keyboard.KEY_F2)) {
 			screenshotCheck = 10;
 		} else if(screenshotCheck > 0) {

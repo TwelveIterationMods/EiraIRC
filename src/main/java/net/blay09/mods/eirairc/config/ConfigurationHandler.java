@@ -16,7 +16,9 @@ import net.blay09.mods.eirairc.config.base.MessageFormatConfig;
 import net.blay09.mods.eirairc.config.base.ServiceConfig;
 import net.blay09.mods.eirairc.util.IRCResolver;
 import net.blay09.mods.eirairc.util.Utils;
+import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
 import org.apache.logging.log4j.LogManager;
@@ -31,8 +33,8 @@ public class ConfigurationHandler {
 
 	private static final Map<String, ServerConfig> serverConfigs = new HashMap<String, ServerConfig>();
 	private static final Map<String, MessageFormatConfig> displayFormats = new HashMap<String, MessageFormatConfig>();
-	private static final List<MessageFormatConfig> displayFormatList = new ArrayList<MessageFormatConfig>();
 	private static final List<IBotCommand> customCommands = new ArrayList<IBotCommand>();
+	private static final List<SuggestedChannel> suggestedChannels = new ArrayList<SuggestedChannel>();
 	private static final Map<String, TrustedServer> trustedServers = new HashMap<String, TrustedServer>();
 
 	private static File baseConfigDir;
@@ -40,7 +42,6 @@ public class ConfigurationHandler {
 
 	private static void loadDisplayFormats(File formatDir) {
 		displayFormats.clear();
-		displayFormatList.clear();
 		if(!formatDir.exists()) {
 			if(!formatDir.mkdirs()) {
 				return;
@@ -57,7 +58,6 @@ public class ConfigurationHandler {
 			MessageFormatConfig dfc = new MessageFormatConfig(files[i]);
 			dfc.loadFormats();
 			displayFormats.put(dfc.getName(), dfc);
-			displayFormatList.add(dfc);
 		}
 		defaultDisplayFormat = displayFormats.get(MessageFormatConfig.DEFAULT_FORMAT);
 	}
@@ -101,6 +101,18 @@ public class ConfigurationHandler {
 		Configuration serviceConfig = new Configuration(new File(configDir, "services.cfg"));
 		ServiceConfig.setupDefaultServices(serviceConfig);
 		ServiceConfig.load(serviceConfig);
+	}
+
+	public static void loadSuggestedChannels(IResourceManager resourceManager) throws IOException {
+		Gson gson = new Gson();
+		InputStream in = resourceManager.getResource(new ResourceLocation("eirairc", "suggested-channels.json")).getInputStream();
+		Reader reader = new InputStreamReader(in);
+		JsonArray channelArray = gson.fromJson(reader, JsonArray.class);
+		for(int i = 0; i < channelArray.size(); i++) {
+			suggestedChannels.add(SuggestedChannel.loadFromJson(channelArray.get(i).getAsJsonObject()));
+		}
+		reader.close();
+		in.close();
 	}
 
 	private static void loadCommands(File configDir) {
@@ -413,5 +425,9 @@ public class ConfigurationHandler {
 
 	public static List<IBotCommand> getCustomCommands() {
 		return customCommands;
+	}
+
+	public static List<SuggestedChannel> getSuggestedChannels() {
+		return suggestedChannels;
 	}
 }

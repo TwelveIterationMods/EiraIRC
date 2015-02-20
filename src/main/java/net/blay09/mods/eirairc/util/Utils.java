@@ -621,4 +621,8 @@ public class Utils {
 		}
 		return new int[] { defaultPort };
 	}
+
+	public static String getModpackId() {
+		return "";
+	}
 }

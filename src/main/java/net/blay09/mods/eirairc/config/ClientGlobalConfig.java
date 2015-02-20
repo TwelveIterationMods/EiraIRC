@@ -28,6 +28,7 @@ public class ClientGlobalConfig {
 
 	// General
 	public static boolean persistentConnection = true;
+	public static boolean showWelcomeScreen = true;
 
 	// Screenshots
 	public static boolean imageLinkPreview = true;
@@ -66,6 +67,7 @@ public class ClientGlobalConfig {
 		// General
 		registerShortCommands = thisConfig.getBoolean("registerShortCommands", GENERAL, registerShortCommands, I19n.format("eirairc:config.property.registerShortCommands.tooltip"), "eirairc:config.property.registerShortCommands");
 		persistentConnection = thisConfig.getBoolean("persistentConnection", GENERAL, persistentConnection, I19n.format("eirairc:config.property.persistentConnection"), "eirairc:config.property.persistentConnection");
+		showWelcomeScreen = thisConfig.getBoolean("showWelcomeScreen", GENERAL, showWelcomeScreen, I19n.format("eirairc:config.property.showWelcomeScreen"), "eirairc:config.property.showWelcomeScreen");
 
 		// Screenshots
 		imageLinkPreview = thisConfig.getBoolean("imageLinkPreview", SCREENSHOTS, imageLinkPreview, I19n.format("eirairc:config.property.imageLinkPreview"), "eirairc:config.property.imageLinkPreview");
@@ -102,6 +104,7 @@ public class ClientGlobalConfig {
 		// General
 		thisConfig.get(GENERAL, "registerShortCommands", false, I19n.format("eirairc:config.property.registerShortCommands.tooltip")).set(registerShortCommands);
 		thisConfig.get(GENERAL, "persistentConnection", false, I19n.format("eirairc:config.property.persistentConnection")).set(persistentConnection);
+		thisConfig.get(GENERAL, "showWelcomeScreen", false, I19n.format("eirairc:config.property.showWelcomeScreen")).set(showWelcomeScreen);
 
 		// Screenshots
 		thisConfig.get(SCREENSHOTS, "imageLinkPreview", false, I19n.format("eirairc:config.property.imageLinkPreview.tooltip")).set(imageLinkPreview);
@@ -170,6 +173,8 @@ public class ClientGlobalConfig {
 			return String.valueOf(persistentConnection);
 		} else if(key.equals("registerShortCommands")) {
 			return String.valueOf(registerShortCommands);
+		} else if(key.equals("showWelcomeScreen")) {
+			return String.valueOf(showWelcomeScreen);
 		} else if(key.equals("imageLinkPreview")) {
 			return String.valueOf(imageLinkPreview);
 		} else if(key.equals("uploadHoster")) {
@@ -192,6 +197,8 @@ public class ClientGlobalConfig {
 			persistentConnection = Boolean.parseBoolean(value);
 		} else if(key.equals("registerShortCommands")) {
 			registerShortCommands = Boolean.parseBoolean(value);
+		} else if(key.equals("showWelcomeScreen")) {
+			showWelcomeScreen = Boolean.parseBoolean(value);
 		} else if(key.equals("uploadHoster")) {
 			if (UploadManager.isValidHoster(value)) {
 				screenshotHoster = value;
@@ -218,12 +225,13 @@ public class ClientGlobalConfig {
 			list.add("registerShortCommands");
 			list.add("imageLinkPreview");
 			list.add("persistentConnection");
+			list.add("showWelcomeScreen");
 			list.add("uploadHoster");
 			list.add("clientBridge");
 			list.add("clientBridgeMessageToken");
 			list.add("clientBridgeNickToken");
 			list.add("disableChatToggle");
-		} else if(option.equals("persistentConnection") || option.equals("clientBridge") || option.equals("disableChatToggle")) {
+		} else if(option.equals("persistentConnection") || option.equals("clientBridge") || option.equals("disableChatToggle") || option.equals("showWelcomeScreen")) {
 			Utils.addBooleansToList(list);
 		}
 	}

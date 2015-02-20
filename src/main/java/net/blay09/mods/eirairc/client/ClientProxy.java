@@ -27,6 +27,7 @@ import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.config.Configuration;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 public class ClientProxy extends CommonProxy {
@@ -66,6 +67,9 @@ public class ClientProxy extends CommonProxy {
 		}
 
 		EiraGui.init(Minecraft.getMinecraft().getResourceManager());
+		try {
+			ConfigurationHandler.loadSuggestedChannels(Minecraft.getMinecraft().getResourceManager());
+		} catch (IOException ignored) {}
 	}
 
 	@Override

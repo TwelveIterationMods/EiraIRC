@@ -2,7 +2,7 @@ package net.blay09.mods.eirairc.client.gui.base.list;
 
 import net.minecraft.client.gui.FontRenderer;
 
-public abstract class GuiListTextEntry extends GuiListEntry {
+public class GuiListTextEntry extends GuiListEntry {
 
 	private FontRenderer fontRenderer;
 	protected int height;

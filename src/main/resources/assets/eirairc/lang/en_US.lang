@@ -275,6 +275,8 @@ eirairc:config.property.disableChatToggle=Disable Chat Toggle
 eirairc:config.property.disableChatToggle.tooltip=Disables the chat toggle at the top left. Originally meant for TabbyChat, so you could set up Tabs with the '/irc msg' command instead.
 eirairc:config.property.vanillaChat=Vanilla Chat
 eirairc:config.property.vanillaChat.tooltip=Nothing, go away. No effect.
+eirairc:config.property.showWelcomeScreen=Show Welcome Screen
+eirairc:config.property.showWelcomeScreen.tooltip=If set to true, EiraIRC will show the welcome screen with suggested channels when joining a world.
 
 ## Properties (Bot)
 eirairc:config.property.relayDeathMessages=Relay Death Messages
