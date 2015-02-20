@@ -54,6 +54,13 @@
     "modpack-exclusive": true
   },
   {
+    "server": "irc.esper.net",
+    "channel": "#Empyrean",
+    "modpack-display": "Direwolf20 1.7",
+    "modpack-id": "DW20_1.7",
+    "modpack-exclusive": true
+  },
+  {
     "server": "apink.hanirc.org",
     "channel": "#Pandamonium",
     "modpack-display": "South Korean Community",
