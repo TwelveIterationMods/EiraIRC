@@ -61,7 +61,7 @@ public class OverlayYesNo extends GuiOverlay {
 
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float p_73863_3_) {
-		drawRect(0, height / 2 - 40, width, height / 2 + 40, Integer.MIN_VALUE);
+		drawRect(0, height / 2 - 40, width, height / 2 + 40, -16777216);
 		super.drawScreen(mouseX, mouseY, p_73863_3_);
 	}
 }
