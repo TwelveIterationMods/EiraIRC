@@ -3,23 +3,18 @@
 
 package net.blay09.mods.eirairc.client.upload;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import net.blay09.mods.eirairc.api.upload.IUploadHoster;
+import net.blay09.mods.eirairc.api.upload.UploadedFile;
+import net.blay09.mods.eirairc.config.ClientGlobalConfig;
+import org.jetbrains.annotations.Nullable;
+
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Scanner;
-
-import com.google.gson.JsonElement;
-import net.blay09.mods.eirairc.api.upload.IUploadHoster;
-import net.blay09.mods.eirairc.api.upload.UploadedFile;
-
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import net.blay09.mods.eirairc.config.ClientGlobalConfig;
-import org.jetbrains.annotations.Nullable;
 
 public class ImgurHoster implements IUploadHoster {
 

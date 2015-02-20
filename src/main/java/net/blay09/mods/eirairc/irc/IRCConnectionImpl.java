@@ -2,14 +2,6 @@
 
 package net.blay09.mods.eirairc.irc;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.*;
-import java.util.*;
-
 import net.blay09.mods.eirairc.api.IRCChannel;
 import net.blay09.mods.eirairc.api.IRCConnection;
 import net.blay09.mods.eirairc.api.IRCUser;
@@ -21,6 +13,10 @@ import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.config.settings.BotStringComponent;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraftforge.common.MinecraftForge;
+
+import java.io.*;
+import java.net.*;
+import java.util.*;
 
 public class IRCConnectionImpl implements Runnable, IRCConnection {
 

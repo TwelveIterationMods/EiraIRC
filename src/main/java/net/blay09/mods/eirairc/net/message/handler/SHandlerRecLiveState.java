@@ -3,12 +3,12 @@
 
 package net.blay09.mods.eirairc.net.message.handler;
 
-import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.net.EiraPlayerInfo;
-import net.blay09.mods.eirairc.net.message.MessageRecLiveState.SMessageRecLiveState;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import net.blay09.mods.eirairc.EiraIRC;
+import net.blay09.mods.eirairc.net.EiraPlayerInfo;
+import net.blay09.mods.eirairc.net.message.MessageRecLiveState.SMessageRecLiveState;
 
 public class SHandlerRecLiveState implements IMessageHandler<SMessageRecLiveState, IMessage> {
 	

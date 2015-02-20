@@ -1,7 +1,5 @@
 package net.blay09.mods.eirairc.irc;
 
-import net.blay09.mods.eirairc.api.IRCConnection;
-
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.net.SocketException;

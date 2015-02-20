@@ -14,7 +14,6 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraftforge.client.ClientCommandHandler;
-
 import org.lwjgl.input.Keyboard;
 
 public class GuiEiraChatInput extends GuiScreen {

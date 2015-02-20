@@ -3,12 +3,6 @@
 
 package net.blay09.mods.eirairc.irc;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import net.blay09.mods.eirairc.api.IRCChannel;
 import net.blay09.mods.eirairc.api.IRCUser;
 import net.blay09.mods.eirairc.api.bot.IBotCommand;
@@ -17,6 +11,8 @@ import net.blay09.mods.eirairc.bot.IRCBotImpl;
 import net.blay09.mods.eirairc.config.settings.BotStringListComponent;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Utils;
+
+import java.util.*;
 
 public class IRCUserImpl implements IRCUser {
 

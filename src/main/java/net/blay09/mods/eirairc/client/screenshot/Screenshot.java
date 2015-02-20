@@ -3,12 +3,10 @@
 
 package net.blay09.mods.eirairc.client.screenshot;
 
-import java.io.File;
-import java.util.Date;
-
 import com.google.gson.JsonObject;
 import net.blay09.mods.eirairc.api.upload.UploadedFile;
-import net.minecraft.client.Minecraft;
+
+import java.io.File;
 
 public class Screenshot {
 

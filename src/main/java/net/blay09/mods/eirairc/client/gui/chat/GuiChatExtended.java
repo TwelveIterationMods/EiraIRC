@@ -3,6 +3,8 @@
 
 package net.blay09.mods.eirairc.client.gui.chat;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.IRCContext;
 import net.blay09.mods.eirairc.client.gui.GuiEiraIRCMenu;
@@ -10,28 +12,19 @@ import net.blay09.mods.eirairc.client.gui.screenshot.GuiImagePreview;
 import net.blay09.mods.eirairc.config.ClientGlobalConfig;
 import net.blay09.mods.eirairc.handler.ChatSessionHandler;
 import net.blay09.mods.eirairc.util.Globals;
-import net.blay09.mods.eirairc.util.MessageFormat;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.*;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiChat;
+import net.minecraft.client.gui.GuiYesNoCallback;
 import net.minecraft.event.ClickEvent;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
-import net.minecraft.util.MathHelper;
 import net.minecraftforge.client.ClientCommandHandler;
-
 import org.lwjgl.input.Keyboard;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import org.lwjgl.input.Mouse;
 
 import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.Iterator;
-import java.util.regex.Matcher;
 
 @SideOnly(Side.CLIENT)
 public class GuiChatExtended extends GuiChat implements GuiYesNoCallback {

@@ -3,12 +3,12 @@
 
 package net.blay09.mods.eirairc.handler;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.blay09.mods.eirairc.api.IRCChannel;
 import net.blay09.mods.eirairc.api.IRCContext;
 import net.blay09.mods.eirairc.api.IRCUser;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ChatSessionHandler {
 

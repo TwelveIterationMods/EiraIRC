@@ -3,13 +3,12 @@
 
 package net.blay09.mods.eirairc.irc;
 
+import net.blay09.mods.eirairc.api.IRCChannel;
+import net.blay09.mods.eirairc.api.IRCUser;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-
-import net.blay09.mods.eirairc.api.IRCChannel;
-import net.blay09.mods.eirairc.api.IRCUser;
-import net.blay09.mods.eirairc.config.settings.ThemeSettings;
 
 public class IRCChannelImpl implements IRCChannel {
 

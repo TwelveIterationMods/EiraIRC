@@ -4,7 +4,7 @@ package net.blay09.mods.eirairc.irc.ssl;
 
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
-import net.blay09.mods.eirairc.irc.*;
+import net.blay09.mods.eirairc.irc.IRCConnectionImpl;
 import net.blay09.mods.eirairc.util.Utils;
 
 import javax.net.ssl.*;
@@ -15,7 +15,8 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
 
 public class IRCConnectionSSLImpl extends IRCConnectionImpl {
 

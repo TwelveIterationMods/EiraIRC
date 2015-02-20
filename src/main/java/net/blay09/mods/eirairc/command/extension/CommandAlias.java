@@ -3,8 +3,6 @@
 
 package net.blay09.mods.eirairc.command.extension;
 
-import java.util.List;
-
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.IRCContext;
 import net.blay09.mods.eirairc.command.SubCommand;
@@ -17,6 +15,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
+
+import java.util.List;
 
 public class CommandAlias extends SubCommand {
 

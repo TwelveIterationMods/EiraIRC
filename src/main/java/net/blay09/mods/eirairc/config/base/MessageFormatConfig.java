@@ -3,10 +3,10 @@
 
 package net.blay09.mods.eirairc.config.base;
 
-import java.io.File;
-
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraftforge.common.config.Configuration;
+
+import java.io.File;
 
 public class MessageFormatConfig {
 

@@ -5,7 +5,6 @@ package net.blay09.mods.eirairc.api.bot;
 
 import net.blay09.mods.eirairc.api.IRCChannel;
 import net.blay09.mods.eirairc.api.IRCConnection;
-import net.blay09.mods.eirairc.api.IRCContext;
 import net.blay09.mods.eirairc.api.IRCUser;
 
 import java.util.Collection;

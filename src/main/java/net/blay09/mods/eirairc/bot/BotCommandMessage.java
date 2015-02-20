@@ -3,8 +3,6 @@
 
 package net.blay09.mods.eirairc.bot;
 
-import java.util.List;
-
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.IRCChannel;
 import net.blay09.mods.eirairc.api.IRCUser;
@@ -20,6 +18,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.IChatComponent;
+
+import java.util.List;
 
 public class BotCommandMessage implements IBotCommand {
 

@@ -1,6 +1,9 @@
 package net.blay09.mods.eirairc.client.gui;
 
-import cpw.mods.fml.client.config.*;
+import cpw.mods.fml.client.config.ConfigGuiType;
+import cpw.mods.fml.client.config.DummyConfigElement;
+import cpw.mods.fml.client.config.GuiConfig;
+import cpw.mods.fml.client.config.IConfigElement;
 import net.blay09.mods.eirairc.config.ClientGlobalConfig;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.util.Globals;

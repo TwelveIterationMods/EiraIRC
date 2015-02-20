@@ -2,11 +2,9 @@ package net.blay09.mods.eirairc.client.gui;
 
 import net.blay09.mods.eirairc.client.gui.base.GuiLabel;
 import net.blay09.mods.eirairc.client.gui.base.list.GuiList;
-import net.blay09.mods.eirairc.client.gui.base.GuiMenuButton;
 import net.blay09.mods.eirairc.client.gui.overlay.GuiOverlay;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.ArrayList;

@@ -1,9 +1,9 @@
 package net.blay09.mods.eirairc.client.gui.base.list;
 
+import net.minecraft.client.gui.Gui;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import net.minecraft.client.gui.Gui;
 
 public class GuiList<T extends GuiListEntry> extends Gui {
 

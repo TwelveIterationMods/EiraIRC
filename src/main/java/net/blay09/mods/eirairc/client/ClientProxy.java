@@ -4,6 +4,7 @@
 package net.blay09.mods.eirairc.client;
 
 import cpw.mods.fml.client.registry.ClientRegistry;
+import cpw.mods.fml.common.FMLCommonHandler;
 import net.blay09.mods.eirairc.CommonProxy;
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.event.IRCChannelChatEvent;
@@ -23,9 +24,7 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.ClientCommandHandler;
-import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraftforge.common.config.Configuration;
-import org.lwjgl.input.Keyboard;
 
 import java.io.File;
 import java.util.List;

@@ -3,25 +3,21 @@
 
 package net.blay09.mods.eirairc.handler;
 
+import cpw.mods.fml.common.eventhandler.EventPriority;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.api.event.IRCChannelChatEvent;
-import net.blay09.mods.eirairc.api.event.IRCChannelTopicEvent;
-import net.blay09.mods.eirairc.api.event.IRCPrivateChatEvent;
-import net.blay09.mods.eirairc.api.event.IRCUserJoinEvent;
-import net.blay09.mods.eirairc.api.event.IRCUserLeaveEvent;
-import net.blay09.mods.eirairc.api.event.IRCUserNickChangeEvent;
-import net.blay09.mods.eirairc.api.event.IRCUserQuitEvent;
+import net.blay09.mods.eirairc.api.event.*;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
-import net.blay09.mods.eirairc.config.settings.*;
-import net.blay09.mods.eirairc.irc.IRCConnectionImpl;
+import net.blay09.mods.eirairc.config.settings.BotBooleanComponent;
+import net.blay09.mods.eirairc.config.settings.BotSettings;
+import net.blay09.mods.eirairc.config.settings.ThemeColorComponent;
+import net.blay09.mods.eirairc.config.settings.ThemeSettings;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.MessageFormat;
 import net.blay09.mods.eirairc.util.NotificationType;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
-import cpw.mods.fml.common.eventhandler.EventPriority;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class IRCEventHandler {
 

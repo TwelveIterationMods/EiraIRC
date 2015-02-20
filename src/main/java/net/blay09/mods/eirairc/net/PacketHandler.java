@@ -1,15 +1,15 @@
 package net.blay09.mods.eirairc.net;
 
-import net.blay09.mods.eirairc.net.message.MessageHello;
-import net.blay09.mods.eirairc.net.message.MessageNotification;
-import net.blay09.mods.eirairc.net.message.MessageRecLiveState.CMessageRecLiveState;
-import net.blay09.mods.eirairc.net.message.MessageRecLiveState.SMessageRecLiveState;
-import net.blay09.mods.eirairc.net.message.MessageRedirect;
-import net.blay09.mods.eirairc.net.message.handler.*;
-import net.blay09.mods.eirairc.util.Globals;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;
+import net.blay09.mods.eirairc.net.message.MessageHello;
+import net.blay09.mods.eirairc.net.message.MessageNotification;
+import net.blay09.mods.eirairc.net.message.MessageRedirect;
+import net.blay09.mods.eirairc.net.message.handler.HandlerHello;
+import net.blay09.mods.eirairc.net.message.handler.HandlerNotification;
+import net.blay09.mods.eirairc.net.message.handler.HandlerRedirect;
+import net.blay09.mods.eirairc.util.Globals;
 
 public class PacketHandler {
 

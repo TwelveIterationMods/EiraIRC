@@ -3,14 +3,14 @@
 
 package net.blay09.mods.eirairc.command;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.blay09.mods.eirairc.api.IRCContext;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class SubCommand implements ICommand {
 

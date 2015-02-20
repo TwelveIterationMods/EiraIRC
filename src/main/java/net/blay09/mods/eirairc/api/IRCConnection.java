@@ -3,9 +3,9 @@
 
 package net.blay09.mods.eirairc.api;
 
-import java.util.Collection;
-
 import net.blay09.mods.eirairc.api.bot.IRCBot;
+
+import java.util.Collection;
 
 public interface IRCConnection {
 

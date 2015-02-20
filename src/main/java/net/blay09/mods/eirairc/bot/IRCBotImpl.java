@@ -3,10 +3,6 @@
 
 package net.blay09.mods.eirairc.bot;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-
 import net.blay09.mods.eirairc.api.IRCChannel;
 import net.blay09.mods.eirairc.api.IRCConnection;
 import net.blay09.mods.eirairc.api.IRCUser;
@@ -19,6 +15,10 @@ import net.blay09.mods.eirairc.irc.IRCUserImpl;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraftforge.common.MinecraftForge;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 public class IRCBotImpl implements IRCBot {
 

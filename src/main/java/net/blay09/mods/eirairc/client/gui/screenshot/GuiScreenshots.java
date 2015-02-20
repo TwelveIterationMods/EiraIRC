@@ -1,9 +1,9 @@
 package net.blay09.mods.eirairc.client.gui.screenshot;
 
-import javafx.stage.Screen;
 import net.blay09.mods.eirairc.client.gui.EiraGui;
 import net.blay09.mods.eirairc.client.gui.EiraGuiScreen;
-import net.blay09.mods.eirairc.client.gui.base.*;
+import net.blay09.mods.eirairc.client.gui.base.GuiAdvancedTextField;
+import net.blay09.mods.eirairc.client.gui.base.GuiImageButton;
 import net.blay09.mods.eirairc.client.gui.base.image.GuiFileImage;
 import net.blay09.mods.eirairc.client.gui.base.image.GuiImage;
 import net.blay09.mods.eirairc.client.gui.overlay.OverlayYesNo;
@@ -11,13 +11,12 @@ import net.blay09.mods.eirairc.client.screenshot.Screenshot;
 import net.blay09.mods.eirairc.client.screenshot.ScreenshotManager;
 import net.blay09.mods.eirairc.config.ScreenshotAction;
 import net.blay09.mods.eirairc.util.Utils;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.*;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiYesNoCallback;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 /**

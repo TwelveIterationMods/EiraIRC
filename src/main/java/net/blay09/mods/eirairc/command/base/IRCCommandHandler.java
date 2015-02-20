@@ -3,27 +3,8 @@
 
 package net.blay09.mods.eirairc.command.base;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import net.blay09.mods.eirairc.command.CommandConfig;
-import net.blay09.mods.eirairc.command.CommandConnect;
-import net.blay09.mods.eirairc.command.CommandDisconnect;
-import net.blay09.mods.eirairc.command.CommandJoin;
-import net.blay09.mods.eirairc.command.CommandLeave;
-import net.blay09.mods.eirairc.command.CommandList;
-import net.blay09.mods.eirairc.command.CommandMessage;
-import net.blay09.mods.eirairc.command.CommandNick;
-import net.blay09.mods.eirairc.command.CommandQuote;
-import net.blay09.mods.eirairc.command.CommandWho;
-import net.blay09.mods.eirairc.command.SubCommand;
-import net.blay09.mods.eirairc.command.extension.CommandAlias;
-import net.blay09.mods.eirairc.command.extension.CommandColor;
-import net.blay09.mods.eirairc.command.extension.CommandGhost;
-import net.blay09.mods.eirairc.command.extension.CommandNickServ;
-import net.blay09.mods.eirairc.command.extension.CommandTwitch;
+import net.blay09.mods.eirairc.command.*;
+import net.blay09.mods.eirairc.command.extension.*;
 import net.blay09.mods.eirairc.command.interop.InterOpCommandKick;
 import net.blay09.mods.eirairc.command.interop.InterOpCommandMode;
 import net.blay09.mods.eirairc.command.interop.InterOpCommandTopic;
@@ -33,9 +14,13 @@ import net.minecraft.command.CommandHandler;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class IRCCommandHandler {
 
