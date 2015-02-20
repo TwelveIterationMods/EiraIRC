@@ -193,9 +193,9 @@ public class ScreenshotManager {
 				AsyncUploadScreenshot task = uploadTasks.remove(i);
 				if(task.getScreenshot().isUploaded()) {
 					ScreenshotAction action = task.getFollowUpAction();
-					if (action == ScreenshotAction.UploadClipboard) {
+					if(action == ScreenshotAction.UploadClipboard) {
 						Utils.setClipboardString(task.getScreenshot().getUploadURL());
-					} else if (action == ScreenshotAction.UploadShare) {
+					} else if(action == ScreenshotAction.UploadShare) {
 						shareScreenshot(task.getScreenshot());
 					}
 					save();
@@ -241,7 +241,7 @@ public class ScreenshotManager {
 	public void handleNewScreenshot(Screenshot screenshot) {
 		if (EiraIRC.proxy.isIngame()) {
 			ScreenshotAction action = ClientGlobalConfig.screenshotAction;
-			if (action == ScreenshotAction.UploadClipboard || action == ScreenshotAction.UploadShare) {
+			if(action == ScreenshotAction.UploadClipboard || action == ScreenshotAction.UploadShare) {
 				uploadScreenshot(screenshot, action);
 			}
 		}

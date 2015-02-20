@@ -293,12 +293,12 @@ public class BotSettings {
 				if(list == null) {
 					list = new String[] { value.substring(4) };
 				} else {
-					ArrayUtils.add(list, value.substring(4));
+					list = ArrayUtils.add(list, value.substring(4));
 				}
 			} else if(value.startsWith("remove ") && list != null) {
 				for(int i = 0; i < list.length; i++) {
 					if(list[i].equals(value.substring(7))) {
-						ArrayUtils.remove(list, i);
+						list = ArrayUtils.remove(list, i);
 						break;
 					}
 				}

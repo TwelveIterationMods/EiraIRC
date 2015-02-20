@@ -27,6 +27,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.*;
+import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.Sys;
@@ -587,15 +588,37 @@ public class Utils {
 		}
 	}
 
-	public static int extractPort(String url, int defaultPort) {
+	public static int[] extractPorts(String url, int defaultPort) {
 		int portIdx = url.indexOf(':');
 		if(portIdx != -1) {
 			try {
-				return Integer.parseInt(url.substring(portIdx + 1));
+				String[] portRanges = url.substring(portIdx + 1).split("\\+");
+				List<Integer> portList = new ArrayList<Integer>();
+				for(int i = 0; i < portRanges.length; i++) {
+					int sepIdx = portRanges[i].indexOf('-');
+					if(sepIdx != -1) {
+						int min = Integer.parseInt(portRanges[i].substring(0, sepIdx));
+						int max = Integer.parseInt(portRanges[i].substring(sepIdx + 1));
+						if(min > max) {
+							int oldMin = min;
+							min = max;
+							max = oldMin;
+						}
+						if(max - min > 5) {
+							throw new RuntimeException("EiraIRC: Port ranges bigger than 5 are not allowed! Split them up if you really have to.");
+						}
+						for(int j = min; j <= max; j++) {
+							portList.add(j);
+						}
+					} else {
+						portList.add(Integer.parseInt(portRanges[i]));
+					}
+				}
+				return ArrayUtils.toPrimitive(portList.toArray(new Integer[portList.size()]));
 			} catch (NumberFormatException e) {
-				return defaultPort;
+				return new int[] { defaultPort };
 			}
 		}
-		return defaultPort;
+		return new int[] { defaultPort };
 	}
 }

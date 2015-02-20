@@ -45,7 +45,7 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 	private final Map<String, IRCUser> users = new HashMap<String, IRCUser>();
 	protected final ServerConfig serverConfig;
 
-	protected final int port;
+	protected final int[] ports;
 	protected final String host;
 	private IRCBotImpl bot;
 	private String nick;
@@ -63,7 +63,7 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 	public IRCConnectionImpl(ServerConfig serverConfig, String nick) {
 		this.serverConfig = serverConfig;
 		this.host = Utils.extractHost(serverConfig.getAddress());
-		this.port = Utils.extractPort(serverConfig.getAddress(), DEFAULT_PORT);
+		this.ports = Utils.extractPorts(serverConfig.getAddress(), DEFAULT_PORT);
 		this.nick = nick;
 	}
 
@@ -129,30 +129,41 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 			if(!SharedGlobalConfig.proxyUsername.isEmpty() || !SharedGlobalConfig.proxyPassword.isEmpty()) {
 				Authenticator.setDefault(new ProxyAuthenticator(SharedGlobalConfig.proxyUsername, SharedGlobalConfig.proxyPassword));
 			}
-			SocketAddress proxyAddr = new InetSocketAddress(Utils.extractHost(SharedGlobalConfig.proxyHost), Utils.extractPort(SharedGlobalConfig.proxyHost, DEFAULT_PROXY_PORT));
+			SocketAddress proxyAddr = new InetSocketAddress(Utils.extractHost(SharedGlobalConfig.proxyHost), Utils.extractPorts(SharedGlobalConfig.proxyHost, DEFAULT_PROXY_PORT)[0]);
 			return new Proxy(Proxy.Type.SOCKS, proxyAddr);
 		}
 		return null;
 	}
 
-	protected Socket connect() throws IOException {
-		SocketAddress targetAddr = new InetSocketAddress(host, port);
-		Socket newSocket;
-		Proxy proxy = createProxy();
-		if(proxy != null) {
-			newSocket = new Socket(proxy);
-		} else {
-			newSocket = new Socket();
-		}
+	protected Socket connect() throws Exception {
+		for(int i = 0; i < ports.length; i++) {
+			try {
+				SocketAddress targetAddr = new InetSocketAddress(host, ports[i]);
+				Socket newSocket;
+				Proxy proxy = createProxy();
+				if (proxy != null) {
+					newSocket = new Socket(proxy);
+				} else {
+					newSocket = new Socket();
+				}
 
-		if(!SharedGlobalConfig.bindIP.isEmpty()) {
-			newSocket.bind(new InetSocketAddress(SharedGlobalConfig.bindIP, port));
+				if (!SharedGlobalConfig.bindIP.isEmpty()) {
+					newSocket.bind(new InetSocketAddress(SharedGlobalConfig.bindIP, ports[i]));
+				}
+				newSocket.connect(targetAddr);
+				writer = new BufferedWriter(new OutputStreamWriter(newSocket.getOutputStream(), serverConfig.getCharset()));
+				reader = new BufferedReader(new InputStreamReader(newSocket.getInputStream(), serverConfig.getCharset()));
+				sender.setWriter(writer);
+				return newSocket;
+			} catch (UnknownHostException e) {
+				throw e;
+			} catch (IOException e) {
+				if(i == ports.length - 1) {
+					throw e;
+				}
+			}
 		}
-		newSocket.connect(targetAddr);
-		writer = new BufferedWriter(new OutputStreamWriter(newSocket.getOutputStream(), serverConfig.getCharset()));
-		reader = new BufferedReader(new InputStreamReader(newSocket.getInputStream(), serverConfig.getCharset()));
-		sender.setWriter(writer);
-		return newSocket;
+		return null;
 	}
 
 	@Override
@@ -160,7 +171,7 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 		try {
 			try {
 				socket = connect();
-			} catch (IOException e) {
+			} catch (Exception e) {
 				MinecraftForge.EVENT_BUS.post(new IRCConnectionFailedEvent(this, e));
 				return;
 			}
@@ -495,12 +506,12 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 
 	@Override
 	public String getIdentifier() {
-		return host + (port != DEFAULT_PORT ? ":" + port : "");
+		return host;
 	}
 
 	@Override
-	public int getPort() {
-		return port;
+	public int[] getPorts() {
+		return ports;
 	}
 
 	public ServerConfig getServerConfig() {

@@ -28,7 +28,7 @@ public interface IRCConnection {
 	public IRCUser getUser(String name);
 	public IRCUser getOrCreateUser(String name);
 	public String getHost();
-	public int getPort();
+	public int[] getPorts();
 	public IRCBot getBot();
 	public String getIdentifier();
 	public String getNick();
