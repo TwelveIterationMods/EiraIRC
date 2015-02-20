@@ -14,19 +14,7 @@ import net.blay09.mods.eirairc.api.IRCChannel;
 import net.blay09.mods.eirairc.api.IRCConnection;
 import net.blay09.mods.eirairc.api.IRCUser;
 import net.blay09.mods.eirairc.api.bot.IRCBot;
-import net.blay09.mods.eirairc.api.event.IRCChannelChatEvent;
-import net.blay09.mods.eirairc.api.event.IRCChannelJoinedEvent;
-import net.blay09.mods.eirairc.api.event.IRCChannelLeftEvent;
-import net.blay09.mods.eirairc.api.event.IRCChannelTopicEvent;
-import net.blay09.mods.eirairc.api.event.IRCConnectEvent;
-import net.blay09.mods.eirairc.api.event.IRCConnectingEvent;
-import net.blay09.mods.eirairc.api.event.IRCDisconnectEvent;
-import net.blay09.mods.eirairc.api.event.IRCErrorEvent;
-import net.blay09.mods.eirairc.api.event.IRCPrivateChatEvent;
-import net.blay09.mods.eirairc.api.event.IRCUserJoinEvent;
-import net.blay09.mods.eirairc.api.event.IRCUserLeaveEvent;
-import net.blay09.mods.eirairc.api.event.IRCUserNickChangeEvent;
-import net.blay09.mods.eirairc.api.event.IRCUserQuitEvent;
+import net.blay09.mods.eirairc.api.event.*;
 import net.blay09.mods.eirairc.bot.IRCBotImpl;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
@@ -151,40 +139,33 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 		return null;
 	}
 
-	protected Socket connect() {
-		try {
-			SocketAddress targetAddr = new InetSocketAddress(host, port);
-			Socket newSocket;
-			Proxy proxy = createProxy();
-			if(proxy != null) {
-				newSocket = new Socket(proxy);
-			} else {
-				newSocket = new Socket();
-			}
-
-			if(!SharedGlobalConfig.bindIP.isEmpty()) {
-				newSocket.bind(new InetSocketAddress(SharedGlobalConfig.bindIP, port));
-			}
-			newSocket.connect(targetAddr);
-			writer = new BufferedWriter(new OutputStreamWriter(newSocket.getOutputStream(), serverConfig.getCharset()));
-			reader = new BufferedReader(new InputStreamReader(newSocket.getInputStream(), serverConfig.getCharset()));
-			sender.setWriter(writer);
-			return newSocket;
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-			return null;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
+	protected Socket connect() throws IOException {
+		SocketAddress targetAddr = new InetSocketAddress(host, port);
+		Socket newSocket;
+		Proxy proxy = createProxy();
+		if(proxy != null) {
+			newSocket = new Socket(proxy);
+		} else {
+			newSocket = new Socket();
 		}
+
+		if(!SharedGlobalConfig.bindIP.isEmpty()) {
+			newSocket.bind(new InetSocketAddress(SharedGlobalConfig.bindIP, port));
+		}
+		newSocket.connect(targetAddr);
+		writer = new BufferedWriter(new OutputStreamWriter(newSocket.getOutputStream(), serverConfig.getCharset()));
+		reader = new BufferedReader(new InputStreamReader(newSocket.getInputStream(), serverConfig.getCharset()));
+		sender.setWriter(writer);
+		return newSocket;
 	}
 
 	@Override
 	public void run() {
 		try {
-			socket = connect();
-			if(socket == null) {
-				MinecraftForge.EVENT_BUS.post(new IRCDisconnectEvent(this));
+			try {
+				socket = connect();
+			} catch (IOException e) {
+				MinecraftForge.EVENT_BUS.post(new IRCConnectionFailedEvent(this, e));
 				return;
 			}
 			register();

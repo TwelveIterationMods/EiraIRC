@@ -2,12 +2,15 @@ package net.blay09.mods.eirairc.client.gui;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.blay09.mods.eirairc.api.event.IRCConnectEvent;
+import net.blay09.mods.eirairc.api.event.IRCConnectionFailedEvent;
 import net.blay09.mods.eirairc.api.event.IRCDisconnectEvent;
+import net.blay09.mods.eirairc.api.event.IRCErrorEvent;
 import net.blay09.mods.eirairc.client.gui.base.GuiAdvancedTextField;
 import net.blay09.mods.eirairc.client.gui.base.GuiLabel;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.settings.BotStringComponent;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
+import net.blay09.mods.eirairc.irc.IRCReplyCodes;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
@@ -102,8 +105,16 @@ public class GuiTwitch extends EiraGuiScreen implements GuiYesNoCallback {
 	}
 
 	@SubscribeEvent
-	public void onFailure(IRCDisconnectEvent event) {
+	public void onFailure(IRCConnectionFailedEvent event) {
 		if(event.connection.getHost().equals(Globals.TWITCH_SERVER)) {
+			MinecraftForge.EVENT_BUS.unregister(this);
+			btnConnect.enabled = true;
+		}
+	}
+
+	@SubscribeEvent
+	public void onWrongPassword(IRCErrorEvent event) {
+		if(event.numeric == IRCReplyCodes.ERR_PASSWDMISMATCH) {
 			MinecraftForge.EVENT_BUS.unregister(this);
 			btnConnect.enabled = true;
 		}

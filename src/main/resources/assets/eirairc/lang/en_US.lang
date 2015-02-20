@@ -61,8 +61,6 @@ eirairc:irc.notify.privateMessage=%s: %s
 eirairc:irc.bot.cmdlist=Channel Bot Commands: %s
 eirairc:irc.bot.unknownCommand=Unknown command. Type HELP to see a list of all available commands.
 eirairc:irc.bot.msgSent=Message sent to %s: %s
-eirairc:irc.bot.nickInUse=Nickname %s is already in use. Trying %s
-eirairc:irc.bot.nickInvalid=%s is not a valid nickname.
 eirairc:irc.bot.playersOnline=%d players online:
 eirairc:irc.bot.noPlayersOnline=No players online.
 eirairc:irc.bot.noPermission=You do not have permission to use this command or you are not authenticated with EiraIRC.
@@ -93,6 +91,17 @@ eirairc:irc.basic.joiningChannel=Joining channel %s on %s
 eirairc:irc.basic.leavingChannel=Leaving channel %s on %s
 eirairc:irc.basic.changingNick=[%s] Changing nick to %s
 eirairc:irc.basic.nickServUpdated=Updated nickserv information for %s
+
+#######################################################################################################################
+
+# Errors
+eirairc:error.nickInUse=Nickname %s is already in use. Trying %s
+eirairc:error.nickInvalid=%s is not a valid nickname.
+eirairc:error.couldNotConnect=Could not connect to %s: %s
+eirairc:error.genericTarget=§cIRC Error: '%s' %s
+eirairc:error.generic=§cIRC Error: %s
+eirairc:error.targetTooFast=IRC Error: Calm down, you're typing too fast!
+eirairc:error.servicesDown=IRC Error: Services are currently offline.
 
 #######################################################################################################################
 

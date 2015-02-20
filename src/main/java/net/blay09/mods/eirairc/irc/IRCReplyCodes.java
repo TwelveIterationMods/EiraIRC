@@ -18,7 +18,7 @@ public class IRCReplyCodes {
 	public static final int ERR_NOTOPLEVEL = 413;
 	public static final int ERR_WILDTOPLEVEL = 414;
 	public static final int ERR_UNKNOWNCOMMAND = 421;
-	public static final int ERR_NOMTOD = 422;
+	public static final int ERR_NOMOTD = 422;
 	public static final int ERR_NOADMININFO = 423;
 	public static final int ERR_FILEERROR = 424;
 	public static final int ERR_NONICKNAMEGIVEN = 431;
@@ -33,7 +33,7 @@ public class IRCReplyCodes {
 	public static final int ERR_USERSDISABLED = 446;
 	public static final int ERR_NOTREGISTERED = 451;
 	public static final int ERR_NEEDMOREPARAMS = 461;
-	public static final int ERR_ALREADYREGISTRED = 462;
+	public static final int ERR_ALREADYREGISTERED = 462;
 	public static final int ERR_NOPERMFORHOST = 463;
 	public static final int ERR_PASSWDMISMATCH = 464;
 	public static final int ERR_YOUREBANNEDCREEP = 465;
@@ -47,11 +47,18 @@ public class IRCReplyCodes {
 	public static final int ERR_CHANOPRIVSNEEDED = 482;
 	public static final int ERR_CANTKILLSERVER = 483;
 	public static final int ERR_NOOPERHOST = 491;
-	public static final int ERR_MODEUNKNOWNFLAG = 501;
+	public static final int ERR_UMODEUNKNOWNFLAG = 501;
 	public static final int ERR_USERSDONTMATCH = 502;
 	public static final int ERR_YOUWILLBEBANNED = 466;
 	public static final int ERR_BADCHANMASK = 476;
 	public static final int ERR_NOSERVICEHOST = 492;
+	public static final int ERR_UNKNOWNERROR = 400;
+	public static final int ERR_NOSUCHSERVICE = 408;
+	public static final int ERR_BADMASK = 415;
+	public static final int ERR_TOOMANYMATCHES = 416;
+	public static final int ERR_TARGETTOOFAST = 439;
+	public static final int ERR_SERVICESDOWN = 440;
+	public static final int ERR_NONICKCHANGE = 447;
 	
 	public static final int RPL_NONE = 300;
 	public static final int RPL_USERHOST = 302;
@@ -123,4 +130,5 @@ public class IRCReplyCodes {
 	public static final int RPL_INFOSTART = 273;
 	public static final int RPL_MYPORTIS = 384;
 	public static final int RPL_ISUPPORT = 5;
+
 }
