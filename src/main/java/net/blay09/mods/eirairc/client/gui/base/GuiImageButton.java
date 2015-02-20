@@ -1,6 +1,6 @@
 package net.blay09.mods.eirairc.client.gui.base;
 
-import net.blay09.mods.eirairc.client.graphics.AtlasRegion;
+import net.blay09.mods.eirairc.client.graphics.TextureRegion;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import org.lwjgl.opengl.GL11;
@@ -12,12 +12,12 @@ public class GuiImageButton extends GuiButton {
 
 	private static final float FADE_PER_FRAME = 0.05f;
 
-	private AtlasRegion region;
+	private TextureRegion region;
 	private float alphaFade = 1f;
 	private int fadeMode;
 	private String tooltipText;
 
-	public GuiImageButton(int id, int xPos, int yPos, AtlasRegion region) {
+	public GuiImageButton(int id, int xPos, int yPos, TextureRegion region) {
 		super(id, xPos, yPos, "");
 		setTextureRegion(region);
 	}
@@ -34,7 +34,7 @@ public class GuiImageButton extends GuiButton {
 		this.fadeMode = fadeMode;
 	}
 
-	public void setTextureRegion(AtlasRegion region) {
+	public void setTextureRegion(TextureRegion region) {
 		this.region = region;
 		width = region.getRegionWidth();
 		height = region.getRegionHeight();

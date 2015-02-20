@@ -7,7 +7,7 @@ import net.minecraft.util.ResourceLocation;
 /**
  * Created by Blay09 on 20.02.2015.
  */
-public class AtlasRegion {
+public class TextureRegion {
 
 	public final ResourceLocation texture;
 	public final String name;
@@ -18,7 +18,7 @@ public class AtlasRegion {
 	private final int textureWidth = 256;
 	private final int textureHeight = 256;
 
-	public AtlasRegion(ResourceLocation texture, String name) {
+	public TextureRegion(ResourceLocation texture, String name) {
 		this.texture = texture;
 		this.name = name;
 	}

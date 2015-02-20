@@ -1,5 +1,6 @@
 package net.blay09.mods.eirairc.client.gui.screenshot;
 
+import javafx.stage.Screen;
 import net.blay09.mods.eirairc.client.gui.EiraGui;
 import net.blay09.mods.eirairc.client.gui.EiraGuiScreen;
 import net.blay09.mods.eirairc.client.gui.base.*;
@@ -15,6 +16,8 @@ import net.minecraft.client.gui.*;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 /**
@@ -41,6 +44,7 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 
 	private List<Screenshot> screenshotList;
 	private List<Screenshot> screenshotGroup;
+	private GuiScreenshotPage activePageButton;
 	private int currentIdx;
 	private String lastSearchText = "";
 	private final List<Screenshot> searchResults = new ArrayList<Screenshot>();
@@ -62,20 +66,28 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 		screenshotList = screenshotGroup;
 	}
 
-	public void setScreenshotList(List<Screenshot> screenshotList) {
-		if(screenshotList.size() > 0) {
-			this.screenshotList = screenshotList;
-			currentIdx = 0;
-			updateScreenshot();
+	private void setScreenshotGroup(GuiScreenshotPage pageButton, List<Screenshot> screenshotGroup) {
+		if(activePageButton != null) {
+			activePageButton.setActive(false);
 		}
+		pageButton.setActive(true);
+		activePageButton = pageButton;
+		this.screenshotGroup = screenshotGroup;
+		setScreenshotList(screenshotGroup);
+		resetSearch();
+	}
+
+	public void setScreenshotList(List<Screenshot> screenshotList) {
+		this.screenshotList = screenshotList;
+		currentIdx = 0;
+		updateScreenshot();
 	}
 
 	public void updateScreenshot() {
 		if(screenshotList.isEmpty()) {
 			currentScreenshot = null;
 			imgPreview = null;
-		}
-		if(currentIdx >= 0 && currentIdx < screenshotList.size()) {
+		} else if(currentIdx >= 0 && currentIdx < screenshotList.size()) {
 			Screenshot screenshot = screenshotList.get(currentIdx);
 			if(currentScreenshot != screenshot) {
 				imgPreview = new GuiFileImage(screenshot.getFile());
@@ -145,10 +157,140 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 		btnReupload.setTooltipText("Re-Upload");
 		buttonList.add(btnReupload);
 
+		int pageLeft = rightX - 3;
+		int pageTop = topY + 10;
+
+		GuiScreenshotPage pageAll = new GuiScreenshotPage(11, pageLeft, pageTop, "All") {
+			@Override
+			public void onClick() {
+				setScreenshotGroup(this, ScreenshotManager.getInstance().getScreenshots());
+			}
+		};
+		pageAll.setActive(true);
+		activePageButton = pageAll;
+		buttonList.add(pageAll);
+		pageTop += pageAll.height;
+
+		GuiScreenshotPage pageFavorited = new GuiScreenshotPage(11, pageLeft, pageTop, "Favorited") {
+			@Override
+			public void onClick() {
+				List<Screenshot> groupList = new ArrayList<Screenshot>();
+				for(Screenshot screenshot : ScreenshotManager.getInstance().getScreenshots()) {
+					if(screenshot.isFavorited()) {
+						groupList.add(screenshot);
+					}
+				}
+				setScreenshotGroup(this, groupList);
+			}
+		};
+		buttonList.add(pageFavorited);
+		pageTop += pageFavorited.height + 3;
+
+		GuiScreenshotPage pageTimestamp = new GuiScreenshotPage(11, pageLeft, pageTop, "Today") {
+			@Override
+			public void onClick() {
+				List<Screenshot> groupList = new ArrayList<Screenshot>();
+				long now = System.currentTimeMillis();
+				for(Screenshot screenshot : ScreenshotManager.getInstance().getScreenshots()) {
+					long diff = now - screenshot.getTimeStamp();
+					if(diff <= 86400000L) {
+						groupList.add(screenshot);
+					}
+				}
+				setScreenshotGroup(this, groupList);
+			}
+		};
+		buttonList.add(pageTimestamp);
+		pageTop += pageTimestamp.height;
+
+		pageTimestamp = new GuiScreenshotPage(11, pageLeft, pageTop, "This Week") {
+			@Override
+			public void onClick() {
+				List<Screenshot> groupList = new ArrayList<Screenshot>();
+				long now = System.currentTimeMillis();
+				for(Screenshot screenshot : ScreenshotManager.getInstance().getScreenshots()) {
+					long diff = now - screenshot.getTimeStamp();
+					if(diff > 86400000L && diff <= 86400000L * 7) {
+						groupList.add(screenshot);
+					}
+				}
+				setScreenshotGroup(this, groupList);
+			}
+		};
+		buttonList.add(pageTimestamp);
+		pageTop += pageTimestamp.height;
+
+		pageTimestamp = new GuiScreenshotPage(11, pageLeft, pageTop, "This Month") {
+			@Override
+			public void onClick() {
+				List<Screenshot> groupList = new ArrayList<Screenshot>();
+				long now = System.currentTimeMillis();
+				for(Screenshot screenshot : ScreenshotManager.getInstance().getScreenshots()) {
+					long diff = now - screenshot.getTimeStamp();
+					if(diff > 86400000L * 7 && diff <= 86400000L * 7 * 4) {
+						groupList.add(screenshot);
+					}
+				}
+				setScreenshotGroup(this, groupList);
+			}
+		};
+		buttonList.add(pageTimestamp);
+		pageTop += pageTimestamp.height;
+
+		pageTimestamp = new GuiScreenshotPage(11, pageLeft, pageTop, "This Year") {
+			@Override
+			public void onClick() {
+				List<Screenshot> groupList = new ArrayList<Screenshot>();
+				long now = System.currentTimeMillis();
+				for(Screenshot screenshot : ScreenshotManager.getInstance().getScreenshots()) {
+					long diff = now - screenshot.getTimeStamp();
+					if(diff > 86400000L * 7 * 4 && diff <= 86400000L * 7 * 4 * 12) {
+						groupList.add(screenshot);
+					}
+				}
+				setScreenshotGroup(this, groupList);
+			}
+		};
+		buttonList.add(pageTimestamp);
+		pageTop += pageTimestamp.height;
+
+		pageTimestamp = new GuiScreenshotPage(11, pageLeft, pageTop, "Older") {
+			@Override
+			public void onClick() {
+				List<Screenshot> groupList = new ArrayList<Screenshot>();
+				long now = System.currentTimeMillis();
+				for(Screenshot screenshot : ScreenshotManager.getInstance().getScreenshots()) {
+					long diff = now - screenshot.getTimeStamp();
+					if(diff > 86400000L * 7 * 4 * 12) {
+						groupList.add(screenshot);
+					}
+				}
+				setScreenshotGroup(this, groupList);
+			}
+		};
+		buttonList.add(pageTimestamp);
+
 		updateScreenshot();
 
 		imgX = leftX + 2;
 		imgY = topY + 10;
+	}
+
+	@Override
+	public void onGuiClosed() {
+		super.onGuiClosed();
+		ScreenshotManager.getInstance().save();
+	}
+
+	@Override
+	public boolean isClickClosePosition(int mouseX, int mouseY) {
+		return (mouseX < menuX);
+	}
+
+	private void resetSearch() {
+		lastSearchText = "";
+		txtSearch.setText("");
+		searchResults.clear();
 	}
 
 	@Override

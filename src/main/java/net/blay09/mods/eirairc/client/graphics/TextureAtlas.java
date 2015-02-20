@@ -21,7 +21,7 @@ public class TextureAtlas {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 		String line;
 		TextureAtlasPage currentPage = null;
-		AtlasRegion currentRegion = null;
+		TextureRegion currentRegion = null;
 		while((line = reader.readLine()) != null) {
 			line = line.trim();
 			if(line.isEmpty()) {
@@ -34,7 +34,7 @@ public class TextureAtlas {
 			} else {
 				int sepIdx = line.indexOf(':');
 				if(sepIdx == -1) {
-					currentRegion = new AtlasRegion(currentPage.texture, line);
+					currentRegion = new TextureRegion(currentPage.texture, line);
 					currentPage.addRegion(currentRegion);
 				} else {
 					String key = line.substring(0, sepIdx);
@@ -57,9 +57,9 @@ public class TextureAtlas {
 		in.close();
 	}
 
-	public AtlasRegion findRegion(String name) {
+	public TextureRegion findRegion(String name) {
 		for(TextureAtlasPage page : pages) {
-			AtlasRegion region = page.getRegion(name);
+			TextureRegion region = page.getRegion(name);
 			if(region != null) {
 				return region;
 			}

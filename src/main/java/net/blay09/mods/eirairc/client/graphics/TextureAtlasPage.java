@@ -10,7 +10,7 @@ import java.util.Map;
  */
 public class TextureAtlasPage {
 
-	private final Map<String, AtlasRegion> regionMap = new HashMap<String, AtlasRegion>();
+	private final Map<String, TextureRegion> regionMap = new HashMap<String, TextureRegion>();
 	public final String fileName;
 	public final ResourceLocation texture;
 
@@ -19,11 +19,11 @@ public class TextureAtlasPage {
 		this.texture = texture;
 	}
 
-	public void addRegion(AtlasRegion region) {
+	public void addRegion(TextureRegion region) {
 		regionMap.put(region.name, region);
 	}
 
-	public AtlasRegion getRegion(String name) {
+	public TextureRegion getRegion(String name) {
 		return regionMap.get(name);
 	}
 

@@ -1,11 +1,10 @@
 package net.blay09.mods.eirairc.client.gui.base.tab;
 
-import net.blay09.mods.eirairc.client.graphics.AtlasRegion;
+import net.blay09.mods.eirairc.client.graphics.TextureRegion;
 import net.blay09.mods.eirairc.client.gui.EiraGui;
 import net.blay09.mods.eirairc.util.Globals;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -19,9 +18,9 @@ public class GuiTabHeader extends Gui {
 	public final int y;
 	public final int width;
 	public final int height;
-	public final AtlasRegion regionLeft;
-	public final AtlasRegion regionMiddle;
-	public final AtlasRegion regionRight;
+	public final TextureRegion regionLeft;
+	public final TextureRegion regionMiddle;
+	public final TextureRegion regionRight;
 
 	public GuiTabHeader(GuiTabPage tabPage, int x, int y, int width, int height) {
 		this.mc = Minecraft.getMinecraft();

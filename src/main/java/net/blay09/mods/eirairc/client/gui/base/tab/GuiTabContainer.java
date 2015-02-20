@@ -1,6 +1,6 @@
 package net.blay09.mods.eirairc.client.gui.base.tab;
 
-import net.blay09.mods.eirairc.client.graphics.AtlasRegion;
+import net.blay09.mods.eirairc.client.graphics.TextureRegion;
 import net.blay09.mods.eirairc.client.gui.EiraGui;
 import net.blay09.mods.eirairc.client.gui.EiraGuiScreen;
 import net.minecraft.client.gui.GuiScreen;
@@ -16,10 +16,10 @@ public class GuiTabContainer extends EiraGuiScreen {
 	private final List<GuiTabHeader> headers = new ArrayList<GuiTabHeader>();
 	protected final List<GuiTabPage> pages = new ArrayList<GuiTabPage>();
 
-	private final AtlasRegion regionContent;
-	private final AtlasRegion regionTopRight;
-	private final AtlasRegion regionBottomRight;
-	private final AtlasRegion regionBottomLeft;
+	private final TextureRegion regionContent;
+	private final TextureRegion regionTopRight;
+	private final TextureRegion regionBottomRight;
+	private final TextureRegion regionBottomLeft;
 
 	protected GuiTabPage currentTab;
 	protected int panelWidth;

@@ -74,9 +74,13 @@ public class EiraGuiScreen extends GuiScreen {
 			listList.get(i).mouseClicked(mouseX, mouseY, mouseButton);
 		}
 
-		if(overlay == null && allowSideClickClose && (mouseX < menuX || mouseX >= menuX + menuWidth)) {
+		if(overlay == null && allowSideClickClose && isClickClosePosition(mouseX, mouseY)) {
 			gotoPrevious();
 		}
+	}
+
+	public boolean isClickClosePosition(int mouseX, int mouseY) {
+		return (mouseX < menuX || mouseX >= menuX + menuWidth);
 	}
 
 	public void gotoPrevious() {

@@ -2,13 +2,12 @@ package net.blay09.mods.eirairc.client.gui.servers;
 
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.IRCConnection;
-import net.blay09.mods.eirairc.client.graphics.AtlasRegion;
+import net.blay09.mods.eirairc.client.graphics.TextureRegion;
 import net.blay09.mods.eirairc.client.gui.EiraGui;
 import net.blay09.mods.eirairc.client.gui.base.list.GuiListTextEntry;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.util.Globals;
 import net.minecraft.client.gui.FontRenderer;
-import org.lwjgl.opengl.GL11;
 
 /**
  * Created by Blay09 on 10.10.2014.
@@ -17,7 +16,7 @@ public class GuiListEntryChannel extends GuiListTextEntry {
 
 	private final GuiServerConfig parent;
 	private final ChannelConfig config;
-	private AtlasRegion icon;
+	private TextureRegion icon;
 
 	public GuiListEntryChannel(GuiServerConfig parent, FontRenderer fontRenderer, ChannelConfig config, int height) {
 		super(fontRenderer, config.getName(), height, Globals.TEXT_COLOR);

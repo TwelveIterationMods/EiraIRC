@@ -4,6 +4,7 @@
 package net.blay09.mods.eirairc.client.screenshot;
 
 import java.io.File;
+import java.util.Date;
 
 import com.google.gson.JsonObject;
 import net.blay09.mods.eirairc.api.upload.UploadedFile;
@@ -26,6 +27,7 @@ public class Screenshot {
 		this.metadata = metadata != null ? metadata : new JsonObject();
 		if(metadata == null) {
 			this.metadata.addProperty(METADATA_ORIGINALNAME, file.getName().substring(0, file.getName().length() - 4));
+			this.metadata.addProperty(METADATA_TIMESTAP, file.lastModified());
 		}
 	}
 
@@ -76,6 +78,13 @@ public class Screenshot {
 
 	public String getDeleteURL() {
 		return metadata.get(METADATA_DELETEURL).getAsString();
+	}
+
+	public long getTimeStamp() {
+		if(!metadata.has(METADATA_TIMESTAP)) {
+			return System.currentTimeMillis();
+		}
+		return metadata.get(METADATA_TIMESTAP).getAsLong();
 	}
 
 }

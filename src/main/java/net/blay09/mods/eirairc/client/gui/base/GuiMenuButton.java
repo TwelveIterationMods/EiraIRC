@@ -1,15 +1,10 @@
 package net.blay09.mods.eirairc.client.gui.base;
 
-import net.blay09.mods.eirairc.client.graphics.AtlasRegion;
-import net.blay09.mods.eirairc.client.gui.EiraGui;
-import net.blay09.mods.eirairc.client.gui.GuiEiraIRCMenu;
+import net.blay09.mods.eirairc.client.graphics.TextureRegion;
 import net.blay09.mods.eirairc.util.Globals;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.audio.SoundHandler;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -18,12 +13,12 @@ import org.lwjgl.opengl.GL11;
 public class GuiMenuButton extends GuiButton {
 
 	private final Minecraft mc;
-	private final AtlasRegion region;
+	private final TextureRegion region;
 	private final int xPos;
 	private final int yPos;
 	private boolean playButtonSound = true;
 
-	public GuiMenuButton(int id, String title, int xPos, int yPos, int width, int height, AtlasRegion region) {
+	public GuiMenuButton(int id, String title, int xPos, int yPos, int width, int height, TextureRegion region) {
 		super(id, xPos, yPos, title);
 		this.mc = Minecraft.getMinecraft();
 		this.xPos = xPos;
