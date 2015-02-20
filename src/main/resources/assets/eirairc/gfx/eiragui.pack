@@ -1,0 +1,201 @@
+
+eiragui.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+menu_cat
+  rotate: false
+  xy: 0, 192
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+menu_friends
+  rotate: false
+  xy: 0, 128
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+menu_screenshots
+  rotate: false
+  xy: 64, 192
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+menu_servers
+  rotate: false
+  xy: 0, 64
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+menu_settings
+  rotate: false
+  xy: 0, 0
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+menu_twitch
+  rotate: false
+  xy: 64, 128
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+button_clipboard
+  rotate: false
+  xy: 128, 224
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+button_delete
+  rotate: false
+  xy: 64, 96
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+button_favorite
+  rotate: false
+  xy: 128, 192
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+button_unfavorite
+  rotate: false
+  xy: 160, 224
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+button_upload
+  rotate: false
+  xy: 64, 64
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+button_zoom
+  rotate: false
+  xy: 96, 96
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+tab_bg_bottomleft
+  rotate: false
+  xy: 128, 176
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+tab_bg_bottomright
+  rotate: false
+  xy: 160, 208
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+tab_bg_content
+  rotate: false
+  xy: 192, 240
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+tab_bg_topright
+  rotate: false
+  xy: 64, 48
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+tab_header_left
+  rotate: false
+  xy: 96, 80
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+tab_header_middle
+  rotate: false
+  xy: 128, 160
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+tab_header_right
+  rotate: false
+  xy: 144, 176
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+button_join
+  rotate: false
+  xy: 160, 196
+  size: 9, 12
+  orig: 9, 12
+  offset: 0, 0
+  index: -1
+button_add
+  rotate: false
+  xy: 176, 214
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+button_first
+  rotate: false
+  xy: 192, 230
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+button_last
+  rotate: false
+  xy: 208, 246
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+button_part
+  rotate: false
+  xy: 64, 36
+  size: 8, 12
+  orig: 8, 12
+  offset: 0, 0
+  index: -1
+button_remove
+  rotate: false
+  xy: 80, 54
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+icon_active
+  rotate: false
+  xy: 96, 70
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+button_next
+  rotate: false
+  xy: 112, 86
+  size: 6, 10
+  orig: 6, 10
+  offset: 0, 0
+  index: -1
+button_prev
+  rotate: false
+  xy: 128, 150
+  size: 6, 10
+  orig: 6, 10
+  offset: 0, 0
+  index: -1

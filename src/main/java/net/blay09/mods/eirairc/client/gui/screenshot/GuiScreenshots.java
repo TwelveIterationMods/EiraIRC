@@ -107,40 +107,40 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 		txtName = new GuiAdvancedTextField(fontRendererObj, width / 2 - 100, topY + 152, 200, 15);
 		textFieldList.add(txtName);
 
-		btnGoToFirst = new GuiImageButton(1, width / 2 - 39, topY + 12, EiraGui.texMenu, 32, 192, 16, 16);
+		btnGoToFirst = new GuiImageButton(1, width / 2 - 39, topY + 12, EiraGui.atlas.findRegion("button_first"));
 		buttonList.add(btnGoToFirst);
 
-		btnGoToPrevious = new GuiImageButton(2, width / 2 - 13, topY + 12, EiraGui.texMenu, 32, 176, 8, 16);
+		btnGoToPrevious = new GuiImageButton(2, width / 2 - 13, topY + 12, EiraGui.atlas.findRegion("button_prev"));
 		buttonList.add(btnGoToPrevious);
 
-		btnGoToNext = new GuiImageButton(3, width / 2 + 5, topY + 12, EiraGui.texMenu, 40, 176, 8, 16);
+		btnGoToNext = new GuiImageButton(3, width / 2 + 5, topY + 12, EiraGui.atlas.findRegion("button_next"));
 		buttonList.add(btnGoToNext);
 
-		btnGoToLast = new GuiImageButton(4, width / 2 + 23, topY + 12, EiraGui.texMenu, 48, 192, 16, 16);
+		btnGoToLast = new GuiImageButton(4, width / 2 + 23, topY + 12, EiraGui.atlas.findRegion("button_last"));
 		buttonList.add(btnGoToLast);
 
-		btnFavorite = new GuiImageButton(5, rightX - 37, topY + 12, EiraGui.texMenu, 0, 208, 32, 32);
+		btnFavorite = new GuiImageButton(5, rightX - 37, topY + 12, EiraGui.atlas.findRegion("button_favorite"));
 		btnFavorite.setTooltipText("Favorite");
 		buttonList.add(btnFavorite);
 
-		btnUpload = new GuiImageButton(6, rightX - 37, topY + 50, EiraGui.texMenu, 32, 208, 32, 32);
+		btnUpload = new GuiImageButton(6, rightX - 37, topY + 50, EiraGui.atlas.findRegion("button_upload"));
 		btnUpload.setTooltipText("Upload");
 		buttonList.add(btnUpload);
 
-		btnClipboard = new GuiImageButton(7, rightX - 37, topY + 50, EiraGui.texMenu, 128, 208, 32, 32);
+		btnClipboard = new GuiImageButton(7, rightX - 37, topY + 50, EiraGui.atlas.findRegion("button_clipboard"));
 		btnClipboard.visible = false;
 		btnClipboard.setTooltipText("To Clipboard");
 		buttonList.add(btnClipboard);
 
-		btnZoom = new GuiImageButton(8, rightX - 37, topY + 135, EiraGui.texMenu, 0, 176, 32, 32);
+		btnZoom = new GuiImageButton(8, rightX - 37, topY + 135, EiraGui.atlas.findRegion("button_zoom"));
 		btnZoom.setTooltipText("Zoom");
 		buttonList.add(btnZoom);
 
-		btnDelete = new GuiImageButton(9, leftX + 5, topY + 12, EiraGui.texMenu, 96, 208, 32, 32);
+		btnDelete = new GuiImageButton(9, leftX + 5, topY + 12, EiraGui.atlas.findRegion("button_delete"));
 		btnDelete.setTooltipText("Delete");
 		buttonList.add(btnDelete);
 
-		btnReupload = new GuiImageButton(10, leftX + 5, topY + 50, EiraGui.texMenu, 32, 208, 32, 32);
+		btnReupload = new GuiImageButton(10, leftX + 5, topY + 50, EiraGui.atlas.findRegion("button_upload"));
 		btnReupload.visible = false;
 		btnReupload.setTooltipText("Re-Upload");
 		buttonList.add(btnReupload);
@@ -287,9 +287,9 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 
 	public void setFavoriteButtonState(boolean state) {
 		if(state) {
-			btnFavorite.setTextureRegion(0, 208, 32, 32);
+			btnFavorite.setTextureRegion(EiraGui.atlas.findRegion("button_favorite"));
 		} else {
-			btnFavorite.setTextureRegion(64, 208, 32, 32);
+			btnFavorite.setTextureRegion(EiraGui.atlas.findRegion("button_unfavorite"));
 		}
 	}
 }

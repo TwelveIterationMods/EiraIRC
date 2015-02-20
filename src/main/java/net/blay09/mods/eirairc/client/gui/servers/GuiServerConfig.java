@@ -101,13 +101,13 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 		lstChannels.setSelectedIdx(oldSelectedIdx);
 		listList.add(lstChannels);
 
-		btnChannelJoinLeave = new GuiImageButton(7, rightX - 95, topY + 100, EiraGui.texMenu, 48, 144, 16, 16);
+		btnChannelJoinLeave = new GuiImageButton(7, rightX - 95, topY + 100, EiraGui.atlas.findRegion("button_join"));
 		buttonList.add(btnChannelJoinLeave);
 
-		btnChannelAdd = new GuiImageButton(5, rightX - 75, topY + 100, EiraGui.texMenu, 32, 144, 10, 10);
+		btnChannelAdd = new GuiImageButton(5, rightX - 75, topY + 100, EiraGui.atlas.findRegion("button_add"));
 		buttonList.add(btnChannelAdd);
 
-		btnChannelDelete = new GuiImageButton(6, rightX - 55, topY + 100, EiraGui.texMenu, 32, 160, 10, 10);
+		btnChannelDelete = new GuiImageButton(6, rightX - 55, topY + 100, EiraGui.atlas.findRegion("button_remove"));
 		buttonList.add(btnChannelDelete);
 
 		btnDelete = new GuiButton(0, rightX - 100, topY + 150, 100, 20, "Delete");
@@ -206,9 +206,9 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 
 	private void setChannelJoinLeaveButtonState(boolean state) {
 		if(state) {
-			btnChannelJoinLeave.setTextureRegion(48, 160, 16, 16);
+			btnChannelJoinLeave.setTextureRegion(EiraGui.atlas.findRegion("button_part"));
 		} else {
-			btnChannelJoinLeave.setTextureRegion(48, 144, 16, 16);
+			btnChannelJoinLeave.setTextureRegion(EiraGui.atlas.findRegion("button_join"));
 		}
 	}
 

@@ -7,6 +7,7 @@ import cpw.mods.fml.client.registry.ClientRegistry;
 import net.blay09.mods.eirairc.CommonProxy;
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.event.IRCChannelChatEvent;
+import net.blay09.mods.eirairc.client.gui.EiraGui;
 import net.blay09.mods.eirairc.client.gui.GuiEiraIRCRedirect;
 import net.blay09.mods.eirairc.client.gui.chat.GuiEiraChat;
 import net.blay09.mods.eirairc.client.gui.overlay.OverlayNotification;
@@ -64,6 +65,8 @@ public class ClientProxy extends CommonProxy {
 		if(ClientGlobalConfig.registerShortCommands) {
 			IRCCommandHandler.registerQuickCommands(ClientCommandHandler.instance);
 		}
+
+		EiraGui.init(Minecraft.getMinecraft().getResourceManager());
 	}
 
 	@Override

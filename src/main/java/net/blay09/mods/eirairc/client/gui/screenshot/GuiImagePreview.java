@@ -55,15 +55,15 @@ public class GuiImagePreview extends EiraGuiScreen implements GuiYesNoCallback {
 		final int rightX = width / 2 + 145;
 		final int topY = height / 2 - 100;
 
-		btnZoom = new GuiImageButton(0, rightX - 37, topY + 12, EiraGui.texMenu, 0, 176, 32, 32);
+		btnZoom = new GuiImageButton(0, rightX - 37, topY + 12, EiraGui.atlas.findRegion("button_zoom"));
 		btnZoom.setTooltipText("View Fullscreen");
 		buttonList.add(btnZoom);
 
-		btnGoToURL = new GuiImageButton(1, rightX - 37, topY + 50, EiraGui.texMenu, 32, 208, 32, 32);
+		btnGoToURL = new GuiImageButton(1, rightX - 37, topY + 50, EiraGui.atlas.findRegion("button_upload"));
 		btnGoToURL.setTooltipText("Open in Browser");
 		buttonList.add(btnGoToURL);
 
-		btnClipboard = new GuiImageButton(2, rightX - 37, topY + 88, EiraGui.texMenu, 128, 208, 32, 32);
+		btnClipboard = new GuiImageButton(2, rightX - 37, topY + 88, EiraGui.atlas.findRegion("button_clipboard"));
 		btnClipboard.setTooltipText("URL to Clipboard");
 		buttonList.add(btnClipboard);
 

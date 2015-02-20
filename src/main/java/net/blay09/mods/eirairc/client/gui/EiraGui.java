@@ -1,14 +1,28 @@
 package net.blay09.mods.eirairc.client.gui;
 
+import net.blay09.mods.eirairc.client.graphics.TextureAtlas;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.resources.IResourceManager;
+import net.minecraft.crash.CrashReport;
 import net.minecraft.util.ResourceLocation;
+
+import java.io.IOException;
 
 /**
  * Created by Blay09 on 05.10.2014.
  */
 public class EiraGui {
 
-	public static final ResourceLocation texMenu = new net.minecraft.util.ResourceLocation("eirairc", "gfx/menu.png");
+	public static TextureAtlas atlas;
+
+	public static void init(IResourceManager resourceManager) {
+		try {
+			atlas = new TextureAtlas(resourceManager, new ResourceLocation("eirairc", "gfx/eiragui.pack"));
+		} catch (IOException e) {
+			Minecraft.getMinecraft().displayCrashReport(new CrashReport("Could not load EiraIRC texture atlas", e));
+		}
+	}
 
 	public static void drawTexturedRect256(int x, int y, int width, int height, int texCoordX, int texCoordY, int regionWidth, int regionHeight, float zLevel) {
 		drawTexturedRect(x, y, width, height, texCoordX, texCoordY, regionWidth, regionHeight, zLevel, 256, 256);

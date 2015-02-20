@@ -34,23 +34,23 @@ public class GuiEiraIRCMenu extends EiraGuiScreen {
 		final int buttonCenterX = width / 2;
 		final int buttonCenterY = height / 2;
 
-		btnServers = new GuiMenuButton(0, "Servers", buttonCenterX - 132, buttonCenterY - 95, BUTTON_SIZE, BUTTON_SIZE, 0, BUTTON_SIZE);
+		btnServers = new GuiMenuButton(0, "Servers", buttonCenterX - 132, buttonCenterY - 95, BUTTON_SIZE, BUTTON_SIZE, EiraGui.atlas.findRegion("menu_servers"));
 		buttonList.add(btnServers);
 
-		btnTwitch = new GuiMenuButton(1, "Twitch", buttonCenterX - 32, buttonCenterY - 95, BUTTON_SIZE, BUTTON_SIZE, 0, 0);
+		btnTwitch = new GuiMenuButton(1, "Twitch", buttonCenterX - 32, buttonCenterY - 95, BUTTON_SIZE, BUTTON_SIZE, EiraGui.atlas.findRegion("menu_twitch"));
 		buttonList.add(btnTwitch);
 
-		btnPlaceholder = new GuiMenuButton(2, "???", buttonCenterX + 64, buttonCenterY - 95, BUTTON_SIZE, BUTTON_SIZE, BUTTON_SIZE, BUTTON_SIZE);
+		btnPlaceholder = new GuiMenuButton(2, "???", buttonCenterX + 64, buttonCenterY - 95, BUTTON_SIZE, BUTTON_SIZE, EiraGui.atlas.findRegion("menu_cat"));
 		btnPlaceholder.setPlayButtonSound(false);
 		buttonList.add(btnPlaceholder);
 
-		btnFriends = new GuiMenuButton(3, "Friends", buttonCenterX - 132, buttonCenterY, BUTTON_SIZE, BUTTON_SIZE, BUTTON_SIZE * 3, 0);
+		btnFriends = new GuiMenuButton(3, "???", buttonCenterX - 132, buttonCenterY, BUTTON_SIZE, BUTTON_SIZE, EiraGui.atlas.findRegion("menu_friends"));
 		buttonList.add(btnFriends);
 
-		btnScreenshots = new GuiMenuButton(4, "Screenshots", buttonCenterX - 32, buttonCenterY, BUTTON_SIZE, BUTTON_SIZE, BUTTON_SIZE, 0);
+		btnScreenshots = new GuiMenuButton(4, "Screenshots", buttonCenterX - 32, buttonCenterY, BUTTON_SIZE, BUTTON_SIZE, EiraGui.atlas.findRegion("menu_screenshots"));
 		buttonList.add(btnScreenshots);
 
-		btnSettings = new GuiMenuButton(5, "Settings", buttonCenterX + 64, buttonCenterY, BUTTON_SIZE, BUTTON_SIZE, BUTTON_SIZE * 2, 0);
+		btnSettings = new GuiMenuButton(5, "Settings", buttonCenterX + 64, buttonCenterY, BUTTON_SIZE, BUTTON_SIZE, EiraGui.atlas.findRegion("menu_settings"));
 		buttonList.add(btnSettings);
 	}
 
