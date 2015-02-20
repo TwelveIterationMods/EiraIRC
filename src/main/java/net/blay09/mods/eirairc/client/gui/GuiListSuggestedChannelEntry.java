@@ -19,10 +19,12 @@ public class GuiListSuggestedChannelEntry extends GuiListEntry {
 
 	private final FontRenderer fontRenderer;
 	private final SuggestedChannel channel;
+	private final boolean altBackground;
 
-	public GuiListSuggestedChannelEntry(FontRenderer fontRenderer, SuggestedChannel channel) {
+	public GuiListSuggestedChannelEntry(FontRenderer fontRenderer, SuggestedChannel channel, boolean altBackground) {
 		this.fontRenderer = fontRenderer;
 		this.channel = channel;
+		this.altBackground = altBackground;
 	}
 
 	@Override
@@ -37,12 +39,22 @@ public class GuiListSuggestedChannelEntry extends GuiListEntry {
 
 	@Override
 	public void drawEntry(int x, int y) {
+		if(altBackground) {
+			drawRect(x + 1, y + 1, x + parentList.getWidth(), y + 1 + parentList.getEntryHeight(), -16777189);
+		}
+		boolean exclusiveFail = (channel.getScore() == Integer.MIN_VALUE);
 		int currentX = x + TEXT_MARGIN;
 		int currentY = y + TEXT_MARGIN;
 		String s = channel.getChannelName();
+		if(exclusiveFail) {
+			s = "\u00a78" + s;
+		}
 		fontRenderer.drawStringWithShadow(s, currentX, currentY, Globals.TEXT_COLOR);
 		currentX += fontRenderer.getStringWidth(s) + TEXT_MARGIN;
 		s = " \u00a7o(" + channel.getServerName() + ")";
+		if(exclusiveFail) {
+			s = "\u00a78" + s;
+		}
 		fontRenderer.drawString(s, currentX, currentY, Globals.TEXT_COLOR);
 		currentX += fontRenderer.getStringWidth(s) + TEXT_MARGIN;
 		if(channel.getScore() > 0 && channel.isRecommended()) {
@@ -53,7 +65,7 @@ public class GuiListSuggestedChannelEntry extends GuiListEntry {
 		currentX = x + TEXT_MARGIN + TEXT_MARGIN;
 		if(!channel.getModpackName().isEmpty()) {
 			s = channel.getModpackName();
-			if(channel.getScore() == Integer.MIN_VALUE) {
+			if(exclusiveFail) {
 				s = "\u00a74" + s;
 			}
 			fontRenderer.drawString(s, currentX, currentY, Globals.TEXT_COLOR);

@@ -1,6 +1,10 @@
 package net.blay09.mods.eirairc.client.gui.base.list;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.util.MathHelper;
+import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +26,7 @@ public class GuiList<T extends GuiListEntry> extends Gui {
 	
 	private int entryHeight;
 	private int scrollOffset;
+	private int lastWheelDelta;
 	private int selectedIdx = -1;
 
 	private int lastClickIdx = -1;
@@ -81,12 +86,33 @@ public class GuiList<T extends GuiListEntry> extends Gui {
 		return selectedIdx;
 	}
 
-	public void drawList() {
+	public void drawList(int mouseX, int mouseY) {
+		if(lastWheelDelta != 0) {
+			if(mouseX >= xPosition && mouseX < xPosition + width && mouseY >= yPosition && mouseY < yPosition + height) {
+				int max = entries.size() * entryHeight - height;
+				scrollOffset = MathHelper.clamp_int(scrollOffset + lastWheelDelta / 8, max * -1, 0);
+			}
+			lastWheelDelta = 0;
+		}
+
 		drawBackground();
-		drawEntries();
+		Minecraft mc = Minecraft.getMinecraft();
+		ScaledResolution scaledResolution = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
+		float scale = scaledResolution.getScaleFactor();
+		GL11.glScissor(0, (int) (mc.displayHeight - (yPosition + height) * scale), (int) ((width + xPosition) * scale), (int) (height * scale));
+		GL11.glEnable(GL11.GL_SCISSOR_TEST);
+		for(int i = 0; i < entries.size(); i++) {
+			GuiListEntry entry = entries.get(i);
+			entry.drawEntry(xPosition, yPosition + i * entryHeight + scrollOffset);
+		}
 		drawSelectionBorder();
+		GL11.glDisable(GL11.GL_SCISSOR_TEST);
 	}
-	
+
+	public void mouseWheelMoved(int delta) {
+		lastWheelDelta = delta;
+	}
+
 	private void drawBackground() {
 		drawRect(this.xPosition + 1, this.yPosition + 1, this.xPosition + this.width, this.yPosition + this.height, BACKGROUND_COLOR);
 		drawHorizontalLine(this.xPosition, this.xPosition + this.width, this.yPosition, BORDER_COLOR);
@@ -95,21 +121,14 @@ public class GuiList<T extends GuiListEntry> extends Gui {
 		drawVerticalLine(this.xPosition + this.width, this.yPosition, this.yPosition + this.height, BORDER_COLOR);
 	}
 	
-	private void drawEntries() {
-		for(int i = 0; i < entries.size(); i++) {
-			GuiListEntry entry = entries.get(i);
-			entry.drawEntry(xPosition, yPosition + i * entryHeight + scrollOffset);
-		}
-	}
-	
 	private void drawSelectionBorder() {
 		if(selectedIdx == -1) {
 			return;
 		}
-		drawHorizontalLine(this.xPosition + 1, this.xPosition + this.width - 1, this.yPosition + 1 + selectedIdx * entryHeight, SELECTION_COLOR);
-		drawHorizontalLine(this.xPosition + 1, this.xPosition + this.width - 1, this.yPosition + 1 + selectedIdx * entryHeight + entryHeight, SELECTION_COLOR);
-		drawVerticalLine(this.xPosition + 1, this.yPosition + 1 + selectedIdx * entryHeight, this.yPosition + entryHeight + 1 + selectedIdx * entryHeight, SELECTION_COLOR);
-		drawVerticalLine(this.xPosition + this.width - 1, this.yPosition + 1 + selectedIdx * entryHeight, this.yPosition + entryHeight + 1 + selectedIdx * entryHeight, SELECTION_COLOR);
+		drawHorizontalLine(this.xPosition + 1, this.xPosition + this.width - 1, this.yPosition + 1 + selectedIdx * entryHeight + scrollOffset, SELECTION_COLOR);
+		drawHorizontalLine(this.xPosition + 1, this.xPosition + this.width - 1, this.yPosition + 1 + selectedIdx * entryHeight + entryHeight + scrollOffset, SELECTION_COLOR);
+		drawVerticalLine(this.xPosition + 1, this.yPosition + 1 + selectedIdx * entryHeight + scrollOffset, this.yPosition + entryHeight + 1 + selectedIdx * entryHeight + scrollOffset, SELECTION_COLOR);
+		drawVerticalLine(this.xPosition + this.width - 1, this.yPosition + 1 + selectedIdx * entryHeight + scrollOffset, this.yPosition + entryHeight + 1 + selectedIdx * entryHeight + scrollOffset, SELECTION_COLOR);
 	}
 
 	public void addEntry(T entry) {

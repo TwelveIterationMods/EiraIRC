@@ -1,7 +1,8 @@
 [
   {
     "server": "za.shadowfire.org",
-    "channel": "#saminecraft"
+    "channel": "#saminecraft",
+    "modpack-display": "SA Minecraft Community"
   },
   {
     "server": "irc.esper.net",
@@ -55,6 +56,7 @@
   {
     "server": "apink.hanirc.org",
     "channel": "#Pandamonium",
+    "modpack-display": "South Korean Community",
     "description": "Pandamonium is a small South Korean community. We use Korean for our common communication because most of our members can't speak English."
   }
 ]

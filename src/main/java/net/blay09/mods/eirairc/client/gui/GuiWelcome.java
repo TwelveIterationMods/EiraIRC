@@ -79,8 +79,10 @@ public class GuiWelcome extends EiraGuiScreen {
 			}
 		});
 
+		boolean altBackground = false;
 		for(SuggestedChannel channel : outputList) {
-			lstChannels.addEntry(new GuiListSuggestedChannelEntry(mc.fontRenderer, channel));
+			lstChannels.addEntry(new GuiListSuggestedChannelEntry(mc.fontRenderer, channel, altBackground));
+			altBackground = !altBackground;
 		}
 	}
 

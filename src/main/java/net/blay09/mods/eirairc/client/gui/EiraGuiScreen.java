@@ -9,6 +9,7 @@ import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
+import org.lwjgl.input.Mouse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,6 +106,17 @@ public class EiraGuiScreen extends GuiScreen {
 	}
 
 	@Override
+	public void handleMouseInput() {
+		super.handleMouseInput();
+		int wheelDelta = Mouse.getEventDWheel();
+		if(wheelDelta != 0) {
+			for(int i = 0; i < listList.size(); i++) {
+				listList.get(i).mouseWheelMoved(wheelDelta);
+			}
+		}
+	}
+
+	@Override
 	protected void mouseMovedOrUp(int mouseX, int mouseY, int mouseButton) {
 		if(selectedButton != null && mouseButton == 0) {
 			selectedButton.mouseReleased(mouseX, mouseY);
@@ -155,19 +167,20 @@ public class EiraGuiScreen extends GuiScreen {
 	}
 
 	@Override
-	public void drawScreen ( int mouseX, int mouseY, float p_73863_3_){
+	public void drawScreen (int mouseX, int mouseY, float p_73863_3_){
 		super.drawScreen(mouseX, mouseY, p_73863_3_);
 
 		for(int i = 0; i < labelList.size(); i++) {
 			labelList.get(i).drawLabel();
 		}
 
+
 		for(int i = 0; i < textFieldList.size(); i++) {
 			textFieldList.get(i).drawTextBox();
 		}
 
 		for(int i = 0; i < listList.size(); i++) {
-			listList.get(i).drawList();
+			listList.get(i).drawList(mouseX, mouseY);
 		}
 
 		if(overlay != null) {
