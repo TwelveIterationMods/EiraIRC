@@ -232,11 +232,23 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 	public void confirmClicked(boolean result, int id) {
 		if(result) {
 			if(id == 0) {
-				ConfigurationHandler.removeServerConfig(config.getAddress());
+				ServerConfig serverConfig = ConfigurationHandler.removeServerConfig(config.getAddress());
+				if(serverConfig != null) {
+					IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(serverConfig.getIdentifier());
+					if(connection != null) {
+						connection.disconnect("");
+					}
+				}
 				ConfigurationHandler.saveServers();
 				tabContainer.removePage(this);
 			} else if(id == 1) {
-				config.removeChannelConfig(deleteChannel.getName());
+				ChannelConfig channelConfig = config.removeChannelConfig(deleteChannel.getName());
+				if(channelConfig != null) {
+					IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(channelConfig.getServerConfig().getIdentifier());
+					if(connection != null) {
+						connection.part(channelConfig.getName());
+					}
+				}
 				ConfigurationHandler.saveServers();
 			}
 		}

@@ -100,8 +100,8 @@ public class ServerConfig {
 		channels.put(channelConfig.getName().toLowerCase(), channelConfig);
 	}
 
-	public void removeChannelConfig(@NotNull String channelName) {
-		channels.remove(channelName.toLowerCase());
+	public ChannelConfig removeChannelConfig(@NotNull String channelName) {
+		return channels.remove(channelName.toLowerCase());
 	}
 
 	public boolean hasChannelConfig(@NotNull String channelName) {
@@ -295,5 +295,9 @@ public class ServerConfig {
 
 	public boolean isRedirect() {
 		return isRedirect;
+	}
+
+	public String getIdentifier() {
+		return Utils.extractHost(address);
 	}
 }

@@ -344,8 +344,8 @@ public class ConfigurationHandler {
 		serverConfigs.put(serverConfig.getAddress().toLowerCase(), serverConfig);
 	}
 
-	public static void removeServerConfig(String host) {
-		serverConfigs.remove(host.toLowerCase());
+	public static ServerConfig removeServerConfig(String host) {
+		return serverConfigs.remove(host.toLowerCase());
 	}
 
 	public static boolean hasServerConfig(String host) {
