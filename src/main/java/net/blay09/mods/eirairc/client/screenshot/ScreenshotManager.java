@@ -210,7 +210,7 @@ public class ScreenshotManager {
 		}
 		IRCContext chatTarget = EiraIRC.instance.getChatSessionHandler().getChatTarget();
 		String format = ConfigHelper.getBotSettings(chatTarget).getMessageFormat().ircScreenshotUpload;
-		format = format.replace("{URL}", screenshot.getUploadURL());
+		format = format.replace("{URL}", screenshot.getDirectURL() != null ? screenshot.getDirectURL() : screenshot.getUploadURL());
 		if(chatTarget == null) {
 			format = format.replace("{NICK}", "/me");
 			format = format.replace("{USER}", "/me");

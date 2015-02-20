@@ -41,7 +41,7 @@ public class GuiEiraIRCMenu extends EiraGuiScreen {
 		btnScreenshots = new GuiMenuButton(2, "Screenshots", buttonCenterX + 64, buttonCenterY - 95, BUTTON_SIZE, BUTTON_SIZE, EiraGui.atlas.findRegion("menu_screenshots"));
 		buttonList.add(btnScreenshots);
 
-		btnFriends = new GuiMenuButton(3, "Welcome Screen", buttonCenterX - 132, buttonCenterY, BUTTON_SIZE, BUTTON_SIZE, EiraGui.atlas.findRegion("menu_friends"));
+		btnFriends = new GuiMenuButton(3, "EiraIRC Channels", buttonCenterX - 132, buttonCenterY, BUTTON_SIZE, BUTTON_SIZE, EiraGui.atlas.findRegion("menu_friends"));
 		buttonList.add(btnFriends);
 
 		btnHelp = new GuiMenuButton(4, "Help", buttonCenterX - 32, buttonCenterY, BUTTON_SIZE, BUTTON_SIZE, EiraGui.atlas.findRegion("menu_cat"));

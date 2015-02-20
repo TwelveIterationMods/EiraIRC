@@ -13,6 +13,7 @@ public class Screenshot {
 	private static final String METADATA_ORIGINALNAME = "originalName";
 	private static final String METADATA_NAME = "name";
 	private static final String METADATA_UPLOADURL = "uploadURL";
+	private static final String METADATA_DIRECTURL = "directURL";
 	private static final String METADATA_DELETEURL = "deleteURL";
 	private static final String METADATA_FAVORITE = "favorite";
 	private static final String METADATA_TIMESTAP = "timestamp";
@@ -49,6 +50,10 @@ public class Screenshot {
 		return metadata;
 	}
 
+	public String getDirectURL() {
+		return metadata.has(METADATA_DIRECTURL) ? metadata.get(METADATA_DIRECTURL).getAsString() : null;
+	}
+
 	public String getUploadURL() {
 		return metadata.get(METADATA_UPLOADURL).getAsString();
 	}
@@ -59,7 +64,12 @@ public class Screenshot {
 
 	public void setUploadedFile(UploadedFile uploadedFile) {
 		metadata.addProperty(METADATA_UPLOADURL, uploadedFile.url);
-		metadata.addProperty(METADATA_DELETEURL, uploadedFile.deleteURL);
+		if(uploadedFile.directURL != null) {
+			metadata.addProperty(METADATA_DIRECTURL, uploadedFile.directURL);
+		}
+		if(uploadedFile.deleteURL != null) {
+			metadata.addProperty(METADATA_DELETEURL, uploadedFile.deleteURL);
+		}
 	}
 
 	public boolean isFavorited() {

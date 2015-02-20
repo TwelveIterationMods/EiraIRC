@@ -409,6 +409,7 @@ public class ConfigurationHandler {
 				}
 			}
 		}
+		save();
 	}
 
 	public static void addOptionsToList(List<String> list, String option) {

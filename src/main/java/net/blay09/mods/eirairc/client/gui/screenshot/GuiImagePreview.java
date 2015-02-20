@@ -38,10 +38,10 @@ public class GuiImagePreview extends EiraGuiScreen implements GuiYesNoCallback {
 	private float hoverTime;
 	private GuiImageButton hoverObject;
 
-	public GuiImagePreview(URL url) {
+	public GuiImagePreview(URL directURL, URL url) {
 		super(null);
-		this.url = url;
-		imgPreview = new GuiURLImage(url);
+		this.url = url != null ? url : directURL;
+		imgPreview = new GuiURLImage(directURL);
 		imgPreview.loadTexture();
 	}
 

@@ -16,6 +16,7 @@ import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiChat;
+import net.minecraft.client.gui.GuiConfirmOpenLink;
 import net.minecraft.client.gui.GuiYesNoCallback;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.util.IChatComponent;
@@ -36,6 +37,7 @@ public class GuiChatExtended extends GuiChat implements GuiYesNoCallback {
 	private GuiButton btnOptions;
 	
 	private long lastToggleTarget;
+	private URL clickedURL;
 
 	public GuiChatExtended() {
 		this("");
@@ -100,17 +102,40 @@ public class GuiChatExtended extends GuiChat implements GuiYesNoCallback {
 
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int button) {
-		if(ClientGlobalConfig.imageLinkPreview && button == 0 && mc.gameSettings.chatLinks) {
+		if(button == 0 && mc.gameSettings.chatLinks) {
 			IChatComponent clickedComponent = mc.ingameGUI.getChatGUI().func_146236_a(Mouse.getX(), Mouse.getY());
 			if(clickedComponent != null) {
 				ClickEvent clickEvent = clickedComponent.getChatStyle().getChatClickEvent();
 				if(clickEvent != null) {
-					if(clickEvent.getValue().endsWith(".png") || clickEvent.getValue().endsWith(".jpg")) {
-						try {
-							mc.displayGuiScreen(new GuiImagePreview(new URL(clickEvent.getValue())));
-							return;
-						} catch (MalformedURLException e) {
-							e.printStackTrace();
+					if(clickEvent.getValue().startsWith("eirairc://")) {
+						String[] params = clickEvent.getValue().substring(10).split(";");
+						if(params.length > 0) {
+							if(params[0].equals("screenshot")) {
+								try {
+									if(ClientGlobalConfig.imageLinkPreview && params[2].length() > 0) {
+										mc.displayGuiScreen(new GuiImagePreview(new URL(params[2]), new URL(params[1])));
+									} else {
+										if(mc.gameSettings.chatLinksPrompt) {
+											clickedURL = new URL(params[1]);
+											mc.displayGuiScreen(new GuiConfirmOpenLink(this, params[1], 0, false));
+										} else {
+											Utils.openWebpage(params[1]);
+										}
+									}
+								} catch (MalformedURLException e) {
+									e.printStackTrace();
+								}
+							}
+						}
+						return;
+					} else {
+						if(ClientGlobalConfig.imageLinkPreview && clickEvent.getValue().endsWith(".png") || clickEvent.getValue().endsWith(".jpg")) {
+							try {
+								mc.displayGuiScreen(new GuiImagePreview(new URL(clickEvent.getValue()), null));
+								return;
+							} catch (MalformedURLException e) {
+								e.printStackTrace();
+							}
 						}
 					}
 				}
