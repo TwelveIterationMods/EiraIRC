@@ -14,12 +14,13 @@ public class GuiOverlay extends EiraGuiScreen {
 	}
 
 	@Override
-	public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
+	public boolean mouseClick(int mouseX, int mouseY, int mouseButton) {
 		if(mouseX < menuX || mouseX >= menuX + menuWidth || mouseY < menuY || mouseY >= menuY + menuHeight) {
 			gotoPrevious();
-			return;
+			return true;
 		}
-		super.mouseClicked(mouseX, mouseY, mouseButton);
+		super.controlClicked(mouseX, mouseY, mouseButton);
+		return true;
 	}
 
 	@Override

@@ -21,6 +21,7 @@ public class GuiList<T extends GuiListEntry> extends Gui {
 	private int height;
 	
 	private int entryHeight;
+	private int scrollOffset;
 	private int selectedIdx = -1;
 
 	private int lastClickIdx = -1;
@@ -34,9 +35,9 @@ public class GuiList<T extends GuiListEntry> extends Gui {
 		this.entryHeight = entryHeight;
 	}
 
-	public void mouseClicked(int x, int y, int button) {
+	public boolean mouseClicked(int x, int y, int button) {
 		if(x < xPosition || y < yPosition || x >= xPosition + width || y >= yPosition + height) {
-			return;
+			return false;
 		}
 		int relX = x - xPosition;
 		int relY = y - yPosition;
@@ -56,6 +57,7 @@ public class GuiList<T extends GuiListEntry> extends Gui {
 				setSelectedIdx(-1);
 			}
 		}
+		return false;
 	}
 
 	public void setSelectedIdx(int idx) {
@@ -96,7 +98,7 @@ public class GuiList<T extends GuiListEntry> extends Gui {
 	private void drawEntries() {
 		for(int i = 0; i < entries.size(); i++) {
 			GuiListEntry entry = entries.get(i);
-			entry.drawEntry(xPosition, yPosition + i * entryHeight);
+			entry.drawEntry(xPosition, yPosition + i * entryHeight + scrollOffset);
 		}
 	}
 	

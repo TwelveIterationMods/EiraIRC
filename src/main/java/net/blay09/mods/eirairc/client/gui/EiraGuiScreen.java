@@ -3,9 +3,12 @@ package net.blay09.mods.eirairc.client.gui;
 import net.blay09.mods.eirairc.client.gui.base.GuiLabel;
 import net.blay09.mods.eirairc.client.gui.base.list.GuiList;
 import net.blay09.mods.eirairc.client.gui.overlay.GuiOverlay;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.common.MinecraftForge;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +31,7 @@ public class EiraGuiScreen extends GuiScreen {
 	protected int menuWidth;
 	protected int menuHeight;
 	protected boolean allowSideClickClose = true;
+	private GuiButton selectedButton;
 
 	public EiraGuiScreen() {
 		this(null);
@@ -59,19 +63,60 @@ public class EiraGuiScreen extends GuiScreen {
 		menuY = height / 2 - menuHeight / 2;
 	}
 
-	@Override
-	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) {
-		if(overlay != null) {
-			overlay.mouseClicked(mouseX, mouseY, mouseButton);
+	public boolean mouseClick(int mouseX, int mouseY, int mouseButton) {
+		if(overlay != null && overlay.mouseClick(mouseX, mouseY, mouseButton)) {
+			return true;
 		}
-		super.mouseClicked(mouseX, mouseY, mouseButton);
+		if(controlClicked(mouseX, mouseY, mouseButton)) {
+			return true;
+		}
+		return false;
+	}
+
+	public boolean controlClicked(int mouseX, int mouseY, int mouseButton) {
+		if(mouseButton == 0) {
+			for(int i = 0; i < buttonList.size(); i++) {
+				GuiButton button = (GuiButton) buttonList.get(i);
+				if(button.mousePressed(mc, mouseX, mouseY)) {
+					GuiScreenEvent.ActionPerformedEvent.Pre event = new GuiScreenEvent.ActionPerformedEvent.Pre(this, button, buttonList);
+					if(MinecraftForge.EVENT_BUS.post(event))
+						break;
+					selectedButton = event.button;
+					event.button.func_146113_a(mc.getSoundHandler());
+					actionPerformed(event.button);
+					if(this.equals(mc.currentScreen))
+						MinecraftForge.EVENT_BUS.post(new GuiScreenEvent.ActionPerformedEvent.Post(this, event.button, buttonList));
+					return true;
+				}
+			}
+		}
 		for(int i = 0; i < textFieldList.size(); i++) {
 			textFieldList.get(i).mouseClicked(mouseX, mouseY, mouseButton);
+			if(textFieldList.get(i).isFocused()) {
+				return true;
+			}
 		}
 		for(int i = 0; i < listList.size(); i++) {
-			listList.get(i).mouseClicked(mouseX, mouseY, mouseButton);
+			if(listList.get(i).mouseClicked(mouseX, mouseY, mouseButton)) {
+				return true;
+			}
 		}
+		return false;
+	}
 
+	@Override
+	protected void mouseMovedOrUp(int mouseX, int mouseY, int mouseButton) {
+		if(selectedButton != null && mouseButton == 0) {
+			selectedButton.mouseReleased(mouseX, mouseY);
+			selectedButton = null;
+		}
+	}
+
+	@Override
+	protected final void mouseClicked(int mouseX, int mouseY, int mouseButton) {
+		if(mouseClick(mouseX, mouseY, mouseButton)) {
+			return;
+		}
 		if(overlay == null && allowSideClickClose && isClickClosePosition(mouseX, mouseY)) {
 			gotoPrevious();
 		}

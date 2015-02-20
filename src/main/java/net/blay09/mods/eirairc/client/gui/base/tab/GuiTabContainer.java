@@ -43,7 +43,6 @@ public class GuiTabContainer extends EiraGuiScreen {
 
 		if(currentTab != null) {
 			currentTab.setWorldAndResolution(mc, width, height);
-			currentTab.initGui();
 		}
 	}
 
@@ -71,14 +70,11 @@ public class GuiTabContainer extends EiraGuiScreen {
 		currentTab = tabPage;
 		if(currentTab != null) {
 			currentTab.setWorldAndResolution(mc, width, height);
-			currentTab.initGui();
 		}
 	}
 
 	@Override
-	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) {
-		super.mouseClicked(mouseX, mouseY, mouseButton);
-
+	public boolean mouseClick(int mouseX, int mouseY, int mouseButton) {
 		for(int i = 0; i < headers.size(); i++) {
 			GuiTabHeader header = headers.get(i);
 
@@ -87,9 +83,10 @@ public class GuiTabContainer extends EiraGuiScreen {
 			}
 		}
 
-		if(currentTab != null) {
-			currentTab.mouseClicked(mouseX, mouseY, mouseButton);
+		if(currentTab != null && currentTab.mouseClick(mouseX, mouseY, mouseButton)) {
+			return true;
 		}
+		return super.mouseClick(mouseX, mouseY, mouseButton);
 	}
 
 	@Override

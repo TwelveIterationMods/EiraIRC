@@ -18,8 +18,9 @@ public class GuiScreenshotBigPreview extends EiraGuiScreen {
 	}
 
 	@Override
-	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) {
+	public boolean mouseClick(int mouseX, int mouseY, int mouseButton) {
 		gotoPrevious();
+		return true;
 	}
 
 	@Override
