@@ -19,7 +19,7 @@ buildscript {
 
 apply plugin: 'forge'
 
-version = "mc1.7.10-v2.8." + BUILD_NUMBER
+version = "v2.8." + BUILD_NUMBER
 group = "net.blay09.mods"
 archivesBaseName = "eirairc"
 
@@ -62,12 +62,14 @@ dependencies {
 
 jar {
     from sourceSets.api.output
+    appendix "mc" + minecraft.version
 }
 
 task jarAPI(type: Jar) {
     from sourceSets.api.output
     
     classifier "api"
+    appendix "mc" + minecraft.version
 }
 
 task jarDev(type: Jar) {
@@ -76,6 +78,7 @@ task jarDev(type: Jar) {
 
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     classifier "dev"
+    appendix "mc" + minecraft.version
 }
 
 artifacts {
