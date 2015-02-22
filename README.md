@@ -30,8 +30,7 @@ Then, add dependencies to either just the EiraIRC API (api) or, if you want Eira
 
 ```
 dependencies {
-    compile 'net.blay09.mods:eirairc:2.8.111:api'
-    compile 'net.blay09.mods:eirairc:2.8.111:dev'
+    compile 'net.blay09.mods:eirairc:2.8.111:dev' // or just api instead of dev
 }
 ```
 
