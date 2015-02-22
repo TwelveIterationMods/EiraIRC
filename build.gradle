@@ -59,9 +59,14 @@ repositories {
     }
 }
 
+configurations {
+    deployerJars
+}
+
 dependencies {
     compile 'org.jetbrains:annotations:13.0'
     compile 'us.dynmap:DynmapCoreAPI:2.1'
+    deployerJars "org.apache.maven.wagon:wagon-ssh:2.2"
 }
 
 jar {
