@@ -26,7 +26,7 @@ repositories {
 ```
 > Note: The reference to the dynmap repository is necessary at the moment because it's stored as a dependency in EiraIRC's maven files. I'm still looking for a way around that.
 
-Then, add dependencies to either just the EiraIRC API (api) or, if you want EiraIRC to be available while testing as well, the deobfuscated version (dev) too:
+Then, add a dependency to either just the EiraIRC API (api) or, if you want EiraIRC to be available while testing as well, the deobfuscated version (dev):
 
 ```
 dependencies {
