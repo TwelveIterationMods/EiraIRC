@@ -10,7 +10,34 @@ Minecraft Mod. On a Minecraft client it acts like any other IRC client, on the s
 * [IRC Channel Submission](http://goo.gl/forms/2LsJiWIQmS) (for Welcome Screen)
 
 ##API
-The latest EiraIRC API and a deobfuscated version of the mod can be downloaded from my [Jenkins](http://jenkins.blay09.net) (v2.8 only). A maven repository to host the API is planned.
+The easiest way to add EiraIRC to your development environment is to do some additions to your build.gradle file. First, register EiraIRC's maven repository by adding the following lines:
+
+```
+repositories {
+    maven {
+        name = "dynmap"
+        url = "http://repo.mikeprimm.com/"
+    }
+    maven {
+        name = "eiramods"
+        url ="http://repo.blay09.net"
+    }
+}
+```
+> Note: The reference to the dynmap repository is necessary at the moment because it's stored as a dependency in EiraIRC's maven files. I'm still looking for a way around that.
+
+Then, add dependencies to either just the EiraIRC API (api) or, if you want EiraIRC to be available while testing as well, the deobfuscated version (dev) too:
+
+```
+dependencies {
+    compile 'net.blay09.mods:eirairc:2.8.111:api'
+    compile 'net.blay09.mods:eirairc:2.8.111:dev'
+}
+```
+
+Done! Run gradle to update your project and you'll be good to go.
+
+The latest EiraIRC API and an unobfuscated version of the mod can also be downloaded from my [Jenkins](http://jenkins.blay09.net) (v2.8 only), if you're not into all that maven stuff.
 
 ##Repacking Textures
 EiraIRC reads its UI textures from a [libGDX](http://libgdx.badlogicgames.com/) TextureAtlas.
