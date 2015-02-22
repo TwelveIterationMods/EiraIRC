@@ -3,10 +3,10 @@
 
 package net.blay09.mods.eirairc.handler;
 
+import net.blay09.mods.eirairc.api.event.*;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.api.event.*;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.config.settings.BotBooleanComponent;
 import net.blay09.mods.eirairc.config.settings.BotSettings;

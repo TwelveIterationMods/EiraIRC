@@ -1,7 +1,7 @@
 package net.blay09.mods.eirairc.api.event;
 
-import cpw.mods.fml.common.eventhandler.Event;
 import net.blay09.mods.eirairc.api.IRCContext;
+import cpw.mods.fml.common.eventhandler.Event;
 import net.minecraft.command.ICommandSender;
 
 /**

@@ -60,8 +60,25 @@ dependencies {
     compile 'us.dynmap:DynmapCoreAPI:2.1'
 }
 
-sourceSets {
-    main {
-        output.resourcesDir = output.classesDir
-    }
+jar {
+    from sourceSets.api.output
+}
+
+task jarAPI(type: Jar) {
+    from sourceSets.api.output
+    
+    classifier "api"
+}
+
+task jarDev(type: Jar) {
+    from sourceSets.main.output
+    from sourceSets.api.output
+
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    classifier "dev"
+}
+
+artifacts {
+    archives jarAPI
+    archives jarDev
 }
