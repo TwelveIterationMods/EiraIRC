@@ -1,4 +1,7 @@
 def BUILD_NUMBER = System.getenv("BUILD_NUMBER") ?: "0"
+def MAVEN_REPO = System.getenv("MAVEN_REPO") ?: "repo.blay09.net"
+def MAVEN_USERNAME = System.getenv("MAVEN_USERNAME") ?: ""
+def MAVEN_PRIVKEY = System.getenv("MAVEN_PRIVKEY") ?: ""
 
 buildscript {
     repositories {
@@ -18,8 +21,9 @@ buildscript {
 }
 
 apply plugin: 'forge'
+apply plugin: 'maven'
 
-version = "v2.8." + BUILD_NUMBER
+version = "2.8." + BUILD_NUMBER
 group = "net.blay09.mods"
 archivesBaseName = "eirairc"
 
@@ -84,4 +88,23 @@ task jarDev(type: Jar) {
 artifacts {
     archives jarAPI
     archives jarDev
+}
+
+uploadArchives {
+    dependsOn 'reobf'
+    repositories {
+        mavenDeployer {
+            configuration = configurations.deployerJars
+            
+            repository(url: MAVEN_REPO) {
+                authentication(userName: MAVEN_USERNAME, privateKey: MAVEN_PRIVKEY)
+            }
+            
+            pom {
+                groupId = project.group
+                version = project.version
+                artifactId = project.archivesBaseName
+            }
+        }
+    }
 }
