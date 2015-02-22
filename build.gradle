@@ -56,12 +56,6 @@ dependencies {
     compile 'us.dynmap:DynmapCoreAPI:2.1'
 }
 
-task cleanBuildDir(type: Delete) {
-    delete fileTree(dir: project.buildDir.getPath() + "/libs/", include: "*.jar")
-}
-
-build.shouldRunAfter(cleanBuildDir)
-
 sourceSets {
     main {
         output.resourcesDir = output.classesDir
