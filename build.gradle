@@ -1,7 +1,7 @@
 def BUILD_NUMBER = System.getenv("BUILD_NUMBER") ?: "0"
-def MAVEN_REPO = System.getenv("MAVEN_REPO") ?: "repo.blay09.net"
+def MAVEN_REPO = System.getenv("MAVEN_REPO") ?: ""
 def MAVEN_USERNAME = System.getenv("MAVEN_USERNAME") ?: ""
-def MAVEN_PRIVKEY = System.getenv("MAVEN_PRIVKEY") ?: ""
+def MAVEN_PASSWORD = System.getenv("MAVEN_PASSWORD") ?: ""
 
 buildscript {
     repositories {
@@ -102,7 +102,7 @@ uploadArchives {
             configuration = configurations.deployerJars
             
             repository(url: MAVEN_REPO) {
-                authentication(userName: MAVEN_USERNAME, privateKey: MAVEN_PRIVKEY)
+                authentication(userName: MAVEN_USERNAME, password: MAVEN_PASSWORD)
             }
             
             pom {
