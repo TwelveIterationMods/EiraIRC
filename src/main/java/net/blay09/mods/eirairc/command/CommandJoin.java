@@ -3,6 +3,7 @@
 
 package net.blay09.mods.eirairc.command;
 
+import net.blay09.mods.eirairc.api.EiraIRCAPI;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.api.SubCommand;
@@ -39,20 +40,21 @@ public class CommandJoin implements SubCommand {
 		if(args.length < 1) {
 			throw new WrongUsageException(getCommandUsage(sender));
 		}
+		IRCContext target = EiraIRCAPI.parseContext(null, args[0], IRCContext.ContextType.IRCConnection);
 		IRCConnection connection;
-		if(IRCResolver.hasServerPrefix(args[0])) {
-			connection = IRCResolver.resolveConnection(args[0]);
-			if(connection == null) {
-				Utils.sendLocalizedMessage(sender, "irc.target.serverNotFound");
+		if(target.getContextType() == IRCContext.ContextType.Error) {
+			if(IRCResolver.hasServerPrefix(args[0])) {
+				Utils.sendLocalizedMessage(sender, target.getName(), args[0]);
 				return true;
+			} else {
+				if(context == null) {
+					Utils.sendLocalizedMessage(sender, "irc.target.specifyServer");
+					return true;
+				}
+				target = context.getConnection();
 			}
-		} else {
-			if(context == null) {
-				Utils.sendLocalizedMessage(sender, "irc.target.specifyServer");
-				return true;
-			}
-			connection = context.getConnection();
 		}
+		connection = (IRCConnection) target;
 		ServerConfig serverConfig = ConfigHelper.getServerConfig(connection);
 		String channelName = IRCResolver.stripPath(args[0]);
 		ChannelConfig channelConfig = serverConfig.getOrCreateChannelConfig(channelName);

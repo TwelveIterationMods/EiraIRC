@@ -43,11 +43,21 @@ public class InternalMethodsImpl implements InternalMethods {
 			connection = EiraIRC.instance.getConnectionManager().getConnection(server);
 			if(connection == null) {
 				return IRCTargetError.NotConnected;
+			} else if(expectedType == IRCContext.ContextType.IRCConnection) {
+				return connection;
 			}
 		} else {
-			if(parentContext != null) {
+			if (parentContext != null) {
 				connection = parentContext.getConnection();
 			} else {
+				connection = EiraIRC.instance.getConnectionManager().getConnection(contextPath);
+				if(connection != null) {
+					if(expectedType == IRCContext.ContextType.IRCConnection) {
+						return connection;
+					} else {
+						return IRCTargetError.InvalidTarget;
+					}
+				}
 				IRCConnection foundConnection = null;
 				for (IRCConnection con : EiraIRC.instance.getConnectionManager().getConnections()) {
 					if (con.getChannel(contextPath) != null || con.getUser(contextPath) != null) {
@@ -62,6 +72,9 @@ public class InternalMethodsImpl implements InternalMethods {
 				}
 				connection = foundConnection;
 			}
+		}
+		if(expectedType == IRCContext.ContextType.IRCConnection) {
+			return connection;
 		}
 		if(connection.getChannelTypes().indexOf(contextPath.charAt(0)) != -1) {
 			if(expectedType != null && expectedType != IRCContext.ContextType.IRCChannel) {
