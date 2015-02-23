@@ -84,7 +84,7 @@ public class MCEventHandler {
 	public void onServerCommand(CommandEvent event) {
 		if(event.command instanceof CommandEmote) {
 			if(event.sender instanceof EntityPlayer) {
-				String emote = Utils.joinStrings(event.parameters, " ").trim();
+				String emote = Utils.joinStrings(event.parameters, " ", 0).trim();
 				if(emote.length() == 0) {
 					return;
 				}
@@ -109,7 +109,7 @@ public class MCEventHandler {
 						if (channel != null) {
 							GeneralSettings generalSettings = ConfigHelper.getGeneralSettings(channel);
 							BotSettings botSettings = ConfigHelper.getBotSettings(channel);
-							String ircMessage = MessageFormat.formatMessage(botSettings.getMessageFormat().ircBroadcastMessage, channel, event.sender, Utils.joinStrings(event.parameters, " "), MessageFormat.Target.IRC, MessageFormat.Mode.Message);
+							String ircMessage = MessageFormat.formatMessage(botSettings.getMessageFormat().ircBroadcastMessage, channel, event.sender, Utils.joinStrings(event.parameters, " ", 0), MessageFormat.Target.IRC, MessageFormat.Mode.Message);
 							if (!generalSettings.isReadOnly() && botSettings.getBoolean(BotBooleanComponent.RelayBroadcasts)) {
 								channel.message(ircMessage);
 							}

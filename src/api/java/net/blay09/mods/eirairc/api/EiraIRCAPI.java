@@ -2,6 +2,7 @@ package net.blay09.mods.eirairc.api;
 
 import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.api.upload.UploadHoster;
+import net.minecraft.command.ICommandSender;
 
 /**
  * Created by Blay09 on 23.02.2015.
@@ -33,4 +34,9 @@ public class EiraIRCAPI {
 	public static boolean isConnectedTo(String serverHost) {
 		return internalMethods.isConnectedTo(serverHost);
 	}
+
+	public static boolean hasClientSideInstalled(ICommandSender user) {
+		return internalMethods.hasClientSideInstalled(user);
+	}
+
 }

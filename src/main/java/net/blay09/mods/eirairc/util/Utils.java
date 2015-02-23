@@ -5,6 +5,7 @@ package net.blay09.mods.eirairc.util;
 
 import io.netty.buffer.ByteBuf;
 import net.blay09.mods.eirairc.EiraIRC;
+import net.blay09.mods.eirairc.api.EiraIRCAPI;
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
@@ -53,8 +54,7 @@ public class Utils {
 	private static final String ENCODING = "UTF-8";
 	
 	public static void sendLocalizedMessage(ICommandSender sender, String key, Object... args) {
-		EiraPlayerInfo playerInfo = EiraIRC.instance.getNetHandler().getPlayerInfo(sender.getCommandSenderName());
-		if(playerInfo.modInstalled) {
+		if(EiraIRCAPI.hasClientSideInstalled(sender)) {
 			sender.addChatMessage(getLocalizedChatMessage(key, args));
 		} else {
 			sender.addChatMessage(new ChatComponentText(getLocalizedChatMessage(key, args).getUnformattedText()));
@@ -540,10 +540,6 @@ public class Utils {
 			shiftedArgs[i - offset] = args[i];
 		}
 		return shiftedArgs;
-	}
-	
-	public static String joinStrings(String[] arr, String delimiter) {
-		return joinStrings(arr, delimiter, 0);
 	}
 	
 	public static String joinStrings(String[] args, String delimiter, int startIdx) {

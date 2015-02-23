@@ -19,8 +19,6 @@ public class Globals {
 	public static final int CHAT_MAX_LENGTH = 100;
 
 	public static final String DEFAULT_NICK = "%USERNAME%";
-	public static final String DEFAULT_IDENT = "EiraIRC";
-	public static final String DEFAULT_DESCRIPTION = "EiraIRC Bot";
 	public static final String DEFAULT_CHARSET = "UTF-8";
 
 	public static final String NBT_EIRAIRC = "EiraIRC";

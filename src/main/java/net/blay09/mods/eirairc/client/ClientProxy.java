@@ -83,7 +83,6 @@ public class ClientProxy extends CommonProxy {
 		switch(type) {
 		case FriendJoined: config = ClientGlobalConfig.ntfyFriendJoined; break;
 		case PlayerMentioned: config = ClientGlobalConfig.ntfyNameMentioned; break;
-		case UserRecording: config = ClientGlobalConfig.ntfyUserRecording; break;
 		case PrivateMessage: config = ClientGlobalConfig.ntfyPrivateMessage; break;
 		default:
 		}

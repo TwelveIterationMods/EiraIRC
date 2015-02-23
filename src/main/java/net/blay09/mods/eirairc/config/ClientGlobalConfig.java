@@ -48,7 +48,6 @@ public class ClientGlobalConfig {
 	public static float notificationSoundPitch = 1f;
 	public static NotificationStyle ntfyFriendJoined = NotificationStyle.TextOnly;
 	public static NotificationStyle ntfyNameMentioned = NotificationStyle.TextAndSound;
-	public static NotificationStyle ntfyUserRecording = NotificationStyle.TextAndSound;
 	public static NotificationStyle ntfyPrivateMessage = NotificationStyle.TextOnly;
 
 	// Compatibility
@@ -81,7 +80,6 @@ public class ClientGlobalConfig {
 		notificationSoundPitch = thisConfig.getFloat("soundPitch", NOTIFICATIONS, notificationSoundPitch, 0.5f, 2f, I19n.format("eirairc:config.property.soundPitch"), "eirairc:config.property.soundPitch");
 		ntfyFriendJoined = NotificationStyle.valueOf(thisConfig.getString("friendJoined", NOTIFICATIONS, ntfyFriendJoined.name(), I19n.format("eirairc:config.property.friendJoined"), NotificationStyle.NAMES, "eirairc:config.property.friendJoined"));
 		ntfyNameMentioned = NotificationStyle.valueOf(thisConfig.getString("nameMentioned", NOTIFICATIONS, ntfyNameMentioned.name(), I19n.format("eirairc:config.property.nameMentioned"), NotificationStyle.NAMES, "eirairc:config.property.nameMentioned"));
-		ntfyUserRecording = NotificationStyle.valueOf(thisConfig.getString("userRecording", NOTIFICATIONS, ntfyUserRecording.name(), I19n.format("eirairc:config.property.userRecording"), NotificationStyle.NAMES, "eirairc:config.property.userRecording"));
 		ntfyPrivateMessage = NotificationStyle.valueOf(thisConfig.getString("privateMessage", NOTIFICATIONS, ntfyPrivateMessage.name(), I19n.format("eirairc:config.property.privateMessage"), NotificationStyle.NAMES, "eirairc:config.property.privateMessage"));
 
 		// Compatibility
@@ -118,7 +116,6 @@ public class ClientGlobalConfig {
 		thisConfig.get(NOTIFICATIONS, "soundPitch", 0f, I19n.format("eirairc:config.property.soundPitch")).set(notificationSoundPitch);
 		thisConfig.get(NOTIFICATIONS, "friendJoined", "", I19n.format("eirairc:config.property.friendJoined")).set(ntfyFriendJoined.name());
 		thisConfig.get(NOTIFICATIONS, "nameMentioned", "", I19n.format("eirairc:config.property.nameMentioned")).set(ntfyNameMentioned.name());
-		thisConfig.get(NOTIFICATIONS, "userRecording", "", I19n.format("eirairc:config.property.userRecording")).set(ntfyUserRecording.name());
 		thisConfig.get(NOTIFICATIONS, "privateMessage", "", I19n.format("eirairc:config.property.privateMessage")).set(ntfyPrivateMessage.name());
 
 		// Compatibility
@@ -156,7 +153,6 @@ public class ClientGlobalConfig {
 		ntfyFriendJoined = NotificationStyle.values[legacyConfig.get("notifications", "notifyFriendJoined", ntfyFriendJoined.ordinal()).getInt()];
 		ntfyNameMentioned = NotificationStyle.values[legacyConfig.get("notifications", "notifyNameMentioned", ntfyNameMentioned.ordinal()).getInt()];
 		ntfyPrivateMessage = NotificationStyle.values[legacyConfig.get("notifications", "notifyPrivateMessage", ntfyPrivateMessage.ordinal()).getInt()];
-		ntfyUserRecording = NotificationStyle.values[legacyConfig.get("notifications", "notifyUserRecording", ntfyUserRecording.ordinal()).getInt()];
 
 		// Compatibility
 		clientBridge = legacyConfig.get("compatibility", "clientBridge", clientBridge).getBoolean();

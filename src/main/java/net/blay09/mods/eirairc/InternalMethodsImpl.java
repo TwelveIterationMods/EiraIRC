@@ -9,8 +9,11 @@ import net.blay09.mods.eirairc.api.irc.IRCUser;
 import net.blay09.mods.eirairc.api.upload.UploadHoster;
 import net.blay09.mods.eirairc.client.UploadManager;
 import net.blay09.mods.eirairc.command.base.IRCCommandHandler;
+import net.blay09.mods.eirairc.net.EiraPlayerInfo;
 import net.blay09.mods.eirairc.util.IRCTargetError;
 import net.blay09.mods.eirairc.util.Utils;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.util.ChatComponentText;
 
 /**
  * Created by Blay09 on 23.02.2015.
@@ -25,6 +28,12 @@ public class InternalMethodsImpl implements InternalMethods {
 	@Override
 	public void registerUploadHoster(UploadHoster uploadHoster) {
 		UploadManager.registerUploadHoster(uploadHoster);
+	}
+
+	@Override
+	public boolean hasClientSideInstalled(ICommandSender user) {
+		EiraPlayerInfo playerInfo = EiraIRC.instance.getNetHandler().getPlayerInfo(user.getCommandSenderName());
+		return playerInfo.modInstalled;
 	}
 
 	@Override
