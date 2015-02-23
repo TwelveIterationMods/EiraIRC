@@ -3,8 +3,8 @@
 
 package net.blay09.mods.eirairc.api.bot;
 
-import net.blay09.mods.eirairc.api.IRCChannel;
-import net.blay09.mods.eirairc.api.IRCUser;
+import net.blay09.mods.eirairc.api.irc.IRCChannel;
+import net.blay09.mods.eirairc.api.irc.IRCUser;
 
 public interface IBotCommand {
 

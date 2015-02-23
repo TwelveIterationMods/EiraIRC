@@ -2,7 +2,7 @@ package net.blay09.mods.eirairc.config;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.blay09.mods.eirairc.api.upload.UploadManager;
+import net.blay09.mods.eirairc.client.UploadManager;
 import net.blay09.mods.eirairc.util.I19n;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.settings.KeyBinding;

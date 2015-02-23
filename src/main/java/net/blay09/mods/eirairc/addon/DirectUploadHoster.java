@@ -3,7 +3,7 @@
 
 package net.blay09.mods.eirairc.addon;
 
-import net.blay09.mods.eirairc.api.upload.IUploadHoster;
+import net.blay09.mods.eirairc.api.upload.UploadHoster;
 import net.blay09.mods.eirairc.api.upload.UploadedFile;
 
 import java.io.*;
@@ -11,7 +11,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class DirectUploadHoster implements IUploadHoster {
+public class DirectUploadHoster implements UploadHoster {
 
 	public static final String API = "http://www.directupload.net/api/upload.php";
 	public static final String BOUNDARY = "---------------------------7d41b838504d8";

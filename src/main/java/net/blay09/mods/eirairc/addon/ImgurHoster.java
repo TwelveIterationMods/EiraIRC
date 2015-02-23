@@ -6,7 +6,7 @@ package net.blay09.mods.eirairc.addon;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import net.blay09.mods.eirairc.api.upload.IUploadHoster;
+import net.blay09.mods.eirairc.api.upload.UploadHoster;
 import net.blay09.mods.eirairc.api.upload.UploadedFile;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,7 +15,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Scanner;
 
-public class ImgurHoster implements IUploadHoster {
+public class ImgurHoster implements UploadHoster {
 
 	private static final String API = "https://api.imgur.com/3/image.json";
 	private static final String IMAGE_BASE_URL = "https://imgur.com/";

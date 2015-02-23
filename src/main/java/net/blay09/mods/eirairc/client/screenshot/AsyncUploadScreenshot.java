@@ -1,19 +1,19 @@
 package net.blay09.mods.eirairc.client.screenshot;
 
-import net.blay09.mods.eirairc.api.upload.IUploadHoster;
+import net.blay09.mods.eirairc.api.upload.UploadHoster;
 import net.blay09.mods.eirairc.api.upload.UploadedFile;
 import net.blay09.mods.eirairc.config.ClientGlobalConfig;
 import net.blay09.mods.eirairc.config.ScreenshotAction;
 
 public class AsyncUploadScreenshot implements Runnable {
 
-	private final IUploadHoster hoster;
+	private final UploadHoster hoster;
 	private final Screenshot screenshot;
 	private final ScreenshotAction followUpAction;
 	private final Thread thread;
 	private boolean complete;
 	
-	public AsyncUploadScreenshot(IUploadHoster hoster, Screenshot screenshot, ScreenshotAction followUpAction) {
+	public AsyncUploadScreenshot(UploadHoster hoster, Screenshot screenshot, ScreenshotAction followUpAction) {
 		this.hoster = hoster;
 		this.screenshot = screenshot;
 		this.followUpAction = followUpAction;

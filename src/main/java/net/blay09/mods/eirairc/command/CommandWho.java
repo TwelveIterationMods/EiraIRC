@@ -4,9 +4,10 @@
 package net.blay09.mods.eirairc.command;
 
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.api.IRCChannel;
-import net.blay09.mods.eirairc.api.IRCConnection;
-import net.blay09.mods.eirairc.api.IRCContext;
+import net.blay09.mods.eirairc.api.irc.IRCChannel;
+import net.blay09.mods.eirairc.api.irc.IRCConnection;
+import net.blay09.mods.eirairc.api.irc.IRCContext;
+import net.blay09.mods.eirairc.api.SubCommand;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.ServerConfig;
@@ -17,7 +18,7 @@ import net.minecraft.command.ICommandSender;
 
 import java.util.List;
 
-public class CommandWho extends SubCommand {
+public class CommandWho implements SubCommand {
 
 	@Override
 	public String getCommandName() {
@@ -25,8 +26,8 @@ public class CommandWho extends SubCommand {
 	}
 
 	@Override
-	public String getUsageString(ICommandSender sender) {
-		return "irc.commands.who";
+	public String getCommandUsage(ICommandSender sender) {
+		return "eirairc:irc.commands.who";
 	}
 
 	@Override

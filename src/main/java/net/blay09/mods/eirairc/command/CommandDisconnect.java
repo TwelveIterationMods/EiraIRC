@@ -4,15 +4,16 @@
 package net.blay09.mods.eirairc.command;
 
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.api.IRCConnection;
-import net.blay09.mods.eirairc.api.IRCContext;
+import net.blay09.mods.eirairc.api.irc.IRCConnection;
+import net.blay09.mods.eirairc.api.irc.IRCContext;
+import net.blay09.mods.eirairc.api.SubCommand;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
 
 import java.util.List;
 
-public class CommandDisconnect extends SubCommand {
+public class CommandDisconnect implements SubCommand {
 
 	private static final String TARGET_ALL = "all";
 	
@@ -22,8 +23,8 @@ public class CommandDisconnect extends SubCommand {
 	}
 
 	@Override
-	public String getUsageString(ICommandSender sender) {
-		return "irc.commands.disconnect";
+	public String getCommandUsage(ICommandSender sender) {
+		return "eirairc:irc.commands.disconnect";
 	}
 
 	@Override
@@ -33,7 +34,7 @@ public class CommandDisconnect extends SubCommand {
 
 	@Override
 	public boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) {
-		String target = null;
+		String target;
 		if(args.length < 1) {
 			if(context != null) {
 				target = context.getConnection().getHost();

@@ -3,7 +3,7 @@
 
 package net.blay09.mods.eirairc.util;
 
-import net.blay09.mods.eirairc.api.IRCContext;
+import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.irc.IRCConnectionImpl;
 
 public enum IRCTargetError implements IRCContext {
@@ -38,10 +38,8 @@ public enum IRCTargetError implements IRCContext {
 	}
 
 	@Override
-	public void message(String message) {
-	}
+	public void message(String message) {}
 	
 	@Override
-	public void notice(String message) {
-	}
+	public void notice(String message) {}
 }

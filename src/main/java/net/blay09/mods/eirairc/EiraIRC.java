@@ -11,9 +11,9 @@ import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import net.blay09.mods.eirairc.api.upload.UploadManager;
 import net.blay09.mods.eirairc.addon.DirectUploadHoster;
 import net.blay09.mods.eirairc.addon.ImgurHoster;
+import net.blay09.mods.eirairc.api.EiraIRCAPI;
 import net.blay09.mods.eirairc.command.base.CommandIRC;
 import net.blay09.mods.eirairc.command.base.CommandServIRC;
 import net.blay09.mods.eirairc.command.base.IRCCommandHandler;
@@ -54,9 +54,6 @@ public class EiraIRC {
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-		UploadManager.registerUploadHoster(new DirectUploadHoster());
-		UploadManager.registerUploadHoster(new ImgurHoster());
-
 		ConfigurationHandler.load(event.getModConfigurationDirectory());
 
 		FMLInterModComms.sendRuntimeMessage(this, "VersionChecker", "addVersionCheck", Globals.UPDATE_URL);
@@ -83,11 +80,15 @@ public class EiraIRC {
 		
 		I19n.init();
 		PacketHandler.init();
+
+		EiraIRCAPI.setupAPI(new InternalMethodsImpl());
 	}
 	
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
 		event.buildSoftDependProxy("Dynmap", "net.blay09.mods.eirairc.addon.DynmapWebChatAddon");
+		EiraIRCAPI.registerUploadHoster(new DirectUploadHoster());
+		EiraIRCAPI.registerUploadHoster(new ImgurHoster());
 
 		proxy.postInit();
 	}

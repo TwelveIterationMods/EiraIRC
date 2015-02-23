@@ -1,13 +1,13 @@
 // Copyright (c) 2014, Christopher "blay09" Baker
 // All rights reserved.
 
-package net.blay09.mods.eirairc.api;
+package net.blay09.mods.eirairc.api.irc;
 
 import net.blay09.mods.eirairc.api.bot.IRCBot;
 
 import java.util.Collection;
 
-public interface IRCConnection {
+public interface IRCConnection extends IRCContext {
 
 	public boolean irc(String irc);
 	public void nick(String nick);
@@ -30,7 +30,6 @@ public interface IRCConnection {
 	public String getHost();
 	public int[] getPorts();
 	public IRCBot getBot();
-	public String getIdentifier();
 	public String getNick();
 
 }

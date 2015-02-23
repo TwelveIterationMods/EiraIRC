@@ -4,15 +4,16 @@
 package net.blay09.mods.eirairc.command;
 
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.api.IRCConnection;
-import net.blay09.mods.eirairc.api.IRCContext;
+import net.blay09.mods.eirairc.api.irc.IRCConnection;
+import net.blay09.mods.eirairc.api.irc.IRCContext;
+import net.blay09.mods.eirairc.api.SubCommand;
 import net.blay09.mods.eirairc.util.IRCResolver;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
 
 import java.util.List;
 
-public class CommandQuote extends SubCommand {
+public class CommandQuote implements SubCommand {
 
 	@Override
 	public String getCommandName() {
@@ -20,8 +21,8 @@ public class CommandQuote extends SubCommand {
 	}
 
 	@Override
-	public String getUsageString(ICommandSender sender) {
-		return "irc.commands.quote";
+	public String getCommandUsage(ICommandSender sender) {
+		return "eirairc:irc.commands.quote";
 	}
 
 	@Override

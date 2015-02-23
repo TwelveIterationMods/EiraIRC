@@ -3,9 +3,10 @@
 
 package net.blay09.mods.eirairc.command;
 
-import net.blay09.mods.eirairc.api.IRCChannel;
-import net.blay09.mods.eirairc.api.IRCConnection;
-import net.blay09.mods.eirairc.api.IRCContext;
+import net.blay09.mods.eirairc.api.irc.IRCChannel;
+import net.blay09.mods.eirairc.api.irc.IRCConnection;
+import net.blay09.mods.eirairc.api.irc.IRCContext;
+import net.blay09.mods.eirairc.api.SubCommand;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.ServerConfig;
@@ -16,7 +17,7 @@ import net.minecraft.command.WrongUsageException;
 
 import java.util.List;
 
-public class CommandLeave extends SubCommand {
+public class CommandLeave implements SubCommand {
 
 	private static final String TARGET_ALL = "all";
 
@@ -26,8 +27,8 @@ public class CommandLeave extends SubCommand {
 	}
 
 	@Override
-	public String getUsageString(ICommandSender sender) {
-		return "irc.commands.leave";
+	public String getCommandUsage(ICommandSender sender) {
+		return "eirairc:irc.commands.leave";
 	}
 
 	@Override

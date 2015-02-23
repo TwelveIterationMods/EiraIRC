@@ -3,8 +3,7 @@
 
 package net.blay09.mods.eirairc.command;
 
-import net.blay09.mods.eirairc.api.IRCContext;
-import net.blay09.mods.eirairc.util.Globals;
+import net.blay09.mods.eirairc.api.SubCommand;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
@@ -12,27 +11,27 @@ import net.minecraft.command.ICommandSender;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class SubCommand implements ICommand {
+public final class SubCommandWrapper implements ICommand {
 
-	public abstract boolean hasQuickCommand();
-	
-	public abstract boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide);
-	
-	public abstract String getUsageString(ICommandSender sender);
-	
-	public abstract String[] getAliases();
-	
+	public final SubCommand command;
+
+	public SubCommandWrapper(SubCommand command) {
+		this.command = command;
+	}
+
 	@Override
-	public abstract String getCommandName();
+	public String getCommandName() {
+		return command.getCommandName();
+	}
 	
 	@Override
 	public final String getCommandUsage(ICommandSender sender) {
-		return Globals.MOD_ID + ":" + getUsageString(sender);
+		return command.getCommandUsage(sender);
 	}
 	
 	@Override
 	public final List<String> getCommandAliases() {
-		String[] aliases = getAliases();
+		String[] aliases = command.getAliases();
 		if(aliases != null) {
 			List<String> list = new ArrayList<String>();
 			for(int i = 0; i < aliases.length; i++) {
@@ -44,22 +43,24 @@ public abstract class SubCommand implements ICommand {
 	}
 	
 	@Override
-	public abstract boolean canCommandSenderUseCommand(ICommandSender sender);
+	public boolean canCommandSenderUseCommand(ICommandSender sender) {
+		return command.canCommandSenderUseCommand(sender);
+	}
 	
 	@Override
-	public abstract boolean isUsernameIndex(String[] args, int idx);
-	
-	public abstract void addTabCompletionOptions(List<String> list, ICommandSender sender, String[] args);
-	
+	public boolean isUsernameIndex(String[] args, int idx){
+		return command.isUsernameIndex(args, idx);
+	}
+
 	@Override
 	public void processCommand(ICommandSender sender, String[] args) {
-		processCommand(sender, Utils.getSuggestedTarget(), args, Utils.isServerSide());
+		command.processCommand(sender, Utils.getSuggestedTarget(), args, Utils.isServerSide());
 	}
 
 	@Override
 	public List addTabCompletionOptions(ICommandSender sender, String[] args) {
 		List<String> list = new ArrayList<String>();
-		addTabCompletionOptions(list, sender, args);
+		command.addTabCompletionOptions(list, sender, args);
 		return list;
 	}
 

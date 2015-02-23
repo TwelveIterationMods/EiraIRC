@@ -1,7 +1,7 @@
 package net.blay09.mods.eirairc.client.gui.servers;
 
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.api.IRCConnection;
+import net.blay09.mods.eirairc.api.irc.IRCConnection;
 import net.blay09.mods.eirairc.client.graphics.TextureRegion;
 import net.blay09.mods.eirairc.client.gui.EiraGui;
 import net.blay09.mods.eirairc.client.gui.base.list.GuiListTextEntry;

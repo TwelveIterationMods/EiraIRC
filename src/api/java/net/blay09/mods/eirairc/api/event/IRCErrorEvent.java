@@ -3,7 +3,7 @@
 
 package net.blay09.mods.eirairc.api.event;
 
-import net.blay09.mods.eirairc.api.IRCConnection;
+import net.blay09.mods.eirairc.api.irc.IRCConnection;
 
 public class IRCErrorEvent extends IRCEvent {
 

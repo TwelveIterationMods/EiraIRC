@@ -5,7 +5,7 @@ package net.blay09.mods.eirairc.config;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import net.blay09.mods.eirairc.api.IRCChannel;
+import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.config.settings.BotSettings;
 import net.blay09.mods.eirairc.config.settings.GeneralSettings;
 import net.blay09.mods.eirairc.config.settings.ThemeSettings;

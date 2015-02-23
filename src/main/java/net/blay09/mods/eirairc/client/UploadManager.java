@@ -1,7 +1,9 @@
 // Copyright (c) 2014, Christopher "blay09" Baker
 // All rights reserved.
 
-package net.blay09.mods.eirairc.api.upload;
+package net.blay09.mods.eirairc.client;
+
+import net.blay09.mods.eirairc.api.upload.UploadHoster;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -9,18 +11,18 @@ import java.util.Map;
 
 public class UploadManager {
 
-	private static Map<String, IUploadHoster> uploadHosters = new HashMap<String, IUploadHoster>();
+	private static Map<String, UploadHoster> uploadHosters = new HashMap<String, UploadHoster>();
 	private static String[] availableHosters;
 	
-	public static IUploadHoster getUploadHoster(String name) {
+	public static UploadHoster getUploadHoster(String name) {
 		return uploadHosters.get(name);
 	}
 	
-	public static void registerUploadHoster(IUploadHoster hoster) {
+	public static void registerUploadHoster(UploadHoster hoster) {
 		uploadHosters.put(hoster.getName(), hoster);
 	}
 
-	public static Collection<IUploadHoster> getUploadHosters() {
+	public static Collection<UploadHoster> getUploadHosters() {
 		return uploadHosters.values();
 	}
 

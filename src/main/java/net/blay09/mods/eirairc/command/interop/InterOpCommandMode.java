@@ -3,8 +3,8 @@
 
 package net.blay09.mods.eirairc.command.interop;
 
-import net.blay09.mods.eirairc.api.IRCContext;
-import net.blay09.mods.eirairc.command.SubCommand;
+import net.blay09.mods.eirairc.api.irc.IRCContext;
+import net.blay09.mods.eirairc.api.SubCommand;
 import net.blay09.mods.eirairc.config.settings.BotBooleanComponent;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.IRCResolver;
@@ -15,11 +15,11 @@ import net.minecraft.command.WrongUsageException;
 
 import java.util.List;
 
-public class InterOpCommandMode extends SubCommand {
+public class InterOpCommandMode implements SubCommand {
 
 	@Override
-	public String getUsageString(ICommandSender sender) {
-		return "irc.commands.interop.mode";
+	public String getCommandUsage(ICommandSender sender) {
+		return "eirairc:irc.commands.interop.mode";
 	}
 
 	@Override

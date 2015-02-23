@@ -8,12 +8,12 @@ import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
 import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.api.IRCChannel;
-import net.blay09.mods.eirairc.api.IRCContext;
-import net.blay09.mods.eirairc.api.IRCUser;
+import net.blay09.mods.eirairc.api.irc.IRCChannel;
+import net.blay09.mods.eirairc.api.irc.IRCContext;
+import net.blay09.mods.eirairc.api.irc.IRCUser;
 import net.blay09.mods.eirairc.api.event.RelayChat;
-import net.blay09.mods.eirairc.api.upload.IUploadHoster;
-import net.blay09.mods.eirairc.api.upload.UploadManager;
+import net.blay09.mods.eirairc.api.upload.UploadHoster;
+import net.blay09.mods.eirairc.client.UploadManager;
 import net.blay09.mods.eirairc.config.ClientGlobalConfig;
 import net.blay09.mods.eirairc.config.ScreenshotAction;
 import net.blay09.mods.eirairc.config.settings.BotSettings;
@@ -181,7 +181,7 @@ public class ScreenshotManager {
 	}
 
 	public void uploadScreenshot(Screenshot screenshot, ScreenshotAction followUpAction) {
-		IUploadHoster hoster = UploadManager.getUploadHoster(ClientGlobalConfig.screenshotHoster);
+		UploadHoster hoster = UploadManager.getUploadHoster(ClientGlobalConfig.screenshotHoster);
 		if (hoster != null) {
 			uploadTasks.add(new AsyncUploadScreenshot(hoster, screenshot, followUpAction));
 		}

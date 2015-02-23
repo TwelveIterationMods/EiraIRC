@@ -2,9 +2,9 @@
 
 package net.blay09.mods.eirairc.irc;
 
-import net.blay09.mods.eirairc.api.IRCChannel;
-import net.blay09.mods.eirairc.api.IRCConnection;
-import net.blay09.mods.eirairc.api.IRCUser;
+import net.blay09.mods.eirairc.api.irc.IRCChannel;
+import net.blay09.mods.eirairc.api.irc.IRCConnection;
+import net.blay09.mods.eirairc.api.irc.IRCUser;
 import net.blay09.mods.eirairc.api.bot.IRCBot;
 import net.blay09.mods.eirairc.api.event.*;
 import net.blay09.mods.eirairc.bot.IRCBotImpl;
@@ -505,9 +505,25 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 	}
 
 	@Override
+	public String getName() {
+		return host;
+	}
+
+	@Override
 	public String getIdentifier() {
 		return host;
 	}
+
+	@Override
+	public IRCConnection getConnection() {
+		return this;
+	}
+
+	@Override
+	public void message(String message) {}
+
+	@Override
+	public void notice(String message) {}
 
 	@Override
 	public int[] getPorts() {
