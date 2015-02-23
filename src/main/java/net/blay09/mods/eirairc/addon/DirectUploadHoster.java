@@ -1,11 +1,10 @@
 // Copyright (c) 2014, Christopher "blay09" Baker
 // All rights reserved.
 
-package net.blay09.mods.eirairc.client.upload;
+package net.blay09.mods.eirairc.addon;
 
 import net.blay09.mods.eirairc.api.upload.IUploadHoster;
 import net.blay09.mods.eirairc.api.upload.UploadedFile;
-import net.blay09.mods.eirairc.config.ClientGlobalConfig;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -18,7 +17,7 @@ public class DirectUploadHoster implements IUploadHoster {
 	public static final String BOUNDARY = "---------------------------7d41b838504d8";
 	
 	@Override
-	public UploadedFile uploadFile(File file) {
+	public UploadedFile uploadFile(File file, int uploadBufferSize) {
 		try {
 			URL apiURL = new URL(API);
 			HttpURLConnection con = (HttpURLConnection) apiURL.openConnection();
@@ -34,7 +33,7 @@ public class DirectUploadHoster implements IUploadHoster {
 			out.writeBytes("\r\n");
 			
 			FileInputStream fis = new FileInputStream(file);
-			byte[] buffer = new byte[ClientGlobalConfig.uploadBufferSize];
+			byte[] buffer = new byte[uploadBufferSize];
 			int len;
 			while((len = fis.read(buffer)) != -1) {
 				out.write(buffer, 0, len);

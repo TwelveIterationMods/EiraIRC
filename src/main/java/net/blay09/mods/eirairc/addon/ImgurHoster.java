@@ -1,14 +1,13 @@
 // Copyright (c) 2014, Christopher "blay09" Baker
 // All rights reserved.
 
-package net.blay09.mods.eirairc.client.upload;
+package net.blay09.mods.eirairc.addon;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import net.blay09.mods.eirairc.api.upload.IUploadHoster;
 import net.blay09.mods.eirairc.api.upload.UploadedFile;
-import net.blay09.mods.eirairc.config.ClientGlobalConfig;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
@@ -23,7 +22,7 @@ public class ImgurHoster implements IUploadHoster {
 	private static final String API_CLIENT_ID = "d47c0303c944643";
 	
 	@Override
-	public UploadedFile uploadFile(File file) {
+	public UploadedFile uploadFile(File file, int uploadBufferSize) {
 		if(!file.exists()) {
 			return null;
 		}
@@ -34,7 +33,7 @@ public class ImgurHoster implements IUploadHoster {
 			
 			OutputStream out = con.getOutputStream();
 			FileInputStream fis = new FileInputStream(file);
-			byte[] buffer = new byte[ClientGlobalConfig.uploadBufferSize];
+			byte[] buffer = new byte[uploadBufferSize];
 			int len;
 			while((len = fis.read(buffer)) != -1) {
 				out.write(buffer, 0, len);
