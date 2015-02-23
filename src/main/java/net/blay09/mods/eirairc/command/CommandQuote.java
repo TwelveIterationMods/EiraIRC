@@ -39,7 +39,7 @@ public class CommandQuote implements SubCommand {
 				Utils.sendLocalizedMessage(sender, "irc.target.specifyServer");
 				return true;
 			}
-			connection = IRCResolver.resolveConnection(args[0], IRCResolver.FLAGS_NONE);
+			connection = IRCResolver.resolveConnection(args[0]);
 			msgIdx = 1;
 		} else {
 			connection = context.getConnection();

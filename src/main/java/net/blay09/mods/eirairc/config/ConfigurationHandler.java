@@ -14,6 +14,7 @@ import net.blay09.mods.eirairc.bot.BotCommandCustom;
 import net.blay09.mods.eirairc.bot.IRCBotImpl;
 import net.blay09.mods.eirairc.config.base.MessageFormatConfig;
 import net.blay09.mods.eirairc.config.base.ServiceConfig;
+import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.IRCResolver;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.resources.IResourceManager;
@@ -374,11 +375,11 @@ public class ConfigurationHandler {
 				Utils.sendLocalizedMessage(sender, "irc.config.invalidOption", "Global", key);
 			}
 		} else {
-			ChannelConfig channelConfig = IRCResolver.resolveChannelConfig(target, IRCResolver.FLAGS_NONE);
+			ChannelConfig channelConfig = ConfigHelper.resolveChannelConfig(target);
 			if(channelConfig != null) {
 				channelConfig.handleConfigCommand(sender, key, value);
 			} else {
-				ServerConfig serverConfig = IRCResolver.resolveServerConfig(target, IRCResolver.FLAGS_NONE);
+				ServerConfig serverConfig = ConfigHelper.resolveServerConfig(target);
 				if(serverConfig != null) {
 					serverConfig.handleConfigCommand(sender, key, value);
 				} else {
@@ -397,11 +398,11 @@ public class ConfigurationHandler {
 				Utils.sendLocalizedMessage(sender, "irc.config.invalidOption", "Global", key);
 			}
 		} else {
-			ChannelConfig channelConfig = IRCResolver.resolveChannelConfig(target, IRCResolver.FLAGS_NONE);
+			ChannelConfig channelConfig = ConfigHelper.resolveChannelConfig(target);
 			if(channelConfig != null) {
 				channelConfig.handleConfigCommand(sender, key);
 			} else {
-				ServerConfig serverConfig = IRCResolver.resolveServerConfig(target, IRCResolver.FLAGS_NONE);
+				ServerConfig serverConfig = ConfigHelper.resolveServerConfig(target);
 				if(serverConfig != null) {
 					serverConfig.handleConfigCommand(sender, key);
 				} else {

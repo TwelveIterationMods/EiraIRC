@@ -46,7 +46,7 @@ public class InterOpCommandKick implements SubCommand {
 			return true;
 		}
 
-		IRCContext targetUser = EiraIRCAPI.parseContext(targetChannel, args[0], IRCContext.ContextType.IRCUser);
+		IRCContext targetUser = EiraIRCAPI.parseContext(targetChannel, args[1], IRCContext.ContextType.IRCUser);
 		if(targetUser.getContextType() == IRCContext.ContextType.Error) {
 			Utils.sendLocalizedMessage(sender, targetUser.getName(), args[1]);
 			return true;

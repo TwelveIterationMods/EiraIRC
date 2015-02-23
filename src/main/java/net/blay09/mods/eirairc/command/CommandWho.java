@@ -39,7 +39,7 @@ public class CommandWho implements SubCommand {
 	public boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) {
 		IRCConnection connection = null;
 		if(args.length > 0) {
-			connection = IRCResolver.resolveConnection(args[0], IRCResolver.FLAGS_NONE);
+			connection = IRCResolver.resolveConnection(args[0]);
 			if(connection == null) {
 				Utils.sendLocalizedMessage(sender, "irc.target.serverNotFound", args[0]);
 				return true;

@@ -41,7 +41,7 @@ public class CommandJoin implements SubCommand {
 		}
 		IRCConnection connection;
 		if(IRCResolver.hasServerPrefix(args[0])) {
-			connection = IRCResolver.resolveConnection(args[0], IRCResolver.FLAGS_NONE);
+			connection = IRCResolver.resolveConnection(args[0]);
 			if(connection == null) {
 				Utils.sendLocalizedMessage(sender, "irc.target.serverNotFound");
 				return true;

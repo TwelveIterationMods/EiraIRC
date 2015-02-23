@@ -27,6 +27,7 @@ import net.blay09.mods.eirairc.handler.IRCEventHandler;
 import net.blay09.mods.eirairc.handler.MCEventHandler;
 import net.blay09.mods.eirairc.net.EiraNetHandler;
 import net.blay09.mods.eirairc.net.PacketHandler;
+import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.I19n;
 import net.blay09.mods.eirairc.util.IRCResolver;
@@ -122,7 +123,7 @@ public class EiraIRC {
 				serverConfig.getGeneralSettings().pushDummyConfig();
 				ConfigurationHandler.saveServers();
 			} else if(event.configID.startsWith("channel:")) {
-				ChannelConfig channelConfig = IRCResolver.resolveChannelConfig(event.configID.substring(8), IRCResolver.FLAGS_NONE);
+				ChannelConfig channelConfig = ConfigHelper.resolveChannelConfig(event.configID.substring(8));
 				channelConfig.getTheme().pushDummyConfig();
 				channelConfig.getBotSettings().pushDummyConfig();
 				channelConfig.getGeneralSettings().pushDummyConfig();

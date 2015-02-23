@@ -3,6 +3,7 @@
 
 package net.blay09.mods.eirairc.handler;
 
+import net.blay09.mods.eirairc.api.EiraIRCAPI;
 import net.blay09.mods.eirairc.api.event.*;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -46,8 +47,8 @@ public class IRCConnectionHandler {
 			}
 		}
 		if(!SharedGlobalConfig.defaultChat.equals("Minecraft")) {
-			IRCContext chatTarget = IRCResolver.resolveTarget(SharedGlobalConfig.defaultChat, IRCResolver.FLAG_CHANNEL);
-			if(chatTarget != null) {
+			IRCContext chatTarget = EiraIRCAPI.parseContext(null, SharedGlobalConfig.defaultChat, IRCContext.ContextType.IRCChannel);
+			if(chatTarget.getContextType() != IRCContext.ContextType.Error) {
 				EiraIRC.instance.getChatSessionHandler().setChatTarget(chatTarget);
 			}
 		}

@@ -10,6 +10,7 @@ import net.blay09.mods.eirairc.api.upload.UploadHoster;
 import net.blay09.mods.eirairc.client.UploadManager;
 import net.blay09.mods.eirairc.command.base.IRCCommandHandler;
 import net.blay09.mods.eirairc.util.IRCTargetError;
+import net.blay09.mods.eirairc.util.Utils;
 
 /**
  * Created by Blay09 on 23.02.2015.
@@ -75,7 +76,7 @@ public class InternalMethodsImpl implements InternalMethods {
 			if(expectedType != null && expectedType != IRCContext.ContextType.IRCUser) {
 				return IRCTargetError.InvalidTarget;
 			}
-			if(parentContext != null && parentContext.getContextType() == IRCContext.ContextType.IRCChannel) {
+			if((parentContext != null && parentContext.getContextType() == IRCContext.ContextType.IRCChannel) || Utils.isServerSide()) {
 				IRCUser user = connection.getUser(contextPath);
 				if(user == null) {
 					return IRCTargetError.UserNotFound;

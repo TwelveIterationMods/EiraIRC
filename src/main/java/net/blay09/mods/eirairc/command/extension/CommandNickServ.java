@@ -44,7 +44,7 @@ public class CommandNickServ implements SubCommand {
 		IRCConnection connection = null;
 		int argidx = 0;
 		if(args.length >= 3) {
-			connection = IRCResolver.resolveConnection(args[0], IRCResolver.FLAGS_NONE);
+			connection = IRCResolver.resolveConnection(args[0]);
 			if(connection == null) {
 				Utils.sendLocalizedMessage(sender, "irc.target.serverNotFound", args[0]);
 				return true;

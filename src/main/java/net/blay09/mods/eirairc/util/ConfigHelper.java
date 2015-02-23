@@ -65,4 +65,31 @@ public class ConfigHelper {
 		}
 		return SharedGlobalConfig.generalSettings;
 	}
+
+	public static ServerConfig resolveServerConfig(String target) {
+		int pathSplitIndex = target.indexOf('/');
+		if(pathSplitIndex != -1) {
+			target = target.substring(0, pathSplitIndex - 1);
+		}
+		return ConfigurationHandler.getServerConfig(target);
+	}
+
+	public static ChannelConfig resolveChannelConfig(String target) {
+		int pathSplitIndex = target.indexOf('/');
+		ServerConfig serverConfig = null;
+		if(pathSplitIndex != -1) {
+			serverConfig = ConfigurationHandler.getServerConfig(target.substring(0, pathSplitIndex - 1));
+			target = target.substring(pathSplitIndex + 1);
+		}
+		if(serverConfig != null) {
+			return serverConfig.getChannelConfig(target);
+		} else {
+			for(ServerConfig config : ConfigurationHandler.getServerConfigs()) {
+				if(config.hasChannelConfig(target)) {
+					return config.getChannelConfig(target);
+				}
+			}
+		}
+		return null;
+	}
 }

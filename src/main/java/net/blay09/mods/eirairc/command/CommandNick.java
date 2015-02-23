@@ -41,7 +41,7 @@ public class CommandNick implements SubCommand {
 			throw new WrongUsageException(getCommandUsage(sender));
 		}
 		if(args.length >= 2) {
-			ServerConfig serverConfig = IRCResolver.resolveServerConfig(args[1], IRCResolver.FLAGS_NONE);
+			ServerConfig serverConfig = ConfigHelper.resolveServerConfig(args[1]);
 			if(serverConfig == null) {
 				Utils.sendLocalizedMessage(sender, "irc.target.serverNotFound");
 				return true;

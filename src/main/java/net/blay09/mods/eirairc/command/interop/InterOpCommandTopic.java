@@ -3,12 +3,11 @@
 
 package net.blay09.mods.eirairc.command.interop;
 
+import net.blay09.mods.eirairc.api.EiraIRCAPI;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.api.SubCommand;
 import net.blay09.mods.eirairc.config.settings.BotBooleanComponent;
 import net.blay09.mods.eirairc.util.ConfigHelper;
-import net.blay09.mods.eirairc.util.IRCResolver;
-import net.blay09.mods.eirairc.util.IRCTargetError;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
@@ -37,8 +36,8 @@ public class InterOpCommandTopic implements SubCommand {
 		if(args.length < 2) {
 			throw new WrongUsageException(getCommandUsage(sender));
 		}
-		IRCContext targetChannel = IRCResolver.resolveTarget(args[0], (short) (IRCResolver.FLAG_CHANNEL + IRCResolver.FLAG_ONCHANNEL));
-		if(targetChannel instanceof IRCTargetError) {
+		IRCContext targetChannel = EiraIRCAPI.parseContext(null, args[0], IRCContext.ContextType.IRCChannel);
+		if(targetChannel.getContextType() == IRCContext.ContextType.Error) {
 			Utils.sendLocalizedMessage(sender, targetChannel.getName(), args[0]);
 			return true;
 		}
@@ -71,7 +70,6 @@ public class InterOpCommandTopic implements SubCommand {
 	}
 
 	@Override
-	public void addTabCompletionOptions(List<String> list, ICommandSender sender, String[] args) {
-	}
+	public void addTabCompletionOptions(List<String> list, ICommandSender sender, String[] args) {}
 
 }
