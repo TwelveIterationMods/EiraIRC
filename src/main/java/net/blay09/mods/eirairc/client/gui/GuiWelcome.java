@@ -2,6 +2,7 @@ package net.blay09.mods.eirairc.client.gui;
 
 import cpw.mods.fml.client.config.GuiCheckBox;
 import net.blay09.mods.eirairc.client.gui.base.GuiLabel;
+import net.blay09.mods.eirairc.client.gui.base.GuiLinkButton;
 import net.blay09.mods.eirairc.client.gui.base.list.GuiList;
 import net.blay09.mods.eirairc.config.ClientGlobalConfig;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
@@ -23,6 +24,7 @@ public class GuiWelcome extends EiraGuiScreen {
 	private GuiList<GuiListSuggestedChannelEntry> lstChannels;
 	private GuiCheckBox chkDontShowAgain;
 	private GuiCheckBox chkRecommendedOnly;
+	private GuiLinkButton btnSubmitChannel;
 
 	@Override
 	public void initGui() {
@@ -45,6 +47,9 @@ public class GuiWelcome extends EiraGuiScreen {
 		chkDontShowAgain = new GuiCheckBox(1, menuX + 10, menuY + menuHeight - 30, "Don't show this message again", false);
 		buttonList.add(chkDontShowAgain);
 
+		btnSubmitChannel = new GuiLinkButton(2, menuX + menuWidth - 85, menuY + menuHeight - 20, mc.fontRenderer, "\u00a7nSubmit Channel");
+		buttonList.add(btnSubmitChannel);
+
 		updateList(chkRecommendedOnly.isChecked());
 	}
 
@@ -52,6 +57,8 @@ public class GuiWelcome extends EiraGuiScreen {
 	protected void actionPerformed(GuiButton button) {
 		if(button == chkRecommendedOnly) {
 			updateList(chkRecommendedOnly.isChecked());
+		} else if(button == btnSubmitChannel) {
+			Utils.openWebpage("http://goo.gl/forms/2LsJiWIQmS");
 		}
 	}
 

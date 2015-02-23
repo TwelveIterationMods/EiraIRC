@@ -52,7 +52,6 @@ public class IRCBotImpl implements IRCBot {
 		commands.put(command.getCommandName().toLowerCase(), command);
 	}
 
-	@Override
 	public Collection<IBotCommand> getCommands() {
 		return commands.values();
 	}
@@ -62,7 +61,6 @@ public class IRCBotImpl implements IRCBot {
 		return connection;
 	}
 
-	@Override
 	public boolean processCommand(IRCChannel channel, IRCUser sender, String message) {
 		String[] args = message.split(" ");
 		if(ConfigHelper.getBotSettings(channel).containsString(BotStringListComponent.DisabledNativeCommands, args[0].toLowerCase())) {
