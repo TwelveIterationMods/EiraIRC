@@ -138,7 +138,6 @@ public class IRCUserImpl implements IRCUser {
 		return authLogin;
 	}
 
-	@Override
 	public void whois() {
 		connection.whois(name);
 	}

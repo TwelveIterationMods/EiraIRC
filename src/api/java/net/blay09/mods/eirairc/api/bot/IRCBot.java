@@ -3,18 +3,24 @@
 
 package net.blay09.mods.eirairc.api.bot;
 
-import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
-import net.blay09.mods.eirairc.api.irc.IRCUser;
-
-import java.util.Collection;
 
 public interface IRCBot {
 
-	public boolean processCommand(IRCChannel channel, IRCUser sender, String message);
+	/**
+	 * @return the irc connection this bot is running on
+	 */
 	public IRCConnection getConnection();
+
+	/**
+	 * @return true if this is a server-side bot
+	 */
 	public boolean isServerSide();
+
+	/**
+	 * Should be run from within a {@code ReloadBotCommandsEvent}
+	 * @param command the command implementation to be registered
+	 */
 	public void registerCommand(IBotCommand command);
-	public Collection<IBotCommand> getCommands();
 
 }

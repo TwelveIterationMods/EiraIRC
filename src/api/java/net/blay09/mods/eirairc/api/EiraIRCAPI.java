@@ -13,28 +13,51 @@ public class EiraIRCAPI {
 
 	/**
 	 * INTERNAL METHOD. DO NOT CALL.
-	 * @param internalMethods
+	 * @param internalMethods implementation of internal API methods
 	 */
-	public static void setupAPI(InternalMethods internalMethods) {
+	public static void internalSetupAPI(InternalMethods internalMethods) {
 		EiraIRCAPI.internalMethods = internalMethods;
 	}
 
+	/**
+	 * Registers the sub-command to EiraIRC's /irc and /sirc commands.
+	 * @param command the class implementing the command
+	 */
 	public static void registerSubCommand(SubCommand command) {
 		internalMethods.registerSubCommand(command);
 	}
 
+	/**
+	 * Registers the upload hoster to EiraIRC's upload manager so that it can be used for screenshot uploading.
+	 * @param uploadHoster the class implementing the hoster
+	 */
 	public static void registerUploadHoster(UploadHoster uploadHoster) {
 		internalMethods.registerUploadHoster(uploadHoster);
 	}
 
+	/**
+	 *
+	 * @param parentContext the context to search for contextPath in or null
+	 * @param contextPath the path to an IRC context (e.g. irc.esper.net/#EiraIRC)
+	 * @param expectedType the expected return type or null for any
+	 * @return an IRC context or a context of type Error with the error message as it's name
+	 */
 	public static IRCContext parseContext(IRCContext parentContext, String contextPath, IRCContext.ContextType expectedType) {
 		return internalMethods.parseContext(parentContext, contextPath, expectedType);
 	}
 
+	/**
+	 * @param serverHost an IRC server address (without the port)
+	 * @return true if EiraIRC is connected to the given host
+	 */
 	public static boolean isConnectedTo(String serverHost) {
 		return internalMethods.isConnectedTo(serverHost);
 	}
 
+	/**
+	 * @param user
+	 * @return true if the player has EiraIRC installed on the client-side
+	 */
 	public static boolean hasClientSideInstalled(ICommandSender user) {
 		return internalMethods.hasClientSideInstalled(user);
 	}

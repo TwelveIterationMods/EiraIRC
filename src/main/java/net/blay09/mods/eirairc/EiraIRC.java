@@ -30,7 +30,6 @@ import net.blay09.mods.eirairc.net.PacketHandler;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.I19n;
-import net.blay09.mods.eirairc.util.IRCResolver;
 import net.minecraft.command.CommandHandler;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
@@ -82,7 +81,7 @@ public class EiraIRC {
 		I19n.init();
 		PacketHandler.init();
 
-		EiraIRCAPI.setupAPI(new InternalMethodsImpl());
+		EiraIRCAPI.internalSetupAPI(new InternalMethodsImpl());
 	}
 	
 	@EventHandler

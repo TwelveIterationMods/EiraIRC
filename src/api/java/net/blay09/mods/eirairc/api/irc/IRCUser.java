@@ -7,11 +7,9 @@ import java.util.Collection;
 
 public interface IRCUser extends IRCContext {
 
-	public void whois();
-	public String getAuthLogin();
 	public Collection<IRCChannel> getChannels();
+	public String getChannelModePrefix(IRCChannel channel);
 	public boolean isOperator(IRCChannel channel);
 	public boolean hasVoice(IRCChannel channel);
-	public String getChannelModePrefix(IRCChannel channel);
 
 }

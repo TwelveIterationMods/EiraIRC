@@ -25,7 +25,7 @@ public class BotCommandHelp implements IBotCommand {
 	public void processCommand(IRCBot bot, IRCChannel channel, IRCUser user, String[] args, IBotCommand commandSettings) {
 		if(channel != null) {
 			StringBuilder sb = new StringBuilder();
-			for(IBotCommand command : bot.getCommands()) {
+			for(IBotCommand command : ((IRCBotImpl) bot).getCommands()) {
 				if(sb.length() > 0) {
 					sb.append(", ");
 				}
@@ -43,7 +43,7 @@ public class BotCommandHelp implements IBotCommand {
 			user.notice("Visit http://blay09.net/?page_id=63 for more information on this bot.");
 			user.notice(" ");
 			user.notice("The following commands are available:");
-			for(IBotCommand command : bot.getCommands()) {
+			for(IBotCommand command : ((IRCBotImpl) bot).getCommands()) {
 				user.notice(command.getCommandName().toUpperCase() + " : " + command.getCommandDescription());
 			}
 			user.notice("***** End of Help *****");
