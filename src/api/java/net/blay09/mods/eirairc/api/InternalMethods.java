@@ -8,7 +8,7 @@ import net.blay09.mods.eirairc.api.upload.UploadHoster;
  */
 public interface InternalMethods {
 	public boolean isConnectedTo(String serverHost);
-	public IRCContext parseContext(String contextPath);
+	public IRCContext parseContext(IRCContext parentContext, String contextPath, IRCContext.ContextType expectedType);
 	public void registerSubCommand(SubCommand command);
 	public void registerUploadHoster(UploadHoster uploadHoster);
 }

@@ -4,6 +4,7 @@ package net.blay09.mods.eirairc.irc;
 
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
+import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.api.irc.IRCUser;
 import net.blay09.mods.eirairc.api.bot.IRCBot;
 import net.blay09.mods.eirairc.api.event.*;
@@ -507,6 +508,11 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 	@Override
 	public String getName() {
 		return host;
+	}
+
+	@Override
+	public ContextType getContextType() {
+		return ContextType.IRCConnection;
 	}
 
 	@Override

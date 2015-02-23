@@ -4,6 +4,7 @@
 package net.blay09.mods.eirairc.irc;
 
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
+import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.api.irc.IRCUser;
 import net.blay09.mods.eirairc.api.bot.IBotCommand;
 import net.blay09.mods.eirairc.api.bot.IRCBot;
@@ -48,6 +49,11 @@ public class IRCUserImpl implements IRCUser {
 	
 	public String getName() {
 		return name;
+	}
+
+	@Override
+	public ContextType getContextType() {
+		return ContextType.IRCUser;
 	}
 
 	@Override

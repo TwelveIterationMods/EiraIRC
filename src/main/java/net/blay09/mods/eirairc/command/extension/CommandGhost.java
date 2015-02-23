@@ -37,7 +37,7 @@ public class CommandGhost implements SubCommand {
 	public boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) {
 		IRCConnection connection;
 		if(args.length > 0) {
-			connection = EiraIRCAPI.parseContext(args[0]).getConnection();
+			connection = EiraIRCAPI.parseContext(null, args[0], null).getConnection();
 			if(connection == null) {
 				Utils.sendLocalizedMessage(sender, "irc.target.serverNotFound", args[0]);
 				return true;

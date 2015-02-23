@@ -66,11 +66,6 @@ public class DirectUploadHoster implements UploadHoster {
 	}
 
 	@Override
-	public boolean isCustomizable() {
-		return false;
-	}
-
-	@Override
 	public String getName() {
 		return "DirectUpload";
 	}

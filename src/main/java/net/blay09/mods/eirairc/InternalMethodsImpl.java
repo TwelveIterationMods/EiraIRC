@@ -5,10 +5,10 @@ import net.blay09.mods.eirairc.api.SubCommand;
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
+import net.blay09.mods.eirairc.api.irc.IRCUser;
 import net.blay09.mods.eirairc.api.upload.UploadHoster;
 import net.blay09.mods.eirairc.client.UploadManager;
 import net.blay09.mods.eirairc.command.base.IRCCommandHandler;
-import net.blay09.mods.eirairc.util.IRCResolver;
 import net.blay09.mods.eirairc.util.IRCTargetError;
 
 /**
@@ -32,7 +32,7 @@ public class InternalMethodsImpl implements InternalMethods {
 	}
 
 	@Override
-	public IRCContext parseContext(String contextPath) {
+	public IRCContext parseContext(IRCContext parentContext, String contextPath, IRCContext.ContextType expectedType) {
 		String server;
 		int serverIdx = contextPath.indexOf('/');
 		IRCConnection connection;
@@ -44,28 +44,46 @@ public class InternalMethodsImpl implements InternalMethods {
 				return IRCTargetError.NotConnected;
 			}
 		} else {
-			IRCConnection foundConnection = null;
-			for(IRCConnection con : EiraIRC.instance.getConnectionManager().getConnections()) {
-				if(con.getChannel(contextPath) != null || con.getUser(contextPath) != null) {
-					if(foundConnection != null) {
-						return IRCTargetError.SpecifyServer;
+			if(parentContext != null) {
+				connection = parentContext.getConnection();
+			} else {
+				IRCConnection foundConnection = null;
+				for (IRCConnection con : EiraIRC.instance.getConnectionManager().getConnections()) {
+					if (con.getChannel(contextPath) != null || con.getUser(contextPath) != null) {
+						if (foundConnection != null) {
+							return IRCTargetError.SpecifyServer;
+						}
+						foundConnection = con;
 					}
-					foundConnection = con;
 				}
+				if (foundConnection == null) {
+					return IRCTargetError.ServerNotFound;
+				}
+				connection = foundConnection;
 			}
-			if(foundConnection == null) {
-				return IRCTargetError.ServerNotFound;
-			}
-			connection = foundConnection;
 		}
 		if(connection.getChannelTypes().indexOf(contextPath.charAt(0)) != -1) {
+			if(expectedType != null && expectedType != IRCContext.ContextType.IRCChannel) {
+				return IRCTargetError.InvalidTarget;
+			}
 			IRCChannel channel = connection.getChannel(contextPath);
 			if(channel == null) {
 				return IRCTargetError.NotOnChannel;
 			}
 			return channel;
 		} else {
-			return connection.getOrCreateUser(contextPath);
+			if(expectedType != null && expectedType != IRCContext.ContextType.IRCUser) {
+				return IRCTargetError.InvalidTarget;
+			}
+			if(parentContext != null && parentContext.getContextType() == IRCContext.ContextType.IRCChannel) {
+				IRCUser user = connection.getUser(contextPath);
+				if(user == null) {
+					return IRCTargetError.UserNotFound;
+				}
+				return user;
+			} else {
+				return connection.getOrCreateUser(contextPath);
+			}
 		}
 	}
 

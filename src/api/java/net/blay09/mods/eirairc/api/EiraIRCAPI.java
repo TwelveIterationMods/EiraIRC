@@ -26,8 +26,8 @@ public class EiraIRCAPI {
 		internalMethods.registerUploadHoster(uploadHoster);
 	}
 
-	public static IRCContext parseContext(String contextPath) {
-		return internalMethods.parseContext(contextPath);
+	public static IRCContext parseContext(IRCContext parentContext, String contextPath, IRCContext.ContextType expectedType) {
+		return internalMethods.parseContext(parentContext, contextPath, expectedType);
 	}
 
 	public static boolean isConnectedTo(String serverHost) {

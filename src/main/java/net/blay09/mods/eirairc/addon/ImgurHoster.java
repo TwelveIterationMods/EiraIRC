@@ -60,11 +60,6 @@ public class ImgurHoster implements UploadHoster {
 		}
 	}
 
-	@Override
-	public boolean isCustomizable() {
-		return false;
-	}
-
 	@Nullable
 	private String handleResponse(InputStream in) {
 		StringBuilder sb = new StringBuilder();

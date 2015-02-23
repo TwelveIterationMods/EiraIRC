@@ -28,6 +28,11 @@ public enum IRCTargetError implements IRCContext {
 	}
 
 	@Override
+	public ContextType getContextType() {
+		return ContextType.Error;
+	}
+
+	@Override
 	public String getIdentifier() {
 		return toString();
 	}
@@ -42,4 +47,5 @@ public enum IRCTargetError implements IRCContext {
 	
 	@Override
 	public void notice(String message) {}
+
 }
