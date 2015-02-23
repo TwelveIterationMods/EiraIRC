@@ -3,12 +3,12 @@
 
 package net.blay09.mods.eirairc.command.extension;
 
+import net.blay09.mods.eirairc.api.EiraIRCAPI;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.api.SubCommand;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.ServerConfig;
-import net.blay09.mods.eirairc.util.IRCResolver;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
@@ -41,14 +41,15 @@ public class CommandNickServ implements SubCommand {
 		if(args.length < 2) {
 			throw new WrongUsageException(getCommandUsage(sender));
 		}
-		IRCConnection connection = null;
+		IRCConnection connection;
 		int argidx = 0;
 		if(args.length >= 3) {
-			connection = IRCResolver.resolveConnection(args[0]);
-			if(connection == null) {
-				Utils.sendLocalizedMessage(sender, "irc.target.serverNotFound", args[0]);
+			IRCContext target = EiraIRCAPI.parseContext(null, args[0], IRCContext.ContextType.IRCConnection);
+			if(target.getContextType() == IRCContext.ContextType.Error) {
+				Utils.sendLocalizedMessage(sender, target.getName(), args[0]);
 				return true;
 			}
+			connection = (IRCConnection) target;
 			argidx = 1;
 		} else {
 			if(context == null) {

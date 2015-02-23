@@ -43,7 +43,7 @@ public class CommandJoin implements SubCommand {
 		IRCContext target = EiraIRCAPI.parseContext(null, args[0], IRCContext.ContextType.IRCConnection);
 		IRCConnection connection;
 		if(target.getContextType() == IRCContext.ContextType.Error) {
-			if(IRCResolver.hasServerPrefix(args[0])) {
+			if(args[0].indexOf('/') != -1) {
 				Utils.sendLocalizedMessage(sender, target.getName(), args[0]);
 				return true;
 			} else {

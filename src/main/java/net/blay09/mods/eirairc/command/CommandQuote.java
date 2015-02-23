@@ -4,10 +4,10 @@
 package net.blay09.mods.eirairc.command;
 
 import net.blay09.mods.eirairc.EiraIRC;
+import net.blay09.mods.eirairc.api.EiraIRCAPI;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.api.SubCommand;
-import net.blay09.mods.eirairc.util.IRCResolver;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
 
@@ -39,14 +39,15 @@ public class CommandQuote implements SubCommand {
 				Utils.sendLocalizedMessage(sender, "irc.target.specifyServer");
 				return true;
 			}
-			connection = IRCResolver.resolveConnection(args[0]);
+			IRCContext target = EiraIRCAPI.parseContext(null, args[0], IRCContext.ContextType.IRCConnection).getConnection();
+			if(target.getContextType() == IRCContext.ContextType.Error) {
+				Utils.sendLocalizedMessage(sender, target.getName(), args[0]);
+				return true;
+			}
+			connection = target.getConnection();
 			msgIdx = 1;
 		} else {
 			connection = context.getConnection();
-		}
-		if(connection == null) {
-			Utils.sendLocalizedMessage(sender, "irc.target.serverNotFound", args[0]);
-			return true;
 		}
 		String msg = Utils.joinStrings(args, " ", msgIdx);
 		connection.irc(msg);

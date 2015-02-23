@@ -3,6 +3,7 @@
 
 package net.blay09.mods.eirairc.command;
 
+import net.blay09.mods.eirairc.api.EiraIRCAPI;
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
@@ -44,11 +45,12 @@ public class CommandLeave implements SubCommand {
 		IRCConnection connection;
 		String channelName;
 		if(args.length > 0) {
-			connection = IRCResolver.resolveConnection(args[0]);
-			if(connection == null) {
-				Utils.sendLocalizedMessage(sender, "irc.target.serverNotFound");
+			IRCContext target = EiraIRCAPI.parseContext(null, args[0], IRCContext.ContextType.IRCConnection);
+			if(target.getContextType() == IRCContext.ContextType.Error) {
+				Utils.sendLocalizedMessage(sender, target.getName(), args[0]);
 				return true;
 			}
+			connection = target.getConnection();
 			channelName = IRCResolver.stripPath(args[0]);
 		} else {
 			if(context == null) {
