@@ -30,6 +30,10 @@ public class ServiceConfig {
 	}
 	
 	public static void setupDefaultServices(Configuration config) {
+		config.get(CATEGORY + Configuration.CATEGORY_SPLITTER + "synirc", "cmdIdentify",  NickServ IDENTIFY {PASS}");
+		config.get(CATEGORY + Configuration.CATEGORY_SPLITTER + "synirc", "cmdGhost", "NickServ GHOST {NICK} {PASS}");
+		config.get(CATEGORY + Configuration.CATEGORY_SPLITTER + "synirc", "serverList", new String[] { Utils.quote("irc.synirc.net") });
+		
 		config.get(CATEGORY + Configuration.CATEGORY_SPLITTER + "atheme", "cmdIdentify", "PRIVMSG NickServ :IDENTIFY {USER} {PASS}");
 		config.get(CATEGORY + Configuration.CATEGORY_SPLITTER + "atheme", "cmdGhost", "PRIVMSG NickServ :GHOST {NICK} {PASS}");
 		config.get(CATEGORY + Configuration.CATEGORY_SPLITTER + "atheme", "serverList", new String[] { Utils.quote("irc.esper.net") });
