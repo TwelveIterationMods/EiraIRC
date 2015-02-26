@@ -173,7 +173,7 @@ public class ConfigurationHandler {
 		override.addProperty("name", "help");
 		override.addProperty("override", "help");
 		override.addProperty("broadcastResult", true);
-		override.addProperty("description", "Changes EiraIRCs help command to broadcast into the channel instead.");
+		override.addProperty("description", "Changes EiraIRCs help command to broadcast into the channel instead of a private tell.");
 		root.add(override);
 		Gson gson = new Gson();
 		try {
