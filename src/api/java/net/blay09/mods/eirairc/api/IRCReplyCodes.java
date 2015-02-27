@@ -1,7 +1,7 @@
 // Copyright (c) 2014, Christopher "blay09" Baker
 // All rights reserved.
 
-package net.blay09.mods.eirairc.irc;
+package net.blay09.mods.eirairc.api;
 
 public class IRCReplyCodes {
 

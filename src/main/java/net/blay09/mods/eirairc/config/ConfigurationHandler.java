@@ -26,6 +26,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.*;
+import java.net.URL;
 import java.util.*;
 
 public class ConfigurationHandler {
@@ -105,8 +106,14 @@ public class ConfigurationHandler {
 	}
 
 	public static void loadSuggestedChannels(IResourceManager resourceManager) throws IOException {
+		InputStream in;
+		URL remoteURL = new URL("https://raw.githubusercontent.com/blay09/EiraIRC/master/src/main/resources/assets/eirairc/suggested-channels.json");
+		try {
+			in = remoteURL.openStream();
+		} catch (IOException e) {
+			in = resourceManager.getResource(new ResourceLocation("eirairc", "suggested-channels.json")).getInputStream();
+		}
 		Gson gson = new Gson();
-		InputStream in = resourceManager.getResource(new ResourceLocation("eirairc", "suggested-channels.json")).getInputStream();
 		Reader reader = new InputStreamReader(in);
 		JsonArray channelArray = gson.fromJson(reader, JsonArray.class);
 		for(int i = 0; i < channelArray.size(); i++) {

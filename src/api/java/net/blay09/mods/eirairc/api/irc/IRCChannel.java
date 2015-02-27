@@ -7,7 +7,14 @@ import java.util.Collection;
 
 public interface IRCChannel extends IRCContext {
 
+	/**
+	 * @return the topic of this channel
+	 */
 	public String getTopic();
+
+	/**
+	 * @return a list of IRCUsers within this channel
+	 */
 	public Collection<IRCUser> getUserList();
 
 }
