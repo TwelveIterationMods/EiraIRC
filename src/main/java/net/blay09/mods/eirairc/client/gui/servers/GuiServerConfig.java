@@ -97,7 +97,7 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 		if(lstChannels != null) {
 			oldSelectedIdx = lstChannels.getSelectedIdx();
 		}
-		lstChannels = new GuiList<GuiListEntryChannel>(rightX - 100, topY + 15, 100, 80, 20);
+		lstChannels = new GuiList<GuiListEntryChannel>(this, rightX - 100, topY + 15, 100, 80, 20);
 		for(ChannelConfig channelConfig : config.getChannelConfigs()) {
 			lstChannels.addEntry(new GuiListEntryChannel(this, fontRendererObj, channelConfig, lstChannels.getEntryHeight()));
 		}

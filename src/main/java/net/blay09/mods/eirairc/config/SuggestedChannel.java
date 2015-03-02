@@ -78,4 +78,8 @@ public class SuggestedChannel {
 	public String getModpackName() {
 		return modpackName;
 	}
+
+	public String getDescription() {
+		return description;
+	}
 }

@@ -2,10 +2,14 @@ package net.blay09.mods.eirairc.client.gui.base.list;
 
 import net.minecraft.client.gui.Gui;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class GuiListEntry extends Gui {
 
-	protected GuiList parentList;
+	protected final List<String> tooltipList = new ArrayList<String>();
 	private boolean selected;
+	protected GuiList parentList;
 
 	public void setSelected(boolean selected){
 		this.selected = selected;
@@ -20,5 +24,9 @@ public abstract class GuiListEntry extends Gui {
 
 	public void setParentList(GuiList parentList) {
 		this.parentList = parentList;
+	}
+
+	public final List<String> getTooltipText() {
+		return tooltipList;
 	}
 }

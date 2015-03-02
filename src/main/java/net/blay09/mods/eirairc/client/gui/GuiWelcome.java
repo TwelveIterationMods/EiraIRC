@@ -41,7 +41,7 @@ public class GuiWelcome extends EiraGuiScreen {
 		chkRecommendedOnly = new GuiCheckBox(0, menuX + 10, menuY + 50, "Show recommended channels only", true);
 		buttonList.add(chkRecommendedOnly);
 
-		lstChannels = new GuiList<GuiListSuggestedChannelEntry>(menuX + 10, menuY + 65, menuWidth - 20, 100, 30);
+		lstChannels = new GuiList<GuiListSuggestedChannelEntry>(this, menuX + 10, menuY + 65, menuWidth - 20, 100, 30);
 		listList.add(lstChannels);
 
 		chkDontShowAgain = new GuiCheckBox(1, menuX + 10, menuY + menuHeight - 30, "Don't show this message again", false);

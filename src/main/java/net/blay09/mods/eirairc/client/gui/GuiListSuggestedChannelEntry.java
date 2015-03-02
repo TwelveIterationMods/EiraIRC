@@ -25,6 +25,8 @@ public class GuiListSuggestedChannelEntry extends GuiListEntry {
 		this.fontRenderer = fontRenderer;
 		this.channel = channel;
 		this.altBackground = altBackground;
+
+		tooltipList.addAll(fontRenderer.listFormattedStringToWidth(channel.getDescription(), 200));
 	}
 
 	@Override

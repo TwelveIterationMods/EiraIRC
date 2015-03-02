@@ -199,4 +199,8 @@ public class EiraGuiScreen extends GuiScreen {
 			overlay.setWorldAndResolution(mc, width, height);
 		}
 	}
+
+	public void drawTooltip(List<String> tooltipList, int mouseX, int mouseY) {
+		func_146283_a(tooltipList, mouseX, mouseY);
+	}
 }

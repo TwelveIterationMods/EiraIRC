@@ -23,7 +23,8 @@
   {
     "server": "irc.esper.net",
     "channel": "#FTB",
-    "modpack-display": "Feed The Beast",
+    "modpack-display": "Feed The Beast Modpacks",
+    "description": "The official Feed The Beast IRC channel.",
     "recommended": true
   },
   {

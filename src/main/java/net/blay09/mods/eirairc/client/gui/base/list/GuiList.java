@@ -1,5 +1,6 @@
 package net.blay09.mods.eirairc.client.gui.base.list;
 
+import net.blay09.mods.eirairc.client.gui.EiraGuiScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
@@ -16,9 +17,11 @@ public class GuiList<T extends GuiListEntry> extends Gui {
 	private static final int BORDER_COLOR = Integer.MAX_VALUE;
 	private static final int SELECTION_COLOR = Integer.MAX_VALUE;
 	private static final int DOUBLE_CLICK_TIME = 250;
+	private static final float TOOLTIP_TIME = 30;
 
 	private final List<T> entries = new ArrayList<T>();
-	
+	private final EiraGuiScreen parentScreen;
+
 	private int xPosition;
 	private int yPosition;
 	private int width;
@@ -31,8 +34,12 @@ public class GuiList<T extends GuiListEntry> extends Gui {
 
 	private int lastClickIdx = -1;
 	private long lastClickTime = 0;
-	
-	public GuiList(int x, int y, int width, int height, int entryHeight) {
+
+	private GuiListEntry hoverObject;
+	private float hoverTime;
+
+	public GuiList(EiraGuiScreen parentScreen, int x, int y, int width, int height, int entryHeight) {
+		this.parentScreen = parentScreen;
 		this.xPosition = x;
 		this.yPosition = y;
 		this.width = width;
@@ -96,6 +103,7 @@ public class GuiList<T extends GuiListEntry> extends Gui {
 		}
 
 		drawBackground();
+		List<String> tooltipList = null;
 		Minecraft mc = Minecraft.getMinecraft();
 		ScaledResolution scaledResolution = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
 		float scale = scaledResolution.getScaleFactor();
@@ -103,10 +111,24 @@ public class GuiList<T extends GuiListEntry> extends Gui {
 		GL11.glEnable(GL11.GL_SCISSOR_TEST);
 		for(int i = 0; i < entries.size(); i++) {
 			GuiListEntry entry = entries.get(i);
-			entry.drawEntry(xPosition, yPosition + i * entryHeight + scrollOffset);
+			int entryY = yPosition + i * entryHeight + scrollOffset;
+			entry.drawEntry(xPosition, entryY);
+			if(!entry.getTooltipText().isEmpty() && mouseX >= xPosition && mouseX < xPosition + width && mouseY >= entryY && mouseY < entryY + entryHeight) {
+				if(entry != hoverObject) {
+					hoverObject = entry;
+					hoverTime = 0f;
+				}
+				hoverTime++;
+				if(hoverTime > TOOLTIP_TIME) {
+					tooltipList = entry.getTooltipText();
+				}
+			}
 		}
 		drawSelectionBorder();
 		GL11.glDisable(GL11.GL_SCISSOR_TEST);
+		if(tooltipList != null) {
+			parentScreen.drawTooltip(tooltipList, mouseX, mouseY);
+		}
 	}
 
 	public void mouseWheelMoved(int delta) {

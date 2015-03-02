@@ -2,12 +2,17 @@ package net.blay09.mods.eirairc.client.gui;
 
 import net.blay09.mods.eirairc.client.graphics.TextureAtlas;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.util.ResourceLocation;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 
 import java.io.IOException;
+import java.util.Iterator;
 
 /**
  * Created by Blay09 on 05.10.2014.
@@ -22,10 +27,6 @@ public class EiraGui {
 		} catch (IOException e) {
 			Minecraft.getMinecraft().displayCrashReport(new CrashReport("Could not load EiraIRC texture atlas", e));
 		}
-	}
-
-	public static void drawTexturedRect256(int x, int y, int width, int height, int texCoordX, int texCoordY, int regionWidth, int regionHeight, float zLevel) {
-		drawTexturedRect(x, y, width, height, texCoordX, texCoordY, regionWidth, regionHeight, zLevel, 256, 256);
 	}
 
 	public static void drawTexturedRect(int x, int y, int width, int height, int texCoordX, int texCoordY, int regionWidth, int regionHeight, float zLevel, int texWidth, int texHeight) {
