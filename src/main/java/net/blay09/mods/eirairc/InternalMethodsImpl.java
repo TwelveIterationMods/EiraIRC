@@ -68,8 +68,8 @@ public class InternalMethodsImpl implements InternalMethods {
 					}
 				}
 				IRCConnection foundConnection = null;
-				for (IRCConnection con : EiraIRC.instance.getConnectionManager().getConnections()) {
-					if (con.getChannel(contextPath) != null || con.getUser(contextPath) != null) {
+				for(IRCConnection con : EiraIRC.instance.getConnectionManager().getConnections()) {
+					if(con.getChannel(contextPath) != null || con.getUser(contextPath) != null) {
 						if (foundConnection != null) {
 							return IRCTargetError.SpecifyServer;
 						}
@@ -77,7 +77,10 @@ public class InternalMethodsImpl implements InternalMethods {
 					}
 				}
 				if (foundConnection == null) {
-					return IRCTargetError.ServerNotFound;
+					foundConnection = EiraIRC.instance.getConnectionManager().getConnectionCount() == 1 ? EiraIRC.instance.getConnectionManager().getDefaultConnection() : null;
+					if(foundConnection == null) {
+						return IRCTargetError.ServerNotFound;
+					}
 				}
 				connection = foundConnection;
 			}
