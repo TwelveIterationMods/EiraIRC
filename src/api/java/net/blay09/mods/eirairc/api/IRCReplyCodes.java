@@ -130,5 +130,5 @@ public class IRCReplyCodes {
 	public static final int RPL_INFOSTART = 273;
 	public static final int RPL_MYPORTIS = 384;
 	public static final int RPL_ISUPPORT = 5;
-
+	public static final int RPL_WELCOME = 1;
 }

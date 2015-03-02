@@ -298,7 +298,7 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 				channel.addUser(user);
 			}
 			MinecraftForge.EVENT_BUS.post(new IRCChannelJoinedEvent(this, channel));
-		} else if(numeric == IRCReplyCodes.RPL_ENDOFMOTD) {
+		} else if(numeric == IRCReplyCodes.RPL_WELCOME) {
 			connected = true;
 			MinecraftForge.EVENT_BUS.post(new IRCConnectEvent(this));
 		} else if(numeric == IRCReplyCodes.RPL_TOPIC) {
