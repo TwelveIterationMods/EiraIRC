@@ -7,11 +7,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
-import io.netty.channel.ChannelHandlerContext;
-import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.net.EiraPlayerInfo;
 import net.blay09.mods.eirairc.util.Utils;
-import net.minecraft.entity.player.EntityPlayer;
 
 public class MessageHello implements IMessage {
 
@@ -26,12 +22,12 @@ public class MessageHello implements IMessage {
 
 	@Override
 	public void fromBytes(ByteBuf buf) {
-//		version = Utils.readString(buf);
+		version = Utils.readString(buf);
 	}
 
 	@Override
 	public void toBytes(ByteBuf buf) {
-//		Utils.writeString(buf, version);
+		Utils.writeString(buf, version);
 	}
 
 	public String getVersion() {

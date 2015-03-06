@@ -1,112 +1,436 @@
-// Copyright (c) 2014, Christopher "blay09" Baker
-// All rights reserved.
-
 package net.blay09.mods.eirairc.client.gui.screenshot;
 
-import net.blay09.mods.eirairc.api.upload.IUploadHoster;
-import net.blay09.mods.eirairc.api.upload.UploadManager;
-import net.blay09.mods.eirairc.client.gui.settings.GuiSettings;
+import net.blay09.mods.eirairc.client.gui.EiraGui;
+import net.blay09.mods.eirairc.client.gui.EiraGuiScreen;
+import net.blay09.mods.eirairc.client.gui.base.GuiAdvancedTextField;
+import net.blay09.mods.eirairc.client.gui.base.GuiImageButton;
+import net.blay09.mods.eirairc.client.gui.base.image.GuiFileImage;
+import net.blay09.mods.eirairc.client.gui.base.image.GuiImage;
+import net.blay09.mods.eirairc.client.gui.overlay.OverlayYesNo;
+import net.blay09.mods.eirairc.client.screenshot.Screenshot;
 import net.blay09.mods.eirairc.client.screenshot.ScreenshotManager;
-import net.blay09.mods.eirairc.config.ScreenshotConfig;
-import net.blay09.mods.eirairc.handler.ConfigurationHandler;
-import net.blay09.mods.eirairc.util.Globals;
+import net.blay09.mods.eirairc.config.ScreenshotAction;
 import net.blay09.mods.eirairc.util.Utils;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiYesNoCallback;
 
-public class GuiScreenshots extends GuiScreen {
-	
-	private static final int BUTTON_WIDTH = 160;
-	private static final int BUTTON_HEIGHT = 20;
-	private static final int BUTTON_GAP = 5;
-	private static final int CUSTOM_GAP = 1;
-	
-	private GuiButton btnScreenshotList;
-	private GuiButton btnUploadService;
-	private GuiButton btnCustomUpload;
-	private GuiButton btnScreenshotAction;
-	
-	private GuiButton btnBack;
-	
-	private int hosterIdx;
-	
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Created by Blay09 on 04.10.2014.
+ */
+public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
+
+	private static final float TOOLTIP_TIME = 30;
+
+	private GuiAdvancedTextField txtSearch;
+	private GuiButton btnOpenFolder;
+	private GuiAdvancedTextField txtName;
+
+	private GuiImageButton btnGoToFirst;
+	private GuiImageButton btnGoToPrevious;
+	private GuiImageButton btnGoToNext;
+	private GuiImageButton btnGoToLast;
+	private GuiImageButton btnZoom;
+	private GuiImageButton btnUpload;
+	private GuiImageButton btnClipboard;
+	private GuiImageButton btnReupload;
+	private GuiImageButton btnFavorite;
+	private GuiImageButton btnDelete;
+
+	private List<Screenshot> screenshotList;
+	private List<Screenshot> screenshotGroup;
+	private GuiScreenshotPage activePageButton;
+	private int currentIdx;
+	private String lastSearchText = "";
+	private final List<Screenshot> searchResults = new ArrayList<Screenshot>();
+	private Screenshot currentScreenshot;
+	private GuiImage imgPreview;
+
+	private int imgX;
+	private int imgY;
+	private final int imgWidth = 285;
+	private final int imgHeight = 160;
+
+	private boolean buttonsVisible;
+	private float hoverTime;
+	private GuiImageButton hoverObject;
+
+	public GuiScreenshots(GuiScreen parentScreen) {
+		super(parentScreen);
+		screenshotGroup = ScreenshotManager.getInstance().getScreenshots();
+		screenshotList = screenshotGroup;
+	}
+
+	private void setScreenshotGroup(GuiScreenshotPage pageButton, List<Screenshot> screenshotGroup) {
+		if(activePageButton != null) {
+			activePageButton.setActive(false);
+		}
+		pageButton.setActive(true);
+		activePageButton = pageButton;
+		this.screenshotGroup = screenshotGroup;
+		setScreenshotList(screenshotGroup);
+		resetSearch();
+	}
+
+	public void setScreenshotList(List<Screenshot> screenshotList) {
+		this.screenshotList = screenshotList;
+		currentIdx = 0;
+		updateScreenshot();
+	}
+
+	public void updateScreenshot() {
+		if(screenshotList.isEmpty()) {
+			currentScreenshot = null;
+			imgPreview = null;
+		} else if(currentIdx >= 0 && currentIdx < screenshotList.size()) {
+			Screenshot screenshot = screenshotList.get(currentIdx);
+			if(currentScreenshot != screenshot) {
+				imgPreview = new GuiFileImage(screenshot.getFile());
+				imgPreview.loadTexture();
+				currentScreenshot = screenshot;
+			}
+			txtName.setDefaultText(screenshot.getOriginalName(), false);
+			txtName.setText(screenshot.getName());
+			setFavoriteButtonState(screenshot.isFavorited());
+		}
+	}
+
 	@Override
 	public void initGui() {
-		int leftX = width / 2 - BUTTON_WIDTH - BUTTON_GAP;
-		int rightX = width / 2 + BUTTON_GAP;
-		
-		btnScreenshotList = new GuiButton(1, leftX, height / 2 - 64, BUTTON_WIDTH, BUTTON_HEIGHT, Utils.getLocalizedMessage("irc.gui.screenshots.archive"));
-		buttonList.add(btnScreenshotList);
-		
-		btnUploadService = new GuiButton(2, rightX, height / 2 - 64, BUTTON_WIDTH - BUTTON_HEIGHT - CUSTOM_GAP, BUTTON_HEIGHT, "");
-		buttonList.add(btnUploadService);
-		
-		btnCustomUpload = new GuiButton(3, rightX + BUTTON_WIDTH - BUTTON_HEIGHT, height / 2 - 64, BUTTON_HEIGHT, BUTTON_HEIGHT, "...");
-		btnCustomUpload.enabled = false;
-		buttonList.add(btnCustomUpload);
-		
-		btnScreenshotAction = new GuiButton(4, leftX, height / 2 - 39, BUTTON_WIDTH, BUTTON_HEIGHT, "");
-		buttonList.add(btnScreenshotAction);
-		
-		btnBack = new GuiButton(0, width / 2 - 100, height / 2, 200, BUTTON_HEIGHT, Utils.getLocalizedMessage("irc.gui.back"));
-		buttonList.add(btnBack);
-		
-		updateButtonText();
+		super.initGui();
+
+		final int leftX = width / 2 - 145;
+		final int rightX = width / 2 + 145;
+		final int topY = height / 2 - 80;
+
+		txtSearch = new GuiAdvancedTextField(fontRendererObj, leftX + 2, topY - 10, 200, 16);
+		txtSearch.setEmptyOnRightClick(true);
+		txtSearch.setDefaultText("Search...", true);
+		textFieldList.add(txtSearch);
+
+		btnOpenFolder = new GuiButton(0, rightX - 85, topY - 12, 85, 20, "Open Folder");
+		buttonList.add(btnOpenFolder);
+
+		txtName = new GuiAdvancedTextField(fontRendererObj, width / 2 - 100, topY + 152, 200, 15);
+		textFieldList.add(txtName);
+
+		btnGoToFirst = new GuiImageButton(1, width / 2 - 39, topY + 12, EiraGui.atlas.findRegion("button_first"));
+		buttonList.add(btnGoToFirst);
+
+		btnGoToPrevious = new GuiImageButton(2, width / 2 - 13, topY + 12, EiraGui.atlas.findRegion("button_prev"));
+		buttonList.add(btnGoToPrevious);
+
+		btnGoToNext = new GuiImageButton(3, width / 2 + 5, topY + 12, EiraGui.atlas.findRegion("button_next"));
+		buttonList.add(btnGoToNext);
+
+		btnGoToLast = new GuiImageButton(4, width / 2 + 23, topY + 12, EiraGui.atlas.findRegion("button_last"));
+		buttonList.add(btnGoToLast);
+
+		btnFavorite = new GuiImageButton(5, rightX - 37, topY + 12, EiraGui.atlas.findRegion("button_favorite"));
+		btnFavorite.setTooltipText("Favorite");
+		buttonList.add(btnFavorite);
+
+		btnUpload = new GuiImageButton(6, rightX - 37, topY + 50, EiraGui.atlas.findRegion("button_upload"));
+		btnUpload.setTooltipText("Upload");
+		buttonList.add(btnUpload);
+
+		btnClipboard = new GuiImageButton(7, rightX - 37, topY + 50, EiraGui.atlas.findRegion("button_clipboard"));
+		btnClipboard.visible = false;
+		btnClipboard.setTooltipText("To Clipboard");
+		buttonList.add(btnClipboard);
+
+		btnZoom = new GuiImageButton(8, rightX - 37, topY + 135, EiraGui.atlas.findRegion("button_zoom"));
+		btnZoom.setTooltipText("Zoom");
+		buttonList.add(btnZoom);
+
+		btnDelete = new GuiImageButton(9, leftX + 5, topY + 12, EiraGui.atlas.findRegion("button_delete"));
+		btnDelete.setTooltipText("Delete");
+		buttonList.add(btnDelete);
+
+		btnReupload = new GuiImageButton(10, leftX + 5, topY + 50, EiraGui.atlas.findRegion("button_upload"));
+		btnReupload.visible = false;
+		btnReupload.setTooltipText("Re-Upload");
+		buttonList.add(btnReupload);
+
+		int pageLeft = rightX - 3;
+		int pageTop = topY + 10;
+
+		GuiScreenshotPage pageAll = new GuiScreenshotPage(11, pageLeft, pageTop, "All") {
+			@Override
+			public void onClick() {
+				setScreenshotGroup(this, ScreenshotManager.getInstance().getScreenshots());
+			}
+		};
+		pageAll.setActive(true);
+		activePageButton = pageAll;
+		buttonList.add(pageAll);
+		pageTop += pageAll.height;
+
+		GuiScreenshotPage pageFavorited = new GuiScreenshotPage(11, pageLeft, pageTop, "Favorited") {
+			@Override
+			public void onClick() {
+				List<Screenshot> groupList = new ArrayList<Screenshot>();
+				for(Screenshot screenshot : ScreenshotManager.getInstance().getScreenshots()) {
+					if(screenshot.isFavorited()) {
+						groupList.add(screenshot);
+					}
+				}
+				setScreenshotGroup(this, groupList);
+			}
+		};
+		buttonList.add(pageFavorited);
+		pageTop += pageFavorited.height + 3;
+
+		GuiScreenshotPage pageTimestamp = new GuiScreenshotPage(11, pageLeft, pageTop, "Today") {
+			@Override
+			public void onClick() {
+				List<Screenshot> groupList = new ArrayList<Screenshot>();
+				long now = System.currentTimeMillis();
+				for(Screenshot screenshot : ScreenshotManager.getInstance().getScreenshots()) {
+					long diff = now - screenshot.getTimeStamp();
+					if(diff <= 86400000L) {
+						groupList.add(screenshot);
+					}
+				}
+				setScreenshotGroup(this, groupList);
+			}
+		};
+		buttonList.add(pageTimestamp);
+		pageTop += pageTimestamp.height;
+
+		pageTimestamp = new GuiScreenshotPage(11, pageLeft, pageTop, "This Week") {
+			@Override
+			public void onClick() {
+				List<Screenshot> groupList = new ArrayList<Screenshot>();
+				long now = System.currentTimeMillis();
+				for(Screenshot screenshot : ScreenshotManager.getInstance().getScreenshots()) {
+					long diff = now - screenshot.getTimeStamp();
+					if(diff > 86400000L && diff <= 86400000L * 7) {
+						groupList.add(screenshot);
+					}
+				}
+				setScreenshotGroup(this, groupList);
+			}
+		};
+		buttonList.add(pageTimestamp);
+		pageTop += pageTimestamp.height;
+
+		pageTimestamp = new GuiScreenshotPage(11, pageLeft, pageTop, "This Month") {
+			@Override
+			public void onClick() {
+				List<Screenshot> groupList = new ArrayList<Screenshot>();
+				long now = System.currentTimeMillis();
+				for(Screenshot screenshot : ScreenshotManager.getInstance().getScreenshots()) {
+					long diff = now - screenshot.getTimeStamp();
+					if(diff > 86400000L * 7 && diff <= 86400000L * 7 * 4) {
+						groupList.add(screenshot);
+					}
+				}
+				setScreenshotGroup(this, groupList);
+			}
+		};
+		buttonList.add(pageTimestamp);
+		pageTop += pageTimestamp.height;
+
+		pageTimestamp = new GuiScreenshotPage(11, pageLeft, pageTop, "This Year") {
+			@Override
+			public void onClick() {
+				List<Screenshot> groupList = new ArrayList<Screenshot>();
+				long now = System.currentTimeMillis();
+				for(Screenshot screenshot : ScreenshotManager.getInstance().getScreenshots()) {
+					long diff = now - screenshot.getTimeStamp();
+					if(diff > 86400000L * 7 * 4 && diff <= 86400000L * 7 * 4 * 12) {
+						groupList.add(screenshot);
+					}
+				}
+				setScreenshotGroup(this, groupList);
+			}
+		};
+		buttonList.add(pageTimestamp);
+		pageTop += pageTimestamp.height;
+
+		pageTimestamp = new GuiScreenshotPage(11, pageLeft, pageTop, "Older") {
+			@Override
+			public void onClick() {
+				List<Screenshot> groupList = new ArrayList<Screenshot>();
+				long now = System.currentTimeMillis();
+				for(Screenshot screenshot : ScreenshotManager.getInstance().getScreenshots()) {
+					long diff = now - screenshot.getTimeStamp();
+					if(diff > 86400000L * 7 * 4 * 12) {
+						groupList.add(screenshot);
+					}
+				}
+				setScreenshotGroup(this, groupList);
+			}
+		};
+		buttonList.add(pageTimestamp);
+
+		updateScreenshot();
+
+		imgX = leftX + 2;
+		imgY = topY + 10;
 	}
-	
+
+	@Override
+	public void onGuiClosed() {
+		super.onGuiClosed();
+		ScreenshotManager.getInstance().save();
+	}
+
+	@Override
+	public boolean isClickClosePosition(int mouseX, int mouseY) {
+		return (mouseX < menuX);
+	}
+
+	private void resetSearch() {
+		lastSearchText = "";
+		txtSearch.setText("");
+		searchResults.clear();
+	}
+
 	@Override
 	public void actionPerformed(GuiButton button) {
-		if(button == btnScreenshotList) {
-			Minecraft.getMinecraft().displayGuiScreen(new GuiScreenshotList(this));
-		} else if(button == btnBack) {
-			Minecraft.getMinecraft().displayGuiScreen(new GuiSettings());
-		} else if(button == btnUploadService) {
-			hosterIdx++;
-			if(hosterIdx >= UploadManager.getAvailableHosters().length) {
-				hosterIdx = 0;
+		if(button == btnGoToFirst) {
+			currentIdx = 0;
+			updateScreenshot();
+		} else if(button == btnGoToPrevious) {
+			if(currentIdx > 0) {
+				currentIdx--;
+				updateScreenshot();
 			}
-			ScreenshotConfig.uploadHoster = UploadManager.getAvailableHosters()[hosterIdx];
-			ConfigurationHandler.save();
-			updateButtonText();
-		} else if(button == btnScreenshotAction) {
-			int action = ScreenshotConfig.screenshotAction;
-			action++;
-			if(action > ScreenshotConfig.VALUE_UPLOADCLIPBOARD) {
-				action = ScreenshotConfig.VALUE_NONE;
+		} else if(button == btnGoToNext) {
+			if(currentIdx < screenshotList.size() - 1) {
+				currentIdx++;
+				updateScreenshot();
 			}
-			ScreenshotConfig.screenshotAction = action;
-			if(action != ScreenshotConfig.VALUE_NONE) {
-				ScreenshotManager.getInstance().findNewScreenshots(false);
+		} else if(button == btnGoToLast) {
+			currentIdx = screenshotList.size() - 1;
+			updateScreenshot();
+		} else if(button == btnOpenFolder) {
+			Utils.openDirectory(new File(mc.mcDataDir, "screenshots"));
+		} else if(button == btnDelete) {
+			if(currentScreenshot != null) {
+				setOverlay(new OverlayYesNo(this, "Do you really want to delete this screenshot?", "This can't be undone, so be careful!", currentIdx));
 			}
-			ConfigurationHandler.save();
-			updateButtonText();
+		} else if(button == btnClipboard) {
+			if(currentScreenshot != null) {
+				Utils.setClipboardString(currentScreenshot.getUploadURL());
+			}
+		} else if(button == btnUpload) {
+			if(currentScreenshot != null) {
+				ScreenshotManager.getInstance().uploadScreenshot(currentScreenshot, ScreenshotAction.None);
+			}
+		} else if(button == btnFavorite) {
+			if(currentScreenshot != null) {
+				currentScreenshot.setFavorited(!currentScreenshot.isFavorited());
+				setFavoriteButtonState(currentScreenshot.isFavorited());
+			}
+		} else if(button == btnZoom) {
+			mc.displayGuiScreen(new GuiScreenshotBigPreview(this, imgPreview));
 		}
 	}
-	
-	public void updateButtonText() {
-		btnUploadService.displayString = Utils.getLocalizedMessage("irc.gui.screenshots.hoster", ScreenshotConfig.uploadHoster);
-		IUploadHoster hoster = UploadManager.getUploadHoster(ScreenshotConfig.uploadHoster);
-		if(hoster != null && hoster.isCustomizable()) {
-			btnCustomUpload.enabled = true;
-		} else {
-			btnCustomUpload.enabled = false;
-		}
-		String autoAction = null;
-		switch(ScreenshotConfig.screenshotAction) {
-			case ScreenshotConfig.VALUE_UPLOAD: autoAction = "irc.gui.screenshots.upload"; break;
-			case ScreenshotConfig.VALUE_UPLOADSHARE: autoAction = "irc.gui.screenshots.uploadShare"; break;
-			case ScreenshotConfig.VALUE_UPLOADCLIPBOARD: autoAction = "irc.gui.screenshots.uploadClipboard"; break;
-			default: autoAction = "irc.gui.none"; break;
-		}
-		btnScreenshotAction.displayString = Utils.getLocalizedMessage("irc.gui.screenshots.autoAction", Utils.getLocalizedMessage(autoAction));
-	}
-	
+
 	@Override
-	public void drawScreen(int par1, int par2, float par3) {
-		drawBackground(0);
-		drawCenteredString(fontRendererObj, Utils.getLocalizedMessage("irc.gui.screenshots"), width / 2, height / 2 - 115, Globals.TEXT_COLOR);
-		super.drawScreen(par1, par2, par3);
+	public void confirmClicked(boolean result, int id) {
+		if(result) {
+			ScreenshotManager.getInstance().deleteScreenshot(currentScreenshot, false);
+			searchResults.remove(currentScreenshot);
+			if(currentIdx >= screenshotList.size()) {
+				currentIdx = Math.max(0, currentIdx - 1);
+			}
+			updateScreenshot();
+		}
 	}
-	
+
+	@Override
+	public void updateScreen() {
+		super.updateScreen();
+
+		if(currentScreenshot != null) {
+			currentScreenshot.setName(txtName.getTextOrDefault());
+		}
+
+		if(!lastSearchText.equals(txtSearch.getText())) {
+			if(!txtSearch.getText().isEmpty()) {
+				searchResults.clear();
+				for(Screenshot screenshot : screenshotGroup) {
+					if(screenshot.getName().contains(txtSearch.getText()) || screenshot.getOriginalName().contains(txtSearch.getText())) {
+						searchResults.add(screenshot);
+					}
+				}
+				setScreenshotList(searchResults);
+			} else {
+				setScreenshotList(screenshotGroup);
+			}
+			lastSearchText = txtSearch.getText();
+		}
+	}
+
+	private static final List<String> tooltipList = new ArrayList<String>();
+	@Override
+	public void drawScreen(int mouseX, int mouseY, float par3) {
+		drawLightBackground(menuX, menuY, menuWidth, menuHeight);
+
+		// Fade all image buttons in/out on hover of image
+		if(imgPreview != null && mouseX >= imgX && mouseX < imgX + imgWidth && mouseY >= imgY && mouseY < imgY + imgHeight) {
+			if(!buttonsVisible) {
+				for (int i = 0; i < buttonList.size(); i++) {
+					GuiButton button = (GuiButton) buttonList.get(i);
+					if (button instanceof GuiImageButton) {
+						((GuiImageButton) button).setFadeMode(1);
+					}
+				}
+				buttonsVisible = true;
+			}
+		} else {
+			if (buttonsVisible) {
+				for (int i = 0; i < buttonList.size(); i++) {
+					GuiButton button = (GuiButton) buttonList.get(i);
+					if (button instanceof GuiImageButton) {
+						((GuiImageButton) button).setFadeMode(-1);
+					}
+				}
+				buttonsVisible = false;
+			}
+		}
+
+		if(imgPreview != null) {
+			// Render the screenshot preview image
+			imgPreview.draw(imgX, imgY, imgWidth, imgHeight, zLevel);
+		}
+
+		super.drawScreen(mouseX, mouseY, par3);
+
+		for (int i = 0; i < buttonList.size(); i++) {
+			GuiButton button = (GuiButton) buttonList.get(i);
+			if (button instanceof GuiImageButton) {
+				GuiImageButton imageButton = (GuiImageButton) button;
+				if(imageButton.isInside(mouseX, mouseY) && imageButton.isAlphaVisible() && imageButton.getTooltipText() != null) {
+					if(imageButton != hoverObject) {
+						hoverObject = imageButton;
+						hoverTime = 0f;
+					}
+					hoverTime++;
+					if(hoverTime > TOOLTIP_TIME) {
+						tooltipList.clear();
+						tooltipList.add(imageButton.getTooltipText());
+						func_146283_a(tooltipList, mouseX, mouseY);
+					}
+					break;
+				}
+			}
+		}
+	}
+
+	public void setFavoriteButtonState(boolean state) {
+		if(state) {
+			btnFavorite.setTextureRegion(EiraGui.atlas.findRegion("button_favorite"));
+		} else {
+			btnFavorite.setTextureRegion(EiraGui.atlas.findRegion("button_unfavorite"));
+		}
+	}
 }

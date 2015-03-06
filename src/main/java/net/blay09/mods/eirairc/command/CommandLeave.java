@@ -3,15 +3,14 @@
 
 package net.blay09.mods.eirairc.command;
 
-import java.util.List;
-
-import net.blay09.mods.eirairc.api.IRCChannel;
-import net.blay09.mods.eirairc.api.IRCConnection;
-import net.blay09.mods.eirairc.api.IRCContext;
+import net.blay09.mods.eirairc.api.EiraIRCAPI;
+import net.blay09.mods.eirairc.api.irc.IRCChannel;
+import net.blay09.mods.eirairc.api.irc.IRCConnection;
+import net.blay09.mods.eirairc.api.irc.IRCContext;
+import net.blay09.mods.eirairc.api.SubCommand;
 import net.blay09.mods.eirairc.config.ChannelConfig;
+import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.ServerConfig;
-import net.blay09.mods.eirairc.handler.ConfigurationHandler;
-import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.IRCResolver;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.CommandException;
@@ -19,7 +18,9 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.util.BlockPos;
 
-public class CommandLeave extends SubCommand {
+import java.util.List;
+
+public class CommandLeave implements SubCommand {
 
 	private static final String TARGET_ALL = "all";
 
@@ -29,8 +30,8 @@ public class CommandLeave extends SubCommand {
 	}
 
 	@Override
-	public String getUsageString(ICommandSender sender) {
-		return "irc.commands.leave";
+	public String getCommandUsage(ICommandSender sender) {
+		return "eirairc:irc.commands.leave";
 	}
 
 	@Override
@@ -46,11 +47,12 @@ public class CommandLeave extends SubCommand {
 		IRCConnection connection;
 		String channelName;
 		if(args.length > 0) {
-			connection = IRCResolver.resolveConnection(args[0], IRCResolver.FLAGS_NONE);
-			if(connection == null) {
-				Utils.sendLocalizedMessage(sender, "irc.target.serverNotFound");
+			IRCContext target = EiraIRCAPI.parseContext(null, args[0], IRCContext.ContextType.IRCConnection);
+			if(target.getContextType() == IRCContext.ContextType.Error) {
+				Utils.sendLocalizedMessage(sender, target.getName(), args[0]);
 				return true;
 			}
+			connection = target.getConnection();
 			channelName = IRCResolver.stripPath(args[0]);
 		} else {
 			if(context == null) {
@@ -67,7 +69,6 @@ public class CommandLeave extends SubCommand {
 			Utils.sendLocalizedMessage(sender, "irc.basic.leavingChannel", "<all>", connection.getHost());
 		} else {
 			Utils.sendLocalizedMessage(sender, "irc.basic.leavingChannel", channelName, connection.getHost());
-			ConfigHelper.getServerConfig(connection).getChannelConfig(channelName).setAutoJoin(false);
 			connection.part(channelName);
 		}
 		return true;

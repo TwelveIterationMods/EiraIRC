@@ -3,20 +3,22 @@
 
 package net.blay09.mods.eirairc.command;
 
-import java.util.List;
-
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.api.IRCContext;
+import net.blay09.mods.eirairc.api.irc.IRCContext;
+import net.blay09.mods.eirairc.api.SubCommand;
 import net.blay09.mods.eirairc.config.ChannelConfig;
+import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.ServerConfig;
-import net.blay09.mods.eirairc.handler.ConfigurationHandler;
+import net.blay09.mods.eirairc.util.IRCResolver;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.util.BlockPos;
 
-public class CommandConfig extends SubCommand {
+import java.util.List;
+
+public class CommandConfig implements SubCommand {
 
 	public static final String TARGET_GLOBAL = "global";
 	
@@ -26,8 +28,8 @@ public class CommandConfig extends SubCommand {
 	}
 
 	@Override
-	public String getUsageString(ICommandSender sender) {
-		return "irc.commands.config";
+	public String getCommandUsage(ICommandSender sender) {
+		return "eirairc:irc.commands.config";
 	}
 
 	@Override
@@ -43,9 +45,9 @@ public class CommandConfig extends SubCommand {
 		String target = args[0];
 		if(target.equals("reload")) {
 			Utils.sendLocalizedMessage(sender, "irc.config.reload");
-			EiraIRC.instance.stopIRC();
-			ConfigurationHandler.reload();
-			EiraIRC.instance.startIRC();
+			EiraIRC.instance.getConnectionManager().stopIRC();
+			ConfigurationHandler.reloadAll();
+			EiraIRC.instance.getConnectionManager().startIRC();
 			return true;
 		}
 		if(args.length < 2) {
@@ -53,7 +55,7 @@ public class CommandConfig extends SubCommand {
 		}
 		String config = args[1];
 		if(args.length > 2) {
-			ConfigurationHandler.handleConfigCommand(sender, target, config, args[2]);
+			ConfigurationHandler.handleConfigCommand(sender, target, config, Utils.joinStrings(args, " ", 2));
 		} else {
 			ConfigurationHandler.handleConfigCommand(sender, target, config);
 		}
@@ -72,7 +74,7 @@ public class CommandConfig extends SubCommand {
 			list.add(TARGET_GLOBAL);
 			Utils.addConnectionsToList(list);
 			for(ServerConfig serverConfig : ConfigurationHandler.getServerConfigs()) {
-				list.add(serverConfig.getHost());
+				list.add(serverConfig.getAddress());
 				for(ChannelConfig channelConfig : serverConfig.getChannelConfigs()) {
 					list.add(channelConfig.getName());
 				}
@@ -82,22 +84,22 @@ public class CommandConfig extends SubCommand {
 				return;
 			}
 			if(args[0].equals(TARGET_GLOBAL)) {
-				ConfigurationHandler.addOptionsToList(list);
-			} else if(args[0].contains("#")) {
-				ChannelConfig.addOptionsToList(list);
+				ConfigurationHandler.addOptionsToList(list, null);
+			} else if(IRCResolver.isChannel(args[0])) {
+				ChannelConfig.addOptionsToList(list, null);
 			} else {
-				ServerConfig.addOptionstoList(list);
+				ServerConfig.addOptionsToList(list, null);
 			}
 		} else if(args.length == 3) {
 			if(args[0].equals("reload")) {
 				return;
 			}
 			if(args[0].equals(TARGET_GLOBAL)) {
-				ConfigurationHandler.addValuesToList(list, args[1]);
-			} else if(args[0].contains("#")) {
-				ChannelConfig.addValuesToList(list, args[1]);
+				ConfigurationHandler.addOptionsToList(list, args[1]);
+			} else if(IRCResolver.isChannel(args[0])) {
+				ChannelConfig.addOptionsToList(list, args[1]);
 			} else {
-				ServerConfig.addValuesToList(list, args[1]);
+				ServerConfig.addOptionsToList(list, args[1]);
 			}
 		}
 	}

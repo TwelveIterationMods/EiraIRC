@@ -3,19 +3,20 @@
 
 package net.blay09.mods.eirairc.command.interop;
 
-import java.util.List;
-
-import net.blay09.mods.eirairc.api.IRCContext;
-import net.blay09.mods.eirairc.command.SubCommand;
-import net.blay09.mods.eirairc.util.IRCResolver;
-import net.blay09.mods.eirairc.util.IRCTargetError;
+import net.blay09.mods.eirairc.api.EiraIRCAPI;
+import net.blay09.mods.eirairc.api.irc.IRCContext;
+import net.blay09.mods.eirairc.api.SubCommand;
+import net.blay09.mods.eirairc.config.settings.BotBooleanComponent;
+import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.util.BlockPos;
 
-public class InterOpCommandUserModeBase extends SubCommand {
+import java.util.List;
+
+public class InterOpCommandUserModeBase implements SubCommand {
 
 	private String name;
 	private String mode;
@@ -30,17 +31,17 @@ public class InterOpCommandUserModeBase extends SubCommand {
 		if(args.length < 2) {
 			throw new WrongUsageException(getCommandUsage(sender));
 		}
-		IRCContext targetChannel = IRCResolver.resolveTarget(args[0], (short) (IRCResolver.FLAG_CHANNEL + IRCResolver.FLAG_ONCHANNEL));
-		if(targetChannel instanceof IRCTargetError) {
+		IRCContext targetChannel = EiraIRCAPI.parseContext(null, args[0], IRCContext.ContextType.IRCChannel);
+		if(targetChannel.getContextType() == IRCContext.ContextType.Error) {
 			Utils.sendLocalizedMessage(sender, targetChannel.getName(), args[0]);
 			return true;
 		}
-		if(!targetChannel.getConnection().getBot().getProfile(targetChannel).isInterOp()) {
+		if(!ConfigHelper.getBotSettings(targetChannel).getBoolean(BotBooleanComponent.InterOp)) {
 			Utils.sendLocalizedMessage(sender, "irc.interop.disabled");
 			return true;
 		}
-		IRCContext targetUser = IRCResolver.resolveTarget(args[1], (short) (IRCResolver.FLAG_USER + IRCResolver.FLAG_USERONCHANNEL));
-		if(targetUser instanceof IRCTargetError) {
+		IRCContext targetUser = EiraIRCAPI.parseContext(targetChannel, args[1], IRCContext.ContextType.IRCUser);
+		if(targetUser.getContextType() == IRCContext.ContextType.Error) {
 			Utils.sendLocalizedMessage(sender, targetUser.getName(), args[1]);
 			return true;
 		}
@@ -60,8 +61,8 @@ public class InterOpCommandUserModeBase extends SubCommand {
 	}
 
 	@Override
-	public String getUsageString(ICommandSender sender) {
-		return "irc.commands.interop." + name;
+	public String getCommandUsage(ICommandSender sender) {
+		return "eirairc:irc.commands.interop." + name;
 	}
 
 	@Override
@@ -80,7 +81,6 @@ public class InterOpCommandUserModeBase extends SubCommand {
 	}
 
 	@Override
-	public void addTabCompletionOptions(List<String> list, ICommandSender sender, String[] args, BlockPos pos) {
-	}
+	public void addTabCompletionOptions(List<String> list, ICommandSender sender, String[] args) {}
 
 }

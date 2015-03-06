@@ -3,12 +3,10 @@
 
 package net.blay09.mods.eirairc.command.extension;
 
-import java.util.List;
-
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.api.IRCContext;
-import net.blay09.mods.eirairc.command.SubCommand;
-import net.blay09.mods.eirairc.config.GlobalConfig;
+import net.blay09.mods.eirairc.api.irc.IRCContext;
+import net.blay09.mods.eirairc.api.SubCommand;
+import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.CommandException;
@@ -20,7 +18,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.BlockPos;
 
-public class CommandAlias extends SubCommand {
+import java.util.List;
+
+public class CommandAlias implements SubCommand {
 
 	private static final String ALIAS_NONE = "none";
 	
@@ -30,8 +30,8 @@ public class CommandAlias extends SubCommand {
 	}
 
 	@Override
-	public String getUsageString(ICommandSender sender) {
-		return "irc.commands.alias";
+	public String getCommandUsage(ICommandSender sender) {
+		return "eirairc:irc.commands.alias";
 	}
 
 	@Override
@@ -41,7 +41,7 @@ public class CommandAlias extends SubCommand {
 
 	@Override
 	public boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) throws CommandException {
-		if(!GlobalConfig.enableAliases) {
+		if(!SharedGlobalConfig.enablePlayerAliases) {
 			Utils.sendLocalizedMessage(sender, "irc.alias.disabled");
 			return true;
 		}
@@ -95,7 +95,7 @@ public class CommandAlias extends SubCommand {
 				Utils.sendLocalizedMessage(sender, "irc.alias.set", oldAlias, alias);
 			}
 			entityPlayer.refreshDisplayName();
-			EiraIRC.instance.getMCEventHandler().onPlayerNickChange(oldAlias, alias);
+			EiraIRC.instance.getMCEventHandler().onPlayerNickChange(entityPlayer, oldAlias);
 		}
 		return true;
 	}

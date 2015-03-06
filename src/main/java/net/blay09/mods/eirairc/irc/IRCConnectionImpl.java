@@ -2,41 +2,26 @@
 
 package net.blay09.mods.eirairc.irc;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.*;
-import java.util.*;
-
-import net.blay09.mods.eirairc.api.IRCChannel;
-import net.blay09.mods.eirairc.api.IRCConnection;
-import net.blay09.mods.eirairc.api.IRCUser;
+import net.blay09.mods.eirairc.api.IRCReplyCodes;
+import net.blay09.mods.eirairc.api.irc.IRCChannel;
+import net.blay09.mods.eirairc.api.irc.IRCConnection;
+import net.blay09.mods.eirairc.api.irc.IRCUser;
 import net.blay09.mods.eirairc.api.bot.IRCBot;
-import net.blay09.mods.eirairc.api.event.IRCChannelChatEvent;
-import net.blay09.mods.eirairc.api.event.IRCChannelJoinedEvent;
-import net.blay09.mods.eirairc.api.event.IRCChannelLeftEvent;
-import net.blay09.mods.eirairc.api.event.IRCChannelTopicEvent;
-import net.blay09.mods.eirairc.api.event.IRCConnectEvent;
-import net.blay09.mods.eirairc.api.event.IRCConnectingEvent;
-import net.blay09.mods.eirairc.api.event.IRCDisconnectEvent;
-import net.blay09.mods.eirairc.api.event.IRCErrorEvent;
-import net.blay09.mods.eirairc.api.event.IRCPrivateChatEvent;
-import net.blay09.mods.eirairc.api.event.IRCUserJoinEvent;
-import net.blay09.mods.eirairc.api.event.IRCUserLeaveEvent;
-import net.blay09.mods.eirairc.api.event.IRCUserNickChangeEvent;
-import net.blay09.mods.eirairc.api.event.IRCUserQuitEvent;
+import net.blay09.mods.eirairc.api.event.*;
 import net.blay09.mods.eirairc.bot.IRCBotImpl;
-import net.blay09.mods.eirairc.config.GlobalConfig;
-import net.blay09.mods.eirairc.config.NetworkConfig;
+import net.blay09.mods.eirairc.config.ServerConfig;
+import net.blay09.mods.eirairc.config.SharedGlobalConfig;
+import net.blay09.mods.eirairc.config.settings.BotStringComponent;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraftforge.common.MinecraftForge;
+
+import java.io.*;
+import java.net.*;
+import java.util.*;
 
 public class IRCConnectionImpl implements Runnable, IRCConnection {
 
 	public static class ProxyAuthenticator extends Authenticator {
-
 		private PasswordAuthentication auth;
 
 		public ProxyAuthenticator(String username, String password) {
@@ -50,49 +35,41 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 	}
 
 	public static final int DEFAULT_PORT = 6667;
+
 	public static final String EMOTE_START = "\u0001ACTION ";
 	public static final String EMOTE_END = "\u0001";
 	protected static final int DEFAULT_PROXY_PORT = 1080;
-
 	private final IRCParser parser = new IRCParser();
+
 	protected final IRCSender sender = new IRCSender(this);
 	private final Map<String, IRCChannel> channels = new HashMap<String, IRCChannel>();
 	private final Map<String, IRCUser> users = new HashMap<String, IRCUser>();
-	protected final int port;
-	protected final String host;
-	private final String password;
-	private IRCBotImpl bot;
-	private String serverType;
-	private String nick;
-	private String ident;
-	private String description;
-	protected String charset;
-	private boolean connected;
+	protected final ServerConfig serverConfig;
 
+	protected final int[] ports;
+	protected final String host;
+	private IRCBotImpl bot;
+	private String nick;
+	private boolean connected;
 	private Thread thread;
+
+	private String serverType;
+	private String channelTypes = "#&";
+	private String channelUserModes = "ov";
+	private String channelUserModePrefixes = "@+";
+
 	private Socket socket;
 	protected BufferedWriter writer;
 	protected BufferedReader reader;
-	
-	public IRCConnectionImpl(String url, String password, String nick, String ident, String description) {
-		this.host = Utils.extractHost(url);
-		this.port = Utils.extractPort(url, DEFAULT_PORT);
-		this.password = password;
+	public IRCConnectionImpl(ServerConfig serverConfig, String nick) {
+		this.serverConfig = serverConfig;
+		this.host = Utils.extractHost(serverConfig.getAddress());
+		this.ports = Utils.extractPorts(serverConfig.getAddress(), DEFAULT_PORT);
 		this.nick = nick;
-		this.ident = ident;
-		this.description = description;
-	}
-	
-	public void setBot(IRCBotImpl bot) {
-		this.bot = bot;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
-	
-	public void setCharset(String charset) {
-		this.charset = charset;
+	public void setBot(IRCBotImpl bot) {
+		this.bot = bot;
 	}
 
 	@Override
@@ -104,7 +81,7 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 	public IRCChannel getChannel(String channelName) {
 		return channels.get(channelName.toLowerCase());
 	}
-	
+
 	public IRCChannel getOrCreateChannel(String channelName) {
 		IRCChannel channel = getChannel(channelName);
 		if(channel == null) {
@@ -138,7 +115,7 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 	public Collection<IRCChannel> getChannels() {
 		return channels.values();
 	}
-	
+
 	public boolean start() {
 		if(MinecraftForge.EVENT_BUS.post(new IRCConnectingEvent(this))) {
 			return false;
@@ -149,53 +126,61 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 	}
 
 	protected Proxy createProxy() {
-		if(!NetworkConfig.proxyHost.isEmpty()) {
-			if(!NetworkConfig.proxyUsername.isEmpty() || !NetworkConfig.proxyPassword.isEmpty()) {
-				Authenticator.setDefault(new ProxyAuthenticator(NetworkConfig.proxyUsername, NetworkConfig.proxyPassword));
+		if(!SharedGlobalConfig.proxyHost.isEmpty()) {
+			if(!SharedGlobalConfig.proxyUsername.isEmpty() || !SharedGlobalConfig.proxyPassword.isEmpty()) {
+				Authenticator.setDefault(new ProxyAuthenticator(SharedGlobalConfig.proxyUsername, SharedGlobalConfig.proxyPassword));
 			}
-			SocketAddress proxyAddr = new InetSocketAddress(Utils.extractHost(NetworkConfig.proxyHost), Utils.extractPort(NetworkConfig.proxyHost, DEFAULT_PROXY_PORT));
+			SocketAddress proxyAddr = new InetSocketAddress(Utils.extractHost(SharedGlobalConfig.proxyHost), Utils.extractPorts(SharedGlobalConfig.proxyHost, DEFAULT_PROXY_PORT)[0]);
 			return new Proxy(Proxy.Type.SOCKS, proxyAddr);
 		}
 		return null;
 	}
 
-	protected Socket connect() {
-		try {
-			SocketAddress targetAddr = new InetSocketAddress(host, port);
-			Socket newSocket;
-			Proxy proxy = createProxy();
-			if(proxy != null) {
-				newSocket = new Socket(proxy);
-			} else {
-				newSocket = new Socket();
+	protected Socket connect() throws Exception {
+		for(int i = 0; i < ports.length; i++) {
+			try {
+				SocketAddress targetAddr = new InetSocketAddress(host, ports[i]);
+				Socket newSocket;
+				Proxy proxy = createProxy();
+				if (proxy != null) {
+					newSocket = new Socket(proxy);
+				} else {
+					newSocket = new Socket();
+				}
+
+				if (!SharedGlobalConfig.bindIP.isEmpty()) {
+					newSocket.bind(new InetSocketAddress(SharedGlobalConfig.bindIP, ports[i]));
+				}
+				newSocket.connect(targetAddr);
+				writer = new BufferedWriter(new OutputStreamWriter(newSocket.getOutputStream(), serverConfig.getCharset()));
+				reader = new BufferedReader(new InputStreamReader(newSocket.getInputStream(), serverConfig.getCharset()));
+				sender.setWriter(writer);
+				return newSocket;
+			} catch (UnknownHostException e) {
+				throw e;
+			} catch (IOException e) {
+				if(i == ports.length - 1) {
+					throw e;
+				}
 			}
-			newSocket.connect(targetAddr);
-			writer = new BufferedWriter(new OutputStreamWriter(newSocket.getOutputStream(), charset));
-			reader = new BufferedReader(new InputStreamReader(newSocket.getInputStream(), charset));
-			sender.setWriter(writer);
-			return newSocket;
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-			return null;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
 		}
+		return null;
 	}
 
 	@Override
 	public void run() {
 		try {
-			socket = connect();
-			if(socket == null) {
-				MinecraftForge.EVENT_BUS.post(new IRCDisconnectEvent(this));
+			try {
+				socket = connect();
+			} catch (Exception e) {
+				MinecraftForge.EVENT_BUS.post(new IRCConnectionFailedEvent(this, e));
 				return;
 			}
 			register();
 			sender.start();
 			String line;
 			while((line = reader.readLine()) != null) {
-				if(GlobalConfig.debugMode) {
+				if(SharedGlobalConfig.debugMode) {
 					System.out.println(line);
 				}
 				IRCMessage msg = parser.parse(line);
@@ -212,7 +197,7 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 			tryReconnect();
 		}
 	}
-	
+
 	public void tryReconnect() {
 		MinecraftForge.EVENT_BUS.post(new IRCDisconnectEvent(this));
 		start();
@@ -234,14 +219,14 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void register() {
 		try {
-			if(password != null && !password.isEmpty()) {
-				writer.write("PASS " + password + "\r\n");
+			if(serverConfig.getServerPassword() != null && !serverConfig.getServerPassword().isEmpty()) {
+				writer.write("PASS " + serverConfig.getServerPassword() + "\r\n");
 			}
 			writer.write("NICK " + nick + "\r\n");
-			writer.write("USER " + ident + " \"\" \"\" :" + description + "\r\n");
+			writer.write("USER " + serverConfig.getBotSettings().getString(BotStringComponent.Ident) + " \"\" \"\" :" + serverConfig.getBotSettings().getString(BotStringComponent.Description) + "\r\n");
 			writer.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -283,12 +268,12 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 	public void mode(String targetName, String flags, String nick) {
 		irc("MODE " + targetName + " " + flags + " " + nick);
 	}
-	
+
 	@Override
 	public void topic(String channelName, String topic) {
 		irc("TOPIC " + channelName + " :" + topic);
 	}
-	
+
 	private boolean handleNumericMessage(IRCMessage msg) {
 		int numeric = msg.getNumericCommand();
 		if(numeric == -1) {
@@ -298,24 +283,22 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 			IRCChannelImpl channel = (IRCChannelImpl) getChannel(msg.arg(2));
 			String[] names = msg.arg(3).split(" ");
 			for (String name : names) {
-				boolean isOp = false;
-				boolean isVoice = false;
-				if (name.startsWith("@")) {
-					isOp = true;
-				} else if (name.startsWith("+")) {
-					isVoice = true;
-				}
-				if (isOp || isVoice) {
+				char firstChar = name.charAt(0);
+				int idx = channelUserModePrefixes.indexOf(firstChar);
+				IRCChannelUserMode mode = null;
+				if(idx != -1) {
+					mode = IRCChannelUserMode.fromChar(channelUserModes.charAt(idx));
 					name = name.substring(1);
 				}
 				IRCUserImpl user = (IRCUserImpl) getOrCreateUser(name);
-				user.setVoice(channel, isVoice);
-				user.setOperator(channel, isOp);
+				if(mode != null) {
+					user.setChannelUserMode(channel, mode);
+				}
 				user.addChannel(channel);
 				channel.addUser(user);
 			}
 			MinecraftForge.EVENT_BUS.post(new IRCChannelJoinedEvent(this, channel));
-		} else if(numeric == IRCReplyCodes.RPL_ENDOFMOTD) {
+		} else if(numeric == IRCReplyCodes.RPL_WELCOME) {
 			connected = true;
 			MinecraftForge.EVENT_BUS.post(new IRCConnectEvent(this));
 		} else if(numeric == IRCReplyCodes.RPL_TOPIC) {
@@ -330,20 +313,46 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 		} else if(numeric == IRCReplyCodes.RPL_IDENTIFIED) {
 			IRCUserImpl user = (IRCUserImpl) getOrCreateUser(msg.arg(1));
 			user.setAuthLogin(msg.arg(1));
+		} else if(numeric == IRCReplyCodes.RPL_ENDOFWHOIS) {
+			IRCUserImpl user = (IRCUserImpl) getOrCreateUser(msg.arg(1));
+			if(user.getAuthLogin() == null || user.getAuthLogin().isEmpty()) {
+				user.setAuthLogin(null);
+			}
 		} else if(numeric == IRCReplyCodes.ERR_NICKNAMEINUSE || numeric == IRCReplyCodes.ERR_ERRONEUSNICKNAME) {
 			MinecraftForge.EVENT_BUS.post(new IRCErrorEvent(this, msg.getNumericCommand(), msg.args()));
 		} else if(numeric == IRCReplyCodes.RPL_MOTD) {
 			// ignore
 		} else if(numeric == IRCReplyCodes.ERR_PASSWDMISMATCH) {
 			MinecraftForge.EVENT_BUS.post(new IRCErrorEvent(this, msg.getNumericCommand(), msg.args()));
-		} else if(numeric <= 5 || numeric == 251 || numeric == 252 || numeric == 254 || numeric == 255 || numeric == 265 || numeric == 266 || numeric == 250 || numeric == 375) {
+		} else if(numeric == IRCReplyCodes.RPL_ISUPPORT) {
+			for(int i = 0; i < msg.argcount(); i++) {
+				if(msg.arg(i).startsWith("CHANTYPES=")) {
+					channelTypes = msg.arg(i).substring(10);
+				} else if(msg.arg(i).startsWith("PREFIX=")) {
+					String value = msg.arg(i).substring(7);
+					StringBuilder sb = new StringBuilder();
+					for(int j = 0; j < value.length(); j++) {
+						char c = value.charAt(j);
+						if(c == ')') {
+							channelUserModes = sb.toString();
+							sb = new StringBuilder();
+						} else if(c != '(') {
+							sb.append(c);
+						}
+					}
+					channelUserModePrefixes = sb.toString();
+				}
+			}
+		} else if(numeric <= 4 || numeric == 251 || numeric == 252 || numeric == 254 || numeric == 255 || numeric == 265 || numeric == 266 || numeric == 250 || numeric == 375) {
 			// ignore for now
 		} else {
-			System.out.println("Unhandled message code: " + msg.getCommand() + " (" + msg.argcount() + " arguments)");
+			if(SharedGlobalConfig.debugMode) {
+				System.out.println("Unhandled message code: " + msg.getCommand() + " (" + msg.argcount() + " arguments)");
+			}
 		}
 		return true;
 	}
-	
+
 	private boolean handleMessage(IRCMessage msg) {
 		String cmd = msg.getCommand();
 		if(cmd.equals("PING")) {
@@ -357,7 +366,7 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 				message = message.substring(EMOTE_START.length(), message.length() - EMOTE_END.length());
 				isEmote = true;
 			}
-			if(target.startsWith("#")) {
+			if(channelTypes.indexOf(target.charAt(0)) != -1) {
 				MinecraftForge.EVENT_BUS.post(new IRCChannelChatEvent(this, getChannel(target), user, message, isEmote));
 			} else if(target.equals(this.nick)) {
 				MinecraftForge.EVENT_BUS.post(new IRCPrivateChatEvent(this, user, message, isEmote));
@@ -369,7 +378,7 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 			}
 			String target = msg.arg(0);
 			String message = msg.arg(1);
-			if(target.startsWith("#")) {
+			if(channelTypes.indexOf(target.charAt(0)) != -1) {
 				MinecraftForge.EVENT_BUS.post(new IRCChannelChatEvent(this, getChannel(target), user, message, false, true));
 			} else if(target.equals(this.nick)) {
 				MinecraftForge.EVENT_BUS.post(new IRCPrivateChatEvent(this, user, message, false, true));
@@ -404,15 +413,12 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 			users.put(user.getName().toLowerCase(), user);
 			MinecraftForge.EVENT_BUS.post(new IRCUserNickChangeEvent(this, user, oldNick, newNick));
 		} else if(cmd.equals("MODE")) {
-			if(!msg.arg(0).startsWith("#")) {
+			if(channelTypes.indexOf(msg.arg(0).charAt(0)) != -1 || msg.argcount() < 3) {
 				return false;
 			}
 			IRCChannelImpl channel = (IRCChannelImpl) getOrCreateChannel(msg.arg(0));
 			String mode = msg.arg(1);
-			String param = null;
-			if(msg.argcount() > 2) {
-				param = msg.arg(2);
-			}
+			String param = msg.arg(2);
 			boolean set = false;
 			List<Character> setList = new ArrayList<Character>();
 			List<Character> unsetList = new ArrayList<Character>();
@@ -428,22 +434,17 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 					unsetList.add(c);
 				}
 			}
-			for (char c : setList) {
-				if (c == 'o') {
-					IRCUserImpl user = (IRCUserImpl) getOrCreateUser(param);
-					user.setOperator(channel, true);
-				} else if (c == 'v') {
-					IRCUserImpl user = (IRCUserImpl) getOrCreateUser(param);
-					user.setVoice(channel, true);
+			IRCUserImpl user = (IRCUserImpl) getOrCreateUser(param);
+			IRCChannelUserMode currentMode = user.getChannelUserMode(channel);
+			for(char c : setList) {
+				int idx = channelUserModes.indexOf(c);
+				if(idx != -1) {
+					user.setChannelUserMode(channel, IRCChannelUserMode.fromChar(c));
 				}
 			}
-			for (char c : unsetList) {
-				if (c == 'o') {
-					IRCUserImpl user = (IRCUserImpl) getOrCreateUser(param);
-					user.setOperator(channel, true);
-				} else if (c == 'v') {
-					IRCUserImpl user = (IRCUserImpl) getOrCreateUser(param);
-					user.setVoice(channel, true);
+			for(char c : unsetList) {
+				if(c == currentMode.modeChar) {
+					user.setChannelUserMode(channel, null);
 				}
 			}
 		} else if(cmd.equals("QUIT")) {
@@ -460,7 +461,7 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 	public void whois(String nick) {
 		irc("WHOIS " + nick);
 	}
-	
+
 	public void message(String target, String message) {
 		irc("PRIVMSG " + target + " :" + message);
 	}
@@ -485,18 +486,58 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 	}
 
 	@Override
+	public String getChannelTypes() {
+		return channelTypes;
+	}
+
+	@Override
+	public String getChannelUserModes() {
+		return channelUserModes;
+	}
+
+	@Override
+	public String getChannelUserModePrefixes() {
+		return channelUserModePrefixes;
+	}
+
+	@Override
 	public IRCBot getBot() {
 		return bot;
 	}
 
 	@Override
-	public String getIdentifier() {
-		return host + (port != DEFAULT_PORT ? ":" + port : "");
+	public String getName() {
+		return host;
 	}
 
 	@Override
-	public int getPort() {
-		return port;
+	public ContextType getContextType() {
+		return ContextType.IRCConnection;
+	}
+
+	@Override
+	public String getIdentifier() {
+		return host;
+	}
+
+	@Override
+	public IRCConnection getConnection() {
+		return this;
+	}
+
+	@Override
+	public void message(String message) {}
+
+	@Override
+	public void notice(String message) {}
+
+	@Override
+	public int[] getPorts() {
+		return ports;
+	}
+
+	public ServerConfig getServerConfig() {
+		return serverConfig;
 	}
 
 	public boolean isConnected() {

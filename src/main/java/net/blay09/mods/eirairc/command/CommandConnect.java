@@ -3,19 +3,20 @@
 
 package net.blay09.mods.eirairc.command;
 
-import java.util.List;
-
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.api.IRCContext;
+import net.blay09.mods.eirairc.api.irc.IRCContext;
+import net.blay09.mods.eirairc.api.SubCommand;
+import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.ServerConfig;
-import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.util.BlockPos;
 
-public class CommandConnect extends SubCommand {
+import java.util.List;
+
+public class CommandConnect implements SubCommand {
 
 	@Override
 	public String getCommandName() {
@@ -23,8 +24,8 @@ public class CommandConnect extends SubCommand {
 	}
 
 	@Override
-	public String getUsageString(ICommandSender sender) {
-		return "irc.commands.connect";
+	public String getCommandUsage(ICommandSender sender) {
+		return "eirairc:irc.commands.connect";
 	}
 
 	@Override
@@ -38,12 +39,12 @@ public class CommandConnect extends SubCommand {
 			throw new WrongUsageException(getCommandUsage(sender));
 		}
 		String host = args[0];
-		if(EiraIRC.instance.isConnectedTo(host)) {
+		if(EiraIRC.instance.getConnectionManager().isConnectedTo(host)) {
 			Utils.sendLocalizedMessage(sender, "irc.general.alreadyConnected", host);
 			return true;
 		}
 		Utils.sendLocalizedMessage(sender, "irc.basic.connecting", host);
-		ServerConfig serverConfig = ConfigurationHandler.getServerConfig(host);
+		ServerConfig serverConfig = ConfigurationHandler.getOrCreateServerConfig(host);
 		if(args.length >= 2) {
 			serverConfig.setServerPassword(args[1]);
 		}
@@ -65,7 +66,7 @@ public class CommandConnect extends SubCommand {
 	public void addTabCompletionOptions(List<String> list, ICommandSender sender, String[] args, BlockPos pos) {
 		if(args.length == 0) {
 			for(ServerConfig serverConfig : ConfigurationHandler.getServerConfigs()) {
-				list.add(serverConfig.getHost());
+				list.add(serverConfig.getAddress());
 			}
 		}
 	}

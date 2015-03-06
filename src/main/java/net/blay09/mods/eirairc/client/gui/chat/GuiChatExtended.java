@@ -3,27 +3,36 @@
 
 package net.blay09.mods.eirairc.client.gui.chat;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.client.gui.settings.GuiSettings;
-import net.blay09.mods.eirairc.config.CompatibilityConfig;
-import net.blay09.mods.eirairc.config.KeyConfig;
+import net.blay09.mods.eirairc.api.irc.IRCContext;
+import net.blay09.mods.eirairc.client.gui.GuiEiraIRCMenu;
+import net.blay09.mods.eirairc.client.gui.screenshot.GuiImagePreview;
+import net.blay09.mods.eirairc.config.ClientGlobalConfig;
 import net.blay09.mods.eirairc.handler.ChatSessionHandler;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiChat;
+import net.minecraft.client.gui.GuiConfirmOpenLink;
+import net.minecraft.client.gui.GuiYesNoCallback;
+import net.minecraft.event.ClickEvent;
+import net.minecraft.util.IChatComponent;
 import net.minecraftforge.client.ClientCommandHandler;
-
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import java.io.IOException;
 
 @SideOnly(Side.CLIENT)
-public class GuiChatExtended extends GuiChat {
+public class GuiChatExtended extends GuiChat implements GuiYesNoCallback {
 
 	public static final int COLOR_BACKGROUND = Integer.MIN_VALUE;
 	
@@ -32,7 +41,8 @@ public class GuiChatExtended extends GuiChat {
 	private GuiButton btnOptions;
 	
 	private long lastToggleTarget;
-	
+	private URL clickedURL;
+
 	public GuiChatExtended() {
 		this("");
 	}
@@ -49,27 +59,27 @@ public class GuiChatExtended extends GuiChat {
 		String s = Utils.getLocalizedMessage("irc.gui.options");
 		int bw = fontRendererObj.getStringWidth(s) + 20;
 		btnOptions = new GuiButton(0, this.width - bw, 0, bw, 20, s);
-		this.buttonList.add(btnOptions);
+		buttonList.add(btnOptions);
 	}
 
 	@Override
 	public void actionPerformed(GuiButton button) throws IOException {
 		super.actionPerformed(button);
 		if(button == btnOptions) {
-			Minecraft.getMinecraft().displayGuiScreen(new GuiSettings());
+			Minecraft.getMinecraft().displayGuiScreen(new GuiEiraIRCMenu());
 		}
 	}
-	
+
 	@Override
 	protected void keyTyped(char unicode, int keyCode) throws IOException {
-		if(keyCode == KeyConfig.toggleTarget && !CompatibilityConfig.disableChatToggle && !CompatibilityConfig.clientBridge && !inputField.getText().startsWith("/")) {
+		if(keyCode == ClientGlobalConfig.keyToggleTarget.getKeyCode() && !ClientGlobalConfig.disableChatToggle && !ClientGlobalConfig.clientBridge && !inputField.getText().startsWith("/")) {
 			if(Keyboard.isRepeatEvent()) {
 				if(System.currentTimeMillis() - lastToggleTarget >= 1000) {
-					chatSession.setChatTarget((String) null);
+					chatSession.setChatTarget(null);
 				}
 			} else {
 				boolean users = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
-				String newTarget = chatSession.getNextTarget(users);
+				IRCContext newTarget = chatSession.getNextTarget(users);
 				if(!users) {
 					lastToggleTarget = System.currentTimeMillis();
 				}
@@ -93,19 +103,63 @@ public class GuiChatExtended extends GuiChat {
 		}
 		super.keyTyped(unicode, keyCode);
 	}
-	
+
+	@Override
+	protected void mouseClicked(int mouseX, int mouseY, int button) {
+		if(button == 0 && mc.gameSettings.chatLinks) {
+			IChatComponent clickedComponent = mc.ingameGUI.getChatGUI().func_146236_a(Mouse.getX(), Mouse.getY());
+			if(clickedComponent != null) {
+				ClickEvent clickEvent = clickedComponent.getChatStyle().getChatClickEvent();
+				if(clickEvent != null) {
+					if(clickEvent.getValue().startsWith("eirairc://")) {
+						String[] params = clickEvent.getValue().substring(10).split(";");
+						if(params.length > 0) {
+							if(params[0].equals("screenshot")) {
+								try {
+									if(ClientGlobalConfig.imageLinkPreview && params[2].length() > 0) {
+										mc.displayGuiScreen(new GuiImagePreview(new URL(params[2]), new URL(params[1])));
+									} else {
+										if(mc.gameSettings.chatLinksPrompt) {
+											clickedURL = new URL(params[1]);
+											mc.displayGuiScreen(new GuiConfirmOpenLink(this, params[1], 0, false));
+										} else {
+											Utils.openWebpage(params[1]);
+										}
+									}
+								} catch (MalformedURLException e) {
+									e.printStackTrace();
+								}
+							}
+						}
+						return;
+					} else {
+						if(ClientGlobalConfig.imageLinkPreview && clickEvent.getValue().endsWith(".png") || clickEvent.getValue().endsWith(".jpg")) {
+							try {
+								mc.displayGuiScreen(new GuiImagePreview(new URL(clickEvent.getValue()), null));
+								return;
+							} catch (MalformedURLException e) {
+								e.printStackTrace();
+							}
+						}
+					}
+				}
+			}
+		}
+		super.mouseClicked(mouseX, mouseY, button);
+	}
+
 	@Override
 	public void drawScreen(int i, int j, float k) {
 		super.drawScreen(i, j, k);
-		if(!CompatibilityConfig.disableChatToggle && !CompatibilityConfig.clientBridge) {
-			String target = chatSession.getChatTarget();
+		if(!ClientGlobalConfig.disableChatToggle && !ClientGlobalConfig.clientBridge) {
+			IRCContext target = chatSession.getChatTarget();
+			String targetName;
 			if(target == null) {
-				target = "Minecraft";
+				targetName = "Minecraft";
 			} else {
-				int sepIdx = target.indexOf("/");
-				target = target.substring(sepIdx + 1) + " (" + target.substring(0, sepIdx) + ")";
+				targetName = target.getName() + " (" + target.getConnection().getHost() + ")";
 			}
-			String text = Utils.getLocalizedMessage("irc.gui.chatTarget", target);
+			String text = Utils.getLocalizedMessage("irc.gui.chatTarget", targetName);
 			int rectWidth = Math.max(200, fontRendererObj.getStringWidth(text) + 10);
 			drawRect(0, 0, rectWidth, fontRendererObj.FONT_HEIGHT + 6, COLOR_BACKGROUND);
 			fontRendererObj.drawString(text, 5, 5, Globals.TEXT_COLOR);

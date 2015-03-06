@@ -3,8 +3,8 @@
 
 package net.blay09.mods.eirairc.bot;
 
-import net.blay09.mods.eirairc.api.IRCChannel;
-import net.blay09.mods.eirairc.api.IRCUser;
+import net.blay09.mods.eirairc.api.irc.IRCChannel;
+import net.blay09.mods.eirairc.api.irc.IRCUser;
 import net.blay09.mods.eirairc.api.bot.IBotCommand;
 import net.blay09.mods.eirairc.api.bot.IRCBot;
 import net.blay09.mods.eirairc.util.Utils;
@@ -22,16 +22,20 @@ public class BotCommandHelp implements IBotCommand {
 	}
 
 	@Override
-	public void processCommand(IRCBot bot, IRCChannel channel, IRCUser user, String[] args) {
+	public void processCommand(IRCBot bot, IRCChannel channel, IRCUser user, String[] args, IBotCommand commandSettings) {
 		if(channel != null) {
 			StringBuilder sb = new StringBuilder();
-			for(IBotCommand command : bot.getProfile(channel).getCommands()) {
+			for(IBotCommand command : ((IRCBotImpl) bot).getCommands()) {
 				if(sb.length() > 0) {
 					sb.append(", ");
 				}
 				sb.append(command.getCommandName());
 			}
-			user.notice(Utils.getLocalizedMessage("irc.bot.cmdlist", sb.toString()));
+			if(commandSettings.broadcastsResult()) {
+				channel.message(Utils.getLocalizedMessage("irc.bot.cmdlist", sb.toString()));
+			} else {
+				user.notice(Utils.getLocalizedMessage("irc.bot.cmdlist", sb.toString()));
+			}
 		} else {
 			user.notice("***** EiraIRC Help *****");
 			user.notice("EiraIRC connects a Minecraft client or a whole server");
@@ -39,11 +43,26 @@ public class BotCommandHelp implements IBotCommand {
 			user.notice("Visit http://blay09.net/?page_id=63 for more information on this bot.");
 			user.notice(" ");
 			user.notice("The following commands are available:");
-			for(IBotCommand command : bot.getMainProfile().getCommands()) {
+			for(IBotCommand command : ((IRCBotImpl) bot).getCommands()) {
 				user.notice(command.getCommandName().toUpperCase() + " : " + command.getCommandDescription());
 			}
 			user.notice("***** End of Help *****");
 		}
+	}
+
+	@Override
+	public boolean requiresAuth() {
+		return false;
+	}
+
+	@Override
+	public boolean broadcastsResult() {
+		return false;
+	}
+
+	@Override
+	public boolean allowArgs() {
+		return false;
 	}
 
 	@Override

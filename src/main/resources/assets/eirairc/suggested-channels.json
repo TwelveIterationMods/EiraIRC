@@ -1,0 +1,70 @@
+[
+  {
+    "server": "za.shadowfire.org",
+    "channel": "#saminecraft",
+    "modpack-display": "SA Minecraft Community"
+  },
+  {
+    "server": "irc.esper.net",
+    "channel": "#rr",
+    "modpack-display": "Resonant Rise",
+    "modpack-id": "RR3",
+    "modpack-exclusive": true,
+    "recommended": true
+  },
+  {
+    "server": "irc.esper.net",
+    "channel": "#PlayTPPI",
+    "modpack-display": "Test Pack Please Ignore",
+    "modpack-id": "TPPI",
+    "modpack-exclusive": true,
+    "recommended": true
+  },
+  {
+    "server": "irc.esper.net",
+    "channel": "#FTB",
+    "modpack-display": "Feed The Beast Modpacks",
+    "description": "The official Feed The Beast IRC channel.",
+    "recommended": true
+  },
+  {
+    "server": "irc.esper.net",
+    "channel": "#digtobuild",
+    "modpack-display": "Dig to Build Servers",
+    "description": "This is the channel that all the Dig To Build (www.digtobuild.com) servers connect. Why only talk to people playing the same pack, when you can all join in the fun of inter-personal-communications.",
+    "recommended": true
+  },
+  {
+    "server": "irc.esper.net",
+    "channel": "#sketacraft",
+    "modpack-display": "Sketacraft Adventure",
+    "description": "Just a modpack I made for fun and accidentally made a server for because a friend wanted to play with me. It's a don't-complain-if-it-lags kinda server which atm runs quite well and have a couple of other random players.\n\nIt's aimed at being medieval/magic/animals-kinda modpack that avoid all machines and other things that doesn't fit a medieval theme (because I don't like it when you can build a nuclear reactor and at the same time run around with bow and arrow :P)"
+  },
+  {
+    "server": "irc.freenode.net",
+    "channel": "#truant",
+    "modpack-display": "Resonant Rise 3",
+    "modpack-id": "RR3",
+    "description": "truant.enjin.com"
+  },
+  {
+    "server": "irc.esper.net",
+    "channel": "#SensibleErectors",
+    "modpack-display": "Direwolf20 1.7",
+    "modpack-id": "DW20_1.7",
+    "modpack-exclusive": true
+  },
+  {
+    "server": "irc.esper.net",
+    "channel": "#Empyrean",
+    "modpack-display": "Direwolf20 1.7",
+    "modpack-id": "DW20_1.7",
+    "modpack-exclusive": true
+  },
+  {
+    "server": "apink.hanirc.org",
+    "channel": "#Pandamonium",
+    "modpack-display": "South Korean Community",
+    "description": "Pandamonium is a small South Korean community. We use Korean for our common communication because most of our members can't speak English."
+  }
+]

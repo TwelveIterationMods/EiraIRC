@@ -4,11 +4,40 @@
 package net.blay09.mods.eirairc.util;
 
 import io.netty.buffer.ByteBuf;
+import net.blay09.mods.eirairc.EiraIRC;
+import net.blay09.mods.eirairc.api.EiraIRCAPI;
+import net.blay09.mods.eirairc.api.irc.IRCChannel;
+import net.blay09.mods.eirairc.api.irc.IRCConnection;
+import net.blay09.mods.eirairc.api.irc.IRCContext;
+import net.blay09.mods.eirairc.api.irc.IRCUser;
+import net.blay09.mods.eirairc.bot.IRCBotImpl;
+import net.blay09.mods.eirairc.config.ChannelConfig;
+import net.blay09.mods.eirairc.config.ServerConfig;
+import net.blay09.mods.eirairc.config.SharedGlobalConfig;
+import net.blay09.mods.eirairc.config.base.ServiceConfig;
+import net.blay09.mods.eirairc.config.base.ServiceSettings;
+import net.blay09.mods.eirairc.config.settings.ThemeColorComponent;
+import net.blay09.mods.eirairc.config.settings.ThemeSettings;
+import net.blay09.mods.eirairc.irc.IRCConnectionImpl;
+import net.blay09.mods.eirairc.irc.ssl.IRCConnectionSSLImpl;
+import net.blay09.mods.eirairc.net.EiraPlayerInfo;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ServerData;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.*;
+import org.apache.commons.lang3.ArrayUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.lwjgl.Sys;
 
-import java.awt.Desktop;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
+import java.io.File;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -17,37 +46,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.api.IRCChannel;
-import net.blay09.mods.eirairc.api.IRCConnection;
-import net.blay09.mods.eirairc.api.IRCContext;
-import net.blay09.mods.eirairc.api.IRCUser;
-import net.blay09.mods.eirairc.api.bot.IRCBot;
-import net.blay09.mods.eirairc.bot.IRCBotImpl;
-import net.blay09.mods.eirairc.command.base.IRCCommandHandler;
-import net.blay09.mods.eirairc.config.DisplayConfig;
-import net.blay09.mods.eirairc.config.GlobalConfig;
-import net.blay09.mods.eirairc.config.ServerConfig;
-import net.blay09.mods.eirairc.config.ServiceConfig;
-import net.blay09.mods.eirairc.config.ServiceSettings;
-import net.blay09.mods.eirairc.irc.IRCConnectionImpl;
-import net.blay09.mods.eirairc.irc.ssl.IRCConnectionSSLImpl;
-import net.blay09.mods.eirairc.net.EiraPlayerInfo;
-import net.minecraft.client.Minecraft;
-import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IChatComponent;
-import net.minecraft.util.StatCollector;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class Utils {
 
@@ -56,8 +54,7 @@ public class Utils {
 	private static final String ENCODING = "UTF-8";
 	
 	public static void sendLocalizedMessage(ICommandSender sender, String key, Object... args) {
-		EiraPlayerInfo playerInfo = EiraIRC.instance.getNetHandler().getPlayerInfo(sender.getName());
-		if(playerInfo.modInstalled) {
+		if(EiraIRCAPI.hasClientSideInstalled(sender)) {
 			sender.addChatMessage(getLocalizedChatMessage(key, args));
 		} else {
 			sender.addChatMessage(new ChatComponentText(getLocalizedChatMessage(key, args).getUnformattedText()));
@@ -137,16 +134,16 @@ public class Utils {
 		return "\"" + s + "\"";
 	}
 	
-	public static String getNickIRC(EntityPlayer player) {
-		return MessageFormat.addPreSuffix(getAliasForPlayer(player));
+	public static String getNickIRC(EntityPlayer player, IRCContext context) {
+		return MessageFormat.formatNick(getAliasForPlayer(player), context, MessageFormat.Target.IRC, MessageFormat.Mode.Message, null);
 	}
-	
+
 	public static String getNickGame(EntityPlayer player) {
 		return getAliasForPlayer(player);
 	}
 
 	public static String getAliasForPlayer(EntityPlayer player) {
-		if(!GlobalConfig.enableAliases) {
+		if(!SharedGlobalConfig.enablePlayerAliases) {
 			return player.getName();
 		}
 		String name = player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getCompoundTag(Globals.NBT_EIRAIRC).getString(Globals.NBT_ALIAS);
@@ -155,7 +152,23 @@ public class Utils {
 		}
 		return name;
 	}
-	
+
+	public static String getServerName() {
+		ServerData serverData = Minecraft.getMinecraft().func_147104_D(); // getServerData
+		if(serverData != null) {
+			return serverData.serverName;
+		}
+		return null;
+	}
+
+	public static String getServerAddress() {
+		ServerData serverData = Minecraft.getMinecraft().func_147104_D(); // getServerData
+		if(serverData != null) {
+			return serverData.serverIP;
+		}
+		return null;
+	}
+
 	public static boolean isOP(ICommandSender sender) {
 		if(MinecraftServer.getServer() == null || MinecraftServer.getServer().isSinglePlayer()) {
 			return true;
@@ -218,35 +231,43 @@ public class Utils {
 	public static EnumChatFormatting getColorFormattingForPlayer(EntityPlayer player) {
 		NBTTagCompound tagCompound = player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getCompoundTag(Globals.NBT_EIRAIRC);
 		boolean isOP = Utils.isServerSide() && Utils.isOP(player);
-		if(!DisplayConfig.enableNameColors && !isOP) {
+		if(!SharedGlobalConfig.enablePlayerColors && !isOP) {
 			return null;
 		}
+		ThemeSettings theme = SharedGlobalConfig.theme;
 		String colorName = tagCompound.getString(Globals.NBT_NAMECOLOR);
 		if(!colorName.isEmpty()) {
 			return Utils.getColorFormatting(colorName);
 		} else if(isOP) {
-			if(!DisplayConfig.mcOpColor.isEmpty()) {
-				return Utils.getColorFormatting(DisplayConfig.mcOpColor);
+			if(theme.hasColor(ThemeColorComponent.mcOpNameColor)) {
+				return theme.getColor(ThemeColorComponent.mcOpNameColor);
 			}
 		}
-		return Utils.getColorFormatting(DisplayConfig.mcColor);
+		return theme.getColor(ThemeColorComponent.mcNameColor);
 	}
 
 	@Nullable
 	public static EnumChatFormatting getColorFormattingForUser(IRCChannel channel, IRCUser user) {
+		ThemeSettings theme = ConfigHelper.getTheme(channel);
 		if(channel == null) {
-			return Utils.getColorFormatting(DisplayConfig.ircPrivateColor);
+			return theme.getColor(ThemeColorComponent.ircPrivateNameColor);
 		}
 		if(user.isOperator(channel)) {
-			if(!DisplayConfig.ircOpColor.isEmpty()) {
-				return Utils.getColorFormatting(DisplayConfig.ircOpColor);
+			if(theme.hasColor(ThemeColorComponent.ircOpNameColor)) {
+				return theme.getColor(ThemeColorComponent.ircOpNameColor);
 			}
 		} else if(user.hasVoice(channel)) {
-			if(!DisplayConfig.ircVoiceColor.isEmpty()) {
-				return Utils.getColorFormatting(DisplayConfig.ircVoiceColor);
+			if(theme.hasColor(ThemeColorComponent.ircVoiceNameColor)) {
+				return theme.getColor(ThemeColorComponent.ircVoiceNameColor);
 			}
 		}
-		return Utils.getColorFormatting(DisplayConfig.ircColor);
+		return theme.getColor(ThemeColorComponent.ircNameColor);
+	}
+
+	public static void addMCColorsToList(List<String> list) {
+		for(EnumChatFormatting formatting : EnumChatFormatting.values()) {
+			list.add(formatting.name());
+		}
 	}
 
 	public static void addValidColorsToList(List<String> list) {
@@ -265,11 +286,11 @@ public class Utils {
 		list.add("red");
 		list.add("magenta");
 		list.add("yellow");
-		list.add("white");		
+		list.add("white");
 	}
 
 	public static void addConnectionsToList(List<String> list) {
-		for(IRCConnection connection : EiraIRC.instance.getConnections()) {
+		for(IRCConnection connection : EiraIRC.instance.getConnectionManager().getConnections()) {
 			list.add(connection.getHost());
 		}		
 	}
@@ -279,14 +300,40 @@ public class Utils {
 		list.add("false");		
 	}
 
-	public static IRCConnectionImpl connectTo(ServerConfig config) {
-		IRCConnectionImpl connection;
-		if(config.isSecureConnection()) {
-			connection = new IRCConnectionSSLImpl(config.getHost(), config.getServerPassword(), ConfigHelper.getFormattedNick(config), config.getIdent(), config.getDescription());
-		} else {
-			connection = new IRCConnectionImpl(config.getHost(), config.getServerPassword(), ConfigHelper.getFormattedNick(config), config.getIdent(), config.getDescription());
+	public static boolean redirectTo(ServerConfig serverConfig, boolean solo) {
+		if(serverConfig == null) {
+			EiraIRC.instance.getConnectionManager().stopIRC();
+			return true;
 		}
-		connection.setCharset(GlobalConfig.charset);
+		IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(serverConfig.getAddress());
+		if(connection != null && solo) {
+			connection.disconnect("Redirected by " + Utils.getCurrentServerName());
+			connection = null;
+		}
+		if(connection == null) {
+			connection = connectTo(serverConfig);
+			if(connection == null) {
+				return false;
+			}
+		} else {
+			for(ChannelConfig channelConfig : serverConfig.getChannelConfigs()) {
+				connection.join(channelConfig.getName(), channelConfig.getPassword());
+			}
+		}
+		return true;
+	}
+
+	public static IRCConnectionImpl connectTo(ServerConfig config) {
+		IRCConnection oldConnection = EiraIRC.instance.getConnectionManager().getConnection(config.getAddress());
+		if(oldConnection != null) {
+			oldConnection.disconnect("Reconnecting...");
+		}
+		IRCConnectionImpl connection;
+		if(config.isSSL()) {
+			connection = new IRCConnectionSSLImpl(config, ConfigHelper.getFormattedNick(config));
+		} else {
+			connection = new IRCConnectionImpl(config, ConfigHelper.getFormattedNick(config));
+		}
 		connection.setBot(new IRCBotImpl(connection));
 		if(connection.start()) {
 			return connection;
@@ -342,23 +389,35 @@ public class Utils {
 			}
 		}
 	}
-	
-	public static void sendPlayerList(IRCUser user) {
+
+	public static void sendPlayerList(IRCContext context) {
 		if(MinecraftServer.getServer() == null || MinecraftServer.getServer().isSinglePlayer()) {
 			return;
 		}
 		List<EntityPlayer> playerList = MinecraftServer.getServer().getConfigurationManager().playerEntityList;
 		if(playerList.size() == 0) {
-			user.notice(getLocalizedMessage("irc.bot.noPlayersOnline"));
+			if(context instanceof IRCUser) {
+				context.notice(getLocalizedMessage("irc.bot.noPlayersOnline"));
+			} else if(context instanceof IRCChannel) {
+				context.message(getLocalizedMessage("irc.bot.noPlayersOnline"));
+			}
 			return;
 		}
-		user.notice(getLocalizedMessage("irc.bot.playersOnline", playerList.size()));
+		if(context instanceof IRCUser) {
+			context.notice(getLocalizedMessage("irc.bot.playersOnline", playerList.size()));
+		} else if(context instanceof IRCChannel) {
+			context.message(getLocalizedMessage("irc.bot.playersOnline", playerList.size()));
+		}
 		String s = " * ";
 		for(int i = 0; i < playerList.size(); i++) {
 			EntityPlayer entityPlayer = playerList.get(i);
-			String alias = getNickIRC(entityPlayer);
+			String alias = getNickIRC(entityPlayer, null);
 			if(s.length() + alias.length() > Globals.CHAT_MAX_LENGTH) {
-				user.notice(s);
+				if(context instanceof IRCUser) {
+					context.notice(s);
+				} else if(context instanceof IRCChannel) {
+					context.message(s);
+				}
 				s = " * ";
 			}
 			if(s.length() > 3) {
@@ -367,14 +426,18 @@ public class Utils {
 			s += alias;
 		}
 		if(s.length() > 3) {
-			user.notice(s);
+			if(context instanceof IRCUser) {
+				context.notice(s);
+			} else if(context instanceof IRCChannel) {
+				context.message(s);
+			}
 		}
 	}
 	
 	public static IRCContext getSuggestedTarget() {
-		IRCContext result = EiraIRC.instance.getChatSessionHandler().getIRCTarget();
+		IRCContext result = EiraIRC.instance.getChatSessionHandler().getChatTarget();
 		if(result == null) {
-			IRCConnection connection = EiraIRC.instance.getDefaultConnection();
+			IRCConnection connection = EiraIRC.instance.getConnectionManager().getDefaultConnection();
 			if(connection != null) {
 				if(connection.getChannels().size() == 1) {
 					return connection.getChannels().iterator().next();
@@ -393,7 +456,29 @@ public class Utils {
 		}
 		return username;
 	}
-	
+
+	public static void openDirectory(File dir) {
+		if (Util.getOSType() == Util.EnumOS.OSX) {
+			try {
+				Runtime.getRuntime().exec(new String[] {"/usr/bin/open", dir.getAbsolutePath()});
+				return;
+			} catch (IOException ignored) {}
+		} else if (Util.getOSType() == Util.EnumOS.WINDOWS) {
+			try {
+				Runtime.getRuntime().exec(String.format("cmd.exe /C start \"Open file\" \"%s\"", dir.getAbsolutePath()));
+				return;
+			} catch (IOException ignored) {}
+		}
+		Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+		if(desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
+			try {
+				desktop.browse(dir.toURI());
+				return;
+			} catch (Exception ignored) {}
+		}
+		Sys.openURL("file://" + dir.getAbsolutePath());
+	}
+
 	public static void openWebpage(String url) {
 		try {
 			openWebpage(new URL(url).toURI());
@@ -403,7 +488,15 @@ public class Utils {
 			e.printStackTrace();
 		}
 	}
-	
+
+	public static void openWebpage(URL url) {
+		try {
+			openWebpage(url.toURI());
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
+	}
+
 	public static void openWebpage(URI uri) {
 		Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
 		if(desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
@@ -418,7 +511,11 @@ public class Utils {
 	public static void setClipboardString(String s) {
 		StringSelection selection = new StringSelection(s);
 		Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-		clipboard.setContents(selection, selection);
+		try {
+			clipboard.setContents(selection, selection);
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static String getCurrentServerName() {
@@ -443,10 +540,6 @@ public class Utils {
 			shiftedArgs[i - offset] = args[i];
 		}
 		return shiftedArgs;
-	}
-	
-	public static String joinStrings(String[] arr, String delimiter) {
-		return joinStrings(arr, delimiter, 0);
 	}
 	
 	public static String joinStrings(String[] args, String delimiter, int startIdx) {
@@ -491,15 +584,41 @@ public class Utils {
 		}
 	}
 
-	public static int extractPort(String url, int defaultPort) {
+	public static int[] extractPorts(String url, int defaultPort) {
 		int portIdx = url.indexOf(':');
 		if(portIdx != -1) {
 			try {
-				return Integer.parseInt(url.substring(portIdx + 1));
+				String[] portRanges = url.substring(portIdx + 1).split("\\+");
+				List<Integer> portList = new ArrayList<Integer>();
+				for(int i = 0; i < portRanges.length; i++) {
+					int sepIdx = portRanges[i].indexOf('-');
+					if(sepIdx != -1) {
+						int min = Integer.parseInt(portRanges[i].substring(0, sepIdx));
+						int max = Integer.parseInt(portRanges[i].substring(sepIdx + 1));
+						if(min > max) {
+							int oldMin = min;
+							min = max;
+							max = oldMin;
+						}
+						if(max - min > 5) {
+							throw new RuntimeException("EiraIRC: Port ranges bigger than 5 are not allowed! Split them up if you really have to.");
+						}
+						for(int j = min; j <= max; j++) {
+							portList.add(j);
+						}
+					} else {
+						portList.add(Integer.parseInt(portRanges[i]));
+					}
+				}
+				return ArrayUtils.toPrimitive(portList.toArray(new Integer[portList.size()]));
 			} catch (NumberFormatException e) {
-				return defaultPort;
+				return new int[] { defaultPort };
 			}
 		}
-		return defaultPort;
+		return new int[] { defaultPort };
+	}
+
+	public static String getModpackId() {
+		return "";
 	}
 }

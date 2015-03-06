@@ -3,17 +3,18 @@
 
 package net.blay09.mods.eirairc.command;
 
-import java.util.List;
-
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.api.IRCConnection;
-import net.blay09.mods.eirairc.api.IRCContext;
-import net.blay09.mods.eirairc.util.IRCResolver;
+import net.blay09.mods.eirairc.api.EiraIRCAPI;
+import net.blay09.mods.eirairc.api.irc.IRCConnection;
+import net.blay09.mods.eirairc.api.irc.IRCContext;
+import net.blay09.mods.eirairc.api.SubCommand;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.BlockPos;
 
-public class CommandQuote extends SubCommand {
+import java.util.List;
+
+public class CommandQuote implements SubCommand {
 
 	@Override
 	public String getCommandName() {
@@ -21,8 +22,8 @@ public class CommandQuote extends SubCommand {
 	}
 
 	@Override
-	public String getUsageString(ICommandSender sender) {
-		return "irc.commands.quote";
+	public String getCommandUsage(ICommandSender sender) {
+		return "eirairc:irc.commands.quote";
 	}
 
 	@Override
@@ -39,14 +40,15 @@ public class CommandQuote extends SubCommand {
 				Utils.sendLocalizedMessage(sender, "irc.target.specifyServer");
 				return true;
 			}
-			connection = IRCResolver.resolveConnection(args[0], IRCResolver.FLAGS_NONE);
+			IRCContext target = EiraIRCAPI.parseContext(null, args[0], IRCContext.ContextType.IRCConnection).getConnection();
+			if(target.getContextType() == IRCContext.ContextType.Error) {
+				Utils.sendLocalizedMessage(sender, target.getName(), args[0]);
+				return true;
+			}
+			connection = target.getConnection();
 			msgIdx = 1;
 		} else {
 			connection = context.getConnection();
-		}
-		if(connection == null) {
-			Utils.sendLocalizedMessage(sender, "irc.target.serverNotFound", args[0]);
-			return true;
 		}
 		String msg = Utils.joinStrings(args, " ", msgIdx);
 		connection.irc(msg);
@@ -61,7 +63,7 @@ public class CommandQuote extends SubCommand {
 	@Override
 	public void addTabCompletionOptions(List<String> list, ICommandSender sender, String[] args, BlockPos pos) {
 		if(args.length == 0) {
-			for(IRCConnection connection : EiraIRC.instance.getConnections()) {
+			for(IRCConnection connection : EiraIRC.instance.getConnectionManager().getConnections()) {
 				list.add(connection.getHost());
 			}
 		}

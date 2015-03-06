@@ -3,12 +3,10 @@
 
 package net.blay09.mods.eirairc.command.extension;
 
-import java.util.List;
-
-import net.blay09.mods.eirairc.api.IRCContext;
-import net.blay09.mods.eirairc.command.SubCommand;
-import net.blay09.mods.eirairc.config.DisplayConfig;
-import net.blay09.mods.eirairc.config.GlobalConfig;
+import net.blay09.mods.eirairc.api.irc.IRCContext;
+import net.blay09.mods.eirairc.api.SubCommand;
+import net.blay09.mods.eirairc.config.SharedGlobalConfig;
+import net.blay09.mods.eirairc.config.settings.ThemeColorComponent;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.CommandException;
@@ -18,7 +16,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.BlockPos;
 
-public class CommandColor extends SubCommand {
+import java.util.List;
+
+public class CommandColor implements SubCommand {
 
 	private static final String COLOR_NONE = "none";
 	
@@ -28,8 +28,8 @@ public class CommandColor extends SubCommand {
 	}
 
 	@Override
-	public String getUsageString(ICommandSender sender) {
-		return "irc.commands.color";
+	public String getCommandUsage(ICommandSender sender) {
+		return "eirairc:irc.commands.color";
 	}
 
 	@Override
@@ -42,7 +42,7 @@ public class CommandColor extends SubCommand {
 		if(!(sender instanceof EntityPlayer)) {
 			return true;
 		}
-		if(!DisplayConfig.enableNameColors) {
+		if(!SharedGlobalConfig.enablePlayerColors) {
 			Utils.sendLocalizedMessage(sender, "irc.color.disabled");
 			return true;
 		}
@@ -50,7 +50,7 @@ public class CommandColor extends SubCommand {
 			throw new WrongUsageException(Utils.getLocalizedMessage("irc.commands.color"));
 		}
 		String colorName = args[0].toLowerCase();
-		if(!Utils.isOP(sender) && (GlobalConfig.colorBlackList.contains(colorName) || DisplayConfig.mcOpColor.equals(colorName))) {
+		if(!Utils.isOP(sender) && (SharedGlobalConfig.colorBlacklist.contains(colorName) || (SharedGlobalConfig.theme.hasColor(ThemeColorComponent.mcOpNameColor) && SharedGlobalConfig.theme.getColor(ThemeColorComponent.mcOpNameColor).equals(colorName)))) {
 			Utils.sendLocalizedMessage(sender, "irc.color.blackList", colorName);
 			return true;
 		}

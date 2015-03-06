@@ -10,8 +10,9 @@ import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.command.WrongUsageException;
 import net.minecraft.util.BlockPos;
+
+import java.util.List;
 
 public class IgnoreCommand implements ICommand {
 

@@ -3,6 +3,9 @@
 
 package net.blay09.mods.eirairc.net;
 
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,16 +27,6 @@ public class EiraNetHandler {
 				playerInfoMap.put(username, playerInfo);
 			}
 			return playerInfo;
-		}
-	}
-
-	@SubscribeEvent
-	public void onPlayerLogin(PlayerLoggedInEvent event) {
-		EntityPlayerMP entityPlayerMP = (EntityPlayerMP) event.player;
-		synchronized(playerInfoMap) {
-			for(EiraPlayerInfo playerInfo : playerInfoMap.values()) {
-				PacketHandler.INSTANCE.sendTo(new SMessageRecLiveState(playerInfo.getUsername(), playerInfo.isRecording, playerInfo.isLive), entityPlayerMP);
-			}
 		}
 	}
 

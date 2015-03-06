@@ -3,70 +3,57 @@
 
 package net.blay09.mods.eirairc.handler;
 
+import net.blay09.mods.eirairc.api.irc.IRCChannel;
+import net.blay09.mods.eirairc.api.irc.IRCContext;
+import net.blay09.mods.eirairc.api.irc.IRCUser;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.api.IRCChannel;
-import net.blay09.mods.eirairc.api.IRCConnection;
-import net.blay09.mods.eirairc.api.IRCContext;
-import net.blay09.mods.eirairc.api.IRCUser;
-import net.blay09.mods.eirairc.irc.IRCChannelImpl;
-import net.blay09.mods.eirairc.irc.IRCUserImpl;
-
 public class ChatSessionHandler {
 
-	private String chatTarget = null;
+	private IRCContext chatTarget = null;
 	private final List<IRCChannel> validTargetChannels = new ArrayList<IRCChannel>();
 	private final List<IRCUser> validTargetUsers = new ArrayList<IRCUser>();
-	private int targetChannelIdx = 0;
-	private int targetUserIdx = -1;
-	
-	public String getChatTarget() {
-		return chatTarget;
-	}
-	
+	private int targetChannelIdx = -1;
+	private int targetUserIdx = 0;
+
 	public void addTargetUser(IRCUser user) {
 		if(!validTargetUsers.contains(user)) {
 			validTargetUsers.add(user);
 		}
 	}
-	
+
 	public void addTargetChannel(IRCChannel channel) {
 		if(!validTargetChannels.contains(channel)) {
 			validTargetChannels.add(channel);
 		}
 	}
-	
+
 	public void removeTargetUser(IRCUser user) {
 		validTargetUsers.remove(user);
 	}
-	
+
 	public void removeTargetChannel(IRCChannel channel) {
 		validTargetChannels.remove(channel);
 	}
-	
-	public void setChatTarget(String chatTarget) {
+
+	public void setChatTarget(IRCContext chatTarget) {
 		this.chatTarget = chatTarget;
+		if(chatTarget instanceof IRCChannel) {
+			targetUserIdx = 0;
+			targetChannelIdx = validTargetChannels.indexOf(chatTarget);
+		} else if(chatTarget instanceof IRCUser) {
+			targetChannelIdx = -1;
+			targetUserIdx = validTargetUsers.indexOf(chatTarget);
+		}
 	}
-	
-	public void setChatTarget(IRCUserImpl user) {
-		this.chatTarget = user.getIdentifier();
+
+	public IRCContext getChatTarget() {
+		return chatTarget;
 	}
-	
-	public void setChatTarget(IRCChannelImpl channel) {
-		this.chatTarget = channel.getIdentifier();
-	}
-	
-	public boolean isChannelTarget() {
-		return chatTarget.contains("#");
-	}
-	
-	public boolean isUserTarget() {
-		return !isChannelTarget();
-	}
-	
-	public String getNextTarget(boolean users) {
+
+	public IRCContext getNextTarget(boolean users) {
 		if(users) {
 			if(validTargetUsers.isEmpty()) {
 				return null;
@@ -75,41 +62,20 @@ public class ChatSessionHandler {
 			if(targetUserIdx >= validTargetUsers.size()) {
 				targetUserIdx = 0;
 			}
-			return validTargetUsers.get(targetUserIdx).getIdentifier();
+			return validTargetUsers.get(targetUserIdx);
 		} else {
 			if(validTargetChannels.isEmpty()) {
 				return null;
 			}
 			targetChannelIdx++;
-			if(targetChannelIdx > validTargetChannels.size()) {
-				targetChannelIdx = 0;
+			if(targetChannelIdx >= validTargetChannels.size()) {
+				targetChannelIdx = -1;
 			}
-			if(targetChannelIdx == 0) {
+			if(targetChannelIdx == -1) {
 				return null;
 			}
-			return validTargetChannels.get(targetChannelIdx - 1).getIdentifier();
+			return validTargetChannels.get(targetChannelIdx);
 		}
 	}
 
-	public IRCContext getIRCTarget() {
-		if(chatTarget == null) {
-			return null;
-		}
-		int sepIdx = chatTarget.indexOf('/');
-		String targetHost = chatTarget.substring(0, sepIdx);
-		IRCConnection connection = EiraIRC.instance.getConnection(targetHost);
-		if(connection == null) {
-			return null;
-		}
-		String target = chatTarget.substring(sepIdx + 1); 
-		if(isChannelTarget()) {
-			return connection.getChannel(target);
-		} else {
-			return connection.getUser(target);
-		}
-	}
-
-	public boolean isMinecraftTarget() {
-		return chatTarget == null;
-	}
 }

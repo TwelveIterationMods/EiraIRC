@@ -1,14 +1,14 @@
 package net.blay09.mods.eirairc.util;
 
-import net.blay09.mods.eirairc.api.IRCChannel;
-import net.blay09.mods.eirairc.api.IRCConnection;
-import net.blay09.mods.eirairc.api.IRCContext;
-import net.blay09.mods.eirairc.api.IRCUser;
-import net.blay09.mods.eirairc.api.bot.IRCBot;
-import net.blay09.mods.eirairc.config.DisplayConfig;
-import net.blay09.mods.eirairc.config.GlobalConfig;
+import net.blay09.mods.eirairc.api.irc.IRCChannel;
+import net.blay09.mods.eirairc.api.irc.IRCConnection;
+import net.blay09.mods.eirairc.api.irc.IRCContext;
+import net.blay09.mods.eirairc.api.irc.IRCUser;
+import net.blay09.mods.eirairc.config.SharedGlobalConfig;
+import net.blay09.mods.eirairc.config.settings.*;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.event.ClickEvent;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
@@ -32,21 +32,97 @@ public class MessageFormat {
 	}
 
 	private static final Pattern playerTagPattern = Pattern.compile("[\\[][^\\]]+[\\]]");
-	private static final Pattern urlPattern = Pattern.compile("^(?:(https?)://)?([-\\w_\\.]{2,}\\.[a-z]{2,4})(/\\S*)?$");
+	public static final Pattern urlPattern = Pattern.compile("(?:(https?)://)?([-\\w_\\.]{2,}\\.[a-z]{2,4})(/\\S*)?");
+	public static final Pattern namePattern = Pattern.compile("@([^ ]+)");
 
-	public static String getMessageFormat(IRCBot bot, IRCContext context, boolean isEmote) {
-		if(context instanceof IRCUser) {
-			if(isEmote) {
-				return ConfigHelper.getDisplayFormat(bot.getDisplayFormat(context)).ircPrivateEmote;
+	public static String getMessageFormat(IRCContext context, boolean isEmote) {
+		BotSettings botSettings = ConfigHelper.getBotSettings(context);
+		if (context instanceof IRCUser) {
+			if (isEmote) {
+				return botSettings.getMessageFormat().ircPrivateEmote;
 			} else {
-				return ConfigHelper.getDisplayFormat(bot.getDisplayFormat(context)).ircPrivateMessage;
+				return botSettings.getMessageFormat().ircPrivateMessage;
 			}
 		} else {
-			if(isEmote) {
-				return ConfigHelper.getDisplayFormat(bot.getDisplayFormat(context)).ircChannelEmote;
+			if (isEmote) {
+				return botSettings.getMessageFormat().ircChannelEmote;
 			} else {
-				return ConfigHelper.getDisplayFormat(bot.getDisplayFormat(context)).ircChannelMessage;
+				return botSettings.getMessageFormat().ircChannelMessage;
 			}
+		}
+	}
+
+	public static IChatComponent createChatComponentForMessage(String message) {
+		ChatComponentText rootComponent = null;
+		StringBuilder buffer = new StringBuilder();
+		Matcher urlMatcher = urlPattern.matcher(message);
+		Matcher nameMatcher = namePattern.matcher(message);
+		int currentIndex = 0;
+		while(currentIndex < message.length()) {
+			// Find the next word in the message
+			int nextWhitespace = message.indexOf(' ', currentIndex);
+			if(nextWhitespace == -1) {
+				nextWhitespace = message.length();
+			}
+			// Update Matchers to check the correct region
+			urlMatcher.region(currentIndex, nextWhitespace);
+			nameMatcher.region(currentIndex, nextWhitespace);
+			if(urlMatcher.matches()) {
+				// Flush the buffer
+				if(buffer.length() > 0) {
+					rootComponent = appendTextToRoot(rootComponent, buffer.toString());
+					buffer = new StringBuilder();
+				}
+				// Create URL component
+				String urlText = urlMatcher.group();
+				ChatComponentText urlComponent = new ChatComponentText(urlText);
+				// Make sure a protocol is specified for the ClickEvent value to prevent NPE in GuiChat (getScheme())
+				if(!urlText.startsWith("http://") && !urlText.startsWith("https://")) {
+					urlText = "http://" + urlText;
+				}
+				urlComponent.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, urlText));
+				rootComponent = appendSiblingToRoot(rootComponent, urlComponent);
+				currentIndex = nextWhitespace;
+			} else if(nameMatcher.matches()) {
+				// Flush the buffer
+				if(buffer.length() > 0) {
+					rootComponent = appendTextToRoot(rootComponent, buffer.toString());
+					buffer = new StringBuilder();
+				}
+				// Create Name Component
+				String nameText = nameMatcher.group();
+				ChatComponentText nameComponent = new ChatComponentText(nameText);
+				nameComponent.getChatStyle().setItalic(true);
+				nameComponent.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, nameText + " "));
+				rootComponent = appendSiblingToRoot(rootComponent, nameComponent);
+				currentIndex = nextWhitespace;
+			} else {
+				buffer.append(message.substring(currentIndex, Math.min(message.length(), nextWhitespace + 1)));
+				currentIndex = nextWhitespace + 1;
+			}
+		}
+		// Flush the buffer
+		if(buffer.length() > 0) {
+			rootComponent = appendTextToRoot(rootComponent, buffer.toString());
+		}
+		return rootComponent;
+	}
+
+	private static ChatComponentText appendSiblingToRoot(ChatComponentText root, IChatComponent sibling) {
+		if(root == null) {
+			root = new ChatComponentText("");
+		}
+		root.appendSibling(sibling);
+		return root;
+	}
+
+	private static ChatComponentText appendTextToRoot(ChatComponentText root, String text) {
+		if(root == null) {
+			root = new ChatComponentText(text);
+			return root;
+		} else {
+			root.appendText(text);
+			return root;
 		}
 	}
 
@@ -64,10 +140,6 @@ public class MessageFormat {
 		return playerTagPattern.matcher(playerName).replaceAll("");
 	}
 
-	public static String addPreSuffix(String name) {
-		return GlobalConfig.nickPrefix + name + GlobalConfig.nickSuffix;
-	}
-
 	private static String filterAllowedCharacters(String message) {
 		StringBuilder sb = new StringBuilder();
 		char[] charArray = message.toCharArray();
@@ -79,29 +151,39 @@ public class MessageFormat {
 		return sb.toString();
 	}
 
-	private static String formatNick(String nick, Target target, Mode mode) {
+	public static String formatNick(String nick, IRCContext context, Target target, Mode mode, IRCUser ircUser) {
 		if(target == Target.IRC) {
-			if (DisplayConfig.hidePlayerTags) {
+			if(SharedGlobalConfig.hidePlayerTags) {
 				nick = filterPlayerTags(nick);
 			}
-			nick = addPreSuffix(nick);
+			nick = String.format(ConfigHelper.getBotSettings(context).getString(BotStringComponent.NickFormat), nick);
+			if(SharedGlobalConfig.preventUserPing) {
+				nick = nick.charAt(0) + '\u0081' + nick.substring(1);
+			}
+		} else if(target == Target.Minecraft && context instanceof IRCChannel) {
+			GeneralSettings settings = ConfigHelper.getGeneralSettings(context);
+			if(settings.getBoolean(GeneralBooleanComponent.ShowNameFlags)) {
+				nick = ircUser.getChannelModePrefix((IRCChannel) context) + nick;
+			}
 		}
 		return nick;
 	}
 
 	public static String formatMessage(String format, IRCContext context, ICommandSender sender, String message, Target target, Mode mode) {
 		String result = formatChatComponent(format, context, sender, message, target, mode).getUnformattedText();
+		BotSettings botSettings = ConfigHelper.getBotSettings(context);
 		if(target == Target.IRC) {
-			result = IRCFormatting.toIRC(result, !DisplayConfig.enableIRCColors);
+			result = IRCFormatting.toIRC(result, !botSettings.getBoolean(BotBooleanComponent.ConvertColors));
 		} else if(target == Target.Minecraft) {
-			result = IRCFormatting.toMC(result, !DisplayConfig.enableIRCColors);
+			result = IRCFormatting.toMC(result, !botSettings.getBoolean(BotBooleanComponent.ConvertColors));
 			result = filterAllowedCharacters(result);
 		}
 		return result;
 	}
 
 	public static IChatComponent formatChatComponent(String format, IRCContext context, ICommandSender sender, String message, Target target, Mode mode) {
-		IChatComponent root = new ChatComponentText("");
+		IChatComponent root = null;
+		EnumChatFormatting nextColor = null;
 		StringBuilder sb = new StringBuilder();
 		int currentIdx = 0;
 		while(currentIdx < format.length()) {
@@ -123,7 +205,7 @@ public class MessageFormat {
 							EntityPlayer player = (EntityPlayer) sender;
 							component = player.getDisplayName().createCopy();
 							String displayName = component.getUnformattedText();
-							displayName = formatNick(displayName, target, mode);
+							displayName = formatNick(displayName, context, target, mode, null);
 							component = new ChatComponentText(displayName);
 							if(mode != Mode.Emote) {
 								EnumChatFormatting nameColor = Utils.getColorFormattingForPlayer(player);
@@ -135,49 +217,83 @@ public class MessageFormat {
 							component = new ChatComponentText(sender.getName());
 						}
 					} else if(token.equals("MESSAGE")) {
+						BotSettings botSettings = ConfigHelper.getBotSettings(context);
 						if(target == Target.Minecraft) {
-							message = IRCFormatting.toMC(message, !DisplayConfig.enableIRCColors);
+							message = IRCFormatting.toMC(message, !botSettings.getBoolean(BotBooleanComponent.ConvertColors));
 							message = filterAllowedCharacters(message);
 						} else if(target == Target.IRC) {
-							message = IRCFormatting.toIRC(message, !DisplayConfig.enableIRCColors);
+							message = IRCFormatting.toIRC(message, !botSettings.getBoolean(BotBooleanComponent.ConvertColors));
 						}
-						component = new ChatComponentText(message);
+						component = createChatComponentForMessage(message);
 					} else {
 						validToken = false;
 					}
 					if(validToken) {
 						if(sb.length() > 0) {
-							root.appendSibling(new ChatComponentText(sb.toString()));
+							IChatComponent newComponent;
+							if(root == null) {
+								root = new ChatComponentText(sb.toString());
+								newComponent = root;
+							} else {
+								newComponent = new ChatComponentText(sb.toString());
+								root.appendSibling(newComponent);
+							}
+							if(nextColor != null) {
+								newComponent.getChatStyle().setColor(nextColor);
+							}
 							sb = new StringBuilder();
 						}
-						root.appendSibling(component);
+						if(root == null) {
+							root = component;
+						} else {
+							root.appendSibling(component);
+						}
+						if(nextColor != null) {
+							component.getChatStyle().setColor(nextColor);
+						}
 						currentIdx += token.length() + 2;
 						continue;
 					}
 				}
+			} else if(c == '\u00a7') {
+				nextColor = IRCFormatting.getColorFromMCColorCode(format.charAt(currentIdx + 1));
+				currentIdx += 2;
+				continue;
 			}
 			sb.append(c);
 			currentIdx++;
 		}
 		if(sb.length() > 0) {
-			root.appendSibling(new ChatComponentText(sb.toString()));
+			IChatComponent newComponent;
+			if(root == null) {
+				root = new ChatComponentText(sb.toString());
+				newComponent = root;
+			} else {
+				newComponent = new ChatComponentText(sb.toString());
+				root.appendSibling(newComponent);
+			}
+			if(nextColor != null) {
+				newComponent.getChatStyle().setColor(nextColor);
+			}
 		}
 		return root;
 	}
 
 	public static String formatMessage(String format, IRCConnection connection, IRCChannel channel, IRCUser user, String message, Target target, Mode mode) {
 		String result = formatChatComponent(format, connection, channel, user, message, target, mode).getUnformattedText();
+		BotSettings botSettings = ConfigHelper.getBotSettings(channel);
 		if(target == Target.IRC) {
-			result = IRCFormatting.toIRC(result, !DisplayConfig.enableIRCColors);
+			result = IRCFormatting.toIRC(result, !botSettings.getBoolean(BotBooleanComponent.ConvertColors));
 		} else if(target == Target.Minecraft) {
-			result = IRCFormatting.toMC(result, !DisplayConfig.enableIRCColors);
+			result = IRCFormatting.toMC(result, !botSettings.getBoolean(BotBooleanComponent.ConvertColors));
 			result = filterAllowedCharacters(result);
 		}
 		return result;
 	}
 
 	public static IChatComponent formatChatComponent(String format, IRCConnection connection, IRCChannel channel, IRCUser user, String message, Target target, Mode mode) {
-		IChatComponent root = new ChatComponentText("");
+		IChatComponent root = null;
+		EnumChatFormatting nextColor = null;
 		StringBuilder sb = new StringBuilder();
 		int currentIdx = 0;
 		while(currentIdx < format.length()) {
@@ -201,7 +317,7 @@ public class MessageFormat {
 					} else if(token.equals("NICK")) {
 						if(user != null) {
 							String displayName = user.getName();
-							displayName = formatNick(displayName, target, mode);
+							displayName = formatNick(displayName, channel, target, mode, user);
 							component = new ChatComponentText(displayName);
 							if(mode != Mode.Emote) {
 								EnumChatFormatting nameColor = Utils.getColorFormattingForUser(channel, user);
@@ -213,32 +329,64 @@ public class MessageFormat {
 							component = new ChatComponentText(connection.getIdentifier());
 						}
 					} else if(token.equals("MESSAGE")) {
+						BotSettings botSettings = ConfigHelper.getBotSettings(channel);
 						if(target == Target.Minecraft) {
-							message = IRCFormatting.toMC(message, !DisplayConfig.enableIRCColors);
+							message = IRCFormatting.toMC(message, !botSettings.getBoolean(BotBooleanComponent.ConvertColors));
 							message = filterAllowedCharacters(message);
 						} else if(target == Target.IRC) {
-							message = IRCFormatting.toIRC(message, !DisplayConfig.enableIRCColors);
+							message = IRCFormatting.toIRC(message, !botSettings.getBoolean(BotBooleanComponent.ConvertColors));
 						}
-						component = new ChatComponentText(message);
+						component = createChatComponentForMessage(message);
 					} else {
 						validToken = false;
 					}
 					if(validToken) {
 						if(sb.length() > 0) {
-							root.appendSibling(new ChatComponentText(sb.toString()));
+							IChatComponent newComponent;
+							if(root == null) {
+								root = new ChatComponentText(sb.toString());
+								newComponent = root;
+							} else {
+								newComponent = new ChatComponentText(sb.toString());
+								root.appendSibling(newComponent);
+							}
+							if(nextColor != null) {
+								newComponent.getChatStyle().setColor(nextColor);
+							}
 							sb = new StringBuilder();
 						}
-						root.appendSibling(component);
+						if(root == null) {
+							root = component;
+						} else {
+							root.appendSibling(component);
+						}
+						if(nextColor != null) {
+							component.getChatStyle().setColor(nextColor);
+						}
 						currentIdx += token.length() + 2;
 						continue;
 					}
 				}
+			} else if(c == '\u00a7') {
+				nextColor = IRCFormatting.getColorFromMCColorCode(format.charAt(currentIdx + 1));
+				currentIdx += 2;
+				continue;
 			}
 			sb.append(c);
 			currentIdx++;
 		}
 		if(sb.length() > 0) {
-			root.appendSibling(new ChatComponentText(sb.toString()));
+			IChatComponent newComponent;
+			if(root == null) {
+				root = new ChatComponentText(sb.toString());
+				newComponent = root;
+			} else {
+				newComponent = new ChatComponentText(sb.toString());
+				root.appendSibling(newComponent);
+			}
+			if(nextColor != null) {
+				newComponent.getChatStyle().setColor(nextColor);
+			}
 		}
 		return root;
 	}

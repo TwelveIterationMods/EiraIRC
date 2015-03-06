@@ -3,43 +3,25 @@
 
 package net.blay09.mods.eirairc.client.screenshot;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.nio.IntBuffer;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
-import java.util.Properties;
-
-import javax.imageio.ImageIO;
-
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.stream.JsonWriter;
+import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.api.IRCChannel;
-import net.blay09.mods.eirairc.api.IRCConnection;
-import net.blay09.mods.eirairc.api.IRCContext;
-import net.blay09.mods.eirairc.api.IRCUser;
-import net.blay09.mods.eirairc.api.bot.IRCBot;
+import net.blay09.mods.eirairc.api.irc.IRCChannel;
+import net.blay09.mods.eirairc.api.irc.IRCContext;
+import net.blay09.mods.eirairc.api.irc.IRCUser;
 import net.blay09.mods.eirairc.api.event.RelayChat;
-import net.blay09.mods.eirairc.api.upload.IUploadHoster;
-import net.blay09.mods.eirairc.api.upload.UploadManager;
-import net.blay09.mods.eirairc.config.DisplayConfig;
-import net.blay09.mods.eirairc.config.ScreenshotConfig;
+import net.blay09.mods.eirairc.api.upload.UploadHoster;
+import net.blay09.mods.eirairc.client.UploadManager;
+import net.blay09.mods.eirairc.config.ClientGlobalConfig;
+import net.blay09.mods.eirairc.config.ScreenshotAction;
+import net.blay09.mods.eirairc.config.settings.BotSettings;
+import net.blay09.mods.eirairc.config.settings.ThemeColorComponent;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.MessageFormat;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
@@ -49,6 +31,13 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.nio.IntBuffer;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class ScreenshotManager {
 
@@ -64,13 +53,11 @@ public class ScreenshotManager {
 	}
 
 	private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss");
-	private static final String PROPERTY_DELETE_URL = "_delete";
-	private static final String PROPERTY_HOSTER = "_hoster";
+	private static final Gson gson = new Gson();
 	private static IntBuffer intBuffer;
 	private static int[] buffer;
 	
 	private final File screenshotDir = new File(Minecraft.getMinecraft().mcDataDir, "screenshots");
-	private final File thumbnailDir = new File(screenshotDir, "thumbnails");
 	private final List<Screenshot> screenshots = new ArrayList<Screenshot>();
 	private final Comparator<Screenshot> comparator = new Comparator<Screenshot>() {
 		@Override
@@ -89,19 +76,13 @@ public class ScreenshotManager {
 	private final List<AsyncUploadScreenshot> uploadTasks = new ArrayList<AsyncUploadScreenshot>();
 	private long lastScreenshotScan;
 	
-	public ScreenshotManager() {
-		thumbnailDir.mkdirs();
-	}
-
 	public void load() {
-		Properties prop = new Properties();
+		JsonObject metadataObject;
 		try {
-			FileInputStream in = new FileInputStream(new File(screenshotDir, "eirairc.properties"));
-			prop.load(in);
-			in.close();
+			Reader reader = new FileReader(new File(screenshotDir, "eirairc_metadata.json"));
+			metadataObject = gson.fromJson(reader, JsonObject.class);
 		} catch (FileNotFoundException e) {
-		} catch (IOException e) {
-			e.printStackTrace();
+			metadataObject = new JsonObject();
 		}
 		File[] screenshotFiles = screenshotDir.listFiles(new FilenameFilter() {
 			@Override
@@ -111,11 +92,7 @@ public class ScreenshotManager {
 		});
 		if (screenshotFiles != null) {
 			for (int i = 0; i < screenshotFiles.length; i++) {
-				Screenshot screenshot = new Screenshot(screenshotFiles[i]);
-				screenshot.setURL(prop.getProperty(screenshot.getName()));
-				screenshot.setDeleteURL(prop.getProperty(screenshot.getName() + PROPERTY_DELETE_URL));
-				screenshot.setHoster(prop.getProperty(screenshot.getName() + PROPERTY_HOSTER));
-				screenshots.add(screenshot);
+				screenshots.add(new Screenshot(screenshotFiles[i], metadataObject.getAsJsonObject(screenshotFiles[i].getName())));
 			}
 		}
 		lastScreenshotScan = System.currentTimeMillis();
@@ -123,19 +100,18 @@ public class ScreenshotManager {
 	}
 
 	public void save() {
-		Properties prop = new Properties();
-		for (int i = 0; i < screenshots.size(); i++) {
+		JsonObject metadataObject = new JsonObject();
+		for(int i = 0; i < screenshots.size(); i++) {
 			Screenshot screenshot = screenshots.get(i);
-			if (screenshot.isUploaded()) {
-				prop.setProperty(screenshot.getName(), screenshot.getUploadURL());
-				prop.setProperty(screenshot.getName() + PROPERTY_DELETE_URL, screenshot.getDeleteURL() != null ? screenshot.getDeleteURL() : "");
-				prop.setProperty(screenshot.getName() + PROPERTY_HOSTER, screenshot.getHoster() != null ? screenshot.getHoster() : "");
+			if(screenshot.getMetadata().entrySet().size() > 0) {
+				metadataObject.add(screenshot.getFile().getName(), screenshot.getMetadata());
 			}
 		}
 		try {
-			FileOutputStream out = new FileOutputStream(new File(screenshotDir, "eirairc.properties"));
-			prop.store(out, null);
-			out.close();
+			JsonWriter writer = new JsonWriter(new FileWriter(new File(screenshotDir, "eirairc_metadata.json")));
+			writer.setIndent("  ");
+			gson.toJson(metadataObject, writer);
+			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -160,7 +136,7 @@ public class ScreenshotManager {
 			bufferedImage.setRGB(0, 0, width, height, buffer, 0, width);
 			File screenshotFile = new File(screenshotDir, getScreenshotName(screenshotDir));
 			ImageIO.write(bufferedImage, "png", screenshotFile);
-			Screenshot screenshot = new Screenshot(screenshotFile);
+			Screenshot screenshot = new Screenshot(screenshotFile, null);
 			screenshots.add(screenshot);
 			Collections.sort(screenshots, comparator);
 			return screenshot;
@@ -193,18 +169,20 @@ public class ScreenshotManager {
 		}
 	}
 
-	public Collection<Screenshot> getScreenshots() {
+	public List<Screenshot> getScreenshots() {
 		return screenshots;
 	}
 
-	public void deleteScreenshot(Screenshot screenshot) {
+	public void deleteScreenshot(Screenshot screenshot, boolean keepUploaded) {
 		screenshot.getFile().delete();
-		screenshot.getThumbnail().getFile().delete();
+		if(!keepUploaded && screenshot.hasDeleteURL()) {
+			Utils.openWebpage(screenshot.getDeleteURL());
+		}
 		screenshots.remove(screenshot);
 	}
 
-	public void uploadScreenshot(Screenshot screenshot, int followUpAction) {
-		IUploadHoster hoster = UploadManager.getUploadHoster(ScreenshotConfig.uploadHoster);
+	public void uploadScreenshot(Screenshot screenshot, ScreenshotAction followUpAction) {
+		UploadHoster hoster = UploadManager.getUploadHoster(ClientGlobalConfig.screenshotHoster);
 		if (hoster != null) {
 			uploadTasks.add(new AsyncUploadScreenshot(hoster, screenshot, followUpAction));
 		}
@@ -215,10 +193,10 @@ public class ScreenshotManager {
 			if(uploadTasks.get(i).isComplete()) {
 				AsyncUploadScreenshot task = uploadTasks.remove(i);
 				if(task.getScreenshot().isUploaded()) {
-					int action = task.getFollowUpAction();
-					if (action == ScreenshotConfig.VALUE_UPLOADCLIPBOARD) {
+					ScreenshotAction action = task.getFollowUpAction();
+					if(action == ScreenshotAction.UploadClipboard) {
 						Utils.setClipboardString(task.getScreenshot().getUploadURL());
-					} else if (action == ScreenshotConfig.VALUE_UPLOADSHARE) {
+					} else if(action == ScreenshotAction.UploadShare) {
 						shareScreenshot(task.getScreenshot());
 					}
 					save();
@@ -231,51 +209,40 @@ public class ScreenshotManager {
 		if(Minecraft.getMinecraft().thePlayer == null) {
 			return;
 		}
-		String text = Utils.getLocalizedMessage("irc.display.shareScreenshot", screenshot.getUploadURL());
-		if(EiraIRC.instance.getChatSessionHandler().isMinecraftTarget()) {
-			String mcMessage = "/me " + text;
-			Minecraft.getMinecraft().thePlayer.sendChatMessage(mcMessage);
+		IRCContext chatTarget = EiraIRC.instance.getChatSessionHandler().getChatTarget();
+		String format = ConfigHelper.getBotSettings(chatTarget).getMessageFormat().ircScreenshotUpload;
+		format = format.replace("{URL}", screenshot.getDirectURL() != null ? screenshot.getDirectURL() : screenshot.getUploadURL());
+		if(chatTarget == null) {
+			format = format.replace("{NICK}", "/me");
+			format = format.replace("{USER}", "/me");
+			Minecraft.getMinecraft().thePlayer.sendChatMessage(format);
 		} else {
-			// TODO damn, clean up your shitty code once 1.6.4 and 1.7.2 is dropped
 			EntityPlayer sender = Minecraft.getMinecraft().thePlayer;
-			MinecraftForge.EVENT_BUS.post(new RelayChat(sender, text, true));
-			String chatTarget = EiraIRC.instance.getChatSessionHandler().getChatTarget();
-			if(chatTarget == null) {
+			EnumChatFormatting emoteColor;
+			IChatComponent chatComponent;
+			if (chatTarget instanceof IRCChannel) {
+				BotSettings botSettings = ConfigHelper.getBotSettings(chatTarget);
+				emoteColor = ConfigHelper.getTheme(chatTarget).getColor(ThemeColorComponent.emoteTextColor);
+				chatComponent = MessageFormat.formatChatComponent(botSettings.getMessageFormat().ircScreenshotUpload, chatTarget, sender, "", MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
+			} else if(chatTarget instanceof IRCUser) {
+				BotSettings botSettings = ConfigHelper.getBotSettings(chatTarget);
+				emoteColor = ConfigHelper.getTheme(chatTarget).getColor(ThemeColorComponent.emoteTextColor);
+				chatComponent = MessageFormat.formatChatComponent(botSettings.getMessageFormat().ircScreenshotUpload, chatTarget, sender, "", MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
+			} else {
 				return;
 			}
-			String[] target = chatTarget.split("/");
-			IRCConnection connection = EiraIRC.instance.getConnection(target[0]);
-			if(connection != null) {
-				IRCBot bot = connection.getBot();
-				EnumChatFormatting emoteColor;
-				IChatComponent chatComponent;
-				if (target[1].startsWith("#")) {
-					IRCChannel targetChannel = connection.getChannel(target[1]);
-					if (targetChannel == null) {
-						return;
-					}
-					emoteColor = Utils.getColorFormatting(ConfigHelper.getEmoteColor(targetChannel));
-					chatComponent = MessageFormat.formatChatComponent(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetChannel)).mcSendChannelEmote, targetChannel, sender, text, MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
-				} else {
-					IRCUser targetUser = connection.getUser(target[1]);
-					if (targetUser == null) {
-						return;
-					}
-					emoteColor = Utils.getColorFormatting(ConfigHelper.getEmoteColor(targetUser));
-					chatComponent = MessageFormat.formatChatComponent(ConfigHelper.getDisplayFormat(bot.getDisplayFormat(targetUser)).mcSendPrivateEmote, targetUser, sender, text, MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
-				}
-				if (emoteColor != null) {
-					chatComponent.getChatStyle().setColor(emoteColor);
-				}
-				Utils.addMessageToChat(chatComponent);
+			if (emoteColor != null) {
+				chatComponent.getChatStyle().setColor(emoteColor);
 			}
+			MinecraftForge.EVENT_BUS.post(new RelayChat(sender, chatComponent.getUnformattedText(), true));
+			Utils.addMessageToChat(chatComponent);
 		}
 	}
 
 	public void handleNewScreenshot(Screenshot screenshot) {
 		if (EiraIRC.proxy.isIngame()) {
-			int action = ScreenshotConfig.screenshotAction;
-			if (action == ScreenshotConfig.VALUE_UPLOADCLIPBOARD || action == ScreenshotConfig.VALUE_UPLOADSHARE) {
+			ScreenshotAction action = ClientGlobalConfig.screenshotAction;
+			if(action == ScreenshotAction.UploadClipboard || action == ScreenshotAction.UploadShare) {
 				uploadScreenshot(screenshot, action);
 			}
 		}
@@ -296,7 +263,7 @@ public class ScreenshotManager {
 		});
 		if (screenshotFiles != null) {
 			for (int i = 0; i < screenshotFiles.length; i++) {
-				Screenshot screenshot = new Screenshot(screenshotFiles[i]);
+				Screenshot screenshot = new Screenshot(screenshotFiles[i], null);
 				if (autoAction) {
 					handleNewScreenshot(screenshot);
 				}
@@ -305,10 +272,6 @@ public class ScreenshotManager {
 		}
 		Collections.sort(screenshots, comparator);
 		lastScreenshotScan = System.currentTimeMillis();
-	}
-
-	public File getThumbnailDir() {
-		return thumbnailDir;
 	}
 
 }

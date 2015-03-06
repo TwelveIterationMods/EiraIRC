@@ -3,14 +3,13 @@
 
 package net.blay09.mods.eirairc.command.extension;
 
-import java.util.List;
-
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.api.IRCContext;
-import net.blay09.mods.eirairc.command.SubCommand;
+import net.blay09.mods.eirairc.api.EiraIRCAPI;
+import net.blay09.mods.eirairc.api.irc.IRCContext;
+import net.blay09.mods.eirairc.api.SubCommand;
 import net.blay09.mods.eirairc.config.ChannelConfig;
+import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.ServerConfig;
-import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.CommandException;
@@ -18,7 +17,9 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.util.BlockPos;
 
-public class CommandTwitch extends SubCommand {
+import java.util.List;
+
+public class CommandTwitch implements SubCommand {
 
 	@Override
 	public String getCommandName() {
@@ -26,8 +27,8 @@ public class CommandTwitch extends SubCommand {
 	}
 
 	@Override
-	public String getUsageString(ICommandSender sender) {
-		return "irc.commands.twitch";
+	public String getCommandUsage(ICommandSender sender) {
+		return "eirairc:irc.commands.twitch";
 	}
 
 	@Override
@@ -37,14 +38,14 @@ public class CommandTwitch extends SubCommand {
 
 	@Override
 	public boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) throws CommandException {
-		if(EiraIRC.instance.isConnectedTo(Globals.TWITCH_SERVER)) {
+		if(EiraIRCAPI.isConnectedTo(Globals.TWITCH_SERVER)) {
 			Utils.sendLocalizedMessage(sender, "irc.general.alreadyConnected", "Twitch");
 			return true;
 		}
 		if(args.length == 0) {
 			if(ConfigurationHandler.hasServerConfig(Globals.TWITCH_SERVER)) {
 				Utils.sendLocalizedMessage(sender, "irc.basic.connecting", "Twitch");
-				ServerConfig serverConfig = ConfigurationHandler.getServerConfig(Globals.TWITCH_SERVER);
+				ServerConfig serverConfig = ConfigurationHandler.getOrCreateServerConfig(Globals.TWITCH_SERVER);
 				Utils.connectTo(serverConfig);
 				return true;
 			} else {
@@ -59,12 +60,12 @@ public class CommandTwitch extends SubCommand {
 			if(args.length < 2 && !ConfigurationHandler.hasServerConfig(Globals.TWITCH_SERVER)) {
 				throw new WrongUsageException(Globals.MOD_ID + ":irc.commands.twitch");
 			}
-			ServerConfig serverConfig = ConfigurationHandler.getServerConfig(Globals.TWITCH_SERVER);
+			ServerConfig serverConfig = ConfigurationHandler.getOrCreateServerConfig(Globals.TWITCH_SERVER);
 			serverConfig.setNick(args[0]);
 			serverConfig.setServerPassword(args[1]);
 			String userChannel = "#" + args[0];
 			if(!serverConfig.hasChannelConfig(userChannel)) {
-				ChannelConfig channelConfig = serverConfig.getChannelConfig(userChannel);
+				ChannelConfig channelConfig = serverConfig.getOrCreateChannelConfig(userChannel);
 				serverConfig.addChannelConfig(channelConfig);
 			}
 			ConfigurationHandler.addServerConfig(serverConfig);

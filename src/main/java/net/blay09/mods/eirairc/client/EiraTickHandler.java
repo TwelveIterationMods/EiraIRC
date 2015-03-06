@@ -5,25 +5,21 @@ package net.blay09.mods.eirairc.client;
 
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import net.blay09.mods.eirairc.EiraIRC;
+import net.blay09.mods.eirairc.client.gui.GuiEiraIRCMenu;
+import net.blay09.mods.eirairc.client.gui.GuiWelcome;
 import net.blay09.mods.eirairc.client.gui.chat.GuiChatExtended;
 import net.blay09.mods.eirairc.client.gui.chat.GuiEiraChat;
 import net.blay09.mods.eirairc.client.gui.chat.GuiEiraChatInput;
-import net.blay09.mods.eirairc.client.gui.screenshot.GuiScreenshotList;
-import net.blay09.mods.eirairc.client.gui.settings.GuiKeybinds;
-import net.blay09.mods.eirairc.client.gui.settings.GuiSettings;
+import net.blay09.mods.eirairc.client.gui.screenshot.GuiScreenshots;
 import net.blay09.mods.eirairc.client.screenshot.Screenshot;
 import net.blay09.mods.eirairc.client.screenshot.ScreenshotManager;
-import net.blay09.mods.eirairc.config.CompatibilityConfig;
-import net.blay09.mods.eirairc.config.KeyConfig;
-import net.blay09.mods.eirairc.config.ScreenshotConfig;
-import net.blay09.mods.eirairc.net.EiraPlayerInfo;
-import net.blay09.mods.eirairc.net.PacketHandler;
-import net.blay09.mods.eirairc.net.message.MessageRecLiveState.CMessageRecLiveState;
+import net.blay09.mods.eirairc.config.ClientGlobalConfig;
+import net.blay09.mods.eirairc.config.ScreenshotAction;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiScreen;
-
+import net.minecraft.client.settings.KeyBinding;
 import org.lwjgl.input.Keyboard;
 
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -33,11 +29,19 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.RenderTickEvent;
 
 public class EiraTickHandler {
 
+	public static final int KEY_IDX_OPENSETTINGS = 0;
+	public static final int KEY_IDX_TOGGLETARGET = 1;
+	public static final int KEY_IDX_SCREENSHOTSHARE = 2;
+	public static final int KEY_IDX_TOGGLERECORDING = 3;
+	public static final int KEY_IDX_TOGGLELIVE = 4;
+	public static final int KEY_IDX_OPENSCREENSHOTS = 5;
+
 	private GuiEiraChat eiraChat;
 	private int screenshotCheck;
 	private boolean[] keyState = new boolean[10];
 	private final int keyChat;
 	private final int keyCommand;
+	private int openWelcomeScreen;
 
 	public EiraTickHandler(GuiEiraChat eiraChat) {
 		this.eiraChat = eiraChat;
@@ -45,11 +49,11 @@ public class EiraTickHandler {
 		keyCommand = Minecraft.getMinecraft().gameSettings.keyBindCommand.getKeyCode();
 	}
 
-	private boolean isKeyPressed(int keyCode, int keyIdx) {
-		if(keyCode == -1) {
+	private boolean isKeyPressed(KeyBinding keyBinding, int keyIdx) {
+		if(keyBinding.getKeyCode() <= 0) {
 			return false;
 		}
-		if(Keyboard.isKeyDown(keyCode)) {
+		if(Keyboard.isKeyDown(keyBinding.getKeyCode())) {
 			if(!keyState[keyIdx]) {
 				keyState[keyIdx] = true;
 				return true;
@@ -61,36 +65,20 @@ public class EiraTickHandler {
 	}
 	
 	private void handleKeyInput() {
-		if(Minecraft.getMinecraft().currentScreen instanceof GuiKeybinds) {
-			return;
-		}
-		if(isKeyPressed(KeyConfig.openMenu, KeyConfig.IDX_OPENSETTINGS)) {
+		if(isKeyPressed(ClientGlobalConfig.keyOpenMenu, KEY_IDX_OPENSETTINGS)) {
 			if(Minecraft.getMinecraft().currentScreen == null) {
-				Minecraft.getMinecraft().displayGuiScreen(new GuiSettings());
+				Minecraft.getMinecraft().displayGuiScreen(new GuiEiraIRCMenu());
 			}
 		}
-		EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
-		if(player != null) {
-			if(isKeyPressed(KeyConfig.toggleRecording, KeyConfig.IDX_TOGGLERECORDING)) {
-				EiraPlayerInfo playerInfo = EiraIRC.instance.getNetHandler().getPlayerInfo(player.getName());
-				playerInfo.isRecording = !playerInfo.isRecording;
-				PacketHandler.INSTANCE.sendToServer(new CMessageRecLiveState(player.getName(), playerInfo.isRecording, playerInfo.isLive));
-			}
-			if(isKeyPressed(KeyConfig.toggleLive, KeyConfig.IDX_TOGGLELIVE)) {
-				EiraPlayerInfo playerInfo = EiraIRC.instance.getNetHandler().getPlayerInfo(player.getName());
-				playerInfo.isLive = !playerInfo.isLive;
-				PacketHandler.INSTANCE.sendToServer(new CMessageRecLiveState(player.getName(), playerInfo.isRecording, playerInfo.isLive));
-			}
-		}
-		if(isKeyPressed(KeyConfig.screenshotShare, KeyConfig.IDX_SCREENSHOTSHARE)) {
+		if(isKeyPressed(ClientGlobalConfig.keyScreenshotShare, KEY_IDX_SCREENSHOTSHARE)) {
 			Screenshot screenshot = ScreenshotManager.getInstance().takeScreenshot();
 			if(screenshot != null) {
-				ScreenshotManager.getInstance().uploadScreenshot(screenshot, ScreenshotConfig.VALUE_UPLOADSHARE);
+				ScreenshotManager.getInstance().uploadScreenshot(screenshot, ScreenshotAction.UploadShare);
 			}
 		}
-		if(isKeyPressed(KeyConfig.openScreenshots, KeyConfig.IDX_OPENSCREENSHOTS)) {
+		if(isKeyPressed(ClientGlobalConfig.keyOpenScreenshots, KEY_IDX_OPENSCREENSHOTS)) {
 			if(Minecraft.getMinecraft().currentScreen == null) {
-				Minecraft.getMinecraft().displayGuiScreen(new GuiScreenshotList(null));
+				Minecraft.getMinecraft().displayGuiScreen(new GuiScreenshots(null));
 			}
 		}
 	}
@@ -102,14 +90,14 @@ public class EiraTickHandler {
 			if(currentScreen == null || currentScreen.getClass() == GuiChat.class) {
 				if(Keyboard.getEventKey() == keyChat) {
 					Minecraft.getMinecraft().gameSettings.keyBindChat.isPressed();
-					if(CompatibilityConfig.vanillaChat) {
+					if(true || ClientGlobalConfig.vanillaChat) {
 						Minecraft.getMinecraft().displayGuiScreen(new GuiChatExtended());
 					} else {
 						Minecraft.getMinecraft().displayGuiScreen(new GuiEiraChatInput(eiraChat));
 					}
 				} else if(Keyboard.getEventKey() == keyChat) {
 					Minecraft.getMinecraft().gameSettings.keyBindChat.isPressed();
-					if(CompatibilityConfig.vanillaChat) {
+					if(true || ClientGlobalConfig.vanillaChat) {
 						Minecraft.getMinecraft().displayGuiScreen(new GuiChatExtended("/"));
 					} else {
 						Minecraft.getMinecraft().displayGuiScreen(new GuiEiraChatInput(eiraChat, "/"));
@@ -121,13 +109,22 @@ public class EiraTickHandler {
 	
 	@SubscribeEvent
 	public void worldJoined(FMLNetworkEvent.ClientConnectedToServerEvent event) {
-		if(!EiraIRC.instance.isIRCRunning()) {
-			EiraIRC.instance.startIRC();
+		if(!EiraIRC.instance.getConnectionManager().isIRCRunning()) {
+			EiraIRC.instance.getConnectionManager().startIRC();
+		}
+		if(ClientGlobalConfig.showWelcomeScreen) {
+			openWelcomeScreen = 20;
 		}
 	}
 	
 	@SubscribeEvent
 	public void clientTick(ClientTickEvent event) {
+		if(Minecraft.getMinecraft().currentScreen == null && openWelcomeScreen > 0) {
+			openWelcomeScreen--;
+			if(openWelcomeScreen <= 0) {
+				Minecraft.getMinecraft().displayGuiScreen(new GuiWelcome());
+			}
+		}
 		if(Keyboard.isKeyDown(Keyboard.KEY_F2)) {
 			screenshotCheck = 10;
 		} else if(screenshotCheck > 0) {

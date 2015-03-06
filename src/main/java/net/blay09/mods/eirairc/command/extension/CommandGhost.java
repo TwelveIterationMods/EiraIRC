@@ -3,21 +3,21 @@
 
 package net.blay09.mods.eirairc.command.extension;
 
-import java.util.List;
-
-import net.blay09.mods.eirairc.api.IRCConnection;
-import net.blay09.mods.eirairc.api.IRCContext;
-import net.blay09.mods.eirairc.command.SubCommand;
+import net.blay09.mods.eirairc.api.EiraIRCAPI;
+import net.blay09.mods.eirairc.api.irc.IRCConnection;
+import net.blay09.mods.eirairc.api.irc.IRCContext;
+import net.blay09.mods.eirairc.api.SubCommand;
+import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.ServerConfig;
-import net.blay09.mods.eirairc.config.ServiceConfig;
-import net.blay09.mods.eirairc.config.ServiceSettings;
-import net.blay09.mods.eirairc.handler.ConfigurationHandler;
-import net.blay09.mods.eirairc.util.IRCResolver;
+import net.blay09.mods.eirairc.config.base.ServiceConfig;
+import net.blay09.mods.eirairc.config.base.ServiceSettings;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.BlockPos;
 
-public class CommandGhost extends SubCommand {
+import java.util.List;
+
+public class CommandGhost implements SubCommand {
 
 	@Override
 	public String getCommandName() {
@@ -25,8 +25,8 @@ public class CommandGhost extends SubCommand {
 	}
 
 	@Override
-	public String getUsageString(ICommandSender sender) {
-		return "irc.commands.ghost";
+	public String getCommandUsage(ICommandSender sender) {
+		return "eirairc:irc.commands.ghost";
 	}
 
 	@Override
@@ -36,9 +36,9 @@ public class CommandGhost extends SubCommand {
 
 	@Override
 	public boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) {
-		IRCConnection connection = null;
+		IRCConnection connection;
 		if(args.length > 0) {
-			connection = IRCResolver.resolveConnection(args[0], IRCResolver.FLAGS_NONE);
+			connection = EiraIRCAPI.parseContext(null, args[0], null).getConnection();
 			if(connection == null) {
 				Utils.sendLocalizedMessage(sender, "irc.target.serverNotFound", args[0]);
 				return true;
@@ -50,7 +50,7 @@ public class CommandGhost extends SubCommand {
 			}
 			connection = context.getConnection();
 		}
-		ServerConfig serverConfig = ConfigurationHandler.getServerConfig(connection.getHost());
+		ServerConfig serverConfig = ConfigurationHandler.getOrCreateServerConfig(connection.getHost());
 		ServiceSettings settings = ServiceConfig.getSettings(connection.getHost(), connection.getServerType());
 		if(settings.hasGhostCommand()) {
 			connection.irc(settings.getGhostCommand(serverConfig.getNickServName(), serverConfig.getNickServPassword()));

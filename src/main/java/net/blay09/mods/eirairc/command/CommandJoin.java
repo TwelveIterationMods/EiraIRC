@@ -3,13 +3,13 @@
 
 package net.blay09.mods.eirairc.command;
 
-import java.util.List;
-
-import net.blay09.mods.eirairc.api.IRCConnection;
-import net.blay09.mods.eirairc.api.IRCContext;
+import net.blay09.mods.eirairc.api.EiraIRCAPI;
+import net.blay09.mods.eirairc.api.irc.IRCConnection;
+import net.blay09.mods.eirairc.api.irc.IRCContext;
+import net.blay09.mods.eirairc.api.SubCommand;
 import net.blay09.mods.eirairc.config.ChannelConfig;
+import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.ServerConfig;
-import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.IRCResolver;
 import net.blay09.mods.eirairc.util.Utils;
@@ -18,7 +18,9 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.util.BlockPos;
 
-public class CommandJoin extends SubCommand {
+import java.util.List;
+
+public class CommandJoin implements SubCommand {
 
 	@Override
 	public String getCommandName() {
@@ -26,8 +28,8 @@ public class CommandJoin extends SubCommand {
 	}
 
 	@Override
-	public String getUsageString(ICommandSender sender) {
-		return "irc.commands.join";
+	public String getCommandUsage(ICommandSender sender) {
+		return "eirairc:irc.commands.join";
 	}
 
 	@Override
@@ -40,26 +42,26 @@ public class CommandJoin extends SubCommand {
 		if(args.length < 1) {
 			throw new WrongUsageException(getCommandUsage(sender));
 		}
-		IRCConnection connection = null;
-		if(IRCResolver.hasServerPrefix(args[0])) {
-			connection = IRCResolver.resolveConnection(args[0], IRCResolver.FLAGS_NONE);
-			if(connection == null) {
-				Utils.sendLocalizedMessage(sender, "irc.target.serverNotFound");
+		IRCContext target = EiraIRCAPI.parseContext(null, args[0], IRCContext.ContextType.IRCConnection);
+		IRCConnection connection;
+		if(target.getContextType() == IRCContext.ContextType.Error) {
+			if(args[0].indexOf('/') != -1) {
+				Utils.sendLocalizedMessage(sender, target.getName(), args[0]);
 				return true;
+			} else {
+				if(context == null) {
+					Utils.sendLocalizedMessage(sender, "irc.target.specifyServer");
+					return true;
+				}
+				target = context.getConnection();
 			}
-		} else {
-			if(context == null) {
-				Utils.sendLocalizedMessage(sender, "irc.target.specifyServer");
-				return true;
-			}
-			connection = context.getConnection();
 		}
+		connection = (IRCConnection) target;
 		ServerConfig serverConfig = ConfigHelper.getServerConfig(connection);
 		String channelName = IRCResolver.stripPath(args[0]);
-		ChannelConfig channelConfig = serverConfig.getChannelConfig(channelName);
-		channelConfig.setAutoJoin(true);
+		ChannelConfig channelConfig = serverConfig.getOrCreateChannelConfig(channelName);
 		if(args.length >= 2) {
-			channelConfig.setPassword(args[2]);
+			channelConfig.setPassword(args[1]);
 		}
 		Utils.sendLocalizedMessage(sender, "irc.basic.joiningChannel", channelConfig.getName(), connection.getHost());
 		connection.join(channelConfig.getName(), channelConfig.getPassword());

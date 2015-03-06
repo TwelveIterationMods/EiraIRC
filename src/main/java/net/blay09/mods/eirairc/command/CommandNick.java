@@ -3,14 +3,12 @@
 
 package net.blay09.mods.eirairc.command;
 
-import java.util.List;
-
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.api.IRCConnection;
-import net.blay09.mods.eirairc.api.IRCContext;
-import net.blay09.mods.eirairc.config.GlobalConfig;
+import net.blay09.mods.eirairc.api.irc.IRCConnection;
+import net.blay09.mods.eirairc.api.irc.IRCContext;
+import net.blay09.mods.eirairc.api.SubCommand;
+import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.ServerConfig;
-import net.blay09.mods.eirairc.handler.ConfigurationHandler;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.IRCResolver;
@@ -20,7 +18,9 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.util.BlockPos;
 
-public class CommandNick extends SubCommand {
+import java.util.List;
+
+public class CommandNick implements SubCommand {
 
 	@Override
 	public String getCommandName() {
@@ -28,8 +28,8 @@ public class CommandNick extends SubCommand {
 	}
 
 	@Override
-	public String getUsageString(ICommandSender sender) {
-		return "irc.commands.nick";
+	public String getCommandUsage(ICommandSender sender) {
+		return "eirairc:irc.commands.nick";
 	}
 
 	@Override
@@ -43,15 +43,15 @@ public class CommandNick extends SubCommand {
 			throw new WrongUsageException(getCommandUsage(sender));
 		}
 		if(args.length >= 2) {
-			ServerConfig serverConfig = IRCResolver.resolveServerConfig(args[1], IRCResolver.FLAGS_NONE);
+			ServerConfig serverConfig = ConfigHelper.resolveServerConfig(args[1]);
 			if(serverConfig == null) {
 				Utils.sendLocalizedMessage(sender, "irc.target.serverNotFound");
 				return true;
 			}
 			String nick = args[0];
-			Utils.sendLocalizedMessage(sender, "irc.basic.changingNick", serverConfig.getHost(), nick);
+			Utils.sendLocalizedMessage(sender, "irc.basic.changingNick", serverConfig.getAddress(), nick);
 			serverConfig.setNick(nick);
-			IRCConnection connection = EiraIRC.instance.getConnection(serverConfig.getHost());
+			IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(serverConfig.getAddress());
 			if(connection != null) {
 				connection.nick(nick);
 			}
@@ -59,13 +59,12 @@ public class CommandNick extends SubCommand {
 			String nick = args[0];
 			if(context == null) {
 				Utils.sendLocalizedMessage(sender, "irc.basic.changingNick", "Global", nick);
-				GlobalConfig.nick = nick;
 				for(ServerConfig serverConfig : ConfigurationHandler.getServerConfigs()) {
-					if(serverConfig.getHost().equals(Globals.TWITCH_SERVER)) {
+					if(serverConfig.getAddress().equals(Globals.TWITCH_SERVER)) {
 						continue;
 					}
 					if(serverConfig.getNick() == null || serverConfig.getNick().isEmpty()) {
-						IRCConnection connection = EiraIRC.instance.getConnection(serverConfig.getHost());
+						IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(serverConfig.getAddress());
 						if(connection != null) {
 							connection.nick(ConfigHelper.formatNick(nick));
 						}

@@ -2,8 +2,9 @@
 
 package net.blay09.mods.eirairc.irc.ssl;
 
-import net.blay09.mods.eirairc.config.NetworkConfig;
-import net.blay09.mods.eirairc.irc.*;
+import net.blay09.mods.eirairc.config.ServerConfig;
+import net.blay09.mods.eirairc.config.SharedGlobalConfig;
+import net.blay09.mods.eirairc.irc.IRCConnectionImpl;
 import net.blay09.mods.eirairc.util.Utils;
 
 import javax.net.ssl.*;
@@ -12,66 +13,60 @@ import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
 
 public class IRCConnectionSSLImpl extends IRCConnectionImpl {
 
 	private SSLSocket sslSocket;
 
-	public IRCConnectionSSLImpl(String host, String password, String nick, String ident, String description) {
-		super(host, password, nick, ident, description);
+	public IRCConnectionSSLImpl(ServerConfig serverConfig, String nick) {
+		super(serverConfig, nick);
 	}
 
 	@Override
-	protected Socket connect() {
-		try {
-			if(!NetworkConfig.sslCustomTrustStore.isEmpty()) {
-				System.setProperty("javax.net.ssl.trustStore", NetworkConfig.sslCustomTrustStore);
-			}
-			SSLSocketFactory socketFactory;
-			if(NetworkConfig.sslTrustAllCerts) {
-				SSLContext context = SSLContext.getInstance("TLS");
-				context.init(null, new TrustManager[] { new NaiveTrustManager() }, null);
-				socketFactory = context.getSocketFactory();
-			} else {
-				socketFactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
-			}
-			Proxy proxy = createProxy();
-			if(proxy != null) {
-				Socket underlying = new Socket(proxy);
-				underlying.connect(new InetSocketAddress(host, port));
-				sslSocket = (SSLSocket) socketFactory.createSocket(underlying, Utils.extractHost(NetworkConfig.proxyHost), Utils.extractPort(NetworkConfig.proxyHost, DEFAULT_PROXY_PORT), true);
-			} else {
-				sslSocket = (SSLSocket) socketFactory.createSocket(host, port);
-			}
+	protected Socket connect() throws Exception {
+		if (!SharedGlobalConfig.sslCustomTrustStore.isEmpty()) {
+			System.setProperty("javax.net.ssl.trustStore", SharedGlobalConfig.sslCustomTrustStore);
+		}
+		SSLSocketFactory socketFactory;
+		if (SharedGlobalConfig.sslTrustAllCerts) {
+			SSLContext context = SSLContext.getInstance("TLS");
+			context.init(null, new TrustManager[]{new NaiveTrustManager()}, null);
+			socketFactory = context.getSocketFactory();
+		} else {
+			socketFactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
+		}
+		Proxy proxy = createProxy();
+		for (int i = 0; i < ports.length; i++) {
 			try {
-				if(NetworkConfig.sslDisableDiffieHellman) {
+				if (proxy != null) {
+					Socket underlying = new Socket(proxy);
+					underlying.connect(new InetSocketAddress(host, ports[i]));
+					sslSocket = (SSLSocket) socketFactory.createSocket(underlying, Utils.extractHost(SharedGlobalConfig.proxyHost), Utils.extractPorts(SharedGlobalConfig.proxyHost, DEFAULT_PROXY_PORT)[0], true);
+				} else {
+					sslSocket = (SSLSocket) socketFactory.createSocket(host, ports[i]);
+				}
+				if (!SharedGlobalConfig.bindIP.isEmpty()) {
+					sslSocket.bind(new InetSocketAddress(SharedGlobalConfig.bindIP, ports[i]));
+				}
+				if (SharedGlobalConfig.sslDisableDiffieHellman) {
 					disableDiffieHellman(sslSocket);
 				}
 				sslSocket.startHandshake();
-			} catch (SSLHandshakeException e) {
-				System.out.println("Couldn't connect to " + host + " at port " + port + ": untrusted certificate");
-				return null;
+				writer = new BufferedWriter(new OutputStreamWriter(sslSocket.getOutputStream(), serverConfig.getCharset()));
+				reader = new BufferedReader(new InputStreamReader(sslSocket.getInputStream(), serverConfig.getCharset()));
+				sender.setWriter(writer);
+				return sslSocket;
+			} catch (UnknownHostException e) {
+				throw e;
+			} catch (IOException e) {
+				if (i == ports.length - 1) {
+					throw e;
+				}
 			}
-			writer = new BufferedWriter(new OutputStreamWriter(sslSocket.getOutputStream(), charset));
-			reader = new BufferedReader(new InputStreamReader(sslSocket.getInputStream(), charset));
-			sender.setWriter(writer);
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-			return null;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-			return null;
-		} catch (KeyManagementException e) {
-			e.printStackTrace();
-			return null;
 		}
-		return sslSocket;
+		return null;
 	}
 
 	private void disableDiffieHellman(SSLSocket sslSocket) {
