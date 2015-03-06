@@ -144,17 +144,17 @@ public class Utils {
 
 	public static String getAliasForPlayer(EntityPlayer player) {
 		if(!SharedGlobalConfig.enablePlayerAliases) {
-			return player.getName();
+			return player.getCommandSenderName();
 		}
 		String name = player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getCompoundTag(Globals.NBT_EIRAIRC).getString(Globals.NBT_ALIAS);
 		if(name.isEmpty()) {
-			name = player.getName();
+			name = player.getCommandSenderName();
 		}
 		return name;
 	}
 
 	public static String getServerName() {
-		ServerData serverData = Minecraft.getMinecraft().func_147104_D(); // getServerData
+		ServerData serverData = Minecraft.getMinecraft().getCurrentServerData();
 		if(serverData != null) {
 			return serverData.serverName;
 		}
@@ -162,7 +162,7 @@ public class Utils {
 	}
 
 	public static String getServerAddress() {
-		ServerData serverData = Minecraft.getMinecraft().func_147104_D(); // getServerData
+		ServerData serverData = Minecraft.getMinecraft().getCurrentServerData();
 		if(serverData != null) {
 			return serverData.serverIP;
 		}
@@ -174,7 +174,7 @@ public class Utils {
 			return true;
 		}
 		if(sender instanceof EntityPlayer) {
-			return MinecraftServer.getServer().getConfigurationManager().getOppedPlayers().getGameProfileFromName(sender.getName().toLowerCase()) != null; // isPlayerOpped
+			return MinecraftServer.getServer().getConfigurationManager().getOppedPlayers().getGameProfileFromName(sender.getCommandSenderName().toLowerCase()) != null; // isPlayerOpped
 		}
 		return true;
 	}

@@ -73,7 +73,7 @@ public class CommandMessage implements SubCommand {
 	}
 
 	@Override
-	public void addTabCompletionOptions(List<String> list, ICommandSender sender, String[] args, BlockPos pos) {
+	public void addTabCompletionOptions(List<String> list, ICommandSender sender, String[] args) {
 		if(args.length == 0) {
 			for(ServerConfig serverConfig : ConfigurationHandler.getServerConfigs()) {
 				for(ChannelConfig channelConfig : serverConfig.getChannelConfigs()) {

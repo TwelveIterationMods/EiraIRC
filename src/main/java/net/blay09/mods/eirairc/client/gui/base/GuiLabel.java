@@ -39,14 +39,14 @@ public class GuiLabel extends Gui {
 
 	public void drawLabel() {
 		for(int i = 0; i < lines.length; i++) {
-			int textWidth = mc.fontRenderer.getStringWidth(lines[i]);
+			int textWidth = mc.fontRendererObj.getStringWidth(lines[i]);
 			int offX = 0;
 			switch(hAlign) {
 				case Left: offX = 0; break;
 				case Center: offX = alignWidth / 2 - textWidth / 2; break;
 				case Right: offX = alignWidth - textWidth; break;
 			}
-			drawString(mc.fontRenderer, lines[i], posX + offX, posY + i * (mc.fontRenderer.FONT_HEIGHT + LINE_SPACING), color);
+			drawString(mc.fontRendererObj, lines[i], posX + offX, posY + i * (mc.fontRendererObj.FONT_HEIGHT + LINE_SPACING), color);
 		}
 	}
 

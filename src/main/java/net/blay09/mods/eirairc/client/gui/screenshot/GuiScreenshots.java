@@ -107,7 +107,7 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 		final int rightX = width / 2 + 145;
 		final int topY = height / 2 - 80;
 
-		txtSearch = new GuiAdvancedTextField(fontRendererObj, leftX + 2, topY - 10, 200, 16);
+		txtSearch = new GuiAdvancedTextField(0, fontRendererObj, leftX + 2, topY - 10, 200, 16);
 		txtSearch.setEmptyOnRightClick(true);
 		txtSearch.setDefaultText("Search...", true);
 		textFieldList.add(txtSearch);
@@ -115,7 +115,7 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 		btnOpenFolder = new GuiButton(0, rightX - 85, topY - 12, 85, 20, "Open Folder");
 		buttonList.add(btnOpenFolder);
 
-		txtName = new GuiAdvancedTextField(fontRendererObj, width / 2 - 100, topY + 152, 200, 15);
+		txtName = new GuiAdvancedTextField(1, fontRendererObj, width / 2 - 100, topY + 152, 200, 15);
 		textFieldList.add(txtName);
 
 		btnGoToFirst = new GuiImageButton(1, width / 2 - 39, topY + 12, EiraGui.atlas.findRegion("button_first"));
@@ -418,7 +418,7 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 					if(hoverTime > TOOLTIP_TIME) {
 						tooltipList.clear();
 						tooltipList.add(imageButton.getTooltipText());
-						func_146283_a(tooltipList, mouseX, mouseY);
+						drawTooltip(tooltipList, mouseX, mouseY);
 					}
 					break;
 				}

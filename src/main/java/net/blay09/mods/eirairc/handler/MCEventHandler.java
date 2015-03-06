@@ -3,12 +3,6 @@
 
 package net.blay09.mods.eirairc.handler;
 
-import cpw.mods.fml.common.eventhandler.EventPriority;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
-import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
@@ -38,11 +32,9 @@ import net.minecraft.util.IChatComponent;
 import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -51,7 +43,7 @@ import java.util.regex.Pattern;
 public class MCEventHandler {
 
 	@SubscribeEvent
-	public void onPlayerLogin(PlayerLoggedInEvent event) {
+	public void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
 		for(ServerConfig serverConfig : ConfigurationHandler.getServerConfigs()) {
 			IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(serverConfig.getAddress());
 			if(connection != null) {
@@ -332,7 +324,7 @@ public class MCEventHandler {
 							GeneralSettings generalSettings = ConfigHelper.getGeneralSettings(channel);
 							BotSettings botSettings = ConfigHelper.getBotSettings(channel);
 							String name = Utils.getNickIRC((EntityPlayer) event.entityLiving, channel);
-							String ircMessage = event.entityLiving.func_110142_aN().func_151521_b().getUnformattedText();
+							String ircMessage = event.entityLiving.getCombatTracker().getDeathMessage().getUnformattedText();
 							ircMessage = ircMessage.replaceAll(Pattern.quote(event.entityLiving.getCommandSenderName()), name);
 							ircMessage = IRCFormatting.toIRC(ircMessage, !botSettings.getBoolean(BotBooleanComponent.ConvertColors));
 							if (!generalSettings.isReadOnly() && botSettings.getBoolean(BotBooleanComponent.RelayDeathMessages)) {
@@ -346,12 +338,12 @@ public class MCEventHandler {
 	}
 	
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
-	public void onPlayerNameFormat(PlayerEvent.NameFormat event) {
+	public void onPlayerNameFormat(net.minecraftforge.event.entity.player.PlayerEvent.NameFormat event) {
 		event.displayname = Utils.getNickGame(event.entityPlayer);
 	}
 	
 	@SubscribeEvent
-	public void onPlayerLogout(PlayerLoggedOutEvent event) {
+	public void onPlayerLogout(PlayerEvent.PlayerLoggedOutEvent event) {
 		for(ServerConfig serverConfig : ConfigurationHandler.getServerConfigs()) {
 			IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(serverConfig.getAddress());
 			if(connection != null) {

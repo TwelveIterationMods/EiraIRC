@@ -90,7 +90,7 @@ public class CommandNick implements SubCommand {
 	}
 
 	@Override
-	public void addTabCompletionOptions(List<String> list, ICommandSender sender, String[] args, BlockPos pos) {
+	public void addTabCompletionOptions(List<String> list, ICommandSender sender, String[] args) {
 	}
 
 	@Override

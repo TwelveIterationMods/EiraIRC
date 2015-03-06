@@ -3,7 +3,6 @@
 
 package net.blay09.mods.eirairc.command.extension;
 
-import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.EiraIRCAPI;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.api.SubCommand;
@@ -77,12 +76,11 @@ public class CommandTwitch implements SubCommand {
 	}
 
 	@Override
-	public boolean canCommandSenderUseCommand(ICommandSender sender) {
-		return Utils.isOP(sender);
-	}
+	public void addTabCompletionOptions(List<String> list, ICommandSender sender, String[] args) {}
 
 	@Override
-	public void addTabCompletionOptions(List<String> list, ICommandSender sender, String[] args, BlockPos pos) {
+	public boolean canCommandSenderUseCommand(ICommandSender sender) {
+		return Utils.isOP(sender);
 	}
 
 	@Override

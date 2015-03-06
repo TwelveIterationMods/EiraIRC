@@ -1,6 +1,5 @@
 package net.blay09.mods.eirairc.client.gui.servers;
 
-import cpw.mods.fml.client.config.GuiConfig;
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
 import net.blay09.mods.eirairc.client.gui.EiraGui;
@@ -22,7 +21,10 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.GuiYesNoCallback;
 import net.minecraftforge.common.config.ConfigElement;
+import net.minecraftforge.fml.client.config.GuiConfig;
 import org.lwjgl.input.Keyboard;
+
+import java.io.IOException;
 
 /**
  * Created by Blay09 on 04.10.2014.
@@ -75,7 +77,7 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 		} else {
 			oldText = config.getAddress();
 		}
-		txtAddress = new GuiTextField(fontRendererObj, leftX, topY + 15, 100, 15);
+		txtAddress = new GuiTextField(0, fontRendererObj, leftX, topY + 15, 100, 15);
 		txtAddress.setText(oldText);
 		textFieldList.add(txtAddress);
 
@@ -86,7 +88,7 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 		} else {
 			oldText = config.getNick();
 		}
-		txtNick = new GuiAdvancedTextField(fontRendererObj, leftX, topY + 55, 100, 15);
+		txtNick = new GuiAdvancedTextField(0, fontRendererObj, leftX, topY + 55, 100, 15);
 		txtNick.setDefaultText(Globals.DEFAULT_NICK, false);
 		txtNick.setText(oldText);
 		textFieldList.add(txtNick);
@@ -192,7 +194,7 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 	}
 
 	@Override
-	public void keyTyped(char unicode, int keyCode) {
+	public void keyTyped(char unicode, int keyCode) throws IOException {
 		super.keyTyped(unicode, keyCode);
 		if(txtAddress.isFocused()) {
 			boolean enabled = txtAddress.getText().length() > 0;

@@ -1,8 +1,5 @@
 package net.blay09.mods.eirairc.net;
 
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import cpw.mods.fml.relauncher.Side;
 import net.blay09.mods.eirairc.net.message.MessageHello;
 import net.blay09.mods.eirairc.net.message.MessageNotification;
 import net.blay09.mods.eirairc.net.message.MessageRedirect;

@@ -75,7 +75,7 @@ public class CommandDisconnect implements SubCommand {
 	}
 
 	@Override
-	public void addTabCompletionOptions(List<String> list, ICommandSender sender, String[] args, BlockPos pos) {
+	public void addTabCompletionOptions(List<String> list, ICommandSender sender, String[] args) {
 		list.add(TARGET_ALL);
 		Utils.addConnectionsToList(list);
 	}

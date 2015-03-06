@@ -1,7 +1,5 @@
 package net.blay09.mods.eirairc.client.gui.servers;
 
-import cpw.mods.fml.client.config.GuiCheckBox;
-import cpw.mods.fml.client.config.GuiConfig;
 import net.blay09.mods.eirairc.client.gui.GuiEiraIRCConfig;
 import net.blay09.mods.eirairc.client.gui.base.GuiAdvancedTextField;
 import net.blay09.mods.eirairc.client.gui.base.GuiLabel;
@@ -17,6 +15,8 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.GuiYesNoCallback;
 import net.minecraftforge.common.config.ConfigElement;
+import net.minecraftforge.fml.client.config.GuiCheckBox;
+import net.minecraftforge.fml.client.config.GuiConfig;
 import org.lwjgl.input.Keyboard;
 
 /**
@@ -72,7 +72,7 @@ public class GuiChannelConfig extends GuiTabPage implements GuiYesNoCallback {
 		} else {
 			oldText = config.getName();
 		}
-		txtName = new GuiTextField(fontRendererObj, leftX, topY + 15, 100, 15);
+		txtName = new GuiTextField(0, fontRendererObj, leftX, topY + 15, 100, 15);
 		txtName.setText(oldText);
 		textFieldList.add(txtName);
 
@@ -83,7 +83,7 @@ public class GuiChannelConfig extends GuiTabPage implements GuiYesNoCallback {
 		} else {
 			oldText = config.getPassword();
 		}
-		txtPassword = new GuiAdvancedTextField(fontRendererObj, leftX, topY + 55, 100, 15);
+		txtPassword = new GuiAdvancedTextField(1, fontRendererObj, leftX, topY + 55, 100, 15);
 		txtPassword.setText(oldText);
 		txtPassword.setDefaultPasswordChar();
 		textFieldList.add(txtPassword);

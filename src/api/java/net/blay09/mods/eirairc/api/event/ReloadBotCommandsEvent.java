@@ -1,7 +1,7 @@
 package net.blay09.mods.eirairc.api.event;
 
-import cpw.mods.fml.common.eventhandler.Event;
 import net.blay09.mods.eirairc.api.bot.IRCBot;
+import net.minecraftforge.fml.common.eventhandler.Event;
 
 /**
  * Created by Blay09 on 20.02.2015.

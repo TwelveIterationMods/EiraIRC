@@ -4,8 +4,8 @@
 package net.blay09.mods.eirairc.command;
 
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.api.SubCommand;
+import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.ServerConfig;
@@ -14,7 +14,6 @@ import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
-import net.minecraft.util.BlockPos;
 
 import java.util.List;
 
@@ -68,7 +67,7 @@ public class CommandConfig implements SubCommand {
 	}
 
 	@Override
-	public void addTabCompletionOptions(List<String> list, ICommandSender sender, String[] args, BlockPos pos) {
+	public void addTabCompletionOptions(List<String> list, ICommandSender sender, String[] args) {
 		if(args.length == 1) {
 			list.add("reload");
 			list.add(TARGET_GLOBAL);

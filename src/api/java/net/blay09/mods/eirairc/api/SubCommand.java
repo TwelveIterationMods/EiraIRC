@@ -1,6 +1,7 @@
 package net.blay09.mods.eirairc.api;
 
 import net.blay09.mods.eirairc.api.irc.IRCContext;
+import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 
 import java.util.List;
@@ -27,7 +28,7 @@ public interface SubCommand {
 	 * @param serverSide true if this command was run via the server-side irc command
 	 * @return true if the command was handled
 	 */
-	public boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide);
+	public boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) throws CommandException;
 
 	/**
 	 * @param list the list to add the tab completion options to

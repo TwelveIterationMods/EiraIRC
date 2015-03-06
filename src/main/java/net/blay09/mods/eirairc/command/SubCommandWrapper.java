@@ -5,8 +5,10 @@ package net.blay09.mods.eirairc.command;
 
 import net.blay09.mods.eirairc.api.SubCommand;
 import net.blay09.mods.eirairc.util.Utils;
+import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.util.BlockPos;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,26 +41,26 @@ public final class SubCommandWrapper implements ICommand {
 			}
 			return list;
 		}
-		return null;
+		return new ArrayList<String>();
 	}
 	
 	@Override
 	public boolean canCommandSenderUseCommand(ICommandSender sender) {
 		return command.canCommandSenderUseCommand(sender);
 	}
-	
+
 	@Override
 	public boolean isUsernameIndex(String[] args, int idx){
 		return command.isUsernameIndex(args, idx);
 	}
 
 	@Override
-	public void processCommand(ICommandSender sender, String[] args) {
+	public void processCommand(ICommandSender sender, String[] args) throws CommandException {
 		command.processCommand(sender, Utils.getSuggestedTarget(), args, Utils.isServerSide());
 	}
 
 	@Override
-	public List addTabCompletionOptions(ICommandSender sender, String[] args) {
+	public List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
 		List<String> list = new ArrayList<String>();
 		command.addTabCompletionOptions(list, sender, args);
 		return list;

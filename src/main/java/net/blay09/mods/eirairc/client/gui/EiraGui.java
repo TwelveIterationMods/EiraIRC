@@ -5,6 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.util.ResourceLocation;
@@ -35,12 +36,13 @@ public class EiraGui {
 		float u2 = (float) (texCoordX + regionWidth) / (float) texWidth;
 		float v2 = (float) (texCoordY + regionHeight) / (float) texHeight;
 
-		Tessellator tessellator = Tessellator.instance;
-		tessellator.startDrawingQuads();
-		tessellator.addVertexWithUV(x, y + height, 0, u, v2);
-		tessellator.addVertexWithUV(x + width, y + height, 0, u2, v2);
-		tessellator.addVertexWithUV(x + width, y, 0, u2, v);
-		tessellator.addVertexWithUV(x, y, 0, u, v);
+		Tessellator tessellator = Tessellator.getInstance();
+		WorldRenderer renderer = tessellator.getWorldRenderer();
+		renderer.startDrawingQuads();
+		renderer.addVertexWithUV(x, y + height, 0, u, v2);
+		renderer.addVertexWithUV(x + width, y + height, 0, u2, v2);
+		renderer.addVertexWithUV(x + width, y, 0, u2, v);
+		renderer.addVertexWithUV(x, y, 0, u, v);
 		tessellator.draw();
 	}
 

@@ -66,12 +66,7 @@ public enum IRCFormatting {
 			while(matcher.find()) {
 				String colorMatch = matcher.group(1);
 				int colorCode = Integer.parseInt(colorMatch);
-				EnumChatFormatting colorFormat = IRCFormatting.getColorFromIRCColorCode(colorCode);
-				if(colorFormat != null) {
-					result = result.replaceFirst(Matcher.quoteReplacement(matcher.group()), MC_FORMATTING_PREFIX + colorFormat.getFormattingCode());
-				} else {
-					result = result.replaceFirst(Matcher.quoteReplacement(matcher.group()), "");
-				}
+				result = result.replaceFirst(Matcher.quoteReplacement(matcher.group()), MC_FORMATTING_PREFIX + IRCFormatting.getColorFromIRCColorCode(colorCode));
 			}
 		}
 		return result;

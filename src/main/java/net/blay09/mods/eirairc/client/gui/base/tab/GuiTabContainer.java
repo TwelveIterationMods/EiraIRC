@@ -5,6 +5,7 @@ import net.blay09.mods.eirairc.client.gui.EiraGui;
 import net.blay09.mods.eirairc.client.gui.EiraGuiScreen;
 import net.minecraft.client.gui.GuiScreen;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,7 +75,7 @@ public class GuiTabContainer extends EiraGuiScreen {
 	}
 
 	@Override
-	public boolean mouseClick(int mouseX, int mouseY, int mouseButton) {
+	public boolean mouseClick(int mouseX, int mouseY, int mouseButton) throws IOException {
 		for(int i = 0; i < headers.size(); i++) {
 			GuiTabHeader header = headers.get(i);
 
@@ -99,7 +100,7 @@ public class GuiTabContainer extends EiraGuiScreen {
 	}
 
 	@Override
-	public void keyTyped(char unicode, int keyCode) {
+	public void keyTyped(char unicode, int keyCode) throws IOException {
 		super.keyTyped(unicode, keyCode);
 
 		if(currentTab != null) {

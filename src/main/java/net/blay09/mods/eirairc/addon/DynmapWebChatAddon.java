@@ -1,18 +1,21 @@
 package net.blay09.mods.eirairc.addon;
 
-import cpw.mods.fml.common.Optional;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.blay09.mods.eirairc.api.event.IRCChannelChatEvent;
 import net.blay09.mods.eirairc.api.event.IRCUserJoinEvent;
 import net.blay09.mods.eirairc.api.event.IRCUserLeaveEvent;
 import net.blay09.mods.eirairc.api.event.RelayChat;
+import net.minecraft.command.CommandResultStats;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.Entity;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.IChatComponent;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.dynmap.DynmapCommonAPI;
 import org.dynmap.DynmapCommonAPIListener;
 
@@ -37,7 +40,7 @@ public class DynmapWebChatAddon extends DynmapCommonAPIListener {
 		}
 
 		@Override
-		public IChatComponent func_145748_c_() {
+		public IChatComponent getDisplayName() {
 			return new ChatComponentText(this.getCommandSenderName());
 		}
 
@@ -50,14 +53,35 @@ public class DynmapWebChatAddon extends DynmapCommonAPIListener {
 		}
 
 		@Override
-		public ChunkCoordinates getPlayerCoordinates() {
-			return new ChunkCoordinates(0, 0, 0);
+		public BlockPos getPosition() {
+			return new BlockPos(0, 0, 0);
+		}
+
+		@Override
+		public Vec3 getPositionVector() {
+			return new Vec3(0, 0, 0);
 		}
 
 		@Override
 		public World getEntityWorld() {
 			return MinecraftServer.getServer().getEntityWorld();
 		}
+
+		@Override
+		public Entity getCommandSenderEntity() {
+			return null;
+		}
+
+		@Override
+		public boolean sendCommandFeedback() {
+			return false;
+		}
+
+		@Override
+		public void setCommandStat(CommandResultStats.Type type, int amount) {
+
+		}
+
 	}
 
 	private DynmapCommonAPI api;

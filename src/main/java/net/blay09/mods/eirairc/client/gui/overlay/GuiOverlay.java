@@ -3,6 +3,8 @@ package net.blay09.mods.eirairc.client.gui.overlay;
 import net.blay09.mods.eirairc.client.gui.EiraGuiScreen;
 import net.minecraft.client.gui.GuiScreen;
 
+import java.io.IOException;
+
 /**
  * Created by Blay09 on 19.02.2015.
  */
@@ -14,7 +16,7 @@ public class GuiOverlay extends EiraGuiScreen {
 	}
 
 	@Override
-	public boolean mouseClick(int mouseX, int mouseY, int mouseButton) {
+	public boolean mouseClick(int mouseX, int mouseY, int mouseButton) throws IOException {
 		if(mouseX < menuX || mouseX >= menuX + menuWidth || mouseY < menuY || mouseY >= menuY + menuHeight) {
 			gotoPrevious();
 			return true;

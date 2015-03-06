@@ -1,6 +1,5 @@
 package net.blay09.mods.eirairc.client.gui;
 
-import cpw.mods.fml.client.config.GuiCheckBox;
 import net.blay09.mods.eirairc.client.gui.base.GuiLabel;
 import net.blay09.mods.eirairc.client.gui.base.GuiLinkButton;
 import net.blay09.mods.eirairc.client.gui.base.list.GuiList;
@@ -10,6 +9,7 @@ import net.blay09.mods.eirairc.config.SuggestedChannel;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraftforge.fml.client.config.GuiCheckBox;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -47,7 +47,7 @@ public class GuiWelcome extends EiraGuiScreen {
 		chkDontShowAgain = new GuiCheckBox(1, menuX + 10, menuY + menuHeight - 30, "Don't show this message again", false);
 		buttonList.add(chkDontShowAgain);
 
-		btnSubmitChannel = new GuiLinkButton(2, menuX + menuWidth - 85, menuY + menuHeight - 20, mc.fontRenderer, "\u00a7nSubmit Channel");
+		btnSubmitChannel = new GuiLinkButton(2, menuX + menuWidth - 85, menuY + menuHeight - 20, mc.fontRendererObj, "\u00a7nSubmit Channel");
 		buttonList.add(btnSubmitChannel);
 
 		updateList(chkRecommendedOnly.isChecked());
@@ -88,7 +88,7 @@ public class GuiWelcome extends EiraGuiScreen {
 
 		boolean altBackground = false;
 		for(SuggestedChannel channel : outputList) {
-			lstChannels.addEntry(new GuiListSuggestedChannelEntry(mc.fontRenderer, channel, altBackground));
+			lstChannels.addEntry(new GuiListSuggestedChannelEntry(mc.fontRendererObj, channel, altBackground));
 			altBackground = !altBackground;
 		}
 	}

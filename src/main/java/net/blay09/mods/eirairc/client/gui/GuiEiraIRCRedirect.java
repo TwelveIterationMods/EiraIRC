@@ -3,7 +3,6 @@
 
 package net.blay09.mods.eirairc.client.gui;
 
-import cpw.mods.fml.client.config.GuiCheckBox;
 import net.blay09.mods.eirairc.client.gui.base.GuiLabel;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
@@ -12,6 +11,7 @@ import net.blay09.mods.eirairc.config.TrustedServer;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraftforge.fml.client.config.GuiCheckBox;
 
 public class GuiEiraIRCRedirect extends EiraGuiScreen {
 

@@ -2,6 +2,7 @@ package net.blay09.mods.eirairc.client.gui.base.image;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.resources.IResourceManager;
@@ -45,12 +46,13 @@ public abstract class GuiImage extends AbstractTexture {
 
 	public void draw(int xPos, int yPos, int width, int height, float zLevel) {
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, getGlTextureId());
-		Tessellator tessellator = Tessellator.instance;
-		tessellator.startDrawingQuads();
-		tessellator.addVertexWithUV(xPos, yPos + height, zLevel, 0, 1);
-		tessellator.addVertexWithUV(xPos + width, yPos + height, zLevel, 1, 1);
-		tessellator.addVertexWithUV(xPos + width, yPos, zLevel, 1, 0);
-		tessellator.addVertexWithUV(xPos, yPos, zLevel, 0, 0);
+		Tessellator tessellator = Tessellator.getInstance();
+		WorldRenderer renderer = tessellator.getWorldRenderer();
+		renderer.startDrawingQuads();
+		renderer.addVertexWithUV(xPos, yPos + height, zLevel, 0, 1);
+		renderer.addVertexWithUV(xPos + width, yPos + height, zLevel, 1, 1);
+		renderer.addVertexWithUV(xPos + width, yPos, zLevel, 1, 0);
+		renderer.addVertexWithUV(xPos, yPos, zLevel, 0, 0);
 		tessellator.draw();
 	}
 

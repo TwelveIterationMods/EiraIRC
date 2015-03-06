@@ -1,6 +1,5 @@
 package net.blay09.mods.eirairc.client.gui;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.blay09.mods.eirairc.api.event.IRCConnectEvent;
 import net.blay09.mods.eirairc.api.event.IRCConnectionFailedEvent;
 import net.blay09.mods.eirairc.api.event.IRCErrorEvent;
@@ -15,6 +14,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.input.Keyboard;
 
 /**
@@ -53,7 +53,7 @@ public class GuiTwitch extends EiraGuiScreen implements GuiYesNoCallback {
 		} else {
 			oldText = config.getNick();
 		}
-		txtUsername = new GuiTextField(fontRendererObj, width / 2 - 90, topX + 15, 180, 15);
+		txtUsername = new GuiTextField(0, fontRendererObj, width / 2 - 90, topX + 15, 180, 15);
 		txtUsername.setMaxStringLength(Integer.MAX_VALUE);
 		txtUsername.setText(oldText);
 		textFieldList.add(txtUsername);
@@ -65,7 +65,7 @@ public class GuiTwitch extends EiraGuiScreen implements GuiYesNoCallback {
 		} else {
 			oldText = config.getServerPassword();
 		}
-		txtPassword = new GuiAdvancedTextField(fontRendererObj, width / 2 - 90, topX + 55, 180, 15);
+		txtPassword = new GuiAdvancedTextField(1, fontRendererObj, width / 2 - 90, topX + 55, 180, 15);
 		txtPassword.setMaxStringLength(Integer.MAX_VALUE);
 		txtPassword.setDefaultPasswordChar();
 		txtPassword.setText(oldText);

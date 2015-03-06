@@ -63,7 +63,7 @@ public class GuiEiraIRCMenu extends EiraGuiScreen {
 		} else if(button == btnSettings) {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiEiraIRCConfig(this));
 		} else if(button == btnHelp) {
-			Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(meow, 1f));
+			Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.create(meow, 1f));
 			Utils.openWebpage("http://blay09.net/?page_id=63");
 		} else if(button == btnFriends) {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiWelcome());

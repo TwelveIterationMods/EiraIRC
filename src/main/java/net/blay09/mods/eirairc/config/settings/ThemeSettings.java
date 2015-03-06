@@ -2,6 +2,8 @@ package net.blay09.mods.eirairc.config.settings;
 
 import com.google.gson.JsonObject;
 import net.blay09.mods.eirairc.util.I19n;
+import net.blay09.mods.eirairc.util.IRCFormatting;
+import net.blay09.mods.eirairc.util.MessageFormat;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.EnumChatFormatting;
@@ -17,25 +19,25 @@ import java.util.Map;
  */
 public class ThemeSettings {
 
-	private static final String[] VALID_COLOR_CODES = new String[] {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"};
-	private static EnumChatFormatting getColorFromCode(char code) {
-		switch(code) {
-			case '0': return EnumChatFormatting.BLACK;
-			case '1': return EnumChatFormatting.DARK_BLUE;
-			case '2': return EnumChatFormatting.DARK_GREEN;
-			case '3': return EnumChatFormatting.DARK_AQUA;
-			case '4': return EnumChatFormatting.DARK_RED;
-			case '5': return EnumChatFormatting.DARK_PURPLE;
-			case '6': return EnumChatFormatting.GOLD;
-			case '7': return EnumChatFormatting.GRAY;
-			case '8': return EnumChatFormatting.DARK_GRAY;
-			case '9': return EnumChatFormatting.BLUE;
-			case 'a': return EnumChatFormatting.GREEN;
-			case 'b': return EnumChatFormatting.AQUA;
-			case 'c': return EnumChatFormatting.RED;
-			case 'd': return EnumChatFormatting.LIGHT_PURPLE;
-			case 'e': return EnumChatFormatting.YELLOW;
-			case 'f': return EnumChatFormatting.WHITE;
+	private static final String[] VALID_COLOR_CODES = new String[] {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"};
+	private static EnumChatFormatting getColorFromCode(int colorCode) {
+		switch(colorCode) {
+			case 0: return EnumChatFormatting.BLACK;
+			case 1: return EnumChatFormatting.DARK_BLUE;
+			case 2: return EnumChatFormatting.DARK_GREEN;
+			case 3: return EnumChatFormatting.DARK_AQUA;
+			case 4: return EnumChatFormatting.DARK_RED;
+			case 5: return EnumChatFormatting.DARK_PURPLE;
+			case 6: return EnumChatFormatting.GOLD;
+			case 7: return EnumChatFormatting.GRAY;
+			case 8: return EnumChatFormatting.DARK_GRAY;
+			case 9: return EnumChatFormatting.BLUE;
+			case 10: return EnumChatFormatting.GREEN;
+			case 11: return EnumChatFormatting.AQUA;
+			case 12: return EnumChatFormatting.RED;
+			case 13: return EnumChatFormatting.LIGHT_PURPLE;
+			case 14: return EnumChatFormatting.YELLOW;
+			case 15: return EnumChatFormatting.WHITE;
 		}
 		return null;
 	}
@@ -71,11 +73,11 @@ public class ThemeSettings {
 	public Configuration pullDummyConfig() {
 		dummyConfig = new Configuration();
 		for(int i = 0; i < ThemeColorComponent.values().length; i++) {
-			Property property = dummyConfig.get("theme", ThemeColorComponent.values[i].name, String.valueOf(parent.getColor(ThemeColorComponent.values[i]).getFormattingCode()));
+			Property property = dummyConfig.get("theme", ThemeColorComponent.values[i].name, String.valueOf(parent.getColor(ThemeColorComponent.values[i]).getColorIndex()));
 			property.setLanguageKey(ThemeColorComponent.values[i].langKey);
 			property.setValidValues(VALID_COLOR_CODES);
 			if(colors.containsKey(ThemeColorComponent.values[i])) {
-				property.set(String.valueOf(colors.get(ThemeColorComponent.values[i]).getFormattingCode()));
+				property.set(String.valueOf(colors.get(ThemeColorComponent.values[i]).getColorIndex()));
 			}
 		}
 		return dummyConfig;
@@ -85,12 +87,14 @@ public class ThemeSettings {
 		colors.clear();
 		for(int i = 0; i < ThemeColorComponent.values().length; i++) {
 			if(defaultValues || config.hasKey(category, ThemeColorComponent.values[i].name)) {
-				String value = config.getString(ThemeColorComponent.values[i].name, category, String.valueOf(ThemeColorComponent.values[i].defaultValue.getFormattingCode()), I19n.format(ThemeColorComponent.values[i].langKey + ".tooltip"), VALID_COLOR_CODES, ThemeColorComponent.values[i].langKey);
+				String value = config.getString(ThemeColorComponent.values[i].name, category, String.valueOf(ThemeColorComponent.values[i].defaultValue.getColorIndex()), I19n.format(ThemeColorComponent.values[i].langKey + ".tooltip"), VALID_COLOR_CODES, ThemeColorComponent.values[i].langKey);
 				if(!value.isEmpty()) {
-					EnumChatFormatting colorValue = getColorFromCode(value.charAt(0));
-					if(defaultValues || colorValue != parent.getColor(ThemeColorComponent.values[i])) {
-						colors.put(ThemeColorComponent.values[i], colorValue);
-					}
+					try {
+						EnumChatFormatting colorValue = getColorFromCode(Integer.parseInt(value));
+						if (defaultValues || colorValue != parent.getColor(ThemeColorComponent.values[i])) {
+							colors.put(ThemeColorComponent.values[i], colorValue);
+						}
+					} catch (NumberFormatException ignored) {}
 				}
 			}
 		}
@@ -99,7 +103,7 @@ public class ThemeSettings {
 	public void load(JsonObject object) {
 		for(int i = 0; i < ThemeColorComponent.values().length; i++) {
 			if(object.has(ThemeColorComponent.values[i].name)) {
-				colors.put(ThemeColorComponent.values[i], getColorFromCode(object.get(ThemeColorComponent.values[i].name).getAsCharacter()));
+				colors.put(ThemeColorComponent.values[i], getColorFromCode(object.get(ThemeColorComponent.values[i].name).getAsInt()));
 			}
 		}
 	}
@@ -110,14 +114,14 @@ public class ThemeSettings {
 		}
 		JsonObject object = new JsonObject();
 		for(Map.Entry<ThemeColorComponent, EnumChatFormatting> entry : colors.entrySet()) {
-			object.addProperty(entry.getKey().name, entry.getValue().getFormattingCode());
+			object.addProperty(entry.getKey().name, entry.getValue().getColorIndex());
 		}
 		return object;
 	}
 
 	public void save(Configuration config, String category) {
 		for(Map.Entry<ThemeColorComponent, EnumChatFormatting> entry : colors.entrySet()) {
-			config.get(category, entry.getKey().name, "", I19n.format(entry.getKey().langKey + ".tooltip")).set(entry.getValue().getFormattingCode());
+			config.get(category, entry.getKey().name, "", I19n.format(entry.getKey().langKey + ".tooltip")).set(entry.getValue().getColorIndex());
 		}
 	}
 

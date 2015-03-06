@@ -83,7 +83,7 @@ public class CommandColor implements SubCommand {
 	}
 
 	@Override
-	public void addTabCompletionOptions(List<String> list, ICommandSender sender, String[] args, BlockPos pos) {
+	public void addTabCompletionOptions(List<String> list, ICommandSender sender, String[] args) {
 		list.add(COLOR_NONE);
 		Utils.addValidColorsToList(list);
 	}

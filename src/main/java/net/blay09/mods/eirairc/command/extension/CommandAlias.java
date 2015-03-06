@@ -54,7 +54,7 @@ public class CommandAlias implements SubCommand {
 			for(int i = 0; i < playerEntityList.size(); i++) {
 				EntityPlayerMP playerEntity = playerEntityList.get(i);
 				if(playerEntity.getEntityData().getCompoundTag(Globals.NBT_EIRAIRC).getString(Globals.NBT_ALIAS).equals(alias)) {
-					Utils.sendLocalizedMessage(sender, "irc.alias.lookup", alias, playerEntity.getName());
+					Utils.sendLocalizedMessage(sender, "irc.alias.lookup", alias, playerEntity.getCommandSenderName());
 					return true;
 				}
 			}
@@ -106,7 +106,7 @@ public class CommandAlias implements SubCommand {
 	}
 
 	@Override
-	public void addTabCompletionOptions(List<String> list, ICommandSender sender, String[] args, BlockPos pos) {
+	public void addTabCompletionOptions(List<String> list, ICommandSender sender, String[] args) {
 		list.add(ALIAS_NONE);
 	}
 

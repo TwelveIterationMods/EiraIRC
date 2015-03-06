@@ -3,9 +3,9 @@
 
 package net.blay09.mods.eirairc.net.message;
 
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import io.netty.buffer.ByteBuf;
 import net.blay09.mods.eirairc.util.Utils;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 public class MessageRedirect implements IMessage {
 

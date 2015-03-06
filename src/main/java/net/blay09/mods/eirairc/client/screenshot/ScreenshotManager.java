@@ -6,7 +6,6 @@ package net.blay09.mods.eirairc.client.screenshot;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
-import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.api.irc.IRCContext;

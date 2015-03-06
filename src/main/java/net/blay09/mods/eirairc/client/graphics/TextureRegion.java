@@ -1,7 +1,9 @@
 package net.blay09.mods.eirairc.client.graphics;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -67,12 +69,13 @@ public class TextureRegion {
 		float u2 = (float) (regionX + regionWidth) / (float) textureWidth;
 		float v2 = (float) (regionY + regionHeight) / (float) textureHeight;
 
-		Tessellator tessellator = Tessellator.instance;
-		tessellator.startDrawingQuads();
-		tessellator.addVertexWithUV(x, y + height, 0, u, v2);
-		tessellator.addVertexWithUV(x + width, y + height, 0, u2, v2);
-		tessellator.addVertexWithUV(x + width, y, 0, u2, v);
-		tessellator.addVertexWithUV(x, y, 0, u, v);
+		Tessellator tessellator = Tessellator.getInstance();
+		WorldRenderer renderer = tessellator.getWorldRenderer();
+		renderer.startDrawingQuads();
+		renderer.addVertexWithUV(x, y + height, 0, u, v2);
+		renderer.addVertexWithUV(x + width, y + height, 0, u2, v2);
+		renderer.addVertexWithUV(x + width, y, 0, u2, v);
+		renderer.addVertexWithUV(x, y, 0, u, v);
 		tessellator.draw();
 	}
 

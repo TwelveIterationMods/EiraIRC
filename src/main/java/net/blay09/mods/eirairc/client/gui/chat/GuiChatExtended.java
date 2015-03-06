@@ -3,8 +3,6 @@
 
 package net.blay09.mods.eirairc.client.gui.chat;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.client.gui.GuiEiraIRCMenu;
@@ -21,11 +19,11 @@ import net.minecraft.client.gui.GuiYesNoCallback;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.util.IChatComponent;
 import net.minecraftforge.client.ClientCommandHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -105,9 +103,9 @@ public class GuiChatExtended extends GuiChat implements GuiYesNoCallback {
 	}
 
 	@Override
-	protected void mouseClicked(int mouseX, int mouseY, int button) {
+	protected void mouseClicked(int mouseX, int mouseY, int button) throws IOException {
 		if(button == 0 && mc.gameSettings.chatLinks) {
-			IChatComponent clickedComponent = mc.ingameGUI.getChatGUI().func_146236_a(Mouse.getX(), Mouse.getY());
+			IChatComponent clickedComponent = mc.ingameGUI.getChatGUI().getChatComponent(Mouse.getX(), Mouse.getY());
 			if(clickedComponent != null) {
 				ClickEvent clickEvent = clickedComponent.getChatStyle().getChatClickEvent();
 				if(clickEvent != null) {

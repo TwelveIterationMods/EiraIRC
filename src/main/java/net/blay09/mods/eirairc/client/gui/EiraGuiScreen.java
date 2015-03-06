@@ -11,6 +11,7 @@ import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.input.Mouse;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,7 +65,7 @@ public class EiraGuiScreen extends GuiScreen {
 		menuY = height / 2 - menuHeight / 2;
 	}
 
-	public boolean mouseClick(int mouseX, int mouseY, int mouseButton) {
+	public boolean mouseClick(int mouseX, int mouseY, int mouseButton) throws IOException {
 		if(overlay != null && overlay.mouseClick(mouseX, mouseY, mouseButton)) {
 			return true;
 		}
@@ -74,7 +75,7 @@ public class EiraGuiScreen extends GuiScreen {
 		return false;
 	}
 
-	public boolean controlClicked(int mouseX, int mouseY, int mouseButton) {
+	public boolean controlClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
 		if(mouseButton == 0) {
 			for(int i = 0; i < buttonList.size(); i++) {
 				GuiButton button = (GuiButton) buttonList.get(i);
@@ -83,7 +84,7 @@ public class EiraGuiScreen extends GuiScreen {
 					if(MinecraftForge.EVENT_BUS.post(event))
 						break;
 					selectedButton = event.button;
-					event.button.func_146113_a(mc.getSoundHandler());
+					event.button.playPressSound(mc.getSoundHandler());
 					actionPerformed(event.button);
 					if(this.equals(mc.currentScreen))
 						MinecraftForge.EVENT_BUS.post(new GuiScreenEvent.ActionPerformedEvent.Post(this, event.button, buttonList));
@@ -106,7 +107,7 @@ public class EiraGuiScreen extends GuiScreen {
 	}
 
 	@Override
-	public void handleMouseInput() {
+	public void handleMouseInput() throws IOException {
 		super.handleMouseInput();
 		int wheelDelta = Mouse.getEventDWheel();
 		if(wheelDelta != 0) {
@@ -117,15 +118,17 @@ public class EiraGuiScreen extends GuiScreen {
 	}
 
 	@Override
-	protected void mouseMovedOrUp(int mouseX, int mouseY, int mouseButton) {
-		if(selectedButton != null && mouseButton == 0) {
+	protected void mouseClickMove(int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick) {
+		super.mouseClickMove(mouseX, mouseY, clickedMouseButton, timeSinceLastClick);
+
+		if(selectedButton != null && clickedMouseButton == 0) {
 			selectedButton.mouseReleased(mouseX, mouseY);
 			selectedButton = null;
 		}
 	}
 
 	@Override
-	protected final void mouseClicked(int mouseX, int mouseY, int mouseButton) {
+	protected final void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
 		if(mouseClick(mouseX, mouseY, mouseButton)) {
 			return;
 		}
@@ -143,7 +146,7 @@ public class EiraGuiScreen extends GuiScreen {
 	}
 
 	@Override
-	public void keyTyped(char unicode, int keyCode) {
+	public void keyTyped(char unicode, int keyCode) throws IOException {
 		super.keyTyped(unicode, keyCode);
 
 		for(int i = 0; i < textFieldList.size(); i++) {
@@ -201,6 +204,6 @@ public class EiraGuiScreen extends GuiScreen {
 	}
 
 	public void drawTooltip(List<String> tooltipList, int mouseX, int mouseY) {
-		func_146283_a(tooltipList, mouseX, mouseY);
+		drawHoveringText(tooltipList, mouseX, mouseY);
 	}
 }

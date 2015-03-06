@@ -3,8 +3,6 @@
 
 package net.blay09.mods.eirairc.client;
 
-import cpw.mods.fml.client.registry.ClientRegistry;
-import cpw.mods.fml.common.FMLCommonHandler;
 import net.blay09.mods.eirairc.CommonProxy;
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.event.IRCChannelChatEvent;
@@ -25,6 +23,8 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import java.io.File;
 import java.io.IOException;
@@ -89,8 +89,8 @@ public class ClientProxy extends CommonProxy {
 		if(config != NotificationStyle.None && config != NotificationStyle.SoundOnly) {
 			notificationGUI.showNotification(type, text);
 		}
-		if(config == NotificationConfig.VALUE_TEXTANDSOUND || config == NotificationConfig.VALUE_SOUNDONLY) {
-			Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.createPositionedSoundRecord(new ResourceLocation(NotificationConfig.notificationSound), NotificationConfig.soundPitch));
+		if(config == NotificationStyle.TextAndSound || config == NotificationStyle.SoundOnly) {
+			Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.create(new ResourceLocation(ClientGlobalConfig.notificationSound), ClientGlobalConfig.notificationSoundPitch));
 		}
 	}
 	
