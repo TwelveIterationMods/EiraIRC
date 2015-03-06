@@ -27,7 +27,7 @@ group = "net.blay09.mods" // http://maven.apache.org/guides/mini/guide-naming-co
 archivesBaseName = "eirairc"
 
 minecraft {
-    version = "1.8-11.14.0.1285-1.8"
+    version = "1.8-11.14.1.1333"
     runDir = "eclipse"
     
     // the mappings can be changed at any time, and must be in the following format.
