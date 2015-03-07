@@ -29,6 +29,13 @@
   },
   {
     "server": "irc.esper.net",
+    "channel": "#Unabridged",
+    "modpack-display": "Unabridged Modpack",
+    "modpack-id": "Unabridged",
+    "description": "Official IRC channel for the 'Unabridged' modpack. http://www.reddit.com/r/MinecraftUnabridged/"
+  },
+  {
+    "server": "irc.esper.net",
     "channel": "#digtobuild",
     "modpack-display": "Dig to Build Servers",
     "description": "This is the channel that all the Dig To Build (www.digtobuild.com) servers connect. Why only talk to people playing the same pack, when you can all join in the fun of inter-personal-communications.",
