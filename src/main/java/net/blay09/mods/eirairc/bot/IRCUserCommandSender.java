@@ -35,7 +35,7 @@ public class IRCUserCommandSender implements ICommandSender {
 
 	@Override
 	public void addChatMessage(IChatComponent chatComponent) {
-		if(broadcastResult) {
+		if(broadcastResult && channel != null) {
 			channel.message(chatComponent.getUnformattedText());
 		} else {
 			user.notice(chatComponent.getUnformattedText());
