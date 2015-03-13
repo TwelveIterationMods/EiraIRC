@@ -66,7 +66,6 @@ public class GuiTwitch extends EiraGuiScreen implements GuiYesNoCallback {
 			oldText = config.getServerPassword();
 		}
 		txtPassword = new GuiAdvancedTextField(fontRendererObj, width / 2 - 90, topX + 55, 180, 15);
-		txtPassword.setMaxStringLength(Integer.MAX_VALUE);
 		txtPassword.setDefaultPasswordChar();
 		txtPassword.setText(oldText);
 		textFieldList.add(txtPassword);
