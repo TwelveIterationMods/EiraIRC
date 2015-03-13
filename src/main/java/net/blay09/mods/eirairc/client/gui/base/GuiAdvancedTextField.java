@@ -24,6 +24,7 @@ public class GuiAdvancedTextField extends GuiTextField {
 	public GuiAdvancedTextField(int id, FontRenderer fontRenderer, int par2, int par3, int par4, int par5) {
 		super(id, fontRenderer, par2, par3, par4, par5);
 		this.fontRenderer = fontRenderer;
+		setMaxStringLength(Integer.MAX_VALUE);
 	}
 
 	@Override
