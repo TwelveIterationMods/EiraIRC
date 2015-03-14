@@ -170,13 +170,10 @@ public class Utils {
 	}
 
 	public static boolean isOP(ICommandSender sender) {
-		if(MinecraftServer.getServer() == null || MinecraftServer.getServer().isSinglePlayer()) {
+		if(MinecraftServer.getServer() == null || (MinecraftServer.getServer().isSinglePlayer() && !MinecraftServer.getServer().isDedicatedServer())) {
 			return true;
 		}
-		if(sender instanceof EntityPlayer) {
-			return MinecraftServer.getServer().getConfigurationManager().func_152603_m().func_152700_a(sender.getCommandSenderName().toLowerCase()) != null; // isPlayerOpped
-		}
-		return true;
+		return sender.canCommandSenderUseCommand(3, "");
 	}
 	
 	public static boolean isValidColor(String colorName) {
