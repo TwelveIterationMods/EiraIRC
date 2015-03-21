@@ -307,7 +307,7 @@ public class MessageFormat {
 					if(token.equals("SERVER")) {
 						component = new ChatComponentText(connection.getIdentifier());
 					} else if(token.equals("CHANNEL")) {
-						component = new ChatComponentText(channel.getName());
+						component = new ChatComponentText(channel != null ? channel.getName() : "#");
 					} else if(token.equals("USER")) {
 						if(user != null) {
 							component = new ChatComponentText(user.getIdentifier());
