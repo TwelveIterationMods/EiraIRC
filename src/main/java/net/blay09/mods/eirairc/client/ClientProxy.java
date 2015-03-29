@@ -111,8 +111,8 @@ public class ClientProxy extends CommonProxy {
 	}
 
 	@Override
-	public void loadConfig(File configDir) {
-		super.loadConfig(configDir);
+	public void loadConfig(File configDir, boolean reloadFile) {
+		super.loadConfig(configDir, reloadFile);
 		ClientGlobalConfig.load(configDir);
 	}
 

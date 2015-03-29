@@ -347,7 +347,7 @@ public class ConfigurationHandler {
 				logger.error("Couldn't get rid of old 'eirairc.cfg' file. Config will REGENERATE unless you delete it yourself.");
 			}
 		} else {
-			EiraIRC.proxy.loadConfig(configDir);
+			EiraIRC.proxy.loadConfig(configDir, true);
 		}
 
 		loadDisplayFormats(new File(configDir, "formats"));
@@ -374,7 +374,7 @@ public class ConfigurationHandler {
 	public static void lightReload() {
 		File configDir = new File(baseConfigDir, "eirairc");
 
-		EiraIRC.proxy.loadConfig(configDir);
+		EiraIRC.proxy.loadConfig(configDir, false);
 	}
 	
 	public static ServerConfig getOrCreateServerConfig(String host) {
