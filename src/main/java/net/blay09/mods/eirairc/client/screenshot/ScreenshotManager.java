@@ -221,12 +221,14 @@ public class ScreenshotManager {
 			IChatComponent chatComponent;
 			if (chatTarget instanceof IRCChannel) {
 				BotSettings botSettings = ConfigHelper.getBotSettings(chatTarget);
+				format = botSettings.getMessageFormat().ircScreenshotUpload.replace("{URL}", screenshot.getDirectURL() != null ? screenshot.getDirectURL() : screenshot.getUploadURL());
 				emoteColor = ConfigHelper.getTheme(chatTarget).getColor(ThemeColorComponent.emoteTextColor);
-				chatComponent = MessageFormat.formatChatComponent(botSettings.getMessageFormat().ircScreenshotUpload, chatTarget, sender, "", MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
+				chatComponent = MessageFormat.formatChatComponent(format, chatTarget, sender, "", MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
 			} else if(chatTarget instanceof IRCUser) {
 				BotSettings botSettings = ConfigHelper.getBotSettings(chatTarget);
+				format = botSettings.getMessageFormat().ircScreenshotUpload.replace("{URL}", screenshot.getDirectURL() != null ? screenshot.getDirectURL() : screenshot.getUploadURL());
 				emoteColor = ConfigHelper.getTheme(chatTarget).getColor(ThemeColorComponent.emoteTextColor);
-				chatComponent = MessageFormat.formatChatComponent(botSettings.getMessageFormat().ircScreenshotUpload, chatTarget, sender, "", MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
+				chatComponent = MessageFormat.formatChatComponent(format, chatTarget, sender, "", MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
 			} else {
 				return;
 			}
