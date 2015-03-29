@@ -5,7 +5,9 @@ package net.blay09.mods.eirairc.api.event;
 
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
 import net.blay09.mods.eirairc.api.irc.IRCUser;
+import net.minecraftforge.fml.common.eventhandler.Cancelable;
 
+@Cancelable
 public class IRCPrivateChatEvent extends IRCEvent {
 
 	public final IRCUser sender;
