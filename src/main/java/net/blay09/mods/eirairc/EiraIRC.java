@@ -33,6 +33,7 @@ import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
 
 @Mod(modid = EiraIRC.MOD_ID, acceptableRemoteVersions="*", guiFactory = "net.blay09.mods.eirairc.client.gui.EiraIRCGuiFactory")
 public class EiraIRC {
@@ -87,6 +88,10 @@ public class EiraIRC {
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
 		event.buildSoftDependProxy("Dynmap", "net.blay09.mods.eirairc.addon.DynmapWebChatAddon");
+		if(FMLCommonHandler.instance().getSide() == Side.CLIENT) {
+			event.buildSoftDependProxy("aether", "net.blay09.mods.eirairc.addon.AetherAddon");
+		}
+
 		EiraIRCAPI.registerUploadHoster(new DirectUploadHoster());
 		EiraIRCAPI.registerUploadHoster(new ImgurHoster());
 
