@@ -3,10 +3,12 @@
 
 package net.blay09.mods.eirairc.api.event;
 
+import cpw.mods.fml.common.eventhandler.Cancelable;
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
 import net.blay09.mods.eirairc.api.irc.IRCUser;
 
+@Cancelable
 public class IRCChannelChatEvent extends IRCEvent {
 
 	public final IRCChannel channel;
