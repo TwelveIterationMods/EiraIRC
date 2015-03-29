@@ -50,9 +50,7 @@ public class SharedGlobalConfig {
 	public static final GeneralSettings generalSettings = new GeneralSettings(null);
 
 	public static void load(File configDir) {
-		if(thisConfig == null) {
-			thisConfig = new Configuration(new File(configDir, "shared.cfg"));
-		}
+		thisConfig = new Configuration(new File(configDir, "shared.cfg"));
 
 		// General
 		defaultChat = thisConfig.getString("defaultChat", GENERAL, defaultChat, I19n.format("eirairc:config.property.defaultChat.tooltip"), "eirairc:config.property.defaultChat");
