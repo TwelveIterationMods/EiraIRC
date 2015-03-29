@@ -183,11 +183,13 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 				if(SharedGlobalConfig.debugMode) {
 					System.out.println(line);
 				}
-				IRCMessage msg = parser.parse(line);
-				if(handleNumericMessage(msg)) {
-					continue;
-				} else if(handleMessage(msg)) {
-					continue;
+				if(!line.isEmpty()) {
+					IRCMessage msg = parser.parse(line);
+					if (handleNumericMessage(msg)) {
+						continue;
+					} else if (handleMessage(msg)) {
+						continue;
+					}
 				}
 			}
 		} catch (IOException e) {
