@@ -36,7 +36,6 @@ public class GuiChatExtended extends GuiChat implements GuiYesNoCallback {
 	private String defaultInputText;
 	private GuiButton btnOptions;
 	
-	private long lastToggleTarget;
 	private URL clickedURL;
 
 	public GuiChatExtended() {
@@ -68,23 +67,7 @@ public class GuiChatExtended extends GuiChat implements GuiYesNoCallback {
 
 	@Override
 	protected void keyTyped(char unicode, int keyCode) {
-		if(keyCode == ClientGlobalConfig.keyToggleTarget.getKeyCode() && !ClientGlobalConfig.disableChatToggle && !ClientGlobalConfig.clientBridge && !inputField.getText().startsWith("/")) {
-			if(Keyboard.isRepeatEvent()) {
-				if(System.currentTimeMillis() - lastToggleTarget >= 1000) {
-					chatSession.setChatTarget(null);
-				}
-			} else {
-				boolean users = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
-				IRCContext newTarget = chatSession.getNextTarget(users);
-				if(!users) {
-					lastToggleTarget = System.currentTimeMillis();
-				}
-				if(!users || newTarget != null) {
-					chatSession.setChatTarget(newTarget);
-				}
-			}
-			return;
-		} else if(keyCode == 28 || keyCode == 156) {
+		if(keyCode == 28 || keyCode == 156) {
 			String s = inputField.getText().trim();
 			if(s.length() > 0) {
 				if(!EiraIRC.instance.getMCEventHandler().onClientChat(s)) {

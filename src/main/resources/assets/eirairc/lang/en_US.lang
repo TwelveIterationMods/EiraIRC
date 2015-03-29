@@ -80,6 +80,7 @@ eirairc:irc.general.serverOnlyCommand=§cThis command only works on the server s
 eirairc:irc.general.usage=§cUsage: %s
 eirairc:irc.general.linkRemoved=<link removed>
 eirairc:irc.general.notSupported=%s is not supported on this server.
+eirairc:irc.general.chattingTo=>> Now chatting to %s <<
 
 #######################################################################################################################
 
@@ -274,7 +275,7 @@ eirairc:config.property.clientBridgeNickToken.tooltip=See clientBridgeMessageTok
 eirairc:config.property.disableChatToggle=Disable Chat Toggle
 eirairc:config.property.disableChatToggle.tooltip=Disables the chat toggle at the top left. Originally meant for TabbyChat, so you could set up Tabs with the '/irc msg' command instead.
 eirairc:config.property.vanillaChat=Vanilla Chat
-eirairc:config.property.vanillaChat.tooltip=Nothing, go away. No effect.
+eirairc:config.property.vanillaChat.tooltip=Makes EiraIRC not apply any changes to the Minecraft Chat GUI at all.
 eirairc:config.property.showWelcomeScreen=Show Welcome Screen
 eirairc:config.property.showWelcomeScreen.tooltip=If set to true, EiraIRC will show the welcome screen with suggested channels when joining a world.
 

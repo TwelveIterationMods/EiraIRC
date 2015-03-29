@@ -11,6 +11,7 @@ import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.relauncher.Side;
 import net.blay09.mods.eirairc.addon.DirectUploadHoster;
 import net.blay09.mods.eirairc.addon.ImgurHoster;
 import net.blay09.mods.eirairc.api.EiraIRCAPI;
@@ -87,6 +88,10 @@ public class EiraIRC {
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
 		event.buildSoftDependProxy("Dynmap", "net.blay09.mods.eirairc.addon.DynmapWebChatAddon");
+		if(FMLCommonHandler.instance().getSide() == Side.CLIENT) {
+			event.buildSoftDependProxy("aether", "net.blay09.mods.eirairc.addon.AetherAddon");
+		}
+
 		EiraIRCAPI.registerUploadHoster(new DirectUploadHoster());
 		EiraIRCAPI.registerUploadHoster(new ImgurHoster());
 

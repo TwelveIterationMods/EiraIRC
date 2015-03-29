@@ -9,6 +9,7 @@ import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.RenderTickEvent;
 import cpw.mods.fml.common.network.FMLNetworkEvent;
 import net.blay09.mods.eirairc.EiraIRC;
+import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.client.gui.GuiEiraIRCMenu;
 import net.blay09.mods.eirairc.client.gui.GuiWelcome;
 import net.blay09.mods.eirairc.client.gui.chat.GuiChatExtended;
@@ -19,86 +20,84 @@ import net.blay09.mods.eirairc.client.screenshot.Screenshot;
 import net.blay09.mods.eirairc.client.screenshot.ScreenshotManager;
 import net.blay09.mods.eirairc.config.ClientGlobalConfig;
 import net.blay09.mods.eirairc.config.ScreenshotAction;
+import net.blay09.mods.eirairc.handler.ChatSessionHandler;
+import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
 import org.lwjgl.input.Keyboard;
 
 public class EiraTickHandler {
 
-	public static final int KEY_IDX_OPENSETTINGS = 0;
-	public static final int KEY_IDX_TOGGLETARGET = 1;
-	public static final int KEY_IDX_SCREENSHOTSHARE = 2;
-	public static final int KEY_IDX_TOGGLERECORDING = 3;
-	public static final int KEY_IDX_TOGGLELIVE = 4;
-	public static final int KEY_IDX_OPENSCREENSHOTS = 5;
-
-	private GuiEiraChat eiraChat;
-	private int screenshotCheck;
-	private boolean[] keyState = new boolean[10];
+	private final GuiEiraChat eiraChat;
+	private final ChatSessionHandler chatSession;
 	private final int keyChat;
 	private final int keyCommand;
+	private int screenshotCheck;
 	private int openWelcomeScreen;
+	private long lastToggleTarget;
 
 	public EiraTickHandler(GuiEiraChat eiraChat) {
 		this.eiraChat = eiraChat;
+		this.chatSession = EiraIRC.instance.getChatSessionHandler();
 		keyChat = Minecraft.getMinecraft().gameSettings.keyBindChat.getKeyCode();
 		keyCommand = Minecraft.getMinecraft().gameSettings.keyBindCommand.getKeyCode();
 	}
 
-	private boolean isKeyPressed(KeyBinding keyBinding, int keyIdx) {
-		if(keyBinding.getKeyCode() <= 0) {
-			return false;
-		}
-		if(Keyboard.isKeyDown(keyBinding.getKeyCode())) {
-			if(!keyState[keyIdx]) {
-				keyState[keyIdx] = true;
-				return true;
-			}
-		} else {
-			keyState[keyIdx] = false;
-		}
-		return false;
-	}
-	
-	private void handleKeyInput() {
-		if(isKeyPressed(ClientGlobalConfig.keyOpenMenu, KEY_IDX_OPENSETTINGS)) {
-			if(Minecraft.getMinecraft().currentScreen == null) {
-				Minecraft.getMinecraft().displayGuiScreen(new GuiEiraIRCMenu());
-			}
-		}
-		if(isKeyPressed(ClientGlobalConfig.keyScreenshotShare, KEY_IDX_SCREENSHOTSHARE)) {
-			Screenshot screenshot = ScreenshotManager.getInstance().takeScreenshot();
-			if(screenshot != null) {
-				ScreenshotManager.getInstance().uploadScreenshot(screenshot, ScreenshotAction.UploadShare);
-			}
-		}
-		if(isKeyPressed(ClientGlobalConfig.keyOpenScreenshots, KEY_IDX_OPENSCREENSHOTS)) {
-			if(Minecraft.getMinecraft().currentScreen == null) {
-				Minecraft.getMinecraft().displayGuiScreen(new GuiScreenshots(null));
-			}
-		}
-	}
-	
 	@SubscribeEvent
 	public void keyInput(KeyInputEvent event) {
 		if(Keyboard.getEventKeyState()) {
-			GuiScreen currentScreen = Minecraft.getMinecraft().currentScreen;
-			if(currentScreen == null || currentScreen.getClass() == GuiChat.class) {
-				if(Keyboard.getEventKey() == keyChat) {
-					Minecraft.getMinecraft().gameSettings.keyBindChat.isPressed();
-					if(true || ClientGlobalConfig.vanillaChat) {
-						Minecraft.getMinecraft().displayGuiScreen(new GuiChatExtended());
+			int keyCode = Keyboard.getEventKey();
+			if(keyCode == ClientGlobalConfig.keyToggleTarget.getKeyCode() && !ClientGlobalConfig.disableChatToggle && !ClientGlobalConfig.clientBridge) {
+				if(Minecraft.getMinecraft().currentScreen instanceof GuiChat) {
+					if(Keyboard.isRepeatEvent()) {
+						if(System.currentTimeMillis() - lastToggleTarget >= 1000) {
+							chatSession.setChatTarget(null);
+							if(ClientGlobalConfig.vanillaChat) {
+								Utils.addMessageToChat(new ChatComponentTranslation("eirairc:irc.general.chattingTo", "Minecraft"));
+							}
+						}
 					} else {
-						Minecraft.getMinecraft().displayGuiScreen(new GuiEiraChatInput(eiraChat));
+						boolean users = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
+						IRCContext newTarget = chatSession.getNextTarget(users);
+						if(!users) {
+							lastToggleTarget = System.currentTimeMillis();
+						}
+						if(!users || newTarget != null) {
+							chatSession.setChatTarget(newTarget);
+							if(ClientGlobalConfig.vanillaChat) {
+								Utils.addMessageToChat(new ChatComponentTranslation("eirairc:irc.general.chattingTo", newTarget == null ? "Minecraft" : newTarget.getName()));
+							}
+						}
 					}
-				} else if(Keyboard.getEventKey() == keyChat) {
-					Minecraft.getMinecraft().gameSettings.keyBindChat.isPressed();
-					if(true || ClientGlobalConfig.vanillaChat) {
-						Minecraft.getMinecraft().displayGuiScreen(new GuiChatExtended("/"));
-					} else {
-						Minecraft.getMinecraft().displayGuiScreen(new GuiEiraChatInput(eiraChat, "/"));
+				}
+			} else if(keyCode == ClientGlobalConfig.keyOpenMenu.getKeyCode()) {
+				if(Minecraft.getMinecraft().currentScreen == null) {
+					Minecraft.getMinecraft().displayGuiScreen(new GuiEiraIRCMenu());
+				}
+			} else if(keyCode == ClientGlobalConfig.keyOpenScreenshots.getKeyCode()) {
+				if (Minecraft.getMinecraft().currentScreen == null) {
+					Minecraft.getMinecraft().displayGuiScreen(new GuiScreenshots(null));
+				}
+			} else if(keyCode == ClientGlobalConfig.keyScreenshotShare.getKeyCode()) {
+				Screenshot screenshot = ScreenshotManager.getInstance().takeScreenshot();
+				if(screenshot != null) {
+					ScreenshotManager.getInstance().uploadScreenshot(screenshot, ScreenshotAction.UploadShare);
+				}
+			} else {
+				if(!ClientGlobalConfig.vanillaChat) {
+					GuiScreen currentScreen = Minecraft.getMinecraft().currentScreen;
+					if(currentScreen == null || currentScreen.getClass() == GuiChat.class) {
+						if(Keyboard.getEventKey() == keyChat) {
+							Minecraft.getMinecraft().gameSettings.keyBindChat.isPressed();
+							Minecraft.getMinecraft().displayGuiScreen(new GuiChatExtended());
+						} else if(Keyboard.getEventKey() == keyCommand) {
+							Minecraft.getMinecraft().gameSettings.keyBindCommand.isPressed();
+							Minecraft.getMinecraft().displayGuiScreen(new GuiChatExtended("/"));
+						}
 					}
 				}
 			}
@@ -132,7 +131,6 @@ public class EiraTickHandler {
 			}
 		}
 		ScreenshotManager.getInstance().clientTick(event);
-		handleKeyInput();
 	}
 	
 	@SubscribeEvent
