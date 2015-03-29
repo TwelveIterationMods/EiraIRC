@@ -41,8 +41,8 @@ public class CommonProxy {
 	public void renderTick(float delta) {
 	}
 
-	public void loadConfig(File configDir) {
-		SharedGlobalConfig.load(configDir);
+	public void loadConfig(File configDir, boolean reloadFile) {
+		SharedGlobalConfig.load(configDir, reloadFile);
 	}
 
 	public void loadLegacyConfig(File configDir, Configuration legacyConfig) {

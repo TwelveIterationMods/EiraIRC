@@ -15,7 +15,6 @@ import net.blay09.mods.eirairc.bot.IRCBotImpl;
 import net.blay09.mods.eirairc.config.base.MessageFormatConfig;
 import net.blay09.mods.eirairc.config.base.ServiceConfig;
 import net.blay09.mods.eirairc.util.ConfigHelper;
-import net.blay09.mods.eirairc.util.IRCResolver;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.command.ICommandSender;
@@ -347,7 +346,7 @@ public class ConfigurationHandler {
 				logger.error("Couldn't get rid of old 'eirairc.cfg' file. Config will REGENERATE unless you delete it yourself.");
 			}
 		} else {
-			EiraIRC.proxy.loadConfig(configDir);
+			EiraIRC.proxy.loadConfig(configDir, false);
 		}
 
 		loadDisplayFormats(new File(configDir, "formats"));
@@ -374,7 +373,7 @@ public class ConfigurationHandler {
 	public static void lightReload() {
 		File configDir = new File(baseConfigDir, "eirairc");
 
-		EiraIRC.proxy.loadConfig(configDir);
+		EiraIRC.proxy.loadConfig(configDir, false);
 	}
 	
 	public static ServerConfig getOrCreateServerConfig(String host) {
