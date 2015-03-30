@@ -38,6 +38,7 @@ import net.minecraft.util.IChatComponent;
 import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.player.AchievementEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 
 import java.util.regex.Pattern;
@@ -342,6 +343,26 @@ public class MCEventHandler {
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
 	public void onPlayerNameFormat(PlayerEvent.NameFormat event) {
 		event.displayname = Utils.getNickGame(event.entityPlayer);
+	}
+
+	@SubscribeEvent
+	public void onAchievement(AchievementEvent event) {
+		for(ServerConfig serverConfig : ConfigurationHandler.getServerConfigs()) {
+			IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(serverConfig.getAddress());
+			if(connection != null) {
+				for (ChannelConfig channelConfig : serverConfig.getChannelConfigs()) {
+					IRCChannel channel = connection.getChannel(channelConfig.getName());
+					if (channel != null) {
+						GeneralSettings generalSettings = ConfigHelper.getGeneralSettings(channel);
+						BotSettings botSettings = ConfigHelper.getBotSettings(channel);
+						String ircMessage = MessageFormat.formatMessage(botSettings.getMessageFormat().ircAchievement, channel, event.entityPlayer, event.achievement.func_150951_e().getUnformattedText(), MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
+						if (!generalSettings.isReadOnly() && botSettings.getBoolean(BotBooleanComponent.RelayAchievements)) {
+							channel.message(ircMessage);
+						}
+					}
+				}
+			}
+		}
 	}
 	
 	@SubscribeEvent
