@@ -59,6 +59,12 @@ processResources
     }
 }
 
+idea {
+    module {
+        inheritOutputDirs = true
+    }
+}
+
 repositories {
     maven {
         name = "dynmap"

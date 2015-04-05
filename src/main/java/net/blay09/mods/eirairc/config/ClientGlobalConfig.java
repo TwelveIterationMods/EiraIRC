@@ -55,7 +55,7 @@ public class ClientGlobalConfig {
 	public static String clientBridgeMessageToken = "[IG]";
 	public static String clientBridgeNickToken = "";
 	public static boolean disableChatToggle = false;
-	public static boolean vanillaChat = true;
+	public static boolean vanillaChat = false;
 	public static boolean registerShortCommands = true;
 
 	public static void load(File configDir) {
@@ -181,6 +181,8 @@ public class ClientGlobalConfig {
 			return clientBridgeNickToken;
 		} else if(key.equals("disableChatToggle")) {
 			return String.valueOf(disableChatToggle);
+		} else if(key.equals("vanillaChat")) {
+			return String.valueOf(vanillaChat);
 		}
 		return null;
 	}
@@ -207,12 +209,13 @@ public class ClientGlobalConfig {
 			clientBridgeNickToken = value;
 		} else if(key.equals("disableChatToggle")) {
 			disableChatToggle = Boolean.parseBoolean(value);
+		} else if(key.equals("vanillaChat")) {
+			vanillaChat = Boolean.parseBoolean(value);
 		} else {
 			result = false;
 		}
 		return result;
 	}
-
 
 	public static void addOptionsToList(List<String> list, String option) {
 		if(option == null) {
@@ -225,7 +228,8 @@ public class ClientGlobalConfig {
 			list.add("clientBridgeMessageToken");
 			list.add("clientBridgeNickToken");
 			list.add("disableChatToggle");
-		} else if(option.equals("persistentConnection") || option.equals("clientBridge") || option.equals("disableChatToggle") || option.equals("showWelcomeScreen")) {
+			list.add("vanillaChat");
+		} else if(option.equals("persistentConnection") || option.equals("clientBridge") || option.equals("disableChatToggle") || option.equals("showWelcomeScreen") || option.equals("vanillaChat")) {
 			Utils.addBooleansToList(list);
 		}
 	}

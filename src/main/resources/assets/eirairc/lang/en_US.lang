@@ -75,11 +75,12 @@ eirairc:irc.general.alreadyConnected=§cYou are already connected to %s
 eirairc:irc.general.notOnChannel=§cYou are not on channel %s
 eirairc:irc.general.noPermission=§cYou do not have permission to use this command.
 eirairc:irc.general.noSuchPlayer=§cThat player cannot be found.
-eirairc:irc.general.notMultiplayer=§cThis is not a multiplayer. Use /irc instead.
+eirairc:irc.general.notMultiplayer=§cThis is not a multiplayer world. Use /irc instead.
 eirairc:irc.general.serverOnlyCommand=§cThis command only works on the server side. Use the GUI (default: I) or the config file for the client settings.
 eirairc:irc.general.usage=§cUsage: %s
 eirairc:irc.general.linkRemoved=<link removed>
 eirairc:irc.general.notSupported=%s is not supported on this server.
+eirairc:irc.general.chattingTo=>> Now chatting to §6%s§f <<
 
 #######################################################################################################################
 
