@@ -73,5 +73,16 @@
     "channel": "#Pandamonium",
     "modpack-display": "South Korean Community",
     "description": "Pandamonium is a small South Korean community. We use Korean for our common communication because most of our members can't speak English."
+  },
+  {
+    "server": "irc.esper.net",
+    "channel": "#Minecraft",
+    "description": "The official Minecraft IRC channel. Requires NickServ authentication to talk."
+  },
+  {
+    "server": "irc.esper.net",
+    "channel": "#rftools",
+    "modpack-display": "RF-Tools Mod",
+    "description": "The IRC channel for the RFTools mod."
   }
 ]
