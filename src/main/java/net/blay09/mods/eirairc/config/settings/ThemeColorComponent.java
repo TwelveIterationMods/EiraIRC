@@ -27,4 +27,13 @@ public enum ThemeColorComponent {
 		this.langKey = langKey;
 	}
 
+	public static ThemeColorComponent fromName(String name) {
+		for(ThemeColorComponent component : values) {
+			if(component.name.equals(name)) {
+				return component;
+			}
+		}
+		return null;
+	}
+
 }

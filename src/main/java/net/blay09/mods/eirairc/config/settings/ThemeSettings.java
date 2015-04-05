@@ -148,25 +148,24 @@ public class ThemeSettings {
 	}
 
 	public String handleConfigCommand(ICommandSender sender, String key) {
-		try {
-			ThemeColorComponent component = ThemeColorComponent.valueOf(key);
+		ThemeColorComponent component = ThemeColorComponent.fromName(key);
+		if(component != null) {
 			if (colors.containsKey(component)) {
 				return colors.get(component).name();
 			} else {
 				return "<inherit>";
 			}
-		} catch (IllegalArgumentException ignored) {}
+		}
 		return null;
 	}
 
 	public boolean handleConfigCommand(ICommandSender sender, String key, String value) {
-		try {
-			ThemeColorComponent component = ThemeColorComponent.valueOf(key);
+		ThemeColorComponent component = ThemeColorComponent.fromName(key);
+		if(component != null) {
 			colors.put(component, EnumChatFormatting.getValueByName(value));
 			return true;
-		} catch (IllegalArgumentException e) {
-			return false;
 		}
+		return false;
 	}
 
 	public static void addOptionsToList(List<String> list, String option) {
@@ -175,10 +174,9 @@ public class ThemeSettings {
 				list.add(component.name);
 			}
 		} else {
-			try {
-				ThemeColorComponent.valueOf(option);
+			if(ThemeColorComponent.fromName(option) != null) {
 				Utils.addMCColorsToList(list);
-			} catch (IllegalArgumentException ignored) {}
+			}
 		}
 	}
 }

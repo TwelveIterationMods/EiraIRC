@@ -23,10 +23,19 @@ public enum BotBooleanComponent {
 	public final boolean defaultValue;
 	public final String langKey;
 
-	private BotBooleanComponent(String name, boolean defaultValue, String langKey) {
+	BotBooleanComponent(String name, boolean defaultValue, String langKey) {
 		this.name = name;
 		this.defaultValue = defaultValue;
 		this.langKey = langKey;
+	}
+
+	public static BotBooleanComponent fromName(String name) {
+		for(BotBooleanComponent value : values) {
+			if (value.name.equals(name)) {
+				return value;
+			}
+		}
+		return null;
 	}
 
 }
