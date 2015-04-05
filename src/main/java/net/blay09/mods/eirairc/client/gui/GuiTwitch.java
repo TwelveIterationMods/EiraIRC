@@ -33,9 +33,6 @@ public class GuiTwitch extends EiraGuiScreen implements GuiYesNoCallback {
 	public GuiTwitch(GuiScreen parentScreen) {
 		super(parentScreen);
 		config = ConfigurationHandler.getOrCreateServerConfig(Globals.TWITCH_SERVER);
-		if(ConfigurationHandler.hasServerConfig(Globals.TWITCH_SERVER)) {
-			config.setNick("");
-		}
 	}
 
 	@Override

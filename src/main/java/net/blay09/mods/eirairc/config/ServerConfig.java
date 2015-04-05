@@ -37,11 +37,15 @@ public class ServerConfig {
 	private boolean isRedirect;
 	private boolean isSSL = false;
 	private boolean isRemote = false;
+
 	public ServerConfig() {
 	}
 
 	public ServerConfig(String address) {
 		this.address = address;
+		if(address.equals(Globals.TWITCH_SERVER)) {
+			nick = "";
+		}
 	}
 
 	public void setAddress(String address) {
