@@ -382,7 +382,7 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 			String message = msg.arg(1);
 			if(channelTypes.indexOf(target.charAt(0)) != -1) {
 				MinecraftForge.EVENT_BUS.post(new IRCChannelChatEvent(this, getChannel(target), user, message, false, true));
-			} else if(target.equals(this.nick)) {
+			} else if(target.equals(this.nick) || target.equals("*")) {
 				MinecraftForge.EVENT_BUS.post(new IRCPrivateChatEvent(this, user, message, false, true));
 			}
 		} else if(cmd.equals("JOIN")) {

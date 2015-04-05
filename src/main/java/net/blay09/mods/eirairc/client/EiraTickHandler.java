@@ -14,7 +14,6 @@ import net.blay09.mods.eirairc.client.gui.GuiEiraIRCMenu;
 import net.blay09.mods.eirairc.client.gui.GuiWelcome;
 import net.blay09.mods.eirairc.client.gui.chat.GuiChatExtended;
 import net.blay09.mods.eirairc.client.gui.chat.GuiEiraChat;
-import net.blay09.mods.eirairc.client.gui.chat.GuiEiraChatInput;
 import net.blay09.mods.eirairc.client.gui.screenshot.GuiScreenshots;
 import net.blay09.mods.eirairc.client.screenshot.Screenshot;
 import net.blay09.mods.eirairc.client.screenshot.ScreenshotManager;
@@ -25,8 +24,6 @@ import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import org.lwjgl.input.Keyboard;
 
@@ -39,6 +36,7 @@ public class EiraTickHandler {
 	private int screenshotCheck;
 	private int openWelcomeScreen;
 	private long lastToggleTarget;
+	private boolean wasToggleTargetDown;
 
 	public EiraTickHandler(GuiEiraChat eiraChat) {
 		this.eiraChat = eiraChat;
@@ -51,30 +49,7 @@ public class EiraTickHandler {
 	public void keyInput(KeyInputEvent event) {
 		if(Keyboard.getEventKeyState()) {
 			int keyCode = Keyboard.getEventKey();
-			if(keyCode == ClientGlobalConfig.keyToggleTarget.getKeyCode() && !ClientGlobalConfig.disableChatToggle && !ClientGlobalConfig.clientBridge) {
-				if(Minecraft.getMinecraft().currentScreen instanceof GuiChat) {
-					if(Keyboard.isRepeatEvent()) {
-						if(System.currentTimeMillis() - lastToggleTarget >= 1000) {
-							chatSession.setChatTarget(null);
-							if(ClientGlobalConfig.vanillaChat) {
-								Utils.addMessageToChat(new ChatComponentTranslation("eirairc:irc.general.chattingTo", "Minecraft"));
-							}
-						}
-					} else {
-						boolean users = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
-						IRCContext newTarget = chatSession.getNextTarget(users);
-						if(!users) {
-							lastToggleTarget = System.currentTimeMillis();
-						}
-						if(!users || newTarget != null) {
-							chatSession.setChatTarget(newTarget);
-							if(ClientGlobalConfig.vanillaChat) {
-								Utils.addMessageToChat(new ChatComponentTranslation("eirairc:irc.general.chattingTo", newTarget == null ? "Minecraft" : newTarget.getName()));
-							}
-						}
-					}
-				}
-			} else if(keyCode == ClientGlobalConfig.keyOpenMenu.getKeyCode()) {
+			if(keyCode == ClientGlobalConfig.keyOpenMenu.getKeyCode()) {
 				if(Minecraft.getMinecraft().currentScreen == null) {
 					Minecraft.getMinecraft().displayGuiScreen(new GuiEiraIRCMenu());
 				}
@@ -122,7 +97,36 @@ public class EiraTickHandler {
 				Minecraft.getMinecraft().displayGuiScreen(new GuiWelcome());
 			}
 		}
-		if(Keyboard.isKeyDown(Keyboard.KEY_F2)) {
+
+		if(Minecraft.getMinecraft().currentScreen instanceof GuiChat && !ClientGlobalConfig.disableChatToggle && !ClientGlobalConfig.clientBridge) {
+			if(Keyboard.isKeyDown(ClientGlobalConfig.keyToggleTarget.getKeyCode())) {
+				if(!wasToggleTargetDown) {
+					boolean users = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
+					IRCContext newTarget = chatSession.getNextTarget(users);
+					if(!users) {
+						lastToggleTarget = System.currentTimeMillis();
+					}
+					if(!users || newTarget != null) {
+						chatSession.setChatTarget(newTarget);
+						if(ClientGlobalConfig.vanillaChat) {
+							Utils.addMessageToChat(new ChatComponentTranslation("eirairc:irc.general.chattingTo", newTarget == null ? "Minecraft" : newTarget.getName()));
+						}
+					}
+					wasToggleTargetDown = true;
+				} else {
+					if(System.currentTimeMillis() - lastToggleTarget >= 1000) {
+						chatSession.setChatTarget(null);
+						if(ClientGlobalConfig.vanillaChat) {
+							Utils.addMessageToChat(new ChatComponentTranslation("eirairc:irc.general.chattingTo", "Minecraft"));
+						}
+						lastToggleTarget = System.currentTimeMillis();
+					}
+				}
+			} else {
+				wasToggleTargetDown = false;
+			}
+		}
+		if(Keyboard.isKeyDown(Minecraft.getMinecraft().gameSettings.keyBindScreenshot.getKeyCode())) {
 			screenshotCheck = 10;
 		} else if(screenshotCheck > 0) {
 			screenshotCheck--;

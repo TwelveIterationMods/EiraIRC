@@ -16,10 +16,18 @@ public enum BotStringComponent {
 	public final String defaultValue;
 	public final String langKey;
 
-	private BotStringComponent(String name, String defaultValue, String langKey) {
+	BotStringComponent(String name, String defaultValue, String langKey) {
 		this.name = name;
 		this.defaultValue = defaultValue;
 		this.langKey = langKey;
 	}
 
+	public static BotStringComponent fromName(String name) {
+		for(BotStringComponent value : values) {
+			if (value.name.equals(name)) {
+				return value;
+			}
+		}
+		return null;
+	}
 }

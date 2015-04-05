@@ -248,69 +248,67 @@ public class BotSettings {
 	}
 
 	public String handleConfigCommand(ICommandSender sender, String key) {
-		try {
-			BotBooleanComponent component = BotBooleanComponent.valueOf(key);
-			if (booleans.containsKey(component)) {
-				return String.valueOf(booleans.get(component));
+		BotBooleanComponent booleanComponent = BotBooleanComponent.fromName(key);
+		if(booleanComponent != null) {
+			if(booleans.containsKey(booleanComponent)) {
+				return String.valueOf(booleans.get(booleanComponent));
 			} else {
 				return "<inherit>";
 			}
-		} catch (IllegalArgumentException ignored) {}
-		try {
-			BotStringComponent component = BotStringComponent.valueOf(key);
-			if (strings.containsKey(component)) {
-				return strings.get(component);
+		}
+		BotStringComponent stringComponent = BotStringComponent.fromName(key);
+		if(stringComponent != null) {
+			if(strings.containsKey(stringComponent)) {
+				return strings.get(stringComponent);
 			} else {
 				return "<inherit>";
 			}
-		} catch (IllegalArgumentException ignored) {}
-		try {
-			BotStringListComponent component = BotStringListComponent.valueOf(key);
-			if (stringLists.containsKey(component)) {
-				return Utils.joinStrings(stringLists.get(component), ", ", 0);
+		}
+		BotStringListComponent stringListComponent = BotStringListComponent.fromName(key);
+		if(stringListComponent != null) {
+			if (stringLists.containsKey(stringListComponent)) {
+				return Utils.joinStrings(stringLists.get(stringListComponent), ", ", 0);
 			} else {
 				return "<inherit>";
 			}
-		} catch (IllegalArgumentException ignored) {}
+		}
 		return null;
 	}
-
 	public boolean handleConfigCommand(ICommandSender sender, String key, String value) {
-		try {
-			BotBooleanComponent component = BotBooleanComponent.valueOf(key);
-			booleans.put(component, Boolean.parseBoolean(value));
+		BotBooleanComponent booleanComponent = BotBooleanComponent.fromName(key);
+		if(booleanComponent != null) {
+			booleans.put(booleanComponent, Boolean.parseBoolean(value));
 			return true;
-		} catch (IllegalArgumentException ignored) {}
-		try {
-			BotStringComponent component = BotStringComponent.valueOf(key);
-			strings.put(component, value);
+		}
+		BotStringComponent stringComponent = BotStringComponent.fromName(key);
+		if(stringComponent != null) {
+			strings.put(stringComponent, value);
 			return true;
-		} catch (IllegalArgumentException ignored) {}
-		try {
-			BotStringListComponent component = BotStringListComponent.valueOf(key);
-			String[] list = stringLists.get(component);
-			if(value.startsWith("add ")) {
-				if(list == null) {
-					list = new String[] { value.substring(4) };
+		}
+		BotStringListComponent stringListComponent = BotStringListComponent.fromName(key);
+		if(stringListComponent != null) {
+			String[] list = stringLists.get(stringListComponent);
+			if (value.startsWith("add ")) {
+				if (list == null) {
+					list = new String[]{value.substring(4)};
 				} else {
 					list = ArrayUtils.add(list, value.substring(4));
 				}
-			} else if(value.startsWith("remove ") && list != null) {
-				for(int i = 0; i < list.length; i++) {
-					if(list[i].equals(value.substring(7))) {
+			} else if (value.startsWith("remove ") && list != null) {
+				for (int i = 0; i < list.length; i++) {
+					if (list[i].equals(value.substring(7))) {
 						list = ArrayUtils.remove(list, i);
 						break;
 					}
 				}
 			}
-			if(list != null) {
-				stringLists.put(component, list);
+			if (list != null) {
+				stringLists.put(stringListComponent, list);
 			}
 			return true;
-		} catch (IllegalArgumentException ignored) {}
+		}
 		return false;
 	}
-
 	public static void addOptionsToList(List<String> list, String option) {
 		if(option == null) {
 			for(BotBooleanComponent component : BotBooleanComponent.values) {
@@ -323,10 +321,9 @@ public class BotSettings {
 				list.add(component.name);
 			}
 		} else {
-			try {
-				BotBooleanComponent.valueOf(option);
+			if(BotBooleanComponent.fromName(option) != null) {
 				Utils.addBooleansToList(list);
-			} catch (IllegalArgumentException ignored) {}
+			}
 		}
 	}
 

@@ -42,6 +42,9 @@ public class ServerConfig {
 
 	public ServerConfig(String address) {
 		this.address = address;
+		if(address.equals(Globals.TWITCH_SERVER)) {
+			nick = "";
+		}
 	}
 
 	public void setAddress(String address) {

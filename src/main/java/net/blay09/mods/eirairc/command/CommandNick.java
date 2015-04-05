@@ -41,12 +41,12 @@ public class CommandNick implements SubCommand {
 			throw new WrongUsageException(getCommandUsage(sender));
 		}
 		if(args.length >= 2) {
-			ServerConfig serverConfig = ConfigHelper.resolveServerConfig(args[1]);
+			ServerConfig serverConfig = ConfigHelper.resolveServerConfig(args[0]);
 			if(serverConfig == null) {
-				Utils.sendLocalizedMessage(sender, "irc.target.serverNotFound");
+				Utils.sendLocalizedMessage(sender, "irc.target.serverNotFound", args[0]);
 				return true;
 			}
-			String nick = args[0];
+			String nick = args[1];
 			Utils.sendLocalizedMessage(sender, "irc.basic.changingNick", serverConfig.getAddress(), nick);
 			serverConfig.setNick(nick);
 			IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(serverConfig.getAddress());

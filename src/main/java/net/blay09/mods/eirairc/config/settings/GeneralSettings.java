@@ -120,37 +120,33 @@ public class GeneralSettings {
 	}
 
 	public String handleConfigCommand(ICommandSender sender, String key) {
-		try {
-			GeneralBooleanComponent component = GeneralBooleanComponent.valueOf(key);
+		GeneralBooleanComponent component = GeneralBooleanComponent.fromName(key);
+		if(component != null) {
 			if (booleans.containsKey(component)) {
 				return String.valueOf(booleans.get(component));
 			} else {
 				return "<inherit>";
 			}
-		} catch (IllegalArgumentException ignored) {}
+		}
 		return null;
 	}
-
 	public boolean handleConfigCommand(ICommandSender sender, String key, String value) {
-		try {
-			GeneralBooleanComponent component = GeneralBooleanComponent.valueOf(key);
+		GeneralBooleanComponent component = GeneralBooleanComponent.fromName(key);
+		if(component != null) {
 			booleans.put(component, Boolean.parseBoolean(value));
 			return true;
-		} catch (IllegalArgumentException e) {
-			return false;
 		}
+		return false;
 	}
-
 	public static void addOptionsToList(List<String> list, String option) {
 		if(option == null) {
 			for(GeneralBooleanComponent component : GeneralBooleanComponent.values) {
 				list.add(component.name);
 			}
 		} else {
-			try {
-				GeneralBooleanComponent.valueOf(option);
+			if(GeneralBooleanComponent.fromName(option) != null) {
 				Utils.addMCColorsToList(list);
-			} catch (IllegalArgumentException ignored) {}
+			}
 		}
 	}
 }

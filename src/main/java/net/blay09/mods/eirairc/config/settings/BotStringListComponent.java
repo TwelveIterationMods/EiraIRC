@@ -15,11 +15,19 @@ public enum BotStringListComponent {
 	public final String langKey;
 	public final boolean allowWildcard;
 
-	private BotStringListComponent(String name, String[] defaultValue, String langKey, boolean allowWildcard) {
+	BotStringListComponent(String name, String[] defaultValue, String langKey, boolean allowWildcard) {
 		this.name = name;
 		this.defaultValue = defaultValue;
 		this.langKey = langKey;
 		this.allowWildcard = allowWildcard;
 	}
 
+	public static BotStringListComponent fromName(String name) {
+		for(BotStringListComponent value : values) {
+			if (value.name.equals(name)) {
+				return value;
+			}
+		}
+		return null;
+	}
 }

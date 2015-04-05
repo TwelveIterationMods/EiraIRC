@@ -55,7 +55,7 @@ public class CommandTwitch implements SubCommand {
 				}
 			}
 		} else {
-			if(args.length < 2 && !ConfigurationHandler.hasServerConfig(Globals.TWITCH_SERVER)) {
+			if(args.length < 2) {
 				throw new WrongUsageException(Globals.MOD_ID + ":irc.commands.twitch");
 			}
 			ServerConfig serverConfig = ConfigurationHandler.getOrCreateServerConfig(Globals.TWITCH_SERVER);

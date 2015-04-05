@@ -13,12 +13,10 @@ import net.blay09.mods.eirairc.config.settings.BotBooleanComponent;
 import net.blay09.mods.eirairc.config.settings.BotSettings;
 import net.blay09.mods.eirairc.config.settings.ThemeColorComponent;
 import net.blay09.mods.eirairc.config.settings.ThemeSettings;
-import net.blay09.mods.eirairc.util.ConfigHelper;
-import net.blay09.mods.eirairc.util.MessageFormat;
-import net.blay09.mods.eirairc.util.NotificationType;
-import net.blay09.mods.eirairc.util.Utils;
+import net.blay09.mods.eirairc.util.*;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
+import net.minecraftforge.common.MinecraftForge;
 
 public class IRCEventHandler {
 
@@ -83,12 +81,17 @@ public class IRCEventHandler {
 				}
 			}
 		}
+		if(event.sender == null && event.isNotice && event.connection.getHost().equals(Globals.TWITCH_SERVER) && event.message.equals("Login unsuccessful")) {
+			event.connection.disconnect("");
+			MinecraftForge.EVENT_BUS.post(new IRCConnectionFailedEvent(event.connection, new RuntimeException("Wrong username or invalid oauth token.")));
+			return;
+		}
 		BotSettings botSettings = ConfigHelper.getBotSettings(null);
 		if(ConfigHelper.getGeneralSettings(event.sender).isMuted()) {
 			return;
 		}
 		if(!botSettings.getBoolean(BotBooleanComponent.AllowPrivateMessages)) {
-			if(!event.isNotice) {
+			if(!event.isNotice && event.sender != null) {
 				event.sender.notice(Utils.getLocalizedMessage("irc.msg.disabled"));
 			}
 			return;
