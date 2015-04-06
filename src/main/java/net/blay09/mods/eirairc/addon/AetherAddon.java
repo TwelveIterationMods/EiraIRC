@@ -16,8 +16,8 @@ public class AetherAddon {
 
 	public AetherAddon() {
 		// Enable VanillaChat if Aether is installed as Aether does it's own chat GUI modifications.
-		logger.info("Enabling vanillaChat config option for Aether II compatibility.");
-		ClientGlobalConfig.vanillaChat = true;
+		logger.info("Enabling useVanillaChat config option for Aether II compatibility.");
+		ClientGlobalConfig.useVanillaChat = true;
 	}
 
 }
