@@ -52,6 +52,7 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 	private String nick;
 	private boolean connected;
 	private Thread thread;
+	private int waitingReconnect;
 
 	private String serverType;
 	private String channelTypes = "#&";
@@ -120,7 +121,7 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 		if(MinecraftForge.EVENT_BUS.post(new IRCConnectingEvent(this))) {
 			return false;
 		}
-		thread = new Thread(this);
+		thread = new Thread(this, "IRC (" + host + ")");
 		thread.start();
 		return true;
 	}
@@ -195,13 +196,24 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		MinecraftForge.EVENT_BUS.post(new IRCDisconnectEvent(this));
 		if(connected) {
 			tryReconnect();
 		}
 	}
 
 	public void tryReconnect() {
-		MinecraftForge.EVENT_BUS.post(new IRCDisconnectEvent(this));
+		if(waitingReconnect == 0) {
+			waitingReconnect = 15000;
+		} else {
+			waitingReconnect *= 2;
+		}
+		MinecraftForge.EVENT_BUS.post(new IRCReconnectEvent(this, waitingReconnect));
+		try {
+			Thread.sleep(waitingReconnect);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		start();
 	}
 
@@ -232,6 +244,7 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 			writer.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
+			MinecraftForge.EVENT_BUS.post(new IRCConnectionFailedEvent(this, e));
 			if(connected) {
 				tryReconnect();
 			}
@@ -302,6 +315,7 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 			MinecraftForge.EVENT_BUS.post(new IRCChannelJoinedEvent(this, channel));
 		} else if(numeric == IRCReplyCodes.RPL_WELCOME) {
 			connected = true;
+			waitingReconnect = 0;
 			MinecraftForge.EVENT_BUS.post(new IRCConnectEvent(this));
 		} else if(numeric == IRCReplyCodes.RPL_TOPIC) {
 			IRCChannelImpl channel = (IRCChannelImpl) getChannel(msg.arg(1));

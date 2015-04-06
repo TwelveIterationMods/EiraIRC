@@ -86,6 +86,7 @@ eirairc:irc.general.chattingTo=>> Now chatting to §6%s§f <<
 
 # Basic IRC
 eirairc:irc.basic.connecting=Connecting to %s
+eirairc:irc.basic.reconnecting=Reconnecting to %s in %d seconds...
 eirairc:irc.basic.connected=Connected to %s
 eirairc:irc.basic.disconnecting=Disconnecting from %s
 eirairc:irc.basic.disconnected=Disconnected from %s
