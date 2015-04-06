@@ -160,11 +160,11 @@ public class MCEventHandler {
 	}
 	
 	@SideOnly(Side.CLIENT)
-	@SubscribeEvent
 	public void onClientEmote(ClientChatEvent event) {
+		String text = event.message.substring(3);
 		EntityPlayer sender = Minecraft.getMinecraft().thePlayer;
 		if(ClientGlobalConfig.clientBridge) {
-			relayChatClient(event.message, true, false, null, true);
+			relayChatClient(text, true, false, null, true);
 			return;
 		}
 		IRCContext chatTarget = EiraIRC.instance.getChatSessionHandler().getChatTarget();
@@ -176,15 +176,15 @@ public class MCEventHandler {
 		if(chatTarget instanceof IRCChannel) {
 			emoteColor = ConfigHelper.getTheme(chatTarget).getColor(ThemeColorComponent.emoteTextColor);
 			BotSettings botSettings = ConfigHelper.getBotSettings(chatTarget);
-			chatComponent = MessageFormat.formatChatComponent(botSettings.getMessageFormat().mcSendChannelEmote, chatTarget, sender, event.message, MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
+			chatComponent = MessageFormat.formatChatComponent(botSettings.getMessageFormat().mcSendChannelEmote, chatTarget, sender, text, MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
 		} else if(chatTarget instanceof IRCUser) {
 			emoteColor = ConfigHelper.getTheme(chatTarget).getColor(ThemeColorComponent.emoteTextColor);
 			BotSettings botSettings = ConfigHelper.getBotSettings(chatTarget);
-			chatComponent = MessageFormat.formatChatComponent(botSettings.getMessageFormat().mcSendPrivateEmote, chatTarget, sender, event.message, MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
+			chatComponent = MessageFormat.formatChatComponent(botSettings.getMessageFormat().mcSendPrivateEmote, chatTarget, sender, text, MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
 		} else {
 			return;
 		}
-		relayChatClient(event.message, true, false, chatTarget, false);
+		relayChatClient(text, true, false, chatTarget, false);
 		if(emoteColor != null) {
 			chatComponent.getChatStyle().setColor(emoteColor);
 		}
