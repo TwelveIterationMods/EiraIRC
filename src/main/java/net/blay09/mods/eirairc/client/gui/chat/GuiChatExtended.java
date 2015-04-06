@@ -4,6 +4,7 @@
 package net.blay09.mods.eirairc.client.gui.chat;
 
 import net.blay09.mods.eirairc.EiraIRC;
+import net.blay09.mods.eirairc.api.event.ClientChatEvent;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.client.gui.GuiEiraIRCMenu;
 import net.blay09.mods.eirairc.client.gui.screenshot.GuiImagePreview;
@@ -19,6 +20,8 @@ import net.minecraft.client.gui.GuiYesNoCallback;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.util.IChatComponent;
 import net.minecraftforge.client.ClientCommandHandler;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
@@ -72,7 +75,7 @@ public class GuiChatExtended extends GuiChat implements GuiYesNoCallback {
 		if(keyCode == 28 || keyCode == 156) {
 			String s = inputField.getText().trim();
 			if(s.length() > 0) {
-				if(!EiraIRC.instance.getMCEventHandler().onClientChat(s)) {
+				if(!FMLCommonHandler.instance().bus().post(new ClientChatEvent(inputField.getText()))) {
 					if(ClientCommandHandler.instance.executeCommand(mc.thePlayer, s) != 1) {
 						this.mc.thePlayer.sendChatMessage(s);
 					}

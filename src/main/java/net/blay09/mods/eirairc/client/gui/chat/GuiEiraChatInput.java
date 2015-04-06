@@ -4,6 +4,7 @@
 package net.blay09.mods.eirairc.client.gui.chat;
 
 import net.blay09.mods.eirairc.EiraIRC;
+import net.blay09.mods.eirairc.api.event.ClientChatEvent;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.client.gui.GuiEiraIRCMenu;
 import net.blay09.mods.eirairc.config.ClientGlobalConfig;
@@ -14,6 +15,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraftforge.client.ClientCommandHandler;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
@@ -108,7 +110,7 @@ public class GuiEiraChatInput extends GuiScreen {
 			String s = txtInput.getText().trim();
 			if(s.length() > 0) {
 				parentChat.addToSentMessages(s);
-				if(!EiraIRC.instance.getMCEventHandler().onClientChat(s)) {
+				if(!FMLCommonHandler.instance().bus().post(new ClientChatEvent(s))) {
 					if(ClientCommandHandler.instance.executeCommand(mc.thePlayer, s) != 1) {
 						this.mc.thePlayer.sendChatMessage(s);
 					}

@@ -64,7 +64,7 @@ public class EiraTickHandler {
 					ScreenshotManager.getInstance().uploadScreenshot(screenshot, ScreenshotAction.UploadShare);
 				}
 			} else {
-				if(!ClientGlobalConfig.useVanillaChat) {
+				if(!ClientGlobalConfig.chatNoOverride) {
 					GuiScreen currentScreen = Minecraft.getMinecraft().currentScreen;
 					if(currentScreen == null || currentScreen.getClass() == GuiChat.class) {
 						if(Keyboard.getEventKey() == keyChat) {
@@ -108,7 +108,7 @@ public class EiraTickHandler {
 					}
 					if(!users || newTarget != null) {
 						chatSession.setChatTarget(newTarget);
-						if(ClientGlobalConfig.useVanillaChat) {
+						if(ClientGlobalConfig.chatNoOverride) {
 							Utils.addMessageToChat(new ChatComponentTranslation("eirairc:irc.general.chattingTo", newTarget == null ? "Minecraft" : newTarget.getName()));
 						}
 					}
@@ -116,7 +116,7 @@ public class EiraTickHandler {
 				} else {
 					if(System.currentTimeMillis() - lastToggleTarget >= 1000) {
 						chatSession.setChatTarget(null);
-						if (ClientGlobalConfig.useVanillaChat) {
+						if (ClientGlobalConfig.chatNoOverride) {
 							Utils.addMessageToChat(new ChatComponentTranslation("eirairc:irc.general.chattingTo", "Minecraft"));
 						}
 						lastToggleTarget = System.currentTimeMillis();

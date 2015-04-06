@@ -55,7 +55,7 @@ public class ClientGlobalConfig {
 	public static String clientBridgeMessageToken = "[IG]";
 	public static String clientBridgeNickToken = "";
 	public static boolean disableChatToggle = false;
-	public static boolean useVanillaChat = false;
+	public static boolean chatNoOverride = false;
 	public static boolean registerShortCommands = true;
 
 	public static void load(File configDir) {
@@ -85,7 +85,7 @@ public class ClientGlobalConfig {
 		clientBridgeMessageToken = thisConfig.getString("clientBridgeMessageToken", COMPATIBILITY, clientBridgeMessageToken, I19n.format("eirairc:config.property.clientBridgeMessageToken"), "eirairc:config.property.clientBridgeMessageToken");
 		clientBridgeNickToken = thisConfig.getString("clientBridgeNickToken", COMPATIBILITY, clientBridgeNickToken, I19n.format("eirairc:config.property.clientBridgeNickToken"), "eirairc:config.property.clientBridgeNickToken");
 		disableChatToggle = thisConfig.getBoolean("disableChatToggle", COMPATIBILITY, disableChatToggle, I19n.format("eirairc:config.property.disableChatToggle"), "eirairc:config.property.disableChatToggle");
-		useVanillaChat = thisConfig.getBoolean("useVanillaChat", COMPATIBILITY, useVanillaChat, I19n.format("eirairc:config.property.useVanillaChat"), "eirairc:config.property.useVanillaChat");
+		chatNoOverride = thisConfig.getBoolean("chatNoOverride", COMPATIBILITY, chatNoOverride, I19n.format("eirairc:config.property.chatNoOverride"), "eirairc:config.property.chatNoOverride");
 
 		save();
 	}
@@ -121,7 +121,7 @@ public class ClientGlobalConfig {
 		thisConfig.get(COMPATIBILITY, "clientBridgeMessageToken", I19n.format("eirairc:config.property.clientBridgeMessageToken")).set(clientBridgeMessageToken);
 		thisConfig.get(COMPATIBILITY, "clientBridgeNickToken", I19n.format("eirairc:config.property.clientBridgeNickToken")).set(clientBridgeNickToken);
 		thisConfig.get(COMPATIBILITY, "disableChatToggle", false, I19n.format("eirairc:config.property.disableChatToggle")).set(disableChatToggle);
-		thisConfig.get(COMPATIBILITY, "useVanillaChat", false, I19n.format("eirairc:config.property.useVanillaChat")).set(useVanillaChat);
+		thisConfig.get(COMPATIBILITY, "chatNoOverride", false, I19n.format("eirairc:config.property.chatNoOverride")).set(chatNoOverride);
 
 		thisConfig.save();
 	}
@@ -157,7 +157,7 @@ public class ClientGlobalConfig {
 		clientBridgeMessageToken = Utils.unquote(legacyConfig.get("compatibility", "clientBridgeMessageToken", clientBridgeMessageToken).getString());
 		clientBridgeNickToken = Utils.unquote(legacyConfig.get("compatibility", "clientBridgeNickToken", clientBridgeNickToken).getString());
 		disableChatToggle = legacyConfig.get("compatibility", "disableChatToggle", disableChatToggle).getBoolean();
-		useVanillaChat = legacyConfig.get("compatibility", "useVanillaChat", useVanillaChat).getBoolean();
+		chatNoOverride = legacyConfig.get("compatibility", "chatNoOverride", chatNoOverride).getBoolean();
 
 		save();
 	}
@@ -181,8 +181,8 @@ public class ClientGlobalConfig {
 			return clientBridgeNickToken;
 		} else if(key.equals("disableChatToggle")) {
 			return String.valueOf(disableChatToggle);
-		} else if(key.equals("useVanillaChat")) {
-			return String.valueOf(useVanillaChat);
+		} else if(key.equals("chatNoOverride")) {
+			return String.valueOf(chatNoOverride);
 		}
 		return null;
 	}
@@ -209,8 +209,8 @@ public class ClientGlobalConfig {
 			clientBridgeNickToken = value;
 		} else if(key.equals("disableChatToggle")) {
 			disableChatToggle = Boolean.parseBoolean(value);
-		} else if(key.equals("useVanillaChat")) {
-			useVanillaChat = Boolean.parseBoolean(value);
+		} else if(key.equals("chatNoOverride")) {
+			chatNoOverride = Boolean.parseBoolean(value);
 		} else {
 			result = false;
 		}
@@ -228,8 +228,8 @@ public class ClientGlobalConfig {
 			list.add("clientBridgeMessageToken");
 			list.add("clientBridgeNickToken");
 			list.add("disableChatToggle");
-			list.add("useVanillaChat");
-		} else if(option.equals("persistentConnection") || option.equals("clientBridge") || option.equals("disableChatToggle") || option.equals("showWelcomeScreen") || option.equals("useVanillaChat")) {
+			list.add("chatNoOverride");
+		} else if(option.equals("persistentConnection") || option.equals("clientBridge") || option.equals("disableChatToggle") || option.equals("showWelcomeScreen") || option.equals("chatNoOverride")) {
 			Utils.addBooleansToList(list);
 		}
 	}

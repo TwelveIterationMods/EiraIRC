@@ -21,12 +21,12 @@ import java.util.regex.Pattern;
  */
 public class MessageFormat {
 
-	public static enum Target {
+	public enum Target {
 		IRC,
 		Minecraft
 	}
 
-	public static enum Mode {
+	public enum Mode {
 		Message,
 		Emote;
 	}
