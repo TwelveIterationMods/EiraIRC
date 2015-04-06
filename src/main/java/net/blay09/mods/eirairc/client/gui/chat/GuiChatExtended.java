@@ -3,9 +3,11 @@
 
 package net.blay09.mods.eirairc.client.gui.chat;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.blay09.mods.eirairc.EiraIRC;
+import net.blay09.mods.eirairc.api.event.ClientChatEvent;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.client.gui.GuiEiraIRCMenu;
 import net.blay09.mods.eirairc.client.gui.screenshot.GuiImagePreview;
@@ -70,7 +72,7 @@ public class GuiChatExtended extends GuiChat implements GuiYesNoCallback {
 		if(keyCode == 28 || keyCode == 156) {
 			String s = inputField.getText().trim();
 			if(s.length() > 0) {
-				if(!EiraIRC.instance.getMCEventHandler().onClientChat(s)) {
+				if(!FMLCommonHandler.instance().bus().post(new ClientChatEvent(s))) {
 					if(ClientCommandHandler.instance.executeCommand(mc.thePlayer, s) != 1) {
 						this.mc.thePlayer.sendChatMessage(s);
 					}
