@@ -66,6 +66,12 @@ public class IRCConnectionHandler {
 	}
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
+	public void onConnectionFailed(IRCReconnectEvent event) {
+		String mcMessage = Utils.getLocalizedMessage("irc.basic.reconnecting", event.connection.getHost(), event.waitingTime / 1000);
+		Utils.addMessageToChat(mcMessage);
+	}
+
+	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void onDisconnected(IRCDisconnectEvent event) {
 		String mcMessage = Utils.getLocalizedMessage("irc.basic.disconnected", event.connection.getHost());
 		Utils.addMessageToChat(mcMessage);
