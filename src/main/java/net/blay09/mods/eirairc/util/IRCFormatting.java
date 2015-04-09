@@ -148,7 +148,7 @@ public enum IRCFormatting {
 	private static final Map<String, EnumChatFormatting> twitchColorMap = new HashMap<String, EnumChatFormatting>();
 	static {
 		twitchColorMap.put("#008000", EnumChatFormatting.DARK_GREEN);
-		twitchColorMap.put("#0000FF", EnumChatFormatting.DARK_BLUE);
+		twitchColorMap.put("#0000FF", EnumChatFormatting.BLUE);
 		twitchColorMap.put("#1E90FF", EnumChatFormatting.BLUE);
 		twitchColorMap.put("#FF0000", EnumChatFormatting.RED);
 		twitchColorMap.put("#006666", EnumChatFormatting.AQUA);
@@ -161,8 +161,13 @@ public enum IRCFormatting {
 		twitchColorMap.put("#D2691E", EnumChatFormatting.GOLD);
 		twitchColorMap.put("#5F9EA0", EnumChatFormatting.AQUA);
 		twitchColorMap.put("#FF69B4", EnumChatFormatting.LIGHT_PURPLE);
-		twitchColorMap.put("#8A2BE2", EnumChatFormatting.DARK_PURPLE);
+		twitchColorMap.put("#8A2BE2", EnumChatFormatting.LIGHT_PURPLE);
 		twitchColorMap.put("#00FF7F", EnumChatFormatting.GREEN);
+		twitchColorMap.put("#66CC00", EnumChatFormatting.GREEN);
+		twitchColorMap.put("#0099E6", EnumChatFormatting.BLUE);
+		twitchColorMap.put("#000000", EnumChatFormatting.GRAY);
+		twitchColorMap.put("#43005C", EnumChatFormatting.LIGHT_PURPLE);
+		twitchColorMap.put("#6BD5FF", EnumChatFormatting.BLUE);
 	}
 
 	public static EnumChatFormatting getColorFromTwitch(String twitchColor) {
