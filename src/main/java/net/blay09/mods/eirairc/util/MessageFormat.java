@@ -231,23 +231,14 @@ public class MessageFormat {
 					if(validToken) {
 						if(sb.length() > 0) {
 							IChatComponent newComponent;
-							if(root == null) {
-								root = new ChatComponentText(sb.toString());
-								newComponent = root;
-							} else {
-								newComponent = new ChatComponentText(sb.toString());
-								root.appendSibling(newComponent);
-							}
+							newComponent = new ChatComponentText(sb.toString());
+							root.appendSibling(newComponent);
 							if(nextColor != null) {
 								newComponent.getChatStyle().setColor(nextColor);
 							}
 							sb = new StringBuilder();
 						}
-						if(root == null) {
-							root = component;
-						} else {
-							root.appendSibling(component);
-						}
+						root.appendSibling(component);
 						if(nextColor != null) {
 							component.getChatStyle().setColor(nextColor);
 						}
@@ -265,13 +256,8 @@ public class MessageFormat {
 		}
 		if(sb.length() > 0) {
 			IChatComponent newComponent;
-			if(root == null) {
-				root = new ChatComponentText(sb.toString());
-				newComponent = root;
-			} else {
-				newComponent = new ChatComponentText(sb.toString());
-				root.appendSibling(newComponent);
-			}
+			newComponent = new ChatComponentText(sb.toString());
+			root.appendSibling(newComponent);
 			if(nextColor != null) {
 				newComponent.getChatStyle().setColor(nextColor);
 			}
@@ -343,23 +329,14 @@ public class MessageFormat {
 					if(validToken) {
 						if(sb.length() > 0) {
 							IChatComponent newComponent;
-							if(root == null) {
-								root = new ChatComponentText(sb.toString());
-								newComponent = root;
-							} else {
-								newComponent = new ChatComponentText(sb.toString());
-								root.appendSibling(newComponent);
-							}
+							newComponent = new ChatComponentText(sb.toString());
+							root.appendSibling(newComponent);
 							if(nextColor != null) {
 								newComponent.getChatStyle().setColor(nextColor);
 							}
 							sb = new StringBuilder();
 						}
-						if(root == null) {
-							root = component;
-						} else {
-							root.appendSibling(component);
-						}
+						root.appendSibling(component);
 						if(nextColor != null) {
 							component.getChatStyle().setColor(nextColor);
 						}
@@ -377,13 +354,8 @@ public class MessageFormat {
 		}
 		if(sb.length() > 0) {
 			IChatComponent newComponent;
-			if(root == null) {
-				root = new ChatComponentText(sb.toString());
-				newComponent = root;
-			} else {
-				newComponent = new ChatComponentText(sb.toString());
-				root.appendSibling(newComponent);
-			}
+			newComponent = new ChatComponentText(sb.toString());
+			root.appendSibling(newComponent);
 			if(nextColor != null) {
 				newComponent.getChatStyle().setColor(nextColor);
 			}

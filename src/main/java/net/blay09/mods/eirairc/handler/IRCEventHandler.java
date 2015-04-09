@@ -91,8 +91,8 @@ public class IRCEventHandler {
 		if(event.sender != null && event.sender.getName().equals("jtv") && event.connection.getHost().equals(Globals.TWITCH_SERVER)) {
 			if(event.message.startsWith("USERCOLOR ")) {
 				int lastSpace = event.message.lastIndexOf(' ');
-				String targetNick = event.message.substring(10, lastSpace - 1);
-				String targetColor = event.message.substring(lastSpace);
+				String targetNick = event.message.substring(10, lastSpace);
+				String targetColor = event.message.substring(lastSpace + 1);
 				IRCUserImpl user = (IRCUserImpl) event.connection.getOrCreateUser(targetNick);
 				user.setNameColor(IRCFormatting.getColorFromTwitch(targetColor));
 			}
