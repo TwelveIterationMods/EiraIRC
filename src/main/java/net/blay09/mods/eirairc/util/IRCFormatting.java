@@ -147,6 +147,7 @@ public enum IRCFormatting {
 
 	private static final Map<String, EnumChatFormatting> twitchColorMap = new HashMap<String, EnumChatFormatting>();
 	static {
+		// TODO I'm not sure if this is the right approach anymore. There just keep popping up new colors! Might have to use the RGB values and pick the closest one instead?
 		twitchColorMap.put("#008000", EnumChatFormatting.DARK_GREEN);
 		twitchColorMap.put("#0000FF", EnumChatFormatting.BLUE);
 		twitchColorMap.put("#1E90FF", EnumChatFormatting.BLUE);
@@ -168,6 +169,8 @@ public enum IRCFormatting {
 		twitchColorMap.put("#000000", EnumChatFormatting.GRAY);
 		twitchColorMap.put("#43005C", EnumChatFormatting.LIGHT_PURPLE);
 		twitchColorMap.put("#6BD5FF", EnumChatFormatting.BLUE);
+		twitchColorMap.put("#FF6BB5", EnumChatFormatting.LIGHT_PURPLE);
+		twitchColorMap.put("#AF551D", EnumChatFormatting.GOLD);
 	}
 
 	public static EnumChatFormatting getColorFromTwitch(String twitchColor) {
