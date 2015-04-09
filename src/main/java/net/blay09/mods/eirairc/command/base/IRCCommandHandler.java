@@ -125,7 +125,7 @@ public class IRCCommandHandler {
 	}
 
 	public static boolean onChatCommand(EntityPlayer sender, String text, boolean serverSide) {
-		if(text.startsWith("!who") || text.startsWith("!players")) {
+		if(text.equals("!who") || text.startsWith("!who ")) {
 			String[] params = text.substring(1).split(" ");
 			try {
 				return processCommand(sender, params, serverSide);
