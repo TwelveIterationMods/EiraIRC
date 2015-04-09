@@ -55,19 +55,18 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 		super(tabContainer, "<new>");
 		this.config = new ServerConfig();
 		isNew = true;
-		MinecraftForge.EVENT_BUS.register(this);
 	}
 
 	public GuiServerConfig(GuiTabContainer tabContainer, ServerConfig config) {
 		super(tabContainer, config.getAddress());
 		this.config = config;
-		MinecraftForge.EVENT_BUS.register(this);
 	}
 
 	@Override
 	public void initGui() {
 		super.initGui();
 		Keyboard.enableRepeatEvents(true);
+		MinecraftForge.EVENT_BUS.register(this);
 		allowSideClickClose = false;
 		title = config.getAddress().isEmpty() ? "<new>" : config.getAddress();
 
