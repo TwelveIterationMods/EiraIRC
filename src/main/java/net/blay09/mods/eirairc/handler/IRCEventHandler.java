@@ -96,6 +96,7 @@ public class IRCEventHandler {
 				IRCUserImpl user = (IRCUserImpl) event.connection.getOrCreateUser(targetNick);
 				user.setNameColor(IRCFormatting.getColorFromTwitch(targetColor));
 			}
+			return;
 		}
 		BotSettings botSettings = ConfigHelper.getBotSettings(null);
 		if(ConfigHelper.getGeneralSettings(event.sender).isMuted()) {
