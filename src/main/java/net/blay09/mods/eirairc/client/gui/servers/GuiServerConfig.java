@@ -1,13 +1,16 @@
 package net.blay09.mods.eirairc.client.gui.servers;
 
 import cpw.mods.fml.client.config.GuiConfig;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.blay09.mods.eirairc.EiraIRC;
+import net.blay09.mods.eirairc.api.event.*;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
 import net.blay09.mods.eirairc.client.gui.EiraGui;
 import net.blay09.mods.eirairc.client.gui.GuiEiraIRCConfig;
 import net.blay09.mods.eirairc.client.gui.base.GuiAdvancedTextField;
 import net.blay09.mods.eirairc.client.gui.base.GuiImageButton;
 import net.blay09.mods.eirairc.client.gui.base.GuiLabel;
+import net.blay09.mods.eirairc.client.gui.base.GuiToggleButton;
 import net.blay09.mods.eirairc.client.gui.base.list.GuiList;
 import net.blay09.mods.eirairc.client.gui.base.tab.GuiTabContainer;
 import net.blay09.mods.eirairc.client.gui.base.tab.GuiTabPage;
@@ -21,6 +24,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.GuiYesNoCallback;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.ConfigElement;
 import org.lwjgl.input.Keyboard;
 
@@ -41,6 +45,7 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 	private GuiButton btnOtherSettings;
 	private GuiButton btnAdvanced;
 	private GuiButton btnDelete;
+	private GuiButton btnConnect;
 
 	private boolean isNew;
 	private ChannelConfig deleteChannel;
@@ -49,11 +54,13 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 		super(tabContainer, "<new>");
 		this.config = new ServerConfig();
 		isNew = true;
+		MinecraftForge.EVENT_BUS.register(this);
 	}
 
 	public GuiServerConfig(GuiTabContainer tabContainer, ServerConfig config) {
 		super(tabContainer, config.getAddress());
 		this.config = config;
+		MinecraftForge.EVENT_BUS.register(this);
 	}
 
 	@Override
@@ -91,13 +98,21 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 		txtNick.setText(oldText);
 		textFieldList.add(txtNick);
 
-		labelList.add(new GuiLabel("Channels", rightX - 100, topY, Globals.TEXT_COLOR));
+		btnConnect = new GuiButton(8, rightX - 100, topY, 100, 20, "");
+		if(EiraIRC.instance.getConnectionManager().isConnectedTo(config.getIdentifier())) {
+			btnConnect.displayString = "Disconnect";
+		} else {
+			btnConnect.displayString = "Connect";
+		}
+		buttonList.add(btnConnect);
+
+		labelList.add(new GuiLabel("Channels", rightX - 100, topY + 25, Globals.TEXT_COLOR));
 
 		int oldSelectedIdx = -1;
 		if(lstChannels != null) {
 			oldSelectedIdx = lstChannels.getSelectedIdx();
 		}
-		lstChannels = new GuiList<GuiListEntryChannel>(this, rightX - 100, topY + 15, 100, 80, 20);
+		lstChannels = new GuiList<GuiListEntryChannel>(this, rightX - 100, topY + 35, 100, 60, 20);
 		for(ChannelConfig channelConfig : config.getChannelConfigs()) {
 			lstChannels.addEntry(new GuiListEntryChannel(this, fontRendererObj, channelConfig, lstChannels.getEntryHeight()));
 		}
@@ -171,14 +186,14 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 					connection = Utils.connectTo(config);
 				}
 				ChannelConfig channelConfig = lstChannels.getSelectedItem().getConfig();
-				if(connection.getChannel(channelConfig.getName()) != null) {
-					connection.part(channelConfig.getName());
-					lstChannels.getSelectedItem().setJoined(false);
-					setChannelJoinLeaveButtonState(false);
-				} else {
-					connection.join(channelConfig.getName(), channelConfig.getPassword());
-					lstChannels.getSelectedItem().setJoined(true);
-					setChannelJoinLeaveButtonState(true);
+				if(connection != null) {
+					if (connection.getChannel(channelConfig.getName()) != null) {
+						connection.part(channelConfig.getName());
+						setChannelJoinLeaveButtonState(false);
+					} else {
+						connection.join(channelConfig.getName(), channelConfig.getPassword());
+						setChannelJoinLeaveButtonState(true);
+					}
 				}
 			}
 		} else if(button == btnDelete) {
@@ -188,6 +203,62 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 			} else {
 				setOverlay(new OverlayYesNo(this, "Do you really want to delete this server configuration?", "This can't be undone, so be careful!", 0));
 			}
+		} else if(button == btnConnect) {
+			IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(config.getAddress());
+			if(connection != null) {
+				btnConnect.enabled = false;
+				btnConnect.displayString = "Disconnecting...";
+				connection.disconnect("");
+			} else {
+				btnConnect.enabled = false;
+				btnConnect.displayString = "Connecting...";
+				connection = Utils.connectTo(config);
+			}
+		}
+	}
+
+	@SubscribeEvent
+	public void onChannelJoined(IRCChannelJoinedEvent event) {
+		for(GuiListEntryChannel entry : lstChannels.getEntries()) {
+			if(entry.getConfig().getIdentifier().equals(event.channel.getIdentifier())) {
+				entry.setJoined(true);
+			}
+		}
+	}
+
+	@SubscribeEvent
+	public void onChannelLeft(IRCChannelLeftEvent event) {
+		for(GuiListEntryChannel entry : lstChannels.getEntries()) {
+			if(entry.getConfig().getIdentifier().equals(event.channel.getIdentifier())) {
+				entry.setJoined(false);
+			}
+		}
+	}
+
+	@SubscribeEvent
+	public void onDisconnect(IRCDisconnectEvent event) {
+		if(event.connection.getIdentifier().equals(config.getIdentifier())) {
+			btnConnect.enabled = true;
+			btnConnect.displayString = "Connect";
+			for(GuiListEntryChannel entry : lstChannels.getEntries()) {
+				entry.setJoined(false);
+			}
+		}
+	}
+
+	@SubscribeEvent
+	public void onConnect(IRCConnectEvent event) {
+		if(event.connection.getIdentifier().equals(config.getIdentifier())) {
+			btnConnect.enabled = true;
+			btnConnect.displayString = "Disconnect";
+		}
+	}
+
+	@SubscribeEvent
+	public void onConnectionFailed(IRCConnectionFailedEvent event) {
+		if(event.connection.getIdentifier().equals(config.getIdentifier())) {
+			btnConnect.enabled = true;
+			btnConnect.displayString = "Connect";
 		}
 	}
 
@@ -260,6 +331,7 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 		super.onGuiClosed();
 		Keyboard.enableRepeatEvents(false);
 		applyChanges();
+		MinecraftForge.EVENT_BUS.unregister(this);
 	}
 
 	public ServerConfig getServerConfig() {

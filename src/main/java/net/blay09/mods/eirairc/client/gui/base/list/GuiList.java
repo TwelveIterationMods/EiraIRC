@@ -1,5 +1,6 @@
 package net.blay09.mods.eirairc.client.gui.base.list;
 
+import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.client.gui.EiraGuiScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -182,5 +183,9 @@ public class GuiList<T extends GuiListEntry> extends Gui {
 
 	public int getWidth() {
 		return width;
+	}
+
+	public List<T> getEntries() {
+		return entries;
 	}
 }
