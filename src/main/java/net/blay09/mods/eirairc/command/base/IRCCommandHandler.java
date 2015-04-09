@@ -122,16 +122,16 @@ public class IRCCommandHandler {
 	}
 
 	public static boolean onChatCommand(EntityPlayer sender, String text, boolean serverSide) {
-		if(!text.startsWith("!")) {
-			return false;
+		if(text.startsWith("!who") || text.startsWith("!players")) {
+			String[] params = text.substring(1).split(" ");
+			try {
+				return processCommand(sender, params, serverSide);
+			} catch (WrongUsageException e) {
+				sender.addChatMessage(Utils.getLocalizedChatMessage("irc.general.usage", Utils.getLocalizedMessageNoPrefix(e.getMessage())));
+				return true;
+			}
 		}
-		String[] params = text.substring(1).split(" ");
-		try {
-			return processCommand(sender, params, serverSide);
-		} catch (WrongUsageException e) {
-			sender.addChatMessage(Utils.getLocalizedChatMessage("irc.general.usage", Utils.getLocalizedMessageNoPrefix(e.getMessage())));
-			return true;
-		}
+		return false;
 	}
 
 }
