@@ -167,6 +167,9 @@ public enum IRCFormatting {
 
 	public static EnumChatFormatting getColorFromTwitch(String twitchColor) {
 		EnumChatFormatting color = twitchColorMap.get(twitchColor);
+		if(color == null) {
+			System.out.println("Unknown Twitch Name Color: " + twitchColor);
+		}
 		return color != null ? color : EnumChatFormatting.WHITE;
 	}
 }

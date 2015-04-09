@@ -170,6 +170,7 @@ public class IRCUserImpl implements IRCUser {
 	public void setNameColor(EnumChatFormatting nameColor) {
 		this.nameColor = nameColor;
 	}
+
 	public EnumChatFormatting getNameColor() {
 		return nameColor;
 	}
