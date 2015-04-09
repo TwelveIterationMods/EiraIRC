@@ -117,7 +117,9 @@ public class IRCEventHandler {
 		if(notifyMsg.length() > 42) {
 			notifyMsg = notifyMsg.substring(0, 42) + "...";
 		}
-		EiraIRC.proxy.publishNotification(NotificationType.PrivateMessage, notifyMsg);
+		if(!event.isNotice) {
+			EiraIRC.proxy.publishNotification(NotificationType.PrivateMessage, notifyMsg);
+		}
 		EiraIRC.instance.getChatSessionHandler().addTargetUser(event.sender);
 		ThemeSettings theme = ConfigHelper.getTheme(event.sender);
 		EnumChatFormatting emoteColor = theme.getColor(ThemeColorComponent.emoteTextColor);
