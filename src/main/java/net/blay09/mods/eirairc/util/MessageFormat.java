@@ -182,7 +182,7 @@ public class MessageFormat {
 	}
 
 	public static IChatComponent formatChatComponent(String format, IRCContext context, ICommandSender sender, String message, Target target, Mode mode) {
-		IChatComponent root = null;
+		IChatComponent root = new ChatComponentText("");
 		EnumChatFormatting nextColor = null;
 		StringBuilder sb = new StringBuilder();
 		int currentIdx = 0;
@@ -292,7 +292,7 @@ public class MessageFormat {
 	}
 
 	public static IChatComponent formatChatComponent(String format, IRCConnection connection, IRCChannel channel, IRCUser user, String message, Target target, Mode mode) {
-		IChatComponent root = null;
+		IChatComponent root = new ChatComponentText("");
 		EnumChatFormatting nextColor = null;
 		StringBuilder sb = new StringBuilder();
 		int currentIdx = 0;
