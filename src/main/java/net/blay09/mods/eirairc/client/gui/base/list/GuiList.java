@@ -183,4 +183,8 @@ public class GuiList<T extends GuiListEntry> extends Gui {
 	public int getWidth() {
 		return width;
 	}
+
+	public List<T> getEntries() {
+		return entries;
+	}
 }
