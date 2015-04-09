@@ -2,6 +2,8 @@ package net.blay09.mods.eirairc.util;
 
 import net.minecraft.util.EnumChatFormatting;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -158,5 +160,30 @@ public enum IRCFormatting {
 			case 'f': return EnumChatFormatting.WHITE; // white
 		}
 		return null;
+	}
+
+	private static final Map<String, EnumChatFormatting> twitchColorMap = new HashMap<String, EnumChatFormatting>();
+	static {
+		twitchColorMap.put("#008000", EnumChatFormatting.DARK_GREEN);
+		twitchColorMap.put("#0000FF", EnumChatFormatting.DARK_BLUE);
+		twitchColorMap.put("#1E90FF", EnumChatFormatting.BLUE);
+		twitchColorMap.put("#FF0000", EnumChatFormatting.RED);
+		twitchColorMap.put("#006666", EnumChatFormatting.AQUA);
+		twitchColorMap.put("#B22222", EnumChatFormatting.DARK_RED);
+		twitchColorMap.put("#FF7F50", EnumChatFormatting.GOLD);
+		twitchColorMap.put("#9ACD32", EnumChatFormatting.GREEN);
+		twitchColorMap.put("#FF4500", EnumChatFormatting.GOLD);
+		twitchColorMap.put("#2E8B57", EnumChatFormatting.DARK_AQUA);
+		twitchColorMap.put("#DAA520", EnumChatFormatting.YELLOW);
+		twitchColorMap.put("#D2691E", EnumChatFormatting.GOLD);
+		twitchColorMap.put("#5F9EA0", EnumChatFormatting.AQUA);
+		twitchColorMap.put("#FF69B4", EnumChatFormatting.LIGHT_PURPLE);
+		twitchColorMap.put("#8A2BE2", EnumChatFormatting.DARK_PURPLE);
+		twitchColorMap.put("#00FF7F", EnumChatFormatting.GREEN);
+	}
+
+	public static EnumChatFormatting getColorFromTwitch(String twitchColor) {
+		EnumChatFormatting color = twitchColorMap.get(twitchColor);
+		return color != null ? color : EnumChatFormatting.WHITE;
 	}
 }

@@ -33,6 +33,10 @@ public class IRCConnectionHandler {
 	public void onConnected(IRCConnectEvent event) {
 		String mcMessage = Utils.getLocalizedMessage("irc.basic.connected", event.connection.getHost());
 		Utils.addMessageToChat(mcMessage);
+		// If this is a Twitch connection, tell the server that we're a JTVCLIENT so we receive name colors
+		if(event.connection.getHost().equals(Globals.TWITCH_SERVER)) {
+			event.connection.irc("JTVCLIENT");
+		}
 		ServerConfig serverConfig = ConfigHelper.getServerConfig(event.connection);
 		if(serverConfig.getAddress().equals(Globals.TWITCH_SERVER) && serverConfig.getNick() != null) {
 			serverConfig.getOrCreateChannelConfig("#" + serverConfig.getNick());

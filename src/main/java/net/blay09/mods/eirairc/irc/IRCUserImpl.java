@@ -12,6 +12,7 @@ import net.blay09.mods.eirairc.bot.IRCBotImpl;
 import net.blay09.mods.eirairc.config.settings.BotStringListComponent;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Utils;
+import net.minecraft.util.EnumChatFormatting;
 
 import java.util.*;
 
@@ -37,6 +38,7 @@ public class IRCUserImpl implements IRCUser {
 	private final List<QueuedAuthCommand> authCommandQueue = new ArrayList<QueuedAuthCommand>();
 	private String name;
 	private String authLogin;
+	private EnumChatFormatting nameColor;
 	
 	public IRCUserImpl(IRCConnectionImpl connection, String name) {
 		this.connection = connection;
@@ -163,5 +165,9 @@ public class IRCUserImpl implements IRCUser {
 				notice(Utils.getLocalizedMessage("irc.bot.noPermission"));
 			}
 		}
+	}
+
+	public void setNameColor(EnumChatFormatting nameColor) {
+		this.nameColor = nameColor;
 	}
 }
