@@ -7,9 +7,9 @@ import java.util.Collection;
 
 public interface IRCUser extends IRCContext {
 
-	public Collection<IRCChannel> getChannels();
-	public String getChannelModePrefix(IRCChannel channel);
-	public boolean isOperator(IRCChannel channel);
-	public boolean hasVoice(IRCChannel channel);
+	Collection<IRCChannel> getChannels();
+	String getChannelModePrefix(IRCChannel channel);
+	boolean isOperator(IRCChannel channel);
+	boolean hasVoice(IRCChannel channel);
 
 }

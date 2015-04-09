@@ -34,6 +34,7 @@ public class SharedGlobalConfig {
 	public static boolean hidePlayerTags = false;
 	public static boolean debugMode = false;
 	public static boolean preventUserPing = false;
+	public static boolean twitchNameColors = true;
 
 	// Network Settings
 	public static String bindIP = "";
@@ -65,6 +66,7 @@ public class SharedGlobalConfig {
 		}
 		hidePlayerTags = thisConfig.getBoolean("hidePlayerTags", GENERAL, hidePlayerTags, I19n.format("eirairc:config.property.hidePlayerTags.tooltip"), "eirairc:config.property.hidePlayerTags");
 		preventUserPing = thisConfig.getBoolean("preventUserPing", GENERAL, preventUserPing, I19n.format("eirairc:config.property.preventUserPing.tooltip"), "eirairc:config.property.preventUserPing");
+		twitchNameColors = thisConfig.getBoolean("twitchNameColors", GENERAL, twitchNameColors, I19n.format("eirairc:config.property.twitchNameColors.tooltip"), "eirairc:config.property.twitchNameColors");
 		debugMode = thisConfig.getBoolean("debugMode", GENERAL, debugMode, I19n.format("eirairc:config.property.debugMode.tooltip"), "eirairc:config.property.debugMode");
 
 		// Network
@@ -99,6 +101,7 @@ public class SharedGlobalConfig {
 		thisConfig.get(GENERAL, "colorBlacklist", new String[0], I19n.format("eirairc:config.property.colorBlacklist.tooltip")).set(colorBlacklist.toArray(new String[colorBlacklist.size()]));
 		thisConfig.get(GENERAL, "hidePlayerTags", false, I19n.format("eirairc:config.property.hidePlayerTags.tooltip")).set(hidePlayerTags);
 		thisConfig.get(GENERAL, "preventUserPing", false, I19n.format("eirairc:config.property.preventUserPing.tooltip")).set(preventUserPing);
+		thisConfig.get(GENERAL, "twitchNameColors", false, I19n.format("eirairc:config.property.twitchNameColors.tooltip")).set(twitchNameColors);
 		thisConfig.get(GENERAL, "debugMode", false, I19n.format("eirairc:config.property.debugMode.tooltip")).set(debugMode);
 
 		// Network
@@ -163,6 +166,8 @@ public class SharedGlobalConfig {
 			enablePlayerAliases = Boolean.parseBoolean(value);
 		} else if(key.equals("hidePlayerTags")) {
 			hidePlayerTags = Boolean.parseBoolean(value);
+		} else if(key.equals("twitchNameColors")) {
+			twitchNameColors = Boolean.parseBoolean(value);
 		} else if(key.equals("debugMode")) {
 			debugMode = Boolean.parseBoolean(value);
 		} else if(key.equals("bindIP")) {
@@ -194,6 +199,8 @@ public class SharedGlobalConfig {
 			value = String.valueOf(preventUserPing);
 		} else if(key.equals("hidePlayerTags")) {
 			value = String.valueOf(hidePlayerTags);
+		} else if(key.equals("twitchNameColors")) {
+			value = String.valueOf(twitchNameColors);
 		} else if(key.equals("debugMode")) {
 			value = String.valueOf(debugMode);
 		} else if(key.equals("bindIP")) {
@@ -223,12 +230,13 @@ public class SharedGlobalConfig {
 			list.add("enablePlayerColors");
 			list.add("preventUserPing");
 			list.add("hidePlayerTags");
+			list.add("twitchNameColors");
 			list.add("debugMode");
 			list.add("bindIP");
 			list.add("sslCustomTrustStore");
 			list.add("sslTrustAllCerts");
 			list.add("sslDisableDiffieHellman");
-		} else if(option.equals("enablePlayerColors") || option.equals("registerShortCommands") || option.equals("hidePlayerTags") || option.equals("sslTrustAllCerts") || option.equals("sslDisableDiffieHellman") || option.equals("preventUserPing")) {
+		} else if(option.equals("enablePlayerColors") || option.equals("registerShortCommands") || option.equals("hidePlayerTags") || option.equals("sslTrustAllCerts") || option.equals("sslDisableDiffieHellman") || option.equals("preventUserPing") || option.equals("twitchNameColors")) {
 			Utils.addBooleansToList(list);
 		}
 		ThemeSettings.addOptionsToList(list, option);

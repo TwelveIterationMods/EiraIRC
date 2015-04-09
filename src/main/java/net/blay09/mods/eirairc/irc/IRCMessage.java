@@ -55,7 +55,7 @@ public class IRCMessage {
 		if(end != -1) {
 			return prefix.substring(0, end);
 		}
-		return null;
+		return prefix;
 	}
 	
 	public String arg(int idx) {

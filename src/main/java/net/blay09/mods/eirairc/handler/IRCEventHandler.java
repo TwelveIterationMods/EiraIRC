@@ -13,6 +13,7 @@ import net.blay09.mods.eirairc.config.settings.BotBooleanComponent;
 import net.blay09.mods.eirairc.config.settings.BotSettings;
 import net.blay09.mods.eirairc.config.settings.ThemeColorComponent;
 import net.blay09.mods.eirairc.config.settings.ThemeSettings;
+import net.blay09.mods.eirairc.irc.IRCUserImpl;
 import net.blay09.mods.eirairc.util.*;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
@@ -86,6 +87,16 @@ public class IRCEventHandler {
 			MinecraftForge.EVENT_BUS.post(new IRCConnectionFailedEvent(event.connection, new RuntimeException("Wrong username or invalid oauth token.")));
 			return;
 		}
+		// Parse Twitch user colors if this is a message from jtv on irc.twitch.tv
+//		if(event.sender != null && event.sender.getName().equals("jtv") && event.connection.getHost().equals(Globals.TWITCH_SERVER)) {
+//			if(event.message.startsWith("USERCOLOR ")) {
+//				int lastSpace = event.message.lastIndexOf(' ');
+//				String targetNick = event.message.substring(10, lastSpace - 1);
+//				String targetColor = event.message.substring(lastSpace);
+//				IRCUserImpl user = (IRCUserImpl) event.connection.getOrCreateUser(targetNick);
+//				user.setNameColor(IRCFormatting.getColorFromTwitch(targetColor));
+//			}
+//		}
 		BotSettings botSettings = ConfigHelper.getBotSettings(null);
 		if(ConfigHelper.getGeneralSettings(event.sender).isMuted()) {
 			return;

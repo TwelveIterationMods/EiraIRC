@@ -19,6 +19,7 @@ import net.blay09.mods.eirairc.config.base.ServiceSettings;
 import net.blay09.mods.eirairc.config.settings.ThemeColorComponent;
 import net.blay09.mods.eirairc.config.settings.ThemeSettings;
 import net.blay09.mods.eirairc.irc.IRCConnectionImpl;
+import net.blay09.mods.eirairc.irc.IRCUserImpl;
 import net.blay09.mods.eirairc.irc.ssl.IRCConnectionSSLImpl;
 import net.blay09.mods.eirairc.net.EiraPlayerInfo;
 import net.minecraft.client.Minecraft;
@@ -245,6 +246,10 @@ public class Utils {
 
 	@Nullable
 	public static EnumChatFormatting getColorFormattingForUser(IRCChannel channel, IRCUser user) {
+		EnumChatFormatting nameColor = ((IRCUserImpl) user).getNameColor();
+		if(nameColor != null && SharedGlobalConfig.twitchNameColors) {
+			return nameColor;
+		}
 		ThemeSettings theme = ConfigHelper.getTheme(channel);
 		if(channel == null) {
 			return theme.getColor(ThemeColorComponent.ircPrivateNameColor);
