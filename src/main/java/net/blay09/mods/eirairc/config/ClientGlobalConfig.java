@@ -56,8 +56,10 @@ public class ClientGlobalConfig {
 	public static boolean chatNoOverride = false;
 	public static boolean registerShortCommands = true;
 
-	public static void load(File configDir) {
-		thisConfig = new Configuration(new File(configDir, "client.cfg"));
+	public static void load(File configDir, boolean reloadFile) {
+		if(thisConfig == null || reloadFile) {
+			thisConfig = new Configuration(new File(configDir, "client.cfg"));
+		}
 
 		// General
 		registerShortCommands = thisConfig.getBoolean("registerShortCommands", GENERAL, registerShortCommands, I19n.format("eirairc:config.property.registerShortCommands.tooltip"), "eirairc:config.property.registerShortCommands");
