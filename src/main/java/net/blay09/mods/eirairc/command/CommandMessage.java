@@ -89,7 +89,7 @@ public class CommandMessage implements SubCommand {
 
 	@Override
 	public boolean hasQuickCommand() {
-		return true;
+		return false;
 	}
 
 }
