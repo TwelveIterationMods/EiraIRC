@@ -115,7 +115,9 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 		for(ChannelConfig channelConfig : config.getChannelConfigs()) {
 			lstChannels.addEntry(new GuiListEntryChannel(this, fontRendererObj, channelConfig, lstChannels.getEntryHeight()));
 		}
-		lstChannels.setSelectedIdx(oldSelectedIdx);
+		if(oldSelectedIdx < lstChannels.getEntries().size()) {
+			lstChannels.setSelectedIdx(oldSelectedIdx);
+		}
 		listList.add(lstChannels);
 
 		btnChannelJoinLeave = new GuiImageButton(7, rightX - 95, topY + 100, EiraGui.atlas.findRegion("button_join"));

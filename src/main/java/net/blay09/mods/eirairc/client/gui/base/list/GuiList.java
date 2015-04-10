@@ -1,6 +1,5 @@
 package net.blay09.mods.eirairc.client.gui.base.list;
 
-import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.client.gui.EiraGuiScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -157,13 +156,6 @@ public class GuiList<T extends GuiListEntry> extends Gui {
 	public void addEntry(T entry) {
 		entry.setParentList(this);
 		entries.add(entry);
-	}
-
-	public void removeEntry(T entry) {
-		if(getSelectedItem() == entry) {
-			selectedIdx = -1;
-		}
-		entries.remove(entry);
 	}
 
 	public int getEntryHeight() {

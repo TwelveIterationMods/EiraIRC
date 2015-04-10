@@ -1,5 +1,6 @@
 package net.blay09.mods.eirairc.client.gui;
 
+import cpw.mods.fml.client.config.GuiCheckBox;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.blay09.mods.eirairc.api.event.IRCConnectEvent;
 import net.blay09.mods.eirairc.api.event.IRCConnectionFailedEvent;
@@ -9,6 +10,7 @@ import net.blay09.mods.eirairc.client.gui.base.GuiLabel;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.api.IRCReplyCodes;
+import net.blay09.mods.eirairc.config.settings.GeneralBooleanComponent;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
@@ -25,6 +27,7 @@ public class GuiTwitch extends EiraGuiScreen implements GuiYesNoCallback {
 	private static final ResourceLocation twitchLogo = new ResourceLocation("eirairc", "gfx/twitch_logo.png");
 
 	private ServerConfig config;
+	private GuiCheckBox chkAnonymous;
 	private GuiTextField txtUsername;
 	private GuiAdvancedTextField txtPassword;
 	private GuiButton btnOAuthHelp;
@@ -39,10 +42,20 @@ public class GuiTwitch extends EiraGuiScreen implements GuiYesNoCallback {
 	public void initGui() {
 		super.initGui();
 		Keyboard.enableRepeatEvents(true);
+		MinecraftForge.EVENT_BUS.register(this);
 
-		final int topX = height / 2 - 30;
+		final int topY = height / 2 - 30;
 
-		labelList.add(new GuiLabel("Twitch Username", width / 2 - 90, topX, Globals.TEXT_COLOR));
+		boolean oldChecked;
+		if(chkAnonymous != null) {
+			oldChecked = chkAnonymous.isChecked();
+		} else {
+			oldChecked = config.getNick().equals("%ANONYMOUS%");
+		}
+		chkAnonymous = new GuiCheckBox(2, width / 2 - 90, topY, "Login anonymously (read-only)", oldChecked);
+		buttonList.add(chkAnonymous);
+
+		labelList.add(new GuiLabel("Twitch Username", width / 2 - 90, topY + 20, Globals.TEXT_COLOR));
 
 		String oldText;
 		if(txtUsername != null) {
@@ -50,28 +63,34 @@ public class GuiTwitch extends EiraGuiScreen implements GuiYesNoCallback {
 		} else {
 			oldText = config.getNick();
 		}
-		txtUsername = new GuiTextField(fontRendererObj, width / 2 - 90, topX + 15, 180, 15);
+		txtUsername = new GuiTextField(fontRendererObj, width / 2 - 90, topY + 35, 180, 15);
 		txtUsername.setMaxStringLength(Integer.MAX_VALUE);
 		txtUsername.setText(oldText);
 		textFieldList.add(txtUsername);
 
-		labelList.add(new GuiLabel("O-Auth Token", width / 2 - 90, topX + 40, Globals.TEXT_COLOR));
+		labelList.add(new GuiLabel("O-Auth Token", width / 2 - 90, topY + 60, Globals.TEXT_COLOR));
 
 		if(txtPassword != null) {
 			oldText = txtPassword.getText();
 		} else {
 			oldText = config.getServerPassword();
 		}
-		txtPassword = new GuiAdvancedTextField(fontRendererObj, width / 2 - 90, topX + 55, 180, 15);
+		txtPassword = new GuiAdvancedTextField(fontRendererObj, width / 2 - 90, topY + 75, 180, 15);
 		txtPassword.setDefaultPasswordChar();
 		txtPassword.setText(oldText);
 		textFieldList.add(txtPassword);
 
-		btnOAuthHelp = new GuiButton(0, width / 2 + 94, topX + 52, 20, 20, "?");
+		btnOAuthHelp = new GuiButton(0, width / 2 + 94, topY + 72, 20, 20, "?");
 		buttonList.add(btnOAuthHelp);
 
-		btnConnect = new GuiButton(1, width / 2 - 100, topX + 90, "Connect");
+		btnConnect = new GuiButton(1, width / 2 - 100, topY + 100, "Connect");
 		buttonList.add(btnConnect);
+
+		if(chkAnonymous.isChecked()) {
+			txtUsername.setEnabled(false);
+			txtPassword.setEnabled(false);
+			btnOAuthHelp.enabled = false;
+		}
 	}
 
 	@Override
@@ -79,13 +98,32 @@ public class GuiTwitch extends EiraGuiScreen implements GuiYesNoCallback {
 		if(button == btnOAuthHelp) {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiConfirmOpenLink(this, Globals.TWITCH_OAUTH, 0, true));
 		} else if(button == btnConnect) {
-			config.setNick(txtUsername.getText());
-			config.setServerPassword(txtPassword.getText());
-			if(!config.getNick().isEmpty() && !config.getServerPassword().isEmpty()) {
+			if(chkAnonymous.isChecked()) {
+				config.setNick("%ANONYMOUS%");
+				config.setServerPassword("");
+				config.getGeneralSettings().setBoolean(GeneralBooleanComponent.ReadOnly, true);
 				btnConnect.enabled = false;
-				MinecraftForge.EVENT_BUS.register(this);
 				ConfigurationHandler.addServerConfig(config);
 				Utils.connectTo(config);
+			} else {
+				config.setNick(txtUsername.getText());
+				config.setServerPassword(txtPassword.getText());
+				config.getGeneralSettings().setBoolean(GeneralBooleanComponent.ReadOnly, false);
+				if(!config.getNick().isEmpty() && !config.getServerPassword().isEmpty()) {
+					btnConnect.enabled = false;
+					ConfigurationHandler.addServerConfig(config);
+					Utils.connectTo(config);
+				}
+			}
+		} else if(button == chkAnonymous) {
+			if(chkAnonymous.isChecked()) {
+				txtUsername.setEnabled(false);
+				txtPassword.setEnabled(false);
+				btnOAuthHelp.enabled = false;
+			} else {
+				txtUsername.setEnabled(true);
+				txtPassword.setEnabled(true);
+				btnOAuthHelp.enabled = true;
 			}
 		}
 	}
@@ -93,7 +131,6 @@ public class GuiTwitch extends EiraGuiScreen implements GuiYesNoCallback {
 	@SubscribeEvent
 	public void onSuccess(IRCConnectEvent event) {
 		if(event.connection.getHost().equals(Globals.TWITCH_SERVER)) {
-			MinecraftForge.EVENT_BUS.unregister(this);
 			gotoPrevious();
 		}
 	}
@@ -101,15 +138,13 @@ public class GuiTwitch extends EiraGuiScreen implements GuiYesNoCallback {
 	@SubscribeEvent
 	public void onFailure(IRCConnectionFailedEvent event) {
 		if(event.connection.getHost().equals(Globals.TWITCH_SERVER)) {
-			MinecraftForge.EVENT_BUS.unregister(this);
 			btnConnect.enabled = true;
 		}
 	}
 
 	@SubscribeEvent
 	public void onWrongPassword(IRCErrorEvent event) {
-		if(event.numeric == IRCReplyCodes.ERR_PASSWDMISMATCH) {
-			MinecraftForge.EVENT_BUS.unregister(this);
+		if(event.numeric == IRCReplyCodes.ERR_PASSWDMISMATCH && event.connection.getHost().equals(Globals.TWITCH_SERVER)) {
 			btnConnect.enabled = true;
 		}
 	}
@@ -126,6 +161,7 @@ public class GuiTwitch extends EiraGuiScreen implements GuiYesNoCallback {
 	public void onGuiClosed() {
 		super.onGuiClosed();
 		Keyboard.enableRepeatEvents(false);
+		MinecraftForge.EVENT_BUS.unregister(this);
 	}
 
 	@Override
