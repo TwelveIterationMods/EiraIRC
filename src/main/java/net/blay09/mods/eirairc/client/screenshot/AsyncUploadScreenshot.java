@@ -10,8 +10,9 @@ public class AsyncUploadScreenshot implements Runnable {
 	private final UploadHoster hoster;
 	private final Screenshot screenshot;
 	private final ScreenshotAction followUpAction;
+	private UploadedFile uploadedFile;
 	private boolean complete;
-	
+
 	public AsyncUploadScreenshot(UploadHoster hoster, Screenshot screenshot, ScreenshotAction followUpAction) {
 		this.hoster = hoster;
 		this.screenshot = screenshot;
@@ -22,7 +23,7 @@ public class AsyncUploadScreenshot implements Runnable {
 	
 	@Override
 	public void run() {
-		UploadedFile uploadedFile = hoster.uploadFile(screenshot.getFile(), ClientGlobalConfig.uploadBufferSize);
+		uploadedFile = hoster.uploadFile(screenshot.getFile(), ClientGlobalConfig.uploadBufferSize);
 		screenshot.setUploadedFile(uploadedFile);
 		complete = true;
 	}
@@ -39,4 +40,7 @@ public class AsyncUploadScreenshot implements Runnable {
 		return screenshot;
 	}
 
+	public UploadedFile getUploadedFile() {
+		return uploadedFile;
+	}
 }
