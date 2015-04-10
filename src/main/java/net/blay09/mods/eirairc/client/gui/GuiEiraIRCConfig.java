@@ -16,9 +16,7 @@ import net.minecraftforge.common.config.Property;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Blay09 on 03.10.2014.
- */
+
 public class GuiEiraIRCConfig extends GuiConfig {
 
 	public GuiEiraIRCConfig(GuiScreen parentScreen) {

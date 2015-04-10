@@ -5,9 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import org.lwjgl.opengl.GL11;
 
-/**
- * Created by Blay09 on 10.10.2014.
- */
+
 public class GuiImageButton extends GuiButton {
 
 	private static final float FADE_PER_FRAME = 0.05f;

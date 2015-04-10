@@ -7,9 +7,7 @@ import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.minecraft.client.gui.GuiScreen;
 
-/**
- * Created by Blay09 on 04.10.2014.
- */
+
 public class GuiServerConfigContainer extends GuiTabContainer {
 
 	public GuiServerConfigContainer(GuiScreen parentScreen) {
@@ -30,10 +28,9 @@ public class GuiServerConfigContainer extends GuiTabContainer {
 		pages.add(new DummyTabPage(this, "+") {
 			@Override
 			public void tabClicked() {
-				for(int i = 0; i < pages.size(); i++) {
-					GuiTabPage tabPage = pages.get(i);
-					if(tabPage instanceof GuiServerConfig) {
-						if(((GuiServerConfig) tabPage).isNew()) {
+				for(GuiTabPage tabPage : pages) {
+					if (tabPage instanceof GuiServerConfig) {
+						if (((GuiServerConfig) tabPage).isNew()) {
 							setCurrentTab(tabPage, false);
 							return;
 						}

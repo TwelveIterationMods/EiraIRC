@@ -7,7 +7,10 @@ import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.irc.IRCConnectionImpl;
 import net.blay09.mods.eirairc.util.Utils;
 
-import javax.net.ssl.*;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
 import java.io.*;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
@@ -17,8 +20,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class IRCConnectionSSLImpl extends IRCConnectionImpl {
-
-	private SSLSocket sslSocket;
 
 	public IRCConnectionSSLImpl(ServerConfig serverConfig, String nick) {
 		super(serverConfig, nick);
@@ -40,6 +41,7 @@ public class IRCConnectionSSLImpl extends IRCConnectionImpl {
 		Proxy proxy = createProxy();
 		for (int i = 0; i < ports.length; i++) {
 			try {
+				SSLSocket sslSocket;
 				if (proxy != null) {
 					Socket underlying = new Socket(proxy);
 					underlying.connect(new InetSocketAddress(host, ports[i]));

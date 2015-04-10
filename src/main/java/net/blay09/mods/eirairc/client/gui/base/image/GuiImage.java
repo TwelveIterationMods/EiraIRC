@@ -1,6 +1,5 @@
 package net.blay09.mods.eirairc.client.gui.base.image;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureUtil;
@@ -10,16 +9,9 @@ import org.lwjgl.opengl.GL11;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-/**
- * Created by Blay09 on 10.10.2014.
- */
+// Copyright (c) 2014, Christopher "blay09" Baker
+// All rights reserved.
 public abstract class GuiImage extends AbstractTexture {
-
-	private final Minecraft mc;
-
-	public GuiImage() {
-		this.mc = Minecraft.getMinecraft();
-	}
 
 	public void loadTexture() {
 		try {

@@ -8,9 +8,7 @@ import net.minecraft.client.gui.GuiScreen;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Blay09 on 04.10.2014.
- */
+
 public class GuiTabContainer extends EiraGuiScreen {
 
 	private final List<GuiTabHeader> headers = new ArrayList<GuiTabHeader>();

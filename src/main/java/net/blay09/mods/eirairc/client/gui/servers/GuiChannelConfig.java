@@ -19,9 +19,7 @@ import net.minecraft.client.gui.GuiYesNoCallback;
 import net.minecraftforge.common.config.ConfigElement;
 import org.lwjgl.input.Keyboard;
 
-/**
- * Created by Blay09 on 04.10.2014.
- */
+
 public class GuiChannelConfig extends GuiTabPage implements GuiYesNoCallback {
 
 	private final GuiServerConfig parent;

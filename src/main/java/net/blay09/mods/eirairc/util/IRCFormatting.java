@@ -7,9 +7,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Created by Blay09 on 01.09.2014.
- */
+
 public enum IRCFormatting {
 
 	BOLD("\u0002", "l"),

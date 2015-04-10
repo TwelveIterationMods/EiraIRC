@@ -9,9 +9,7 @@ import net.minecraft.client.gui.GuiButton;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-/**
- * Created by Christopher on 19.01.2015.
- */
+
 public class GuiErrorScreen extends EiraGuiScreen {
 
     private final String errorLangKey;

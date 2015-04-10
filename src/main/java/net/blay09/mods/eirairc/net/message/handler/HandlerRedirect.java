@@ -9,9 +9,7 @@ import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.net.message.MessageRedirect;
 
-/**
- * Created by Christopher on 23.12.2014.
- */
+
 public class HandlerRedirect implements IMessageHandler<MessageRedirect, IMessage> {
 
     @Override

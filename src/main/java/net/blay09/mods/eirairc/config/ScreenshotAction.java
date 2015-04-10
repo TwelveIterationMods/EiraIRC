@@ -1,8 +1,6 @@
 package net.blay09.mods.eirairc.config;
 
-/**
- * Created by Blay09 on 02.10.2014.
- */
+
 public enum ScreenshotAction {
 	None,
 	Upload,

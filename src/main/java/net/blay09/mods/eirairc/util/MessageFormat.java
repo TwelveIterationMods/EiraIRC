@@ -16,9 +16,7 @@ import net.minecraft.util.IChatComponent;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Created by Blay09 on 01.09.2014.
- */
+
 public class MessageFormat {
 
 	public enum Target {
@@ -28,7 +26,7 @@ public class MessageFormat {
 
 	public enum Mode {
 		Message,
-		Emote;
+		Emote
 	}
 
 	private static final Pattern playerTagPattern = Pattern.compile("[\\[][^\\]]+[\\]]");

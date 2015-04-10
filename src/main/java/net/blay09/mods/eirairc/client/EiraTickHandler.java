@@ -13,7 +13,6 @@ import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.client.gui.GuiEiraIRCMenu;
 import net.blay09.mods.eirairc.client.gui.GuiWelcome;
 import net.blay09.mods.eirairc.client.gui.chat.GuiChatExtended;
-import net.blay09.mods.eirairc.client.gui.chat.GuiEiraChat;
 import net.blay09.mods.eirairc.client.gui.screenshot.GuiScreenshots;
 import net.blay09.mods.eirairc.client.screenshot.Screenshot;
 import net.blay09.mods.eirairc.client.screenshot.ScreenshotManager;
@@ -29,7 +28,6 @@ import org.lwjgl.input.Keyboard;
 
 public class EiraTickHandler {
 
-	private final GuiEiraChat eiraChat;
 	private final ChatSessionHandler chatSession;
 	private final int keyChat;
 	private final int keyCommand;
@@ -38,8 +36,7 @@ public class EiraTickHandler {
 	private long lastToggleTarget;
 	private boolean wasToggleTargetDown;
 
-	public EiraTickHandler(GuiEiraChat eiraChat) {
-		this.eiraChat = eiraChat;
+	public EiraTickHandler() {
 		this.chatSession = EiraIRC.instance.getChatSessionHandler();
 		keyChat = Minecraft.getMinecraft().gameSettings.keyBindChat.getKeyCode();
 		keyCommand = Minecraft.getMinecraft().gameSettings.keyBindCommand.getKeyCode();

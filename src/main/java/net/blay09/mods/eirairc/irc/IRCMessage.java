@@ -26,8 +26,9 @@ public class IRCMessage {
 	public int getNumericCommand() {
 		try {
 			return Integer.parseInt(command);
-		} catch (NumberFormatException e) { }
-		return -1;
+		} catch (NumberFormatException e) {
+			return -1;
+		}
 	}
 	
 	public String getHostName() {

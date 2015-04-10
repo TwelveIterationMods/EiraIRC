@@ -10,14 +10,13 @@ public class AsyncUploadScreenshot implements Runnable {
 	private final UploadHoster hoster;
 	private final Screenshot screenshot;
 	private final ScreenshotAction followUpAction;
-	private final Thread thread;
 	private boolean complete;
 	
 	public AsyncUploadScreenshot(UploadHoster hoster, Screenshot screenshot, ScreenshotAction followUpAction) {
 		this.hoster = hoster;
 		this.screenshot = screenshot;
 		this.followUpAction = followUpAction;
-		thread = new Thread(this, "ScreenshotUpload");
+		Thread thread = new Thread(this, "ScreenshotUpload");
 		thread.start();
 	}
 	

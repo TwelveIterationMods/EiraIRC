@@ -23,7 +23,6 @@ import net.minecraft.client.gui.GuiYesNoCallback;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.util.IChatComponent;
 import net.minecraftforge.client.ClientCommandHandler;
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import java.net.MalformedURLException;
@@ -37,8 +36,6 @@ public class GuiChatExtended extends GuiChat implements GuiYesNoCallback {
 	private ChatSessionHandler chatSession;
 	private String defaultInputText;
 	private GuiButton btnOptions;
-	
-	private URL clickedURL;
 
 	public GuiChatExtended() {
 		this("");
@@ -101,7 +98,6 @@ public class GuiChatExtended extends GuiChat implements GuiYesNoCallback {
 										mc.displayGuiScreen(new GuiImagePreview(new URL(params[2]), new URL(params[1])));
 									} else {
 										if(mc.gameSettings.chatLinksPrompt) {
-											clickedURL = new URL(params[1]);
 											mc.displayGuiScreen(new GuiConfirmOpenLink(this, params[1], 0, false));
 										} else {
 											Utils.openWebpage(params[1]);

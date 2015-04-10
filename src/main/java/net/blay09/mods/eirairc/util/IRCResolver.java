@@ -15,9 +15,6 @@ public class IRCResolver {
 
 	public static boolean isChannel(String path) {
 		path = stripPath(path);
-		if(!Character.isAlphabetic(path.charAt(0))) {
-			return true;
-		}
-		return false;
+		return !Character.isAlphabetic(path.charAt(0));
 	}
 }

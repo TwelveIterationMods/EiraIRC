@@ -9,9 +9,7 @@ import net.blay09.mods.eirairc.util.Utils;
 
 import java.util.*;
 
-/**
- * Created by Blay09 on 03.10.2014.
- */
+
 public class ConnectionManager {
 
 	private final Map<String, IRCConnection> connections = new HashMap<String, IRCConnection>();

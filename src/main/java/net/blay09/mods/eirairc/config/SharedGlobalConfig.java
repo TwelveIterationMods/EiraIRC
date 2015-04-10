@@ -13,9 +13,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Blay09 on 29.09.2014.
- */
+
 public class SharedGlobalConfig {
 
 	public static final String GENERAL = "general";

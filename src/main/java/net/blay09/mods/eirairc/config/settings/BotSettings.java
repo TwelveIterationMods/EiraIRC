@@ -16,9 +16,6 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by Blay09 on 02.10.2014.
- */
 public class BotSettings {
 
 	private final BotSettings parent;
@@ -43,11 +40,11 @@ public class BotSettings {
 		} else {
 			list = stringLists.get(component);
 		}
-		for(int i = 0; i < list.length; i++) {
-			if(component.allowWildcard && list[i].equals("*")) {
+		for(String entry : list) {
+			if (component.allowWildcard && entry.equals("*")) {
 				return true;
 			}
-			if(s.contains(list[i])) {
+			if (s.contains(entry)) {
 				return true;
 			}
 		}
@@ -64,11 +61,11 @@ public class BotSettings {
 		} else {
 			list = stringLists.get(component);
 		}
-		for(int i = 0; i < list.length; i++) {
-			if(component.allowWildcard && list[i].equals("*")) {
+		for(String entry : list) {
+			if (component.allowWildcard && entry.equals("*")) {
 				return true;
 			}
-			if(list[i].equals(s)) {
+			if (entry.equals(s)) {
 				return true;
 			}
 		}

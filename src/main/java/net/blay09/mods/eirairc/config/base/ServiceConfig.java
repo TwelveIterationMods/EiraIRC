@@ -54,8 +54,8 @@ public class ServiceConfig {
 			String cmdGhost = Utils.unquote(config.get(qname, "cmdGhost", "").getString());
 			ServiceSettings nss = new ServiceSettings(cmdIdentify, cmdGhost);
 			String[] serverList = config.get(qname, "serverList", new String[0]).getStringList();
-			for(int i = 0; i < serverList.length; i++) {
-				serverMap.put(Utils.unquote(serverList[i]), nss);
+			for(String entry : serverList) {
+				serverMap.put(Utils.unquote(entry), nss);
 			}
 		}
 	}

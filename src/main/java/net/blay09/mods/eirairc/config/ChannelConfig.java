@@ -94,7 +94,14 @@ public class ChannelConfig {
 	}
 
 	public void handleConfigCommand(ICommandSender sender, String key) {
-		String value = null;
+		String value;
+		value = generalSettings.handleConfigCommand(sender, key);
+		if(value == null) {
+			value = botSettings.handleConfigCommand(sender, key);
+		}
+		if(value == null) {
+			value = theme.handleConfigCommand(sender, key);
+		}
 		if(value != null) {
 			Utils.sendLocalizedMessage(sender, "irc.config.lookup", name, key, value);
 		} else {
@@ -103,7 +110,7 @@ public class ChannelConfig {
 	}
 
 	public void handleConfigCommand(ICommandSender sender, String key, String value) {
-		if(true) {
+		if(!generalSettings.handleConfigCommand(sender, key, value) && !botSettings.handleConfigCommand(sender, key, value) && !theme.handleConfigCommand(sender, key, value)) {
 			Utils.sendLocalizedMessage(sender, "irc.config.invalidOption", name, key, value);
 			return;
 		}

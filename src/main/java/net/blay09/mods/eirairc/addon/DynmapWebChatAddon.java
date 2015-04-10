@@ -16,9 +16,7 @@ import net.minecraftforge.common.MinecraftForge;
 import org.dynmap.DynmapCommonAPI;
 import org.dynmap.DynmapCommonAPIListener;
 
-/**
- * Created by Blay09 on 07.02.2015.
- */
+
 @Optional.Interface(iface = "org.dynmap.DynmapCommonAPIListener", modid = "Dynmap")
 public class DynmapWebChatAddon extends DynmapCommonAPIListener {
 

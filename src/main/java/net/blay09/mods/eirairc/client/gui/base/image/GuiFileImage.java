@@ -5,9 +5,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-/**
- * Created by Blay09 on 10.10.2014.
- */
+
 public class GuiFileImage extends GuiImage {
 
 	private final File file;

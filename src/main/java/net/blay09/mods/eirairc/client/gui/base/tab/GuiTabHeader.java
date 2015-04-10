@@ -7,9 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import org.lwjgl.opengl.GL11;
 
-/**
- * Created by Blay09 on 05.10.2014.
- */
+
 public class GuiTabHeader extends Gui {
 
 	private Minecraft mc;

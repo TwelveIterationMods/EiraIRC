@@ -10,7 +10,6 @@ import net.blay09.mods.eirairc.client.gui.GuiEiraIRCConfig;
 import net.blay09.mods.eirairc.client.gui.base.GuiAdvancedTextField;
 import net.blay09.mods.eirairc.client.gui.base.GuiImageButton;
 import net.blay09.mods.eirairc.client.gui.base.GuiLabel;
-import net.blay09.mods.eirairc.client.gui.base.GuiToggleButton;
 import net.blay09.mods.eirairc.client.gui.base.list.GuiList;
 import net.blay09.mods.eirairc.client.gui.base.tab.GuiTabContainer;
 import net.blay09.mods.eirairc.client.gui.base.tab.GuiTabPage;
@@ -28,9 +27,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.ConfigElement;
 import org.lwjgl.input.Keyboard;
 
-/**
- * Created by Blay09 on 04.10.2014.
- */
+
 public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 
 	private ServerConfig config;
@@ -213,7 +210,7 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 			} else {
 				btnConnect.enabled = false;
 				btnConnect.displayString = "Connecting...";
-				connection = Utils.connectTo(config);
+				Utils.connectTo(config);
 			}
 		}
 	}

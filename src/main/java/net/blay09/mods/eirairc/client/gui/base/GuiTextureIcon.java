@@ -2,9 +2,7 @@ package net.blay09.mods.eirairc.client.gui.base;
 
 import net.minecraft.util.IIcon;
 
-/**
- * Created by Blay09 on 02.11.2014.
- */
+
 public class GuiTextureIcon implements IIcon {
 
 	private final String name;

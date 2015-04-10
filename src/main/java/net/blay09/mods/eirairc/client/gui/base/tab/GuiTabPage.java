@@ -3,9 +3,7 @@ package net.blay09.mods.eirairc.client.gui.base.tab;
 import net.blay09.mods.eirairc.client.gui.EiraGuiScreen;
 import net.minecraft.client.gui.GuiScreen;
 
-/**
- * Created by Blay09 on 04.10.2014.
- */
+
 public abstract class GuiTabPage extends EiraGuiScreen {
 
 	protected String title;

@@ -10,7 +10,6 @@ import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.event.IRCChannelChatEvent;
 import net.blay09.mods.eirairc.client.gui.EiraGui;
 import net.blay09.mods.eirairc.client.gui.GuiEiraIRCRedirect;
-import net.blay09.mods.eirairc.client.gui.chat.GuiEiraChat;
 import net.blay09.mods.eirairc.client.gui.overlay.OverlayNotification;
 import net.blay09.mods.eirairc.client.screenshot.ScreenshotManager;
 import net.blay09.mods.eirairc.command.base.IRCCommandHandler;
@@ -32,7 +31,6 @@ import java.util.List;
 
 public class ClientProxy extends CommonProxy {
 
-	private GuiEiraChat eiraChat;
 	private OverlayNotification notificationGUI;
 
 	private static final KeyBinding[] keyBindings = new KeyBinding[] {
@@ -44,14 +42,12 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public void init() {
-		eiraChat = new GuiEiraChat();
-		
 		notificationGUI = new OverlayNotification();
 		ScreenshotManager.create();
-		FMLCommonHandler.instance().bus().register(new EiraTickHandler(eiraChat));
+		FMLCommonHandler.instance().bus().register(new EiraTickHandler());
 
-		for(int i = 0; i < keyBindings.length; i++) {
-			ClientRegistry.registerKeyBinding(keyBindings[i]);
+		for(KeyBinding keyBinding : keyBindings) {
+			ClientRegistry.registerKeyBinding(keyBinding);
 		}
 
 		// Dirty hack to stop toggle target overshadowing player list key when they share the same key code (they do by default)
@@ -128,11 +124,7 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public boolean handleConfigCommand(ICommandSender sender, String key, String value) {
-		if(!super.handleConfigCommand(sender, key, value)) {
-			return ClientGlobalConfig.handleConfigCommand(sender, key, value);
-		} else {
-			return true;
-		}
+		return super.handleConfigCommand(sender, key, value) || ClientGlobalConfig.handleConfigCommand(sender, key, value);
 	}
 
 	@Override

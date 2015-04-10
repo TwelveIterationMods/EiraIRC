@@ -1,8 +1,6 @@
 package net.blay09.mods.eirairc.config.settings;
 
-/**
- * Created by Blay09 on 02.10.2014.
- */
+
 public enum BotStringComponent {
 	Ident("ident", "EiraIRC", "eirairc:config.property.ident"),
 	Description("description", "EiraIRC Bot", "eirairc:config.property.description"),

@@ -18,7 +18,7 @@ public enum IRCTargetError implements IRCContext {
 
 	private String errorString;
 	
-	private IRCTargetError(String errorString) {
+	IRCTargetError(String errorString) {
 		this.errorString = errorString;
 	}
 	

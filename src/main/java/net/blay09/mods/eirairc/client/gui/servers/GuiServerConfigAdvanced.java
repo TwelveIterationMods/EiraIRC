@@ -17,9 +17,7 @@ import org.lwjgl.input.Keyboard;
 
 import java.nio.charset.Charset;
 
-/**
- * Created by Blay09 on 04.10.2014.
- */
+
 public class GuiServerConfigAdvanced extends GuiTabPage implements GuiYesNoCallback {
 
 	private final GuiServerConfig parent;

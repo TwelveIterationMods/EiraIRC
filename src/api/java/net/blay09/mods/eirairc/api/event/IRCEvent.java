@@ -3,8 +3,8 @@
 
 package net.blay09.mods.eirairc.api.event;
 
-import net.blay09.mods.eirairc.api.bot.IRCBot;
 import cpw.mods.fml.common.eventhandler.Event;
+import net.blay09.mods.eirairc.api.bot.IRCBot;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
 
 public abstract class IRCEvent extends Event {

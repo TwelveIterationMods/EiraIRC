@@ -15,9 +15,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Blay09 on 04.10.2014.
- */
+
 public class GuiImagePreview extends EiraGuiScreen implements GuiYesNoCallback {
 
 	private static final float TOOLTIP_TIME = 30;
@@ -31,8 +29,6 @@ public class GuiImagePreview extends EiraGuiScreen implements GuiYesNoCallback {
 
 	private int imgX;
 	private int imgY;
-	private final int imgWidth = 285;
-	private final int imgHeight = 180;
 
 	private boolean buttonsVisible;
 	private float hoverTime;
@@ -96,10 +92,12 @@ public class GuiImagePreview extends EiraGuiScreen implements GuiYesNoCallback {
 		drawLightBackground(menuX, menuY, menuWidth, menuHeight);
 
 		// Fade all image buttons in/out on hover of image
+		int imgWidth = 285;
+		int imgHeight = 180;
 		if(imgPreview != null && mouseX >= imgX && mouseX < imgX + imgWidth && mouseY >= imgY && mouseY < imgY + imgHeight) {
 			if(!buttonsVisible) {
-				for (int i = 0; i < buttonList.size(); i++) {
-					GuiButton button = (GuiButton) buttonList.get(i);
+				for(Object entry : buttonList) {
+					GuiButton button = (GuiButton) entry;
 					if (button instanceof GuiImageButton) {
 						((GuiImageButton) button).setFadeMode(1);
 					}
@@ -108,8 +106,8 @@ public class GuiImagePreview extends EiraGuiScreen implements GuiYesNoCallback {
 			}
 		} else {
 			if (buttonsVisible) {
-				for (int i = 0; i < buttonList.size(); i++) {
-					GuiButton button = (GuiButton) buttonList.get(i);
+				for(Object entry : buttonList) {
+					GuiButton button = (GuiButton) entry;
 					if (button instanceof GuiImageButton) {
 						((GuiImageButton) button).setFadeMode(-1);
 					}
@@ -125,17 +123,17 @@ public class GuiImagePreview extends EiraGuiScreen implements GuiYesNoCallback {
 
 		super.drawScreen(mouseX, mouseY, par3);
 
-		for (int i = 0; i < buttonList.size(); i++) {
-			GuiButton button = (GuiButton) buttonList.get(i);
+		for(Object entry : buttonList) {
+			GuiButton button = (GuiButton) entry;
 			if (button instanceof GuiImageButton) {
 				GuiImageButton imageButton = (GuiImageButton) button;
-				if(imageButton.isInside(mouseX, mouseY) && imageButton.visible && imageButton.isAlphaVisible() && imageButton.getTooltipText() != null) {
-					if(imageButton != hoverObject) {
+				if (imageButton.isInside(mouseX, mouseY) && imageButton.visible && imageButton.isAlphaVisible() && imageButton.getTooltipText() != null) {
+					if (imageButton != hoverObject) {
 						hoverObject = imageButton;
 						hoverTime = 0f;
 					}
 					hoverTime++;
-					if(hoverTime > TOOLTIP_TIME) {
+					if (hoverTime > TOOLTIP_TIME) {
 						tooltipList.clear();
 						tooltipList.add(imageButton.getTooltipText());
 						func_146283_a(tooltipList, mouseX, mouseY);

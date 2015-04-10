@@ -11,9 +11,7 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by Blay09 on 02.10.2014.
- */
+
 public class GeneralSettings {
 
 	private final EnumMap<GeneralBooleanComponent, Boolean> booleans = new EnumMap<GeneralBooleanComponent, Boolean>(GeneralBooleanComponent.class);

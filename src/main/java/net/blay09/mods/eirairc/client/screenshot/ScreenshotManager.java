@@ -8,10 +8,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
 import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.blay09.mods.eirairc.EiraIRC;
+import net.blay09.mods.eirairc.api.event.RelayChat;
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.api.irc.IRCUser;
-import net.blay09.mods.eirairc.api.event.RelayChat;
 import net.blay09.mods.eirairc.api.upload.UploadHoster;
 import net.blay09.mods.eirairc.client.UploadManager;
 import net.blay09.mods.eirairc.config.ClientGlobalConfig;
@@ -90,8 +90,8 @@ public class ScreenshotManager {
 			}
 		});
 		if (screenshotFiles != null) {
-			for (int i = 0; i < screenshotFiles.length; i++) {
-				screenshots.add(new Screenshot(screenshotFiles[i], metadataObject.getAsJsonObject(screenshotFiles[i].getName())));
+			for(File screenshotFile : screenshotFiles) {
+				screenshots.add(new Screenshot(screenshotFile, metadataObject.getAsJsonObject(screenshotFile.getName())));
 			}
 		}
 		lastScreenshotScan = System.currentTimeMillis();
@@ -100,9 +100,8 @@ public class ScreenshotManager {
 
 	public void save() {
 		JsonObject metadataObject = new JsonObject();
-		for(int i = 0; i < screenshots.size(); i++) {
-			Screenshot screenshot = screenshots.get(i);
-			if(screenshot.getMetadata().entrySet().size() > 0) {
+		for(Screenshot screenshot : screenshots) {
+			if (screenshot.getMetadata().entrySet().size() > 0) {
 				metadataObject.add(screenshot.getFile().getName(), screenshot.getMetadata());
 			}
 		}
@@ -157,7 +156,7 @@ public class ScreenshotManager {
 	}
 
 	private static String getScreenshotName(File directory) {
-		String s = dateFormat.format(new Date()).toString();
+		String s = dateFormat.format(new Date());
 		int i = 1;
 		while (true) {
 			File file = new File(directory, s + (i == 1 ? "" : "_" + i) + ".png");
@@ -173,7 +172,9 @@ public class ScreenshotManager {
 	}
 
 	public void deleteScreenshot(Screenshot screenshot, boolean keepUploaded) {
-		screenshot.getFile().delete();
+		if(!screenshot.getFile().delete()) {
+			System.out.println("Couldn't delete screenshot file " + screenshot.getFile());
+		}
 		if(!keepUploaded && screenshot.hasDeleteURL()) {
 			Utils.openWebpage(screenshot.getDeleteURL());
 		}
@@ -253,18 +254,12 @@ public class ScreenshotManager {
 		File[] screenshotFiles = screenshotDir.listFiles(new FileFilter() {
 			@Override
 			public boolean accept(File file) {
-				if(!file.getName().endsWith(".png")) {
-					return false;
-				}
-				if(file.lastModified() > lastScreenshotScan) {
-					return true;
-				}
-				return false;
+				return file.getName().endsWith(".png") && file.lastModified() > lastScreenshotScan;
 			}
 		});
 		if (screenshotFiles != null) {
-			for (int i = 0; i < screenshotFiles.length; i++) {
-				Screenshot screenshot = new Screenshot(screenshotFiles[i], null);
+			for(File screenshotFile : screenshotFiles) {
+				Screenshot screenshot = new Screenshot(screenshotFile, null);
 				if (autoAction) {
 					handleNewScreenshot(screenshot);
 				}

@@ -13,9 +13,7 @@ import org.lwjgl.input.Keyboard;
 import java.io.File;
 import java.util.List;
 
-/**
- * Created by Blay09 on 29.09.2014.
- */
+
 @SideOnly(Side.CLIENT)
 public class ClientGlobalConfig {
 

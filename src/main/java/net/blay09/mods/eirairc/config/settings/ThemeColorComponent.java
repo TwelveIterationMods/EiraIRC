@@ -2,9 +2,7 @@ package net.blay09.mods.eirairc.config.settings;
 
 import net.minecraft.util.EnumChatFormatting;
 
-/**
-* Created by Blay09 on 02.10.2014.
-*/
+
 public enum ThemeColorComponent {
 	mcNameColor("mcNameColor", EnumChatFormatting.WHITE, "eirairc:config.property.mcNameColor"),
 	mcOpNameColor("mcOpNameColor", EnumChatFormatting.RED, "eirairc:config.property.mcOpNameColor"),

@@ -16,9 +16,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-/**
- * Created by Blay09 on 20.02.2015.
- */
+
 public class GuiWelcome extends EiraGuiScreen {
 
 	private GuiList<GuiListSuggestedChannelEntry> lstChannels;

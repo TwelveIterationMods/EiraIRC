@@ -243,10 +243,7 @@ public class ServerConfig {
 	}
 
 	public void handleConfigCommand(ICommandSender sender, String key, String value) {
-		if(generalSettings.handleConfigCommand(sender, key, value)) {
-		} else if(botSettings.handleConfigCommand(sender, key, value)) {
-		} else if(theme.handleConfigCommand(sender, key, value)) {
-		} else {
+		if(!generalSettings.handleConfigCommand(sender, key, value) && !botSettings.handleConfigCommand(sender, key, value) && !theme.handleConfigCommand(sender, key, value)) {
 			Utils.sendLocalizedMessage(sender, "irc.config.invalidOption", address, key, value);
 			return;
 		}

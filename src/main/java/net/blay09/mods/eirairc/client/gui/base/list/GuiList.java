@@ -51,7 +51,6 @@ public class GuiList<T extends GuiListEntry> extends Gui {
 		if(x < xPosition || y < yPosition || x >= xPosition + width || y >= yPosition + height) {
 			return false;
 		}
-		int relX = x - xPosition;
 		int relY = y - yPosition;
 		if(button == 0) {
 			int clickedIdx = relY / entryHeight;

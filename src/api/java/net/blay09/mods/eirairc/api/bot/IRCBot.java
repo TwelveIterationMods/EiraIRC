@@ -10,17 +10,17 @@ public interface IRCBot {
 	/**
 	 * @return the irc connection this bot is running on
 	 */
-	public IRCConnection getConnection();
+	IRCConnection getConnection();
 
 	/**
 	 * @return true if this is a server-side bot
 	 */
-	public boolean isServerSide();
+	boolean isServerSide();
 
 	/**
 	 * Should be run from within a {@code ReloadBotCommandsEvent}
 	 * @param command the command implementation to be registered
 	 */
-	public void registerCommand(IBotCommand command);
+	void registerCommand(IBotCommand command);
 
 }
