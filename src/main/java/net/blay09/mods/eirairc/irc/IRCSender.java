@@ -67,13 +67,11 @@ public class IRCSender implements Runnable {
 		} catch (SocketException e) {
 			e.printStackTrace();
 			if(connection.isConnected()) {
-				MinecraftForge.EVENT_BUS.post(new IRCDisconnectEvent(connection));
 				connection.tryReconnect();
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 			if(connection.isConnected()) {
-				MinecraftForge.EVENT_BUS.post(new IRCDisconnectEvent(connection));
 				connection.tryReconnect();
 			}
 		} catch (Exception e) {
