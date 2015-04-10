@@ -3,14 +3,14 @@
 package net.blay09.mods.eirairc.api.event;
 
 import cpw.mods.fml.common.eventhandler.Event;
-import net.blay09.mods.eirairc.client.screenshot.Screenshot;
+import net.blay09.mods.eirairc.api.upload.UploadedFile;
 
 public class ScreenshotUploadEvent extends Event {
 
-    public final Screenshot screenshot;
+    public final UploadedFile uploadedFile;
 
-    public ScreenshotUploadEvent(Screenshot screenshot) {
-        this.screenshot = screenshot;
+    public ScreenshotUploadEvent(UploadedFile uploadedFile) {
+        this.uploadedFile = uploadedFile;
     }
 
 }

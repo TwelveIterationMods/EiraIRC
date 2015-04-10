@@ -369,7 +369,7 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 
 	@SubscribeEvent
 	public void onScreenshotUploaded(ScreenshotUploadEvent event) {
-		if(event.screenshot == currentScreenshot) {
+		if(isUploading) {
 			btnUpload.enabled = true;
 			btnReupload.enabled = true;
 			isUploading = false;

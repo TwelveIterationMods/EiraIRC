@@ -193,7 +193,7 @@ public class ScreenshotManager {
 		for(int i = uploadTasks.size() - 1; i >= 0; i--) {
 			if(uploadTasks.get(i).isComplete()) {
 				AsyncUploadScreenshot task = uploadTasks.remove(i);
-				MinecraftForge.EVENT_BUS.post(new ScreenshotUploadEvent(task.getScreenshot()));
+				MinecraftForge.EVENT_BUS.post(new ScreenshotUploadEvent(task.getUploadedFile()));
 				if(task.getScreenshot().isUploaded()) {
 					ScreenshotAction action = task.getFollowUpAction();
 					if(action == ScreenshotAction.UploadClipboard) {
