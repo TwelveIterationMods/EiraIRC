@@ -19,7 +19,11 @@ import net.blay09.mods.eirairc.irc.IRCConnectionImpl;
 public class ConfigHelper {
 	
 	public static String formatNick(String format) {
-		return format.replace("%USERNAME%", Utils.getUsername());
+		String s = format;
+		s = s.replace("%USERNAME%", Utils.getUsername());
+		s = s.replace("%ANONYMOUS%", "justinfan" + String.valueOf((int) (Math.random() * 1000000)) + String.valueOf(((int) (Math.random() * 1000000))));
+		System.out.println(s);
+		return s;
 	}
 	
 	public static String getNick(ServerConfig serverConfig) {

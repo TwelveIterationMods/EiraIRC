@@ -62,11 +62,6 @@ public class CommandTwitch implements SubCommand {
 			ServerConfig serverConfig = ConfigurationHandler.getOrCreateServerConfig(Globals.TWITCH_SERVER);
 			serverConfig.setNick(args[0]);
 			serverConfig.setServerPassword(args[1]);
-			String userChannel = "#" + args[0];
-			if(!serverConfig.hasChannelConfig(userChannel)) {
-				ChannelConfig channelConfig = serverConfig.getOrCreateChannelConfig(userChannel);
-				serverConfig.addChannelConfig(channelConfig);
-			}
 			ConfigurationHandler.addServerConfig(serverConfig);
 			ConfigurationHandler.save();
 			Utils.sendLocalizedMessage(sender, "irc.basic.connecting", "Twitch");

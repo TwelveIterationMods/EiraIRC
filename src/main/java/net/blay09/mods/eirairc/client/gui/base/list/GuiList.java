@@ -158,13 +158,6 @@ public class GuiList<T extends GuiListEntry> extends Gui {
 		entries.add(entry);
 	}
 
-	public void removeEntry(T entry) {
-		if(getSelectedItem() == entry) {
-			selectedIdx = -1;
-		}
-		entries.remove(entry);
-	}
-
 	public int getEntryHeight() {
 		return entryHeight;
 	}
