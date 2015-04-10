@@ -19,9 +19,10 @@ public class GuiImagePreview extends EiraGuiScreen implements GuiYesNoCallback {
 
 	private static final float TOOLTIP_TIME = 30;
 
-	private final GuiImage imgPreview;
 	private final URL url;
+	private final URL directURL;
 
+	private GuiImage imgPreview;
 	private GuiImageButton btnZoom;
 	private GuiImageButton btnClipboard;
 	private GuiImageButton btnGoToURL;
@@ -36,8 +37,7 @@ public class GuiImagePreview extends EiraGuiScreen implements GuiYesNoCallback {
 	public GuiImagePreview(URL directURL, URL url) {
 		super(null);
 		this.url = url != null ? url : directURL;
-		imgPreview = new GuiURLImage(directURL);
-		imgPreview.loadTexture();
+		this.directURL = directURL;
 	}
 
 	@Override
@@ -62,6 +62,15 @@ public class GuiImagePreview extends EiraGuiScreen implements GuiYesNoCallback {
 
 		imgX = leftX + 2;
 		imgY = topY + 10;
+
+		imgPreview = new GuiURLImage(directURL);
+		imgPreview.loadTexture();
+	}
+
+	@Override
+	public void onGuiClosed() {
+		super.onGuiClosed();
+		imgPreview.dispose();
 	}
 
 	@Override

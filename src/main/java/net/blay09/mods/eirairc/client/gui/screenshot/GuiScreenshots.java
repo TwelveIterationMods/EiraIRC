@@ -80,10 +80,16 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 	public void updateScreenshot() {
 		if(screenshotList.isEmpty()) {
 			currentScreenshot = null;
+			if(imgPreview != null) {
+				imgPreview.dispose();
+			}
 			imgPreview = null;
 		} else if(currentIdx >= 0 && currentIdx < screenshotList.size()) {
 			Screenshot screenshot = screenshotList.get(currentIdx);
 			if(currentScreenshot != screenshot) {
+				if(imgPreview != null) {
+					imgPreview.dispose();
+				}
 				imgPreview = new GuiFileImage(screenshot.getFile());
 				imgPreview.loadTexture();
 				currentScreenshot = screenshot;
