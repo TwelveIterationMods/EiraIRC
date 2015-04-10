@@ -136,7 +136,7 @@ public class GuiImagePreview extends EiraGuiScreen implements GuiYesNoCallback {
 			GuiButton button = (GuiButton) entry;
 			if (button instanceof GuiImageButton) {
 				GuiImageButton imageButton = (GuiImageButton) button;
-				if (imageButton.isInside(mouseX, mouseY) && imageButton.visible && imageButton.isAlphaVisible() && imageButton.visible && imageButton.getTooltipText() != null) {
+				if (imageButton.isInside(mouseX, mouseY) && imageButton.visible && imageButton.isAlphaVisible() && imageButton.getTooltipText() != null) {
 					if (imageButton != hoverObject) {
 						hoverObject = imageButton;
 						hoverTime = 0f;
