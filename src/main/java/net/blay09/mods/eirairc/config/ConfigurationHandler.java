@@ -6,6 +6,7 @@ package net.blay09.mods.eirairc.config;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
@@ -55,8 +56,8 @@ public class ConfigurationHandler {
 				return name.endsWith(".cfg");
 			}
 		});
-		for(int i = 0; i < files.length; i++) {
-			MessageFormatConfig dfc = new MessageFormatConfig(files[i]);
+		for(File file : files) {
+			MessageFormatConfig dfc = new MessageFormatConfig(file);
 			dfc.loadFormats();
 			displayFormats.put(dfc.getName(), dfc);
 		}
@@ -67,7 +68,9 @@ public class ConfigurationHandler {
 		Gson gson = new Gson();
 		try {
 			Reader reader = new FileReader(new File(configDir, "trusted_servers.json"));
-			JsonArray serverArray = gson.fromJson(reader, JsonArray.class);
+			JsonReader jsonReader = new JsonReader(reader);
+			jsonReader.setLenient(true);
+			JsonArray serverArray = gson.fromJson(jsonReader, JsonArray.class);
 			for(int i = 0; i < serverArray.size(); i++) {
 				addTrustedServer(TrustedServer.loadFromJson(serverArray.get(i).getAsJsonObject()));
 			}
@@ -114,7 +117,9 @@ public class ConfigurationHandler {
 		}
 		Gson gson = new Gson();
 		Reader reader = new InputStreamReader(in);
-		JsonArray channelArray = gson.fromJson(reader, JsonArray.class);
+		JsonReader jsonReader = new JsonReader(reader);
+		jsonReader.setLenient(true);
+		JsonArray channelArray = gson.fromJson(jsonReader, JsonArray.class);
 		for(int i = 0; i < channelArray.size(); i++) {
 			suggestedChannels.add(SuggestedChannel.loadFromJson(channelArray.get(i).getAsJsonObject()));
 		}
@@ -149,7 +154,9 @@ public class ConfigurationHandler {
 				}
 			}
 			Reader reader = new FileReader(file);
-			JsonArray commandArray = gson.fromJson(reader, JsonArray.class);
+			JsonReader jsonReader = new JsonReader(reader);
+			jsonReader.setLenient(true);
+			JsonArray commandArray = gson.fromJson(jsonReader, JsonArray.class);
 			for(int i = 0; i < commandArray.size(); i++) {
 				customCommands.add(BotCommandCustom.loadFromJson(commandArray.get(i).getAsJsonObject()));
 			}
@@ -247,7 +254,9 @@ public class ConfigurationHandler {
 		Gson gson = new Gson();
 		try {
 			Reader reader = new FileReader(new File(configDir, "servers.json"));
-			JsonArray serverArray = gson.fromJson(reader, JsonArray.class);
+			JsonReader jsonReader = new JsonReader(reader);
+			jsonReader.setLenient(true);
+			JsonArray serverArray = gson.fromJson(jsonReader, JsonArray.class);
 			for(int i = 0; i < serverArray.size(); i++) {
 				addServerConfig(ServerConfig.loadFromJson(serverArray.get(i).getAsJsonObject()));
 			}
