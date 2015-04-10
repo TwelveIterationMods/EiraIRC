@@ -9,6 +9,7 @@ import com.google.gson.stream.JsonWriter;
 import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.event.RelayChat;
+import net.blay09.mods.eirairc.api.event.ScreenshotUploadEvent;
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.api.irc.IRCUser;
@@ -192,6 +193,7 @@ public class ScreenshotManager {
 		for(int i = uploadTasks.size() - 1; i >= 0; i--) {
 			if(uploadTasks.get(i).isComplete()) {
 				AsyncUploadScreenshot task = uploadTasks.remove(i);
+				MinecraftForge.EVENT_BUS.post(new ScreenshotUploadEvent(task.getScreenshot()));
 				if(task.getScreenshot().isUploaded()) {
 					ScreenshotAction action = task.getFollowUpAction();
 					if(action == ScreenshotAction.UploadClipboard) {

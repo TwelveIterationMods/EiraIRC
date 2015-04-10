@@ -1,5 +1,7 @@
 package net.blay09.mods.eirairc.client.gui.screenshot;
 
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.blay09.mods.eirairc.api.event.ScreenshotUploadEvent;
 import net.blay09.mods.eirairc.client.gui.EiraGui;
 import net.blay09.mods.eirairc.client.gui.EiraGuiScreen;
 import net.blay09.mods.eirairc.client.gui.base.GuiAdvancedTextField;
@@ -10,10 +12,12 @@ import net.blay09.mods.eirairc.client.gui.overlay.OverlayYesNo;
 import net.blay09.mods.eirairc.client.screenshot.Screenshot;
 import net.blay09.mods.eirairc.client.screenshot.ScreenshotManager;
 import net.blay09.mods.eirairc.config.ScreenshotAction;
+import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiYesNoCallback;
+import net.minecraftforge.common.MinecraftForge;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -51,6 +55,7 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 	private int imgX;
 	private int imgY;
 
+	private boolean isUploading;
 	private boolean buttonsVisible;
 	private float hoverTime;
 	private GuiImageButton hoverObject;
@@ -97,6 +102,15 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 			}
 			txtName.setDefaultText(screenshot.getOriginalName(), false);
 			txtName.setText(screenshot.getName());
+			if(screenshot.isUploaded()) {
+				btnUpload.visible = false;
+				btnClipboard.visible = true;
+				btnReupload.visible = true;
+			} else {
+				btnUpload.visible = true;
+				btnClipboard.visible = false;
+				btnReupload.visible = false;
+			}
 			setFavoriteButtonState(screenshot.isFavorited());
 		}
 	}
@@ -104,6 +118,8 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 	@Override
 	public void initGui() {
 		super.initGui();
+
+		MinecraftForge.EVENT_BUS.register(this);
 
 		final int leftX = width / 2 - 145;
 		final int rightX = width / 2 + 145;
@@ -280,6 +296,7 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 	@Override
 	public void onGuiClosed() {
 		super.onGuiClosed();
+		MinecraftForge.EVENT_BUS.unregister(this);
 		ScreenshotManager.getInstance().save();
 	}
 
@@ -297,25 +314,29 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 	@Override
 	public void actionPerformed(GuiButton button) {
 		if(button == btnGoToFirst) {
-			currentIdx = 0;
-			updateScreenshot();
+			if(!isUploading) {
+				currentIdx = 0;
+				updateScreenshot();
+			}
 		} else if(button == btnGoToPrevious) {
-			if(currentIdx > 0) {
+			if(currentIdx > 0 && !isUploading) {
 				currentIdx--;
 				updateScreenshot();
 			}
 		} else if(button == btnGoToNext) {
-			if(currentIdx < screenshotList.size() - 1) {
+			if(currentIdx < screenshotList.size() - 1 && !isUploading) {
 				currentIdx++;
 				updateScreenshot();
 			}
 		} else if(button == btnGoToLast) {
-			currentIdx = screenshotList.size() - 1;
-			updateScreenshot();
+			if(!isUploading) {
+				currentIdx = screenshotList.size() - 1;
+				updateScreenshot();
+			}
 		} else if(button == btnOpenFolder) {
 			Utils.openDirectory(new File(mc.mcDataDir, "screenshots"));
 		} else if(button == btnDelete) {
-			if(currentScreenshot != null) {
+			if(currentScreenshot != null && !isUploading) {
 				setOverlay(new OverlayYesNo(this, "Do you really want to delete this screenshot?", "This can't be undone, so be careful!", currentIdx));
 			}
 		} else if(button == btnClipboard) {
@@ -324,6 +345,14 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 			}
 		} else if(button == btnUpload) {
 			if(currentScreenshot != null) {
+				btnUpload.enabled = false;
+				isUploading = true;
+				ScreenshotManager.getInstance().uploadScreenshot(currentScreenshot, ScreenshotAction.None);
+			}
+		} else if(button == btnReupload) {
+			if(currentScreenshot != null) {
+				btnReupload.enabled = false;
+				isUploading = true;
 				ScreenshotManager.getInstance().uploadScreenshot(currentScreenshot, ScreenshotAction.None);
 			}
 		} else if(button == btnFavorite) {
@@ -332,7 +361,19 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 				setFavoriteButtonState(currentScreenshot.isFavorited());
 			}
 		} else if(button == btnZoom) {
-			mc.displayGuiScreen(new GuiScreenshotBigPreview(this, imgPreview));
+			if(!isUploading) {
+				mc.displayGuiScreen(new GuiScreenshotBigPreview(this, imgPreview));
+			}
+		}
+	}
+
+	@SubscribeEvent
+	public void onScreenshotUploaded(ScreenshotUploadEvent event) {
+		if(event.screenshot == currentScreenshot) {
+			btnUpload.enabled = true;
+			btnReupload.enabled = true;
+			isUploading = false;
+			updateScreenshot();
 		}
 	}
 
@@ -413,7 +454,7 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 			GuiButton button = (GuiButton) entry;
 			if (button instanceof GuiImageButton) {
 				GuiImageButton imageButton = (GuiImageButton) button;
-				if (imageButton.isInside(mouseX, mouseY) && imageButton.isAlphaVisible() && imageButton.getTooltipText() != null) {
+				if (imageButton.isInside(mouseX, mouseY) && imageButton.isAlphaVisible() && imageButton.visible && imageButton.getTooltipText() != null) {
 					if (imageButton != hoverObject) {
 						hoverObject = imageButton;
 						hoverTime = 0f;
@@ -427,6 +468,10 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 					break;
 				}
 			}
+		}
+
+		if(isUploading) {
+			drawCenteredString(fontRendererObj, "Uploading...", width / 2, height / 2, Globals.TEXT_COLOR);
 		}
 	}
 

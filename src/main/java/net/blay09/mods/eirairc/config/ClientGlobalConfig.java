@@ -56,8 +56,10 @@ public class ClientGlobalConfig {
 	public static boolean chatNoOverride = false;
 	public static boolean registerShortCommands = true;
 
-	public static void load(File configDir) {
-		thisConfig = new Configuration(new File(configDir, "client.cfg"));
+	public static void load(File configDir, boolean reloadFile) {
+		if(thisConfig == null || reloadFile) {
+			thisConfig = new Configuration(new File(configDir, "client.cfg"));
+		}
 
 		// General
 		registerShortCommands = thisConfig.getBoolean("registerShortCommands", GENERAL, registerShortCommands, I19n.format("eirairc:config.property.registerShortCommands.tooltip"), "eirairc:config.property.registerShortCommands");
@@ -66,7 +68,7 @@ public class ClientGlobalConfig {
 
 		// Screenshots
 		imageLinkPreview = thisConfig.getBoolean("imageLinkPreview", SCREENSHOTS, imageLinkPreview, I19n.format("eirairc:config.property.imageLinkPreview"), "eirairc:config.property.imageLinkPreview");
-		screenshotHoster = thisConfig.getString("uploadHoster", SCREENSHOTS, screenshotHoster, I19n.format("eirairc:config.property.uploadHoster"), UploadManager.getAvailableHosters(), "eirairc:config.property.uploadHoster");
+		screenshotHoster = thisConfig.getString("uploadHoster", SCREENSHOTS, screenshotHoster, I19n.format("eirairc:config.property.uploadHoster"), "eirairc:config.property.uploadHoster");
 		screenshotAction = ScreenshotAction.valueOf(thisConfig.getString("autoAction", SCREENSHOTS, screenshotAction.name(), I19n.format("eirairc:config.property.autoAction"), ScreenshotAction.NAMES, "eirairc:config.property.autoAction"));
 		uploadBufferSize = thisConfig.getInt("uploadBufferSize", SCREENSHOTS, uploadBufferSize, 256, 4096, I19n.format("eirairc:config.property.uploadBufferSize"), "eirairc:config.property.uploadBufferSize");
 
