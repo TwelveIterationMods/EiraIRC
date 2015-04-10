@@ -3,15 +3,15 @@
 
 package net.blay09.mods.eirairc.client.screenshot;
 
-import java.io.File;
-
 import com.google.gson.JsonObject;
 import net.blay09.mods.eirairc.api.upload.UploadedFile;
-import net.minecraft.client.Minecraft;
+
+import java.io.File;
 
 public class Screenshot {
 
 	private static final String METADATA_ORIGINALNAME = "originalName";
+	private static final String METADATA_NAME = "name";
 	private static final String METADATA_UPLOADURL = "uploadURL";
 	private static final String METADATA_DIRECTURL = "directURL";
 	private static final String METADATA_DELETEURL = "deleteURL";
@@ -26,11 +26,16 @@ public class Screenshot {
 		this.metadata = metadata != null ? metadata : new JsonObject();
 		if(metadata == null) {
 			this.metadata.addProperty(METADATA_ORIGINALNAME, file.getName().substring(0, file.getName().length() - 4));
+			this.metadata.addProperty(METADATA_TIMESTAP, file.lastModified());
 		}
 	}
 
 	public String getName() {
-		return file.getName().substring(0, file.getName().length() - 4);
+		return metadata.has(METADATA_NAME) ? metadata.get(METADATA_NAME).getAsString() : "";
+	}
+
+	public void setName(String name) {
+		metadata.addProperty(METADATA_NAME, name);
 	}
 
 	public boolean isUploaded() {
@@ -45,12 +50,12 @@ public class Screenshot {
 		return metadata;
 	}
 
-	public String getUploadURL() {
-		return metadata.get(METADATA_UPLOADURL).getAsString();
+	public String getDirectURL() {
+		return metadata.has(METADATA_DIRECTURL) ? metadata.get(METADATA_DIRECTURL).getAsString() : null;
 	}
 
-	public String getDirectURL() {
-		return metadata.get(METADATA_DIRECTURL).getAsString();
+	public String getUploadURL() {
+		return metadata.get(METADATA_UPLOADURL).getAsString();
 	}
 
 	public String getOriginalName() {
@@ -59,8 +64,12 @@ public class Screenshot {
 
 	public void setUploadedFile(UploadedFile uploadedFile) {
 		metadata.addProperty(METADATA_UPLOADURL, uploadedFile.url);
-		metadata.addProperty(METADATA_DIRECTURL, uploadedFile.directURL);
-		metadata.addProperty(METADATA_DELETEURL, uploadedFile.deleteURL);
+		if(uploadedFile.directURL != null) {
+			metadata.addProperty(METADATA_DIRECTURL, uploadedFile.directURL);
+		}
+		if(uploadedFile.deleteURL != null) {
+			metadata.addProperty(METADATA_DELETEURL, uploadedFile.deleteURL);
+		}
 	}
 
 	public boolean isFavorited() {
@@ -78,4 +87,12 @@ public class Screenshot {
 	public String getDeleteURL() {
 		return metadata.get(METADATA_DELETEURL).getAsString();
 	}
+
+	public long getTimeStamp() {
+		if(!metadata.has(METADATA_TIMESTAP)) {
+			return System.currentTimeMillis();
+		}
+		return metadata.get(METADATA_TIMESTAP).getAsLong();
+	}
+
 }

@@ -3,10 +3,14 @@
 
 package net.blay09.mods.eirairc.bot;
 
-import net.blay09.mods.eirairc.api.IRCChannel;
-import net.blay09.mods.eirairc.api.IRCUser;
+import net.blay09.mods.eirairc.api.irc.IRCChannel;
+import net.blay09.mods.eirairc.api.irc.IRCUser;
 import net.blay09.mods.eirairc.api.bot.IBotCommand;
 import net.blay09.mods.eirairc.api.bot.IRCBot;
+import net.blay09.mods.eirairc.config.settings.BotBooleanComponent;
+import net.blay09.mods.eirairc.config.settings.BotSettings;
+import net.blay09.mods.eirairc.config.settings.BotStringListComponent;
+import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.server.MinecraftServer;
 
@@ -23,24 +27,44 @@ public class BotCommandOp implements IBotCommand {
 	}
 
 	@Override
-	public void processCommand(IRCBot bot, IRCChannel channel, IRCUser user, String[] args) {
-		if(!bot.getProfile(channel).isInterOp() || !bot.getProfile(channel).isInterOpAuth(user.getAuthLogin())) {
-			user.notice(Utils.getLocalizedMessage("irc.bot.noPermission"));
+	public void processCommand(IRCBot bot, IRCChannel channel, IRCUser user, String[] args, IBotCommand commandSettings) {
+		BotSettings botSettings = ConfigHelper.getBotSettings(channel);
+		if(!botSettings.getBoolean(BotBooleanComponent.InterOp)) {
+			user.notice(Utils.getLocalizedMessage("irc.interop.disabled"));
 			return;
 		}
-		String message = Utils.joinStrings(args, " ", 0).trim();
+		String message = "";
+		if(args.length >= 1) {
+			if(commandSettings.allowArgs()) {
+				message = Utils.joinStrings(args, " ", 0).trim();
+			} else {
+				message = args[0];
+			}
+		}
 		if(message.isEmpty()) {
 			user.notice("Usage: !op <command>");
 			return;
 		}
-		String[] commandBlacklist = bot.getProfile(channel).getInterOpBlacklist();
-		for(int i = 0; i < commandBlacklist.length; i++) {
-			if(commandBlacklist[i].equals(Utils.unquote("*")) || message.contains(Utils.unquote(commandBlacklist[i]))) {
-				user.notice(Utils.getLocalizedMessage("irc.bot.interOpBlacklist"));
-				return;
-			}
+		if(botSettings.stringContains(BotStringListComponent.DisabledInterOpCommands, message)) {
+			user.notice(Utils.getLocalizedMessage("irc.bot.interOpBlacklist"));
+			return;
 		}
-		MinecraftServer.getServer().getCommandManager().executeCommand(new IRCUserCommandSender(channel, user, false, true), message);
+		MinecraftServer.getServer().getCommandManager().executeCommand(new IRCUserCommandSender(channel, user, commandSettings.broadcastsResult(), true), message);
+	}
+
+	@Override
+	public boolean requiresAuth() {
+		return true;
+	}
+
+	@Override
+	public boolean broadcastsResult() {
+		return false;
+	}
+
+	@Override
+	public boolean allowArgs() {
+		return true;
 	}
 
 	@Override

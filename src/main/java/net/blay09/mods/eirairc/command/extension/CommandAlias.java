@@ -3,11 +3,9 @@
 
 package net.blay09.mods.eirairc.command.extension;
 
-import java.util.List;
-
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.api.IRCContext;
-import net.blay09.mods.eirairc.command.SubCommand;
+import net.blay09.mods.eirairc.api.irc.IRCContext;
+import net.blay09.mods.eirairc.api.SubCommand;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
@@ -18,7 +16,9 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 
-public class CommandAlias extends SubCommand {
+import java.util.List;
+
+public class CommandAlias implements SubCommand {
 
 	private static final String ALIAS_NONE = "none";
 	
@@ -28,8 +28,8 @@ public class CommandAlias extends SubCommand {
 	}
 
 	@Override
-	public String getUsageString(ICommandSender sender) {
-		return "irc.commands.alias";
+	public String getCommandUsage(ICommandSender sender) {
+		return "eirairc:irc.commands.alias";
 	}
 
 	@Override
@@ -51,7 +51,7 @@ public class CommandAlias extends SubCommand {
 			String alias = args[0];
 			for(int i = 0; i < playerEntityList.size(); i++) {
 				EntityPlayerMP playerEntity = playerEntityList.get(i);
-				if(playerEntity.getEntityData().getCompoundTag(Globals.NBT_EIRAIRC).getString(Globals.NBT_ALIAS).equals(alias)) {
+				if(playerEntity.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getCompoundTag(Globals.NBT_EIRAIRC).getString(Globals.NBT_ALIAS).equals(alias)) {
 					Utils.sendLocalizedMessage(sender, "irc.alias.lookup", alias, playerEntity.getCommandSenderName());
 					return true;
 				}
@@ -93,7 +93,7 @@ public class CommandAlias extends SubCommand {
 				Utils.sendLocalizedMessage(sender, "irc.alias.set", oldAlias, alias);
 			}
 			entityPlayer.refreshDisplayName();
-			EiraIRC.instance.getMCEventHandler().onPlayerNickChange(oldAlias, alias);
+			EiraIRC.instance.getMCEventHandler().onPlayerNickChange(entityPlayer, oldAlias);
 		}
 		return true;
 	}

@@ -3,27 +3,9 @@
 
 package net.blay09.mods.eirairc.command.base;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import net.blay09.mods.eirairc.command.CommandConfig;
-import net.blay09.mods.eirairc.command.CommandConnect;
-import net.blay09.mods.eirairc.command.CommandDisconnect;
-import net.blay09.mods.eirairc.command.CommandJoin;
-import net.blay09.mods.eirairc.command.CommandLeave;
-import net.blay09.mods.eirairc.command.CommandList;
-import net.blay09.mods.eirairc.command.CommandMessage;
-import net.blay09.mods.eirairc.command.CommandNick;
-import net.blay09.mods.eirairc.command.CommandQuote;
-import net.blay09.mods.eirairc.command.CommandWho;
-import net.blay09.mods.eirairc.command.SubCommand;
-import net.blay09.mods.eirairc.command.extension.CommandAlias;
-import net.blay09.mods.eirairc.command.extension.CommandColor;
-import net.blay09.mods.eirairc.command.extension.CommandGhost;
-import net.blay09.mods.eirairc.command.extension.CommandNickServ;
-import net.blay09.mods.eirairc.command.extension.CommandTwitch;
+import net.blay09.mods.eirairc.api.SubCommand;
+import net.blay09.mods.eirairc.command.*;
+import net.blay09.mods.eirairc.command.extension.*;
 import net.blay09.mods.eirairc.command.interop.InterOpCommandKick;
 import net.blay09.mods.eirairc.command.interop.InterOpCommandMode;
 import net.blay09.mods.eirairc.command.interop.InterOpCommandTopic;
@@ -33,13 +15,17 @@ import net.minecraft.command.CommandHandler;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class IRCCommandHandler {
 
-	private static final Map<String, SubCommand> commands = new HashMap<String, SubCommand>();
+	private static final Map<String, SubCommandWrapper> commands = new HashMap<String, SubCommandWrapper>();
 	
 	public static void registerCommands() {
 		registerCommand(new CommandConnect());
@@ -70,25 +56,26 @@ public class IRCCommandHandler {
 	}
 	
 	public static void registerCommand(SubCommand command) {
-		commands.put(command.getCommandName(), command);
-		List<String> aliases = command.getCommandAliases();
+		SubCommandWrapper wrapper = new SubCommandWrapper(command);
+		commands.put(command.getCommandName(), wrapper);
+		String[] aliases = command.getAliases();
 		if(aliases != null) {
 			for(String alias : aliases) {
-				commands.put(alias, command);
+				commands.put(alias, wrapper);
 			}
 		}
 	}
 	
 	public static void registerQuickCommands(CommandHandler commandHandler) {
-		for(SubCommand command : commands.values()) {
-			if(command.hasQuickCommand()) {
-				commandHandler.registerCommand(command);
+		for(SubCommandWrapper wrapper : commands.values()) {
+			if(wrapper.command.hasQuickCommand()) {
+				commandHandler.registerCommand(wrapper);
 			}
 		}
 	}
 	
 	public static boolean isUsernameIndex(String[] args, int idx) {
-		SubCommand cmd = commands.get(args[0]);
+		SubCommandWrapper cmd = commands.get(args[0]);
 		if(cmd != null) {
 			String[] shiftedArgs = Utils.shiftArgs(args, 1);
 			return cmd.isUsernameIndex(shiftedArgs, idx - 1);
@@ -102,7 +89,7 @@ public class IRCCommandHandler {
 			list.addAll(commands.keySet());
 			return list;
 		}
-		SubCommand cmd = commands.get(args[0]);
+		SubCommandWrapper cmd = commands.get(args[0]);
 		if(cmd != null) {
 			String[] shiftedArgs = Utils.shiftArgs(args, 1);
 			return cmd.addTabCompletionOptions(sender, shiftedArgs);
@@ -111,7 +98,7 @@ public class IRCCommandHandler {
 	}
 
 	public static boolean processCommand(ICommandSender sender, String[] args, boolean serverSide) {
-		SubCommand cmd = commands.get(args[0]);
+		SubCommandWrapper cmd = commands.get(args[0]);
 		if(cmd == null) {
 			sendUsageHelp(sender);
 			return false;
@@ -123,7 +110,7 @@ public class IRCCommandHandler {
             return true;
 		}
 		String[] shiftedArgs = Utils.shiftArgs(args, 1);
-		return cmd.processCommand(sender, Utils.getSuggestedTarget(), shiftedArgs, serverSide);
+		return cmd.command.processCommand(sender, Utils.getSuggestedTarget(), shiftedArgs, serverSide);
 	}
 	
 	public static void sendUsageHelp(ICommandSender sender) {
@@ -135,16 +122,16 @@ public class IRCCommandHandler {
 	}
 
 	public static boolean onChatCommand(EntityPlayer sender, String text, boolean serverSide) {
-		if(!text.startsWith("!")) {
-			return false;
+		if(text.equals("!who") || text.startsWith("!who ")) {
+			String[] params = text.substring(1).split(" ");
+			try {
+				return processCommand(sender, params, serverSide);
+			} catch (WrongUsageException e) {
+				sender.addChatMessage(Utils.getLocalizedChatMessage("irc.general.usage", Utils.getLocalizedMessageNoPrefix(e.getMessage())));
+				return true;
+			}
 		}
-		String[] params = text.substring(1).split(" ");
-		try {
-			return processCommand(sender, params, serverSide);
-		} catch (WrongUsageException e) {
-			sender.addChatMessage(Utils.getLocalizedChatMessage("irc.general.usage", Utils.getLocalizedMessageNoPrefix(e.getMessage())));
-			return true;
-		}
+		return false;
 	}
 
 }

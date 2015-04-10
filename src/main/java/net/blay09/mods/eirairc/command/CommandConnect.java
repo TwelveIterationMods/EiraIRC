@@ -3,17 +3,18 @@
 
 package net.blay09.mods.eirairc.command;
 
-import java.util.List;
-
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.api.IRCContext;
-import net.blay09.mods.eirairc.config.ServerConfig;
+import net.blay09.mods.eirairc.api.irc.IRCContext;
+import net.blay09.mods.eirairc.api.SubCommand;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
+import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 
-public class CommandConnect extends SubCommand {
+import java.util.List;
+
+public class CommandConnect implements SubCommand {
 
 	@Override
 	public String getCommandName() {
@@ -21,8 +22,8 @@ public class CommandConnect extends SubCommand {
 	}
 
 	@Override
-	public String getUsageString(ICommandSender sender) {
-		return "irc.commands.connect";
+	public String getCommandUsage(ICommandSender sender) {
+		return "eirairc:irc.commands.connect";
 	}
 
 	@Override

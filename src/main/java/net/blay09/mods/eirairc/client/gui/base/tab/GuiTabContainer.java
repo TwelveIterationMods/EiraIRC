@@ -1,5 +1,6 @@
 package net.blay09.mods.eirairc.client.gui.base.tab;
 
+import net.blay09.mods.eirairc.client.graphics.TextureRegion;
 import net.blay09.mods.eirairc.client.gui.EiraGui;
 import net.blay09.mods.eirairc.client.gui.EiraGuiScreen;
 import net.minecraft.client.gui.GuiScreen;
@@ -15,12 +16,22 @@ public class GuiTabContainer extends EiraGuiScreen {
 	private final List<GuiTabHeader> headers = new ArrayList<GuiTabHeader>();
 	protected final List<GuiTabPage> pages = new ArrayList<GuiTabPage>();
 
+	private final TextureRegion regionContent;
+	private final TextureRegion regionTopRight;
+	private final TextureRegion regionBottomRight;
+	private final TextureRegion regionBottomLeft;
+
 	protected GuiTabPage currentTab;
 	protected int panelWidth;
 	protected int panelHeight;
 
 	public GuiTabContainer(GuiScreen parentScreen) {
 		super(parentScreen);
+
+		regionContent = EiraGui.atlas.findRegion("tab_bg_content");
+		regionTopRight = EiraGui.atlas.findRegion("tab_bg_topright");
+		regionBottomRight = EiraGui.atlas.findRegion("tab_bg_bottomright");
+		regionBottomLeft = EiraGui.atlas.findRegion("tab_bg_bottomleft");
 	}
 
 	@Override
@@ -32,7 +43,6 @@ public class GuiTabContainer extends EiraGuiScreen {
 
 		if(currentTab != null) {
 			currentTab.setWorldAndResolution(mc, width, height);
-			currentTab.initGui();
 		}
 	}
 
@@ -60,14 +70,11 @@ public class GuiTabContainer extends EiraGuiScreen {
 		currentTab = tabPage;
 		if(currentTab != null) {
 			currentTab.setWorldAndResolution(mc, width, height);
-			currentTab.initGui();
 		}
 	}
 
 	@Override
-	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) {
-		super.mouseClicked(mouseX, mouseY, mouseButton);
-
+	public boolean mouseClick(int mouseX, int mouseY, int mouseButton) {
 		for(int i = 0; i < headers.size(); i++) {
 			GuiTabHeader header = headers.get(i);
 
@@ -76,9 +83,10 @@ public class GuiTabContainer extends EiraGuiScreen {
 			}
 		}
 
-		if(currentTab != null) {
-			currentTab.mouseClicked(mouseX, mouseY, mouseButton);
+		if(currentTab != null && currentTab.mouseClick(mouseX, mouseY, mouseButton)) {
+			return true;
 		}
+		return super.mouseClick(mouseX, mouseY, mouseButton);
 	}
 
 	@Override
@@ -112,13 +120,13 @@ public class GuiTabContainer extends EiraGuiScreen {
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float par3) {
 		super.drawScreen(mouseX, mouseY, par3);
-		mc.renderEngine.bindTexture(EiraGui.texMenu);
-		EiraGui.drawTexturedRect256(menuX, menuY + 8, panelWidth - 16, panelHeight - 16, 0, 144, 16, 16, zLevel);
-		EiraGui.drawTexturedRect256(menuX + 16, menuY + 8 + panelHeight - 16, panelWidth - 32, 16, 0, 144, 16, 16, zLevel);
-		EiraGui.drawTexturedRect256(menuX + panelWidth - 16, menuY + 24, 16, panelHeight - 32, 0, 144, 16, 16, zLevel);
-		EiraGui.drawTexturedRect256(menuX, menuY + 8 + panelHeight - 16, 16, 16, 0, 160, 16, 16, zLevel);
-		EiraGui.drawTexturedRect256(menuX + panelWidth - 16, menuY + 8 + panelHeight - 16, 16, 16, 16, 160, 16, 16, zLevel);
-		EiraGui.drawTexturedRect256(menuX + panelWidth - 16, menuY + 8, 16, 16, 16, 144, 16, 16, zLevel);
+
+		regionContent.draw(menuX, menuY + 8, panelWidth - 16, panelHeight - 16);
+		regionContent.draw(menuX + 16, menuY + 8 + panelHeight - 16, panelWidth - 32, 16);
+		regionContent.draw(menuX + panelWidth - 16, menuY + 24, 16, panelHeight - 32);
+		regionBottomLeft.draw(menuX, menuY + 8 + panelHeight - 16);
+		regionBottomRight.draw(menuX + panelWidth - 16, menuY + 8 + panelHeight - 16);
+		regionTopRight.draw(menuX + panelWidth - 16, menuY + 8);
 
 		if(currentTab != null) {
 			currentTab.drawScreen(mouseX, mouseY, par3);

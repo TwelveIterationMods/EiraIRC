@@ -4,33 +4,36 @@
 package net.blay09.mods.eirairc;
 
 import cpw.mods.fml.client.event.ConfigChangedEvent;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.Mod.EventHandler;
+import cpw.mods.fml.common.Mod.Instance;
+import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import net.blay09.mods.eirairc.api.upload.UploadManager;
-import net.blay09.mods.eirairc.client.upload.DirectUploadHoster;
-import net.blay09.mods.eirairc.client.upload.ImgurHoster;
+import cpw.mods.fml.relauncher.Side;
+import net.blay09.mods.eirairc.addon.DirectUploadHoster;
+import net.blay09.mods.eirairc.addon.ImgurHoster;
+import net.blay09.mods.eirairc.api.EiraIRCAPI;
 import net.blay09.mods.eirairc.command.base.CommandIRC;
 import net.blay09.mods.eirairc.command.base.CommandServIRC;
 import net.blay09.mods.eirairc.command.base.IRCCommandHandler;
 import net.blay09.mods.eirairc.command.base.IgnoreCommand;
-import net.blay09.mods.eirairc.config.*;
+import net.blay09.mods.eirairc.config.ChannelConfig;
+import net.blay09.mods.eirairc.config.ConfigurationHandler;
+import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.handler.ChatSessionHandler;
 import net.blay09.mods.eirairc.handler.IRCConnectionHandler;
 import net.blay09.mods.eirairc.handler.IRCEventHandler;
 import net.blay09.mods.eirairc.handler.MCEventHandler;
 import net.blay09.mods.eirairc.net.EiraNetHandler;
 import net.blay09.mods.eirairc.net.PacketHandler;
+import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Globals;
-import net.blay09.mods.eirairc.util.IRCResolver;
 import net.blay09.mods.eirairc.util.I19n;
 import net.minecraft.command.CommandHandler;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.SidedProxy;
 
 @Mod(modid = EiraIRC.MOD_ID, acceptableRemoteVersions="*", guiFactory = "net.blay09.mods.eirairc.client.gui.EiraIRCGuiFactory")
 public class EiraIRC {
@@ -52,9 +55,6 @@ public class EiraIRC {
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-		UploadManager.registerUploadHoster(new DirectUploadHoster());
-		UploadManager.registerUploadHoster(new ImgurHoster());
-
 		ConfigurationHandler.load(event.getModConfigurationDirectory());
 
 		FMLInterModComms.sendRuntimeMessage(this, "VersionChecker", "addVersionCheck", Globals.UPDATE_URL);
@@ -70,7 +70,7 @@ public class EiraIRC {
 		ircConnectionHandler = new IRCConnectionHandler();
 		mcEventHandler = new MCEventHandler();
 
-		proxy.setupClient();
+		proxy.init();
 
 		FMLCommonHandler.instance().bus().register(this);
 		FMLCommonHandler.instance().bus().register(mcEventHandler);
@@ -81,10 +81,21 @@ public class EiraIRC {
 		
 		I19n.init();
 		PacketHandler.init();
+
+		EiraIRCAPI.internalSetupAPI(new InternalMethodsImpl());
 	}
 	
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
+		event.buildSoftDependProxy("Dynmap", "net.blay09.mods.eirairc.addon.DynmapWebChatAddon");
+		if(FMLCommonHandler.instance().getSide() == Side.CLIENT) {
+			event.buildSoftDependProxy("aether", "net.blay09.mods.eirairc.addon.AetherAddon");
+		}
+
+		EiraIRCAPI.registerUploadHoster(new DirectUploadHoster());
+		EiraIRCAPI.registerUploadHoster(new ImgurHoster());
+
+		proxy.postInit();
 	}
 	
 	@EventHandler
@@ -116,7 +127,7 @@ public class EiraIRC {
 				serverConfig.getGeneralSettings().pushDummyConfig();
 				ConfigurationHandler.saveServers();
 			} else if(event.configID.startsWith("channel:")) {
-				ChannelConfig channelConfig = IRCResolver.resolveChannelConfig(event.configID.substring(8), IRCResolver.FLAGS_NONE);
+				ChannelConfig channelConfig = ConfigHelper.resolveChannelConfig(event.configID.substring(8));
 				channelConfig.getTheme().pushDummyConfig();
 				channelConfig.getBotSettings().pushDummyConfig();
 				channelConfig.getGeneralSettings().pushDummyConfig();

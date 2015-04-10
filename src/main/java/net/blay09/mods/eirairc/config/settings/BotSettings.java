@@ -1,13 +1,16 @@
 package net.blay09.mods.eirairc.config.settings;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import net.blay09.mods.eirairc.config.base.MessageFormatConfig;
+import com.google.gson.JsonPrimitive;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
+import net.blay09.mods.eirairc.config.base.MessageFormatConfig;
 import net.blay09.mods.eirairc.util.I19n;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
+import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.EnumMap;
 import java.util.List;
@@ -21,12 +24,65 @@ public class BotSettings {
 	private final BotSettings parent;
 
 	private final EnumMap<BotStringComponent, String> strings = new EnumMap<BotStringComponent, String>(BotStringComponent.class);
+	private final EnumMap<BotStringListComponent, String[]> stringLists = new EnumMap<BotStringListComponent, String[]>(BotStringListComponent.class);
 	private final EnumMap<BotBooleanComponent, Boolean> booleans = new EnumMap<BotBooleanComponent, Boolean>(BotBooleanComponent.class);
 
 	private Configuration dummyConfig;
 
 	public BotSettings(BotSettings parent) {
 		this.parent = parent;
+	}
+
+	public boolean stringContains(BotStringListComponent component, String s) {
+		String[] list;
+		if(!stringLists.containsKey(component)) {
+			if(parent != null) {
+				return parent.stringContains(component, s);
+			}
+			list = component.defaultValue;
+		} else {
+			list = stringLists.get(component);
+		}
+		for(int i = 0; i < list.length; i++) {
+			if(component.allowWildcard && list[i].equals("*")) {
+				return true;
+			}
+			if(s.contains(list[i])) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean containsString(BotStringListComponent component, String s) {
+		String[] list;
+		if(!stringLists.containsKey(component)) {
+			if(parent != null) {
+				return parent.containsString(component, s);
+			}
+			list = component.defaultValue;
+		} else {
+			list = stringLists.get(component);
+		}
+		for(int i = 0; i < list.length; i++) {
+			if(component.allowWildcard && list[i].equals("*")) {
+				return true;
+			}
+			if(list[i].equals(s)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private String[] getStringList(BotStringListComponent component) {
+		if(!stringLists.containsKey(component)) {
+			if(parent != null) {
+				return parent.getStringList(component);
+			}
+			return component.defaultValue;
+		}
+		return stringLists.get(component);
 	}
 
 	public String getString(BotStringComponent component) {
@@ -67,6 +123,15 @@ public class BotSettings {
 				}
 			}
 		}
+		stringLists.clear();
+		for(int i = 0; i < BotStringListComponent.values().length; i++) {
+			if(defaultValues || config.hasKey(category, BotStringListComponent.values[i].name)) {
+				String[] value = config.getStringList(BotStringListComponent.values[i].name, category, BotStringListComponent.values[i].defaultValue, I19n.format(BotStringListComponent.values[i].langKey + ".tooltip"), null, BotStringListComponent.values[i].langKey);
+				if(defaultValues || value.length > 0) {
+					stringLists.put(BotStringListComponent.values[i], value);
+				}
+			}
+		}
 		booleans.clear();
 		for(int i = 0; i < BotBooleanComponent.values().length; i++) {
 			if(defaultValues || config.hasKey(category, BotBooleanComponent.values[i].name)) {
@@ -94,6 +159,13 @@ public class BotSettings {
 				property.set(strings.get(BotStringComponent.values[i]));
 			}
 		}
+		for(int i = 0; i < BotStringListComponent.values().length; i++) {
+			Property property = dummyConfig.get("bot", BotStringListComponent.values[i].name, parent.getStringList(BotStringListComponent.values[i]));
+			property.setLanguageKey(BotStringListComponent.values[i].langKey);
+			if(stringLists.containsKey(BotStringListComponent.values[i])) {
+				property.set(stringLists.get(BotStringListComponent.values[i]));
+			}
+		}
 		for(int i = 0; i < BotBooleanComponent.values().length; i++) {
 			Property property = dummyConfig.get("bot", BotBooleanComponent.values[i].name, parent.getBoolean(BotBooleanComponent.values[i]));
 			property.setLanguageKey(BotBooleanComponent.values[i].langKey);
@@ -108,6 +180,16 @@ public class BotSettings {
 		for(int i = 0; i < BotStringComponent.values().length; i++) {
 			if(object.has(BotStringComponent.values[i].name)) {
 				strings.put(BotStringComponent.values[i], object.get(BotStringComponent.values[i].name).getAsString());
+			}
+		}
+		for(int i = 0; i < BotStringListComponent.values().length; i++) {
+			if(object.has(BotStringListComponent.values[i].name)) {
+				JsonArray array = object.getAsJsonArray(BotStringListComponent.values[i].name);
+				String[] values = new String[array.size()];
+				for(int j = 0; j < values.length; j++) {
+					values[j] = array.get(j).getAsString();
+				}
+				stringLists.put(BotStringListComponent.values[i], values);
 			}
 		}
 		for(int i = 0; i < BotBooleanComponent.values().length; i++) {
@@ -125,6 +207,13 @@ public class BotSettings {
 		for(Map.Entry<BotStringComponent, String> entry : strings.entrySet()) {
 			object.addProperty(entry.getKey().name, entry.getValue());
 		}
+		for(Map.Entry<BotStringListComponent, String[]> entry : stringLists.entrySet()) {
+			JsonArray array = new JsonArray();
+			for(int i = 0; i < entry.getValue().length; i++) {
+				array.add(new JsonPrimitive(entry.getValue()[i]));
+			}
+			object.add(entry.getKey().name, array);
+		}
 		for(Map.Entry<BotBooleanComponent, Boolean> entry : booleans.entrySet()) {
 			object.addProperty(entry.getKey().name, entry.getValue());
 		}
@@ -133,6 +222,9 @@ public class BotSettings {
 
 	public void save(Configuration config, String category) {
 		for(Map.Entry<BotStringComponent, String> entry : strings.entrySet()) {
+			config.get(category, entry.getKey().name, "", I19n.format(entry.getKey().langKey + ".tooltip")).set(entry.getValue());
+		}
+		for(Map.Entry<BotStringListComponent, String[]> entry : stringLists.entrySet()) {
 			config.get(category, entry.getKey().name, "", I19n.format(entry.getKey().langKey + ".tooltip")).set(entry.getValue());
 		}
 		for(Map.Entry<BotBooleanComponent, Boolean> entry : booleans.entrySet()) {
@@ -156,39 +248,67 @@ public class BotSettings {
 	}
 
 	public String handleConfigCommand(ICommandSender sender, String key) {
-		try {
-			BotBooleanComponent component = BotBooleanComponent.valueOf(key);
-			if (booleans.containsKey(component)) {
-				return String.valueOf(booleans.get(component));
+		BotBooleanComponent booleanComponent = BotBooleanComponent.fromName(key);
+		if(booleanComponent != null) {
+			if(booleans.containsKey(booleanComponent)) {
+				return String.valueOf(booleans.get(booleanComponent));
 			} else {
 				return "<inherit>";
 			}
-		} catch (IllegalArgumentException ignored) {}
-		try {
-			BotStringComponent component = BotStringComponent.valueOf(key);
-			if (strings.containsKey(component)) {
-				return strings.get(component);
+		}
+		BotStringComponent stringComponent = BotStringComponent.fromName(key);
+		if(stringComponent != null) {
+			if(strings.containsKey(stringComponent)) {
+				return strings.get(stringComponent);
 			} else {
 				return "<inherit>";
 			}
-		} catch (IllegalArgumentException ignored) {}
+		}
+		BotStringListComponent stringListComponent = BotStringListComponent.fromName(key);
+		if(stringListComponent != null) {
+			if (stringLists.containsKey(stringListComponent)) {
+				return Utils.joinStrings(stringLists.get(stringListComponent), ", ", 0);
+			} else {
+				return "<inherit>";
+			}
+		}
 		return null;
 	}
-
 	public boolean handleConfigCommand(ICommandSender sender, String key, String value) {
-		try {
-			BotBooleanComponent component = BotBooleanComponent.valueOf(key);
-			booleans.put(component, Boolean.parseBoolean(value));
+		BotBooleanComponent booleanComponent = BotBooleanComponent.fromName(key);
+		if(booleanComponent != null) {
+			booleans.put(booleanComponent, Boolean.parseBoolean(value));
 			return true;
-		} catch (IllegalArgumentException ignored) {}
-		try {
-			BotStringComponent component = BotStringComponent.valueOf(key);
-			strings.put(component, value);
+		}
+		BotStringComponent stringComponent = BotStringComponent.fromName(key);
+		if(stringComponent != null) {
+			strings.put(stringComponent, value);
 			return true;
-		} catch (IllegalArgumentException ignored) {}
+		}
+		BotStringListComponent stringListComponent = BotStringListComponent.fromName(key);
+		if(stringListComponent != null) {
+			String[] list = stringLists.get(stringListComponent);
+			if (value.startsWith("add ")) {
+				if (list == null) {
+					list = new String[]{value.substring(4)};
+				} else {
+					list = ArrayUtils.add(list, value.substring(4));
+				}
+			} else if (value.startsWith("remove ") && list != null) {
+				for (int i = 0; i < list.length; i++) {
+					if (list[i].equals(value.substring(7))) {
+						list = ArrayUtils.remove(list, i);
+						break;
+					}
+				}
+			}
+			if (list != null) {
+				stringLists.put(stringListComponent, list);
+			}
+			return true;
+		}
 		return false;
 	}
-
 	public static void addOptionsToList(List<String> list, String option) {
 		if(option == null) {
 			for(BotBooleanComponent component : BotBooleanComponent.values) {
@@ -197,11 +317,13 @@ public class BotSettings {
 			for(BotStringComponent component : BotStringComponent.values) {
 				list.add(component.name);
 			}
+			for(BotStringListComponent component : BotStringListComponent.values) {
+				list.add(component.name);
+			}
 		} else {
-			try {
-				BotBooleanComponent.valueOf(option);
+			if(BotBooleanComponent.fromName(option) != null) {
 				Utils.addBooleansToList(list);
-			} catch (IllegalArgumentException ignored) {}
+			}
 		}
 	}
 

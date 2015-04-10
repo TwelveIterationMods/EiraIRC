@@ -1,7 +1,7 @@
 package net.blay09.mods.eirairc.bot;
 
-import net.blay09.mods.eirairc.api.IRCChannel;
-import net.blay09.mods.eirairc.api.IRCUser;
+import net.blay09.mods.eirairc.api.irc.IRCChannel;
+import net.blay09.mods.eirairc.api.irc.IRCUser;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
@@ -35,7 +35,7 @@ public class IRCUserCommandSender implements ICommandSender {
 
 	@Override
 	public void addChatMessage(IChatComponent chatComponent) {
-		if(broadcastResult) {
+		if(broadcastResult && channel != null) {
 			channel.message(chatComponent.getUnformattedText());
 		} else {
 			user.notice(chatComponent.getUnformattedText());

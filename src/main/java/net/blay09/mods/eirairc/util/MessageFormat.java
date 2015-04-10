@@ -1,15 +1,17 @@
 package net.blay09.mods.eirairc.util;
 
-import net.blay09.mods.eirairc.api.IRCChannel;
-import net.blay09.mods.eirairc.api.IRCConnection;
-import net.blay09.mods.eirairc.api.IRCContext;
-import net.blay09.mods.eirairc.api.IRCUser;
+import net.blay09.mods.eirairc.api.irc.IRCChannel;
+import net.blay09.mods.eirairc.api.irc.IRCConnection;
+import net.blay09.mods.eirairc.api.irc.IRCContext;
+import net.blay09.mods.eirairc.api.irc.IRCUser;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.config.settings.*;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.event.ClickEvent;
-import net.minecraft.util.*;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -19,12 +21,12 @@ import java.util.regex.Pattern;
  */
 public class MessageFormat {
 
-	public static enum Target {
+	public enum Target {
 		IRC,
 		Minecraft
 	}
 
-	public static enum Mode {
+	public enum Mode {
 		Message,
 		Emote;
 	}
@@ -151,18 +153,17 @@ public class MessageFormat {
 
 	public static String formatNick(String nick, IRCContext context, Target target, Mode mode, IRCUser ircUser) {
 		if(target == Target.IRC) {
-			if (SharedGlobalConfig.hidePlayerTags) {
+			if(SharedGlobalConfig.hidePlayerTags) {
 				nick = filterPlayerTags(nick);
 			}
 			nick = String.format(ConfigHelper.getBotSettings(context).getString(BotStringComponent.NickFormat), nick);
+			if(SharedGlobalConfig.preventUserPing) {
+				nick = nick.charAt(0) + '\u0081' + nick.substring(1);
+			}
 		} else if(target == Target.Minecraft && context instanceof IRCChannel) {
 			GeneralSettings settings = ConfigHelper.getGeneralSettings(context);
 			if(settings.getBoolean(GeneralBooleanComponent.ShowNameFlags)) {
-				if(ircUser.isOperator((IRCChannel) context)) {
-					nick = "@" + nick;
-				} else if(ircUser.hasVoice((IRCChannel) context)) {
-					nick = "+" + nick;
-				}
+				nick = ircUser.getChannelModePrefix((IRCChannel) context) + nick;
 			}
 		}
 		return nick;
@@ -182,6 +183,7 @@ public class MessageFormat {
 
 	public static IChatComponent formatChatComponent(String format, IRCContext context, ICommandSender sender, String message, Target target, Mode mode) {
 		IChatComponent root = new ChatComponentText("");
+		EnumChatFormatting nextColor = null;
 		StringBuilder sb = new StringBuilder();
 		int currentIdx = 0;
 		while(currentIdx < format.length()) {
@@ -228,20 +230,37 @@ public class MessageFormat {
 					}
 					if(validToken) {
 						if(sb.length() > 0) {
-							root.appendSibling(new ChatComponentText(sb.toString()));
+							IChatComponent newComponent;
+							newComponent = new ChatComponentText(sb.toString());
+							root.appendSibling(newComponent);
+							if(nextColor != null) {
+								newComponent.getChatStyle().setColor(nextColor);
+							}
 							sb = new StringBuilder();
 						}
 						root.appendSibling(component);
+						if(nextColor != null) {
+							component.getChatStyle().setColor(nextColor);
+						}
 						currentIdx += token.length() + 2;
 						continue;
 					}
 				}
+			} else if(c == '\u00a7') {
+				nextColor = IRCFormatting.getColorFromMCColorCode(format.charAt(currentIdx + 1));
+				currentIdx += 2;
+				continue;
 			}
 			sb.append(c);
 			currentIdx++;
 		}
 		if(sb.length() > 0) {
-			root.appendSibling(new ChatComponentText(sb.toString()));
+			IChatComponent newComponent;
+			newComponent = new ChatComponentText(sb.toString());
+			root.appendSibling(newComponent);
+			if(nextColor != null) {
+				newComponent.getChatStyle().setColor(nextColor);
+			}
 		}
 		return root;
 	}
@@ -260,6 +279,7 @@ public class MessageFormat {
 
 	public static IChatComponent formatChatComponent(String format, IRCConnection connection, IRCChannel channel, IRCUser user, String message, Target target, Mode mode) {
 		IChatComponent root = new ChatComponentText("");
+		EnumChatFormatting nextColor = null;
 		StringBuilder sb = new StringBuilder();
 		int currentIdx = 0;
 		while(currentIdx < format.length()) {
@@ -273,7 +293,7 @@ public class MessageFormat {
 					if(token.equals("SERVER")) {
 						component = new ChatComponentText(connection.getIdentifier());
 					} else if(token.equals("CHANNEL")) {
-						component = new ChatComponentText(channel.getName());
+						component = new ChatComponentText(channel != null ? channel.getName() : "#");
 					} else if(token.equals("USER")) {
 						if(user != null) {
 							component = new ChatComponentText(user.getIdentifier());
@@ -308,20 +328,37 @@ public class MessageFormat {
 					}
 					if(validToken) {
 						if(sb.length() > 0) {
-							root.appendSibling(new ChatComponentText(sb.toString()));
+							IChatComponent newComponent;
+							newComponent = new ChatComponentText(sb.toString());
+							root.appendSibling(newComponent);
+							if(nextColor != null) {
+								newComponent.getChatStyle().setColor(nextColor);
+							}
 							sb = new StringBuilder();
 						}
 						root.appendSibling(component);
+						if(nextColor != null) {
+							component.getChatStyle().setColor(nextColor);
+						}
 						currentIdx += token.length() + 2;
 						continue;
 					}
 				}
+			} else if(c == '\u00a7') {
+				nextColor = IRCFormatting.getColorFromMCColorCode(format.charAt(currentIdx + 1));
+				currentIdx += 2;
+				continue;
 			}
 			sb.append(c);
 			currentIdx++;
 		}
 		if(sb.length() > 0) {
-			root.appendSibling(new ChatComponentText(sb.toString()));
+			IChatComponent newComponent;
+			newComponent = new ChatComponentText(sb.toString());
+			root.appendSibling(newComponent);
+			if(nextColor != null) {
+				newComponent.getChatStyle().setColor(nextColor);
+			}
 		}
 		return root;
 	}

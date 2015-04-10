@@ -3,19 +3,20 @@
 
 package net.blay09.mods.eirairc.command;
 
-import java.util.List;
-
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.api.IRCContext;
+import net.blay09.mods.eirairc.api.irc.IRCContext;
+import net.blay09.mods.eirairc.api.SubCommand;
 import net.blay09.mods.eirairc.config.ChannelConfig;
-import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
+import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.util.IRCResolver;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 
-public class CommandConfig extends SubCommand {
+import java.util.List;
+
+public class CommandConfig implements SubCommand {
 
 	public static final String TARGET_GLOBAL = "global";
 	
@@ -25,8 +26,8 @@ public class CommandConfig extends SubCommand {
 	}
 
 	@Override
-	public String getUsageString(ICommandSender sender) {
-		return "irc.commands.config";
+	public String getCommandUsage(ICommandSender sender) {
+		return "eirairc:irc.commands.config";
 	}
 
 	@Override
@@ -43,7 +44,7 @@ public class CommandConfig extends SubCommand {
 		if(target.equals("reload")) {
 			Utils.sendLocalizedMessage(sender, "irc.config.reload");
 			EiraIRC.instance.getConnectionManager().stopIRC();
-			ConfigurationHandler.reload();
+			ConfigurationHandler.reloadAll();
 			EiraIRC.instance.getConnectionManager().startIRC();
 			return true;
 		}
@@ -52,7 +53,7 @@ public class CommandConfig extends SubCommand {
 		}
 		String config = args[1];
 		if(args.length > 2) {
-			ConfigurationHandler.handleConfigCommand(sender, target, config, args[2]);
+			ConfigurationHandler.handleConfigCommand(sender, target, config, Utils.joinStrings(args, " ", 2));
 		} else {
 			ConfigurationHandler.handleConfigCommand(sender, target, config);
 		}

@@ -3,29 +3,17 @@
 
 package net.blay09.mods.eirairc.client.screenshot;
 
-import java.awt.image.BufferedImage;
-import java.io.*;
-import java.nio.IntBuffer;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
-
-import javax.imageio.ImageIO;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
+import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.api.IRCChannel;
-import net.blay09.mods.eirairc.api.IRCConnection;
-import net.blay09.mods.eirairc.api.IRCUser;
+import net.blay09.mods.eirairc.api.irc.IRCChannel;
+import net.blay09.mods.eirairc.api.irc.IRCContext;
+import net.blay09.mods.eirairc.api.irc.IRCUser;
 import net.blay09.mods.eirairc.api.event.RelayChat;
-import net.blay09.mods.eirairc.api.upload.IUploadHoster;
-import net.blay09.mods.eirairc.api.upload.UploadManager;
+import net.blay09.mods.eirairc.api.upload.UploadHoster;
+import net.blay09.mods.eirairc.client.UploadManager;
 import net.blay09.mods.eirairc.config.ClientGlobalConfig;
 import net.blay09.mods.eirairc.config.ScreenshotAction;
 import net.blay09.mods.eirairc.config.settings.BotSettings;
@@ -34,7 +22,6 @@ import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.MessageFormat;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
@@ -43,7 +30,13 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.nio.IntBuffer;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class ScreenshotManager {
 
@@ -188,7 +181,7 @@ public class ScreenshotManager {
 	}
 
 	public void uploadScreenshot(Screenshot screenshot, ScreenshotAction followUpAction) {
-		IUploadHoster hoster = UploadManager.getUploadHoster(ClientGlobalConfig.screenshotHoster);
+		UploadHoster hoster = UploadManager.getUploadHoster(ClientGlobalConfig.screenshotHoster);
 		if (hoster != null) {
 			uploadTasks.add(new AsyncUploadScreenshot(hoster, screenshot, followUpAction));
 		}
@@ -200,9 +193,9 @@ public class ScreenshotManager {
 				AsyncUploadScreenshot task = uploadTasks.remove(i);
 				if(task.getScreenshot().isUploaded()) {
 					ScreenshotAction action = task.getFollowUpAction();
-					if (action == ScreenshotAction.UploadClipboard) {
+					if(action == ScreenshotAction.UploadClipboard) {
 						Utils.setClipboardString(task.getScreenshot().getUploadURL());
-					} else if (action == ScreenshotAction.UploadShare) {
+					} else if(action == ScreenshotAction.UploadShare) {
 						shareScreenshot(task.getScreenshot());
 					}
 					save();
@@ -215,52 +208,42 @@ public class ScreenshotManager {
 		if(Minecraft.getMinecraft().thePlayer == null) {
 			return;
 		}
-		String text = Utils.getLocalizedMessage("irc.display.shareScreenshot", screenshot.getUploadURL());
-		if(EiraIRC.instance.getChatSessionHandler().isMinecraftTarget()) {
-			String mcMessage = "/me " + text;
-			Minecraft.getMinecraft().thePlayer.sendChatMessage(mcMessage);
+		IRCContext chatTarget = EiraIRC.instance.getChatSessionHandler().getChatTarget();
+		String format = ConfigHelper.getBotSettings(chatTarget).getMessageFormat().ircScreenshotUpload;
+		format = format.replace("{URL}", screenshot.getDirectURL() != null ? screenshot.getDirectURL() : screenshot.getUploadURL());
+		if(chatTarget == null) {
+			format = format.replace("{NICK}", "/me");
+			format = format.replace("{USER}", "/me");
+			Minecraft.getMinecraft().thePlayer.sendChatMessage(format);
 		} else {
-			// TODO damn, clean up your shitty code once 1.6.4 and 1.7.2 is dropped
 			EntityPlayer sender = Minecraft.getMinecraft().thePlayer;
-			MinecraftForge.EVENT_BUS.post(new RelayChat(sender, text, true));
-			String chatTarget = EiraIRC.instance.getChatSessionHandler().getChatTarget();
-			if(chatTarget == null) {
+			EnumChatFormatting emoteColor;
+			IChatComponent chatComponent;
+			if (chatTarget instanceof IRCChannel) {
+				BotSettings botSettings = ConfigHelper.getBotSettings(chatTarget);
+				format = botSettings.getMessageFormat().ircScreenshotUpload.replace("{URL}", screenshot.getDirectURL() != null ? screenshot.getDirectURL() : screenshot.getUploadURL());
+				emoteColor = ConfigHelper.getTheme(chatTarget).getColor(ThemeColorComponent.emoteTextColor);
+				chatComponent = MessageFormat.formatChatComponent(format, chatTarget, sender, "", MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
+			} else if(chatTarget instanceof IRCUser) {
+				BotSettings botSettings = ConfigHelper.getBotSettings(chatTarget);
+				format = botSettings.getMessageFormat().ircScreenshotUpload.replace("{URL}", screenshot.getDirectURL() != null ? screenshot.getDirectURL() : screenshot.getUploadURL());
+				emoteColor = ConfigHelper.getTheme(chatTarget).getColor(ThemeColorComponent.emoteTextColor);
+				chatComponent = MessageFormat.formatChatComponent(format, chatTarget, sender, "", MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
+			} else {
 				return;
 			}
-			String[] target = chatTarget.split("/");
-			IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(target[0]);
-			if(connection != null) {
-				EnumChatFormatting emoteColor;
-				IChatComponent chatComponent;
-				if (connection.getChannelTypes().indexOf(target[1].charAt(0)) != -1) {
-					IRCChannel targetChannel = connection.getChannel(target[1]);
-					if (targetChannel == null) {
-						return;
-					}
-					BotSettings botSettings = ConfigHelper.getBotSettings(targetChannel);
-					emoteColor = ConfigHelper.getTheme(targetChannel).getColor(ThemeColorComponent.emoteTextColor);
-					chatComponent = MessageFormat.formatChatComponent(botSettings.getMessageFormat().mcSendChannelEmote, targetChannel, sender, text, MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
-				} else {
-					IRCUser targetUser = connection.getUser(target[1]);
-					if (targetUser == null) {
-						return;
-					}
-					BotSettings botSettings = ConfigHelper.getBotSettings(targetUser);
-					emoteColor = ConfigHelper.getTheme(targetUser).getColor(ThemeColorComponent.emoteTextColor);
-					chatComponent = MessageFormat.formatChatComponent(botSettings.getMessageFormat().mcSendPrivateEmote, targetUser, sender, text, MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
-				}
-				if (emoteColor != null) {
-					chatComponent.getChatStyle().setColor(emoteColor);
-				}
-				Utils.addMessageToChat(chatComponent);
+			if (emoteColor != null) {
+				chatComponent.getChatStyle().setColor(emoteColor);
 			}
+			MinecraftForge.EVENT_BUS.post(new RelayChat(sender, chatComponent.getUnformattedText(), true));
+			Utils.addMessageToChat(chatComponent);
 		}
 	}
 
 	public void handleNewScreenshot(Screenshot screenshot) {
 		if (EiraIRC.proxy.isIngame()) {
 			ScreenshotAction action = ClientGlobalConfig.screenshotAction;
-			if (action == ScreenshotAction.UploadClipboard || action == ScreenshotAction.UploadShare) {
+			if(action == ScreenshotAction.UploadClipboard || action == ScreenshotAction.UploadShare) {
 				uploadScreenshot(screenshot, action);
 			}
 		}

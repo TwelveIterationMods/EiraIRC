@@ -3,24 +3,23 @@
 
 package net.blay09.mods.eirairc.command;
 
-import java.util.List;
-
-import net.blay09.mods.eirairc.api.IRCContext;
+import net.blay09.mods.eirairc.api.EiraIRCAPI;
+import net.blay09.mods.eirairc.api.irc.IRCContext;
+import net.blay09.mods.eirairc.api.SubCommand;
 import net.blay09.mods.eirairc.config.ChannelConfig;
+import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.settings.BotBooleanComponent;
-import net.blay09.mods.eirairc.config.ConfigurationHandler;
-import net.blay09.mods.eirairc.irc.IRCUserImpl;
 import net.blay09.mods.eirairc.util.ConfigHelper;
-import net.blay09.mods.eirairc.util.IRCResolver;
-import net.blay09.mods.eirairc.util.IRCTargetError;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
 
-public class CommandMessage extends SubCommand {
+import java.util.List;
+
+public class CommandMessage implements SubCommand {
 
 	@Override
 	public String getCommandName() {
@@ -28,8 +27,8 @@ public class CommandMessage extends SubCommand {
 	}
 
 	@Override
-	public String getUsageString(ICommandSender sender) {
-		return "irc.commands.msg";
+	public String getCommandUsage(ICommandSender sender) {
+		return "eirairc:irc.commands.msg";
 	}
 
 	@Override
@@ -42,15 +41,11 @@ public class CommandMessage extends SubCommand {
 		if(args.length < 2) {
 			throw new WrongUsageException(getCommandUsage(sender));
 		}
-		short flags = IRCResolver.FLAG_CHANNEL + IRCResolver.FLAG_ONCHANNEL + IRCResolver.FLAG_USER;
-		if(serverSide && !Utils.isOP(sender)) {
-			flags += IRCResolver.FLAG_USERONCHANNEL;
-		}
-		IRCContext target = IRCResolver.resolveTarget(args[0], flags);
-		if(target instanceof IRCTargetError) {
+		IRCContext target = EiraIRCAPI.parseContext(null, args[0], null);
+		if(target.getContextType() == IRCContext.ContextType.Error) {
 			Utils.sendLocalizedMessage(sender, target.getName(), args[0]);
 			return true;
-		} else if(target instanceof IRCUserImpl) {
+		} else if(target.getContextType() == IRCContext.ContextType.IRCUser) {
 			if(!ConfigHelper.getBotSettings(context).getBoolean(BotBooleanComponent.AllowPrivateMessages)) {
 				Utils.sendLocalizedMessage(sender, "irc.msg.disabled");
 				return true;

@@ -3,8 +3,6 @@
 
 package net.blay09.mods.eirairc.config;
 
-import java.util.List;
-
 import com.google.gson.JsonObject;
 import net.blay09.mods.eirairc.config.settings.BotSettings;
 import net.blay09.mods.eirairc.config.settings.GeneralSettings;
@@ -14,6 +12,8 @@ import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
+
+import java.util.List;
 
 public class ChannelConfig {
 

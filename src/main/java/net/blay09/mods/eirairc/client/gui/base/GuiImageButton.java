@@ -1,11 +1,8 @@
 package net.blay09.mods.eirairc.client.gui.base;
 
-import cpw.mods.fml.client.config.GuiUtils;
-import net.blay09.mods.eirairc.client.gui.EiraGui;
+import net.blay09.mods.eirairc.client.graphics.TextureRegion;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -15,20 +12,14 @@ public class GuiImageButton extends GuiButton {
 
 	private static final float FADE_PER_FRAME = 0.05f;
 
-	private final ResourceLocation res;
-	private int texCoordX;
-	private int texCoordY;
+	private TextureRegion region;
 	private float alphaFade = 1f;
 	private int fadeMode;
 	private String tooltipText;
 
-	public GuiImageButton(int id, int xPos, int yPos, ResourceLocation res, int texCoordX, int texCoordY, int texWidth, int texHeight) {
+	public GuiImageButton(int id, int xPos, int yPos, TextureRegion region) {
 		super(id, xPos, yPos, "");
-		this.res = res;
-		this.texCoordX = texCoordX;
-		this.texCoordY = texCoordY;
-		width = texWidth;
-		height = texHeight;
+		setTextureRegion(region);
 	}
 
 	public String getTooltipText() {
@@ -43,11 +34,10 @@ public class GuiImageButton extends GuiButton {
 		this.fadeMode = fadeMode;
 	}
 
-	public void setTextureRegion(int texCoordX, int texCoordY, int texWidth, int texHeight) {
-		this.texCoordX = texCoordX;
-		this.texCoordY = texCoordY;
-		width = texWidth;
-		height = texHeight;
+	public void setTextureRegion(TextureRegion region) {
+		this.region = region;
+		width = region.getRegionWidth();
+		height = region.getRegionHeight();
 	}
 
 	public boolean isAlphaVisible() {
@@ -70,7 +60,6 @@ public class GuiImageButton extends GuiButton {
 				}
 			}
 			// Render the button with fade alpha and hover effect
-			mc.renderEngine.bindTexture(res);
 			boolean hovered = false;
 			if(enabled) {
 				if (mouseX >= xPosition && mouseY >= yPosition && mouseX < xPosition + width && mouseY < yPosition + height) {
@@ -86,7 +75,7 @@ public class GuiImageButton extends GuiButton {
 				GL11.glPushMatrix();
 				GL11.glTranslatef(0.5f, 0.5f, 0.5f);
 			}
-			GuiUtils.drawTexturedModalRect(xPosition, yPosition, texCoordX, texCoordY, width, height, this.zLevel);
+			region.draw(xPosition, yPosition);
 			if(hovered) {
 				GL11.glPopMatrix();
 			}

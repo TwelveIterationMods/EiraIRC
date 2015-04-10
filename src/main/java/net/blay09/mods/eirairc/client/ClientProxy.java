@@ -4,9 +4,11 @@
 package net.blay09.mods.eirairc.client;
 
 import cpw.mods.fml.client.registry.ClientRegistry;
+import cpw.mods.fml.common.FMLCommonHandler;
 import net.blay09.mods.eirairc.CommonProxy;
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.event.IRCChannelChatEvent;
+import net.blay09.mods.eirairc.client.gui.EiraGui;
 import net.blay09.mods.eirairc.client.gui.GuiEiraIRCRedirect;
 import net.blay09.mods.eirairc.client.gui.chat.GuiEiraChat;
 import net.blay09.mods.eirairc.client.gui.overlay.OverlayNotification;
@@ -22,10 +24,10 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.ClientCommandHandler;
-import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraftforge.common.config.Configuration;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 public class ClientProxy extends CommonProxy {
@@ -36,14 +38,12 @@ public class ClientProxy extends CommonProxy {
 	private static final KeyBinding[] keyBindings = new KeyBinding[] {
 		ClientGlobalConfig.keyScreenshotShare,
 		ClientGlobalConfig.keyOpenScreenshots,
-		ClientGlobalConfig.keyToggleRecording,
-		ClientGlobalConfig.keyToggleLive,
 		ClientGlobalConfig.keyToggleTarget,
 		ClientGlobalConfig.keyOpenMenu
 	};
 
 	@Override
-	public void setupClient() {
+	public void init() {
 		eiraChat = new GuiEiraChat();
 		
 		notificationGUI = new OverlayNotification();
@@ -53,13 +53,25 @@ public class ClientProxy extends CommonProxy {
 		for(int i = 0; i < keyBindings.length; i++) {
 			ClientRegistry.registerKeyBinding(keyBindings[i]);
 		}
+
+		// Dirty hack to stop toggle target overshadowing player list key when they share the same key code (they do by default)
+		KeyBinding keyBindPlayerList = Minecraft.getMinecraft().gameSettings.keyBindPlayerList;
+		if(ClientGlobalConfig.keyToggleTarget.getKeyCode() == keyBindPlayerList.getKeyCode()) {
+			Minecraft.getMinecraft().gameSettings.keyBindPlayerList = new KeyBinding(keyBindPlayerList.getKeyDescription(), keyBindPlayerList.getKeyCodeDefault(), keyBindPlayerList.getKeyCategory());
+			Minecraft.getMinecraft().gameSettings.keyBindPlayerList.setKeyCode(keyBindPlayerList.getKeyCode());
+		}
 		
 		EiraIRC.instance.registerCommands(ClientCommandHandler.instance, false);
 		if(ClientGlobalConfig.registerShortCommands) {
 			IRCCommandHandler.registerQuickCommands(ClientCommandHandler.instance);
 		}
+
+		EiraGui.init(Minecraft.getMinecraft().getResourceManager());
+		try {
+			ConfigurationHandler.loadSuggestedChannels(Minecraft.getMinecraft().getResourceManager());
+		} catch (IOException ignored) {}
 	}
-	
+
 	@Override
 	public void renderTick(float delta) {
 		notificationGUI.updateAndRender(delta);
@@ -71,7 +83,6 @@ public class ClientProxy extends CommonProxy {
 		switch(type) {
 		case FriendJoined: config = ClientGlobalConfig.ntfyFriendJoined; break;
 		case PlayerMentioned: config = ClientGlobalConfig.ntfyNameMentioned; break;
-		case UserRecording: config = ClientGlobalConfig.ntfyUserRecording; break;
 		case PrivateMessage: config = ClientGlobalConfig.ntfyPrivateMessage; break;
 		default:
 		}
@@ -100,8 +111,8 @@ public class ClientProxy extends CommonProxy {
 	}
 
 	@Override
-	public void loadConfig(File configDir) {
-		super.loadConfig(configDir);
+	public void loadConfig(File configDir, boolean reloadFile) {
+		super.loadConfig(configDir, reloadFile);
 		ClientGlobalConfig.load(configDir);
 	}
 

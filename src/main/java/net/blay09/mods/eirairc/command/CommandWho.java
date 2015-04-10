@@ -3,21 +3,22 @@
 
 package net.blay09.mods.eirairc.command;
 
-import java.util.List;
-
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.api.IRCChannel;
-import net.blay09.mods.eirairc.api.IRCConnection;
-import net.blay09.mods.eirairc.api.IRCContext;
+import net.blay09.mods.eirairc.api.EiraIRCAPI;
+import net.blay09.mods.eirairc.api.irc.IRCChannel;
+import net.blay09.mods.eirairc.api.irc.IRCConnection;
+import net.blay09.mods.eirairc.api.irc.IRCContext;
+import net.blay09.mods.eirairc.api.SubCommand;
 import net.blay09.mods.eirairc.config.ChannelConfig;
-import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
+import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.irc.IRCChannelImpl;
-import net.blay09.mods.eirairc.util.IRCResolver;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
 
-public class CommandWho extends SubCommand {
+import java.util.List;
+
+public class CommandWho implements SubCommand {
 
 	@Override
 	public String getCommandName() {
@@ -25,8 +26,8 @@ public class CommandWho extends SubCommand {
 	}
 
 	@Override
-	public String getUsageString(ICommandSender sender) {
-		return "irc.commands.who";
+	public String getCommandUsage(ICommandSender sender) {
+		return "eirairc:irc.commands.who";
 	}
 
 	@Override
@@ -36,43 +37,29 @@ public class CommandWho extends SubCommand {
 
 	@Override
 	public boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) {
-		IRCConnection connection = null;
+		IRCContext target = null;
 		if(args.length > 0) {
-			connection = IRCResolver.resolveConnection(args[0], IRCResolver.FLAGS_NONE);
-			if(connection == null) {
-				Utils.sendLocalizedMessage(sender, "irc.target.serverNotFound", args[0]);
+			target = EiraIRCAPI.parseContext(null, args[0], null);
+			if(target.getContextType() == IRCContext.ContextType.Error) {
+				Utils.sendLocalizedMessage(sender, target.getName(), args[0]);
 				return true;
 			}
 		} else {
 			if(context != null) {
-				connection = context.getConnection();
+				target = context;
 			}
 		}
-		if(args.length > 0) {
-			String channelName = IRCResolver.stripPath(args[0]);
-			context = connection.getChannel(channelName);
-			if(context == null) {
-				Utils.sendLocalizedMessage(sender, "irc.target.channelNotFound", args[0]);
-				return true;
-			}
-		}
-		if(context instanceof IRCChannelImpl) {
-			Utils.sendUserList(sender, connection, (IRCChannelImpl) context);
-		} else if(connection != null) {
-			for(IRCChannel channel : connection.getChannels()) {
-				Utils.sendUserList(sender, connection, channel);
-			}
-		} else {
-			for(ServerConfig serverConfig : ConfigurationHandler.getServerConfigs()) {
-				IRCConnection con = EiraIRC.instance.getConnectionManager().getConnection(serverConfig.getAddress());
-				if(con != null) {
-					for (ChannelConfig channelConfig : serverConfig.getChannelConfigs()) {
-						IRCChannel channel = con.getChannel(channelConfig.getName());
-						if (channel != null) {
-							Utils.sendUserList(sender, con, channel);
-						}
-					}
+		if(target == null) {
+			for(IRCConnection connection : EiraIRC.instance.getConnectionManager().getConnections()) {
+				for(IRCChannel channel : connection.getChannels()) {
+					Utils.sendUserList(sender, connection, channel);
 				}
+			}
+		} else if(target.getContextType() == IRCContext.ContextType.IRCChannel) {
+			Utils.sendUserList(sender, target.getConnection(), (IRCChannelImpl) target);
+		} else if(target.getContextType() == IRCContext.ContextType.IRCConnection) {
+			for(IRCChannel channel : target.getConnection().getChannels()) {
+				Utils.sendUserList(sender, target.getConnection(), channel);
 			}
 		}
 		return true;

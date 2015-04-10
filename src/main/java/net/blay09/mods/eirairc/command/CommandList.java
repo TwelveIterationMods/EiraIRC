@@ -3,17 +3,18 @@
 
 package net.blay09.mods.eirairc.command;
 
-import java.util.List;
-
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.api.IRCChannel;
-import net.blay09.mods.eirairc.api.IRCConnection;
-import net.blay09.mods.eirairc.api.IRCContext;
+import net.blay09.mods.eirairc.api.irc.IRCChannel;
+import net.blay09.mods.eirairc.api.irc.IRCConnection;
+import net.blay09.mods.eirairc.api.irc.IRCContext;
+import net.blay09.mods.eirairc.api.SubCommand;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ChatComponentText;
 
-public class CommandList extends SubCommand {
+import java.util.List;
+
+public class CommandList implements SubCommand {
 
 	@Override
 	public String getCommandName() {
@@ -21,8 +22,8 @@ public class CommandList extends SubCommand {
 	}
 
 	@Override
-	public String getUsageString(ICommandSender sender) {
-		return "irc.commands.list";
+	public String getCommandUsage(ICommandSender sender) {
+		return "eirairc:irc.commands.list";
 	}
 
 	@Override

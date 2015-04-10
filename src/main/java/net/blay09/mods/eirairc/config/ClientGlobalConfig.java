@@ -2,7 +2,7 @@ package net.blay09.mods.eirairc.config;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.blay09.mods.eirairc.api.upload.UploadManager;
+import net.blay09.mods.eirairc.client.UploadManager;
 import net.blay09.mods.eirairc.util.I19n;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.settings.KeyBinding;
@@ -27,8 +27,8 @@ public class ClientGlobalConfig {
 	public static Configuration thisConfig;
 
 	// General
-	public static boolean hudRecState = false;
 	public static boolean persistentConnection = true;
+	public static boolean showWelcomeScreen = true;
 
 	// Screenshots
 	public static boolean imageLinkPreview = true;
@@ -39,8 +39,6 @@ public class ClientGlobalConfig {
 	// Keybinds
 	public static final KeyBinding keyScreenshotShare = new KeyBinding("key.irc.screenshotShare", 0, "key.categories.irc");
 	public static final KeyBinding keyOpenScreenshots = new KeyBinding("key.irc.openScreenshots", 0, "key.categories.irc");
-	public static final KeyBinding keyToggleRecording = new KeyBinding("key.irc.toggleRecording", 0, "key.categories.irc");
-	public static final KeyBinding keyToggleLive = new KeyBinding("key.irc.toggleLive", 0, "key.categories.irc");
 	public static final KeyBinding keyToggleTarget = new KeyBinding("key.irc.toggleTarget", Keyboard.KEY_TAB, "key.categories.irc");
 	public static final KeyBinding keyOpenMenu = new KeyBinding("key.irc.openMenu", Keyboard.KEY_I, "key.categories.irc");
 
@@ -50,7 +48,6 @@ public class ClientGlobalConfig {
 	public static float notificationSoundPitch = 1f;
 	public static NotificationStyle ntfyFriendJoined = NotificationStyle.TextOnly;
 	public static NotificationStyle ntfyNameMentioned = NotificationStyle.TextAndSound;
-	public static NotificationStyle ntfyUserRecording = NotificationStyle.TextAndSound;
 	public static NotificationStyle ntfyPrivateMessage = NotificationStyle.TextOnly;
 
 	// Compatibility
@@ -58,18 +55,16 @@ public class ClientGlobalConfig {
 	public static String clientBridgeMessageToken = "[IG]";
 	public static String clientBridgeNickToken = "";
 	public static boolean disableChatToggle = false;
-	public static boolean vanillaChat = true;
+	public static boolean chatNoOverride = false;
 	public static boolean registerShortCommands = true;
 
 	public static void load(File configDir) {
-		if(thisConfig == null) {
-			thisConfig = new Configuration(new File(configDir, "client.cfg"));
-		}
+		thisConfig = new Configuration(new File(configDir, "client.cfg"));
 
 		// General
 		registerShortCommands = thisConfig.getBoolean("registerShortCommands", GENERAL, registerShortCommands, I19n.format("eirairc:config.property.registerShortCommands.tooltip"), "eirairc:config.property.registerShortCommands");
-		hudRecState = thisConfig.getBoolean("hudRecState", GENERAL, hudRecState, I19n.format("eirairc:config.property.hudRecState"), "eirairc:config.property.hudRecState");
 		persistentConnection = thisConfig.getBoolean("persistentConnection", GENERAL, persistentConnection, I19n.format("eirairc:config.property.persistentConnection"), "eirairc:config.property.persistentConnection");
+		showWelcomeScreen = thisConfig.getBoolean("showWelcomeScreen", GENERAL, showWelcomeScreen, I19n.format("eirairc:config.property.showWelcomeScreen"), "eirairc:config.property.showWelcomeScreen");
 
 		// Screenshots
 		imageLinkPreview = thisConfig.getBoolean("imageLinkPreview", SCREENSHOTS, imageLinkPreview, I19n.format("eirairc:config.property.imageLinkPreview"), "eirairc:config.property.imageLinkPreview");
@@ -83,7 +78,6 @@ public class ClientGlobalConfig {
 		notificationSoundPitch = thisConfig.getFloat("soundPitch", NOTIFICATIONS, notificationSoundPitch, 0.5f, 2f, I19n.format("eirairc:config.property.soundPitch"), "eirairc:config.property.soundPitch");
 		ntfyFriendJoined = NotificationStyle.valueOf(thisConfig.getString("friendJoined", NOTIFICATIONS, ntfyFriendJoined.name(), I19n.format("eirairc:config.property.friendJoined"), NotificationStyle.NAMES, "eirairc:config.property.friendJoined"));
 		ntfyNameMentioned = NotificationStyle.valueOf(thisConfig.getString("nameMentioned", NOTIFICATIONS, ntfyNameMentioned.name(), I19n.format("eirairc:config.property.nameMentioned"), NotificationStyle.NAMES, "eirairc:config.property.nameMentioned"));
-		ntfyUserRecording = NotificationStyle.valueOf(thisConfig.getString("userRecording", NOTIFICATIONS, ntfyUserRecording.name(), I19n.format("eirairc:config.property.userRecording"), NotificationStyle.NAMES, "eirairc:config.property.userRecording"));
 		ntfyPrivateMessage = NotificationStyle.valueOf(thisConfig.getString("privateMessage", NOTIFICATIONS, ntfyPrivateMessage.name(), I19n.format("eirairc:config.property.privateMessage"), NotificationStyle.NAMES, "eirairc:config.property.privateMessage"));
 
 		// Compatibility
@@ -91,7 +85,9 @@ public class ClientGlobalConfig {
 		clientBridgeMessageToken = thisConfig.getString("clientBridgeMessageToken", COMPATIBILITY, clientBridgeMessageToken, I19n.format("eirairc:config.property.clientBridgeMessageToken"), "eirairc:config.property.clientBridgeMessageToken");
 		clientBridgeNickToken = thisConfig.getString("clientBridgeNickToken", COMPATIBILITY, clientBridgeNickToken, I19n.format("eirairc:config.property.clientBridgeNickToken"), "eirairc:config.property.clientBridgeNickToken");
 		disableChatToggle = thisConfig.getBoolean("disableChatToggle", COMPATIBILITY, disableChatToggle, I19n.format("eirairc:config.property.disableChatToggle"), "eirairc:config.property.disableChatToggle");
-		vanillaChat = thisConfig.getBoolean("vanillaChat", COMPATIBILITY, vanillaChat, I19n.format("eirairc:config.property.vanillaChat"), "eirairc:config.property.vanillaChat");
+		chatNoOverride = thisConfig.getBoolean("chatNoOverride", COMPATIBILITY, chatNoOverride, I19n.format("eirairc:config.property.chatNoOverride"), "eirairc:config.property.chatNoOverride");
+
+		save();
 	}
 
 	public static void save() {
@@ -103,8 +99,8 @@ public class ClientGlobalConfig {
 
 		// General
 		thisConfig.get(GENERAL, "registerShortCommands", false, I19n.format("eirairc:config.property.registerShortCommands.tooltip")).set(registerShortCommands);
-		thisConfig.get(GENERAL, "hudRecState", false, I19n.format("eirairc:config.property.hudRecState")).set(hudRecState);
 		thisConfig.get(GENERAL, "persistentConnection", false, I19n.format("eirairc:config.property.persistentConnection")).set(persistentConnection);
+		thisConfig.get(GENERAL, "showWelcomeScreen", false, I19n.format("eirairc:config.property.showWelcomeScreen")).set(showWelcomeScreen);
 
 		// Screenshots
 		thisConfig.get(SCREENSHOTS, "imageLinkPreview", false, I19n.format("eirairc:config.property.imageLinkPreview.tooltip")).set(imageLinkPreview);
@@ -118,7 +114,6 @@ public class ClientGlobalConfig {
 		thisConfig.get(NOTIFICATIONS, "soundPitch", 0f, I19n.format("eirairc:config.property.soundPitch")).set(notificationSoundPitch);
 		thisConfig.get(NOTIFICATIONS, "friendJoined", "", I19n.format("eirairc:config.property.friendJoined")).set(ntfyFriendJoined.name());
 		thisConfig.get(NOTIFICATIONS, "nameMentioned", "", I19n.format("eirairc:config.property.nameMentioned")).set(ntfyNameMentioned.name());
-		thisConfig.get(NOTIFICATIONS, "userRecording", "", I19n.format("eirairc:config.property.userRecording")).set(ntfyUserRecording.name());
 		thisConfig.get(NOTIFICATIONS, "privateMessage", "", I19n.format("eirairc:config.property.privateMessage")).set(ntfyPrivateMessage.name());
 
 		// Compatibility
@@ -126,7 +121,7 @@ public class ClientGlobalConfig {
 		thisConfig.get(COMPATIBILITY, "clientBridgeMessageToken", I19n.format("eirairc:config.property.clientBridgeMessageToken")).set(clientBridgeMessageToken);
 		thisConfig.get(COMPATIBILITY, "clientBridgeNickToken", I19n.format("eirairc:config.property.clientBridgeNickToken")).set(clientBridgeNickToken);
 		thisConfig.get(COMPATIBILITY, "disableChatToggle", false, I19n.format("eirairc:config.property.disableChatToggle")).set(disableChatToggle);
-		thisConfig.get(COMPATIBILITY, "vanillaChat", false, I19n.format("eirairc:config.property.vanillaChat")).set(vanillaChat);
+		thisConfig.get(COMPATIBILITY, "chatNoOverride", false, I19n.format("eirairc:config.property.chatNoOverride")).set(chatNoOverride);
 
 		thisConfig.save();
 	}
@@ -136,7 +131,6 @@ public class ClientGlobalConfig {
 
 		// General
 		registerShortCommands = legacyConfig.getBoolean("registerShortCommands", "global", registerShortCommands, "");
-		hudRecState = legacyConfig.get("display", "hudRecState", hudRecState).getBoolean();
 		persistentConnection = legacyConfig.get("clientonly", "persistentConnection", persistentConnection).getBoolean();
 
 		// Screenshots
@@ -147,8 +141,6 @@ public class ClientGlobalConfig {
 		// Keybinds
 		keyOpenMenu.setKeyCode(legacyConfig.get("keybinds", "keyMenu", keyOpenMenu.getKeyCodeDefault()).getInt());
 		keyToggleTarget.setKeyCode(legacyConfig.get("keybinds", "keyToggleTarget", keyToggleTarget.getKeyCodeDefault()).getInt());
-		keyToggleLive.setKeyCode(legacyConfig.get("keybinds", "keyToggleLive", keyToggleLive.getKeyCodeDefault()).getInt());
-		keyToggleRecording.setKeyCode(legacyConfig.get("keybinds", "keyToggleRecording", keyToggleRecording.getKeyCodeDefault()).getInt());
 		keyScreenshotShare.setKeyCode(legacyConfig.get("keybinds", "keyScreenshotShare", keyScreenshotShare.getKeyCodeDefault()).getInt());
 		keyOpenScreenshots.setKeyCode(legacyConfig.get("keybinds", "keyOpenScreenshots", keyOpenScreenshots.getKeyCodeDefault()).getInt());
 
@@ -159,14 +151,15 @@ public class ClientGlobalConfig {
 		ntfyFriendJoined = NotificationStyle.values[legacyConfig.get("notifications", "notifyFriendJoined", ntfyFriendJoined.ordinal()).getInt()];
 		ntfyNameMentioned = NotificationStyle.values[legacyConfig.get("notifications", "notifyNameMentioned", ntfyNameMentioned.ordinal()).getInt()];
 		ntfyPrivateMessage = NotificationStyle.values[legacyConfig.get("notifications", "notifyPrivateMessage", ntfyPrivateMessage.ordinal()).getInt()];
-		ntfyUserRecording = NotificationStyle.values[legacyConfig.get("notifications", "notifyUserRecording", ntfyUserRecording.ordinal()).getInt()];
 
 		// Compatibility
 		clientBridge = legacyConfig.get("compatibility", "clientBridge", clientBridge).getBoolean();
 		clientBridgeMessageToken = Utils.unquote(legacyConfig.get("compatibility", "clientBridgeMessageToken", clientBridgeMessageToken).getString());
 		clientBridgeNickToken = Utils.unquote(legacyConfig.get("compatibility", "clientBridgeNickToken", clientBridgeNickToken).getString());
 		disableChatToggle = legacyConfig.get("compatibility", "disableChatToggle", disableChatToggle).getBoolean();
-		vanillaChat = legacyConfig.get("compatibility", "vanillaChat", vanillaChat).getBoolean();
+		chatNoOverride = legacyConfig.get("compatibility", "chatNoOverride", chatNoOverride).getBoolean();
+
+		save();
 	}
 
 	public static String handleConfigCommand(ICommandSender sender, String key) {
@@ -174,6 +167,8 @@ public class ClientGlobalConfig {
 			return String.valueOf(persistentConnection);
 		} else if(key.equals("registerShortCommands")) {
 			return String.valueOf(registerShortCommands);
+		} else if(key.equals("showWelcomeScreen")) {
+			return String.valueOf(showWelcomeScreen);
 		} else if(key.equals("imageLinkPreview")) {
 			return String.valueOf(imageLinkPreview);
 		} else if(key.equals("uploadHoster")) {
@@ -186,6 +181,8 @@ public class ClientGlobalConfig {
 			return clientBridgeNickToken;
 		} else if(key.equals("disableChatToggle")) {
 			return String.valueOf(disableChatToggle);
+		} else if(key.equals("chatNoOverride")) {
+			return String.valueOf(chatNoOverride);
 		}
 		return null;
 	}
@@ -196,6 +193,8 @@ public class ClientGlobalConfig {
 			persistentConnection = Boolean.parseBoolean(value);
 		} else if(key.equals("registerShortCommands")) {
 			registerShortCommands = Boolean.parseBoolean(value);
+		} else if(key.equals("showWelcomeScreen")) {
+			showWelcomeScreen = Boolean.parseBoolean(value);
 		} else if(key.equals("uploadHoster")) {
 			if (UploadManager.isValidHoster(value)) {
 				screenshotHoster = value;
@@ -210,6 +209,8 @@ public class ClientGlobalConfig {
 			clientBridgeNickToken = value;
 		} else if(key.equals("disableChatToggle")) {
 			disableChatToggle = Boolean.parseBoolean(value);
+		} else if(key.equals("chatNoOverride")) {
+			chatNoOverride = Boolean.parseBoolean(value);
 		} else {
 			result = false;
 		}
@@ -222,12 +223,14 @@ public class ClientGlobalConfig {
 			list.add("registerShortCommands");
 			list.add("imageLinkPreview");
 			list.add("persistentConnection");
+			list.add("showWelcomeScreen");
 			list.add("uploadHoster");
 			list.add("clientBridge");
 			list.add("clientBridgeMessageToken");
 			list.add("clientBridgeNickToken");
 			list.add("disableChatToggle");
-		} else if(option.equals("persistentConnection") || option.equals("clientBridge") || option.equals("disableChatToggle")) {
+			list.add("chatNoOverride");
+		} else if(option.equals("persistentConnection") || option.equals("clientBridge") || option.equals("disableChatToggle") || option.equals("showWelcomeScreen") || option.equals("chatNoOverride")) {
 			Utils.addBooleansToList(list);
 		}
 	}

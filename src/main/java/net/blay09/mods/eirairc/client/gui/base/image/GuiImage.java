@@ -7,11 +7,8 @@ import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.resources.IResourceManager;
 import org.lwjgl.opengl.GL11;
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * Created by Blay09 on 10.10.2014.

@@ -3,11 +3,9 @@
 
 package net.blay09.mods.eirairc.bot;
 
-import java.util.List;
-
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.api.IRCChannel;
-import net.blay09.mods.eirairc.api.IRCUser;
+import net.blay09.mods.eirairc.api.irc.IRCChannel;
+import net.blay09.mods.eirairc.api.irc.IRCUser;
 import net.blay09.mods.eirairc.api.bot.IBotCommand;
 import net.blay09.mods.eirairc.api.bot.IRCBot;
 import net.blay09.mods.eirairc.config.settings.BotBooleanComponent;
@@ -20,6 +18,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.IChatComponent;
+
+import java.util.List;
 
 public class BotCommandMessage implements IBotCommand {
 
@@ -34,7 +34,7 @@ public class BotCommandMessage implements IBotCommand {
 	}
 
 	@Override
-	public void processCommand(IRCBot bot, IRCChannel channel, IRCUser user, String[] args) {
+	public void processCommand(IRCBot bot, IRCChannel channel, IRCUser user, String[] args, IBotCommand commandSettings) {
 		BotSettings botSettings = ConfigHelper.getBotSettings(channel);
 		if(!botSettings.getBoolean(BotBooleanComponent.AllowPrivateMessages)) {
 			user.notice(Utils.getLocalizedMessage("irc.msg.disabled"));
@@ -65,6 +65,21 @@ public class BotCommandMessage implements IBotCommand {
 		EiraIRC.proxy.sendNotification((EntityPlayerMP) entityPlayer, NotificationType.PrivateMessage, notifyMsg);
 		entityPlayer.addChatMessage(chatComponent);
 		user.notice(Utils.getLocalizedMessage("irc.bot.msgSent", playerName, message));
+	}
+
+	@Override
+	public boolean requiresAuth() {
+		return false;
+	}
+
+	@Override
+	public boolean broadcastsResult() {
+		return false;
+	}
+
+	@Override
+	public boolean allowArgs() {
+		return true;
 	}
 
 	@Override

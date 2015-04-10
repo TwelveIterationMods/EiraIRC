@@ -45,163 +45,26 @@ eirairc:irc.cmdlist.special=§eSpecial Commands: §ftwitch, color, alias
 #######################################################################################################################
 
 # GUI
-## General
 eirairc:irc.gui.options=Options
 eirairc:irc.gui.chatTarget=Chatting to: %s
-eirairc:gui.back=Back
 eirairc:irc.gui.yes=Yes
 eirairc:irc.gui.no=No
-eirairc:irc.gui.add=Add %s
-eirairc:irc.gui.edit=Edit
-eirairc:irc.gui.delete=Delete
-eirairc:irc.gui.save=Save
-eirairc:irc.gui.rename=Rename
-eirairc:irc.gui.cancel=Cancel
-eirairc:irc.gui.none=None
-eirairc:irc.gui.reallyRemove=Do you really want to remove this %s?
-eirairc:irc.gui.configDelete=This will delete it from the config file.
-eirairc:irc.gui.noUndo=This action can't be undone.
-
-## Common Config
-eirairc:irc.gui.config.connectStartup=Connect on Startup: %s
-eirairc:irc.gui.config.joinStartup=Join on Startup: %s
-eirairc:irc.gui.config.privateMessages=Private Messages: %s
-eirairc:irc.gui.config.nick=Nick:
-eirairc:irc.gui.config.relayDeathMessages=Relay Death Messages: %s
-eirairc:irc.gui.config.relayMinecraftJoins=Relay Minecraft Joins: %s
-eirairc:irc.gui.config.relayIRCJoins=Relay IRC Joins: %s
-eirairc:irc.gui.config.relayNickChanges=Relay Nick Changes: %s
-eirairc:irc.gui.config.relayBroadcasts=Relay Broadcasts: %s
-eirairc:irc.gui.config.linkFilter=Filter Links: %s
-eirairc:irc.gui.config.autoPlayers=Send Players on Join: %s
-eirairc:irc.gui.config.messageDisplay=Message Display: %s
-eirairc:irc.gui.config.interOp=Enable InterOp: %s
-eirairc:irc.gui.config.profile=Profile
-eirairc:irc.gui.config.autoWho=List Users on Startup: %s
-eirairc:irc.gui.config.muted=Muted: %s
-eirairc:irc.gui.config.readOnly=Read Only: %s
-
-## Server Config
-eirairc:irc.gui.editServer=EiraIRC - Edit Server
-eirairc:irc.gui.editServer.serverAddress=Server Address:
-eirairc:irc.gui.editServer.serverPassword=Server Password:
-eirairc:irc.gui.editServer.nick=Nick:
-eirairc:irc.gui.editServer.nickServName=NickServ Username:
-eirairc:irc.gui.editServer.nickServPassword=NickServ Password:
-eirairc:irc.gui.editServer.ident=Ident:
-eirairc:irc.gui.editServer.description=Description:
-
-## Menu
-eirairc:gui.menu.title=EiraIRC Menu
-eirairc:gui.settings=Settings
-eirairc:irc.gui.settings.serverList=Server List
-eirairc:irc.gui.settings.friendsIgnoreList=Friends / Ignore List
-eirairc:irc.gui.settings.twitch=Twitch Chat
-eirairc:irc.gui.settings.screenshots=Screenshot Archive
-
-## Twitch Config
-eirairc:irc.gui.twitch=EiraIRC - Twitch Chat
-eirairc:irc.gui.twitch.username=Twitch Username:
-eirairc:irc.gui.twitch.oauth=OAuth Token:
-
-## Screenshot Config
-eirairc:irc.gui.screenshots=EiraIRC - Screenshots
-eirairc:irc.gui.screenshots.archive=Archive
-eirairc:irc.gui.screenshots.local=Local
-eirairc:irc.gui.screenshots.uploaded=Uploaded
-eirairc:irc.gui.screenshots.hoster=Hoster: %s
-eirairc:irc.gui.screenshots.autoAction=Auto-Action: %s
-eirairc:irc.gui.screenshots.upload=Upload
-eirairc:irc.gui.screenshots.uploadShare=Upload & Share
-eirairc:irc.gui.screenshots.uploadClipboard=Upload & Clipboard
-eirairc:irc.gui.screenshots.toClipboard=To Clipboard
-eirairc:irc.gui.screenshotList=EiraIRC - Screenshot List
-
-## Notification Config
-eirairc:irc.gui.notifications=EiraIRC - Notifications
-eirairc:irc.gui.notifications.textOnly=Text Only
-eirairc:irc.gui.notifications.soundOnly=Sound Only
-eirairc:irc.gui.notifications.textAndSound=Text and Sound
-eirairc:irc.gui.notifications.userRecording=User Recording: %s
-eirairc:irc.gui.notifications.nameMentioned=Name Mentioned: %s
-eirairc:irc.gui.notifications.friendJoined=Friend Joined: %s
-eirairc:irc.gui.notifications.privateMessage=Private Message: %s
-
-## Keybinds Config
-eirairc:irc.gui.keybinds=EiraIRC - Keybinds
-eirairc:irc.gui.keybinds.selectKey=Press a key to continue or ESC to cancel...
-eirairc:irc.gui.keybinds.menu=Menu: %s
-eirairc:irc.gui.keybinds.screenshotShare=Screenshot & Share: %s
-eirairc:irc.gui.keybinds.toggleLive=Toggle Live: %s
-eirairc:irc.gui.keybinds.toggleRecording=Toggle Recording: %s
-eirairc:irc.gui.keybinds.toggleTarget=Toggle Target: %s
-eirairc:irc.gui.keybinds.openScreenshots=Screenshot Archive: %s
-
-## Server List
-eirairc:irc.gui.serverList=EiraIRC - Server List
-eirairc:irc.gui.serverList.connected=§aConnected
-eirairc:irc.gui.serverList.notConnected=§cNot Connected
-eirairc:irc.gui.serverList.connect=Connect
-eirairc:irc.gui.serverList.disconnect=Disconnect
-eirairc:irc.gui.serverList.channels=Channels
-
-## Channel List
-eirairc:irc.gui.channelList=EiraIRC - Channel List
-eirairc:irc.gui.channelList.join=Join
-eirairc:irc.gui.channelList.leave=Leave
-eirairc:irc.gui.channelList.joined=§aJoined
-eirairc:irc.gui.channelList.notJoined=§cNot Joined
-eirairc:irc.gui.channelList.notConnected=§cNot Connected
-
-## Display Settings
-eirairc:irc.gui.displaySettings=EiraIRC - Display Settings
-eirairc:irc.gui.displaySettings.recordingHud=Show Recording HUD: %s
-
-## Bot Settings
-eirairc:irc.gui.botSettings=EiraIRC - Profile Editor
-
-## Bot Commands
-eirairc:irc.gui.botCommands=EiraIRC - Bot Commands
-
-## Bot Command
-eirairc:irc.gui.botCommand=EiraIRC - Edit Custom Command
-eirairc:irc.gui.botCommand.allowArgs=Allow Arguments: %s
-eirairc:irc.gui.botCommand.runAsOp=Run as OP: %s
-eirairc:irc.gui.botCommand.requireAuth=Require Authentication: %s
-eirairc:irc.gui.botCommand.broadcastResult=Broadcast Result: %s
-
-## Channel Config
-eirairc:irc.gui.editChannel=EiraIRC - Edit Channel
-eirairc:irc.gui.editChannel.name=Channel Name:
-eirairc:irc.gui.editChannel.password=Channel Password:
-
-## Global Settings
-eirairc:irc.gui.globalSettings=EiraIRC - Global Settings
-eirairc:irc.gui.globalSettings.nickname=Nickname:
-eirairc:irc.gui.globalSettings.saveCredentials=Save Credentials: %s
-eirairc:irc.gui.globalSettings.persistentConnection=Persistent Connection: %s
 
 #######################################################################################################################
 
 # Notifications
 eirairc:irc.notify.privateMessage=%s: %s
-eirairc:irc.notify.liveTrue=%s is now live.
-eirairc:irc.notify.liveFalse=%s has stopped livestreaming.
-eirairc:irc.notify.recordingTrue=%s is now recording.
-eirairc:irc.notify.recordingFalse=%s has stopped recording.
 
 #######################################################################################################################
 
 # Bot
-eirairc:irc.bot.auth=Authenticating with EiraIRC...
 eirairc:irc.bot.cmdlist=Channel Bot Commands: %s
 eirairc:irc.bot.unknownCommand=Unknown command. Type HELP to see a list of all available commands.
 eirairc:irc.bot.msgSent=Message sent to %s: %s
-eirairc:irc.bot.nickInUse=Nickname %s is already in use. Trying %s
-eirairc:irc.bot.nickInvalid=%s is not a valid nickname.
 eirairc:irc.bot.playersOnline=%d players online:
 eirairc:irc.bot.noPlayersOnline=No players online.
-eirairc:irc.bot.noPermission=You do not have permission to use this command or you are not authenticated with EiraIRC.
+eirairc:irc.bot.noPermission=You do not have permission to use this command.
+eirairc:irc.bot.notAuthed=You are not authenticated with IRC services.
 eirairc:irc.bot.interOpBlacklist=This command has been blacklisted from InterOp.
 
 #######################################################################################################################
@@ -212,16 +75,18 @@ eirairc:irc.general.alreadyConnected=§cYou are already connected to %s
 eirairc:irc.general.notOnChannel=§cYou are not on channel %s
 eirairc:irc.general.noPermission=§cYou do not have permission to use this command.
 eirairc:irc.general.noSuchPlayer=§cThat player cannot be found.
-eirairc:irc.general.notMultiplayer=§cThis is not a multiplayer. Use /irc instead.
+eirairc:irc.general.notMultiplayer=§cThis is not a multiplayer world. Use /irc instead.
 eirairc:irc.general.serverOnlyCommand=§cThis command only works on the server side. Use the GUI (default: I) or the config file for the client settings.
 eirairc:irc.general.usage=§cUsage: %s
 eirairc:irc.general.linkRemoved=<link removed>
 eirairc:irc.general.notSupported=%s is not supported on this server.
+eirairc:irc.general.chattingTo=>> Now chatting to §6%s§f <<
 
 #######################################################################################################################
 
 # Basic IRC
 eirairc:irc.basic.connecting=Connecting to %s
+eirairc:irc.basic.reconnecting=Reconnecting to %s in %d seconds...
 eirairc:irc.basic.connected=Connected to %s
 eirairc:irc.basic.disconnecting=Disconnecting from %s
 eirairc:irc.basic.disconnected=Disconnected from %s
@@ -229,6 +94,17 @@ eirairc:irc.basic.joiningChannel=Joining channel %s on %s
 eirairc:irc.basic.leavingChannel=Leaving channel %s on %s
 eirairc:irc.basic.changingNick=[%s] Changing nick to %s
 eirairc:irc.basic.nickServUpdated=Updated nickserv information for %s
+
+#######################################################################################################################
+
+# Errors
+eirairc:error.nickInUse=Nickname %s is already in use. Trying %s
+eirairc:error.nickInvalid=%s is not a valid nickname.
+eirairc:error.couldNotConnect=Could not connect to %s: %s
+eirairc:error.genericTarget=§cIRC Error: '%s' %s
+eirairc:error.generic=§cIRC Error: %s
+eirairc:error.targetTooFast=IRC Error: Calm down, you're typing too fast!
+eirairc:error.servicesDown=IRC Error: Services are currently offline.
 
 #######################################################################################################################
 
@@ -290,16 +166,8 @@ eirairc:irc.interop.topic=Topic for channel %s set to "%s"
 #######################################################################################################################
 
 # Display Format
-eirairc:irc.display.irc.joinMsg=§e[%s] %s joined the channel
-eirairc:irc.display.irc.partMsg=§e[%s] %s left the channel
-eirairc:irc.display.irc.quitMsg=§e[%s] %s disconnected from IRC (%s)
-eirairc:irc.display.irc.nickChange=§e[%s] %s is now known as %s
 eirairc:irc.display.irc.topic=§e[%s] §f%s
 eirairc:irc.display.irc.topicChange=§e%s changed the topic for %s: §f%s
-eirairc:irc.display.mc.joinMsg=%s joined the game
-eirairc:irc.display.mc.partMsg=%s left the game
-eirairc:irc.display.mc.nickChange=%s is now known as %s
-eirairc:irc.display.shareScreenshot=just uploaded a screenshot: %s
 
 #######################################################################################################################
 
@@ -363,12 +231,14 @@ eirairc:config.property.bindIP=Bind to IP
 eirairc:config.property.bindIP.tooltip=[Advanced] The IP address to use for outgoing connections.
 eirairc:config.property.defaultChat=Default Chat
 eirairc:config.property.defaultChat.tooltip=The default chat target to select when opening the chat for the first time.
+eirairc:config.property.preventUserPing=Prevent User Ping
+eirairc:config.property.preventUserPing.tooltip=This adds an invisible character to player names sent to IRC to prevent pinging those users of the same name on IRC. Thanks to Simon Meskens!
+eirairc:config.property.twitchNameColors=Twitch Name Colors
+eirairc:config.property.twitchNameColors.tooltip=If enabled, EiraIRC will attempt to map Twitch colors to Minecraft colors for nicks.
 
 ## Properties (Client)
 eirairc:config.property.imageLinkPreview=Show Image Link Preview
 eirairc:config.property.imageLinkPreview.tooltip=If set to true, clicking an image link in the chat will open a preview screen inside Minecraft.
-eirairc:config.property.hudRecState=Show Red/Green Dot
-eirairc:config.property.hudRecState.tooltip=[Deprecated] If set to true, your screen will get cool red and green dots in some locations.
 eirairc:config.property.persistentConnection=Persistent Connection
 eirairc:config.property.persistentConnection.tooltip=If set to true, the IRC connection will remain open after leaving a world or server (until Minecraft closes).
 eirairc:config.property.uploadHoster=Upload Hoster
@@ -381,10 +251,6 @@ eirairc:config.property.screenshotShare=Share Screenshot
 eirairc:config.property.screenshotShare.tooltip=Key code to take a screenshot and share it in the current channel.
 eirairc:config.property.openScreenshots=Open Screenshot Archives
 eirairc:config.property.openScreenshots.tooltip=Key code to open the screenshot archive.
-eirairc:config.property.toggleRecording=Recording Notification
-eirairc:config.property.toggleRecording.tooltip=[Deprecated] Key code to fire a recording notification.
-eirairc:config.property.toggleLive=Livestream Notification
-eirairc:config.property.toggleLive.tooltip=[Deprecated] Key code to fire a livestream notification.
 eirairc:config.property.toggleTarget=Toggle Chat Target
 eirairc:config.property.toggleTarget.tooltip=Key code to switch between the current chat channel.
 eirairc:config.property.openMenu=Open EiraIRC Menu
@@ -411,8 +277,10 @@ eirairc:config.property.clientBridgeNickToken=Client Bridge Nick Token
 eirairc:config.property.clientBridgeNickToken.tooltip=See clientBridgeMessageToken. Is used in favor over the message token. Messages from nicks with this token will be omitted.
 eirairc:config.property.disableChatToggle=Disable Chat Toggle
 eirairc:config.property.disableChatToggle.tooltip=Disables the chat toggle at the top left. Originally meant for TabbyChat, so you could set up Tabs with the '/irc msg' command instead.
-eirairc:config.property.vanillaChat=Vanilla Chat
-eirairc:config.property.vanillaChat.tooltip=Nothing, go away. No effect.
+eirairc:config.property.chatNoOverride=No Chat Override
+eirairc:config.property.chatNoOverride.tooltip=[Advanced] Makes EiraIRC not apply any changes to the Minecraft Chat GUI at all. Only use with EiraIRC compatible chat-overriding mods!
+eirairc:config.property.showWelcomeScreen=Show Welcome Screen
+eirairc:config.property.showWelcomeScreen.tooltip=If set to true, EiraIRC will show the welcome screen with suggested channels when joining a world.
 
 ## Properties (Bot)
 eirairc:config.property.relayDeathMessages=Relay Death Messages
@@ -423,6 +291,8 @@ eirairc:config.property.relayIRCJoinLeave=Relay IRC Join/Leave
 eirairc:config.property.relayIRCJoinLeave.tooltip=If set to true, IRC join/leave messages from this IRC context will be sent to Minecraft chat.
 eirairc:config.property.relayNickChanges=Relay Nick Changes
 eirairc:config.property.relayNickChanges.tooltip=If set to true, IRC nick changes from this IRC context will be sent to Minecraft chat.
+eirairc:config.property.relayAchievements=Relay Achievements
+eirairc:config.property.relayAchievements.tooltip=If set to true, Minecraft Achievement messages will be sent to this IRC context.
 eirairc:config.property.filterLinks=Enable Link Filter
 eirairc:config.property.filterLinks.tooltip=If set to true, links from this IRC context will be replaced by <removed link>.
 eirairc:config.property.hideNotices=Hide IRC Notices
@@ -445,8 +315,14 @@ eirairc:config.property.messageFormat=Message Format
 eirairc:config.property.messageFormat.tooltip=The name to the message format used to display chat messages. See /eirairc/formats/.
 eirairc:config.property.mcNickFormat=Nick Format
 eirairc:config.property.mcNickFormat.tooltip=The format to put the nick in (previously nickPrefix and nickSuffix). %s will be replaced by the nick. No effect in channels. Example: %s-IG
-eirairc:config.property.botProfile=Bot Profile
-eirairc:config.property.botProfile.tooltip=[Deprecated] The bot profile to use for this connection. Only used for InterOP and custom commands. No effect in channels.
+eirairc:config.property.interOp=Enable InterOp
+eirairc:config.property.interOp.tooltip=Allows the usage of InterOp commands between Minecraft and IRC.
+eirairc:config.property.interOpAuthList=InterOp Auth List
+eirairc:config.property.interOpAuthList.tooltip=The list of IRC auth usernames that may run InterOp commands from IRC.
+eirairc:config.property.disabledNativeCommands=Disabled Native Commands
+eirairc:config.property.disabledNativeCommands.tooltip=The list of IRC commands (such as !who) that are disabled. Supports "*" for all.
+eirairc:config.property.disabledInterOpCommands=Disabled InterOp Commands
+eirairc:config.property.disabledInterOpCommands.tooltip=The list of minecraft commands (such as /stop) that are disabled for InterOp.
 
 ## Properties (General Settings)
 eirairc:config.property.autoJoin=Auto Join

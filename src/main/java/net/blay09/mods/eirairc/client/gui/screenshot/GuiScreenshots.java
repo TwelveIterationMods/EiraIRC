@@ -2,15 +2,18 @@ package net.blay09.mods.eirairc.client.gui.screenshot;
 
 import net.blay09.mods.eirairc.client.gui.EiraGui;
 import net.blay09.mods.eirairc.client.gui.EiraGuiScreen;
-import net.blay09.mods.eirairc.client.gui.base.*;
+import net.blay09.mods.eirairc.client.gui.base.GuiAdvancedTextField;
+import net.blay09.mods.eirairc.client.gui.base.GuiImageButton;
 import net.blay09.mods.eirairc.client.gui.base.image.GuiFileImage;
 import net.blay09.mods.eirairc.client.gui.base.image.GuiImage;
+import net.blay09.mods.eirairc.client.gui.overlay.OverlayYesNo;
 import net.blay09.mods.eirairc.client.screenshot.Screenshot;
 import net.blay09.mods.eirairc.client.screenshot.ScreenshotManager;
 import net.blay09.mods.eirairc.config.ScreenshotAction;
 import net.blay09.mods.eirairc.util.Utils;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.*;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiYesNoCallback;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -22,7 +25,6 @@ import java.util.List;
 public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 
 	private static final float TOOLTIP_TIME = 30;
-	private final List<Screenshot> screenshotList;
 
 	private GuiAdvancedTextField txtSearch;
 	private GuiButton btnOpenFolder;
@@ -39,7 +41,12 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 	private GuiImageButton btnFavorite;
 	private GuiImageButton btnDelete;
 
+	private List<Screenshot> screenshotList;
+	private List<Screenshot> screenshotGroup;
+	private GuiScreenshotPage activePageButton;
 	private int currentIdx;
+	private String lastSearchText = "";
+	private final List<Screenshot> searchResults = new ArrayList<Screenshot>();
 	private Screenshot currentScreenshot;
 	private GuiImage imgPreview;
 
@@ -54,11 +61,32 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 
 	public GuiScreenshots(GuiScreen parentScreen) {
 		super(parentScreen);
-		screenshotList = ScreenshotManager.getInstance().getScreenshots(); // TODO will be set by the category tabs
+		screenshotGroup = ScreenshotManager.getInstance().getScreenshots();
+		screenshotList = screenshotGroup;
+	}
+
+	private void setScreenshotGroup(GuiScreenshotPage pageButton, List<Screenshot> screenshotGroup) {
+		if(activePageButton != null) {
+			activePageButton.setActive(false);
+		}
+		pageButton.setActive(true);
+		activePageButton = pageButton;
+		this.screenshotGroup = screenshotGroup;
+		setScreenshotList(screenshotGroup);
+		resetSearch();
+	}
+
+	public void setScreenshotList(List<Screenshot> screenshotList) {
+		this.screenshotList = screenshotList;
+		currentIdx = 0;
+		updateScreenshot();
 	}
 
 	public void updateScreenshot() {
-		if(currentIdx >= 0 && currentIdx < screenshotList.size()) {
+		if(screenshotList.isEmpty()) {
+			currentScreenshot = null;
+			imgPreview = null;
+		} else if(currentIdx >= 0 && currentIdx < screenshotList.size()) {
 			Screenshot screenshot = screenshotList.get(currentIdx);
 			if(currentScreenshot != screenshot) {
 				imgPreview = new GuiFileImage(screenshot.getFile());
@@ -67,6 +95,7 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 			}
 			txtName.setDefaultText(screenshot.getOriginalName(), false);
 			txtName.setText(screenshot.getName());
+			setFavoriteButtonState(screenshot.isFavorited());
 		}
 	}
 
@@ -89,50 +118,178 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 		txtName = new GuiAdvancedTextField(fontRendererObj, width / 2 - 100, topY + 152, 200, 15);
 		textFieldList.add(txtName);
 
-		btnGoToFirst = new GuiImageButton(1, width / 2 - 39, topY + 12, EiraGui.texMenu, 32, 192, 16, 16);
+		btnGoToFirst = new GuiImageButton(1, width / 2 - 39, topY + 12, EiraGui.atlas.findRegion("button_first"));
 		buttonList.add(btnGoToFirst);
 
-		btnGoToPrevious = new GuiImageButton(2, width / 2 - 13, topY + 12, EiraGui.texMenu, 32, 176, 8, 16);
+		btnGoToPrevious = new GuiImageButton(2, width / 2 - 13, topY + 12, EiraGui.atlas.findRegion("button_prev"));
 		buttonList.add(btnGoToPrevious);
 
-		btnGoToNext = new GuiImageButton(3, width / 2 + 5, topY + 12, EiraGui.texMenu, 40, 176, 8, 16);
+		btnGoToNext = new GuiImageButton(3, width / 2 + 5, topY + 12, EiraGui.atlas.findRegion("button_next"));
 		buttonList.add(btnGoToNext);
 
-		btnGoToLast = new GuiImageButton(4, width / 2 + 23, topY + 12, EiraGui.texMenu, 48, 192, 16, 16);
+		btnGoToLast = new GuiImageButton(4, width / 2 + 23, topY + 12, EiraGui.atlas.findRegion("button_last"));
 		buttonList.add(btnGoToLast);
 
-		btnFavorite = new GuiImageButton(5, rightX - 37, topY + 12, EiraGui.texMenu, 0, 208, 32, 32);
+		btnFavorite = new GuiImageButton(5, rightX - 37, topY + 12, EiraGui.atlas.findRegion("button_favorite"));
 		btnFavorite.setTooltipText("Favorite");
 		buttonList.add(btnFavorite);
 
-		btnUpload = new GuiImageButton(6, rightX - 37, topY + 50, EiraGui.texMenu, 32, 208, 32, 32);
+		btnUpload = new GuiImageButton(6, rightX - 37, topY + 50, EiraGui.atlas.findRegion("button_upload"));
 		btnUpload.setTooltipText("Upload");
 		buttonList.add(btnUpload);
 
-		btnClipboard = new GuiImageButton(7, rightX - 37, topY + 50, EiraGui.texMenu, 128, 208, 32, 32);
+		btnClipboard = new GuiImageButton(7, rightX - 37, topY + 50, EiraGui.atlas.findRegion("button_clipboard"));
 		btnClipboard.visible = false;
 		btnClipboard.setTooltipText("To Clipboard");
 		buttonList.add(btnClipboard);
 
-		btnZoom = new GuiImageButton(8, rightX - 37, topY + 135, EiraGui.texMenu, 0, 176, 32, 32);
+		btnZoom = new GuiImageButton(8, rightX - 37, topY + 135, EiraGui.atlas.findRegion("button_zoom"));
 		btnZoom.setTooltipText("Zoom");
 		buttonList.add(btnZoom);
 
-		btnDelete = new GuiImageButton(9, leftX + 5, topY + 12, EiraGui.texMenu, 96, 208, 32, 32);
+		btnDelete = new GuiImageButton(9, leftX + 5, topY + 12, EiraGui.atlas.findRegion("button_delete"));
 		btnDelete.setTooltipText("Delete");
 		buttonList.add(btnDelete);
 
-		btnReupload = new GuiImageButton(10, leftX + 5, topY + 50, EiraGui.texMenu, 32, 208, 32, 32);
+		btnReupload = new GuiImageButton(10, leftX + 5, topY + 50, EiraGui.atlas.findRegion("button_upload"));
 		btnReupload.visible = false;
 		btnReupload.setTooltipText("Re-Upload");
 		buttonList.add(btnReupload);
 
-		// clipboard button
+		int pageLeft = rightX - 3;
+		int pageTop = topY + 10;
+
+		GuiScreenshotPage pageAll = new GuiScreenshotPage(11, pageLeft, pageTop, "All") {
+			@Override
+			public void onClick() {
+				setScreenshotGroup(this, ScreenshotManager.getInstance().getScreenshots());
+			}
+		};
+		pageAll.setActive(true);
+		activePageButton = pageAll;
+		buttonList.add(pageAll);
+		pageTop += pageAll.height;
+
+		GuiScreenshotPage pageFavorited = new GuiScreenshotPage(11, pageLeft, pageTop, "Favorited") {
+			@Override
+			public void onClick() {
+				List<Screenshot> groupList = new ArrayList<Screenshot>();
+				for(Screenshot screenshot : ScreenshotManager.getInstance().getScreenshots()) {
+					if(screenshot.isFavorited()) {
+						groupList.add(screenshot);
+					}
+				}
+				setScreenshotGroup(this, groupList);
+			}
+		};
+		buttonList.add(pageFavorited);
+		pageTop += pageFavorited.height + 3;
+
+		GuiScreenshotPage pageTimestamp = new GuiScreenshotPage(11, pageLeft, pageTop, "Today") {
+			@Override
+			public void onClick() {
+				List<Screenshot> groupList = new ArrayList<Screenshot>();
+				long now = System.currentTimeMillis();
+				for(Screenshot screenshot : ScreenshotManager.getInstance().getScreenshots()) {
+					long diff = now - screenshot.getTimeStamp();
+					if(diff <= 86400000L) {
+						groupList.add(screenshot);
+					}
+				}
+				setScreenshotGroup(this, groupList);
+			}
+		};
+		buttonList.add(pageTimestamp);
+		pageTop += pageTimestamp.height;
+
+		pageTimestamp = new GuiScreenshotPage(11, pageLeft, pageTop, "This Week") {
+			@Override
+			public void onClick() {
+				List<Screenshot> groupList = new ArrayList<Screenshot>();
+				long now = System.currentTimeMillis();
+				for(Screenshot screenshot : ScreenshotManager.getInstance().getScreenshots()) {
+					long diff = now - screenshot.getTimeStamp();
+					if(diff > 86400000L && diff <= 86400000L * 7) {
+						groupList.add(screenshot);
+					}
+				}
+				setScreenshotGroup(this, groupList);
+			}
+		};
+		buttonList.add(pageTimestamp);
+		pageTop += pageTimestamp.height;
+
+		pageTimestamp = new GuiScreenshotPage(11, pageLeft, pageTop, "This Month") {
+			@Override
+			public void onClick() {
+				List<Screenshot> groupList = new ArrayList<Screenshot>();
+				long now = System.currentTimeMillis();
+				for(Screenshot screenshot : ScreenshotManager.getInstance().getScreenshots()) {
+					long diff = now - screenshot.getTimeStamp();
+					if(diff > 86400000L * 7 && diff <= 86400000L * 7 * 4) {
+						groupList.add(screenshot);
+					}
+				}
+				setScreenshotGroup(this, groupList);
+			}
+		};
+		buttonList.add(pageTimestamp);
+		pageTop += pageTimestamp.height;
+
+		pageTimestamp = new GuiScreenshotPage(11, pageLeft, pageTop, "This Year") {
+			@Override
+			public void onClick() {
+				List<Screenshot> groupList = new ArrayList<Screenshot>();
+				long now = System.currentTimeMillis();
+				for(Screenshot screenshot : ScreenshotManager.getInstance().getScreenshots()) {
+					long diff = now - screenshot.getTimeStamp();
+					if(diff > 86400000L * 7 * 4 && diff <= 86400000L * 7 * 4 * 12) {
+						groupList.add(screenshot);
+					}
+				}
+				setScreenshotGroup(this, groupList);
+			}
+		};
+		buttonList.add(pageTimestamp);
+		pageTop += pageTimestamp.height;
+
+		pageTimestamp = new GuiScreenshotPage(11, pageLeft, pageTop, "Older") {
+			@Override
+			public void onClick() {
+				List<Screenshot> groupList = new ArrayList<Screenshot>();
+				long now = System.currentTimeMillis();
+				for(Screenshot screenshot : ScreenshotManager.getInstance().getScreenshots()) {
+					long diff = now - screenshot.getTimeStamp();
+					if(diff > 86400000L * 7 * 4 * 12) {
+						groupList.add(screenshot);
+					}
+				}
+				setScreenshotGroup(this, groupList);
+			}
+		};
+		buttonList.add(pageTimestamp);
 
 		updateScreenshot();
 
 		imgX = leftX + 2;
 		imgY = topY + 10;
+	}
+
+	@Override
+	public void onGuiClosed() {
+		super.onGuiClosed();
+		ScreenshotManager.getInstance().save();
+	}
+
+	@Override
+	public boolean isClickClosePosition(int mouseX, int mouseY) {
+		return (mouseX < menuX);
+	}
+
+	private void resetSearch() {
+		lastSearchText = "";
+		txtSearch.setText("");
+		searchResults.clear();
 	}
 
 	@Override
@@ -156,14 +313,22 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 		} else if(button == btnOpenFolder) {
 			Utils.openDirectory(new File(mc.mcDataDir, "screenshots"));
 		} else if(button == btnDelete) {
-			mc.displayGuiScreen(new GuiYesNo(this, "Do you really want to delete this screenshot?", "This can't be undone, so be careful!", currentIdx));
+			if(currentScreenshot != null) {
+				setOverlay(new OverlayYesNo(this, "Do you really want to delete this screenshot?", "This can't be undone, so be careful!", currentIdx));
+			}
 		} else if(button == btnClipboard) {
-			Utils.setClipboardString(currentScreenshot.getUploadURL());
+			if(currentScreenshot != null) {
+				Utils.setClipboardString(currentScreenshot.getUploadURL());
+			}
 		} else if(button == btnUpload) {
-			ScreenshotManager.getInstance().uploadScreenshot(currentScreenshot, ScreenshotAction.None);
+			if(currentScreenshot != null) {
+				ScreenshotManager.getInstance().uploadScreenshot(currentScreenshot, ScreenshotAction.None);
+			}
 		} else if(button == btnFavorite) {
-			currentScreenshot.setFavorited(!currentScreenshot.isFavorited());
-			setFavoriteButtonState(currentScreenshot.isFavorited());
+			if(currentScreenshot != null) {
+				currentScreenshot.setFavorited(!currentScreenshot.isFavorited());
+				setFavoriteButtonState(currentScreenshot.isFavorited());
+			}
 		} else if(button == btnZoom) {
 			mc.displayGuiScreen(new GuiScreenshotBigPreview(this, imgPreview));
 		}
@@ -173,8 +338,36 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 	public void confirmClicked(boolean result, int id) {
 		if(result) {
 			ScreenshotManager.getInstance().deleteScreenshot(currentScreenshot, false);
+			searchResults.remove(currentScreenshot);
+			if(currentIdx >= screenshotList.size()) {
+				currentIdx = Math.max(0, currentIdx - 1);
+			}
+			updateScreenshot();
 		}
-		Minecraft.getMinecraft().displayGuiScreen(this);
+	}
+
+	@Override
+	public void updateScreen() {
+		super.updateScreen();
+
+		if(currentScreenshot != null) {
+			currentScreenshot.setName(txtName.getTextOrDefault());
+		}
+
+		if(!lastSearchText.equals(txtSearch.getText())) {
+			if(!txtSearch.getText().isEmpty()) {
+				searchResults.clear();
+				for(Screenshot screenshot : screenshotGroup) {
+					if(screenshot.getName().contains(txtSearch.getText()) || screenshot.getOriginalName().contains(txtSearch.getText())) {
+						searchResults.add(screenshot);
+					}
+				}
+				setScreenshotList(searchResults);
+			} else {
+				setScreenshotList(screenshotGroup);
+			}
+			lastSearchText = txtSearch.getText();
+		}
 	}
 
 	private static final List<String> tooltipList = new ArrayList<String>();
@@ -235,9 +428,9 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 
 	public void setFavoriteButtonState(boolean state) {
 		if(state) {
-			btnFavorite.setTextureRegion(0, 208, 32, 32);
+			btnFavorite.setTextureRegion(EiraGui.atlas.findRegion("button_favorite"));
 		} else {
-			btnFavorite.setTextureRegion(64, 208, 32, 32);
+			btnFavorite.setTextureRegion(EiraGui.atlas.findRegion("button_unfavorite"));
 		}
 	}
 }

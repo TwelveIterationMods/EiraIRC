@@ -3,88 +3,46 @@
 
 package net.blay09.mods.eirairc.config;
 
-import java.io.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.config.base.BotProfileImpl;
+import net.blay09.mods.eirairc.api.irc.IRCConnection;
+import net.blay09.mods.eirairc.api.bot.IBotCommand;
+import net.blay09.mods.eirairc.bot.BotCommandCustom;
+import net.blay09.mods.eirairc.bot.IRCBotImpl;
 import net.blay09.mods.eirairc.config.base.MessageFormatConfig;
 import net.blay09.mods.eirairc.config.base.ServiceConfig;
-import net.blay09.mods.eirairc.util.IRCResolver;
+import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Utils;
+import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.io.*;
+import java.net.URL;
+import java.util.*;
 
 public class ConfigurationHandler {
 
 	private static final Logger logger = LogManager.getLogger();
 
 	private static final Map<String, ServerConfig> serverConfigs = new HashMap<String, ServerConfig>();
-	private static final Map<String, BotProfileImpl> botProfiles = new HashMap<String, BotProfileImpl>();
-	private static final List<BotProfileImpl> botProfileList = new ArrayList<BotProfileImpl>();
 	private static final Map<String, MessageFormatConfig> displayFormats = new HashMap<String, MessageFormatConfig>();
-	private static final List<MessageFormatConfig> displayFormatList = new ArrayList<MessageFormatConfig>();
+	private static final List<IBotCommand> customCommands = new ArrayList<IBotCommand>();
+	private static final List<SuggestedChannel> suggestedChannels = new ArrayList<SuggestedChannel>();
 	private static final Map<String, TrustedServer> trustedServers = new HashMap<String, TrustedServer>();
 
 	private static File baseConfigDir;
-	private static BotProfileImpl defaultBotProfile;
 	private static MessageFormatConfig defaultDisplayFormat;
-
-	public static void findDefaultBotProfile() {
-		defaultBotProfile = botProfiles.get("Client");
-		if(defaultBotProfile == null) {
-			for(BotProfileImpl botProfile : botProfiles.values()) {
-				if(botProfile.isDefaultProfile()) {
-					defaultBotProfile = botProfile;
-					return;
-				}
-			}
-			if(defaultBotProfile == null) {
-				Iterator<BotProfileImpl> it = botProfiles.values().iterator();
-				defaultBotProfile = it.next();
-			}
-		}
-	}
-
-	private static void loadBotProfiles(File profileDir) {
-		botProfiles.clear();
-		botProfileList.clear();
-		if(!profileDir.exists()) {
-			if(!profileDir.mkdirs()) {
-				return;
-			}
-		}
-		BotProfileImpl.setupDefaultProfiles(profileDir);
-		File[] files = profileDir.listFiles(new FilenameFilter() {
-			@Override
-			public boolean accept(File file, String name) {
-				return name.endsWith(".cfg");
-			}
-		});
-		for(int i = 0; i < files.length; i++) {
-			BotProfileImpl botProfile = new BotProfileImpl(files[i]);
-			botProfile.loadCommands();
-			botProfiles.put(botProfile.getName(), botProfile);
-			botProfileList.add(botProfile);
-		}
-		findDefaultBotProfile();
-	}
 
 	private static void loadDisplayFormats(File formatDir) {
 		displayFormats.clear();
-		displayFormatList.clear();
 		if(!formatDir.exists()) {
 			if(!formatDir.mkdirs()) {
 				return;
@@ -101,7 +59,6 @@ public class ConfigurationHandler {
 			MessageFormatConfig dfc = new MessageFormatConfig(files[i]);
 			dfc.loadFormats();
 			displayFormats.put(dfc.getName(), dfc);
-			displayFormatList.add(dfc);
 		}
 		defaultDisplayFormat = displayFormats.get(MessageFormatConfig.DEFAULT_FORMAT);
 	}
@@ -147,13 +104,146 @@ public class ConfigurationHandler {
 		ServiceConfig.load(serviceConfig);
 	}
 
+	public static void loadSuggestedChannels(IResourceManager resourceManager) throws IOException {
+		InputStream in;
+		URL remoteURL = new URL("https://raw.githubusercontent.com/blay09/EiraIRC/master/src/main/resources/assets/eirairc/suggested-channels.json");
+		try {
+			in = remoteURL.openStream();
+		} catch (IOException e) {
+			in = resourceManager.getResource(new ResourceLocation("eirairc", "suggested-channels.json")).getInputStream();
+		}
+		Gson gson = new Gson();
+		Reader reader = new InputStreamReader(in);
+		JsonArray channelArray = gson.fromJson(reader, JsonArray.class);
+		for(int i = 0; i < channelArray.size(); i++) {
+			suggestedChannels.add(SuggestedChannel.loadFromJson(channelArray.get(i).getAsJsonObject()));
+		}
+		reader.close();
+		in.close();
+	}
+
+	private static void loadCommands(File configDir) {
+		if(!configDir.exists()) {
+			if(!configDir.mkdirs()) {
+				return;
+			}
+		}
+		createExampleCommands();
+		Gson gson = new Gson();
+		try {
+			File file = new File(configDir, "commands.json");
+			if(!file.exists()) {
+				JsonArray root = new JsonArray();
+				JsonObject players = new JsonObject();
+				players.addProperty("name", "players");
+				players.addProperty("override", "who");
+				players.addProperty("description", "Default alias players for the who command.");
+				root.add(players);
+				try {
+					JsonWriter writer = new JsonWriter(new FileWriter(new File(baseConfigDir, "eirairc/commands.json")));
+					writer.setIndent("  ");
+					gson.toJson(root, writer);
+					writer.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			Reader reader = new FileReader(file);
+			JsonArray commandArray = gson.fromJson(reader, JsonArray.class);
+			for(int i = 0; i < commandArray.size(); i++) {
+				customCommands.add(BotCommandCustom.loadFromJson(commandArray.get(i).getAsJsonObject()));
+			}
+			reader.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private static void createExampleCommands() {
+		JsonArray root = new JsonArray();
+		JsonObject tps = new JsonObject();
+		tps.addProperty("name", "tps");
+		tps.addProperty("command", "cofh tps");
+		tps.addProperty("broadcastResult", true);
+		tps.addProperty("runAsOp", true);
+		tps.addProperty("requireAuth", false);
+		tps.addProperty("allowArgs", false);
+		tps.addProperty("description", "Broadcasts the current TPS to the channel.");
+		root.add(tps);
+		JsonObject alias = new JsonObject();
+		alias.addProperty("name", "players");
+		alias.addProperty("override", "who");
+		alias.addProperty("description", "An alias for the who command called players.");
+		root.add(alias);
+		JsonObject override = new JsonObject();
+		override.addProperty("name", "help");
+		override.addProperty("override", "help");
+		override.addProperty("broadcastResult", true);
+		override.addProperty("description", "Changes EiraIRCs help command to broadcast into the channel instead of a private tell.");
+		root.add(override);
+		JsonObject ban = new JsonObject();
+		ban.addProperty("name", "ban");
+		ban.addProperty("command", "ban");
+		ban.addProperty("broadcastResult", false);
+		ban.addProperty("runAsOp", true);
+		ban.addProperty("requireAuth", true);
+		ban.addProperty("allowArgs", true);
+		ban.addProperty("description", "Bans the specified player with an optional reason from the server. /ban <name> [reason ...]. Authed only.");
+		root.add(ban);
+		JsonObject banip = new JsonObject();
+		banip.addProperty("name", "ban-ip");
+		banip.addProperty("command", "ban-ip");
+		banip.addProperty("broadcastResult", false);
+		banip.addProperty("runAsOp", true);
+		banip.addProperty("requireAuth", true);
+		banip.addProperty("allowArgs", true);
+		banip.addProperty("description", "Bans the specified IP address with an optional reason from the server. /ban <address|name> [reason ...]. Authed only.");
+		root.add(banip);
+		JsonObject banlist = new JsonObject();
+		banlist.addProperty("name", "banlist");
+		banlist.addProperty("command", "banlist");
+		banlist.addProperty("broadcastResult", false);
+		banlist.addProperty("runAsOp", true);
+		banlist.addProperty("requireAuth", true);
+		banlist.addProperty("allowArgs", true);
+		banlist.addProperty("description", "List IP addresses and names on the server. /banlist [ips|players]. Authed only.");
+		root.add(banlist);
+		JsonObject pardon = new JsonObject();
+		pardon.addProperty("name", "pardon");
+		pardon.addProperty("command", "pardon");
+		pardon.addProperty("broadcastResult", false);
+		pardon.addProperty("runAsOp", true);
+		pardon.addProperty("requireAuth", true);
+		pardon.addProperty("allowArgs", true);
+		pardon.addProperty("description", "Unbans (pardons) the specified player on the server. /pardon <name>. Authed only.");
+		root.add(pardon);
+		JsonObject pardonip = new JsonObject();
+		pardonip.addProperty("name", "pardon-ip");
+		pardonip.addProperty("command", "pardon-ip");
+		pardonip.addProperty("broadcastResult", false);
+		pardonip.addProperty("runAsOp", true);
+		pardonip.addProperty("requireAuth", true);
+		pardonip.addProperty("allowArgs", true);
+		pardonip.addProperty("description", "Unbans (pardons) the specified IP address on the server. /pardon-ip <address>. Authed only.");
+		root.add(pardonip);
+		Gson gson = new Gson();
+		try {
+			JsonWriter writer = new JsonWriter(new FileWriter(new File(baseConfigDir, "eirairc/commands.json.example.txt")));
+			writer.setIndent("  ");
+			gson.toJson(root, writer);
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	private static void loadServers(File configDir) {
 		if(!configDir.exists()) {
 			if(!configDir.mkdirs()) {
 				return;
 			}
 		}
-		createExample();
+		createExampleServers();
 		Gson gson = new Gson();
 		try {
 			Reader reader = new FileReader(new File(configDir, "servers.json"));
@@ -167,7 +257,7 @@ public class ConfigurationHandler {
 		}
 	}
 
-	private static void createExample() {
+	private static void createExampleServers() {
 		JsonArray root = new JsonArray();
 		JsonObject server = new JsonObject();
 		server.addProperty("address", "irc.esper.net");
@@ -256,12 +346,12 @@ public class ConfigurationHandler {
 				logger.error("Couldn't get rid of old 'eirairc.cfg' file. Config will REGENERATE unless you delete it yourself.");
 			}
 		} else {
-			EiraIRC.proxy.loadConfig(configDir);
+			EiraIRC.proxy.loadConfig(configDir, false);
 		}
 
 		loadDisplayFormats(new File(configDir, "formats"));
-		loadBotProfiles(new File(configDir, "bots"));
 
+		loadCommands(configDir);
 		loadServers(configDir);
 		loadTrustedServers(configDir);
 	}
@@ -273,21 +363,23 @@ public class ConfigurationHandler {
 		saveTrustedServers();
 	}
 
-	public static void reload() {
+	public static void reloadAll() {
 		load(baseConfigDir);
+		for(IRCConnection connection : EiraIRC.instance.getConnectionManager().getConnections()) {
+			((IRCBotImpl) connection.getBot()).reloadCommands();
+		}
 	}
 
 	public static void lightReload() {
 		File configDir = new File(baseConfigDir, "eirairc");
 
-		EiraIRC.proxy.loadConfig(configDir);
+		EiraIRC.proxy.loadConfig(configDir, false);
 	}
 	
 	public static ServerConfig getOrCreateServerConfig(String host) {
 		ServerConfig serverConfig = serverConfigs.get(host.toLowerCase());
 		if(serverConfig == null) {
 			serverConfig = new ServerConfig(host);
-			serverConfig.useDefaults(Utils.isServerSide());
 		}
 		return serverConfig;
 	}
@@ -304,8 +396,8 @@ public class ConfigurationHandler {
 		serverConfigs.put(serverConfig.getAddress().toLowerCase(), serverConfig);
 	}
 
-	public static void removeServerConfig(String host) {
-		serverConfigs.remove(host.toLowerCase());
+	public static ServerConfig removeServerConfig(String host) {
+		return serverConfigs.remove(host.toLowerCase());
 	}
 
 	public static boolean hasServerConfig(String host) {
@@ -334,11 +426,11 @@ public class ConfigurationHandler {
 				Utils.sendLocalizedMessage(sender, "irc.config.invalidOption", "Global", key);
 			}
 		} else {
-			ChannelConfig channelConfig = IRCResolver.resolveChannelConfig(target, IRCResolver.FLAGS_NONE);
+			ChannelConfig channelConfig = ConfigHelper.resolveChannelConfig(target);
 			if(channelConfig != null) {
 				channelConfig.handleConfigCommand(sender, key, value);
 			} else {
-				ServerConfig serverConfig = IRCResolver.resolveServerConfig(target, IRCResolver.FLAGS_NONE);
+				ServerConfig serverConfig = ConfigHelper.resolveServerConfig(target);
 				if(serverConfig != null) {
 					serverConfig.handleConfigCommand(sender, key, value);
 				} else {
@@ -357,11 +449,11 @@ public class ConfigurationHandler {
 				Utils.sendLocalizedMessage(sender, "irc.config.invalidOption", "Global", key);
 			}
 		} else {
-			ChannelConfig channelConfig = IRCResolver.resolveChannelConfig(target, IRCResolver.FLAGS_NONE);
+			ChannelConfig channelConfig = ConfigHelper.resolveChannelConfig(target);
 			if(channelConfig != null) {
 				channelConfig.handleConfigCommand(sender, key);
 			} else {
-				ServerConfig serverConfig = IRCResolver.resolveServerConfig(target, IRCResolver.FLAGS_NONE);
+				ServerConfig serverConfig = ConfigHelper.resolveServerConfig(target);
 				if(serverConfig != null) {
 					serverConfig.handleConfigCommand(sender, key);
 				} else {
@@ -369,18 +461,11 @@ public class ConfigurationHandler {
 				}
 			}
 		}
+		save();
 	}
 
 	public static void addOptionsToList(List<String> list, String option) {
 		EiraIRC.proxy.addConfigOptionsToList(list, option);
-	}
-
-	public static BotProfileImpl getBotProfile(String name) {
-		BotProfileImpl botProfile = botProfiles.get(name);
-		if(botProfile == null) {
-			return defaultBotProfile;
-		}
-		return botProfile;
 	}
 
 	public static MessageFormatConfig getMessageFormat(String displayMode) {
@@ -391,4 +476,11 @@ public class ConfigurationHandler {
 		return displayFormat;
 	}
 
+	public static List<IBotCommand> getCustomCommands() {
+		return customCommands;
+	}
+
+	public static List<SuggestedChannel> getSuggestedChannels() {
+		return suggestedChannels;
+	}
 }

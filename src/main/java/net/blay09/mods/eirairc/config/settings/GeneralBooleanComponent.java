@@ -16,10 +16,18 @@ public enum GeneralBooleanComponent {
 	public final boolean defaultValue;
 	public final String langKey;
 
-	private GeneralBooleanComponent(String name, boolean defaultValue, String langKey) {
+	GeneralBooleanComponent(String name, boolean defaultValue, String langKey) {
 		this.name = name;
 		this.defaultValue = defaultValue;
 		this.langKey = langKey;
 	}
 
+	public static GeneralBooleanComponent fromName(String name) {
+		for(GeneralBooleanComponent component : values) {
+			if(component.name.equals(name)) {
+				return component;
+			}
+		}
+		return null;
+	}
 }

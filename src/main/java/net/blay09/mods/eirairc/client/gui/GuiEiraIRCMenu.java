@@ -20,12 +20,10 @@ public class GuiEiraIRCMenu extends EiraGuiScreen {
 
 	private GuiMenuButton btnServers;
 	private GuiMenuButton btnTwitch;
-	private GuiMenuButton btnPlaceholder;
+	private GuiMenuButton btnHelp;
 	private GuiMenuButton btnFriends;
 	private GuiMenuButton btnScreenshots;
 	private GuiMenuButton btnSettings;
-
-	private int catCount;
 
 	@Override
 	public void initGui() {
@@ -34,23 +32,23 @@ public class GuiEiraIRCMenu extends EiraGuiScreen {
 		final int buttonCenterX = width / 2;
 		final int buttonCenterY = height / 2;
 
-		btnServers = new GuiMenuButton(0, "Servers", buttonCenterX - 132, buttonCenterY - 95, BUTTON_SIZE, BUTTON_SIZE, 0, BUTTON_SIZE);
+		btnServers = new GuiMenuButton(0, "Servers", buttonCenterX - 132, buttonCenterY - 95, BUTTON_SIZE, BUTTON_SIZE, EiraGui.atlas.findRegion("menu_servers"));
 		buttonList.add(btnServers);
 
-		btnTwitch = new GuiMenuButton(1, "Twitch", buttonCenterX - 32, buttonCenterY - 95, BUTTON_SIZE, BUTTON_SIZE, 0, 0);
+		btnTwitch = new GuiMenuButton(1, "Twitch", buttonCenterX - 32, buttonCenterY - 95, BUTTON_SIZE, BUTTON_SIZE, EiraGui.atlas.findRegion("menu_twitch"));
 		buttonList.add(btnTwitch);
 
-		btnPlaceholder = new GuiMenuButton(2, "???", buttonCenterX + 64, buttonCenterY - 95, BUTTON_SIZE, BUTTON_SIZE, BUTTON_SIZE, BUTTON_SIZE);
-		btnPlaceholder.setPlayButtonSound(false);
-		buttonList.add(btnPlaceholder);
-
-		btnFriends = new GuiMenuButton(3, "Friends", buttonCenterX - 132, buttonCenterY, BUTTON_SIZE, BUTTON_SIZE, BUTTON_SIZE * 3, 0);
-		buttonList.add(btnFriends);
-
-		btnScreenshots = new GuiMenuButton(4, "Screenshots", buttonCenterX - 32, buttonCenterY, BUTTON_SIZE, BUTTON_SIZE, BUTTON_SIZE, 0);
+		btnScreenshots = new GuiMenuButton(2, "Screenshots", buttonCenterX + 64, buttonCenterY - 95, BUTTON_SIZE, BUTTON_SIZE, EiraGui.atlas.findRegion("menu_screenshots"));
 		buttonList.add(btnScreenshots);
 
-		btnSettings = new GuiMenuButton(5, "Settings", buttonCenterX + 64, buttonCenterY, BUTTON_SIZE, BUTTON_SIZE, BUTTON_SIZE * 2, 0);
+		btnFriends = new GuiMenuButton(3, "EiraIRC Channels", buttonCenterX - 132, buttonCenterY, BUTTON_SIZE, BUTTON_SIZE, EiraGui.atlas.findRegion("menu_friends"));
+		buttonList.add(btnFriends);
+
+		btnHelp = new GuiMenuButton(4, "Help", buttonCenterX - 32, buttonCenterY, BUTTON_SIZE, BUTTON_SIZE, EiraGui.atlas.findRegion("menu_cat"));
+		btnHelp.setPlayButtonSound(false);
+		buttonList.add(btnHelp);
+
+		btnSettings = new GuiMenuButton(5, "Settings", buttonCenterX + 64, buttonCenterY, BUTTON_SIZE, BUTTON_SIZE, EiraGui.atlas.findRegion("menu_settings"));
 		buttonList.add(btnSettings);
 	}
 
@@ -64,13 +62,11 @@ public class GuiEiraIRCMenu extends EiraGuiScreen {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiScreenshots(this));
 		} else if(button == btnSettings) {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiEiraIRCConfig(this));
-		} else if(button == btnPlaceholder) {
-			catCount++;
+		} else if(button == btnHelp) {
 			Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(meow, 1f));
-			if(catCount >= 4) {
-				Utils.openWebpage("https://www.youtube.com/results?search_query=Cute+Cat+Videos");
-				catCount = Integer.MIN_VALUE;
-			}
+			Utils.openWebpage("http://blay09.net/?page_id=63");
+		} else if(button == btnFriends) {
+			Minecraft.getMinecraft().displayGuiScreen(new GuiWelcome());
 		}
 	}
 

@@ -33,6 +33,8 @@ public class SharedGlobalConfig {
 	public static final List<String> colorBlacklist = new ArrayList<String>();
 	public static boolean hidePlayerTags = false;
 	public static boolean debugMode = false;
+	public static boolean preventUserPing = false;
+	public static boolean twitchNameColors = true;
 
 	// Network Settings
 	public static String bindIP = "";
@@ -48,8 +50,8 @@ public class SharedGlobalConfig {
 	public static final BotSettings botSettings = new BotSettings(null);
 	public static final GeneralSettings generalSettings = new GeneralSettings(null);
 
-	public static void load(File configDir) {
-		if(thisConfig == null) {
+	public static void load(File configDir, boolean reloadFile) {
+		if(thisConfig == null || reloadFile) {
 			thisConfig = new Configuration(new File(configDir, "shared.cfg"));
 		}
 
@@ -58,10 +60,13 @@ public class SharedGlobalConfig {
 		enablePlayerAliases = thisConfig.getBoolean("enablePlayerAliases", GENERAL, enablePlayerAliases, I19n.format("eirairc:config.property.enablePlayerAliases.tooltip"), "eirairc:config.property.enablePlayerAliases");
 		enablePlayerColors = thisConfig.getBoolean("enablePlayerColors", GENERAL, enablePlayerColors, I19n.format("eirairc:config.property.enablePlayerColors.tooltip"), "eirairc:config.property.enablePlayerColors");
 		String[] colorBlacklistArray = thisConfig.getStringList("colorBlacklist", GENERAL, Globals.DEFAULT_COLOR_BLACKLIST, I19n.format("eirairc:config.property.colorBlacklist.tooltip"), null, "eirairc:config.property.colorBlacklist");
+		colorBlacklist.clear();
 		for(String entry : colorBlacklistArray) {
 			colorBlacklist.add(entry);
 		}
 		hidePlayerTags = thisConfig.getBoolean("hidePlayerTags", GENERAL, hidePlayerTags, I19n.format("eirairc:config.property.hidePlayerTags.tooltip"), "eirairc:config.property.hidePlayerTags");
+		preventUserPing = thisConfig.getBoolean("preventUserPing", GENERAL, preventUserPing, I19n.format("eirairc:config.property.preventUserPing.tooltip"), "eirairc:config.property.preventUserPing");
+		twitchNameColors = thisConfig.getBoolean("twitchNameColors", GENERAL, twitchNameColors, I19n.format("eirairc:config.property.twitchNameColors.tooltip"), "eirairc:config.property.twitchNameColors");
 		debugMode = thisConfig.getBoolean("debugMode", GENERAL, debugMode, I19n.format("eirairc:config.property.debugMode.tooltip"), "eirairc:config.property.debugMode");
 
 		// Network
@@ -77,6 +82,8 @@ public class SharedGlobalConfig {
 		theme.load(thisConfig, THEME, true);
 		botSettings.load(thisConfig, BOT, true);
 		generalSettings.load(thisConfig, SETTINGS, true);
+
+		save();
 	}
 
 	public static void save() {
@@ -93,6 +100,8 @@ public class SharedGlobalConfig {
 		thisConfig.get(GENERAL, "enablePlayerColors", false, I19n.format("eirairc:config.property.enablePlayerColors.tooltip")).set(enablePlayerColors);
 		thisConfig.get(GENERAL, "colorBlacklist", new String[0], I19n.format("eirairc:config.property.colorBlacklist.tooltip")).set(colorBlacklist.toArray(new String[colorBlacklist.size()]));
 		thisConfig.get(GENERAL, "hidePlayerTags", false, I19n.format("eirairc:config.property.hidePlayerTags.tooltip")).set(hidePlayerTags);
+		thisConfig.get(GENERAL, "preventUserPing", false, I19n.format("eirairc:config.property.preventUserPing.tooltip")).set(preventUserPing);
+		thisConfig.get(GENERAL, "twitchNameColors", false, I19n.format("eirairc:config.property.twitchNameColors.tooltip")).set(twitchNameColors);
 		thisConfig.get(GENERAL, "debugMode", false, I19n.format("eirairc:config.property.debugMode.tooltip")).set(debugMode);
 
 		// Network
@@ -119,6 +128,7 @@ public class SharedGlobalConfig {
 		enablePlayerAliases = legacyConfig.getBoolean("enableAliases", "serveronly", enablePlayerAliases, "");
 		enablePlayerColors = legacyConfig.getBoolean("enableNameColors", "display", enablePlayerColors, "");
 		String[] colorBlacklistArray = legacyConfig.getStringList("colorBlackList", "serveronly", new String[0], "");
+		colorBlacklist.clear();
 		for(String entry : colorBlacklistArray) {
 			colorBlacklist.add(Utils.unquote(entry));
 		}
@@ -140,6 +150,8 @@ public class SharedGlobalConfig {
 		botSettings.loadLegacy(legacyConfig, null);
 		generalSettings.load(thisConfig, SETTINGS, true);
 		generalSettings.loadLegacy(legacyConfig, null);
+
+		save();
 	}
 
 	public static boolean handleConfigCommand(ICommandSender sender, String key, String value) {
@@ -148,10 +160,14 @@ public class SharedGlobalConfig {
 			defaultChat = value;
 		} else if(key.equals("enablePlayerColors")) {
 			enablePlayerColors = Boolean.parseBoolean(value);
+		} else if(key.equals("preventUserPing")) {
+			enablePlayerColors = Boolean.parseBoolean(value);
 		} else if(key.equals("enablePlayerAliases")) {
 			enablePlayerAliases = Boolean.parseBoolean(value);
 		} else if(key.equals("hidePlayerTags")) {
 			hidePlayerTags = Boolean.parseBoolean(value);
+		} else if(key.equals("twitchNameColors")) {
+			twitchNameColors = Boolean.parseBoolean(value);
 		} else if(key.equals("debugMode")) {
 			debugMode = Boolean.parseBoolean(value);
 		} else if(key.equals("bindIP")) {
@@ -179,8 +195,12 @@ public class SharedGlobalConfig {
 			value = String.valueOf(enablePlayerColors);
 		} else if(key.equals("enablePlayerAliases")) {
 			value = String.valueOf(enablePlayerAliases);
+		} else if(key.equals("preventUserPing")) {
+			value = String.valueOf(preventUserPing);
 		} else if(key.equals("hidePlayerTags")) {
 			value = String.valueOf(hidePlayerTags);
+		} else if(key.equals("twitchNameColors")) {
+			value = String.valueOf(twitchNameColors);
 		} else if(key.equals("debugMode")) {
 			value = String.valueOf(debugMode);
 		} else if(key.equals("bindIP")) {
@@ -208,13 +228,15 @@ public class SharedGlobalConfig {
 		if(option == null) {
 			list.add("defaultChat");
 			list.add("enablePlayerColors");
+			list.add("preventUserPing");
 			list.add("hidePlayerTags");
+			list.add("twitchNameColors");
 			list.add("debugMode");
 			list.add("bindIP");
 			list.add("sslCustomTrustStore");
 			list.add("sslTrustAllCerts");
 			list.add("sslDisableDiffieHellman");
-		} else if(option.equals("enablePlayerColors") || option.equals("registerShortCommands") || option.equals("hidePlayerTags") || option.equals("sslTrustAllCerts") || option.equals("sslDisableDiffieHellman")) {
+		} else if(option.equals("enablePlayerColors") || option.equals("registerShortCommands") || option.equals("hidePlayerTags") || option.equals("sslTrustAllCerts") || option.equals("sslDisableDiffieHellman") || option.equals("preventUserPing") || option.equals("twitchNameColors")) {
 			Utils.addBooleansToList(list);
 		}
 		ThemeSettings.addOptionsToList(list, option);

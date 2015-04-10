@@ -3,10 +3,10 @@
 
 package net.blay09.mods.eirairc.client.gui.chat;
 
+import net.blay09.mods.eirairc.handler.ChatSessionHandler;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import net.blay09.mods.eirairc.handler.ChatSessionHandler;
 
 public class GuiEiraChat {
 

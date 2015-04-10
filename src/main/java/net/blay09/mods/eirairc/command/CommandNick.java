@@ -3,13 +3,12 @@
 
 package net.blay09.mods.eirairc.command;
 
-import java.util.List;
-
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.api.IRCConnection;
-import net.blay09.mods.eirairc.api.IRCContext;
-import net.blay09.mods.eirairc.config.ServerConfig;
+import net.blay09.mods.eirairc.api.irc.IRCConnection;
+import net.blay09.mods.eirairc.api.irc.IRCContext;
+import net.blay09.mods.eirairc.api.SubCommand;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
+import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.IRCResolver;
@@ -17,7 +16,9 @@ import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 
-public class CommandNick extends SubCommand {
+import java.util.List;
+
+public class CommandNick implements SubCommand {
 
 	@Override
 	public String getCommandName() {
@@ -25,8 +26,8 @@ public class CommandNick extends SubCommand {
 	}
 
 	@Override
-	public String getUsageString(ICommandSender sender) {
-		return "irc.commands.nick";
+	public String getCommandUsage(ICommandSender sender) {
+		return "eirairc:irc.commands.nick";
 	}
 
 	@Override
@@ -40,12 +41,12 @@ public class CommandNick extends SubCommand {
 			throw new WrongUsageException(getCommandUsage(sender));
 		}
 		if(args.length >= 2) {
-			ServerConfig serverConfig = IRCResolver.resolveServerConfig(args[1], IRCResolver.FLAGS_NONE);
+			ServerConfig serverConfig = ConfigHelper.resolveServerConfig(args[0]);
 			if(serverConfig == null) {
-				Utils.sendLocalizedMessage(sender, "irc.target.serverNotFound");
+				Utils.sendLocalizedMessage(sender, "irc.target.serverNotFound", args[0]);
 				return true;
 			}
-			String nick = args[0];
+			String nick = args[1];
 			Utils.sendLocalizedMessage(sender, "irc.basic.changingNick", serverConfig.getAddress(), nick);
 			serverConfig.setNick(nick);
 			IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(serverConfig.getAddress());

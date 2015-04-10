@@ -3,13 +3,11 @@
 
 package net.blay09.mods.eirairc.command.base;
 
-import java.util.List;
-
 import net.blay09.mods.eirairc.util.Globals;
-import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.command.WrongUsageException;
+
+import java.util.List;
 
 public class CommandIRC implements ICommand {
 

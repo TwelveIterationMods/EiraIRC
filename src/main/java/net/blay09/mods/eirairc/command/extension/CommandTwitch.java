@@ -3,20 +3,21 @@
 
 package net.blay09.mods.eirairc.command.extension;
 
-import java.util.List;
-
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.api.IRCContext;
-import net.blay09.mods.eirairc.command.SubCommand;
+import net.blay09.mods.eirairc.api.EiraIRCAPI;
+import net.blay09.mods.eirairc.api.irc.IRCContext;
+import net.blay09.mods.eirairc.api.SubCommand;
 import net.blay09.mods.eirairc.config.ChannelConfig;
-import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
+import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 
-public class CommandTwitch extends SubCommand {
+import java.util.List;
+
+public class CommandTwitch implements SubCommand {
 
 	@Override
 	public String getCommandName() {
@@ -24,8 +25,8 @@ public class CommandTwitch extends SubCommand {
 	}
 
 	@Override
-	public String getUsageString(ICommandSender sender) {
-		return "irc.commands.twitch";
+	public String getCommandUsage(ICommandSender sender) {
+		return "eirairc:irc.commands.twitch";
 	}
 
 	@Override
@@ -35,7 +36,7 @@ public class CommandTwitch extends SubCommand {
 
 	@Override
 	public boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) {
-		if(EiraIRC.instance.getConnectionManager().isConnectedTo(Globals.TWITCH_SERVER)) {
+		if(EiraIRCAPI.isConnectedTo(Globals.TWITCH_SERVER)) {
 			Utils.sendLocalizedMessage(sender, "irc.general.alreadyConnected", "Twitch");
 			return true;
 		}
@@ -54,7 +55,7 @@ public class CommandTwitch extends SubCommand {
 				}
 			}
 		} else {
-			if(args.length < 2 && !ConfigurationHandler.hasServerConfig(Globals.TWITCH_SERVER)) {
+			if(args.length < 2) {
 				throw new WrongUsageException(Globals.MOD_ID + ":irc.commands.twitch");
 			}
 			ServerConfig serverConfig = ConfigurationHandler.getOrCreateServerConfig(Globals.TWITCH_SERVER);

@@ -22,11 +22,6 @@ public abstract class GuiTabPage extends EiraGuiScreen {
 		this.tabContainer = tabContainer;
 	}
 
-	@Override
-	public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
-		super.mouseClicked(mouseX, mouseY, mouseButton);
-	}
-
 	public boolean requestClose() {
 		return true;
 	}

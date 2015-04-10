@@ -2,6 +2,8 @@ package net.blay09.mods.eirairc.util;
 
 import net.minecraft.util.EnumChatFormatting;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,7 +27,7 @@ public enum IRCFormatting {
 	private final String ircCode;
 	private final String mcCode;
 
-	private IRCFormatting(String ircCode, String mcCode) {
+	IRCFormatting(String ircCode, String mcCode) {
 		this.ircCode = ircCode;
 		this.mcCode = MC_FORMATTING_PREFIX + mcCode;
 	}
@@ -121,4 +123,61 @@ public enum IRCFormatting {
 		return 1;
 	}
 
+	public static EnumChatFormatting getColorFromMCColorCode(char colorCode) {
+		switch(colorCode) {
+			case '0': return EnumChatFormatting.BLACK; // black
+			case '1': return EnumChatFormatting.DARK_BLUE; // dark blue
+			case '2': return EnumChatFormatting.DARK_GREEN; // dark green
+			case '3': return EnumChatFormatting.DARK_AQUA; // dark aqua
+			case '4': return EnumChatFormatting.DARK_RED; // dark red
+			case '5': return EnumChatFormatting.DARK_PURPLE; // dark purple
+			case '6': return EnumChatFormatting.GOLD; // gold
+			case '7': return EnumChatFormatting.GRAY; // gray
+			case '8': return EnumChatFormatting.DARK_GRAY; // dark gray
+			case '9': return EnumChatFormatting.BLUE; // blue
+			case 'a': return EnumChatFormatting.GREEN; // green
+			case 'b': return EnumChatFormatting.AQUA; // aqua
+			case 'c': return EnumChatFormatting.RED; // red
+			case 'd': return EnumChatFormatting.LIGHT_PURPLE; // light purple
+			case 'e': return EnumChatFormatting.YELLOW; // yellow
+			case 'f': return EnumChatFormatting.WHITE; // white
+		}
+		return null;
+	}
+
+	private static final Map<String, EnumChatFormatting> twitchColorMap = new HashMap<String, EnumChatFormatting>();
+	static {
+		// TODO I'm not sure if this is the right approach anymore. There just keep popping up new colors! Might have to use the RGB values and pick the closest one instead?
+		twitchColorMap.put("#008000", EnumChatFormatting.DARK_GREEN);
+		twitchColorMap.put("#0000FF", EnumChatFormatting.BLUE);
+		twitchColorMap.put("#1E90FF", EnumChatFormatting.BLUE);
+		twitchColorMap.put("#FF0000", EnumChatFormatting.RED);
+		twitchColorMap.put("#006666", EnumChatFormatting.AQUA);
+		twitchColorMap.put("#B22222", EnumChatFormatting.DARK_RED);
+		twitchColorMap.put("#FF7F50", EnumChatFormatting.GOLD);
+		twitchColorMap.put("#9ACD32", EnumChatFormatting.GREEN);
+		twitchColorMap.put("#FF4500", EnumChatFormatting.GOLD);
+		twitchColorMap.put("#2E8B57", EnumChatFormatting.DARK_AQUA);
+		twitchColorMap.put("#DAA520", EnumChatFormatting.YELLOW);
+		twitchColorMap.put("#D2691E", EnumChatFormatting.GOLD);
+		twitchColorMap.put("#5F9EA0", EnumChatFormatting.AQUA);
+		twitchColorMap.put("#FF69B4", EnumChatFormatting.LIGHT_PURPLE);
+		twitchColorMap.put("#8A2BE2", EnumChatFormatting.LIGHT_PURPLE);
+		twitchColorMap.put("#00FF7F", EnumChatFormatting.GREEN);
+		twitchColorMap.put("#66CC00", EnumChatFormatting.GREEN);
+		twitchColorMap.put("#0099E6", EnumChatFormatting.BLUE);
+		twitchColorMap.put("#000000", EnumChatFormatting.GRAY);
+		twitchColorMap.put("#43005C", EnumChatFormatting.LIGHT_PURPLE);
+		twitchColorMap.put("#6BD5FF", EnumChatFormatting.BLUE);
+		twitchColorMap.put("#FF6BB5", EnumChatFormatting.LIGHT_PURPLE);
+		twitchColorMap.put("#AF551D", EnumChatFormatting.GOLD);
+	}
+
+	public static EnumChatFormatting getColorFromTwitch(String twitchColor) {
+		EnumChatFormatting color = twitchColorMap.get(twitchColor);
+		if(color == null) {
+			System.out.println("Unknown Twitch Name Color: " + twitchColor);
+		}
+		return color != null ? color : EnumChatFormatting.WHITE;
+	}
 }

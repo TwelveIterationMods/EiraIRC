@@ -5,9 +5,9 @@ package net.blay09.mods.eirairc.irc;
 
 public class IRCMessage {
 
-	private String prefix;
-	private String command;
-	private String[] args;
+	private final String prefix;
+	private final String command;
+	private final String[] args;
 	
 	public IRCMessage(String prefix, String command, String[] args) {
 		this.prefix = prefix;
@@ -55,7 +55,7 @@ public class IRCMessage {
 		if(end != -1) {
 			return prefix.substring(0, end);
 		}
-		return null;
+		return prefix;
 	}
 	
 	public String arg(int idx) {

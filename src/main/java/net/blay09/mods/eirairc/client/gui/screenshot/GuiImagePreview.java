@@ -5,14 +5,12 @@ import net.blay09.mods.eirairc.client.gui.EiraGuiScreen;
 import net.blay09.mods.eirairc.client.gui.base.GuiImageButton;
 import net.blay09.mods.eirairc.client.gui.base.image.GuiImage;
 import net.blay09.mods.eirairc.client.gui.base.image.GuiURLImage;
-import net.blay09.mods.eirairc.client.screenshot.ScreenshotManager;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiConfirmOpenLink;
 import net.minecraft.client.gui.GuiYesNoCallback;
 
-import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,10 +38,10 @@ public class GuiImagePreview extends EiraGuiScreen implements GuiYesNoCallback {
 	private float hoverTime;
 	private GuiImageButton hoverObject;
 
-	public GuiImagePreview(URL url) {
+	public GuiImagePreview(URL directURL, URL url) {
 		super(null);
-		this.url = url;
-		imgPreview = new GuiURLImage(url);
+		this.url = url != null ? url : directURL;
+		imgPreview = new GuiURLImage(directURL);
 		imgPreview.loadTexture();
 	}
 
@@ -55,15 +53,15 @@ public class GuiImagePreview extends EiraGuiScreen implements GuiYesNoCallback {
 		final int rightX = width / 2 + 145;
 		final int topY = height / 2 - 100;
 
-		btnZoom = new GuiImageButton(0, rightX - 37, topY + 12, EiraGui.texMenu, 0, 176, 32, 32);
+		btnZoom = new GuiImageButton(0, rightX - 37, topY + 12, EiraGui.atlas.findRegion("button_zoom"));
 		btnZoom.setTooltipText("View Fullscreen");
 		buttonList.add(btnZoom);
 
-		btnGoToURL = new GuiImageButton(1, rightX - 37, topY + 50, EiraGui.texMenu, 32, 208, 32, 32);
+		btnGoToURL = new GuiImageButton(1, rightX - 37, topY + 50, EiraGui.atlas.findRegion("button_upload"));
 		btnGoToURL.setTooltipText("Open in Browser");
 		buttonList.add(btnGoToURL);
 
-		btnClipboard = new GuiImageButton(2, rightX - 37, topY + 88, EiraGui.texMenu, 128, 208, 32, 32);
+		btnClipboard = new GuiImageButton(2, rightX - 37, topY + 88, EiraGui.atlas.findRegion("button_clipboard"));
 		btnClipboard.setTooltipText("URL to Clipboard");
 		buttonList.add(btnClipboard);
 
@@ -131,7 +129,7 @@ public class GuiImagePreview extends EiraGuiScreen implements GuiYesNoCallback {
 			GuiButton button = (GuiButton) buttonList.get(i);
 			if (button instanceof GuiImageButton) {
 				GuiImageButton imageButton = (GuiImageButton) button;
-				if(imageButton.isInside(mouseX, mouseY) && imageButton.isAlphaVisible() && imageButton.getTooltipText() != null) {
+				if(imageButton.isInside(mouseX, mouseY) && imageButton.visible && imageButton.isAlphaVisible() && imageButton.getTooltipText() != null) {
 					if(imageButton != hoverObject) {
 						hoverObject = imageButton;
 						hoverTime = 0f;

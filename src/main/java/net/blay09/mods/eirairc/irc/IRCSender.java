@@ -1,6 +1,9 @@
 package net.blay09.mods.eirairc.irc;
 
-import net.blay09.mods.eirairc.api.IRCConnection;
+import net.blay09.mods.eirairc.api.event.IRCDisconnectEvent;
+import net.minecraft.client.Minecraft;
+import net.minecraft.crash.CrashReport;
+import net.minecraftforge.common.MinecraftForge;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -66,13 +69,17 @@ public class IRCSender implements Runnable {
 		} catch (SocketException e) {
 			e.printStackTrace();
 			if(connection.isConnected()) {
+				MinecraftForge.EVENT_BUS.post(new IRCDisconnectEvent(connection));
 				connection.tryReconnect();
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 			if(connection.isConnected()) {
+				MinecraftForge.EVENT_BUS.post(new IRCDisconnectEvent(connection));
 				connection.tryReconnect();
 			}
+		} catch (Exception e) {
+			Minecraft.getMinecraft().displayCrashReport(new CrashReport("EiraIRC connection to " + connection.getHost() + " has crashed :(", e));
 		}
 	}
 

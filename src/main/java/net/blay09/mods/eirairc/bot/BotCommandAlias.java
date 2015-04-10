@@ -3,17 +3,16 @@
 
 package net.blay09.mods.eirairc.bot;
 
-import java.util.List;
-
-import net.blay09.mods.eirairc.api.IRCChannel;
-import net.blay09.mods.eirairc.api.IRCUser;
+import net.blay09.mods.eirairc.api.irc.IRCChannel;
+import net.blay09.mods.eirairc.api.irc.IRCUser;
 import net.blay09.mods.eirairc.api.bot.IBotCommand;
 import net.blay09.mods.eirairc.api.bot.IRCBot;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
-import net.blay09.mods.eirairc.util.MessageFormat;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
+
+import java.util.List;
 
 public class BotCommandAlias implements IBotCommand {
 
@@ -28,7 +27,7 @@ public class BotCommandAlias implements IBotCommand {
 	}
 
 	@Override
-	public void processCommand(IRCBot bot, IRCChannel channel, IRCUser user, String[] args) {
+	public void processCommand(IRCBot bot, IRCChannel channel, IRCUser user, String[] args, IBotCommand commandSettings) {
 		if(!SharedGlobalConfig.enablePlayerAliases) {
 			user.notice(Utils.getLocalizedMessage("irc.alias.disabled"));
 			return;
@@ -37,11 +36,34 @@ public class BotCommandAlias implements IBotCommand {
 		List<EntityPlayer> playerEntityList = MinecraftServer.getServer().getConfigurationManager().playerEntityList;
 		for(EntityPlayer entity : playerEntityList) {
 			if(Utils.getNickGame(entity).equals(alias) || Utils.getNickIRC(entity, channel).equals(alias)) {
-				user.notice(Utils.getLocalizedMessage("irc.alias.lookup", alias, entity.getCommandSenderName()));
+				if(commandSettings.broadcastsResult() && channel != null) {
+					channel.message(Utils.getLocalizedMessage("irc.alias.lookup", alias, entity.getCommandSenderName()));
+				} else {
+					user.notice(Utils.getLocalizedMessage("irc.alias.lookup", alias, entity.getCommandSenderName()));
+				}
 				return;
 			}
 		}
-		user.notice(Utils.getLocalizedMessage("irc.general.noSuchPlayer"));
+		if(commandSettings.broadcastsResult() && channel != null) {
+			channel.message(Utils.getLocalizedMessage("irc.general.noSuchPlayer"));
+		} else {
+			user.notice(Utils.getLocalizedMessage("irc.general.noSuchPlayer"));
+		}
+	}
+
+	@Override
+	public boolean requiresAuth() {
+		return false;
+	}
+
+	@Override
+	public boolean broadcastsResult() {
+		return false;
+	}
+
+	@Override
+	public boolean allowArgs() {
+		return true;
 	}
 
 	@Override

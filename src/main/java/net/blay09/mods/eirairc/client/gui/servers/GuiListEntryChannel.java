@@ -1,13 +1,13 @@
 package net.blay09.mods.eirairc.client.gui.servers;
 
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.api.IRCConnection;
+import net.blay09.mods.eirairc.api.irc.IRCConnection;
+import net.blay09.mods.eirairc.client.graphics.TextureRegion;
 import net.blay09.mods.eirairc.client.gui.EiraGui;
 import net.blay09.mods.eirairc.client.gui.base.list.GuiListTextEntry;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.util.Globals;
 import net.minecraft.client.gui.FontRenderer;
-import org.lwjgl.opengl.GL11;
 
 /**
  * Created by Blay09 on 10.10.2014.
@@ -16,7 +16,7 @@ public class GuiListEntryChannel extends GuiListTextEntry {
 
 	private final GuiServerConfig parent;
 	private final ChannelConfig config;
-	private boolean isJoined;
+	private TextureRegion icon;
 
 	public GuiListEntryChannel(GuiServerConfig parent, FontRenderer fontRenderer, ChannelConfig config, int height) {
 		super(fontRenderer, config.getName(), height, Globals.TEXT_COLOR);
@@ -24,7 +24,7 @@ public class GuiListEntryChannel extends GuiListTextEntry {
 		this.config = config;
 
 		IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(parent.getServerConfig().getAddress());
-		isJoined = (connection != null && connection.getChannel(config.getName()) != null);
+		setJoined(connection != null && connection.getChannel(config.getName()) != null);
 	}
 
 	public ChannelConfig getConfig() {
@@ -46,16 +46,19 @@ public class GuiListEntryChannel extends GuiListTextEntry {
 	}
 
 	public void setJoined(boolean isJoined) {
-		this.isJoined = isJoined;
+		if(isJoined) {
+			icon = EiraGui.atlas.findRegion("icon_active");
+		} else {
+			icon = null;
+		}
 	}
 
 	@Override
 	public void drawEntry(int x, int y) {
 		super.drawEntry(x + 11, y);
 
-		if(isJoined) {
-			parent.mc.renderEngine.bindTexture(EiraGui.texMenu);
-			EiraGui.drawTexturedRect256(x + 3, y + height / 2 - 6, 10, 10, 48, 128, 10, 10, zLevel);
+		if(icon != null) {
+			icon.draw(x + 3, y + height / 2 - 6);
 		}
 	}
 }

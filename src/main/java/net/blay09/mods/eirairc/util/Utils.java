@@ -4,9 +4,37 @@
 package net.blay09.mods.eirairc.util;
 
 import io.netty.buffer.ByteBuf;
+import net.blay09.mods.eirairc.EiraIRC;
+import net.blay09.mods.eirairc.api.EiraIRCAPI;
+import net.blay09.mods.eirairc.api.irc.IRCChannel;
+import net.blay09.mods.eirairc.api.irc.IRCConnection;
+import net.blay09.mods.eirairc.api.irc.IRCContext;
+import net.blay09.mods.eirairc.api.irc.IRCUser;
+import net.blay09.mods.eirairc.bot.IRCBotImpl;
+import net.blay09.mods.eirairc.config.ChannelConfig;
+import net.blay09.mods.eirairc.config.ServerConfig;
+import net.blay09.mods.eirairc.config.SharedGlobalConfig;
+import net.blay09.mods.eirairc.config.base.ServiceConfig;
+import net.blay09.mods.eirairc.config.base.ServiceSettings;
+import net.blay09.mods.eirairc.config.settings.ThemeColorComponent;
+import net.blay09.mods.eirairc.config.settings.ThemeSettings;
+import net.blay09.mods.eirairc.irc.IRCConnectionImpl;
+import net.blay09.mods.eirairc.irc.IRCUserImpl;
+import net.blay09.mods.eirairc.irc.ssl.IRCConnectionSSLImpl;
+import net.blay09.mods.eirairc.net.EiraPlayerInfo;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ServerData;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.*;
+import org.apache.commons.lang3.ArrayUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.lwjgl.Sys;
 
-import java.awt.Desktop;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.io.File;
@@ -20,35 +48,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.api.IRCChannel;
-import net.blay09.mods.eirairc.api.IRCConnection;
-import net.blay09.mods.eirairc.api.IRCContext;
-import net.blay09.mods.eirairc.api.IRCUser;
-import net.blay09.mods.eirairc.bot.IRCBotImpl;
-import net.blay09.mods.eirairc.config.ChannelConfig;
-import net.blay09.mods.eirairc.config.ServerConfig;
-import net.blay09.mods.eirairc.config.SharedGlobalConfig;
-import net.blay09.mods.eirairc.config.base.ServiceConfig;
-import net.blay09.mods.eirairc.config.base.ServiceSettings;
-import net.blay09.mods.eirairc.config.settings.BotSettings;
-import net.blay09.mods.eirairc.config.settings.BotStringComponent;
-import net.blay09.mods.eirairc.config.settings.ThemeColorComponent;
-import net.blay09.mods.eirairc.config.settings.ThemeSettings;
-import net.blay09.mods.eirairc.irc.IRCConnectionImpl;
-import net.blay09.mods.eirairc.irc.ssl.IRCConnectionSSLImpl;
-import net.blay09.mods.eirairc.net.EiraPlayerInfo;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ServerData;
-import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.*;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.lwjgl.Sys;
-
 public class Utils {
 
 	private static final int MAX_CHAT_LENGTH = 100;
@@ -56,8 +55,7 @@ public class Utils {
 	private static final String ENCODING = "UTF-8";
 	
 	public static void sendLocalizedMessage(ICommandSender sender, String key, Object... args) {
-		EiraPlayerInfo playerInfo = EiraIRC.instance.getNetHandler().getPlayerInfo(sender.getCommandSenderName());
-		if(playerInfo.modInstalled) {
+		if(EiraIRCAPI.hasClientSideInstalled(sender)) {
 			sender.addChatMessage(getLocalizedChatMessage(key, args));
 		} else {
 			sender.addChatMessage(new ChatComponentText(getLocalizedChatMessage(key, args).getUnformattedText()));
@@ -77,7 +75,7 @@ public class Utils {
 	}
 	
 	public static void addMessageToChat(@NotNull IChatComponent chatComponent) {
-		if(MinecraftServer.getServer() != null) {
+		if(MinecraftServer.getServer() != null && !MinecraftServer.getServer().isSinglePlayer()) {
 			MinecraftServer.getServer().getConfigurationManager().sendChatMsg(chatComponent);
 		} else {
 			if(Minecraft.getMinecraft().thePlayer != null) {
@@ -173,13 +171,10 @@ public class Utils {
 	}
 
 	public static boolean isOP(ICommandSender sender) {
-		if(MinecraftServer.getServer() == null || MinecraftServer.getServer().isSinglePlayer()) {
+		if(MinecraftServer.getServer() == null || (MinecraftServer.getServer().isSinglePlayer() && !MinecraftServer.getServer().isDedicatedServer())) {
 			return true;
 		}
-		if(sender instanceof EntityPlayer) {
-			return MinecraftServer.getServer().getConfigurationManager().func_152603_m().func_152700_a(sender.getCommandSenderName().toLowerCase()) != null; // isPlayerOpped
-		}
-		return true;
+		return sender.canCommandSenderUseCommand(3, "");
 	}
 	
 	public static boolean isValidColor(String colorName) {
@@ -251,6 +246,10 @@ public class Utils {
 
 	@Nullable
 	public static EnumChatFormatting getColorFormattingForUser(IRCChannel channel, IRCUser user) {
+		EnumChatFormatting nameColor = ((IRCUserImpl) user).getNameColor();
+		if(nameColor != null && SharedGlobalConfig.twitchNameColors) {
+			return nameColor;
+		}
 		ThemeSettings theme = ConfigHelper.getTheme(channel);
 		if(channel == null) {
 			return theme.getColor(ThemeColorComponent.ircPrivateNameColor);
@@ -304,6 +303,10 @@ public class Utils {
 	}
 
 	public static boolean redirectTo(ServerConfig serverConfig, boolean solo) {
+		if(serverConfig == null) {
+			EiraIRC.instance.getConnectionManager().stopIRC();
+			return true;
+		}
 		IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(serverConfig.getAddress());
 		if(connection != null && solo) {
 			connection.disconnect("Redirected by " + Utils.getCurrentServerName());
@@ -323,6 +326,10 @@ public class Utils {
 	}
 
 	public static IRCConnectionImpl connectTo(ServerConfig config) {
+		IRCConnection oldConnection = EiraIRC.instance.getConnectionManager().getConnection(config.getAddress());
+		if(oldConnection != null) {
+			oldConnection.disconnect("Reconnecting...");
+		}
 		IRCConnectionImpl connection;
 		if(config.isSSL()) {
 			connection = new IRCConnectionSSLImpl(config, ConfigHelper.getFormattedNick(config));
@@ -384,23 +391,35 @@ public class Utils {
 			}
 		}
 	}
-	
-	public static void sendPlayerList(IRCUser user) {
+
+	public static void sendPlayerList(IRCContext context) {
 		if(MinecraftServer.getServer() == null || MinecraftServer.getServer().isSinglePlayer()) {
 			return;
 		}
 		List<EntityPlayer> playerList = MinecraftServer.getServer().getConfigurationManager().playerEntityList;
 		if(playerList.size() == 0) {
-			user.notice(getLocalizedMessage("irc.bot.noPlayersOnline"));
+			if(context instanceof IRCUser) {
+				context.notice(getLocalizedMessage("irc.bot.noPlayersOnline"));
+			} else if(context instanceof IRCChannel) {
+				context.message(getLocalizedMessage("irc.bot.noPlayersOnline"));
+			}
 			return;
 		}
-		user.notice(getLocalizedMessage("irc.bot.playersOnline", playerList.size()));
+		if(context instanceof IRCUser) {
+			context.notice(getLocalizedMessage("irc.bot.playersOnline", playerList.size()));
+		} else if(context instanceof IRCChannel) {
+			context.message(getLocalizedMessage("irc.bot.playersOnline", playerList.size()));
+		}
 		String s = " * ";
 		for(int i = 0; i < playerList.size(); i++) {
 			EntityPlayer entityPlayer = playerList.get(i);
 			String alias = getNickIRC(entityPlayer, null);
 			if(s.length() + alias.length() > Globals.CHAT_MAX_LENGTH) {
-				user.notice(s);
+				if(context instanceof IRCUser) {
+					context.notice(s);
+				} else if(context instanceof IRCChannel) {
+					context.message(s);
+				}
 				s = " * ";
 			}
 			if(s.length() > 3) {
@@ -409,12 +428,16 @@ public class Utils {
 			s += alias;
 		}
 		if(s.length() > 3) {
-			user.notice(s);
+			if(context instanceof IRCUser) {
+				context.notice(s);
+			} else if(context instanceof IRCChannel) {
+				context.message(s);
+			}
 		}
 	}
 	
 	public static IRCContext getSuggestedTarget() {
-		IRCContext result = EiraIRC.instance.getChatSessionHandler().getIRCTarget();
+		IRCContext result = EiraIRC.instance.getChatSessionHandler().getChatTarget();
 		if(result == null) {
 			IRCConnection connection = EiraIRC.instance.getConnectionManager().getDefaultConnection();
 			if(connection != null) {
@@ -521,10 +544,6 @@ public class Utils {
 		return shiftedArgs;
 	}
 	
-	public static String joinStrings(String[] arr, String delimiter) {
-		return joinStrings(arr, delimiter, 0);
-	}
-	
 	public static String joinStrings(String[] args, String delimiter, int startIdx) {
 		StringBuilder sb = new StringBuilder();
 		for(int i = startIdx; i < args.length; i++) {
@@ -567,15 +586,41 @@ public class Utils {
 		}
 	}
 
-	public static int extractPort(String url, int defaultPort) {
+	public static int[] extractPorts(String url, int defaultPort) {
 		int portIdx = url.indexOf(':');
 		if(portIdx != -1) {
 			try {
-				return Integer.parseInt(url.substring(portIdx + 1));
+				String[] portRanges = url.substring(portIdx + 1).split("\\+");
+				List<Integer> portList = new ArrayList<Integer>();
+				for(int i = 0; i < portRanges.length; i++) {
+					int sepIdx = portRanges[i].indexOf('-');
+					if(sepIdx != -1) {
+						int min = Integer.parseInt(portRanges[i].substring(0, sepIdx));
+						int max = Integer.parseInt(portRanges[i].substring(sepIdx + 1));
+						if(min > max) {
+							int oldMin = min;
+							min = max;
+							max = oldMin;
+						}
+						if(max - min > 5) {
+							throw new RuntimeException("EiraIRC: Port ranges bigger than 5 are not allowed! Split them up if you really have to.");
+						}
+						for(int j = min; j <= max; j++) {
+							portList.add(j);
+						}
+					} else {
+						portList.add(Integer.parseInt(portRanges[i]));
+					}
+				}
+				return ArrayUtils.toPrimitive(portList.toArray(new Integer[portList.size()]));
 			} catch (NumberFormatException e) {
-				return defaultPort;
+				return new int[] { defaultPort };
 			}
 		}
-		return defaultPort;
+		return new int[] { defaultPort };
+	}
+
+	public static String getModpackId() {
+		return "";
 	}
 }

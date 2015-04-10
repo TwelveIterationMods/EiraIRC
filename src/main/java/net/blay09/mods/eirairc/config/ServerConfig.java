@@ -3,17 +3,10 @@
 
 package net.blay09.mods.eirairc.config;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import net.blay09.mods.eirairc.api.IRCChannel;
-import net.blay09.mods.eirairc.config.base.BotProfileImpl;
+import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.config.settings.BotSettings;
-import net.blay09.mods.eirairc.config.settings.BotStringComponent;
 import net.blay09.mods.eirairc.config.settings.GeneralSettings;
 import net.blay09.mods.eirairc.config.settings.ThemeSettings;
 import net.blay09.mods.eirairc.util.Globals;
@@ -22,6 +15,11 @@ import net.minecraft.command.ICommandSender;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ServerConfig {
 
@@ -44,15 +42,8 @@ public class ServerConfig {
 
 	public ServerConfig(String address) {
 		this.address = address;
-	}
-
-	public void useDefaults(boolean serverSide) {
 		if(address.equals(Globals.TWITCH_SERVER)) {
-			botSettings.setString(BotStringComponent.BotProfile, BotProfileImpl.DEFAULT_TWITCH);
-		} else if(serverSide) {
-			botSettings.setString(BotStringComponent.BotProfile, BotProfileImpl.DEFAULT_SERVER);
-		} else {
-			botSettings.setString(BotStringComponent.BotProfile, BotProfileImpl.DEFAULT_CLIENT);
+			nick = "";
 		}
 	}
 
@@ -112,8 +103,8 @@ public class ServerConfig {
 		channels.put(channelConfig.getName().toLowerCase(), channelConfig);
 	}
 
-	public void removeChannelConfig(@NotNull String channelName) {
-		channels.remove(channelName.toLowerCase());
+	public ChannelConfig removeChannelConfig(@NotNull String channelName) {
+		return channels.remove(channelName.toLowerCase());
 	}
 
 	public boolean hasChannelConfig(@NotNull String channelName) {
@@ -307,5 +298,9 @@ public class ServerConfig {
 
 	public boolean isRedirect() {
 		return isRedirect;
+	}
+
+	public String getIdentifier() {
+		return Utils.extractHost(address);
 	}
 }

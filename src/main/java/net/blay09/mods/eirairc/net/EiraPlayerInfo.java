@@ -7,8 +7,6 @@ public class EiraPlayerInfo {
 
 	private String username;
 	public String modVersion;
-	public boolean isLive;
-	public boolean isRecording;
 	public boolean modInstalled;
 	
 	public EiraPlayerInfo(String username) {
