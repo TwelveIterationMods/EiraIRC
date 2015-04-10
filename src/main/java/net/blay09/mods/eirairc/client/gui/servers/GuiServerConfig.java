@@ -29,12 +29,10 @@ import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
 
-/**
- * Created by Blay09 on 04.10.2014.
- */
+
 public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 
-	private ServerConfig config;
+	private final ServerConfig config;
 	private GuiTextField txtAddress;
 	private GuiAdvancedTextField txtNick;
 	private GuiList<GuiListEntryChannel> lstChannels;
@@ -187,13 +185,15 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 				if(connection == null) {
 					connection = Utils.connectTo(config);
 				}
-				ChannelConfig channelConfig = lstChannels.getSelectedItem().getConfig();
-				if(connection.getChannel(channelConfig.getName()) != null) {
-					connection.part(channelConfig.getName());
-					setChannelJoinLeaveButtonState(false);
-				} else {
-					connection.join(channelConfig.getName(), channelConfig.getPassword());
-					setChannelJoinLeaveButtonState(true);
+				if(connection != null) {
+					ChannelConfig channelConfig = lstChannels.getSelectedItem().getConfig();
+					if (connection.getChannel(channelConfig.getName()) != null) {
+						connection.part(channelConfig.getName());
+						setChannelJoinLeaveButtonState(false);
+					} else {
+						connection.join(channelConfig.getName(), channelConfig.getPassword());
+						setChannelJoinLeaveButtonState(true);
+					}
 				}
 			}
 		} else if(button == btnDelete) {
@@ -212,7 +212,7 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 			} else {
 				btnConnect.enabled = false;
 				btnConnect.displayString = "Connecting...";
-				connection = Utils.connectTo(config);
+				Utils.connectTo(config);
 			}
 		}
 	}

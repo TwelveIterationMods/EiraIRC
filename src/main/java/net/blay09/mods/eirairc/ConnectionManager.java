@@ -9,9 +9,7 @@ import net.blay09.mods.eirairc.util.Utils;
 
 import java.util.*;
 
-/**
- * Created by Blay09 on 03.10.2014.
- */
+
 public class ConnectionManager {
 
 	private final Map<String, IRCConnection> connections = new HashMap<String, IRCConnection>();
@@ -32,8 +30,8 @@ public class ConnectionManager {
 		for(IRCConnection connection : connections.values()) {
 			dcList.add(connection);
 		}
-		for(int i = 0; i < dcList.size(); i++) {
-			dcList.get(i).disconnect(ConfigHelper.getQuitMessage(dcList.get(i)));
+		for (IRCConnection aDcList : dcList) {
+			aDcList.disconnect(ConfigHelper.getQuitMessage(aDcList));
 		}
 		connections.clear();
 		ircRunning = false;

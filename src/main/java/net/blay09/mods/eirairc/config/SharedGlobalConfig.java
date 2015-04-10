@@ -11,11 +11,10 @@ import net.minecraftforge.common.config.Configuration;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-/**
- * Created by Blay09 on 29.09.2014.
- */
+
 public class SharedGlobalConfig {
 
 	public static final String GENERAL = "general";
@@ -61,9 +60,7 @@ public class SharedGlobalConfig {
 		enablePlayerColors = thisConfig.getBoolean("enablePlayerColors", GENERAL, enablePlayerColors, I19n.format("eirairc:config.property.enablePlayerColors.tooltip"), "eirairc:config.property.enablePlayerColors");
 		String[] colorBlacklistArray = thisConfig.getStringList("colorBlacklist", GENERAL, Globals.DEFAULT_COLOR_BLACKLIST, I19n.format("eirairc:config.property.colorBlacklist.tooltip"), null, "eirairc:config.property.colorBlacklist");
 		colorBlacklist.clear();
-		for(String entry : colorBlacklistArray) {
-			colorBlacklist.add(entry);
-		}
+		Collections.addAll(colorBlacklist, colorBlacklistArray);
 		hidePlayerTags = thisConfig.getBoolean("hidePlayerTags", GENERAL, hidePlayerTags, I19n.format("eirairc:config.property.hidePlayerTags.tooltip"), "eirairc:config.property.hidePlayerTags");
 		preventUserPing = thisConfig.getBoolean("preventUserPing", GENERAL, preventUserPing, I19n.format("eirairc:config.property.preventUserPing.tooltip"), "eirairc:config.property.preventUserPing");
 		twitchNameColors = thisConfig.getBoolean("twitchNameColors", GENERAL, twitchNameColors, I19n.format("eirairc:config.property.twitchNameColors.tooltip"), "eirairc:config.property.twitchNameColors");
@@ -178,10 +175,7 @@ public class SharedGlobalConfig {
 			sslDisableDiffieHellman = Boolean.parseBoolean(value);
 		} else if(key.equals("sslCustomTrustStore")) {
 			sslCustomTrustStore = value;
-		} else if(theme.handleConfigCommand(sender, key, value)) {
-		} else if(botSettings.handleConfigCommand(sender, key, value)) {
-		} else if(generalSettings.handleConfigCommand(sender, key, value)) {
-		} else {
+		} else if(!theme.handleConfigCommand(sender, key, value) && !botSettings.handleConfigCommand(sender, key, value) && !generalSettings.handleConfigCommand(sender, key, value)) {
 			result = false;
 		}
 		return result;

@@ -1,15 +1,15 @@
 package net.blay09.mods.eirairc.client.graphics;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.util.ResourceLocation;
 
-/**
- * Created by Blay09 on 20.02.2015.
- */
+
 public class TextureRegion {
+
+	private static final int TEXTURE_WIDTH = 256;
+	private static final int TEXTURE_HEIGHT = 256;
 
 	public final ResourceLocation texture;
 	public final String name;
@@ -17,8 +17,6 @@ public class TextureRegion {
 	private int regionY;
 	private int regionWidth;
 	private int regionHeight;
-	private final int textureWidth = 256;
-	private final int textureHeight = 256;
 
 	public TextureRegion(ResourceLocation texture, String name) {
 		this.texture = texture;
@@ -64,10 +62,10 @@ public class TextureRegion {
 	public void draw(int x, int y, int width, int height) {
 		Minecraft.getMinecraft().renderEngine.bindTexture(texture);
 
-		float u = (float) regionX / (float) textureWidth;
-		float v = (float) regionY / (float) textureHeight;
-		float u2 = (float) (regionX + regionWidth) / (float) textureWidth;
-		float v2 = (float) (regionY + regionHeight) / (float) textureHeight;
+		float u = (float) regionX / (float) TEXTURE_WIDTH;
+		float v = (float) regionY / (float) TEXTURE_HEIGHT;
+		float u2 = (float) (regionX + regionWidth) / (float) TEXTURE_WIDTH;
+		float v2 = (float) (regionY + regionHeight) / (float) TEXTURE_HEIGHT;
 
 		Tessellator tessellator = Tessellator.getInstance();
 		WorldRenderer renderer = tessellator.getWorldRenderer();

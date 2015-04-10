@@ -3,34 +3,31 @@
 
 package net.blay09.mods.eirairc.client;
 
-import net.blay09.mods.eirairc.api.irc.IRCContext;
-import net.blay09.mods.eirairc.handler.ChatSessionHandler;
-import net.blay09.mods.eirairc.util.Utils;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import net.blay09.mods.eirairc.EiraIRC;
+import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.client.gui.GuiEiraIRCMenu;
 import net.blay09.mods.eirairc.client.gui.GuiWelcome;
 import net.blay09.mods.eirairc.client.gui.chat.GuiChatExtended;
-import net.blay09.mods.eirairc.client.gui.chat.GuiEiraChat;
 import net.blay09.mods.eirairc.client.gui.screenshot.GuiScreenshots;
 import net.blay09.mods.eirairc.client.screenshot.Screenshot;
 import net.blay09.mods.eirairc.client.screenshot.ScreenshotManager;
 import net.blay09.mods.eirairc.config.ClientGlobalConfig;
 import net.blay09.mods.eirairc.config.ScreenshotAction;
+import net.blay09.mods.eirairc.handler.ChatSessionHandler;
+import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiScreen;
-import org.lwjgl.input.Keyboard;
-
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.RenderTickEvent;
+import net.minecraftforge.fml.common.network.FMLNetworkEvent;
+import org.lwjgl.input.Keyboard;
 
 public class EiraTickHandler {
 
-	private final GuiEiraChat eiraChat;
 	private final ChatSessionHandler chatSession;
 	private int screenshotCheck;
 	private final int keyChat;
@@ -39,8 +36,7 @@ public class EiraTickHandler {
 	private long lastToggleTarget;
 	private boolean wasToggleTargetDown;
 
-	public EiraTickHandler(GuiEiraChat eiraChat) {
-		this.eiraChat = eiraChat;
+	public EiraTickHandler() {
 		this.chatSession = EiraIRC.instance.getChatSessionHandler();
 		keyChat = Minecraft.getMinecraft().gameSettings.keyBindChat.getKeyCode();
 		keyCommand = Minecraft.getMinecraft().gameSettings.keyBindCommand.getKeyCode();

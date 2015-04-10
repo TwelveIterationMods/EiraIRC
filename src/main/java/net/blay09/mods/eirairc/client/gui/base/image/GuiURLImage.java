@@ -5,9 +5,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
 
-/**
- * Created by Blay09 on 10.10.2014.
- */
+
 public class GuiURLImage extends GuiImage {
 
 	private final URL url;

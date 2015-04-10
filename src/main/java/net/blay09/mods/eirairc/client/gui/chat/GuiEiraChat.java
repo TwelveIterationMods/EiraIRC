@@ -13,7 +13,7 @@ public class GuiEiraChat {
 	public static final int COLOR_BACKGROUND = Integer.MIN_VALUE;
 	
 	private ChatSessionHandler chatSession;
-	private List<String> sentHistory = new ArrayList<String>();
+	private final List<String> sentHistory = new ArrayList<String>();
 
 	public GuiEiraChat() {
 	}

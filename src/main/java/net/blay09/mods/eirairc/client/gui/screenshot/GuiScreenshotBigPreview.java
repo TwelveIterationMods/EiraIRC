@@ -5,9 +5,7 @@ import net.blay09.mods.eirairc.client.gui.base.image.GuiImage;
 import net.blay09.mods.eirairc.util.Globals;
 import net.minecraft.client.gui.GuiScreen;
 
-/**
- * Created by Blay09 on 10.10.2014.
- */
+
 public class GuiScreenshotBigPreview extends EiraGuiScreen {
 
 	private final GuiImage image;

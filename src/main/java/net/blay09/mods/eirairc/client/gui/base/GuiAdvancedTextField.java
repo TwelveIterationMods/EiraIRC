@@ -96,7 +96,6 @@ public class GuiAdvancedTextField extends GuiTextField {
 	
 	/**
 	 * Minecraft code makes this ridiculously annoying to do, so it doesn't work yet.
-	 * @param textCentered
 	 */
 	public void setTextCentered(boolean textCentered) {
 		this.textCentered = textCentered;

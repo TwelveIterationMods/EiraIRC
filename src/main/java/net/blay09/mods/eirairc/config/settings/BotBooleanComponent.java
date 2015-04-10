@@ -1,8 +1,6 @@
 package net.blay09.mods.eirairc.config.settings;
 
-/**
- * Created by Blay09 on 02.10.2014.
- */
+
 public enum BotBooleanComponent {
 	RelayDeathMessages("relayDeathMessages", false, "eirairc:config.property.relayDeathMessages"),
 	RelayMinecraftJoinLeave("relayMinecraftJoinLeave", false, "eirairc:config.property.relayMinecraftJoinLeave"),

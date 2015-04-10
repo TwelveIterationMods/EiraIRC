@@ -2,8 +2,6 @@ package net.blay09.mods.eirairc.config.settings;
 
 import com.google.gson.JsonObject;
 import net.blay09.mods.eirairc.util.I19n;
-import net.blay09.mods.eirairc.util.IRCFormatting;
-import net.blay09.mods.eirairc.util.MessageFormat;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.EnumChatFormatting;
@@ -14,9 +12,7 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by Blay09 on 29.09.2014.
- */
+
 public class ThemeSettings {
 
 	private static final String[] VALID_COLOR_CODES = new String[] {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"};

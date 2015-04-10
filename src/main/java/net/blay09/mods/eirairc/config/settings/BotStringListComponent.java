@@ -1,8 +1,6 @@
 package net.blay09.mods.eirairc.config.settings;
 
-/**
- * Created by Blay09 on 02.10.2014.
- */
+
 public enum BotStringListComponent {
 	InterOpAuthList("interOpAuthList", new String[0], "eirairc:config.property.interOpAuthList", false),
 	DisabledNativeCommands("disabledNativeCommands", new String[0], "eirairc:config.property.disabledNativeCommands", true),

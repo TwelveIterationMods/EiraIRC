@@ -16,9 +16,7 @@ import net.minecraft.util.IChatComponent;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Created by Blay09 on 01.09.2014.
- */
+
 public class MessageFormat {
 
 	public enum Target {
@@ -28,7 +26,7 @@ public class MessageFormat {
 
 	public enum Mode {
 		Message,
-		Emote;
+		Emote
 	}
 
 	private static final Pattern playerTagPattern = Pattern.compile("[\\[][^\\]]+[\\]]");
@@ -131,7 +129,10 @@ public class MessageFormat {
 		StringBuilder sb = new StringBuilder();
 		for(int i = 0; i < s.length; i++) {
 			Matcher matcher = urlPattern.matcher(s[i]);
-			sb.append(((i > 0) ? " " : "") + matcher.replaceAll(Utils.getLocalizedMessage("irc.general.linkRemoved")));
+			if(i > 0) {
+				sb.append(" ");
+			}
+			sb.append(matcher.replaceAll(Utils.getLocalizedMessage("irc.general.linkRemoved")));
 		}
 		return sb.toString();
 	}
@@ -143,9 +144,9 @@ public class MessageFormat {
 	private static String filterAllowedCharacters(String message) {
 		StringBuilder sb = new StringBuilder();
 		char[] charArray = message.toCharArray();
-		for (int i = 0; i < charArray.length; i++) {
-			if (isAllowedCharacter(charArray[i])) {
-				sb.append(charArray[i]);
+		for (char value : charArray) {
+			if (isAllowedCharacter(value)) {
+				sb.append(value);
 			}
 		}
 		return sb.toString();

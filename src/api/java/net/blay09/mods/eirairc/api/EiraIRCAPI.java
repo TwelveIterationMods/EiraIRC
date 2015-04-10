@@ -4,9 +4,7 @@ import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.api.upload.UploadHoster;
 import net.minecraft.command.ICommandSender;
 
-/**
- * Created by Blay09 on 23.02.2015.
- */
+
 public class EiraIRCAPI {
 
 	private static InternalMethods internalMethods;
@@ -55,7 +53,7 @@ public class EiraIRCAPI {
 	}
 
 	/**
-	 * @param user
+	 * @param user the player to be checked
 	 * @return true if the player has EiraIRC installed on the client-side
 	 */
 	public static boolean hasClientSideInstalled(ICommandSender user) {

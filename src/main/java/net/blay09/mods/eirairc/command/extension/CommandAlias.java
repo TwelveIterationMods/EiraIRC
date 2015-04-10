@@ -4,8 +4,8 @@
 package net.blay09.mods.eirairc.command.extension;
 
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.api.SubCommand;
+import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
@@ -16,7 +16,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.BlockPos;
 
 import java.util.List;
 
@@ -51,9 +50,8 @@ public class CommandAlias implements SubCommand {
 		List<EntityPlayerMP> playerEntityList = MinecraftServer.getServer().getConfigurationManager().playerEntityList;
 		if(args.length < 2) {
 			String alias = args[0];
-			for(int i = 0; i < playerEntityList.size(); i++) {
-				EntityPlayerMP playerEntity = playerEntityList.get(i);
-				if(playerEntity.getEntityData().getCompoundTag(Globals.NBT_EIRAIRC).getString(Globals.NBT_ALIAS).equals(alias)) {
+			for (EntityPlayerMP playerEntity : playerEntityList) {
+				if (playerEntity.getEntityData().getCompoundTag(Globals.NBT_EIRAIRC).getString(Globals.NBT_ALIAS).equals(alias)) {
 					Utils.sendLocalizedMessage(sender, "irc.alias.lookup", alias, playerEntity.getCommandSenderName());
 					return true;
 				}
@@ -64,9 +62,8 @@ public class CommandAlias implements SubCommand {
 			String alias = args[1];
 			EntityPlayerMP entityPlayer = MinecraftServer.getServer().getConfigurationManager().getPlayerByUsername(username);
 			if(entityPlayer == null) {
-				for(int i = 0; i < playerEntityList.size(); i++) {
-					EntityPlayerMP playerEntity = playerEntityList.get(i);
-					if(playerEntity.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getCompoundTag(Globals.NBT_EIRAIRC).getString(Globals.NBT_ALIAS).equals(username)) {
+				for (EntityPlayerMP playerEntity : playerEntityList) {
+					if (playerEntity.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getCompoundTag(Globals.NBT_EIRAIRC).getString(Globals.NBT_ALIAS).equals(username)) {
 						entityPlayer = playerEntity;
 						break;
 					}

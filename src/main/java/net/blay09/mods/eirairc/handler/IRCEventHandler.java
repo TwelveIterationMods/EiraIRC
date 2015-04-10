@@ -3,8 +3,8 @@
 
 package net.blay09.mods.eirairc.handler;
 
-import net.blay09.mods.eirairc.api.event.*;
 import net.blay09.mods.eirairc.EiraIRC;
+import net.blay09.mods.eirairc.api.event.*;
 import net.blay09.mods.eirairc.bot.IRCBotImpl;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.config.settings.BotBooleanComponent;

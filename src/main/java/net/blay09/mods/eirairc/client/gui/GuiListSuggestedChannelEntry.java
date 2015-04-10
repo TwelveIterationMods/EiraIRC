@@ -10,9 +10,7 @@ import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 
-/**
- * Created by Blay09 on 20.02.2015.
- */
+
 public class GuiListSuggestedChannelEntry extends GuiListEntry {
 
 	private static final int TEXT_MARGIN = 5;
@@ -35,7 +33,9 @@ public class GuiListSuggestedChannelEntry extends GuiListEntry {
 		ServerConfig serverConfig = ConfigurationHandler.getOrCreateServerConfig(channel.getServerName());
 		serverConfig.getOrCreateChannelConfig(channel.getChannelName());
 		IRCConnection connection = Utils.connectTo(serverConfig);
-		connection.join(channel.getChannelName(), null);
+		if(connection != null) {
+			connection.join(channel.getChannelName(), null);
+		}
 		Minecraft.getMinecraft().displayGuiScreen(null);
 	}
 
@@ -58,7 +58,6 @@ public class GuiListSuggestedChannelEntry extends GuiListEntry {
 			s = "\u00a78" + s;
 		}
 		fontRenderer.drawString(s, currentX, currentY, Globals.TEXT_COLOR);
-		currentX += fontRenderer.getStringWidth(s) + TEXT_MARGIN;
 		if(channel.getScore() > 0 && channel.isRecommended()) {
 			s = "\u00a72recommended";
 			fontRenderer.drawStringWithShadow(s, x + parentList.getWidth() - fontRenderer.getStringWidth(s) - TEXT_MARGIN, currentY, Globals.TEXT_COLOR);

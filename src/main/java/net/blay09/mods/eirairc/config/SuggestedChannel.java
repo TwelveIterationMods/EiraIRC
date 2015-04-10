@@ -2,9 +2,7 @@ package net.blay09.mods.eirairc.config;
 
 import com.google.gson.JsonObject;
 
-/**
- * Created by Blay09 on 20.02.2015.
- */
+
 public class SuggestedChannel {
 
 	private String server;

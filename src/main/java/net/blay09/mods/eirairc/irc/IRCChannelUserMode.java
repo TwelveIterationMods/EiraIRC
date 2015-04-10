@@ -1,8 +1,6 @@
 package net.blay09.mods.eirairc.irc;
 
-/**
- * Created by Blay09 on 18.02.2015.
- */
+
 public enum IRCChannelUserMode {
 	VOICE('v'), // RFC1459
 	HALFOP('h'), // RFC2811
@@ -17,14 +15,14 @@ public enum IRCChannelUserMode {
 
 	public final char modeChar;
 
-	private IRCChannelUserMode(char modeChar) {
+	IRCChannelUserMode(char modeChar) {
 		this.modeChar = modeChar;
 	}
 
 	public static IRCChannelUserMode fromChar(char c) {
-		for(int i = 0; i < values.length; i++) {
-			if(values[i].modeChar == c) {
-				return values[i];
+		for (IRCChannelUserMode value : values) {
+			if (value.modeChar == c) {
+				return value;
 			}
 		}
 		return null;

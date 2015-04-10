@@ -7,9 +7,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Created by Blay09 on 01.09.2014.
- */
+
 public enum IRCFormatting {
 
 	BOLD("\u0002", "l"),
@@ -27,7 +25,7 @@ public enum IRCFormatting {
 	private final String ircCode;
 	private final String mcCode;
 
-	private IRCFormatting(String ircCode, String mcCode) {
+	IRCFormatting(String ircCode, String mcCode) {
 		this.ircCode = ircCode;
 		this.mcCode = MC_FORMATTING_PREFIX + mcCode;
 	}

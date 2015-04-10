@@ -1,8 +1,6 @@
 package net.blay09.mods.eirairc.config.settings;
 
-/**
- * Created by Blay09 on 02.10.2014.
- */
+
 public enum GeneralBooleanComponent {
 	AutoJoin("autoJoin", true, "eirairc:config.property.autoJoin"),
 	AutoWho("autoWho", false, "eirairc:config.property.autoWho"),

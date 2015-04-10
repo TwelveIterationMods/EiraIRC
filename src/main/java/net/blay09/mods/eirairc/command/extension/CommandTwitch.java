@@ -4,9 +4,8 @@
 package net.blay09.mods.eirairc.command.extension;
 
 import net.blay09.mods.eirairc.api.EiraIRCAPI;
-import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.api.SubCommand;
-import net.blay09.mods.eirairc.config.ChannelConfig;
+import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.util.Globals;
@@ -14,7 +13,6 @@ import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
-import net.minecraft.util.BlockPos;
 
 import java.util.List;
 

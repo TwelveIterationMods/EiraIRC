@@ -3,11 +3,9 @@
 
 package net.blay09.mods.eirairc.net.message;
 
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import net.blay09.mods.eirairc.util.Utils;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 public class MessageHello implements IMessage {
 

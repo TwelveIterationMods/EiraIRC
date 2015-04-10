@@ -20,28 +20,23 @@ import net.minecraft.client.gui.GuiYesNoCallback;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.util.IChatComponent;
 import net.minecraftforge.client.ClientCommandHandler;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-
-import java.io.IOException;
 
 @SideOnly(Side.CLIENT)
 public class GuiChatExtended extends GuiChat implements GuiYesNoCallback {
 
 	public static final int COLOR_BACKGROUND = Integer.MIN_VALUE;
 	
-	private ChatSessionHandler chatSession;
-	private String defaultInputText;
+	private final ChatSessionHandler chatSession;
+	private final String defaultInputText;
 	private GuiButton btnOptions;
-	
-	private URL clickedURL;
 
 	public GuiChatExtended() {
 		this("");
@@ -104,7 +99,6 @@ public class GuiChatExtended extends GuiChat implements GuiYesNoCallback {
 										mc.displayGuiScreen(new GuiImagePreview(new URL(params[2]), new URL(params[1])));
 									} else {
 										if(mc.gameSettings.chatLinksPrompt) {
-											clickedURL = new URL(params[1]);
 											mc.displayGuiScreen(new GuiConfirmOpenLink(this, params[1], 0, false));
 										} else {
 											Utils.openWebpage(params[1]);

@@ -170,10 +170,7 @@ public class Utils {
 	}
 
 	public static boolean isOP(ICommandSender sender) {
-		if(MinecraftServer.getServer() == null || (MinecraftServer.getServer().isSinglePlayer() && !MinecraftServer.getServer().isDedicatedServer())) {
-			return true;
-		}
-		return sender.canCommandSenderUseCommand(3, "");
+		return MinecraftServer.getServer() == null || (MinecraftServer.getServer().isSinglePlayer() && !MinecraftServer.getServer().isDedicatedServer()) || sender.canCommandSenderUseCommand(3, "");
 	}
 	
 	public static boolean isValidColor(String colorName) {
@@ -410,18 +407,17 @@ public class Utils {
 			context.message(getLocalizedMessage("irc.bot.playersOnline", playerList.size()));
 		}
 		String s = " * ";
-		for(int i = 0; i < playerList.size(); i++) {
-			EntityPlayer entityPlayer = playerList.get(i);
+		for (EntityPlayer entityPlayer : playerList) {
 			String alias = getNickIRC(entityPlayer, null);
-			if(s.length() + alias.length() > Globals.CHAT_MAX_LENGTH) {
-				if(context instanceof IRCUser) {
+			if (s.length() + alias.length() > Globals.CHAT_MAX_LENGTH) {
+				if (context instanceof IRCUser) {
 					context.notice(s);
-				} else if(context instanceof IRCChannel) {
+				} else if (context instanceof IRCChannel) {
 					context.message(s);
 				}
 				s = " * ";
 			}
-			if(s.length() > 3) {
+			if (s.length() > 3) {
 				s += ", ";
 			}
 			s += alias;
@@ -537,9 +533,7 @@ public class Utils {
 	
 	public static String[] shiftArgs(String[] args, int offset) {
 		String[] shiftedArgs = new String[args.length - offset];
-		for(int i = offset; i < args.length; i++) {
-			shiftedArgs[i - offset] = args[i];
-		}
+		System.arraycopy(args, offset, shiftedArgs, 0, args.length - offset);
 		return shiftedArgs;
 	}
 	
@@ -591,24 +585,24 @@ public class Utils {
 			try {
 				String[] portRanges = url.substring(portIdx + 1).split("\\+");
 				List<Integer> portList = new ArrayList<Integer>();
-				for(int i = 0; i < portRanges.length; i++) {
-					int sepIdx = portRanges[i].indexOf('-');
-					if(sepIdx != -1) {
-						int min = Integer.parseInt(portRanges[i].substring(0, sepIdx));
-						int max = Integer.parseInt(portRanges[i].substring(sepIdx + 1));
-						if(min > max) {
+				for (String portRange : portRanges) {
+					int sepIdx = portRange.indexOf('-');
+					if (sepIdx != -1) {
+						int min = Integer.parseInt(portRange.substring(0, sepIdx));
+						int max = Integer.parseInt(portRange.substring(sepIdx + 1));
+						if (min > max) {
 							int oldMin = min;
 							min = max;
 							max = oldMin;
 						}
-						if(max - min > 5) {
+						if (max - min > 5) {
 							throw new RuntimeException("EiraIRC: Port ranges bigger than 5 are not allowed! Split them up if you really have to.");
 						}
-						for(int j = min; j <= max; j++) {
+						for (int j = min; j <= max; j++) {
 							portList.add(j);
 						}
 					} else {
-						portList.add(Integer.parseInt(portRanges[i]));
+						portList.add(Integer.parseInt(portRange));
 					}
 				}
 				return ArrayUtils.toPrimitive(portList.toArray(new Integer[portList.size()]));

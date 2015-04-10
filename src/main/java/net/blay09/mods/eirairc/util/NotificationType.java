@@ -8,7 +8,7 @@ public enum NotificationType {
 	PlayerMentioned,
 	PrivateMessage;
 
-	private static NotificationType[] values = values();
+	private static final NotificationType[] values = values();
 	public static NotificationType fromId(int id) {
 		return values[id];
 	}

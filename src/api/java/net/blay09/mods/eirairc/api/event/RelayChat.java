@@ -4,9 +4,7 @@ import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.minecraft.command.ICommandSender;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
-/**
- * Created by Blay09 on 01.08.2014.
- */
+
 public class RelayChat extends Event {
 
 	public final IRCContext target;

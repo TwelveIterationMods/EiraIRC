@@ -6,9 +6,7 @@ import net.blay09.mods.eirairc.util.Globals;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 
-/**
- * Created by Blay09 on 19.02.2015.
- */
+
 public class OverlayYesNo extends GuiOverlay {
 
 	private final int id;

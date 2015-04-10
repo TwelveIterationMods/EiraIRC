@@ -1,5 +1,6 @@
 package net.blay09.mods.eirairc.client.gui;
 
+import net.blay09.mods.eirairc.api.IRCReplyCodes;
 import net.blay09.mods.eirairc.api.event.IRCConnectEvent;
 import net.blay09.mods.eirairc.api.event.IRCConnectionFailedEvent;
 import net.blay09.mods.eirairc.api.event.IRCErrorEvent;
@@ -7,7 +8,6 @@ import net.blay09.mods.eirairc.client.gui.base.GuiAdvancedTextField;
 import net.blay09.mods.eirairc.client.gui.base.GuiLabel;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.ServerConfig;
-import net.blay09.mods.eirairc.api.IRCReplyCodes;
 import net.blay09.mods.eirairc.config.settings.GeneralBooleanComponent;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
@@ -19,14 +19,12 @@ import net.minecraftforge.fml.client.config.GuiCheckBox;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.input.Keyboard;
 
-/**
- * Created by Blay09 on 04.10.2014.
- */
+
 public class GuiTwitch extends EiraGuiScreen implements GuiYesNoCallback {
 
 	private static final ResourceLocation twitchLogo = new ResourceLocation("eirairc", "gfx/twitch_logo.png");
 
-	private ServerConfig config;
+	private final ServerConfig config;
 	private GuiCheckBox chkAnonymous;
 	private GuiTextField txtUsername;
 	private GuiAdvancedTextField txtPassword;

@@ -19,7 +19,7 @@ public class MessageFormatConfig {
 	
 	private final Configuration config;
 	
-	private String name;
+	private final String name;
 	public String mcChannelMessage;
 	public String mcChannelEmote;
 	public String mcChannelNotice;

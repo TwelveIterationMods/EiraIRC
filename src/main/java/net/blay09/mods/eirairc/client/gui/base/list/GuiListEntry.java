@@ -18,6 +18,10 @@ public abstract class GuiListEntry extends Gui {
 		}
 	}
 
+	public boolean isSelected() {
+		return selected;
+	}
+
 	public void onSelected() {}
 	public void onDoubleClick() {}
 	public abstract void drawEntry(int x, int y);

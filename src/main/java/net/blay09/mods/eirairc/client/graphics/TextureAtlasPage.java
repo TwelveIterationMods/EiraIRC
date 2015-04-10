@@ -5,9 +5,7 @@ import net.minecraft.util.ResourceLocation;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by Blay09 on 20.02.2015.
- */
+
 public class TextureAtlasPage {
 
 	private final Map<String, TextureRegion> regionMap = new HashMap<String, TextureRegion>();

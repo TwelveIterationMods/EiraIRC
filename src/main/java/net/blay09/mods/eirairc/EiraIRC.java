@@ -3,8 +3,6 @@
 
 package net.blay09.mods.eirairc;
 
-import net.minecraftforge.fml.client.event.ConfigChangedEvent;
-import net.minecraftforge.fml.common.event.*;
 import net.blay09.mods.eirairc.addon.DirectUploadHoster;
 import net.blay09.mods.eirairc.addon.ImgurHoster;
 import net.blay09.mods.eirairc.api.EiraIRCAPI;
@@ -27,13 +25,14 @@ import net.blay09.mods.eirairc.util.I19n;
 import net.minecraft.command.CommandHandler;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
 
 @Mod(modid = EiraIRC.MOD_ID, acceptableRemoteVersions="*", guiFactory = "net.blay09.mods.eirairc.client.gui.EiraIRCGuiFactory")
 public class EiraIRC {
@@ -50,7 +49,6 @@ public class EiraIRC {
 	private ChatSessionHandler chatSessionHandler;
 	private EiraNetHandler netHandler;
 	private IRCEventHandler ircEventHandler;
-	private IRCConnectionHandler ircConnectionHandler;
 	private MCEventHandler mcEventHandler;
 
 	@EventHandler
@@ -67,7 +65,7 @@ public class EiraIRC {
 		netHandler = new EiraNetHandler();
 
 		ircEventHandler = new IRCEventHandler();
-		ircConnectionHandler = new IRCConnectionHandler();
+		IRCConnectionHandler ircConnectionHandler = new IRCConnectionHandler();
 		mcEventHandler = new MCEventHandler();
 
 		proxy.init();
@@ -125,10 +123,12 @@ public class EiraIRC {
 				ConfigurationHandler.saveServers();
 			} else if(event.configID.startsWith("channel:")) {
 				ChannelConfig channelConfig = ConfigHelper.resolveChannelConfig(event.configID.substring(8));
-				channelConfig.getTheme().pushDummyConfig();
-				channelConfig.getBotSettings().pushDummyConfig();
-				channelConfig.getGeneralSettings().pushDummyConfig();
-				ConfigurationHandler.saveServers();
+				if(channelConfig != null) {
+					channelConfig.getTheme().pushDummyConfig();
+					channelConfig.getBotSettings().pushDummyConfig();
+					channelConfig.getGeneralSettings().pushDummyConfig();
+					ConfigurationHandler.saveServers();
+				}
 			}
 		}
 	}

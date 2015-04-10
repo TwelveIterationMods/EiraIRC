@@ -13,6 +13,7 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,7 @@ import java.util.List;
 public class CommandServIRC implements ICommand {
 
 	@Override
-	public int compareTo(Object o) {
+	public int compareTo(@NotNull Object o) {
 		return getCommandName().compareTo(((ICommand) o).getCommandName());
 	}
 

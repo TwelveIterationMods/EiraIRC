@@ -9,9 +9,7 @@ import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.util.Globals;
 import net.minecraft.client.gui.FontRenderer;
 
-/**
- * Created by Blay09 on 10.10.2014.
- */
+
 public class GuiListEntryChannel extends GuiListTextEntry {
 
 	private final GuiServerConfig parent;

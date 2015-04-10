@@ -3,9 +3,7 @@ package net.blay09.mods.eirairc.client.gui.base;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 
-/**
- * Created by Blay09 on 04.10.2014.
- */
+
 public class GuiLabel extends Gui {
 
 	private static final int LINE_SPACING = 3;
@@ -18,7 +16,7 @@ public class GuiLabel extends Gui {
 	private HAlignment hAlign = HAlignment.Left;
 	private int alignWidth;
 
-	public static enum HAlignment {
+	public enum HAlignment {
 		Left,
 		Center,
 		Right

@@ -6,8 +6,8 @@ package net.blay09.mods.eirairc.config.base;
 
 public class ServiceSettings {
 	
-	private String identifyCMD;
-	private String ghostCMD;
+	private final String identifyCMD;
+	private final String ghostCMD;
 	
 	public ServiceSettings(String identifyCMD, String ghostCMD) {
 		this.identifyCMD = identifyCMD;

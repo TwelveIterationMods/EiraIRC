@@ -16,9 +16,9 @@ public enum IRCTargetError implements IRCContext {
 	NotConnected("irc.target.notConnected"), 
 	NotOnChannel("irc.target.notOnChannel");
 
-	private String errorString;
+	private final String errorString;
 	
-	private IRCTargetError(String errorString) {
+	IRCTargetError(String errorString) {
 		this.errorString = errorString;
 	}
 	

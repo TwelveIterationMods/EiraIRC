@@ -2,22 +2,15 @@ package net.blay09.mods.eirairc.client.gui;
 
 import net.blay09.mods.eirairc.client.graphics.TextureAtlas;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
 
 import java.io.IOException;
-import java.util.Iterator;
 
-/**
- * Created by Blay09 on 05.10.2014.
- */
+
 public class EiraGui {
 
 	public static TextureAtlas atlas;

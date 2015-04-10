@@ -9,9 +9,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-/**
- * Created by Christopher on 23.12.2014.
- */
+
 public class HandlerRedirect implements IMessageHandler<MessageRedirect, IMessage> {
 
     @Override

@@ -5,18 +5,18 @@ package net.blay09.mods.eirairc.api.irc;
 
 public interface IRCContext {
 
-	public static enum ContextType {
+	enum ContextType {
 		Error,
 		IRCConnection,
 		IRCChannel,
 		IRCUser
 	}
 
-	public String getName();
-	public ContextType getContextType();
-	public String getIdentifier();
-	public IRCConnection getConnection();
-	public void message(String message);
-	public void notice(String message);
+	String getName();
+	ContextType getContextType();
+	String getIdentifier();
+	IRCConnection getConnection();
+	void message(String message);
+	void notice(String message);
 	
 }

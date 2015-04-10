@@ -3,12 +3,12 @@
 
 package net.blay09.mods.eirairc.bot;
 
+import net.blay09.mods.eirairc.api.bot.IBotCommand;
+import net.blay09.mods.eirairc.api.bot.IRCBot;
 import net.blay09.mods.eirairc.api.event.ReloadBotCommandsEvent;
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
 import net.blay09.mods.eirairc.api.irc.IRCUser;
-import net.blay09.mods.eirairc.api.bot.IBotCommand;
-import net.blay09.mods.eirairc.api.bot.IRCBot;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.settings.BotStringListComponent;
 import net.blay09.mods.eirairc.irc.IRCConnectionImpl;

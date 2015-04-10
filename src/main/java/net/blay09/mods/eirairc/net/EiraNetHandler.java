@@ -3,11 +3,11 @@
 
 package net.blay09.mods.eirairc.net;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class EiraNetHandler {
 

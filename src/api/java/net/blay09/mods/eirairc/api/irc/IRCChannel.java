@@ -10,11 +10,11 @@ public interface IRCChannel extends IRCContext {
 	/**
 	 * @return the topic of this channel
 	 */
-	public String getTopic();
+	String getTopic();
 
 	/**
 	 * @return a list of IRCUsers within this channel
 	 */
-	public Collection<IRCUser> getUserList();
+	Collection<IRCUser> getUserList();
 
 }

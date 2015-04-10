@@ -10,9 +10,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Blay09 on 20.02.2015.
- */
+
 public class TextureAtlas {
 
 	private final List<TextureAtlasPage> pages = new ArrayList<TextureAtlasPage>();

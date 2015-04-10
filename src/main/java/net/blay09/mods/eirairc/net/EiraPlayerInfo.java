@@ -5,7 +5,7 @@ package net.blay09.mods.eirairc.net;
 
 public class EiraPlayerInfo {
 
-	private String username;
+	private final String username;
 	public String modVersion;
 	public boolean modInstalled;
 	

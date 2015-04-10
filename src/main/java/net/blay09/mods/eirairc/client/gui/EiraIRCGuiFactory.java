@@ -6,9 +6,7 @@ import net.minecraftforge.fml.client.IModGuiFactory;
 
 import java.util.Set;
 
-/**
- * Created by Blay09 on 03.10.2014.
- */
+
 public class EiraIRCGuiFactory implements IModGuiFactory {
 
 	@Override

@@ -4,10 +4,10 @@ import net.minecraft.client.gui.FontRenderer;
 
 public class GuiListTextEntry extends GuiListEntry {
 
-	private FontRenderer fontRenderer;
-	protected int height;
-	private String text;
-	private int textColor;
+	private final FontRenderer fontRenderer;
+	protected final int height;
+	private final String text;
+	private final int textColor;
 	
 	public GuiListTextEntry(FontRenderer fontRenderer, String text, int height, int textColor) {
 		this.fontRenderer = fontRenderer;

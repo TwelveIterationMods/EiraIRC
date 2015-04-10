@@ -3,11 +3,11 @@
 package net.blay09.mods.eirairc.irc;
 
 import net.blay09.mods.eirairc.api.IRCReplyCodes;
+import net.blay09.mods.eirairc.api.bot.IRCBot;
+import net.blay09.mods.eirairc.api.event.*;
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
 import net.blay09.mods.eirairc.api.irc.IRCUser;
-import net.blay09.mods.eirairc.api.bot.IRCBot;
-import net.blay09.mods.eirairc.api.event.*;
 import net.blay09.mods.eirairc.bot.IRCBotImpl;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
@@ -22,7 +22,7 @@ import java.util.*;
 public class IRCConnectionImpl implements Runnable, IRCConnection {
 
 	public static class ProxyAuthenticator extends Authenticator {
-		private PasswordAuthentication auth;
+		private final PasswordAuthentication auth;
 
 		public ProxyAuthenticator(String username, String password) {
 			auth = new PasswordAuthentication(username, password.toCharArray());
@@ -51,7 +51,6 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 	private IRCBotImpl bot;
 	private String nick;
 	private boolean connected;
-	private Thread thread;
 	private int waitingReconnect;
 
 	private String serverType;
@@ -121,7 +120,7 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 		if(MinecraftForge.EVENT_BUS.post(new IRCConnectingEvent(this))) {
 			return false;
 		}
-		thread = new Thread(this, "IRC (" + host + ")");
+		Thread thread = new Thread(this, "IRC (" + host + ")");
 		thread.start();
 		return true;
 	}
@@ -186,10 +185,8 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 				}
 				if(!line.isEmpty()) {
 					IRCMessage msg = parser.parse(line);
-					if (handleNumericMessage(msg)) {
-						continue;
-					} else if (handleMessage(msg)) {
-						continue;
+					if(!handleNumericMessage(msg)) {
+						handleMessage(msg);
 					}
 				}
 			}
@@ -336,8 +333,6 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 			}
 		} else if(numeric == IRCReplyCodes.ERR_NICKNAMEINUSE || numeric == IRCReplyCodes.ERR_ERRONEUSNICKNAME) {
 			MinecraftForge.EVENT_BUS.post(new IRCErrorEvent(this, msg.getNumericCommand(), msg.args()));
-		} else if(numeric == IRCReplyCodes.RPL_MOTD) {
-			// ignore
 		} else if(numeric == IRCReplyCodes.ERR_PASSWDMISMATCH) {
 			MinecraftForge.EVENT_BUS.post(new IRCErrorEvent(this, msg.getNumericCommand(), msg.args()));
 		} else if(numeric == IRCReplyCodes.RPL_ISUPPORT) {
@@ -359,8 +354,10 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 					channelUserModePrefixes = sb.toString();
 				}
 			}
-		} else if(numeric <= 4 || numeric == 251 || numeric == 252 || numeric == 254 || numeric == 255 || numeric == 265 || numeric == 266 || numeric == 250 || numeric == 375) {
-			// ignore for now
+		} else if(numeric == IRCReplyCodes.RPL_MOTD || numeric <= 4 || numeric == 251 || numeric == 252 || numeric == 254 || numeric == 255 || numeric == 265 || numeric == 266 || numeric == 250 || numeric == 375) {
+			if(SharedGlobalConfig.debugMode) {
+				System.out.println("Ignored message code: " + msg.getCommand() + " (" + msg.argcount() + " arguments)");
+			}
 		} else {
 			if(SharedGlobalConfig.debugMode) {
 				System.out.println("Unhandled message code: " + msg.getCommand() + " (" + msg.argcount() + " arguments)");

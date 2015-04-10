@@ -9,8 +9,10 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.BlockPos;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public final class SubCommandWrapper implements ICommand {
@@ -36,9 +38,7 @@ public final class SubCommandWrapper implements ICommand {
 		String[] aliases = command.getAliases();
 		if(aliases != null) {
 			List<String> list = new ArrayList<String>();
-			for(int i = 0; i < aliases.length; i++) {
-				list.add(aliases[i]);
-			}
+			Collections.addAll(list, aliases);
 			return list;
 		}
 		return new ArrayList<String>();
@@ -67,7 +67,7 @@ public final class SubCommandWrapper implements ICommand {
 	}
 
 	@Override
-	public int compareTo(Object o) {
+	public int compareTo(@NotNull Object o) {
 		return getCommandName().compareTo(((ICommand) o).getCommandName());
 	}
 	

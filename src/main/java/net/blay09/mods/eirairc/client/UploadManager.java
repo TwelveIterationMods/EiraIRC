@@ -11,7 +11,7 @@ import java.util.Map;
 
 public class UploadManager {
 
-	private static Map<String, UploadHoster> uploadHosters = new HashMap<String, UploadHoster>();
+	private static final Map<String, UploadHoster> uploadHosters = new HashMap<String, UploadHoster>();
 	private static String[] availableHosters;
 	
 	public static UploadHoster getUploadHoster(String name) {

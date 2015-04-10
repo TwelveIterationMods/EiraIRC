@@ -13,11 +13,8 @@ import net.blay09.mods.eirairc.net.EiraPlayerInfo;
 import net.blay09.mods.eirairc.util.IRCTargetError;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.util.ChatComponentText;
 
-/**
- * Created by Blay09 on 23.02.2015.
- */
+
 public class InternalMethodsImpl implements InternalMethods {
 
 	@Override

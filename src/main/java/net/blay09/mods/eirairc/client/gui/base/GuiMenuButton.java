@@ -7,12 +7,9 @@ import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.gui.GuiButton;
 import org.lwjgl.opengl.GL11;
 
-/**
- * Created by Blay09 on 04.10.2014.
- */
+
 public class GuiMenuButton extends GuiButton {
 
-	private final Minecraft mc;
 	private final TextureRegion region;
 	private final int xPos;
 	private final int yPos;
@@ -20,7 +17,6 @@ public class GuiMenuButton extends GuiButton {
 
 	public GuiMenuButton(int id, String title, int xPos, int yPos, int width, int height, TextureRegion region) {
 		super(id, xPos, yPos, title);
-		this.mc = Minecraft.getMinecraft();
 		this.xPos = xPos;
 		this.yPos = yPos;
 		this.width = width;

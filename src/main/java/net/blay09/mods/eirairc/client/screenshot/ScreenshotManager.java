@@ -7,10 +7,10 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
 import net.blay09.mods.eirairc.EiraIRC;
+import net.blay09.mods.eirairc.api.event.RelayChat;
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.api.irc.IRCUser;
-import net.blay09.mods.eirairc.api.event.RelayChat;
 import net.blay09.mods.eirairc.api.upload.UploadHoster;
 import net.blay09.mods.eirairc.client.UploadManager;
 import net.blay09.mods.eirairc.config.ClientGlobalConfig;
@@ -25,11 +25,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -38,6 +38,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+@SuppressWarnings("ALL")
 public class ScreenshotManager {
 
 	private static ScreenshotManager instance;
@@ -157,7 +158,7 @@ public class ScreenshotManager {
 	}
 
 	private static String getScreenshotName(File directory) {
-		String s = dateFormat.format(new Date()).toString();
+		String s = dateFormat.format(new Date());
 		int i = 1;
 		while (true) {
 			File file = new File(directory, s + (i == 1 ? "" : "_" + i) + ".png");
@@ -173,7 +174,9 @@ public class ScreenshotManager {
 	}
 
 	public void deleteScreenshot(Screenshot screenshot, boolean keepUploaded) {
-		screenshot.getFile().delete();
+		if(screenshot.getFile().delete()) {
+			System.out.println("Couldn't delete screenshot file " + screenshot.getFile());
+		}
 		if(!keepUploaded && screenshot.hasDeleteURL()) {
 			Utils.openWebpage(screenshot.getDeleteURL());
 		}
@@ -253,13 +256,7 @@ public class ScreenshotManager {
 		File[] screenshotFiles = screenshotDir.listFiles(new FileFilter() {
 			@Override
 			public boolean accept(File file) {
-				if(!file.getName().endsWith(".png")) {
-					return false;
-				}
-				if(file.lastModified() > lastScreenshotScan) {
-					return true;
-				}
-				return false;
+			return file.getName().endsWith(".png") && file.lastModified() > lastScreenshotScan;
 			}
 		});
 		if (screenshotFiles != null) {

@@ -22,12 +22,12 @@ public class GuiList<T extends GuiListEntry> extends Gui {
 	private final List<T> entries = new ArrayList<T>();
 	private final EiraGuiScreen parentScreen;
 
-	private int xPosition;
-	private int yPosition;
-	private int width;
-	private int height;
+	private final int xPosition;
+	private final int yPosition;
+	private final int width;
+	private final int height;
 	
-	private int entryHeight;
+	private final int entryHeight;
 	private int scrollOffset;
 	private int lastWheelDelta;
 	private int selectedIdx = -1;
@@ -51,7 +51,6 @@ public class GuiList<T extends GuiListEntry> extends Gui {
 		if(x < xPosition || y < yPosition || x >= xPosition + width || y >= yPosition + height) {
 			return false;
 		}
-		int relX = x - xPosition;
 		int relY = y - yPosition;
 		if(button == 0) {
 			int clickedIdx = relY / entryHeight;

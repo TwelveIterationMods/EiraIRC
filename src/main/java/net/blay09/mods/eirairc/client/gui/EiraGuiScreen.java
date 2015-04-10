@@ -15,9 +15,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Blay09 on 04.10.2014.
- */
+
 public class EiraGuiScreen extends GuiScreen {
 
 	private static final ResourceLocation texMenuBackground = new ResourceLocation("eirairc", "gfx/menubg.png");
@@ -66,13 +64,7 @@ public class EiraGuiScreen extends GuiScreen {
 	}
 
 	public boolean mouseClick(int mouseX, int mouseY, int mouseButton) throws IOException {
-		if(overlay != null && overlay.mouseClick(mouseX, mouseY, mouseButton)) {
-			return true;
-		}
-		if(controlClicked(mouseX, mouseY, mouseButton)) {
-			return true;
-		}
-		return false;
+		return overlay != null && overlay.mouseClick(mouseX, mouseY, mouseButton) || controlClicked(mouseX, mouseY, mouseButton);
 	}
 
 	public boolean controlClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
@@ -92,14 +84,14 @@ public class EiraGuiScreen extends GuiScreen {
 				}
 			}
 		}
-		for(int i = 0; i < textFieldList.size(); i++) {
-			textFieldList.get(i).mouseClicked(mouseX, mouseY, mouseButton);
-			if(textFieldList.get(i).isFocused()) {
+		for (GuiTextField textField : textFieldList) {
+			textField.mouseClicked(mouseX, mouseY, mouseButton);
+			if (textField.isFocused()) {
 				return true;
 			}
 		}
-		for(int i = 0; i < listList.size(); i++) {
-			if(listList.get(i).mouseClicked(mouseX, mouseY, mouseButton)) {
+		for (GuiList list : listList) {
+			if (list.mouseClicked(mouseX, mouseY, mouseButton)) {
 				return true;
 			}
 		}
@@ -111,8 +103,8 @@ public class EiraGuiScreen extends GuiScreen {
 		super.handleMouseInput();
 		int wheelDelta = Mouse.getEventDWheel();
 		if(wheelDelta != 0) {
-			for(int i = 0; i < listList.size(); i++) {
-				listList.get(i).mouseWheelMoved(wheelDelta);
+			for (GuiList list : listList) {
+				list.mouseWheelMoved(wheelDelta);
 			}
 		}
 	}
@@ -149,8 +141,8 @@ public class EiraGuiScreen extends GuiScreen {
 	public void keyTyped(char unicode, int keyCode) throws IOException {
 		super.keyTyped(unicode, keyCode);
 
-		for(int i = 0; i < textFieldList.size(); i++) {
-			if(textFieldList.get(i).textboxKeyTyped(unicode, keyCode)) {
+		for (GuiTextField textField : textFieldList) {
+			if (textField.textboxKeyTyped(unicode, keyCode)) {
 				return;
 			}
 		}
@@ -164,8 +156,8 @@ public class EiraGuiScreen extends GuiScreen {
 			overlay.updateScreen();
 		}
 
-		for(int i = 0; i < textFieldList.size(); i++) {
-			textFieldList.get(i).updateCursorCounter();
+		for (GuiTextField textField : textFieldList) {
+			textField.updateCursorCounter();
 		}
 	}
 
@@ -173,17 +165,16 @@ public class EiraGuiScreen extends GuiScreen {
 	public void drawScreen (int mouseX, int mouseY, float p_73863_3_){
 		super.drawScreen(mouseX, mouseY, p_73863_3_);
 
-		for(int i = 0; i < labelList.size(); i++) {
-			labelList.get(i).drawLabel();
+		for (GuiLabel label : labelList) {
+			label.drawLabel();
 		}
 
-
-		for(int i = 0; i < textFieldList.size(); i++) {
-			textFieldList.get(i).drawTextBox();
+		for (GuiTextField textField : textFieldList) {
+			textField.drawTextBox();
 		}
 
-		for(int i = 0; i < listList.size(); i++) {
-			listList.get(i).drawList(mouseX, mouseY);
+		for (GuiList list : listList) {
+			list.drawList(mouseX, mouseY);
 		}
 
 		if(overlay != null) {

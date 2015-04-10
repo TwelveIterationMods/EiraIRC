@@ -3,11 +3,10 @@
 
 package net.blay09.mods.eirairc.irc;
 
-import net.blay09.mods.eirairc.api.irc.IRCChannel;
-import net.blay09.mods.eirairc.api.irc.IRCContext;
-import net.blay09.mods.eirairc.api.irc.IRCUser;
 import net.blay09.mods.eirairc.api.bot.IBotCommand;
 import net.blay09.mods.eirairc.api.bot.IRCBot;
+import net.blay09.mods.eirairc.api.irc.IRCChannel;
+import net.blay09.mods.eirairc.api.irc.IRCUser;
 import net.blay09.mods.eirairc.bot.IRCBotImpl;
 import net.blay09.mods.eirairc.config.settings.BotStringListComponent;
 import net.blay09.mods.eirairc.util.ConfigHelper;
@@ -169,5 +168,9 @@ public class IRCUserImpl implements IRCUser {
 
 	public void setNameColor(EnumChatFormatting nameColor) {
 		this.nameColor = nameColor;
+	}
+
+	public EnumChatFormatting getNameColor() {
+		return nameColor;
 	}
 }

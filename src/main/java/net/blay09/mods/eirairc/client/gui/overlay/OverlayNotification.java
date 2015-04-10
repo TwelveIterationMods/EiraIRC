@@ -71,11 +71,11 @@ public class OverlayNotification extends Gui {
 		}
 		updateGuiScale();
 		
-		int offset = 0;
+		int offset;
 		if(notificationTime < TIME_ROLLOUT - TIME_ROLLIN) {
-			offset = HEIGHT - (int) (HEIGHT * Math.min(1f, (float) notificationTime / (float) TIME_ROLLIN));
+			offset = HEIGHT - (int) (HEIGHT * Math.min(1f, notificationTime / TIME_ROLLIN));
 		} else {
-			offset = HEIGHT * 2 + (int) (HEIGHT * Math.min(1f, (float) (notificationTime - TIME_ROLLOUT - TIME_ROLLIN) / (float) TIME_ROLLIN));
+			offset = HEIGHT * 2 + (int) (HEIGHT * Math.min(1f, (notificationTime - TIME_ROLLOUT - TIME_ROLLIN) / TIME_ROLLIN));
 		}
 		int x = windowWidth - WIDTH;
 		int y = windowHeight - HEIGHT + offset;

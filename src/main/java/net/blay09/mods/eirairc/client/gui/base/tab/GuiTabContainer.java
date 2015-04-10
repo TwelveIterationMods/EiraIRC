@@ -9,9 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Blay09 on 04.10.2014.
- */
+
 public class GuiTabContainer extends EiraGuiScreen {
 
 	private final List<GuiTabHeader> headers = new ArrayList<GuiTabHeader>();
@@ -51,9 +49,9 @@ public class GuiTabContainer extends EiraGuiScreen {
 		headers.clear();
 		int curX = menuX;
 		int headerY = menuY - 8;
-		for(int i = 0; i < pages.size(); i++) {
-			int titleWidth = Math.max(4, fontRendererObj.getStringWidth(pages.get(i).getTitle()) - 8);
-			headers.add(new GuiTabHeader(pages.get(i), curX, headerY, titleWidth + 32, 16));
+		for (GuiTabPage page : pages) {
+			int titleWidth = Math.max(4, fontRendererObj.getStringWidth(page.getTitle()) - 8);
+			headers.add(new GuiTabHeader(page, curX, headerY, titleWidth + 32, 16));
 			curX += titleWidth + 24;
 		}
 	}
@@ -76,18 +74,12 @@ public class GuiTabContainer extends EiraGuiScreen {
 
 	@Override
 	public boolean mouseClick(int mouseX, int mouseY, int mouseButton) throws IOException {
-		for(int i = 0; i < headers.size(); i++) {
-			GuiTabHeader header = headers.get(i);
-
-			if(mouseX >= header.x && mouseX < header.x + header.width - 8 && mouseY >= header.y && mouseY < header.y + header.height) {
+		for (GuiTabHeader header : headers) {
+			if (mouseX >= header.x && mouseX < header.x + header.width - 8 && mouseY >= header.y && mouseY < header.y + header.height) {
 				header.tabPage.tabClicked();
 			}
 		}
-
-		if(currentTab != null && currentTab.mouseClick(mouseX, mouseY, mouseButton)) {
-			return true;
-		}
-		return super.mouseClick(mouseX, mouseY, mouseButton);
+		return currentTab != null && currentTab.mouseClick(mouseX, mouseY, mouseButton) || super.mouseClick(mouseX, mouseY, mouseButton);
 	}
 
 	@Override

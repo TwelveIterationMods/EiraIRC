@@ -4,13 +4,12 @@
 package net.blay09.mods.eirairc.command;
 
 import net.blay09.mods.eirairc.EiraIRC;
+import net.blay09.mods.eirairc.api.SubCommand;
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
-import net.blay09.mods.eirairc.api.SubCommand;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 
 import java.util.List;
