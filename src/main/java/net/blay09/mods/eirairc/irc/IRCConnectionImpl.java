@@ -225,7 +225,6 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 			if(socket != null) {
 				socket.close();
 			}
-			MinecraftForge.EVENT_BUS.post(new IRCDisconnectEvent(this));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
