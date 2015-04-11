@@ -30,10 +30,11 @@ Then, add a dependency to either just the EiraIRC API (api) or, if you want Eira
 
 ```
 dependencies {
-    compile 'net.blay09.mods:eirairc:2.8.111:dev' // or just api instead of dev
+    compile 'net.blay09.mods:eirairc:2.8.182:dev' // or just api instead of dev
 }
 ```
 
+Make sure you enter the correct version number for the Minecraft version you're developing for. The major version is the important part here; it is increased for every Minecraft update.
 Done! Run gradle to update your project and you'll be good to go.
 
 The latest EiraIRC API and an unobfuscated version of the mod can also be downloaded from my [Jenkins](http://jenkins.blay09.net) (v2.8 only), if you're not into all that maven stuff.
