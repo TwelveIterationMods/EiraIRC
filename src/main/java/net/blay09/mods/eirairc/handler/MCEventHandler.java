@@ -195,7 +195,7 @@ public class MCEventHandler {
 	@SubscribeEvent
 	public void onServerChat(ServerChatEvent event) {
 		IChatComponent senderComponent = event.player.func_145748_c_();
-		EnumChatFormatting nameColor = Utils.getColorFormattingForPlayer(event.player);
+		EnumChatFormatting nameColor = IRCFormatting.getColorFormattingForPlayer(event.player);
 		if(nameColor != null) {
 			senderComponent.getChatStyle().setColor(nameColor);
 		}

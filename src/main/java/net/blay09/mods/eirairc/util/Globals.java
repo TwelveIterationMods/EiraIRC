@@ -22,7 +22,8 @@ public class Globals {
 	public static final String DEFAULT_CHARSET = "UTF-8";
 
 	public static final String NBT_EIRAIRC = "EiraIRC";
-	public static final String NBT_NAMECOLOR = "NameColor";
+	public static final String NBT_NAMECOLOR_DEPRECATED = "NameColor";
+	public static final String NBT_NAMECOLOR = "NameColorID";
 
 	public static final String NBT_ALIAS = "Alias";
 }

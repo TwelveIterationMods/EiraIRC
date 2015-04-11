@@ -2,6 +2,7 @@ package net.blay09.mods.eirairc.config.settings;
 
 import com.google.gson.JsonObject;
 import net.blay09.mods.eirairc.util.I19n;
+import net.blay09.mods.eirairc.util.IRCFormatting;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
 import net.minecraftforge.common.config.Configuration;
@@ -143,7 +144,7 @@ public class GeneralSettings {
 			}
 		} else {
 			if(GeneralBooleanComponent.fromName(option) != null) {
-				Utils.addMCColorsToList(list);
+				IRCFormatting.addValidColorsToList(list);
 			}
 		}
 	}

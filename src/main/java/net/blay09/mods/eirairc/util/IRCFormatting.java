@@ -1,8 +1,17 @@
 package net.blay09.mods.eirairc.util;
 
+import net.blay09.mods.eirairc.api.irc.IRCChannel;
+import net.blay09.mods.eirairc.api.irc.IRCUser;
+import net.blay09.mods.eirairc.config.SharedGlobalConfig;
+import net.blay09.mods.eirairc.config.settings.ThemeColorComponent;
+import net.blay09.mods.eirairc.config.settings.ThemeSettings;
+import net.blay09.mods.eirairc.irc.IRCUserImpl;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -21,6 +30,7 @@ public enum IRCFormatting {
 	private static final Pattern ircColorPattern = Pattern.compile("\u0003([0-9][0-9]?)(?:[,][0-9][0-9]?)?");
 	private static final Pattern mcColorPattern = Pattern.compile("\u00a7([0-9a-f])");
 	private static final IRCFormatting[] values = values();
+	private static final EnumChatFormatting[] mcChatFormatting = EnumChatFormatting.values();
 
 	private final String ircCode;
 	private final String mcCode;
@@ -177,5 +187,123 @@ public enum IRCFormatting {
 			System.out.println("Unknown Twitch Name Color: " + twitchColor);
 		}
 		return color != null ? color : EnumChatFormatting.WHITE;
+	}
+
+	public static void addValidColorsToList(List<String> list) {
+		for(EnumChatFormatting mcFormatting : mcChatFormatting) {
+			list.add(mcFormatting.name().toLowerCase());
+		}
+	}
+
+	@Deprecated
+	public static boolean isValidColorLegacy(String colorName) {
+		EnumChatFormatting colorFormatting = getColorFormattingLegacy(colorName);
+		return colorFormatting != null && colorFormatting.isColor();
+	}
+
+	@Deprecated
+	public static EnumChatFormatting getColorFormattingLegacy(String colorName) {
+		if(colorName == null || colorName.isEmpty()) {
+			return null;
+		}
+		colorName = colorName.toLowerCase();
+		EnumChatFormatting colorFormatting = null;
+		if(colorName.equals("black")) {
+			colorFormatting = EnumChatFormatting.BLACK;
+		} else if(colorName.equals("darkblue") || colorName.equals("dark blue")) {
+			colorFormatting = EnumChatFormatting.DARK_BLUE;
+		} else if(colorName.equals("green")) {
+			colorFormatting = EnumChatFormatting.DARK_GREEN;
+		} else if(colorName.equals("cyan")) {
+			colorFormatting = EnumChatFormatting.DARK_AQUA;
+		} else if(colorName.equals("darkred") || colorName.equals("dark red")) {
+			colorFormatting = EnumChatFormatting.DARK_RED;
+		} else if(colorName.equals("purple")) {
+			colorFormatting = EnumChatFormatting.DARK_PURPLE;
+		} else if(colorName.equals("gold") || colorName.equals("orange")) {
+			colorFormatting = EnumChatFormatting.GOLD;
+		} else if(colorName.equals("gray") || colorName.equals("grey")) {
+			colorFormatting = EnumChatFormatting.GRAY;
+		} else if(colorName.equals("darkgray") || colorName.equals("darkgrey") || colorName.equals("dark gray") || colorName.equals("dark grey")) {
+			colorFormatting = EnumChatFormatting.DARK_GRAY;
+		} else if(colorName.equals("blue")) {
+			colorFormatting = EnumChatFormatting.BLUE;
+		} else if(colorName.equals("lime")) {
+			colorFormatting = EnumChatFormatting.GREEN;
+		} else if(colorName.equals("lightblue") || colorName.equals("light blue")) {
+			colorFormatting = EnumChatFormatting.AQUA;
+		} else if(colorName.equals("red")) {
+			colorFormatting = EnumChatFormatting.RED;
+		} else if(colorName.equals("magenta") || colorName.equals("pink")) {
+			colorFormatting = EnumChatFormatting.LIGHT_PURPLE;
+		} else if(colorName.equals("yellow")) {
+			colorFormatting = EnumChatFormatting.YELLOW;
+		} else if(colorName.equals("white")) {
+			colorFormatting = EnumChatFormatting.WHITE;
+		}
+		return colorFormatting;
+	}
+
+	public static EnumChatFormatting getColorFormattingForPlayer(EntityPlayer player) {
+		NBTTagCompound tagCompound = player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getCompoundTag(Globals.NBT_EIRAIRC);
+		ThemeSettings theme = SharedGlobalConfig.theme;
+		int nameColorId = -1;
+		if(SharedGlobalConfig.enablePlayerColors) {
+			if (tagCompound.hasKey(Globals.NBT_NAMECOLOR)) {
+				nameColorId = tagCompound.getInteger(Globals.NBT_NAMECOLOR);
+			} else if (tagCompound.hasKey(Globals.NBT_NAMECOLOR_DEPRECATED)) {
+				String colorName = tagCompound.getString(Globals.NBT_NAMECOLOR_DEPRECATED);
+				EnumChatFormatting color = getColorFormattingLegacy(colorName);
+				if (color != null) {
+					nameColorId = color.ordinal();
+				}
+			}
+		}
+		if(nameColorId != -1) {
+			return mcChatFormatting[nameColorId];
+		} else if(Utils.isOP(player)) {
+			if(theme.hasColor(ThemeColorComponent.mcOpNameColor)) {
+				return theme.getColor(ThemeColorComponent.mcOpNameColor);
+			}
+		}
+		return theme.getColor(ThemeColorComponent.mcNameColor);
+	}
+
+	public static EnumChatFormatting getColorFormattingForUser(IRCChannel channel, IRCUser user) {
+		EnumChatFormatting nameColor = ((IRCUserImpl) user).getNameColor();
+		if(nameColor != null && SharedGlobalConfig.twitchNameColors) {
+			return nameColor;
+		}
+		ThemeSettings theme = ConfigHelper.getTheme(channel);
+		if(channel == null) {
+			return theme.getColor(ThemeColorComponent.ircPrivateNameColor);
+		}
+		if(user.isOperator(channel)) {
+			if(theme.hasColor(ThemeColorComponent.ircOpNameColor)) {
+				return theme.getColor(ThemeColorComponent.ircOpNameColor);
+			}
+		} else if(user.hasVoice(channel)) {
+			if(theme.hasColor(ThemeColorComponent.ircVoiceNameColor)) {
+				return theme.getColor(ThemeColorComponent.ircVoiceNameColor);
+			}
+		}
+		return theme.getColor(ThemeColorComponent.ircNameColor);
+	}
+
+	public static boolean isValidColor(String colorName) {
+		try {
+			EnumChatFormatting formatting = EnumChatFormatting.valueOf(colorName.toUpperCase());
+			return formatting.isColor();
+		} catch (IllegalArgumentException e) {
+			return false;
+		}
+	}
+
+	public static EnumChatFormatting getColorFromName(String colorName) {
+		try {
+			return EnumChatFormatting.valueOf(colorName.toUpperCase());
+		} catch (IllegalArgumentException e) {
+			return null;
+		}
 	}
 }

@@ -2,6 +2,7 @@ package net.blay09.mods.eirairc.config.settings;
 
 import com.google.gson.JsonObject;
 import net.blay09.mods.eirairc.util.I19n;
+import net.blay09.mods.eirairc.util.IRCFormatting;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.EnumChatFormatting;
@@ -123,21 +124,21 @@ public class ThemeSettings {
 		if(categoryName != null) {
 			String emoteColor = Utils.unquote(legacyConfig.get(categoryName, "emoteColor", "").getString());
 			if(!emoteColor.isEmpty()) {
-				colors.put(ThemeColorComponent.emoteTextColor, Utils.getColorFormatting(emoteColor));
+				colors.put(ThemeColorComponent.emoteTextColor, IRCFormatting.getColorFormattingLegacy(emoteColor));
 			}
 			String ircColor = Utils.unquote(legacyConfig.get(categoryName, "ircColor", "").getString());
 			if(!ircColor.isEmpty()) {
-				colors.put(ThemeColorComponent.ircNameColor, Utils.getColorFormatting(ircColor));
+				colors.put(ThemeColorComponent.ircNameColor, IRCFormatting.getColorFormattingLegacy(ircColor));
 			}
 		} else {
-			colors.put(ThemeColorComponent.emoteTextColor, Utils.getColorFormatting(Utils.unquote(legacyConfig.get("display", "emoteColor", "gold").getString())));
-			colors.put(ThemeColorComponent.mcNameColor, Utils.getColorFormatting(Utils.unquote(legacyConfig.get("display", "defaultColor", "white").getString())));
-			colors.put(ThemeColorComponent.mcOpNameColor, Utils.getColorFormatting(Utils.unquote(legacyConfig.get("display", "opColor", "red").getString())));
-			colors.put(ThemeColorComponent.ircNameColor, Utils.getColorFormatting(Utils.unquote(legacyConfig.get("display", "ircColor", "gray").getString())));
-			colors.put(ThemeColorComponent.ircPrivateNameColor, Utils.getColorFormatting(Utils.unquote(legacyConfig.get("display", "ircPrivateColor", "gray").getString())));
-			colors.put(ThemeColorComponent.ircVoiceNameColor, Utils.getColorFormatting(Utils.unquote(legacyConfig.get("display", "ircVoiceColor", "gray").getString())));
-			colors.put(ThemeColorComponent.ircOpNameColor, Utils.getColorFormatting(Utils.unquote(legacyConfig.get("display", "ircOpColor", "gold").getString())));
-			colors.put(ThemeColorComponent.ircNoticeTextColor, Utils.getColorFormatting(Utils.unquote(legacyConfig.get("display", "ircNoticeColor", "gray").getString())));
+			colors.put(ThemeColorComponent.emoteTextColor, IRCFormatting.getColorFormattingLegacy(Utils.unquote(legacyConfig.get("display", "emoteColor", "gold").getString())));
+			colors.put(ThemeColorComponent.mcNameColor, IRCFormatting.getColorFormattingLegacy(Utils.unquote(legacyConfig.get("display", "defaultColor", "white").getString())));
+			colors.put(ThemeColorComponent.mcOpNameColor, IRCFormatting.getColorFormattingLegacy(Utils.unquote(legacyConfig.get("display", "opColor", "red").getString())));
+			colors.put(ThemeColorComponent.ircNameColor, IRCFormatting.getColorFormattingLegacy(Utils.unquote(legacyConfig.get("display", "ircColor", "gray").getString())));
+			colors.put(ThemeColorComponent.ircPrivateNameColor, IRCFormatting.getColorFormattingLegacy(Utils.unquote(legacyConfig.get("display", "ircPrivateColor", "gray").getString())));
+			colors.put(ThemeColorComponent.ircVoiceNameColor, IRCFormatting.getColorFormattingLegacy(Utils.unquote(legacyConfig.get("display", "ircVoiceColor", "gray").getString())));
+			colors.put(ThemeColorComponent.ircOpNameColor, IRCFormatting.getColorFormattingLegacy(Utils.unquote(legacyConfig.get("display", "ircOpColor", "gold").getString())));
+			colors.put(ThemeColorComponent.ircNoticeTextColor, IRCFormatting.getColorFormattingLegacy(Utils.unquote(legacyConfig.get("display", "ircNoticeColor", "gray").getString())));
 		}
 	}
 
@@ -167,7 +168,7 @@ public class ThemeSettings {
 			}
 		} else {
 			if(ThemeColorComponent.fromName(option) != null) {
-				Utils.addMCColorsToList(list);
+				IRCFormatting.addValidColorsToList(list);
 			}
 		}
 	}
