@@ -37,6 +37,7 @@ public class SharedGlobalConfig {
 
 	// Network Settings
 	public static String bindIP = "";
+	public static int antiFloodTime = 500;
 	public static boolean sslTrustAllCerts = false;
 	public static String sslCustomTrustStore = "";
 	public static boolean sslDisableDiffieHellman = true;
@@ -68,6 +69,7 @@ public class SharedGlobalConfig {
 
 		// Network
 		bindIP = thisConfig.getString("bindIP", NETWORK, bindIP, I19n.format("eirairc:config.property.bindIP.tooltip"), "eirairc:config.property.bindIP");
+		antiFloodTime = thisConfig.getInt("antiFloodTime", NETWORK, antiFloodTime, 0, 10000, I19n.format("eirairc:config.property.antiFloodTime.tooltip"), "eirairc:config.property.antiFloodTime");
 		sslTrustAllCerts = thisConfig.getBoolean("sslTrustAllCerts", NETWORK, sslTrustAllCerts, I19n.format("eirairc:config.property.sslTrustAllCerts.tooltip"), "eirairc:config.property.sslTrustAllCerts");
 		sslCustomTrustStore = thisConfig.getString("sslCustomTrustStore", NETWORK, sslCustomTrustStore, I19n.format("eirairc:config.property.sslCustomTrustStore.tooltip"), "eirairc:config.property.sslCustomTrustStore");
 		sslDisableDiffieHellman = thisConfig.getBoolean("sslDisableDiffieHellman", NETWORK, sslDisableDiffieHellman, I19n.format("eirairc:config.property.sslDisableDiffieHellman.tooltip"), "eirairc:config.property.sslDisableDiffieHellman");
@@ -103,6 +105,7 @@ public class SharedGlobalConfig {
 
 		// Network
 		thisConfig.get(NETWORK, "bindIP", "", I19n.format("eirairc:config.property.bindIP.tooltip")).set(bindIP);
+		thisConfig.get(NETWORK, "antiFloodTime", "", I19n.format("eirairc:config.property.antiFloodTime.tooltip")).set(antiFloodTime);
 		thisConfig.get(NETWORK, "sslTrustAllCerts", false, I19n.format("eirairc:config.property.sslTrustAllCerts.tooltip")).set(sslTrustAllCerts);
 		thisConfig.get(NETWORK, "sslCustomTrustStore", I19n.format("eirairc:config.property.sslCustomTrustStore.tooltip")).set(sslCustomTrustStore);
 		thisConfig.get(NETWORK, "sslDisableDiffieHellman", false, I19n.format("eirairc:config.property.sslDisableDiffieHellman.tooltip")).set(sslDisableDiffieHellman);
@@ -167,6 +170,8 @@ public class SharedGlobalConfig {
 			twitchNameColors = Boolean.parseBoolean(value);
 		} else if(key.equals("debugMode")) {
 			debugMode = Boolean.parseBoolean(value);
+		} else if(key.equals("antiFloodTime")) {
+			antiFloodTime = Integer.parseInt(value);
 		} else if(key.equals("bindIP")) {
 			bindIP = value;
 		} else if(key.equals("sslTrustAllCerts")) {
@@ -197,6 +202,8 @@ public class SharedGlobalConfig {
 			value = String.valueOf(hidePlayerTags);
 		} else if(key.equals("debugMode")) {
 			value = String.valueOf(debugMode);
+		} else if(key.equals("antiFloodTime")) {
+			value = String.valueOf(antiFloodTime);
 		} else if(key.equals("bindIP")) {
 			value = bindIP;
 		} else if(key.equals("sslTrustAllCerts")) {
@@ -227,6 +234,7 @@ public class SharedGlobalConfig {
 			list.add("twitchNameColors");
 			list.add("debugMode");
 			list.add("bindIP");
+			list.add("antiFloodTime");
 			list.add("sslCustomTrustStore");
 			list.add("sslTrustAllCerts");
 			list.add("sslDisableDiffieHellman");

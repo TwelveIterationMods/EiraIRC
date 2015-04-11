@@ -235,6 +235,8 @@ eirairc:config.property.preventUserPing=Prevent User Ping
 eirairc:config.property.preventUserPing.tooltip=This adds an invisible character to player names sent to IRC to prevent pinging those users of the same name on IRC. Thanks to Simon Meskens!
 eirairc:config.property.twitchNameColors=Twitch Name Colors
 eirairc:config.property.twitchNameColors.tooltip=If enabled, EiraIRC will attempt to map Twitch colors to Minecraft colors for nicks.
+eirairc:config.property.antiFloodTime=Anti-Flood Time
+eirairc:config.property.antiFloodTime.tooltip=The time in milliseconds to wait in between bigger bunches of messages to prevent Excess Flood issues.
 
 ## Properties (Client)
 eirairc:config.property.imageLinkPreview=Show Image Link Preview
