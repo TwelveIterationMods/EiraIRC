@@ -262,11 +262,10 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 	@Override
 	public void part(String channelName) {
 		if(irc("PART " + channelName)) {
-			IRCChannel channel = getChannel(channelName);
+			IRCChannel channel = channels.remove(channelName.toLowerCase());
 			if(channel != null) {
 				MinecraftForge.EVENT_BUS.post(new IRCChannelLeftEvent(this, channel));
 			}
-			channels.remove(channelName.toLowerCase());
 		}
 	}
 
