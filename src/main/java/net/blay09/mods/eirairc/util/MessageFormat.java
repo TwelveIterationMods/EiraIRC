@@ -209,9 +209,9 @@ public class MessageFormat {
 							displayName = formatNick(displayName, context, target, mode, null);
 							component = new ChatComponentText(displayName);
 							if(mode != Mode.Emote) {
-								EnumChatFormatting nameColor = Utils.getColorFormattingForPlayer(player);
+								EnumChatFormatting nameColor = IRCFormatting.getColorFormattingForPlayer(player);
 								if(nameColor != null) {
-									component.getChatStyle().setColor(Utils.getColorFormattingForPlayer(player));
+									component.getChatStyle().setColor(IRCFormatting.getColorFormattingForPlayer(player));
 								}
 							}
 						} else {
@@ -307,7 +307,7 @@ public class MessageFormat {
 							displayName = formatNick(displayName, channel, target, mode, user);
 							component = new ChatComponentText(displayName);
 							if(mode != Mode.Emote) {
-								EnumChatFormatting nameColor = Utils.getColorFormattingForUser(channel, user);
+								EnumChatFormatting nameColor = IRCFormatting.getColorFormattingForUser(channel, user);
 								if(nameColor != null) {
 									component.getChatStyle().setColor(nameColor);
 								}

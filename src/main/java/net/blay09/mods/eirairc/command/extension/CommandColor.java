@@ -8,12 +8,14 @@ import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.config.settings.ThemeColorComponent;
 import net.blay09.mods.eirairc.util.Globals;
+import net.blay09.mods.eirairc.util.IRCFormatting;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumChatFormatting;
 
 import java.util.List;
 
@@ -53,22 +55,28 @@ public class CommandColor implements SubCommand {
 			Utils.sendLocalizedMessage(sender, "irc.color.blackList", colorName);
 			return true;
 		}
-		if(!colorName.equals(COLOR_NONE) && !Utils.isValidColor(colorName)) {
+		boolean isNone = colorName.equals(COLOR_NONE);
+		if(!isNone && !IRCFormatting.isValidColor(colorName)) {
 			Utils.sendLocalizedMessage(sender, "irc.color.invalid", colorName);
 			return true;
 		}
 		EntityPlayer entityPlayer = (EntityPlayer) sender;
 		NBTTagCompound persistentTag = entityPlayer.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG);
 		NBTTagCompound tagCompound = persistentTag.getCompoundTag(Globals.NBT_EIRAIRC);
-		if(colorName.equals(COLOR_NONE)) {
+		if(isNone) {
+			tagCompound.removeTag(Globals.NBT_NAMECOLOR_DEPRECATED);
 			tagCompound.removeTag(Globals.NBT_NAMECOLOR);
 		} else {
-			tagCompound.setString(Globals.NBT_NAMECOLOR, colorName);
+			EnumChatFormatting color = IRCFormatting.getColorFromName(colorName);
+			if(color != null) {
+				tagCompound.removeTag(Globals.NBT_NAMECOLOR_DEPRECATED);
+				tagCompound.setByte(Globals.NBT_NAMECOLOR, (byte) color.ordinal());
+			}
 		}
 		persistentTag.setTag(Globals.NBT_EIRAIRC, tagCompound);
 		entityPlayer.getEntityData().setTag(EntityPlayer.PERSISTED_NBT_TAG, persistentTag);
 		entityPlayer.refreshDisplayName();
-		if(colorName.equals(COLOR_NONE)) {
+		if(isNone) {
 			Utils.sendLocalizedMessage(sender, "irc.color.reset");
 		} else {
 			Utils.sendLocalizedMessage(sender, "irc.color.set", colorName);
@@ -84,7 +92,7 @@ public class CommandColor implements SubCommand {
 	@Override
 	public void addTabCompletionOptions(List<String> list, ICommandSender sender, String[] args) {
 		list.add(COLOR_NONE);
-		Utils.addValidColorsToList(list);
+		IRCFormatting.addValidColorsToList(list);
 	}
 
 	@Override
