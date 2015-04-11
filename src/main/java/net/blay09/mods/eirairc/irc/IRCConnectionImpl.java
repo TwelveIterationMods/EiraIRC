@@ -179,7 +179,7 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 			register();
 			sender.start();
 			String line;
-			while((line = reader.readLine()) != null) {
+			while((line = reader.readLine()) != null && sender.isRunning()) {
 				if(SharedGlobalConfig.debugMode) {
 					System.out.println(line);
 				}

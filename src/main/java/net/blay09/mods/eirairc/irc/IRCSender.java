@@ -70,17 +70,16 @@ public class IRCSender implements Runnable {
 			}
 		} catch (SocketException e) {
 			e.printStackTrace();
-			if(connection.isConnected()) {
-				connection.tryReconnect();
-			}
 		} catch (IOException e) {
 			e.printStackTrace();
-			if(connection.isConnected()) {
-				connection.tryReconnect();
-			}
 		} catch (Exception e) {
 			Minecraft.getMinecraft().displayCrashReport(new CrashReport("EiraIRC connection to " + connection.getHost() + " has crashed :(", e));
 		}
+		running = false;
+	}
+
+	public boolean isRunning() {
+		return running;
 	}
 
 	public void stop() {
