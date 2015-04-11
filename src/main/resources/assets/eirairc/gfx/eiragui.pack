@@ -5,196 +5,196 @@ filter: Nearest,Nearest
 repeat: none
 menu_cat
   rotate: false
-  xy: 0, 192
+  xy: 0, 185
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 menu_friends
   rotate: false
-  xy: 0, 128
+  xy: 0, 119
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 menu_screenshots
   rotate: false
-  xy: 64, 192
+  xy: 64, 185
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 menu_servers
   rotate: false
-  xy: 0, 64
+  xy: 0, 53
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 menu_settings
   rotate: false
-  xy: 0, 0
+  xy: 64, 119
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 menu_twitch
   rotate: false
-  xy: 64, 128
+  xy: 128, 185
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 button_clipboard
   rotate: false
-  xy: 128, 224
+  xy: 0, 19
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 button_delete
   rotate: false
-  xy: 64, 96
+  xy: 64, 85
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 button_favorite
   rotate: false
-  xy: 128, 192
+  xy: 128, 151
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 button_unfavorite
   rotate: false
-  xy: 160, 224
+  xy: 192, 217
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 button_upload
   rotate: false
-  xy: 64, 64
+  xy: 224, 217
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 button_zoom
   rotate: false
-  xy: 96, 96
+  xy: 32, 19
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 tab_bg_bottomleft
   rotate: false
-  xy: 128, 176
+  xy: 0, 1
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 tab_bg_bottomright
   rotate: false
-  xy: 160, 208
+  xy: 64, 67
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 tab_bg_content
   rotate: false
-  xy: 192, 240
+  xy: 96, 101
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 tab_bg_topright
   rotate: false
-  xy: 64, 48
+  xy: 128, 133
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 tab_header_left
   rotate: false
-  xy: 96, 80
+  xy: 160, 167
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 tab_header_middle
   rotate: false
-  xy: 128, 160
+  xy: 192, 199
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 tab_header_right
   rotate: false
-  xy: 144, 176
+  xy: 16, 1
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
-button_join
-  rotate: false
-  xy: 160, 196
-  size: 9, 12
-  orig: 9, 12
-  offset: 0, 0
-  index: -1
 button_add
   rotate: false
-  xy: 176, 214
+  xy: 64, 55
   size: 10, 10
   orig: 10, 10
   offset: 0, 0
   index: -1
 button_first
   rotate: false
-  xy: 192, 230
+  xy: 80, 73
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+button_join
+  rotate: false
+  xy: 96, 89
   size: 10, 10
   orig: 10, 10
   offset: 0, 0
   index: -1
 button_last
   rotate: false
-  xy: 208, 246
+  xy: 112, 107
   size: 10, 10
   orig: 10, 10
   offset: 0, 0
   index: -1
 button_part
   rotate: false
-  xy: 64, 36
-  size: 8, 12
-  orig: 8, 12
+  xy: 128, 121
+  size: 10, 10
+  orig: 10, 10
   offset: 0, 0
   index: -1
 button_remove
   rotate: false
-  xy: 80, 54
+  xy: 144, 139
   size: 10, 10
   orig: 10, 10
   offset: 0, 0
   index: -1
 icon_active
   rotate: false
-  xy: 96, 70
+  xy: 160, 155
   size: 10, 10
   orig: 10, 10
   offset: 0, 0
   index: -1
 button_next
   rotate: false
-  xy: 112, 86
+  xy: 176, 173
   size: 6, 10
   orig: 6, 10
   offset: 0, 0
   index: -1
 button_prev
   rotate: false
-  xy: 128, 150
+  xy: 192, 187
   size: 6, 10
   orig: 6, 10
   offset: 0, 0

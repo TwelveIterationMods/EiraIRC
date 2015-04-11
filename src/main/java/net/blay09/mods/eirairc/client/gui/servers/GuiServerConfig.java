@@ -189,11 +189,10 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 					ChannelConfig channelConfig = lstChannels.getSelectedItem().getConfig();
 					if (connection.getChannel(channelConfig.getName()) != null) {
 						connection.part(channelConfig.getName());
-						setChannelJoinLeaveButtonState(false);
 					} else {
 						connection.join(channelConfig.getName(), channelConfig.getPassword());
-						setChannelJoinLeaveButtonState(true);
 					}
+					btnChannelJoinLeave.enabled = false;
 				}
 			}
 		} else if(button == btnDelete) {
@@ -224,6 +223,7 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 				entry.setJoined(true);
 			}
 		}
+		updateButtonStates();
 	}
 
 	@SubscribeEvent
@@ -233,6 +233,7 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 				entry.setJoined(false);
 			}
 		}
+		updateButtonStates();
 	}
 
 	@SubscribeEvent
@@ -243,6 +244,7 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 			for(GuiListEntryChannel entry : lstChannels.getEntries()) {
 				entry.setJoined(false);
 			}
+			updateButtonStates();
 		}
 	}
 
@@ -278,21 +280,26 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 		}
 	}
 
-	private void setChannelJoinLeaveButtonState(boolean state) {
-		if(state) {
-			btnChannelJoinLeave.setTextureRegion(EiraGui.atlas.findRegion("button_part"));
+	private void updateButtonStates() {
+		if(lstChannels.hasSelection()) {
+			IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(config.getAddress());
+			ChannelConfig channelConfig = lstChannels.getSelectedItem().getConfig();
+			if(connection != null && channelConfig != null && connection.getChannel(channelConfig.getName()) != null) {
+				btnChannelJoinLeave.setTextureRegion(EiraGui.atlas.findRegion("button_part"));
+			} else {
+				btnChannelJoinLeave.setTextureRegion(EiraGui.atlas.findRegion("button_join"));
+			}
+			btnChannelDelete.enabled = true;
+			btnChannelJoinLeave.enabled = true;
 		} else {
+			btnChannelDelete.enabled = false;
+			btnChannelJoinLeave.enabled = false;
 			btnChannelJoinLeave.setTextureRegion(EiraGui.atlas.findRegion("button_join"));
 		}
 	}
 
 	public void channelSelected(ChannelConfig channelConfig) {
-		IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(config.getAddress());
-		if(connection != null && connection.getChannel(channelConfig.getName()) != null) {
-			setChannelJoinLeaveButtonState(true);
-		} else {
-			setChannelJoinLeaveButtonState(false);
-		}
+		updateButtonStates();
 	}
 
 	public void channelClicked(ChannelConfig channelConfig) {
