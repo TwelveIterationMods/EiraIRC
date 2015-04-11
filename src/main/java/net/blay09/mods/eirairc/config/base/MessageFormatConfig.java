@@ -110,7 +110,7 @@ public class MessageFormatConfig {
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcSendPrivateEmote", Utils.quote("[->{CHANNEL}] * {NICK} {MESSAGE}"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcUserJoin", Utils.quote("\u00a7e[{CHANNEL}] {NICK} joined the channel"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcUserLeave", Utils.quote("\u00a7e[{CHANNEL}] {NICK} left the channel"));
-		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcUserQuit", Utils.quote("\u00a7e[{SERVER}] {NICK} disconnected from IRC ({QUITMESSAGE})"));
+		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcUserQuit", Utils.quote("\u00a7e[{SERVER}] {NICK} disconnected from IRC ({MESSAGE})"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcUserNickChange", Utils.quote("\u00a7e[{CHANNEL}] {OLDNICK} is now known as {NICK}"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircChannelMessage", Utils.quote("<{NICK}> {MESSAGE}"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircChannelEmote", Utils.quote("* {NICK} {MESSAGE}"));
@@ -138,7 +138,7 @@ public class MessageFormatConfig {
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcSendPrivateEmote", Utils.quote("[[->{CHANNEL}] {NICK} {MESSAGE} ]"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcUserJoin", Utils.quote("\u00a7e[{CHANNEL}] {NICK} joined the channel"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcUserLeave", Utils.quote("\u00a7e[{CHANNEL}] {NICK} left the channel"));
-		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcUserQuit", Utils.quote("\u00a7e[{SERVER}] {NICK} disconnected from IRC ({QUITMESSAGE})"));
+		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcUserQuit", Utils.quote("\u00a7e[{SERVER}] {NICK} disconnected from IRC ({MESSAGE})"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcUserNickChange", Utils.quote("\u00a7e[{CHANNEL}] {OLDNICK} is now known as {NICK}"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircChannelMessage", Utils.quote("<{NICK}> {MESSAGE}"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircChannelEmote", Utils.quote("* {NICK} {MESSAGE}"));
@@ -166,7 +166,7 @@ public class MessageFormatConfig {
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcSendPrivateEmote", Utils.quote("[[>{CHANNEL}] {NICK} {MESSAGE} ]"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcUserJoin", Utils.quote("\u00a7e[{CHANNEL}] {NICK} joined the channel"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcUserLeave", Utils.quote("\u00a7e[{CHANNEL}] {NICK} left the channel"));
-		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcUserQuit", Utils.quote("\u00a7e[{SERVER}] {NICK} disconnected from IRC ({QUITMESSAGE})"));
+		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcUserQuit", Utils.quote("\u00a7e[{SERVER}] {NICK} disconnected from IRC ({MESSAGE})"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcUserNickChange", Utils.quote("\u00a7e[{CHANNEL}] {OLDNICK} is now known as {NICK}"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircChannelMessage", Utils.quote("<{NICK}> {MESSAGE}"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircChannelEmote", Utils.quote("* {NICK} {MESSAGE}"));
@@ -194,7 +194,7 @@ public class MessageFormatConfig {
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcSendPrivateEmote", Utils.quote("[{CHANNEL}] * {NICK} {MESSAGE}"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcUserJoin", Utils.quote("\u00a7e[{CHANNEL}] {NICK} joined the channel"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcUserLeave", Utils.quote("\u00a7e[{CHANNEL}] {NICK} left the channel"));
-		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcUserQuit", Utils.quote("\u00a7e[{SERVER}] {NICK} disconnected from IRC ({QUITMESSAGE})"));
+		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcUserQuit", Utils.quote("\u00a7e[{SERVER}] {NICK} disconnected from IRC ({MESSAGE})"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcUserNickChange", Utils.quote("\u00a7e[{CHANNEL}] {OLDNICK} is now known as {NICK}"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircChannelMessage", Utils.quote("<{NICK}> {MESSAGE}"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircChannelEmote", Utils.quote("* {NICK} {MESSAGE}"));
@@ -222,7 +222,7 @@ public class MessageFormatConfig {
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcSendPrivateEmote", Utils.quote("[{SERVER}/{CHANNEL}] * {NICK} {MESSAGE}"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcUserJoin", Utils.quote("\u00a7e[{CHANNEL}] {NICK} joined the channel"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcUserLeave", Utils.quote("\u00a7e[{CHANNEL}] {NICK} left the channel"));
-		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcUserQuit", Utils.quote("\u00a7e[{SERVER}] {NICK} disconnected from IRC ({QUITMESSAGE})"));
+		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcUserQuit", Utils.quote("\u00a7e[{SERVER}] {NICK} disconnected from IRC ({MESSAGE})"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcUserNickChange", Utils.quote("\u00a7e[{CHANNEL}] {OLDNICK} is now known as {NICK}"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircChannelMessage", Utils.quote("<{NICK}> {MESSAGE}"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircChannelEmote", Utils.quote("* {NICK} {MESSAGE}"));
@@ -250,7 +250,7 @@ public class MessageFormatConfig {
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcSendPrivateEmote", Utils.quote("[->{CHANNEL}] * {NICK} {MESSAGE}"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcUserJoin", Utils.quote("\u00a7e[{CHANNEL}] {NICK} joined the channel"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcUserLeave", Utils.quote("\u00a7e[{CHANNEL}] {NICK} left the channel"));
-		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcUserQuit", Utils.quote("\u00a7e[{SERVER}] {NICK} disconnected from IRC ({QUITMESSAGE})"));
+		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcUserQuit", Utils.quote("\u00a7e[{SERVER}] {NICK} disconnected from IRC ({MESSAGE})"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_MC, "mcUserNickChange", Utils.quote("\u00a7e[{CHANNEL}] {OLDNICK} is now known as {NICK}"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircChannelMessage", Utils.quote("[{NICK}] {MESSAGE}"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircChannelEmote", Utils.quote("* {NICK} {MESSAGE}"));
