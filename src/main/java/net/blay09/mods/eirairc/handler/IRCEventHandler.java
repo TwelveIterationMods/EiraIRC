@@ -66,7 +66,7 @@ public class IRCEventHandler {
 		}
 		if(SharedGlobalConfig.botSettings.getBoolean(BotBooleanComponent.RelayIRCJoinLeave)) {
 			String format = ConfigHelper.getBotSettings(event.user).getMessageFormat().mcUserQuit;
-			Utils.addMessageToChat(MessageFormat.formatChatComponent(format, event.connection, null, event.user, "", MessageFormat.Target.Minecraft, MessageFormat.Mode.Emote));
+			Utils.addMessageToChat(MessageFormat.formatChatComponent(format, event.connection, null, event.user, event.message, MessageFormat.Target.Minecraft, MessageFormat.Mode.Emote));
 		}
 	}
 	
