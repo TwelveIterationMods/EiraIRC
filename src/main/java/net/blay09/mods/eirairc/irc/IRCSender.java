@@ -1,15 +1,13 @@
 package net.blay09.mods.eirairc.irc;
 
-import net.blay09.mods.eirairc.api.event.IRCDisconnectEvent;
+import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.crash.CrashReport;
-import net.minecraftforge.common.MinecraftForge;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.net.SocketException;
 import java.util.LinkedList;
-
 
 public class IRCSender implements Runnable {
 
@@ -49,20 +47,26 @@ public class IRCSender implements Runnable {
 	public void run() {
 		try {
 			while (running) {
+				boolean antiFlood = false;
 				synchronized (queue) {
-					if (queue.size() > 0) {
-						while (!queue.isEmpty()) {
+					int queueSize = queue.size();
+					if (queueSize > 0) {
+						int messagesSent = 0;
+						while (messagesSent < queueSize && messagesSent < 3) {
 							String entry = queue.removeFirst();
 							writer.write(entry);
 							writer.write(LINE_FEED);
+							messagesSent++;
 						}
 						writer.flush();
+						if(messagesSent < queueSize) {
+							antiFlood = true;
+						}
 					}
 				}
 				try {
-					Thread.sleep(100);
-				} catch (InterruptedException ignored) {
-				}
+					Thread.sleep(antiFlood ? SharedGlobalConfig.antiFloodTime : 100);
+				} catch (InterruptedException ignored) {}
 			}
 		} catch (SocketException e) {
 			e.printStackTrace();
