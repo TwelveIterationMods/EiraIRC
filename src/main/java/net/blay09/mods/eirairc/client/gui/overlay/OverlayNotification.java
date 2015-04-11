@@ -79,15 +79,24 @@ public class OverlayNotification extends Gui {
 		}
 		int x = windowWidth - WIDTH;
 		int y = windowHeight - HEIGHT + offset;
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(backgroundTextures);
+		boolean wasTex2DEnabled = GL11.glIsEnabled(GL11.GL_TEXTURE_2D);
+		if(!wasTex2DEnabled) {
+			GL11.glEnable(GL11.GL_TEXTURE_2D);
+		}
+		boolean wasLightingEnabled = GL11.glIsEnabled(GL11.GL_LIGHTING);
+		if(wasLightingEnabled) {
+			GL11.glDisable(GL11.GL_LIGHTING);
+		}
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		GL11.glDisable(GL11.GL_LIGHTING);
-		// TODO render icon here
 		drawTexturedModalRect(x, y, 96, 202, WIDTH, HEIGHT);
 		theGame.fontRenderer.drawSplitString(text, x + 30, y + 32 / 2 - theGame.fontRenderer.FONT_HEIGHT * 2 / 2, WIDTH - 36, Globals.TEXT_COLOR);
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
-		GL11.glEnable(GL11.GL_LIGHTING);
+		if(!wasTex2DEnabled) {
+			GL11.glDisable(GL11.GL_TEXTURE_2D);
+		}
+		if(wasLightingEnabled) {
+			GL11.glEnable(GL11.GL_LIGHTING);
+		}
 	}
 	
 }
