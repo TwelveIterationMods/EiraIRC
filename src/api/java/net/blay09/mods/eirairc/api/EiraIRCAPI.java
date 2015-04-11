@@ -1,9 +1,10 @@
+// Copyright (c) 2014, Christopher "blay09" Baker
+// All rights reserved.
 package net.blay09.mods.eirairc.api;
 
 import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.api.upload.UploadHoster;
 import net.minecraft.command.ICommandSender;
-
 
 public class EiraIRCAPI {
 
@@ -14,6 +15,9 @@ public class EiraIRCAPI {
 	 * @param internalMethods implementation of internal API methods
 	 */
 	public static void internalSetupAPI(InternalMethods internalMethods) {
+		if(EiraIRCAPI.internalMethods != null) {
+			throw new RuntimeException("EiraIRC API is already initialized");
+		}
 		EiraIRCAPI.internalMethods = internalMethods;
 	}
 
@@ -34,7 +38,6 @@ public class EiraIRCAPI {
 	}
 
 	/**
-	 *
 	 * @param parentContext the context to search for contextPath in or null
 	 * @param contextPath the path to an IRC context (e.g. irc.esper.net/#EiraIRC)
 	 * @param expectedType the expected return type or null for any

@@ -1,3 +1,5 @@
+// Copyright (c) 2014, Christopher "blay09" Baker
+// All rights reserved.
 package net.blay09.mods.eirairc.api.event;
 
 import cpw.mods.fml.common.eventhandler.Cancelable;
@@ -11,8 +13,14 @@ import cpw.mods.fml.common.eventhandler.Event;
 @Cancelable
 public class ClientChatEvent extends Event {
 
+    /**
+     * the message typed into the chat GUI (including command messages)
+     */
     public final String message;
 
+    /**
+     * @param message the message typed into the chat GUI (including command messages)
+     */
     public ClientChatEvent(String message) {
         this.message = message;
     }
