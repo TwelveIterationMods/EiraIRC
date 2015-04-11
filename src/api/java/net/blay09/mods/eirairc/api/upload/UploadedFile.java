@@ -1,3 +1,5 @@
+// Copyright (c) 2014, Christopher "blay09" Baker
+// All rights reserved.
 package net.blay09.mods.eirairc.api.upload;
 
 public class UploadedFile {
@@ -5,7 +7,12 @@ public class UploadedFile {
 	public final String url;
 	public final String directURL;
 	public final String deleteURL;
-	
+
+	/**
+	 * @param url the default URL to the uploaded screenshot
+	 * @param directURL the direct URL to the uploaded screenshot (in image format)
+	 * @param deleteURL the URL to delete this screenshot or null if deleting is not possible
+	 */
 	public UploadedFile(String url, String directURL, String deleteURL) {
 		this.url = url;
 		this.directURL = directURL;
