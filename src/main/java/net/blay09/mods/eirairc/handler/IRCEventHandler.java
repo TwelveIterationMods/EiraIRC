@@ -113,7 +113,9 @@ public class IRCEventHandler {
 			message = MessageFormat.filterLinks(message);
 		}
 		String format;
-		if(event.isNotice) {
+		if(event.connection.getHost().equals(Globals.TWITCH_SERVER) && event.sender != null && event.sender.getName().equals("twitchnotify")) {
+			format = "{MESSAGE}";
+		} else if(event.isNotice) {
 			format = botSettings.getMessageFormat().mcPrivateNotice;
 		} else if(event.isEmote) {
 			format = botSettings.getMessageFormat().mcPrivateEmote;
