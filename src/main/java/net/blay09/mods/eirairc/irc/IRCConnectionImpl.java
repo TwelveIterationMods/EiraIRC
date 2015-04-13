@@ -181,19 +181,21 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 			register();
 			sender.start();
 			String line;
-			while((line = reader.readLine()) != null && sender.isRunning()) {
-				if(SharedGlobalConfig.debugMode) {
+			while ((line = reader.readLine()) != null && sender.isRunning()) {
+				if (SharedGlobalConfig.debugMode) {
 					System.out.println(line);
 				}
-				if(!line.isEmpty()) {
+				if (!line.isEmpty()) {
 					IRCMessage msg = parser.parse(line);
-					if(!handleNumericMessage(msg)) {
+					if (!handleNumericMessage(msg)) {
 						handleMessage(msg);
 					}
 				}
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			if(!e.getMessage().equals("Socket closed")) {
+				e.printStackTrace();
+			}
 		} catch (Exception e) {
 			EiraIRC.proxy.handleException(this, e);
 		}
