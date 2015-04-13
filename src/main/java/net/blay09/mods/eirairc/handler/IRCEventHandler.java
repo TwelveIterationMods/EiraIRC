@@ -137,9 +137,10 @@ public class IRCEventHandler {
 		EiraIRC.instance.getChatSessionHandler().addTargetUser(event.sender);
 		ThemeSettings theme = ConfigHelper.getTheme(event.sender);
 		EnumChatFormatting emoteColor = theme.getColor(ThemeColorComponent.emoteTextColor);
+		EnumChatFormatting twitchNameColor = (event.sender != null && SharedGlobalConfig.twitchNameColors) ? ((IRCUserImpl) event.sender).getNameColor() : null;
 		EnumChatFormatting noticeColor = theme.getColor(ThemeColorComponent.ircNoticeTextColor);
-		if(event.isEmote && emoteColor != null) {
-			chatComponent.getChatStyle().setColor(emoteColor);
+		if(event.isEmote && (emoteColor != null || twitchNameColor != null)) {
+			chatComponent.getChatStyle().setColor(twitchNameColor != null ? twitchNameColor : emoteColor);
 		} else if(event.isNotice && noticeColor != null) {
 			chatComponent.getChatStyle().setColor(noticeColor);
 		}
@@ -179,9 +180,10 @@ public class IRCEventHandler {
 		}
 		ThemeSettings theme = ConfigHelper.getTheme(event.channel);
 		EnumChatFormatting emoteColor = theme.getColor(ThemeColorComponent.emoteTextColor);
+		EnumChatFormatting twitchNameColor = (event.sender != null && SharedGlobalConfig.twitchNameColors) ? ((IRCUserImpl) event.sender).getNameColor() : null;
 		EnumChatFormatting noticeColor = theme.getColor(ThemeColorComponent.ircNoticeTextColor);
-		if(event.isEmote && emoteColor != null) {
-			chatComponent.getChatStyle().setColor(emoteColor);
+		if(event.isEmote && (emoteColor != null || twitchNameColor != null)) {
+			chatComponent.getChatStyle().setColor(twitchNameColor != null ? twitchNameColor : emoteColor);
 		} else if(event.isNotice && noticeColor != null) {
 			chatComponent.getChatStyle().setColor(noticeColor);
 		}
