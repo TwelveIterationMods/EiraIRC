@@ -42,6 +42,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.regex.Pattern;
 
+@SuppressWarnings("unused")
 public class MCEventHandler {
 
 	@SubscribeEvent

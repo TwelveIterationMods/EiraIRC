@@ -22,7 +22,6 @@ public class ConfigHelper {
 		String s = format;
 		s = s.replace("%USERNAME%", Utils.getUsername());
 		s = s.replace("%ANONYMOUS%", "justinfan" + String.valueOf((int) (Math.random() * 1000000)) + String.valueOf(((int) (Math.random() * 1000000))));
-		System.out.println(s);
 		return s;
 	}
 	

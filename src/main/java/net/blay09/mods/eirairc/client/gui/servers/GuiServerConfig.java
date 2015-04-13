@@ -15,6 +15,7 @@ import net.blay09.mods.eirairc.client.gui.overlay.OverlayYesNo;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.ServerConfig;
+import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
@@ -68,6 +69,7 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 		allowSideClickClose = false;
 		title = config.getAddress().isEmpty() ? "<new>" : config.getAddress();
 
+		final boolean isConnected = EiraIRC.instance.getConnectionManager().isConnectedTo(config.getIdentifier());
 		final int leftX = width / 2 - 130;
 		final int rightX = width / 2 + 130;
 		final int topY = height / 2 - 80;
@@ -81,6 +83,7 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 			oldText = config.getAddress();
 		}
 		txtAddress = new GuiTextField(0, fontRendererObj, leftX, topY + 15, 100, 15);
+		txtAddress.setEnabled(!isConnected);
 		txtAddress.setText(oldText);
 		textFieldList.add(txtAddress);
 
@@ -97,7 +100,7 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 		textFieldList.add(txtNick);
 
 		btnConnect = new GuiButton(8, rightX - 100, topY, 100, 20, "");
-		if(EiraIRC.instance.getConnectionManager().isConnectedTo(config.getIdentifier())) {
+		if(isConnected) {
 			btnConnect.displayString = "Disconnect";
 		} else {
 			btnConnect.displayString = "Connect";
@@ -239,6 +242,7 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 	@SubscribeEvent
 	public void onDisconnect(IRCDisconnectEvent event) {
 		if(event.connection.getIdentifier().equals(config.getIdentifier())) {
+			txtAddress.setEnabled(true);
 			btnConnect.enabled = true;
 			btnConnect.displayString = "Connect";
 			for(GuiListEntryChannel entry : lstChannels.getEntries()) {
@@ -251,6 +255,8 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 	@SubscribeEvent
 	public void onConnect(IRCConnectEvent event) {
 		if(event.connection.getIdentifier().equals(config.getIdentifier())) {
+			txtAddress.setEnabled(false);
+			txtAddress.setText(config.getAddress());
 			btnConnect.enabled = true;
 			btnConnect.displayString = "Disconnect";
 		}
@@ -259,6 +265,7 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 	@SubscribeEvent
 	public void onConnectionFailed(IRCConnectionFailedEvent event) {
 		if(event.connection.getIdentifier().equals(config.getIdentifier())) {
+			txtAddress.setEnabled(true);
 			btnConnect.enabled = true;
 			btnConnect.displayString = "Connect";
 		}
@@ -353,6 +360,11 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 			isNew = false;
 		}
 		config.setNick(txtNick.getTextOrDefault());
+		// If connected, send nick change to IRC
+		IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(config.getIdentifier());
+		if(connection != null && !connection.getNick().equals(config.getNick())) {
+			connection.nick(ConfigHelper.formatNick(config.getNick()));
+		}
 		ConfigurationHandler.saveServers();
 		title = config.getAddress();
 		tabContainer.initGui();

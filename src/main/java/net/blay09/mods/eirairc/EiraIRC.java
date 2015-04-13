@@ -14,8 +14,8 @@ import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.handler.ChatSessionHandler;
-import net.blay09.mods.eirairc.handler.IRCConnectionHandler;
 import net.blay09.mods.eirairc.handler.IRCEventHandler;
+import net.blay09.mods.eirairc.handler.InternalEventHandler;
 import net.blay09.mods.eirairc.handler.MCEventHandler;
 import net.blay09.mods.eirairc.net.EiraNetHandler;
 import net.blay09.mods.eirairc.net.PacketHandler;
@@ -32,6 +32,7 @@ import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.*;
+import net.minecraftforge.fml.common.eventhandler.EventBus;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @Mod(modid = EiraIRC.MOD_ID, acceptableRemoteVersions="*", guiFactory = "net.blay09.mods.eirairc.client.gui.EiraIRCGuiFactory")
@@ -45,11 +46,14 @@ public class EiraIRC {
 	@SidedProxy(serverSide = "net.blay09.mods.eirairc.CommonProxy", clientSide = "net.blay09.mods.eirairc.client.ClientProxy")
 	public static CommonProxy proxy;
 
+	public static final EventBus internalBus = new EventBus();
+
 	private ConnectionManager connectionManager;
 	private ChatSessionHandler chatSessionHandler;
 	private EiraNetHandler netHandler;
 	private IRCEventHandler ircEventHandler;
 	private MCEventHandler mcEventHandler;
+	private InternalEventHandler internalEventHandler;
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
@@ -65,8 +69,8 @@ public class EiraIRC {
 		netHandler = new EiraNetHandler();
 
 		ircEventHandler = new IRCEventHandler();
-		IRCConnectionHandler ircConnectionHandler = new IRCConnectionHandler();
 		mcEventHandler = new MCEventHandler();
+		internalEventHandler = new InternalEventHandler();
 
 		proxy.init();
 
@@ -74,8 +78,8 @@ public class EiraIRC {
 		FMLCommonHandler.instance().bus().register(mcEventHandler);
 		MinecraftForge.EVENT_BUS.register(mcEventHandler);
 		MinecraftForge.EVENT_BUS.register(ircEventHandler);
-		MinecraftForge.EVENT_BUS.register(ircConnectionHandler);
 		FMLCommonHandler.instance().bus().register(netHandler);
+		internalBus.register(internalEventHandler);
 		
 		I19n.init();
 		PacketHandler.init();
@@ -133,10 +137,6 @@ public class EiraIRC {
 		}
 	}
 
-	public IRCEventHandler getIRCEventHandler() {
-		return ircEventHandler;
-	}
-	
 	public MCEventHandler getMCEventHandler() {
 		return mcEventHandler;
 	}
