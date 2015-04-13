@@ -6,6 +6,7 @@ package net.blay09.mods.eirairc.handler;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.blay09.mods.eirairc.EiraIRC;
+import net.blay09.mods.eirairc.api.IRCReplyCodes;
 import net.blay09.mods.eirairc.api.event.*;
 import net.blay09.mods.eirairc.bot.IRCBotImpl;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
@@ -43,9 +44,6 @@ public class IRCEventHandler {
 			String format = ConfigHelper.getBotSettings(event.channel).getMessageFormat().mcUserJoin;
 			Utils.addMessageToChat(MessageFormat.formatChatComponent(format, event.connection, event.channel, event.user, "", MessageFormat.Target.Minecraft, MessageFormat.Mode.Emote));
 		}
-		if(botSettings.getBoolean(BotBooleanComponent.SendAutoWho)) {
-			Utils.sendPlayerList(event.user);
-		}
 	}
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
@@ -69,35 +67,9 @@ public class IRCEventHandler {
 			Utils.addMessageToChat(MessageFormat.formatChatComponent(format, event.connection, null, event.user, event.message, MessageFormat.Target.Minecraft, MessageFormat.Mode.Emote));
 		}
 	}
-	
+
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void onPrivateChat(IRCPrivateChatEvent event) {
-		if(!event.isNotice) {
-			if(((IRCBotImpl) event.bot).processCommand(null, event.sender, event.message)) {
-				return;
-			} else {
-				if(event.bot.isServerSide()) {
-					event.sender.notice(Utils.getLocalizedMessage("irc.bot.unknownCommand"));
-					return;
-				}
-			}
-		}
-		if(event.sender != null && event.sender.getName().equals("tmi.twitch.tv") && event.isNotice && event.connection.getHost().equals(Globals.TWITCH_SERVER) && event.message.equals("Login unsuccessful")) {
-			event.connection.disconnect("");
-			MinecraftForge.EVENT_BUS.post(new IRCConnectionFailedEvent(event.connection, new RuntimeException("Wrong username or invalid oauth token.")));
-			return;
-		}
-		// Parse Twitch user colors if this is a message from jtv on irc.twitch.tv
-		if(event.sender != null && event.sender.getName().equals("jtv") && event.connection.getHost().equals(Globals.TWITCH_SERVER)) {
-			if(event.message.startsWith("USERCOLOR ")) {
-				int lastSpace = event.message.lastIndexOf(' ');
-				String targetNick = event.message.substring(10, lastSpace);
-				String targetColor = event.message.substring(lastSpace + 1);
-				IRCUserImpl user = (IRCUserImpl) event.connection.getOrCreateUser(targetNick);
-				user.setNameColor(IRCFormatting.getColorFromTwitch(targetColor));
-			}
-			return;
-		}
 		BotSettings botSettings = ConfigHelper.getBotSettings(null);
 		if(ConfigHelper.getGeneralSettings(event.sender).isMuted()) {
 			return;
@@ -146,12 +118,9 @@ public class IRCEventHandler {
 		}
 		Utils.addMessageToChat(chatComponent);
 	}
-	
+
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void onChannelChat(IRCChannelChatEvent event) {
-		if(!event.isNotice && event.message.startsWith("!") && ((IRCBotImpl) event.bot).processCommand(event.channel, event.sender, event.message.substring(1))) {
-			return;
-		}
 		if(ConfigHelper.getGeneralSettings(event.channel).isMuted()) {
 			return;
 		}
@@ -204,4 +173,87 @@ public class IRCEventHandler {
 		}
 	}
 
+	@SubscribeEvent(priority = EventPriority.LOWEST)
+	public void onConnected(IRCConnectEvent event) {
+		String mcMessage = Utils.getLocalizedMessage("irc.basic.connected", event.connection.getHost());
+		Utils.addMessageToChat(mcMessage);
+	}
+
+	@SubscribeEvent(priority = EventPriority.LOWEST)
+	public void onConnectionFailed(IRCConnectionFailedEvent event) {
+		String mcMessage = Utils.getLocalizedMessage("error.couldNotConnect", event.connection.getHost(), event.exception);
+		Utils.addMessageToChat(mcMessage);
+	}
+
+	@SubscribeEvent(priority = EventPriority.LOWEST)
+	public void onConnectionFailed(IRCReconnectEvent event) {
+		String mcMessage = Utils.getLocalizedMessage("irc.basic.reconnecting", event.connection.getHost(), event.waitingTime / 1000);
+		Utils.addMessageToChat(mcMessage);
+	}
+
+	@SubscribeEvent(priority = EventPriority.LOWEST)
+	public void onDisconnected(IRCDisconnectEvent event) {
+		String mcMessage = Utils.getLocalizedMessage("irc.basic.disconnected", event.connection.getHost());
+		Utils.addMessageToChat(mcMessage);
+	}
+
+	@SubscribeEvent(priority = EventPriority.LOWEST)
+	public void onIRCError(IRCErrorEvent event) {
+		switch(event.numeric) {
+			case IRCReplyCodes.ERR_NONICKCHANGE:
+				Utils.addMessageToChat(Utils.getLocalizedChatMessage("error.noNickChange")); break;
+			case IRCReplyCodes.ERR_SERVICESDOWN:
+				Utils.addMessageToChat(Utils.getLocalizedChatMessage("error.servicesDown")); break;
+			case IRCReplyCodes.ERR_TARGETTOOFAST:
+				Utils.addMessageToChat(Utils.getLocalizedChatMessage("error.targetTooFast")); break;
+			case IRCReplyCodes.ERR_CANNOTSENDTOCHAN:
+			case IRCReplyCodes.ERR_TOOMANYCHANNELS:
+			case IRCReplyCodes.ERR_TOOMANYTARGETS:
+			case IRCReplyCodes.ERR_UNKNOWNERROR:
+			case IRCReplyCodes.ERR_NOSUCHSERVER:
+			case IRCReplyCodes.ERR_NOSUCHSERVICE:
+			case IRCReplyCodes.ERR_NOTOPLEVEL:
+			case IRCReplyCodes.ERR_WILDTOPLEVEL:
+			case IRCReplyCodes.ERR_BADMASK:
+			case IRCReplyCodes.ERR_UNKNOWNCOMMAND:
+			case IRCReplyCodes.ERR_NOADMININFO:
+			case IRCReplyCodes.ERR_NOTONCHANNEL:
+			case IRCReplyCodes.ERR_WASNOSUCHNICK:
+			case IRCReplyCodes.ERR_NOSUCHNICK:
+			case IRCReplyCodes.ERR_NOSUCHCHANNEL:
+			case IRCReplyCodes.ERR_NOLOGIN:
+			case IRCReplyCodes.ERR_BANNEDFROMCHAN:
+			case IRCReplyCodes.ERR_CHANOPRIVSNEEDED:
+			case IRCReplyCodes.ERR_BADCHANMASK:
+			case IRCReplyCodes.ERR_BADCHANNELKEY:
+			case IRCReplyCodes.ERR_INVITEONLYCHAN:
+			case IRCReplyCodes.ERR_UNKNOWNMODE:
+			case IRCReplyCodes.ERR_CHANNELISFULL:
+			case IRCReplyCodes.ERR_KEYSET:
+			case IRCReplyCodes.ERR_NEEDMOREPARAMS:
+				Utils.addMessageToChat(Utils.getLocalizedChatMessage("error.genericTarget", event.args[1], event.args[2])); break;
+			case IRCReplyCodes.ERR_NOORIGIN:
+			case IRCReplyCodes.ERR_NORECIPIENT:
+			case IRCReplyCodes.ERR_NOTEXTTOSEND:
+			case IRCReplyCodes.ERR_NOMOTD:
+			case IRCReplyCodes.ERR_FILEERROR:
+			case IRCReplyCodes.ERR_NONICKNAMEGIVEN:
+			case IRCReplyCodes.ERR_SUMMONDISABLED:
+			case IRCReplyCodes.ERR_USERSDISABLED:
+			case IRCReplyCodes.ERR_NOTREGISTERED:
+			case IRCReplyCodes.ERR_PASSWDMISMATCH:
+			case IRCReplyCodes.ERR_YOUREBANNEDCREEP:
+			case IRCReplyCodes.ERR_USERSDONTMATCH:
+			case IRCReplyCodes.ERR_UMODEUNKNOWNFLAG:
+			case IRCReplyCodes.ERR_NOOPERHOST:
+			case IRCReplyCodes.ERR_NOPRIVILEGES:
+			case IRCReplyCodes.ERR_ALREADYREGISTERED:
+			case IRCReplyCodes.ERR_NOPERMFORHOST:
+			case IRCReplyCodes.ERR_CANTKILLSERVER:
+				Utils.addMessageToChat(Utils.getLocalizedChatMessage("error.generic", event.args[1])); break;
+			default:
+				System.out.println("Unhandled error code: " + event.numeric + " (" + event.args.length + " arguments)");
+				break;
+		}
+	}
 }

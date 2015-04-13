@@ -3,7 +3,6 @@
 
 package net.blay09.mods.eirairc;
 
-import cpw.mods.fml.common.FMLLog;
 import net.blay09.mods.eirairc.api.event.IRCChannelChatEvent;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
 import net.blay09.mods.eirairc.config.ServerConfig;
