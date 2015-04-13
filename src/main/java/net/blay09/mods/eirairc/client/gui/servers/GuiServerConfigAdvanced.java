@@ -1,6 +1,12 @@
 package net.blay09.mods.eirairc.client.gui.servers;
 
 import cpw.mods.fml.client.config.GuiCheckBox;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.blay09.mods.eirairc.EiraIRC;
+import net.blay09.mods.eirairc.api.event.IRCConnectEvent;
+import net.blay09.mods.eirairc.api.event.IRCConnectionFailedEvent;
+import net.blay09.mods.eirairc.api.event.IRCDisconnectEvent;
+import net.blay09.mods.eirairc.api.irc.IRCConnection;
 import net.blay09.mods.eirairc.client.gui.base.GuiAdvancedTextField;
 import net.blay09.mods.eirairc.client.gui.base.GuiLabel;
 import net.blay09.mods.eirairc.client.gui.base.tab.GuiTabContainer;
@@ -10,9 +16,11 @@ import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.settings.GeneralBooleanComponent;
 import net.blay09.mods.eirairc.util.Globals;
+import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.GuiYesNoCallback;
+import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.input.Keyboard;
 
 import java.nio.charset.Charset;
@@ -44,8 +52,10 @@ public class GuiServerConfigAdvanced extends GuiTabPage implements GuiYesNoCallb
 	public void initGui() {
 		super.initGui();
 		Keyboard.enableRepeatEvents(true);
+		MinecraftForge.EVENT_BUS.register(this);
 		allowSideClickClose = false;
 
+		final boolean isConnected = EiraIRC.instance.getConnectionManager().isConnectedTo(config.getIdentifier());
 		final int leftX = width / 2 - 130;
 		final int rightX = width / 2 + 130;
 		final int topY = height / 2 - 80;
@@ -59,6 +69,7 @@ public class GuiServerConfigAdvanced extends GuiTabPage implements GuiYesNoCallb
 			oldText = config.getAddress();
 		}
 		txtAddress = new GuiTextField(fontRendererObj, leftX, topY + 15, 100, 15);
+		txtAddress.setEnabled(!isConnected);
 		txtAddress.setText(oldText);
 		textFieldList.add(txtAddress);
 
@@ -106,6 +117,7 @@ public class GuiServerConfigAdvanced extends GuiTabPage implements GuiYesNoCallb
 		}
 		txtServerPassword = new GuiAdvancedTextField(fontRendererObj, rightX - 100, topY + 15, 100, 15);
 		txtServerPassword.setText(oldText);
+		txtServerPassword.setEnabled(!isConnected);
 		txtServerPassword.setDefaultPasswordChar();
 		textFieldList.add(txtServerPassword);
 
@@ -118,6 +130,7 @@ public class GuiServerConfigAdvanced extends GuiTabPage implements GuiYesNoCallb
 		}
 		txtCharset = new GuiAdvancedTextField(fontRendererObj, rightX - 100, topY + 55, 100, 15);
 		txtCharset.setDefaultText(Globals.DEFAULT_CHARSET, false);
+		txtCharset.setEnabled(!isConnected);
 		txtCharset.setText(oldText);
 		textFieldList.add(txtCharset);
 
@@ -128,6 +141,7 @@ public class GuiServerConfigAdvanced extends GuiTabPage implements GuiYesNoCallb
 			oldState = config.isSSL();
 		}
 		chkSSL = new GuiCheckBox(2, rightX - 100, topY + 80, " Use SSL", oldState);
+		chkSSL.enabled = !isConnected;
 		buttonList.add(chkSSL);
 
 		if(chkAutoConnect != null) {
@@ -175,17 +189,62 @@ public class GuiServerConfigAdvanced extends GuiTabPage implements GuiYesNoCallb
 		}
 	}
 
+	@SubscribeEvent
+	public void onConnect(IRCConnectEvent event) {
+		if(event.connection.getIdentifier().equals(config.getIdentifier())) {
+			txtAddress.setEnabled(false);
+			txtServerPassword.setEnabled(false);
+			txtCharset.setEnabled(false);
+			chkSSL.enabled = false;
+			txtAddress.setText(config.getAddress());
+			txtServerPassword.setText(config.getServerPassword());
+			txtCharset.setText(config.getCharset());
+			chkSSL.setIsChecked(config.isSSL());
+		}
+	}
+
+	@SubscribeEvent
+	public void onDisconnect(IRCDisconnectEvent event) {
+		if(event.connection.getIdentifier().equals(config.getIdentifier())) {
+			txtAddress.setEnabled(true);
+			txtServerPassword.setEnabled(true);
+			txtCharset.setEnabled(true);
+			chkSSL.enabled = true;
+		}
+	}
+
+	@SubscribeEvent
+	public void onConnectionFailed(IRCConnectionFailedEvent event) {
+		if(event.connection.getIdentifier().equals(config.getIdentifier())) {
+			txtAddress.setEnabled(true);
+			txtServerPassword.setEnabled(true);
+			txtCharset.setEnabled(true);
+			chkSSL.enabled = true;
+		}
+	}
+
 	@Override
 	public void onGuiClosed() {
 		super.onGuiClosed();
 		Keyboard.enableRepeatEvents(false);
+		MinecraftForge.EVENT_BUS.unregister(this);
 		if(!txtAddress.getText().isEmpty() && !txtAddress.getText().equals(config.getAddress())) {
 			ConfigurationHandler.removeServerConfig(config.getAddress());
 			config.setAddress(txtAddress.getText());
 			ConfigurationHandler.addServerConfig(config);
 		}
+
 		config.setNick(txtNick.getTextOrDefault());
+		// If connected, send nick change to IRC
+		IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(config.getIdentifier());
+		if(connection != null && !connection.getNick().equals(config.getNick())) {
+			connection.nick(config.getNick());
+		}
 		config.setNickServ(txtNickServName.getText(), txtNickServPassword.getText());
+		// If connected, identify with nickserv
+		if(connection != null) {
+			Utils.doNickServ(connection, config);
+		}
 		config.setServerPassword(txtServerPassword.getText());
 		config.setIsSSL(chkSSL.isChecked());
 		config.getGeneralSettings().setBoolean(GeneralBooleanComponent.AutoJoin, chkAutoConnect.isChecked());
