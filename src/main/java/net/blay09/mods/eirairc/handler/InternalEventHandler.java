@@ -25,6 +25,7 @@ import net.blay09.mods.eirairc.util.IRCFormatting;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraftforge.common.MinecraftForge;
 
+@SuppressWarnings("unused")
 public class InternalEventHandler {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -76,6 +77,7 @@ public class InternalEventHandler {
         }
         if(event.sender != null && event.sender.getName().equals("tmi.twitch.tv") && event.isNotice && event.connection.getHost().equals(Globals.TWITCH_SERVER) && event.message.equals("Login unsuccessful")) {
             event.connection.disconnect("");
+            EiraIRC.internalBus.post(new IRCConnectionFailedEvent(event.connection, new RuntimeException("Wrong username or invalid oauth token.")));
             MinecraftForge.EVENT_BUS.post(new IRCConnectionFailedEvent(event.connection, new RuntimeException("Wrong username or invalid oauth token.")));
             return;
         }
