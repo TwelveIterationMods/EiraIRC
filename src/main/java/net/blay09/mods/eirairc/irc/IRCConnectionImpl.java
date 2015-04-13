@@ -2,6 +2,8 @@
 
 package net.blay09.mods.eirairc.irc;
 
+import net.blay09.mods.eirairc.CommonProxy;
+import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.IRCReplyCodes;
 import net.blay09.mods.eirairc.api.bot.IRCBot;
 import net.blay09.mods.eirairc.api.event.*;
@@ -192,6 +194,8 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
+		} catch (Exception e) {
+			EiraIRC.proxy.handleException(this, e);
 		}
 		MinecraftForge.EVENT_BUS.post(new IRCDisconnectEvent(this));
 		if(connected) {
