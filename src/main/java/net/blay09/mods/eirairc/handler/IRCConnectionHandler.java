@@ -34,13 +34,9 @@ public class IRCConnectionHandler {
 		String mcMessage = Utils.getLocalizedMessage("irc.basic.connected", event.connection.getHost());
 		Utils.addMessageToChat(mcMessage);
 		ServerConfig serverConfig = ConfigHelper.getServerConfig(event.connection);
-		// If this is a Twitch connection, tell the server that we're a JTVCLIENT so we receive name colors, join our own channel (if not anonymous) and switch to Twitch message format.
+		// If this is a Twitch connection, tell the server that we're a JTVCLIENT so we receive name colors.
 		if(event.connection.getHost().equals(Globals.TWITCH_SERVER)) {
 			event.connection.irc("JTVCLIENT");
-			if(serverConfig.getNick() != null && !serverConfig.getNick().equals("%ANONYMOUS%")) {
-				serverConfig.getOrCreateChannelConfig("#" + serverConfig.getNick());
-			}
-			serverConfig.getBotSettings().setString(BotStringComponent.MessageFormat, "Twitch");
 		}
 		Utils.doNickServ(event.connection, serverConfig);
 		for(ChannelConfig channelConfig : serverConfig.getChannelConfigs()) {

@@ -8,6 +8,8 @@ import net.blay09.mods.eirairc.api.SubCommand;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.ServerConfig;
+import net.blay09.mods.eirairc.config.settings.BotStringComponent;
+import net.blay09.mods.eirairc.config.settings.GeneralBooleanComponent;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
@@ -59,6 +61,9 @@ public class CommandTwitch implements SubCommand {
 			ServerConfig serverConfig = ConfigurationHandler.getOrCreateServerConfig(Globals.TWITCH_SERVER);
 			serverConfig.setNick(args[0]);
 			serverConfig.setServerPassword(args[1]);
+			serverConfig.getOrCreateChannelConfig("#" + serverConfig.getNick());
+			serverConfig.getGeneralSettings().setBoolean(GeneralBooleanComponent.ReadOnly, false);
+			serverConfig.getBotSettings().setString(BotStringComponent.MessageFormat, "Twitch");
 			ConfigurationHandler.addServerConfig(serverConfig);
 			ConfigurationHandler.save();
 			Utils.sendLocalizedMessage(sender, "irc.basic.connecting", "Twitch");

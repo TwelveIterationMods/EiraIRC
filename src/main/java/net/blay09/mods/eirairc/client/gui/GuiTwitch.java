@@ -10,6 +10,7 @@ import net.blay09.mods.eirairc.client.gui.base.GuiAdvancedTextField;
 import net.blay09.mods.eirairc.client.gui.base.GuiLabel;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.ServerConfig;
+import net.blay09.mods.eirairc.config.settings.BotStringComponent;
 import net.blay09.mods.eirairc.config.settings.GeneralBooleanComponent;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
@@ -100,6 +101,7 @@ public class GuiTwitch extends EiraGuiScreen implements GuiYesNoCallback {
 				config.setNick("%ANONYMOUS%");
 				config.setServerPassword("");
 				config.getGeneralSettings().setBoolean(GeneralBooleanComponent.ReadOnly, true);
+				config.getBotSettings().setString(BotStringComponent.MessageFormat, "Twitch");
 				btnConnect.enabled = false;
 				ConfigurationHandler.addServerConfig(config);
 				Utils.connectTo(config);
@@ -107,7 +109,9 @@ public class GuiTwitch extends EiraGuiScreen implements GuiYesNoCallback {
 				config.setNick(txtUsername.getText());
 				config.setServerPassword(txtPassword.getText());
 				config.getGeneralSettings().setBoolean(GeneralBooleanComponent.ReadOnly, false);
+				config.getBotSettings().setString(BotStringComponent.MessageFormat, "Twitch");
 				if(!config.getNick().isEmpty() && !config.getServerPassword().isEmpty()) {
+					config.getOrCreateChannelConfig("#" + config.getNick());
 					btnConnect.enabled = false;
 					ConfigurationHandler.addServerConfig(config);
 					Utils.connectTo(config);
