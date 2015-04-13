@@ -105,6 +105,7 @@ eirairc:error.genericTarget=§cIRC Error: '%s' %s
 eirairc:error.generic=§cIRC Error: %s
 eirairc:error.targetTooFast=IRC Error: Calm down, you're typing too fast!
 eirairc:error.servicesDown=IRC Error: Services are currently offline.
+eirairc:error.alreadyJoined=You have joined %s in %s already.
 
 #######################################################################################################################
 

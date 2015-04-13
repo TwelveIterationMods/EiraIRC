@@ -57,6 +57,10 @@ public class CommandJoin implements SubCommand {
 		connection = (IRCConnection) target;
 		ServerConfig serverConfig = ConfigHelper.getServerConfig(connection);
 		String channelName = IRCResolver.stripPath(args[0]);
+		if(connection.getChannel(channelName) != null) {
+			Utils.sendLocalizedMessage(sender, "error.alreadyJoined", channelName, connection.getHost());
+			return true;
+		}
 		ChannelConfig channelConfig = serverConfig.getOrCreateChannelConfig(channelName);
 		if(args.length >= 2) {
 			channelConfig.setPassword(args[1]);
