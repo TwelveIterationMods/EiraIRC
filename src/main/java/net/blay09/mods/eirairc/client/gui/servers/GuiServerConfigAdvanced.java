@@ -15,6 +15,7 @@ import net.blay09.mods.eirairc.client.gui.overlay.OverlayYesNo;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.settings.GeneralBooleanComponent;
+import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.gui.GuiButton;
@@ -238,7 +239,7 @@ public class GuiServerConfigAdvanced extends GuiTabPage implements GuiYesNoCallb
 		// If connected, send nick change to IRC
 		IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(config.getIdentifier());
 		if(connection != null && !connection.getNick().equals(config.getNick())) {
-			connection.nick(config.getNick());
+			connection.nick(ConfigHelper.formatNick(config.getNick()));
 		}
 		config.setNickServ(txtNickServName.getText(), txtNickServPassword.getText());
 		// If connected, identify with nickserv
