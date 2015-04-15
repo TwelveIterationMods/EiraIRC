@@ -388,11 +388,13 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 				isEmote = true;
 			}
 			if(channelTypes.indexOf(target.charAt(0)) != -1) {
-				EiraIRC.internalBus.post(new IRCChannelChatEvent(this, getChannel(target), user, message, isEmote));
-				MinecraftForge.EVENT_BUS.post(new IRCChannelChatEvent(this, getChannel(target), user, message, isEmote));
+				if(!EiraIRC.internalBus.post(new IRCChannelChatEvent(this, getChannel(target), user, message, isEmote))) {
+					MinecraftForge.EVENT_BUS.post(new IRCChannelChatEvent(this, getChannel(target), user, message, isEmote));
+				}
 			} else if(target.equals(this.nick)) {
-				EiraIRC.internalBus.post(new IRCPrivateChatEvent(this, user, message, isEmote));
-				MinecraftForge.EVENT_BUS.post(new IRCPrivateChatEvent(this, user, message, isEmote));
+				if(!EiraIRC.internalBus.post(new IRCPrivateChatEvent(this, user, message, isEmote))) {
+					MinecraftForge.EVENT_BUS.post(new IRCPrivateChatEvent(this, user, message, isEmote));
+				}
 			}
 		} else if(cmd.equals("NOTICE")) {
 			IRCUserImpl user = null;
@@ -402,11 +404,13 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 			String target = msg.arg(0);
 			String message = msg.arg(1);
 			if(channelTypes.indexOf(target.charAt(0)) != -1) {
-				EiraIRC.internalBus.post(new IRCChannelChatEvent(this, getChannel(target), user, message, false, true));
-				MinecraftForge.EVENT_BUS.post(new IRCChannelChatEvent(this, getChannel(target), user, message, false, true));
+				if(!EiraIRC.internalBus.post(new IRCChannelChatEvent(this, getChannel(target), user, message, false, true))) {
+					MinecraftForge.EVENT_BUS.post(new IRCChannelChatEvent(this, getChannel(target), user, message, false, true));
+				}
 			} else if(target.equals(this.nick) || target.equals("*")) {
-				EiraIRC.internalBus.post(new IRCPrivateChatEvent(this, user, message, false, true));
-				MinecraftForge.EVENT_BUS.post(new IRCPrivateChatEvent(this, user, message, false, true));
+				if(EiraIRC.internalBus.post(new IRCPrivateChatEvent(this, user, message, false, true))) {
+					MinecraftForge.EVENT_BUS.post(new IRCPrivateChatEvent(this, user, message, false, true));
+				}
 			}
 		} else if(cmd.equals("JOIN")) {
 			IRCUserImpl user = (IRCUserImpl) getOrCreateUser(msg.getNick());

@@ -41,7 +41,7 @@ public class InternalEventHandler {
         EiraIRC.instance.getConnectionManager().addConnection(event.connection);
     }
 
-    @SubscribeEvent(priority = EventPriority.LOWEST)
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onConnected(IRCConnectEvent event) {
         ServerConfig serverConfig = ConfigHelper.getServerConfig(event.connection);
         // If this is a Twitch connection, tell the server that we're a JTVCLIENT so we receive name colors.
@@ -67,10 +67,12 @@ public class InternalEventHandler {
     public void onPrivateChat(IRCPrivateChatEvent event) {
         if(!event.isNotice) {
             if(((IRCBotImpl) event.bot).processCommand(null, event.sender, event.message)) {
+                event.setCanceled(true);
                 return;
             } else {
                 if(event.bot.isServerSide()) {
                     event.sender.notice(Utils.getLocalizedMessage("irc.bot.unknownCommand"));
+                    event.setCanceled(true);
                     return;
                 }
             }
@@ -79,6 +81,7 @@ public class InternalEventHandler {
             event.connection.disconnect("");
             EiraIRC.internalBus.post(new IRCConnectionFailedEvent(event.connection, new RuntimeException("Wrong username or invalid oauth token.")));
             MinecraftForge.EVENT_BUS.post(new IRCConnectionFailedEvent(event.connection, new RuntimeException("Wrong username or invalid oauth token.")));
+            event.setCanceled(true);
             return;
         }
         // Parse Twitch user colors if this is a message from jtv on irc.twitch.tv
@@ -90,13 +93,14 @@ public class InternalEventHandler {
                 IRCUserImpl user = (IRCUserImpl) event.connection.getOrCreateUser(targetNick);
                 user.setNameColor(IRCFormatting.getColorFromTwitch(targetColor));
             }
+            event.setCanceled(true);
         }
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onChannelChat(IRCChannelChatEvent event) {
         if(!event.isNotice && event.message.startsWith("!") && ((IRCBotImpl) event.bot).processCommand(event.channel, event.sender, event.message.substring(1))) {
-            return;
+            event.setCanceled(true);
         }
     }
 
