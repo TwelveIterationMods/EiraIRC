@@ -62,7 +62,7 @@ public class MCEventHandler {
 						if (channel.getTopic() != null) {
 							Utils.sendLocalizedMessage(event.player, "irc.display.irc.topic", channel.getName(), channel.getTopic());
 						}
-						if (generalSettings.getBoolean(GeneralBooleanComponent.AutoJoin)) {
+						if (generalSettings.getBoolean(GeneralBooleanComponent.AutoWho)) {
 							Utils.sendUserList(event.player, connection, channel);
 						}
 					}
