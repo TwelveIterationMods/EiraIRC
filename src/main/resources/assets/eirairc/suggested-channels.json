@@ -84,5 +84,13 @@
     "channel": "#rftools",
     "modpack-display": "RF-Tools Mod",
     "description": "The IRC channel for the RFTools mod."
+  },
+  {
+    "server": "irc.esper.net",
+    "channel": "#WLR",
+    "modpack-display": "WanderLust Reloaded",
+    "modpack-id": "WLR",
+    "description": "Channel for the Wanderlust Reloaded Questing ModPack",
+    "recommended": true
   }
 ]
