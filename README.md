@@ -34,7 +34,10 @@ dependencies {
 }
 ```
 
+*Important*: If you do use the dev version like that, make sure that you still only use code within the API packages! Rikka will get mad at you and give you a dose of Schwarz Sechs if you mess with any of EiraIRC's internal classes.
+
 Make sure you enter the correct version number for the Minecraft version you're developing for. The major version is the important part here; it is increased for every Minecraft update.
+
 Done! Run gradle to update your project and you'll be good to go.
 
 The latest EiraIRC API and an unobfuscated version of the mod can also be downloaded from my [Jenkins](http://jenkins.blay09.net) (v2.8 only), if you're not into all that maven stuff.
