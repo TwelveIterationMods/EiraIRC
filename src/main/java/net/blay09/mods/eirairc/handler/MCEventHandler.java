@@ -126,7 +126,7 @@ public class MCEventHandler {
 	@SubscribeEvent
 	public void onClientChat(ClientChatEvent event) {
 		if(event.message.startsWith("/")) {
-			if(event.message.startsWith("/me") && event.message.length() > 3) {
+			if(event.message.startsWith("/me ") && event.message.length() > 4) {
 				onClientEmote(event);
 			}
 			return;
@@ -161,7 +161,7 @@ public class MCEventHandler {
 	
 	@SideOnly(Side.CLIENT)
 	public void onClientEmote(ClientChatEvent event) {
-		String text = event.message.substring(3);
+		String text = event.message.substring(4);
 		EntityPlayer sender = Minecraft.getMinecraft().thePlayer;
 		if(ClientGlobalConfig.clientBridge) {
 			relayChatClient(text, true, false, null, true);
