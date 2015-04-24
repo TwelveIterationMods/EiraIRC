@@ -79,6 +79,11 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 	}
 
 	@Override
+	public IRCUser getBotUser() {
+		return getOrCreateUser(nick);
+	}
+
+	@Override
 	public IRCChannel getChannel(String channelName) {
 		return channels.get(channelName.toLowerCase());
 	}

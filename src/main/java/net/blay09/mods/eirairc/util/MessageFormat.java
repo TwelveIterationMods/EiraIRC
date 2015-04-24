@@ -278,7 +278,7 @@ public class MessageFormat {
 		return result;
 	}
 
-	public static IChatComponent formatChatComponent(String format, IRCConnection connection, IRCChannel channel, IRCUser user, String message, Target target, Mode mode) {
+	public static IChatComponent formatChatComponent(String format, IRCConnection connection, IRCContext targetContext, IRCUser user, String message, Target target, Mode mode) {
 		IChatComponent root = new ChatComponentText("");
 		EnumChatFormatting nextColor = null;
 		StringBuilder sb = new StringBuilder();
@@ -294,7 +294,7 @@ public class MessageFormat {
 					if(token.equals("SERVER")) {
 						component = new ChatComponentText(connection.getIdentifier());
 					} else if(token.equals("CHANNEL")) {
-						component = new ChatComponentText(channel != null ? channel.getName() : "#");
+						component = new ChatComponentText(targetContext != null ? targetContext.getName() : "#");
 					} else if(token.equals("USER")) {
 						if(user != null) {
 							component = new ChatComponentText(user.getIdentifier());
@@ -304,10 +304,10 @@ public class MessageFormat {
 					} else if(token.equals("NICK")) {
 						if(user != null) {
 							String displayName = user.getName();
-							displayName = formatNick(displayName, channel, target, mode, user);
+							displayName = formatNick(displayName, targetContext, target, mode, user);
 							component = new ChatComponentText(displayName);
 							if(mode != Mode.Emote) {
-								EnumChatFormatting nameColor = IRCFormatting.getColorFormattingForUser(channel, user);
+								EnumChatFormatting nameColor = IRCFormatting.getColorFormattingForUser(targetContext instanceof IRCChannel ? (IRCChannel) targetContext : null, user);
 								if(nameColor != null) {
 									component.getChatStyle().setColor(nameColor);
 								}
@@ -316,7 +316,7 @@ public class MessageFormat {
 							component = new ChatComponentText(connection.getIdentifier());
 						}
 					} else if(token.equals("MESSAGE")) {
-						BotSettings botSettings = ConfigHelper.getBotSettings(channel);
+						BotSettings botSettings = ConfigHelper.getBotSettings(targetContext);
 						if(target == Target.Minecraft) {
 							message = IRCFormatting.toMC(message, !botSettings.getBoolean(BotBooleanComponent.ConvertColors));
 							message = filterAllowedCharacters(message);

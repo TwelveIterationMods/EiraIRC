@@ -144,13 +144,14 @@ public class MCEventHandler {
 		if(chatTarget == null) {
 			return;
 		}
+		IRCUser ircSender = chatTarget.getConnection().getBotUser();
 		IChatComponent chatComponent;
 		if(chatTarget instanceof IRCChannel) {
 			BotSettings botSettings = ConfigHelper.getBotSettings(chatTarget);
-			chatComponent = MessageFormat.formatChatComponent(botSettings.getMessageFormat().mcSendChannelMessage, chatTarget, sender, event.message, MessageFormat.Target.IRC, MessageFormat.Mode.Message);
+			chatComponent = MessageFormat.formatChatComponent(botSettings.getMessageFormat().mcSendChannelMessage, chatTarget.getConnection(), chatTarget, ircSender, event.message, MessageFormat.Target.IRC, MessageFormat.Mode.Message);
 		} else if(chatTarget instanceof IRCUser) {
 			BotSettings botSettings = ConfigHelper.getBotSettings(chatTarget);
-			chatComponent = MessageFormat.formatChatComponent(botSettings.getMessageFormat().mcSendPrivateMessage, chatTarget, sender, event.message, MessageFormat.Target.IRC, MessageFormat.Mode.Message);
+			chatComponent = MessageFormat.formatChatComponent(botSettings.getMessageFormat().mcSendPrivateMessage, chatTarget.getConnection(), chatTarget, ircSender, event.message, MessageFormat.Target.IRC, MessageFormat.Mode.Message);
 		} else {
 			return;
 		}
@@ -172,16 +173,17 @@ public class MCEventHandler {
 		if(chatTarget == null) {
 			return;
 		}
+		IRCUser ircSender = chatTarget.getConnection().getBotUser();
 		EnumChatFormatting emoteColor;
 		IChatComponent chatComponent;
 		if(chatTarget instanceof IRCChannel) {
 			emoteColor = ConfigHelper.getTheme(chatTarget).getColor(ThemeColorComponent.emoteTextColor);
 			BotSettings botSettings = ConfigHelper.getBotSettings(chatTarget);
-			chatComponent = MessageFormat.formatChatComponent(botSettings.getMessageFormat().mcSendChannelEmote, chatTarget, sender, text, MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
+			chatComponent = MessageFormat.formatChatComponent(botSettings.getMessageFormat().mcSendChannelEmote, chatTarget.getConnection(), chatTarget, ircSender, text, MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
 		} else if(chatTarget instanceof IRCUser) {
 			emoteColor = ConfigHelper.getTheme(chatTarget).getColor(ThemeColorComponent.emoteTextColor);
 			BotSettings botSettings = ConfigHelper.getBotSettings(chatTarget);
-			chatComponent = MessageFormat.formatChatComponent(botSettings.getMessageFormat().mcSendPrivateEmote, chatTarget, sender, text, MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
+			chatComponent = MessageFormat.formatChatComponent(botSettings.getMessageFormat().mcSendPrivateEmote, chatTarget.getConnection(), chatTarget, ircSender, text, MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
 		} else {
 			return;
 		}
