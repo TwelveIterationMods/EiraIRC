@@ -146,4 +146,8 @@ public interface IRCConnection extends IRCContext {
 	 */
 	String getNick();
 
+	/**
+	 * @return the IRCUser object that represents the connection's bot
+	 */
+	IRCUser getBotUser();
 }

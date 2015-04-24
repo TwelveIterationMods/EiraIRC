@@ -2,7 +2,6 @@
 
 package net.blay09.mods.eirairc.irc;
 
-import net.blay09.mods.eirairc.CommonProxy;
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.IRCReplyCodes;
 import net.blay09.mods.eirairc.api.bot.IRCBot;
@@ -77,6 +76,11 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 	@Override
 	public String getNick() {
 		return nick;
+	}
+
+	@Override
+	public IRCUser getBotUser() {
+		return getOrCreateUser(nick);
 	}
 
 	@Override
