@@ -46,15 +46,15 @@ public class EiraTickHandler {
 	public void keyInput(KeyInputEvent event) {
 		if(Keyboard.getEventKeyState()) {
 			int keyCode = Keyboard.getEventKey();
-			if(keyCode == ClientGlobalConfig.keyOpenMenu.getKeyCode()) {
+			if(ClientGlobalConfig.keyOpenMenu.getKeyCode() != 0 && keyCode == ClientGlobalConfig.keyOpenMenu.getKeyCode()) {
 				if(Minecraft.getMinecraft().currentScreen == null) {
 					Minecraft.getMinecraft().displayGuiScreen(new GuiEiraIRCMenu());
 				}
-			} else if(keyCode == ClientGlobalConfig.keyOpenScreenshots.getKeyCode()) {
+			} else if(ClientGlobalConfig.keyOpenScreenshots.getKeyCode() != 0 && keyCode == ClientGlobalConfig.keyOpenScreenshots.getKeyCode()) {
 				if (Minecraft.getMinecraft().currentScreen == null) {
 					Minecraft.getMinecraft().displayGuiScreen(new GuiScreenshots(null));
 				}
-			} else if(keyCode == ClientGlobalConfig.keyScreenshotShare.getKeyCode()) {
+			} else if(ClientGlobalConfig.keyScreenshotShare.getKeyCode() != 0 && keyCode == ClientGlobalConfig.keyScreenshotShare.getKeyCode()) {
 				Screenshot screenshot = ScreenshotManager.getInstance().takeScreenshot();
 				if(screenshot != null) {
 					ScreenshotManager.getInstance().uploadScreenshot(screenshot, ScreenshotAction.UploadShare);
