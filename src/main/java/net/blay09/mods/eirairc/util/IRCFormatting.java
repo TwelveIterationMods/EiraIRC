@@ -9,13 +9,14 @@ import net.blay09.mods.eirairc.irc.IRCUserImpl;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
+import org.lwjgl.util.vector.Vector3f;
 
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 
 public enum IRCFormatting {
 
@@ -31,6 +32,42 @@ public enum IRCFormatting {
 	private static final Pattern mcColorPattern = Pattern.compile("\u00a7([0-9a-f])");
 	private static final IRCFormatting[] values = values();
 	private static final EnumChatFormatting[] mcChatFormatting = EnumChatFormatting.values();
+	private static final Map<EnumChatFormatting, Vector3f> mcColorValues = new EnumMap<EnumChatFormatting, Vector3f>(EnumChatFormatting.class);
+	private static final Map<String, EnumChatFormatting> twitchColorCache = new HashMap<String, EnumChatFormatting>();
+	static {
+		mcColorValues.put(EnumChatFormatting.BLACK, new Vector3f(0f, 0f, 0f));
+		mcColorValues.put(EnumChatFormatting.DARK_BLUE, new Vector3f(0f, 0f, 0.66f));
+		mcColorValues.put(EnumChatFormatting.DARK_GREEN, new Vector3f(0f, 0.66f, 0f));
+		mcColorValues.put(EnumChatFormatting.DARK_AQUA, new Vector3f(0f, 0.66f, 0.66f));
+		mcColorValues.put(EnumChatFormatting.DARK_RED, new Vector3f(0.66f, 0f, 0f));
+		mcColorValues.put(EnumChatFormatting.DARK_PURPLE, new Vector3f(0.66f, 0f, 0.66f));
+		mcColorValues.put(EnumChatFormatting.GOLD, new Vector3f(1f, 0.66f, 0f));
+		mcColorValues.put(EnumChatFormatting.GRAY, new Vector3f(0.66f, 0.66f, 0.66f));
+		mcColorValues.put(EnumChatFormatting.DARK_GRAY, new Vector3f(0.33f, 0.33f, 0.33f));
+		mcColorValues.put(EnumChatFormatting.BLUE, new Vector3f(0.33f, 0.33f, 1f));
+		mcColorValues.put(EnumChatFormatting.GREEN, new Vector3f(0.33f, 1f, 0.33f));
+		mcColorValues.put(EnumChatFormatting.AQUA, new Vector3f(0.33f, 1f, 1f));
+		mcColorValues.put(EnumChatFormatting.RED, new Vector3f(1f, 0.33f, 0.33f));
+		mcColorValues.put(EnumChatFormatting.LIGHT_PURPLE, new Vector3f(1f, 0.33f, 1f));
+		mcColorValues.put(EnumChatFormatting.YELLOW, new Vector3f(1f, 1f, 0.33f));
+		mcColorValues.put(EnumChatFormatting.WHITE, new Vector3f(1f, 1f, 1f));
+
+		twitchColorCache.put("#008000", EnumChatFormatting.DARK_GREEN);
+		twitchColorCache.put("#0000FF", EnumChatFormatting.BLUE);
+		twitchColorCache.put("#1E90FF", EnumChatFormatting.BLUE);
+		twitchColorCache.put("#FF0000", EnumChatFormatting.RED);
+		twitchColorCache.put("#B22222", EnumChatFormatting.DARK_RED);
+		twitchColorCache.put("#FF7F50", EnumChatFormatting.GOLD);
+		twitchColorCache.put("#9ACD32", EnumChatFormatting.GREEN);
+		twitchColorCache.put("#FF4500", EnumChatFormatting.GOLD);
+		twitchColorCache.put("#2E8B57", EnumChatFormatting.DARK_AQUA);
+		twitchColorCache.put("#DAA520", EnumChatFormatting.YELLOW);
+		twitchColorCache.put("#D2691E", EnumChatFormatting.GOLD);
+		twitchColorCache.put("#5F9EA0", EnumChatFormatting.AQUA);
+		twitchColorCache.put("#FF69B4", EnumChatFormatting.LIGHT_PURPLE);
+		twitchColorCache.put("#8A2BE2", EnumChatFormatting.LIGHT_PURPLE);
+		twitchColorCache.put("#00FF7F", EnumChatFormatting.GREEN);
+	}
 
 	private final String ircCode;
 	private final String mcCode;
@@ -153,40 +190,32 @@ public enum IRCFormatting {
 		return null;
 	}
 
-	private static final Map<String, EnumChatFormatting> twitchColorMap = new HashMap<String, EnumChatFormatting>();
-	static {
-		// TODO I'm not sure if this is the right approach anymore. There just keep popping up new colors! Might have to use the RGB values and pick the closest one instead?
-		twitchColorMap.put("#008000", EnumChatFormatting.DARK_GREEN);
-		twitchColorMap.put("#0000FF", EnumChatFormatting.BLUE);
-		twitchColorMap.put("#1E90FF", EnumChatFormatting.BLUE);
-		twitchColorMap.put("#FF0000", EnumChatFormatting.RED);
-		twitchColorMap.put("#006666", EnumChatFormatting.AQUA);
-		twitchColorMap.put("#B22222", EnumChatFormatting.DARK_RED);
-		twitchColorMap.put("#FF7F50", EnumChatFormatting.GOLD);
-		twitchColorMap.put("#9ACD32", EnumChatFormatting.GREEN);
-		twitchColorMap.put("#FF4500", EnumChatFormatting.GOLD);
-		twitchColorMap.put("#2E8B57", EnumChatFormatting.DARK_AQUA);
-		twitchColorMap.put("#DAA520", EnumChatFormatting.YELLOW);
-		twitchColorMap.put("#D2691E", EnumChatFormatting.GOLD);
-		twitchColorMap.put("#5F9EA0", EnumChatFormatting.AQUA);
-		twitchColorMap.put("#FF69B4", EnumChatFormatting.LIGHT_PURPLE);
-		twitchColorMap.put("#8A2BE2", EnumChatFormatting.LIGHT_PURPLE);
-		twitchColorMap.put("#00FF7F", EnumChatFormatting.GREEN);
-		twitchColorMap.put("#66CC00", EnumChatFormatting.GREEN);
-		twitchColorMap.put("#0099E6", EnumChatFormatting.BLUE);
-		twitchColorMap.put("#000000", EnumChatFormatting.GRAY);
-		twitchColorMap.put("#43005C", EnumChatFormatting.LIGHT_PURPLE);
-		twitchColorMap.put("#6BD5FF", EnumChatFormatting.BLUE);
-		twitchColorMap.put("#FF6BB5", EnumChatFormatting.LIGHT_PURPLE);
-		twitchColorMap.put("#AF551D", EnumChatFormatting.GOLD);
-	}
-
 	public static EnumChatFormatting getColorFromTwitch(String twitchColor) {
-		EnumChatFormatting color = twitchColorMap.get(twitchColor);
+		EnumChatFormatting color = twitchColorCache.get(twitchColor);
 		if(color == null) {
-			System.out.println("Unknown Twitch Name Color: " + twitchColor);
+			Vector3f twitchRGB = hexToRGB(twitchColor);
+			float minDist = Float.MAX_VALUE;
+			EnumChatFormatting minColor = null;
+			for(Map.Entry<EnumChatFormatting, Vector3f> entry : mcColorValues.entrySet()) {
+				float dist = (twitchRGB.x - entry.getValue().x) * (twitchRGB.x - entry.getValue().x) + (twitchRGB.y - entry.getValue().y) * (twitchRGB.y - entry.getValue().y) + (twitchRGB.z - entry.getValue().z) * (twitchRGB.z - entry.getValue().z);
+				if(dist < minDist) {
+					minDist = dist;
+					minColor = entry.getKey();
+				}
+			}
+			if(minColor != null) {
+				twitchColorCache.put(twitchColor, minColor);
+				color = minColor;
+			}
 		}
 		return color != null ? color : EnumChatFormatting.WHITE;
+	}
+
+	private static Vector3f hexToRGB(String hexColor) {
+		return new Vector3f(
+				(float) Integer.valueOf(hexColor.substring(1, 3), 16) / 255f,
+				(float) Integer.valueOf(hexColor.substring(3, 5), 16) / 255f,
+				(float) Integer.valueOf(hexColor.substring(5, 7), 16) / 255f);
 	}
 
 	public static void addValidColorsToList(List<String> list) {
