@@ -3,9 +3,7 @@
 
 package net.blay09.mods.eirairc.config;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import net.blay09.mods.eirairc.EiraIRC;
@@ -38,6 +36,7 @@ public class ConfigurationHandler {
 	private static final List<IBotCommand> customCommands = new ArrayList<IBotCommand>();
 	private static final List<SuggestedChannel> suggestedChannels = new ArrayList<SuggestedChannel>();
 	private static final Map<String, TrustedServer> trustedServers = new HashMap<String, TrustedServer>();
+	public static final List<String> failedToLoad = new ArrayList<String>();
 
 	private static File baseConfigDir;
 	private static MessageFormatConfig defaultDisplayFormat;
@@ -71,10 +70,14 @@ public class ConfigurationHandler {
 			JsonReader jsonReader = new JsonReader(reader);
 			jsonReader.setLenient(true);
 			JsonArray serverArray = gson.fromJson(jsonReader, JsonArray.class);
-			for(int i = 0; i < serverArray.size(); i++) {
+			for (int i = 0; i < serverArray.size(); i++) {
 				addTrustedServer(TrustedServer.loadFromJson(serverArray.get(i).getAsJsonObject()));
 			}
 			reader.close();
+		} catch (JsonSyntaxException e) {
+			logger.error("Syntax error in trusted_servers.json: ", e);
+			failedToLoad.add("trusted_servers.json");
+		} catch (FileNotFoundException ignored) {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -119,9 +122,14 @@ public class ConfigurationHandler {
 		Reader reader = new InputStreamReader(in);
 		JsonReader jsonReader = new JsonReader(reader);
 		jsonReader.setLenient(true);
-		JsonArray channelArray = gson.fromJson(jsonReader, JsonArray.class);
-		for(int i = 0; i < channelArray.size(); i++) {
-			suggestedChannels.add(SuggestedChannel.loadFromJson(channelArray.get(i).getAsJsonObject()));
+		try {
+			JsonArray channelArray = gson.fromJson(jsonReader, JsonArray.class);
+			for (int i = 0; i < channelArray.size(); i++) {
+				suggestedChannels.add(SuggestedChannel.loadFromJson(channelArray.get(i).getAsJsonObject()));
+			}
+		} catch (JsonSyntaxException e) {
+			logger.error("Syntax error in suggested-channels.json: ", e);
+			failedToLoad.add("suggested-channels.json");
 		}
 		reader.close();
 		in.close();
@@ -161,8 +169,12 @@ public class ConfigurationHandler {
 				customCommands.add(BotCommandCustom.loadFromJson(commandArray.get(i).getAsJsonObject()));
 			}
 			reader.close();
+		} catch (FileNotFoundException ignored) {
 		} catch (IOException e) {
 			e.printStackTrace();
+		} catch (JsonSyntaxException e) {
+			logger.error("Syntax error in commands.json: ", e);
+			failedToLoad.add("commands.json");
 		}
 	}
 
@@ -257,10 +269,14 @@ public class ConfigurationHandler {
 			JsonReader jsonReader = new JsonReader(reader);
 			jsonReader.setLenient(true);
 			JsonArray serverArray = gson.fromJson(jsonReader, JsonArray.class);
-			for(int i = 0; i < serverArray.size(); i++) {
+			for (int i = 0; i < serverArray.size(); i++) {
 				addServerConfig(ServerConfig.loadFromJson(serverArray.get(i).getAsJsonObject()));
 			}
 			reader.close();
+		} catch (JsonSyntaxException e) {
+			logger.error("Syntax error in servers.json: ", e);
+			failedToLoad.add("servers.json");
+		} catch (FileNotFoundException ignored) {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -373,6 +389,7 @@ public class ConfigurationHandler {
 	}
 
 	public static void reloadAll() {
+		failedToLoad.clear();
 		load(baseConfigDir);
 		for(IRCConnection connection : EiraIRC.instance.getConnectionManager().getConnections()) {
 			((IRCBotImpl) connection.getBot()).reloadCommands();

@@ -17,6 +17,17 @@ public class ConnectionManager {
 	private boolean ircRunning;
 
 	public void startIRC() {
+		if(!ConfigurationHandler.failedToLoad.isEmpty()) {
+			StringBuilder sb = new StringBuilder("Failed to load EiraIRC configurations due to syntax errors: ");
+			for(String s : ConfigurationHandler.failedToLoad) {
+				if(sb.length() > 0) {
+					sb.append(", ");
+				}
+				sb.append(s);
+			}
+			Utils.addMessageToChat(sb.toString());
+			Utils.addMessageToChat("See the log for more information.");
+		}
 		for(ServerConfig serverConfig : ConfigurationHandler.getServerConfigs()) {
 			if(serverConfig.getGeneralSettings().getBoolean(GeneralBooleanComponent.AutoJoin) && !serverConfig.isRedirect()) {
 				Utils.connectTo(serverConfig);
