@@ -1,5 +1,6 @@
 package net.blay09.mods.eirairc.util;
 
+import net.blay09.mods.eirairc.api.event.ApplyEmoticons;
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
@@ -12,6 +13,7 @@ import net.minecraft.event.ClickEvent;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
+import net.minecraftforge.common.MinecraftForge;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -51,7 +53,7 @@ public class MessageFormat {
 	}
 
 	public static IChatComponent createChatComponentForMessage(String message) {
-		ChatComponentText rootComponent = null;
+		IChatComponent rootComponent = new ChatComponentText("");
 		StringBuilder buffer = new StringBuilder();
 		Matcher urlMatcher = urlPattern.matcher(message);
 		Matcher nameMatcher = namePattern.matcher(message);
@@ -106,22 +108,16 @@ public class MessageFormat {
 		return rootComponent;
 	}
 
-	private static ChatComponentText appendSiblingToRoot(ChatComponentText root, IChatComponent sibling) {
-		if(root == null) {
-			root = new ChatComponentText("");
-		}
+	private static IChatComponent appendSiblingToRoot(IChatComponent root, IChatComponent sibling) {
 		root.appendSibling(sibling);
 		return root;
 	}
 
-	private static ChatComponentText appendTextToRoot(ChatComponentText root, String text) {
-		if(root == null) {
-			root = new ChatComponentText(text);
-			return root;
-		} else {
-			root.appendText(text);
-			return root;
-		}
+	private static IChatComponent appendTextToRoot(IChatComponent root, String text) {
+		ApplyEmoticons emoticons = new ApplyEmoticons(new ChatComponentText(text));
+		MinecraftForge.EVENT_BUS.post(emoticons);
+		root.appendSibling(emoticons.component);
+		return root;
 	}
 
 	public static String filterLinks(String message) {
