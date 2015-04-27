@@ -2,8 +2,8 @@
 // All rights reserved.
 package net.blay09.mods.eirairc.api.event;
 
-import cpw.mods.fml.common.eventhandler.Event;
 import net.minecraft.util.IChatComponent;
+import net.minecraftforge.fml.common.eventhandler.Event;
 
 /**
  * This event is published on the MinecraftForge.EVENTBUS bus for every text component in a message EiraIRC has received.
