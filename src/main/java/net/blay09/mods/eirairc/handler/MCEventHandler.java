@@ -199,7 +199,7 @@ public class MCEventHandler {
 	public void onServerChat(ServerChatEvent event) {
 		IChatComponent senderComponent = event.player.getDisplayName();
 		EnumChatFormatting nameColor = IRCFormatting.getColorFormattingForPlayer(event.player);
-		if(nameColor != null) {
+		if(nameColor != null && nameColor != EnumChatFormatting.WHITE) {
 			senderComponent.getChatStyle().setColor(nameColor);
 		}
 		event.component = new ChatComponentTranslation("chat.type.text", senderComponent, MessageFormat.createChatComponentForMessage(event.message));
