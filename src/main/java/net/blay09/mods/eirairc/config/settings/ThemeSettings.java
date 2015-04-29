@@ -116,7 +116,7 @@ public class ThemeSettings {
 
 	public void save(Configuration config, String category) {
 		for(Map.Entry<ThemeColorComponent, EnumChatFormatting> entry : colors.entrySet()) {
-			config.get(category, entry.getKey().name, "", I19n.format(entry.getKey().langKey + ".tooltip")).set(entry.getValue().getFormattingCode());
+			config.get(category, entry.getKey().name, "", I19n.format(entry.getKey().langKey + ".tooltip")).set(String.valueOf(entry.getValue().getFormattingCode()));
 		}
 	}
 
