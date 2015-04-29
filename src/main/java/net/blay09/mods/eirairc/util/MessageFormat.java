@@ -206,8 +206,8 @@ public class MessageFormat {
 							component = new ChatComponentText(displayName);
 							if(mode != Mode.Emote) {
 								EnumChatFormatting nameColor = IRCFormatting.getColorFormattingForPlayer(player);
-								if(nameColor != null) {
-									component.getChatStyle().setColor(IRCFormatting.getColorFormattingForPlayer(player));
+								if(nameColor != null && nameColor != EnumChatFormatting.WHITE) {
+									component.getChatStyle().setColor(nameColor);
 								}
 							}
 						} else {
