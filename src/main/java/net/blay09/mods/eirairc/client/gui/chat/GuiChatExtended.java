@@ -71,7 +71,7 @@ public class GuiChatExtended extends GuiChat implements GuiYesNoCallback {
 			String s = inputField.getText().trim();
 			if(s.length() > 0) {
 				if(!FMLCommonHandler.instance().bus().post(new ClientChatEvent(inputField.getText()))) {
-					if(ClientCommandHandler.instance.executeCommand(mc.thePlayer, s) != 1) {
+					if(s.charAt(0) != '/' || ClientCommandHandler.instance.executeCommand(mc.thePlayer, s) != 1) {
 						this.mc.thePlayer.sendChatMessage(s);
 					}
 				}
