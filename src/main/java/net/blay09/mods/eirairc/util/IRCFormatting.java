@@ -32,25 +32,25 @@ public enum IRCFormatting {
 	private static final Pattern mcColorPattern = Pattern.compile("\u00a7([0-9a-f])");
 	private static final IRCFormatting[] values = values();
 	private static final EnumChatFormatting[] mcChatFormatting = EnumChatFormatting.values();
-	private static final Map<EnumChatFormatting, Vector3f> mcColorValues = new EnumMap<EnumChatFormatting, Vector3f>(EnumChatFormatting.class);
+	private static final Vector3f[] mcColorValues = new Vector3f[16];
 	private static final Map<String, EnumChatFormatting> twitchColorCache = new HashMap<String, EnumChatFormatting>();
 	static {
-		mcColorValues.put(EnumChatFormatting.BLACK, new Vector3f(0f, 0f, 0f));
-		mcColorValues.put(EnumChatFormatting.DARK_BLUE, new Vector3f(0f, 0f, 0.66f));
-		mcColorValues.put(EnumChatFormatting.DARK_GREEN, new Vector3f(0f, 0.66f, 0f));
-		mcColorValues.put(EnumChatFormatting.DARK_AQUA, new Vector3f(0f, 0.66f, 0.66f));
-		mcColorValues.put(EnumChatFormatting.DARK_RED, new Vector3f(0.66f, 0f, 0f));
-		mcColorValues.put(EnumChatFormatting.DARK_PURPLE, new Vector3f(0.66f, 0f, 0.66f));
-		mcColorValues.put(EnumChatFormatting.GOLD, new Vector3f(1f, 0.66f, 0f));
-		mcColorValues.put(EnumChatFormatting.GRAY, new Vector3f(0.66f, 0.66f, 0.66f));
-		mcColorValues.put(EnumChatFormatting.DARK_GRAY, new Vector3f(0.33f, 0.33f, 0.33f));
-		mcColorValues.put(EnumChatFormatting.BLUE, new Vector3f(0.33f, 0.33f, 1f));
-		mcColorValues.put(EnumChatFormatting.GREEN, new Vector3f(0.33f, 1f, 0.33f));
-		mcColorValues.put(EnumChatFormatting.AQUA, new Vector3f(0.33f, 1f, 1f));
-		mcColorValues.put(EnumChatFormatting.RED, new Vector3f(1f, 0.33f, 0.33f));
-		mcColorValues.put(EnumChatFormatting.LIGHT_PURPLE, new Vector3f(1f, 0.33f, 1f));
-		mcColorValues.put(EnumChatFormatting.YELLOW, new Vector3f(1f, 1f, 0.33f));
-		mcColorValues.put(EnumChatFormatting.WHITE, new Vector3f(1f, 1f, 1f));
+		mcColorValues[EnumChatFormatting.BLACK.ordinal()] = new Vector3f(0f, 0f, 0f);
+		mcColorValues[EnumChatFormatting.DARK_BLUE.ordinal()] = new Vector3f(0f, 0f, 0.66f);
+		mcColorValues[EnumChatFormatting.DARK_GREEN.ordinal()] = new Vector3f(0f, 0.66f, 0f);
+		mcColorValues[EnumChatFormatting.DARK_AQUA.ordinal()] = new Vector3f(0f, 0.66f, 0.66f);
+		mcColorValues[EnumChatFormatting.DARK_RED.ordinal()] = new Vector3f(0.66f, 0f, 0f);
+		mcColorValues[EnumChatFormatting.DARK_PURPLE.ordinal()] = new Vector3f(0.66f, 0f, 0.66f);
+		mcColorValues[EnumChatFormatting.GOLD.ordinal()] = new Vector3f(1f, 0.66f, 0f);
+		mcColorValues[EnumChatFormatting.GRAY.ordinal()] = new Vector3f(0.66f, 0.66f, 0.66f);
+		mcColorValues[EnumChatFormatting.DARK_GRAY.ordinal()] = new Vector3f(0.33f, 0.33f, 0.33f);
+		mcColorValues[EnumChatFormatting.BLUE.ordinal()] = new Vector3f(0.33f, 0.33f, 1f);
+		mcColorValues[EnumChatFormatting.GREEN.ordinal()] = new Vector3f(0.33f, 1f, 0.33f);
+		mcColorValues[EnumChatFormatting.AQUA.ordinal()] = new Vector3f(0.33f, 1f, 1f);
+		mcColorValues[EnumChatFormatting.RED.ordinal()] = new Vector3f(1f, 0.33f, 0.33f);
+		mcColorValues[EnumChatFormatting.LIGHT_PURPLE.ordinal()] = new Vector3f(1f, 0.33f, 1f);
+		mcColorValues[EnumChatFormatting.YELLOW.ordinal()] = new Vector3f(1f, 1f, 0.33f);
+		mcColorValues[EnumChatFormatting.WHITE.ordinal()] = new Vector3f(1f, 1f, 1f);
 
 		twitchColorCache.put("#008000", EnumChatFormatting.DARK_GREEN);
 		twitchColorCache.put("#0000FF", EnumChatFormatting.BLUE);
@@ -196,11 +196,11 @@ public enum IRCFormatting {
 			Vector3f twitchRGB = hexToRGB(twitchColor);
 			float minDist = Float.MAX_VALUE;
 			EnumChatFormatting minColor = null;
-			for(Map.Entry<EnumChatFormatting, Vector3f> entry : mcColorValues.entrySet()) {
-				float dist = (twitchRGB.x - entry.getValue().x) * (twitchRGB.x - entry.getValue().x) + (twitchRGB.y - entry.getValue().y) * (twitchRGB.y - entry.getValue().y) + (twitchRGB.z - entry.getValue().z) * (twitchRGB.z - entry.getValue().z);
+			for(int i = 0; i < mcColorValues.length; i++) {
+				float dist = (twitchRGB.x - mcColorValues[i].x) * (twitchRGB.x - mcColorValues[i].x) + (twitchRGB.y - mcColorValues[i].y) * (twitchRGB.y - mcColorValues[i].y) + (twitchRGB.z - mcColorValues[i].z) * (twitchRGB.z - mcColorValues[i].z);
 				if(dist < minDist) {
 					minDist = dist;
-					minColor = entry.getKey();
+					minColor = mcChatFormatting[i];
 				}
 			}
 			if(minColor != null) {
