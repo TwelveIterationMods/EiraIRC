@@ -36,7 +36,6 @@ public class GuiChatExtended extends GuiChat implements GuiYesNoCallback {
 	
 	private final ChatSessionHandler chatSession;
 	private final String defaultInputText;
-	private GuiButton btnOptions;
 
 	public GuiChatExtended() {
 		this("");
@@ -51,18 +50,6 @@ public class GuiChatExtended extends GuiChat implements GuiYesNoCallback {
 	public void initGui() {
 		super.initGui();
 		inputField.setText(defaultInputText);
-		String s = Utils.getLocalizedMessage("irc.gui.options");
-		int bw = fontRendererObj.getStringWidth(s) + 20;
-		btnOptions = new GuiButton(0, this.width - bw, 0, bw, 20, s);
-		buttonList.add(btnOptions);
-	}
-
-	@Override
-	public void actionPerformed(GuiButton button) throws IOException {
-		super.actionPerformed(button);
-		if(button == btnOptions) {
-			Minecraft.getMinecraft().displayGuiScreen(new GuiEiraIRCMenu());
-		}
 	}
 
 	@Override

@@ -8,6 +8,7 @@ import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.client.gui.GuiEiraIRCMenu;
 import net.blay09.mods.eirairc.client.gui.GuiWelcome;
 import net.blay09.mods.eirairc.client.gui.chat.GuiChatExtended;
+import net.blay09.mods.eirairc.client.gui.overlay.OverlayNotification;
 import net.blay09.mods.eirairc.client.gui.screenshot.GuiScreenshots;
 import net.blay09.mods.eirairc.client.screenshot.Screenshot;
 import net.blay09.mods.eirairc.client.screenshot.ScreenshotManager;
@@ -16,9 +17,11 @@ import net.blay09.mods.eirairc.config.ScreenshotAction;
 import net.blay09.mods.eirairc.handler.ChatSessionHandler;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ChatComponentTranslation;
+import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
@@ -26,20 +29,40 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.RenderTickEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import org.lwjgl.input.Keyboard;
 
-public class EiraTickHandler {
+public class ClientHandler {
 
 	private final ChatSessionHandler chatSession;
+	private final OverlayNotification notificationGUI;
 	private int screenshotCheck;
 	private final int keyChat;
 	private final int keyCommand;
 	private int openWelcomeScreen;
 	private long lastToggleTarget;
 	private boolean wasToggleTargetDown;
+	private GuiButton chatOptionsButton;
 
-	public EiraTickHandler() {
+	public ClientHandler() {
 		this.chatSession = EiraIRC.instance.getChatSessionHandler();
+		notificationGUI = new OverlayNotification();
 		keyChat = Minecraft.getMinecraft().gameSettings.keyBindChat.getKeyCode();
 		keyCommand = Minecraft.getMinecraft().gameSettings.keyBindCommand.getKeyCode();
+	}
+
+	@SubscribeEvent
+	public void chatInit(GuiScreenEvent.InitGuiEvent.Post event) {
+		if(event.gui instanceof GuiChat) {
+			String s = Utils.getLocalizedMessage("irc.gui.options");
+			int bw = Minecraft.getMinecraft().fontRendererObj.getStringWidth(s) + 20;
+			chatOptionsButton = new GuiButton(0, event.gui.width - bw, 0, bw, 20, s);
+			event.buttonList.add(chatOptionsButton);
+		}
+	}
+
+	@SubscribeEvent
+	public void chatActionPerformed(GuiScreenEvent.ActionPerformedEvent event) {
+		if(event.button == chatOptionsButton) {
+			Minecraft.getMinecraft().displayGuiScreen(new GuiEiraIRCMenu());
+		}
 	}
 
 	@SubscribeEvent
@@ -135,7 +158,10 @@ public class EiraTickHandler {
 	
 	@SubscribeEvent
 	public void renderTick(RenderTickEvent event) {
-		EiraIRC.proxy.renderTick(event.renderTickTime);
+		notificationGUI.updateAndRender(event.renderTickTime);
 	}
 
+	public OverlayNotification getNotificationOverlay() {
+		return notificationGUI;
+	}
 }

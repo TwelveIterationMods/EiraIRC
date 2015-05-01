@@ -44,9 +44,6 @@ public class CommonProxy {
 		return true;
 	}
 	
-	public void renderTick(float delta) {
-	}
-
 	public void loadConfig(File configDir, boolean reloadFile) {
 		SharedGlobalConfig.load(configDir, false);
 	}

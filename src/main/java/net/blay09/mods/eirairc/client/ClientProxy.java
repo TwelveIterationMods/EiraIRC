@@ -21,6 +21,7 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.ClientCommandHandler;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -31,8 +32,6 @@ import java.util.List;
 
 public class ClientProxy extends CommonProxy {
 
-	private OverlayNotification notificationGUI;
-
 	private static final KeyBinding[] keyBindings = new KeyBinding[] {
 		ClientGlobalConfig.keyScreenshotShare,
 		ClientGlobalConfig.keyOpenScreenshots,
@@ -40,11 +39,15 @@ public class ClientProxy extends CommonProxy {
 		ClientGlobalConfig.keyOpenMenu
 	};
 
+	private ClientHandler clientHandler;
+
 	@Override
 	public void init() {
-		notificationGUI = new OverlayNotification();
 		ScreenshotManager.create();
-		FMLCommonHandler.instance().bus().register(new EiraTickHandler());
+
+		clientHandler = new ClientHandler();
+		MinecraftForge.EVENT_BUS.register(clientHandler);
+		FMLCommonHandler.instance().bus().register(clientHandler);
 
 		for (KeyBinding keyBinding : keyBindings) {
 			ClientRegistry.registerKeyBinding(keyBinding);
@@ -63,16 +66,12 @@ public class ClientProxy extends CommonProxy {
 		}
 
 		EiraGui.init(Minecraft.getMinecraft().getResourceManager());
+
 		try {
 			ConfigurationHandler.loadSuggestedChannels(Minecraft.getMinecraft().getResourceManager());
 		} catch (IOException ignored) {}
 	}
 
-	@Override
-	public void renderTick(float delta) {
-		notificationGUI.updateAndRender(delta);
-	}
-	
 	@Override
 	public void publishNotification(NotificationType type, String text) {
 		NotificationStyle config = NotificationStyle.None;
@@ -83,7 +82,7 @@ public class ClientProxy extends CommonProxy {
 		default:
 		}
 		if(config != NotificationStyle.None && config != NotificationStyle.SoundOnly) {
-			notificationGUI.showNotification(type, text);
+			clientHandler.getNotificationOverlay().showNotification(type, text);
 		}
 		if(config == NotificationStyle.TextAndSound || config == NotificationStyle.SoundOnly) {
 			Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.create(new ResourceLocation(ClientGlobalConfig.notificationSound), ClientGlobalConfig.notificationSoundPitch));

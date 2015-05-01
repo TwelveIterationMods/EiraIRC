@@ -6,6 +6,8 @@ package net.blay09.mods.eirairc;
 import net.blay09.mods.eirairc.addon.DirectUploadHoster;
 import net.blay09.mods.eirairc.addon.ImgurHoster;
 import net.blay09.mods.eirairc.api.EiraIRCAPI;
+import net.blay09.mods.eirairc.client.ClientHandler;
+import net.blay09.mods.eirairc.client.gui.overlay.OverlayNotification;
 import net.blay09.mods.eirairc.command.base.CommandIRC;
 import net.blay09.mods.eirairc.command.base.CommandServIRC;
 import net.blay09.mods.eirairc.command.base.IRCCommandHandler;
@@ -163,4 +165,5 @@ public class EiraIRC {
 	public ConnectionManager getConnectionManager() {
 		return connectionManager;
 	}
+
 }
