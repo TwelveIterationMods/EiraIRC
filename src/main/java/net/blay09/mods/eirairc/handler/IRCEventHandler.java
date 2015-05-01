@@ -117,7 +117,7 @@ public class IRCEventHandler {
 		} else if(event.isNotice && noticeColor != null) {
 			chatComponent.getChatStyle().setColor(noticeColor);
 		}
-		Utils.addMessageToChat(chatComponent);
+		MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(chatComponent));
 	}
 	
 	@SubscribeEvent(priority = EventPriority.LOWEST)
@@ -157,7 +157,7 @@ public class IRCEventHandler {
 		} else if(event.isNotice && noticeColor != null) {
 			chatComponent.getChatStyle().setColor(noticeColor);
 		}
-		Utils.addMessageToChat(chatComponent);
+		MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(chatComponent));
 	}
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)

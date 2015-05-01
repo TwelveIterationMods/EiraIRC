@@ -5,18 +5,23 @@ package net.blay09.mods.eirairc.command;
 
 import net.blay09.mods.eirairc.api.EiraIRCAPI;
 import net.blay09.mods.eirairc.api.SubCommand;
+import net.blay09.mods.eirairc.api.event.ChatMessageEvent;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
+import net.blay09.mods.eirairc.api.irc.IRCUser;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.settings.BotBooleanComponent;
+import net.blay09.mods.eirairc.config.settings.BotSettings;
 import net.blay09.mods.eirairc.util.ConfigHelper;
+import net.blay09.mods.eirairc.util.MessageFormat;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
+import net.minecraftforge.common.MinecraftForge;
 
 import java.util.List;
 
@@ -56,13 +61,29 @@ public class CommandMessage implements SubCommand {
 		if(message.isEmpty()) {
 			throw new WrongUsageException(getCommandUsage(sender));
 		}
+		String format = "{MESSAGE}";
+		BotSettings botSettings = ConfigHelper.getBotSettings(target);
+		IRCUser botUser = target.getConnection().getBotUser();
+
 		String ircMessage = message;
 		if(serverSide) {
-			ircMessage = "<" + Utils.getNickIRC((EntityPlayer) sender, context) + "> " + ircMessage;
+			if(target.getContextType() == IRCContext.ContextType.IRCChannel) {
+				format = botSettings.getMessageFormat().mcSendChannelMessage;
+			} else if (target.getContextType() == IRCContext.ContextType.IRCUser) {
+				format = botSettings.getMessageFormat().mcSendChannelMessage;
+			}
+			ircMessage = MessageFormat.formatMessage(format, target.getConnection(), target, botUser, message, MessageFormat.Target.IRC, MessageFormat.Mode.Message);
 		}
 		target.message(ircMessage);
-		String mcMessage = "[-> " + target.getName() + "] <" + Utils.getNickGame((EntityPlayer) sender) + "> " + message;
-		sender.addChatMessage(new ChatComponentText(mcMessage));
+
+		format = "{MESSAGE}";
+		if(target.getContextType() == IRCContext.ContextType.IRCChannel) {
+			format = ConfigHelper.getBotSettings(target).getMessageFormat().mcSendChannelMessage;
+		} else if (target.getContextType() == IRCContext.ContextType.IRCUser) {
+			format = ConfigHelper.getBotSettings(target).getMessageFormat().mcSendChannelMessage;
+		}
+
+		MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(sender, MessageFormat.formatChatComponent(format, target.getConnection(), target, botUser, message, MessageFormat.Target.IRC, MessageFormat.Mode.Message)));
 		return true;
 	}
 

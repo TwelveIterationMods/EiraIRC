@@ -79,6 +79,7 @@ configurations {
 dependencies {
     compile 'org.jetbrains:annotations:13.0'
     compile 'us.dynmap:DynmapCoreAPI:2.1'
+    compile files('lib/TabbyChat-2.0.0-beta-api.jar')
     deployerJars "org.apache.maven.wagon:wagon-ftp:2.2"
 }
 

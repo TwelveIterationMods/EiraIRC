@@ -262,9 +262,9 @@ public class MessageFormat {
 		return root;
 	}
 
-	public static String formatMessage(String format, IRCConnection connection, IRCChannel channel, IRCUser user, String message, Target target, Mode mode) {
-		String result = formatChatComponent(format, connection, channel, user, message, target, mode).getUnformattedText();
-		BotSettings botSettings = ConfigHelper.getBotSettings(channel);
+	public static String formatMessage(String format, IRCConnection connection, IRCContext targetContext, IRCUser user, String message, Target target, Mode mode) {
+		String result = formatChatComponent(format, connection, targetContext, user, message, target, mode).getUnformattedText();
+		BotSettings botSettings = ConfigHelper.getBotSettings(targetContext);
 		if(target == Target.IRC) {
 			result = IRCFormatting.toIRC(result, !botSettings.getBoolean(BotBooleanComponent.ConvertColors));
 		} else if(target == Target.Minecraft) {
