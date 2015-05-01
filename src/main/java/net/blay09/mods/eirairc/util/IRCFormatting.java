@@ -32,7 +32,7 @@ public enum IRCFormatting {
 	private static final Pattern mcColorPattern = Pattern.compile("\u00a7([0-9a-f])");
 	private static final IRCFormatting[] values = values();
 	private static final EnumChatFormatting[] mcChatFormatting = EnumChatFormatting.values();
-	private static final Map<EnumChatFormatting, Vector3f> mcColorValues = new EnumMap<EnumChatFormatting, Vector3f>(EnumChatFormatting.class);
+	private static final EnumMap<EnumChatFormatting, Vector3f> mcColorValues = new EnumMap<EnumChatFormatting, Vector3f>(EnumChatFormatting.class);
 	private static final Map<String, EnumChatFormatting> twitchColorCache = new HashMap<String, EnumChatFormatting>();
 	static {
 		mcColorValues.put(EnumChatFormatting.BLACK, new Vector3f(0f, 0f, 0f));
