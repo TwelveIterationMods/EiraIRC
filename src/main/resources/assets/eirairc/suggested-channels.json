@@ -92,5 +92,10 @@
     "modpack-id": "WLR",
     "description": "Channel for the Wanderlust Reloaded Questing ModPack",
     "recommended": true
+  },
+  {
+    "server": "irc.coldfront.net",
+    "channel": "#newedenradio",
+    "description": "Gaming radio station founded due to the video game Eve Online. We are now a general gaming radio station, with reviews about all games on all platforms from old school DnD, to console and PC games."
   }
 ]
