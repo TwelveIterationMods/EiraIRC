@@ -13,13 +13,13 @@ public class ChatMessageEvent extends Event {
     public final ICommandSender target;
     public final IChatComponent component;
 
-    public ChatMessageEvent(ICommandSender target, IChatComponent component) {
-        this.target = target;
+    public ChatMessageEvent(IChatComponent component) {
+        this.target = null;
         this.component = component;
     }
 
-    public ChatMessageEvent(IChatComponent component) {
-        this.target = null;
+    public ChatMessageEvent(ICommandSender target, IChatComponent component) {
+        this.target = target;
         this.component = component;
     }
 

@@ -166,11 +166,9 @@ public class IRCEventHandler {
 			return;
 		}
 		if(event.user == null) {
-			String mcMessage = Utils.getLocalizedMessage("irc.display.irc.topic", event.channel.getName(), event.channel.getTopic());
-			Utils.addMessageToChat(mcMessage);
+			MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(Utils.getLocalizedChatMessage("irc.display.irc.topic", event.channel.getName(), event.channel.getTopic())));
 		} else {
-			String mcMessage = Utils.getLocalizedMessage("irc.display.irc.topicChange", event.user.getName(), event.channel.getName(), event.channel.getTopic());
-			Utils.addMessageToChat(mcMessage);
+			MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(Utils.getLocalizedChatMessage("irc.display.irc.topicChange", event.user.getName(), event.channel.getName(), event.channel.getTopic())));
 		}
 	}
 
@@ -185,7 +183,7 @@ public class IRCEventHandler {
 	}
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
-	public void onConnectionFailed(IRCReconnectEvent event) {
+	public void onReconnecting(IRCReconnectEvent event) {
 		MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(Utils.getLocalizedChatMessage("irc.basic.reconnecting", event.connection.getHost(), event.waitingTime / 1000)));
 	}
 
