@@ -37,6 +37,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -157,7 +158,7 @@ public class MCEventHandler {
 			return;
 		}
 		relayChatClient(event.message, false, false, chatTarget, false);
-		Utils.addMessageToChat(chatComponent);
+		MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(chatComponent));
 		event.setCanceled(true);
 	}
 	
@@ -191,7 +192,7 @@ public class MCEventHandler {
 		if(emoteColor != null) {
 			chatComponent.getChatStyle().setColor(emoteColor);
 		}
-		Utils.addMessageToChat(chatComponent);
+		MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(chatComponent));
 		event.setCanceled(true);
 	}
 
