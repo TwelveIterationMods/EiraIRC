@@ -30,7 +30,7 @@ public class IRCEventHandler {
 		if(SharedGlobalConfig.botSettings.getBoolean(BotBooleanComponent.RelayNickChanges)) {
 			String format = ConfigHelper.getBotSettings(event.user).getMessageFormat().mcUserNickChange;
 			format = format.replace("{OLDNICK}", event.oldNick);
-			Utils.addMessageToChat(MessageFormat.formatChatComponent(format, event.connection, null, event.user, "", MessageFormat.Target.Minecraft, MessageFormat.Mode.Emote));
+			MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(MessageFormat.formatChatComponent(format, event.connection, null, event.user, "", MessageFormat.Target.Minecraft, MessageFormat.Mode.Emote)));
 		}
 	}
 
@@ -42,7 +42,7 @@ public class IRCEventHandler {
 		BotSettings botSettings = ConfigHelper.getBotSettings(event.channel);
 		if(botSettings.getBoolean(BotBooleanComponent.RelayIRCJoinLeave)) {
 			String format = ConfigHelper.getBotSettings(event.channel).getMessageFormat().mcUserJoin;
-			Utils.addMessageToChat(MessageFormat.formatChatComponent(format, event.connection, event.channel, event.user, "", MessageFormat.Target.Minecraft, MessageFormat.Mode.Emote));
+			MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(MessageFormat.formatChatComponent(format, event.connection, null, event.user, "", MessageFormat.Target.Minecraft, MessageFormat.Mode.Emote)));
 		}
 	}
 
@@ -53,7 +53,7 @@ public class IRCEventHandler {
 		}
 		if(ConfigHelper.getBotSettings(event.channel).getBoolean(BotBooleanComponent.RelayIRCJoinLeave)) {
 			String format = ConfigHelper.getBotSettings(event.channel).getMessageFormat().mcUserLeave;
-			Utils.addMessageToChat(MessageFormat.formatChatComponent(format, event.connection, event.channel, event.user, "", MessageFormat.Target.Minecraft, MessageFormat.Mode.Emote));
+			MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(MessageFormat.formatChatComponent(format, event.connection, null, event.user, "", MessageFormat.Target.Minecraft, MessageFormat.Mode.Emote)));
 		}
 	}
 	
@@ -64,7 +64,7 @@ public class IRCEventHandler {
 		}
 		if(SharedGlobalConfig.botSettings.getBoolean(BotBooleanComponent.RelayIRCJoinLeave)) {
 			String format = ConfigHelper.getBotSettings(event.user).getMessageFormat().mcUserQuit;
-			Utils.addMessageToChat(MessageFormat.formatChatComponent(format, event.connection, null, event.user, event.message, MessageFormat.Target.Minecraft, MessageFormat.Mode.Emote));
+			MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(MessageFormat.formatChatComponent(format, event.connection, null, event.user, "", MessageFormat.Target.Minecraft, MessageFormat.Mode.Emote)));
 		}
 	}
 
@@ -116,7 +116,7 @@ public class IRCEventHandler {
 		} else if(event.isNotice && noticeColor != null) {
 			chatComponent.getChatStyle().setColor(noticeColor);
 		}
-		Utils.addMessageToChat(chatComponent);
+		MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(chatComponent));
 	}
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
@@ -156,7 +156,7 @@ public class IRCEventHandler {
 		} else if(event.isNotice && noticeColor != null) {
 			chatComponent.getChatStyle().setColor(noticeColor);
 		}
-		Utils.addMessageToChat(chatComponent);
+		MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(chatComponent));
 	}
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
@@ -165,47 +165,41 @@ public class IRCEventHandler {
 			return;
 		}
 		if(event.user == null) {
-			String mcMessage = Utils.getLocalizedMessage("irc.display.irc.topic", event.channel.getName(), event.channel.getTopic());
-			Utils.addMessageToChat(mcMessage);
+			MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(Utils.getLocalizedChatMessage("irc.display.irc.topic", event.channel.getName(), event.channel.getTopic())));
 		} else {
-			String mcMessage = Utils.getLocalizedMessage("irc.display.irc.topicChange", event.user.getName(), event.channel.getName(), event.channel.getTopic());
-			Utils.addMessageToChat(mcMessage);
+			MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(Utils.getLocalizedChatMessage("irc.display.irc.topicChange", event.user.getName(), event.channel.getName(), event.channel.getTopic())));
 		}
 	}
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void onConnected(IRCConnectEvent event) {
-		String mcMessage = Utils.getLocalizedMessage("irc.basic.connected", event.connection.getHost());
-		Utils.addMessageToChat(mcMessage);
+		MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(Utils.getLocalizedChatMessage("irc.basic.connected", event.connection.getHost())));
 	}
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void onConnectionFailed(IRCConnectionFailedEvent event) {
-		String mcMessage = Utils.getLocalizedMessage("error.couldNotConnect", event.connection.getHost(), event.exception);
-		Utils.addMessageToChat(mcMessage);
+		MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(Utils.getLocalizedChatMessage("error.couldNotConnect", event.connection.getHost(), event.exception)));
 	}
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
-	public void onConnectionFailed(IRCReconnectEvent event) {
-		String mcMessage = Utils.getLocalizedMessage("irc.basic.reconnecting", event.connection.getHost(), event.waitingTime / 1000);
-		Utils.addMessageToChat(mcMessage);
+	public void onReconnecting(IRCReconnectEvent event) {
+		MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(Utils.getLocalizedChatMessage("irc.basic.reconnecting", event.connection.getHost(), event.waitingTime / 1000)));
 	}
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void onDisconnected(IRCDisconnectEvent event) {
-		String mcMessage = Utils.getLocalizedMessage("irc.basic.disconnected", event.connection.getHost());
-		Utils.addMessageToChat(mcMessage);
+		MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(Utils.getLocalizedChatMessage("irc.basic.disconnected", event.connection.getHost())));
 	}
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void onIRCError(IRCErrorEvent event) {
 		switch(event.numeric) {
 			case IRCReplyCodes.ERR_NONICKCHANGE:
-				Utils.addMessageToChat(Utils.getLocalizedChatMessage("error.noNickChange")); break;
+				MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(Utils.getLocalizedChatMessage("error.noNickChange"))); break;
 			case IRCReplyCodes.ERR_SERVICESDOWN:
-				Utils.addMessageToChat(Utils.getLocalizedChatMessage("error.servicesDown")); break;
+				MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(Utils.getLocalizedChatMessage("error.servicesDown"))); break;
 			case IRCReplyCodes.ERR_TARGETTOOFAST:
-				Utils.addMessageToChat(Utils.getLocalizedChatMessage("error.targetTooFast")); break;
+				MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(Utils.getLocalizedChatMessage("error.targetTooFast"))); break;
 			case IRCReplyCodes.ERR_CANNOTSENDTOCHAN:
 			case IRCReplyCodes.ERR_TOOMANYCHANNELS:
 			case IRCReplyCodes.ERR_TOOMANYTARGETS:
@@ -231,7 +225,7 @@ public class IRCEventHandler {
 			case IRCReplyCodes.ERR_CHANNELISFULL:
 			case IRCReplyCodes.ERR_KEYSET:
 			case IRCReplyCodes.ERR_NEEDMOREPARAMS:
-				Utils.addMessageToChat(Utils.getLocalizedChatMessage("error.genericTarget", event.args[1], event.args[2])); break;
+				MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(Utils.getLocalizedChatMessage("error.genericTarget", event.args[1], event.args[2]))); break;
 			case IRCReplyCodes.ERR_NOORIGIN:
 			case IRCReplyCodes.ERR_NORECIPIENT:
 			case IRCReplyCodes.ERR_NOTEXTTOSEND:
@@ -250,7 +244,7 @@ public class IRCEventHandler {
 			case IRCReplyCodes.ERR_ALREADYREGISTERED:
 			case IRCReplyCodes.ERR_NOPERMFORHOST:
 			case IRCReplyCodes.ERR_CANTKILLSERVER:
-				Utils.addMessageToChat(Utils.getLocalizedChatMessage("error.generic", event.args[1])); break;
+				MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(Utils.getLocalizedChatMessage("error.generic", event.args[1]))); break;
 			default:
 				System.out.println("Unhandled error code: " + event.numeric + " (" + event.args.length + " arguments)");
 				break;

@@ -10,6 +10,7 @@ import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.blay09.mods.eirairc.EiraIRC;
+import net.blay09.mods.eirairc.api.event.ChatMessageEvent;
 import net.blay09.mods.eirairc.api.event.ClientChatEvent;
 import net.blay09.mods.eirairc.api.event.RelayChat;
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
@@ -193,7 +194,16 @@ public class MCEventHandler {
 		Utils.addMessageToChat(chatComponent);
 		event.setCanceled(true);
 	}
-	
+
+	@SubscribeEvent(priority = EventPriority.LOWEST)
+	public void onChatMessage(ChatMessageEvent event) {
+		if(event.target != null) {
+			event.target.addChatMessage(event.component);
+		} else {
+			Utils.addMessageToChat(event.component);
+		}
+	}
+
 	@SubscribeEvent
 	public void onServerChat(ServerChatEvent event) {
 		IChatComponent senderComponent = event.player.func_145748_c_();
