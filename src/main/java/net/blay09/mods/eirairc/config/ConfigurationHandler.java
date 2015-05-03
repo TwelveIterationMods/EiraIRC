@@ -112,11 +112,16 @@ public class ConfigurationHandler {
 
 	public static void loadSuggestedChannels(IResourceManager resourceManager) throws IOException {
 		InputStream in;
-		URL remoteURL = new URL("https://raw.githubusercontent.com/blay09/EiraIRC/master/src/main/resources/assets/eirairc/suggested-channels.json");
-		try {
-			in = remoteURL.openStream();
-		} catch (IOException e) {
-			in = resourceManager.getResource(new ResourceLocation("eirairc", "suggested-channels.json")).getInputStream();
+		File overrideFile = new File(baseConfigDir, "suggested-channels.json");
+		if(overrideFile.exists()) {
+			in = new FileInputStream(overrideFile);
+		} else {
+			URL remoteURL = new URL("https://raw.githubusercontent.com/blay09/EiraIRC/master/src/main/resources/assets/eirairc/suggested-channels.json");
+			try {
+				in = remoteURL.openStream();
+			} catch (IOException e) {
+				in = resourceManager.getResource(new ResourceLocation("eirairc", "suggested-channels.json")).getInputStream();
+			}
 		}
 		Gson gson = new Gson();
 		Reader reader = new InputStreamReader(in);
