@@ -112,7 +112,7 @@ public class ConfigurationHandler {
 
 	public static void loadSuggestedChannels(IResourceManager resourceManager) throws IOException {
 		InputStream in;
-		File overrideFile = new File(baseConfigDir, "suggested-channels.json");
+		File overrideFile = new File(baseConfigDir, "eirairc/suggested-channels.json");
 		if(overrideFile.exists()) {
 			in = new FileInputStream(overrideFile);
 		} else {
