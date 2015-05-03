@@ -117,6 +117,7 @@ public class GuiTwitch extends EiraGuiScreen implements GuiYesNoCallback {
 					Utils.connectTo(config);
 				}
 			}
+			ConfigurationHandler.saveServers();
 		} else if(button == chkAnonymous) {
 			if(chkAnonymous.isChecked()) {
 				txtUsername.setEnabled(false);
