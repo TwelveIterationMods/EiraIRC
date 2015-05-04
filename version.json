@@ -2,30 +2,36 @@
 	"versionList": [
 		{
 			"mcVersion":"1.8",
-			"modVersion":"mc1.8-v1.7.5",
+			"modVersion":"3.8.92",
 			"changeLog": [
-				"Fix private messages not being allowed even when enabled.",
-                "Fix vanilla's /help not working under certain circumstances."
+				"Add TabbyChat 2 compatibility",
+                "Allow overriding of suggested-channels.json by placing the file in the config/eirairc folder",
+                "Fix crash when adding a new tab in the server configurations",
+                "Fix Twitch GUI info not being saved",
+                "Fix instant server crash due to Vector3f usage"
 			],
-			"updateURL":"http://minecraft.curseforge.com/mc-mods/68420-eirairc/files/2224258/download",
+			"updateURL":"http://minecraft.curseforge.com/mc-mods/68420-eirairc/files/2236759/download",
 			"isDirectLink":"true",
-			"newFileName":""
+			"newFileName":"eirairc-mc1.8-3.8.92.jar"
 		},
 		{
 			"mcVersion":"1.7.10",
-			"modVersion":"mc1.7.10-v1.7.56",
+			"modVersion":"2.8.206",
 			"changeLog": [
-                "Fix private messages not being allowed even when enabled.",
-                "Fix vanilla's /help not working under certain circumstances."
+                "Allow overriding of suggested-channels.json by placing the file in the config/eirairc folder",
+                "Backport ChatMessageEvent API from MC 1.8",
+                "Fix Twitch GUI info not being saved",
+                "Fix instant server crash due to Vector3f usage"
 			],
-			"updateURL":"http://minecraft.curseforge.com/mc-mods/68420-eirairc/files/2224258/download",
+			"updateURL":"http://minecraft.curseforge.com/mc-mods/68420-eirairc/files/2236758/download",
 			"isDirectLink":"true",
-			"newFileName":""
+			"newFileName":"eirairc-mc1.7.10-2.8.206.jar"
 		},
         {
             "mcVersion":"1.7.2",
             "modVersion":"mc1.7.2-v1.7.22",
             "changeLog": [
+                "Final 1.7.2 release.",
                 "Fixed SSL connections not working at all.",
                 "Fixed crashes on invalid color config settings.",
                 "Fixed crashes on no color config settings."
