@@ -9,9 +9,7 @@ import net.blay09.mods.eirairc.irc.IRCUserImpl;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
-import org.lwjgl.util.vector.Vector3f;
 
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,29 +26,41 @@ public enum IRCFormatting {
 	public static final String IRC_COLOR_PREFIX = "\u0003";
 	public static final String MC_FORMATTING_PREFIX = "\u00a7";
 
+	public static class RGB {
+		private float r;
+		private float g;
+		private float b;
+
+		public RGB(float r, float g, float b) {
+			this.r = r;
+			this.g = g;
+			this.b = b;
+		}
+	}
+
 	private static final Pattern ircColorPattern = Pattern.compile("\u0003([0-9][0-9]?)(?:[,][0-9][0-9]?)?");
 	private static final Pattern mcColorPattern = Pattern.compile("\u00a7([0-9a-f])");
 	private static final IRCFormatting[] values = values();
 	private static final EnumChatFormatting[] mcChatFormatting = EnumChatFormatting.values();
-	private static final Vector3f[] mcColorValues = new Vector3f[16];
+	private static final RGB[] mcColorValues = new RGB[16];
 	private static final Map<String, EnumChatFormatting> twitchColorCache = new HashMap<String, EnumChatFormatting>();
 	static {
-		mcColorValues[EnumChatFormatting.BLACK.getColorIndex()] = new Vector3f(0f, 0f, 0f);
-		mcColorValues[EnumChatFormatting.DARK_BLUE.getColorIndex()] = new Vector3f(0f, 0f, 0.66f);
-		mcColorValues[EnumChatFormatting.DARK_GREEN.getColorIndex()] = new Vector3f(0f, 0.66f, 0f);
-		mcColorValues[EnumChatFormatting.DARK_AQUA.getColorIndex()] = new Vector3f(0f, 0.66f, 0.66f);
-		mcColorValues[EnumChatFormatting.DARK_RED.getColorIndex()] = new Vector3f(0.66f, 0f, 0f);
-		mcColorValues[EnumChatFormatting.DARK_PURPLE.getColorIndex()] = new Vector3f(0.66f, 0f, 0.66f);
-		mcColorValues[EnumChatFormatting.GOLD.getColorIndex()] = new Vector3f(1f, 0.66f, 0f);
-		mcColorValues[EnumChatFormatting.GRAY.getColorIndex()] = new Vector3f(0.66f, 0.66f, 0.66f);
-		mcColorValues[EnumChatFormatting.DARK_GRAY.getColorIndex()] = new Vector3f(0.33f, 0.33f, 0.33f);
-		mcColorValues[EnumChatFormatting.BLUE.getColorIndex()] = new Vector3f(0.33f, 0.33f, 1f);
-		mcColorValues[EnumChatFormatting.GREEN.getColorIndex()] = new Vector3f(0.33f, 1f, 0.33f);
-		mcColorValues[EnumChatFormatting.AQUA.getColorIndex()] = new Vector3f(0.33f, 1f, 1f);
-		mcColorValues[EnumChatFormatting.RED.getColorIndex()] = new Vector3f(1f, 0.33f, 0.33f);
-		mcColorValues[EnumChatFormatting.LIGHT_PURPLE.getColorIndex()] = new Vector3f(1f, 0.33f, 1f);
-		mcColorValues[EnumChatFormatting.YELLOW.getColorIndex()] = new Vector3f(1f, 1f, 0.33f);
-		mcColorValues[EnumChatFormatting.WHITE.getColorIndex()] = new Vector3f(1f, 1f, 1f);
+		mcColorValues[EnumChatFormatting.BLACK.getColorIndex()] = new RGB(0f, 0f, 0f);
+		mcColorValues[EnumChatFormatting.DARK_BLUE.getColorIndex()] = new RGB(0f, 0f, 0.66f);
+		mcColorValues[EnumChatFormatting.DARK_GREEN.getColorIndex()] = new RGB(0f, 0.66f, 0f);
+		mcColorValues[EnumChatFormatting.DARK_AQUA.getColorIndex()] = new RGB(0f, 0.66f, 0.66f);
+		mcColorValues[EnumChatFormatting.DARK_RED.getColorIndex()] = new RGB(0.66f, 0f, 0f);
+		mcColorValues[EnumChatFormatting.DARK_PURPLE.getColorIndex()] = new RGB(0.66f, 0f, 0.66f);
+		mcColorValues[EnumChatFormatting.GOLD.getColorIndex()] = new RGB(1f, 0.66f, 0f);
+		mcColorValues[EnumChatFormatting.GRAY.getColorIndex()] = new RGB(0.66f, 0.66f, 0.66f);
+		mcColorValues[EnumChatFormatting.DARK_GRAY.getColorIndex()] = new RGB(0.33f, 0.33f, 0.33f);
+		mcColorValues[EnumChatFormatting.BLUE.getColorIndex()] = new RGB(0.33f, 0.33f, 1f);
+		mcColorValues[EnumChatFormatting.GREEN.getColorIndex()] = new RGB(0.33f, 1f, 0.33f);
+		mcColorValues[EnumChatFormatting.AQUA.getColorIndex()] = new RGB(0.33f, 1f, 1f);
+		mcColorValues[EnumChatFormatting.RED.getColorIndex()] = new RGB(1f, 0.33f, 0.33f);
+		mcColorValues[EnumChatFormatting.LIGHT_PURPLE.getColorIndex()] = new RGB(1f, 0.33f, 1f);
+		mcColorValues[EnumChatFormatting.YELLOW.getColorIndex()] = new RGB(1f, 1f, 0.33f);
+		mcColorValues[EnumChatFormatting.WHITE.getColorIndex()] = new RGB(1f, 1f, 1f);
 
 		twitchColorCache.put("#008000", EnumChatFormatting.DARK_GREEN);
 		twitchColorCache.put("#0000FF", EnumChatFormatting.BLUE);
@@ -210,11 +220,11 @@ public enum IRCFormatting {
 	public static EnumChatFormatting getColorFromTwitch(String twitchColor) {
 		EnumChatFormatting color = twitchColorCache.get(twitchColor);
 		if(color == null) {
-			Vector3f twitchRGB = hexToRGB(twitchColor);
+			RGB twitchRGB = hexToRGB(twitchColor);
 			float minDist = Float.MAX_VALUE;
 			EnumChatFormatting minColor = null;
 			for(int i = 0; i < mcColorValues.length; i++) {
-				float dist = (twitchRGB.x - mcColorValues[i].x) * (twitchRGB.x - mcColorValues[i].x) + (twitchRGB.y - mcColorValues[i].y) * (twitchRGB.y - mcColorValues[i].y) + (twitchRGB.z - mcColorValues[i].z) * (twitchRGB.z - mcColorValues[i].z);
+				float dist = (twitchRGB.r - mcColorValues[i].r) * (twitchRGB.r - mcColorValues[i].r) + (twitchRGB.g - mcColorValues[i].g) * (twitchRGB.g - mcColorValues[i].g) + (twitchRGB.b - mcColorValues[i].b) * (twitchRGB.b - mcColorValues[i].b);
 				if(dist < minDist) {
 					minDist = dist;
 					minColor = mcChatFormatting[i];
@@ -228,8 +238,8 @@ public enum IRCFormatting {
 		return color != null ? color : EnumChatFormatting.WHITE;
 	}
 
-	private static Vector3f hexToRGB(String hexColor) {
-		return new Vector3f(
+	private static RGB hexToRGB(String hexColor) {
+		return new RGB(
 				(float) Integer.valueOf(hexColor.substring(1, 3), 16) / 255f,
 				(float) Integer.valueOf(hexColor.substring(3, 5), 16) / 255f,
 				(float) Integer.valueOf(hexColor.substring(5, 7), 16) / 255f);
