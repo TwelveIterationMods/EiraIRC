@@ -308,7 +308,7 @@ public class MCEventHandler {
 			}
 		} else {
 			for(ServerConfig serverConfig : ConfigurationHandler.getServerConfigs()) {
-				IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(serverConfig.getAddress());
+				IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(serverConfig.getIdentifier());
 				if(connection != null) {
 					for(ChannelConfig channelConfig : serverConfig.getChannelConfigs()) {
 						IRCChannel channel = connection.getChannel(channelConfig.getName());
