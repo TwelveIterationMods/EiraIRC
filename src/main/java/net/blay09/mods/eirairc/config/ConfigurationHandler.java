@@ -64,6 +64,7 @@ public class ConfigurationHandler {
 	}
 
 	private static void loadTrustedServers(File configDir) {
+		trustedServers.clear();
 		Gson gson = new Gson();
 		try {
 			Reader reader = new FileReader(new File(configDir, "trusted_servers.json"));
@@ -111,6 +112,7 @@ public class ConfigurationHandler {
 	}
 
 	public static void loadSuggestedChannels(IResourceManager resourceManager) throws IOException {
+		suggestedChannels.clear();
 		InputStream in;
 		File overrideFile = new File(baseConfigDir, "eirairc/suggested-channels.json");
 		if(overrideFile.exists()) {
@@ -141,6 +143,7 @@ public class ConfigurationHandler {
 	}
 
 	private static void loadCommands(File configDir) {
+		customCommands.clear();
 		if(!configDir.exists()) {
 			if(!configDir.mkdirs()) {
 				return;
@@ -262,6 +265,7 @@ public class ConfigurationHandler {
 	}
 
 	private static void loadServers(File configDir) {
+		serverConfigs.clear();
 		if(!configDir.exists()) {
 			if(!configDir.mkdirs()) {
 				return;
