@@ -376,7 +376,7 @@ public class ConfigurationHandler {
 				logger.error("Couldn't get rid of old 'eirairc.cfg' file. Config will REGENERATE unless you delete it yourself.");
 			}
 		} else {
-			EiraIRC.proxy.loadConfig(configDir, false);
+			EiraIRC.proxy.loadConfig(configDir, true);
 		}
 
 		loadDisplayFormats(new File(configDir, "formats"));
