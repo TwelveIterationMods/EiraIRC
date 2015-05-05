@@ -78,4 +78,11 @@ public class ChatSessionHandler {
 		}
 	}
 
+	public void clear() {
+		chatTarget = null;
+		validTargetChannels.clear();
+		validTargetUsers.clear();
+		targetChannelIdx = -1;
+		targetUserIdx = 0;
+	}
 }

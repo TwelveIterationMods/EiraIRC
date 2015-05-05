@@ -45,6 +45,7 @@ public class ConnectionManager {
 			aDcList.disconnect(ConfigHelper.getQuitMessage(aDcList));
 		}
 		connections.clear();
+		EiraIRC.instance.getChatSessionHandler().clear();
 		ircRunning = false;
 	}
 
