@@ -155,7 +155,7 @@ public class MessageFormat {
 			}
 			nick = String.format(ConfigHelper.getBotSettings(context).getString(BotStringComponent.NickFormat), nick);
 			if(SharedGlobalConfig.preventUserPing) {
-				nick = nick.charAt(0) + '\u0081' + nick.substring(1);
+				nick = nick.substring(0, 1) + '\u0081' + nick.substring(1);
 			}
 		} else if(target == Target.Minecraft && context instanceof IRCChannel) {
 			GeneralSettings settings = ConfigHelper.getGeneralSettings(context);

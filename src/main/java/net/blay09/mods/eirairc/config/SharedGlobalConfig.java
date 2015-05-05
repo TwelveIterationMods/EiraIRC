@@ -161,7 +161,7 @@ public class SharedGlobalConfig {
 		} else if(key.equals("enablePlayerColors")) {
 			enablePlayerColors = Boolean.parseBoolean(value);
 		} else if(key.equals("preventUserPing")) {
-			enablePlayerColors = Boolean.parseBoolean(value);
+			preventUserPing = Boolean.parseBoolean(value);
 		} else if(key.equals("enablePlayerAliases")) {
 			enablePlayerAliases = Boolean.parseBoolean(value);
 		} else if(key.equals("hidePlayerTags")) {
