@@ -192,7 +192,7 @@ public class Utils {
 			EiraIRC.instance.getConnectionManager().stopIRC();
 			return true;
 		}
-		IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(serverConfig.getAddress());
+		IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(serverConfig.getIdentifier());
 		if(connection != null && solo) {
 			connection.disconnect("Redirected by " + Utils.getCurrentServerName());
 			connection = null;
@@ -211,7 +211,7 @@ public class Utils {
 	}
 
 	public static IRCConnectionImpl connectTo(ServerConfig config) {
-		IRCConnection oldConnection = EiraIRC.instance.getConnectionManager().getConnection(config.getAddress());
+		IRCConnection oldConnection = EiraIRC.instance.getConnectionManager().getConnection(config.getIdentifier());
 		if(oldConnection != null) {
 			oldConnection.disconnect("Reconnecting...");
 		}

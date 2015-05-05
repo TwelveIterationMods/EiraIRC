@@ -51,7 +51,7 @@ public class MCEventHandler {
 	@SubscribeEvent
 	public void onPlayerLogin(PlayerLoggedInEvent event) {
 		for(ServerConfig serverConfig : ConfigurationHandler.getServerConfigs()) {
-			IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(serverConfig.getAddress());
+			IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(serverConfig.getIdentifier());
 			if(connection != null) {
 				for(ChannelConfig channelConfig : serverConfig.getChannelConfigs()) {
 					IRCChannel channel = connection.getChannel(channelConfig.getName());
@@ -106,7 +106,7 @@ public class MCEventHandler {
 			}
 		} else if(event.command instanceof CommandBroadcast) {
 			for(ServerConfig serverConfig : ConfigurationHandler.getServerConfigs()) {
-				IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(serverConfig.getAddress());
+				IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(serverConfig.getIdentifier());
 				if(connection != null) {
 					for(ChannelConfig channelConfig : serverConfig.getChannelConfigs()) {
 						IRCChannel channel = connection.getChannel(channelConfig.getName());
@@ -252,7 +252,7 @@ public class MCEventHandler {
 					ircMessage = ircMessage + " " + ClientGlobalConfig.clientBridgeMessageToken;
 				}
 				for(ServerConfig serverConfig : ConfigurationHandler.getServerConfigs()) {
-					IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(serverConfig.getAddress());
+					IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(serverConfig.getIdentifier());
 					if(connection != null) {
 						for (ChannelConfig channelConfig : serverConfig.getChannelConfigs()) {
 							IRCChannel channel = connection.getChannel(channelConfig.getName());
@@ -336,7 +336,7 @@ public class MCEventHandler {
 	public void onPlayerDeath(LivingDeathEvent event) {
 		if(event.entityLiving instanceof EntityPlayer) {
 			for(ServerConfig serverConfig : ConfigurationHandler.getServerConfigs()) {
-				IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(serverConfig.getAddress());
+				IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(serverConfig.getIdentifier());
 				if(connection != null) {
 					for (ChannelConfig channelConfig : serverConfig.getChannelConfigs()) {
 						IRCChannel channel = connection.getChannel(channelConfig.getName());
@@ -365,7 +365,7 @@ public class MCEventHandler {
 	@SubscribeEvent
 	public void onAchievement(AchievementEvent event) {
 		for(ServerConfig serverConfig : ConfigurationHandler.getServerConfigs()) {
-			IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(serverConfig.getAddress());
+			IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(serverConfig.getIdentifier());
 			if(connection != null) {
 				for (ChannelConfig channelConfig : serverConfig.getChannelConfigs()) {
 					IRCChannel channel = connection.getChannel(channelConfig.getName());
@@ -385,7 +385,7 @@ public class MCEventHandler {
 	@SubscribeEvent
 	public void onPlayerLogout(PlayerLoggedOutEvent event) {
 		for(ServerConfig serverConfig : ConfigurationHandler.getServerConfigs()) {
-			IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(serverConfig.getAddress());
+			IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(serverConfig.getIdentifier());
 			if(connection != null) {
 				for (ChannelConfig channelConfig : serverConfig.getChannelConfigs()) {
 					IRCChannel channel = connection.getChannel(channelConfig.getName());
@@ -408,7 +408,7 @@ public class MCEventHandler {
 		IChatComponent chatComponent = MessageFormat.formatChatComponent(format, null, player, "", MessageFormat.Target.Minecraft, MessageFormat.Mode.Emote);
 		Utils.addMessageToChat(chatComponent);
 		for(ServerConfig serverConfig : ConfigurationHandler.getServerConfigs()) {
-			IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(serverConfig.getAddress());
+			IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(serverConfig.getIdentifier());
 			if(connection != null) {
 				for(ChannelConfig channelConfig : serverConfig.getChannelConfigs()) {
 					IRCChannel channel = connection.getChannel(channelConfig.getName());

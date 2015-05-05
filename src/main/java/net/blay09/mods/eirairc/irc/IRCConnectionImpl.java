@@ -383,7 +383,14 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 		if(cmd.equals("PING")) {
 			irc("PONG " + msg.arg(0));
 		} else if(cmd.equals("PRIVMSG")) {
-			IRCUserImpl user = (IRCUserImpl) getOrCreateUser(msg.getNick());
+			IRCUserImpl user = null;
+			if(msg.getNick() != null) {
+				if(msg.getNick().toLowerCase().equals(nick.toLowerCase())) {
+					// Ignore echoes, just in case some weird IRC servers do that...
+					return true;
+				}
+				user = (IRCUserImpl) getOrCreateUser(msg.getNick());
+			}
 			String target = msg.arg(0);
 			String message = msg.arg(1);
 			boolean isEmote = false;
@@ -403,6 +410,10 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 		} else if(cmd.equals("NOTICE")) {
 			IRCUserImpl user = null;
 			if(msg.getNick() != null) {
+				if(msg.getNick().toLowerCase().equals(nick.toLowerCase())) {
+					// Ignore echoes, just in case some weird IRC servers do that...
+					return true;
+				}
 				user = (IRCUserImpl) getOrCreateUser(msg.getNick());
 			}
 			String target = msg.arg(0);
