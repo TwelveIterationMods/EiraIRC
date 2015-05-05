@@ -78,7 +78,7 @@ public class IRCChannelImpl implements IRCChannel {
 	}
 
 	public String getIdentifier() {
-		return connection.getIdentifier() + "/" + name;
+		return connection.getIdentifier() + "/" + name.toLowerCase();
 	}
 
 }

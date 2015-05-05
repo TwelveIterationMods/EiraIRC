@@ -145,6 +145,6 @@ public class ChannelConfig {
 	}
 
 	public String getIdentifier() {
-		return serverConfig.getAddress() + "/" + name;
+		return serverConfig.getIdentifier() + "/" + name.toLowerCase();
 	}
 }
