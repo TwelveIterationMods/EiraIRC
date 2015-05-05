@@ -45,7 +45,7 @@ public class CommonProxy {
 	}
 	
 	public void loadConfig(File configDir, boolean reloadFile) {
-		SharedGlobalConfig.load(configDir, false);
+		SharedGlobalConfig.load(configDir, reloadFile);
 	}
 
 	public void loadLegacyConfig(File configDir, Configuration legacyConfig) {
