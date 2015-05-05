@@ -58,9 +58,6 @@ public class ConnectionManager {
 	}
 
 	public void addConnection(IRCConnection connection) {
-		if(connections.containsKey(connection.getIdentifier())) {
-			System.out.println("");
-		}
 		connections.put(connection.getIdentifier(), connection);
 	}
 
