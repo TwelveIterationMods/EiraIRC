@@ -15,11 +15,11 @@ public class ServiceSettings {
 	}
 	
 	public String getIdentifyCommand(String username, String password) {
-		return identifyCMD.replaceAll("\\{USER\\}", username).replaceAll("\\{PASS\\}", password);
+		return identifyCMD.replace("\\{USER\\}", username).replaceAll("\\{PASS\\}", password);
 	}
 	
 	public String getGhostCommand(String nick, String password) {
-		return ghostCMD.replaceAll("\\{NICK\\}", nick).replaceAll("\\{PASS\\}", password);
+		return ghostCMD.replace("\\{NICK\\}", nick).replaceAll("\\{PASS\\}", password);
 	}
 
 	public boolean hasGhostCommand() {
