@@ -385,10 +385,6 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 		} else if(cmd.equals("PRIVMSG")) {
 			IRCUserImpl user = null;
 			if(msg.getNick() != null) {
-				if(msg.getNick().toLowerCase().equals(nick.toLowerCase())) {
-					// Ignore echoes, just in case some weird IRC servers do that...
-					return true;
-				}
 				user = (IRCUserImpl) getOrCreateUser(msg.getNick());
 			}
 			String target = msg.arg(0);
@@ -410,10 +406,6 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 		} else if(cmd.equals("NOTICE")) {
 			IRCUserImpl user = null;
 			if(msg.getNick() != null) {
-				if(msg.getNick().toLowerCase().equals(nick.toLowerCase())) {
-					// Ignore echoes, just in case some weird IRC servers do that...
-					return true;
-				}
 				user = (IRCUserImpl) getOrCreateUser(msg.getNick());
 			}
 			String target = msg.arg(0);
