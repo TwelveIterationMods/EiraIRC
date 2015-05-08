@@ -10,12 +10,6 @@ import org.lwjgl.opengl.GL11;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-<<<<<<< HEAD
-
-=======
-// Copyright (c) 2014, Christopher "blay09" Baker
-// All rights reserved.
->>>>>>> d248e1685dde1dafba3323d197ad61200374c3a9
 public abstract class GuiImage extends AbstractTexture {
 
 	public void loadTexture() {

@@ -28,11 +28,7 @@ public class GuiServerConfigContainer extends GuiTabContainer {
 		pages.add(new DummyTabPage(this, "+") {
 			@Override
 			public void tabClicked() {
-<<<<<<< HEAD
 				for (GuiTabPage tabPage : pages) {
-=======
-				for(GuiTabPage tabPage : pages) {
->>>>>>> d248e1685dde1dafba3323d197ad61200374c3a9
 					if (tabPage instanceof GuiServerConfig) {
 						if (((GuiServerConfig) tabPage).isNew()) {
 							setCurrentTab(tabPage, false);

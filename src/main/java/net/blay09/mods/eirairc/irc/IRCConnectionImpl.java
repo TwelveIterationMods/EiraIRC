@@ -185,7 +185,6 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 			register();
 			sender.start();
 			String line;
-<<<<<<< HEAD
 			while((line = reader.readLine()) != null && sender.isRunning()) {
 				if(SharedGlobalConfig.debugMode) {
 					System.out.println(line);
@@ -193,15 +192,6 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 				if(!line.isEmpty()) {
 					IRCMessage msg = parser.parse(line);
 					if(!handleNumericMessage(msg)) {
-=======
-			while ((line = reader.readLine()) != null && sender.isRunning()) {
-				if (SharedGlobalConfig.debugMode) {
-					System.out.println(line);
-				}
-				if (!line.isEmpty()) {
-					IRCMessage msg = parser.parse(line);
-					if (!handleNumericMessage(msg)) {
->>>>>>> d248e1685dde1dafba3323d197ad61200374c3a9
 						handleMessage(msg);
 					}
 				}
@@ -378,11 +368,7 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 			}
 		} else if(numeric == IRCReplyCodes.RPL_MOTD || numeric <= 4 || numeric == 251 || numeric == 252 || numeric == 254 || numeric == 255 || numeric == 265 || numeric == 266 || numeric == 250 || numeric == 375) {
 			if(SharedGlobalConfig.debugMode) {
-<<<<<<< HEAD
 				System.out.println("Ignored message code: " + msg.getCommand() + " (" + msg.argcount() + " arguments)");
-=======
-				System.out.println("Ignoring message code: " + msg.getCommand() + " (" + msg.argcount() + " arguments)");
->>>>>>> d248e1685dde1dafba3323d197ad61200374c3a9
 			}
 		} else {
 			if(SharedGlobalConfig.debugMode) {
@@ -429,11 +415,7 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 					MinecraftForge.EVENT_BUS.post(new IRCChannelChatEvent(this, getChannel(target), user, message, false, true));
 				}
 			} else if(target.equals(this.nick) || target.equals("*")) {
-<<<<<<< HEAD
 				if(!EiraIRC.internalBus.post(new IRCPrivateChatEvent(this, user, message, false, true))) {
-=======
-				if(EiraIRC.internalBus.post(new IRCPrivateChatEvent(this, user, message, false, true))) {
->>>>>>> d248e1685dde1dafba3323d197ad61200374c3a9
 					MinecraftForge.EVENT_BUS.post(new IRCPrivateChatEvent(this, user, message, false, true));
 				}
 			}

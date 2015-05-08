@@ -1,10 +1,5 @@
 package net.blay09.mods.eirairc.client.gui;
 
-<<<<<<< HEAD
-=======
-import cpw.mods.fml.client.config.GuiCheckBox;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
->>>>>>> d248e1685dde1dafba3323d197ad61200374c3a9
 import net.blay09.mods.eirairc.api.IRCReplyCodes;
 import net.blay09.mods.eirairc.api.event.IRCConnectEvent;
 import net.blay09.mods.eirairc.api.event.IRCConnectionFailedEvent;
@@ -30,11 +25,7 @@ public class GuiTwitch extends EiraGuiScreen implements GuiYesNoCallback {
 
 	private static final ResourceLocation twitchLogo = new ResourceLocation("eirairc", "gfx/twitch_logo.png");
 
-<<<<<<< HEAD
 	private final ServerConfig config;
-=======
-	private ServerConfig config;
->>>>>>> d248e1685dde1dafba3323d197ad61200374c3a9
 	private GuiCheckBox chkAnonymous;
 	private GuiTextField txtUsername;
 	private GuiAdvancedTextField txtPassword;
@@ -71,11 +62,7 @@ public class GuiTwitch extends EiraGuiScreen implements GuiYesNoCallback {
 		} else {
 			oldText = config.getNick();
 		}
-<<<<<<< HEAD
 		txtUsername = new GuiTextField(0, fontRendererObj, width / 2 - 90, topY + 35, 180, 15);
-=======
-		txtUsername = new GuiTextField(fontRendererObj, width / 2 - 90, topY + 35, 180, 15);
->>>>>>> d248e1685dde1dafba3323d197ad61200374c3a9
 		txtUsername.setMaxStringLength(Integer.MAX_VALUE);
 		txtUsername.setText(oldText);
 		textFieldList.add(txtUsername);
@@ -87,11 +74,7 @@ public class GuiTwitch extends EiraGuiScreen implements GuiYesNoCallback {
 		} else {
 			oldText = config.getServerPassword();
 		}
-<<<<<<< HEAD
 		txtPassword = new GuiAdvancedTextField(1, fontRendererObj, width / 2 - 90, topY + 75, 180, 15);
-=======
-		txtPassword = new GuiAdvancedTextField(fontRendererObj, width / 2 - 90, topY + 75, 180, 15);
->>>>>>> d248e1685dde1dafba3323d197ad61200374c3a9
 		txtPassword.setDefaultPasswordChar();
 		txtPassword.setText(oldText);
 		textFieldList.add(txtPassword);

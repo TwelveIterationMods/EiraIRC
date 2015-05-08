@@ -170,14 +170,7 @@ public class Utils {
 	}
 
 	public static boolean isOP(ICommandSender sender) {
-<<<<<<< HEAD
 		return MinecraftServer.getServer() == null || (MinecraftServer.getServer().isSinglePlayer() && !MinecraftServer.getServer().isDedicatedServer()) || sender.canCommandSenderUseCommand(3, "");
-=======
-		if(MinecraftServer.getServer() == null || (MinecraftServer.getServer().isSinglePlayer() && !MinecraftServer.getServer().isDedicatedServer())) {
-			return true;
-		}
-		return sender.canCommandSenderUseCommand(3, "");
->>>>>>> d248e1685dde1dafba3323d197ad61200374c3a9
 	}
 	
 	public static void addConnectionsToList(List<String> list) {

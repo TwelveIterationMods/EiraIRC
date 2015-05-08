@@ -16,10 +16,6 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
-<<<<<<< HEAD
-
-=======
->>>>>>> d248e1685dde1dafba3323d197ad61200374c3a9
 public class BotSettings {
 
 	private final BotSettings parent;
@@ -44,11 +40,7 @@ public class BotSettings {
 		} else {
 			list = stringLists.get(component);
 		}
-<<<<<<< HEAD
 		for (String entry : list) {
-=======
-		for(String entry : list) {
->>>>>>> d248e1685dde1dafba3323d197ad61200374c3a9
 			if (component.allowWildcard && entry.equals("*")) {
 				return true;
 			}
@@ -69,11 +61,7 @@ public class BotSettings {
 		} else {
 			list = stringLists.get(component);
 		}
-<<<<<<< HEAD
 		for (String entry : list) {
-=======
-		for(String entry : list) {
->>>>>>> d248e1685dde1dafba3323d197ad61200374c3a9
 			if (component.allowWildcard && entry.equals("*")) {
 				return true;
 			}

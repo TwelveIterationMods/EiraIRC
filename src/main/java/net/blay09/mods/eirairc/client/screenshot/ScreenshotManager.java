@@ -174,11 +174,7 @@ public class ScreenshotManager {
 	}
 
 	public void deleteScreenshot(Screenshot screenshot, boolean keepUploaded) {
-<<<<<<< HEAD
 		if(screenshot.getFile().delete()) {
-=======
-		if(!screenshot.getFile().delete()) {
->>>>>>> d248e1685dde1dafba3323d197ad61200374c3a9
 			System.out.println("Couldn't delete screenshot file " + screenshot.getFile());
 		}
 		if(!keepUploaded && screenshot.hasDeleteURL()) {
@@ -261,11 +257,7 @@ public class ScreenshotManager {
 		File[] screenshotFiles = screenshotDir.listFiles(new FileFilter() {
 			@Override
 			public boolean accept(File file) {
-<<<<<<< HEAD
 			return file.getName().endsWith(".png") && file.lastModified() > lastScreenshotScan;
-=======
-				return file.getName().endsWith(".png") && file.lastModified() > lastScreenshotScan;
->>>>>>> d248e1685dde1dafba3323d197ad61200374c3a9
 			}
 		});
 		if (screenshotFiles != null) {

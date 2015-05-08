@@ -32,8 +32,4 @@ public enum ThemeColorComponent {
 		}
 		return null;
 	}
-<<<<<<< HEAD
-
-=======
->>>>>>> d248e1685dde1dafba3323d197ad61200374c3a9
 }

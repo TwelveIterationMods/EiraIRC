@@ -262,7 +262,6 @@ public class MessageFormatConfig {
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircBroadcastMessage", Utils.quote("*** {MESSAGE} ***"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircScreenshotUpload", Utils.quote("{NICK} just uploaded a screenshot: {URL}"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircAchievement", Utils.quote("{NICK} just earned an achievement: {MESSAGE}"));
-<<<<<<< HEAD
 		config.save();
 
 		config = new Configuration(new File(displayDir, "tabbychat2.cfg"));
@@ -291,8 +290,6 @@ public class MessageFormatConfig {
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircPlayerNickChange", Utils.quote("{OLDNICK} is now known as {NICK}"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircScreenshotUpload", Utils.quote("{NICK} just uploaded a screenshot: {URL}"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircAchievement", Utils.quote("{NICK} just earned an achievement: {MESSAGE}"));
-=======
->>>>>>> d248e1685dde1dafba3323d197ad61200374c3a9
 		config.save();
 
 	}

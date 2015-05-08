@@ -1,10 +1,5 @@
 package net.blay09.mods.eirairc.client.gui.servers;
 
-<<<<<<< HEAD
-=======
-import cpw.mods.fml.client.config.GuiCheckBox;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
->>>>>>> d248e1685dde1dafba3323d197ad61200374c3a9
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.event.IRCConnectEvent;
 import net.blay09.mods.eirairc.api.event.IRCConnectionFailedEvent;
@@ -25,11 +20,8 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.GuiYesNoCallback;
 import net.minecraftforge.common.MinecraftForge;
-<<<<<<< HEAD
 import net.minecraftforge.fml.client.config.GuiCheckBox;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-=======
->>>>>>> d248e1685dde1dafba3323d197ad61200374c3a9
 import org.lwjgl.input.Keyboard;
 
 import java.nio.charset.Charset;
@@ -77,11 +69,7 @@ public class GuiServerConfigAdvanced extends GuiTabPage implements GuiYesNoCallb
 		} else {
 			oldText = config.getAddress();
 		}
-<<<<<<< HEAD
 		txtAddress = new GuiTextField(0, fontRendererObj, leftX, topY + 15, 100, 15);
-=======
-		txtAddress = new GuiTextField(fontRendererObj, leftX, topY + 15, 100, 15);
->>>>>>> d248e1685dde1dafba3323d197ad61200374c3a9
 		txtAddress.setEnabled(!isConnected);
 		txtAddress.setText(oldText);
 		textFieldList.add(txtAddress);
