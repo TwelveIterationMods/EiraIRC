@@ -45,6 +45,7 @@ public enum IRCFormatting {
 	private static final RGB[] mcColorValues = new RGB[16];
 	private static final Map<String, EnumChatFormatting> twitchColorCache = new HashMap<String, EnumChatFormatting>();
 	static {
+<<<<<<< HEAD
 		mcColorValues[EnumChatFormatting.BLACK.getColorIndex()] = new RGB(0f, 0f, 0f);
 		mcColorValues[EnumChatFormatting.DARK_BLUE.getColorIndex()] = new RGB(0f, 0f, 0.66f);
 		mcColorValues[EnumChatFormatting.DARK_GREEN.getColorIndex()] = new RGB(0f, 0.66f, 0f);
@@ -61,6 +62,24 @@ public enum IRCFormatting {
 		mcColorValues[EnumChatFormatting.LIGHT_PURPLE.getColorIndex()] = new RGB(1f, 0.33f, 1f);
 		mcColorValues[EnumChatFormatting.YELLOW.getColorIndex()] = new RGB(1f, 1f, 0.33f);
 		mcColorValues[EnumChatFormatting.WHITE.getColorIndex()] = new RGB(1f, 1f, 1f);
+=======
+		mcColorValues[EnumChatFormatting.BLACK.ordinal()] = new RGB(0f, 0f, 0f);
+		mcColorValues[EnumChatFormatting.DARK_BLUE.ordinal()] = new RGB(0f, 0f, 0.66f);
+		mcColorValues[EnumChatFormatting.DARK_GREEN.ordinal()] = new RGB(0f, 0.66f, 0f);
+		mcColorValues[EnumChatFormatting.DARK_AQUA.ordinal()] = new RGB(0f, 0.66f, 0.66f);
+		mcColorValues[EnumChatFormatting.DARK_RED.ordinal()] = new RGB(0.66f, 0f, 0f);
+		mcColorValues[EnumChatFormatting.DARK_PURPLE.ordinal()] = new RGB(0.66f, 0f, 0.66f);
+		mcColorValues[EnumChatFormatting.GOLD.ordinal()] = new RGB(1f, 0.66f, 0f);
+		mcColorValues[EnumChatFormatting.GRAY.ordinal()] = new RGB(0.66f, 0.66f, 0.66f);
+		mcColorValues[EnumChatFormatting.DARK_GRAY.ordinal()] = new RGB(0.33f, 0.33f, 0.33f);
+		mcColorValues[EnumChatFormatting.BLUE.ordinal()] = new RGB(0.33f, 0.33f, 1f);
+		mcColorValues[EnumChatFormatting.GREEN.ordinal()] = new RGB(0.33f, 1f, 0.33f);
+		mcColorValues[EnumChatFormatting.AQUA.ordinal()] = new RGB(0.33f, 1f, 1f);
+		mcColorValues[EnumChatFormatting.RED.ordinal()] = new RGB(1f, 0.33f, 0.33f);
+		mcColorValues[EnumChatFormatting.LIGHT_PURPLE.ordinal()] = new RGB(1f, 0.33f, 1f);
+		mcColorValues[EnumChatFormatting.YELLOW.ordinal()] = new RGB(1f, 1f, 0.33f);
+		mcColorValues[EnumChatFormatting.WHITE.ordinal()] = new RGB(1f, 1f, 1f);
+>>>>>>> d248e1685dde1dafba3323d197ad61200374c3a9
 
 		twitchColorCache.put("#008000", EnumChatFormatting.DARK_GREEN);
 		twitchColorCache.put("#0000FF", EnumChatFormatting.BLUE);

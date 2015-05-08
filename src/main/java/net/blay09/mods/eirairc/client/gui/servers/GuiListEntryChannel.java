@@ -21,7 +21,7 @@ public class GuiListEntryChannel extends GuiListTextEntry {
 		this.parent = parent;
 		this.config = config;
 
-		IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(parent.getServerConfig().getAddress());
+		IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(parent.getServerConfig().getIdentifier());
 		setJoined(connection != null && connection.getChannel(config.getName()) != null);
 	}
 

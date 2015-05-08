@@ -30,9 +30,13 @@ Then, add a dependency to either just the EiraIRC API (api) or, if you want Eira
 
 ```
 dependencies {
-    compile 'net.blay09.mods:eirairc:2.8.111:dev' // or just api instead of dev
+    compile 'net.blay09.mods:eirairc:2.8.182:dev' // or just api instead of dev
 }
 ```
+
+*Important*: If you do use the dev version like that, make sure that you still only use code within the API packages! Rikka will get mad at you and give you a dose of Schwarz Sechs if you mess with any of EiraIRC's internal classes.
+
+Make sure you enter the correct version number for the Minecraft version you're developing for. The major version is the important part here; it is increased for every Minecraft update.
 
 Done! Run gradle to update your project and you'll be good to go.
 

@@ -73,9 +73,15 @@ public class GuiTabContainer extends EiraGuiScreen {
 	}
 
 	@Override
+<<<<<<< HEAD
 	public boolean mouseClick(int mouseX, int mouseY, int mouseButton) throws IOException {
 		for(GuiTabHeader header : headers) {
 			if(mouseX >= header.x && mouseX < header.x + header.width - 8 && mouseY >= header.y && mouseY < header.y + header.height) {
+=======
+	public boolean mouseClick(int mouseX, int mouseY, int mouseButton) {
+		for(GuiTabHeader header : headers) {
+			if (mouseX >= header.x && mouseX < header.x + header.width - 8 && mouseY >= header.y && mouseY < header.y + header.height) {
+>>>>>>> d248e1685dde1dafba3323d197ad61200374c3a9
 				header.tabPage.tabClicked();
 				break;
 			}

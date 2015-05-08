@@ -132,9 +132,12 @@ public class IRCCommandHandler {
 			} catch (WrongUsageException e) {
 				sender.addChatMessage(Utils.getLocalizedChatMessage("irc.general.usage", Utils.getLocalizedMessageNoPrefix(e.getMessage())));
 				return true;
+<<<<<<< HEAD
 			} catch (CommandException e) {
 				sender.addChatMessage(new ChatComponentText(e.getMessage()));
 				return true;
+=======
+>>>>>>> d248e1685dde1dafba3323d197ad61200374c3a9
 			}
 		}
 		return false;

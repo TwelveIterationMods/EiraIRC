@@ -92,8 +92,8 @@ public class ScreenshotManager {
 			}
 		});
 		if (screenshotFiles != null) {
-			for (int i = 0; i < screenshotFiles.length; i++) {
-				screenshots.add(new Screenshot(screenshotFiles[i], metadataObject.getAsJsonObject(screenshotFiles[i].getName())));
+			for(File screenshotFile : screenshotFiles) {
+				screenshots.add(new Screenshot(screenshotFile, metadataObject.getAsJsonObject(screenshotFile.getName())));
 			}
 		}
 		lastScreenshotScan = System.currentTimeMillis();
@@ -102,9 +102,8 @@ public class ScreenshotManager {
 
 	public void save() {
 		JsonObject metadataObject = new JsonObject();
-		for(int i = 0; i < screenshots.size(); i++) {
-			Screenshot screenshot = screenshots.get(i);
-			if(screenshot.getMetadata().entrySet().size() > 0) {
+		for(Screenshot screenshot : screenshots) {
+			if (screenshot.getMetadata().entrySet().size() > 0) {
 				metadataObject.add(screenshot.getFile().getName(), screenshot.getMetadata());
 			}
 		}
@@ -175,7 +174,11 @@ public class ScreenshotManager {
 	}
 
 	public void deleteScreenshot(Screenshot screenshot, boolean keepUploaded) {
+<<<<<<< HEAD
 		if(screenshot.getFile().delete()) {
+=======
+		if(!screenshot.getFile().delete()) {
+>>>>>>> d248e1685dde1dafba3323d197ad61200374c3a9
 			System.out.println("Couldn't delete screenshot file " + screenshot.getFile());
 		}
 		if(!keepUploaded && screenshot.hasDeleteURL()) {
@@ -258,12 +261,16 @@ public class ScreenshotManager {
 		File[] screenshotFiles = screenshotDir.listFiles(new FileFilter() {
 			@Override
 			public boolean accept(File file) {
+<<<<<<< HEAD
 			return file.getName().endsWith(".png") && file.lastModified() > lastScreenshotScan;
+=======
+				return file.getName().endsWith(".png") && file.lastModified() > lastScreenshotScan;
+>>>>>>> d248e1685dde1dafba3323d197ad61200374c3a9
 			}
 		});
 		if (screenshotFiles != null) {
-			for (int i = 0; i < screenshotFiles.length; i++) {
-				Screenshot screenshot = new Screenshot(screenshotFiles[i], null);
+			for(File screenshotFile : screenshotFiles) {
+				Screenshot screenshot = new Screenshot(screenshotFile, null);
 				if (autoAction) {
 					handleNewScreenshot(screenshot);
 				}

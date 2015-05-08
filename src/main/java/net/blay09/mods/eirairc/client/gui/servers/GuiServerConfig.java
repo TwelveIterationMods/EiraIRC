@@ -1,5 +1,10 @@
 package net.blay09.mods.eirairc.client.gui.servers;
 
+<<<<<<< HEAD
+=======
+import cpw.mods.fml.client.config.GuiConfig;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+>>>>>>> d248e1685dde1dafba3323d197ad61200374c3a9
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.event.*;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
@@ -28,8 +33,11 @@ import net.minecraftforge.fml.client.config.GuiConfig;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.input.Keyboard;
 
+<<<<<<< HEAD
 import java.io.IOException;
 
+=======
+>>>>>>> d248e1685dde1dafba3323d197ad61200374c3a9
 
 public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 
@@ -82,7 +90,11 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 		} else {
 			oldText = config.getAddress();
 		}
+<<<<<<< HEAD
 		txtAddress = new GuiTextField(0, fontRendererObj, leftX, topY + 15, 100, 15);
+=======
+		txtAddress = new GuiTextField(fontRendererObj, leftX, topY + 15, 100, 15);
+>>>>>>> d248e1685dde1dafba3323d197ad61200374c3a9
 		txtAddress.setEnabled(!isConnected);
 		txtAddress.setText(oldText);
 		textFieldList.add(txtAddress);
@@ -188,9 +200,15 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 				if(connection == null) {
 					connection = Utils.connectTo(config);
 				}
+<<<<<<< HEAD
 				if(connection != null) {
 					ChannelConfig channelConfig = lstChannels.getSelectedItem().getConfig();
 					if (connection.getChannel(channelConfig.getName()) != null) {
+=======
+				ChannelConfig channelConfig = lstChannels.getSelectedItem().getConfig();
+				if(connection != null) {
+					if(connection.getChannel(channelConfig.getName()) != null) {
+>>>>>>> d248e1685dde1dafba3323d197ad61200374c3a9
 						connection.part(channelConfig.getName());
 					} else {
 						connection.join(channelConfig.getName(), channelConfig.getPassword());

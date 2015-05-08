@@ -90,7 +90,11 @@ public class OverlayNotification extends Gui {
 		}
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		drawTexturedModalRect(x, y, 96, 202, WIDTH, HEIGHT);
+<<<<<<< HEAD
 		theGame.fontRendererObj.drawSplitString(text, x + 30, y + 32 / 2 - theGame.fontRendererObj.FONT_HEIGHT * 2 / 2, WIDTH - 36, Globals.TEXT_COLOR);
+=======
+		theGame.fontRenderer.drawSplitString(text, x + 30, y + 32 / 2 - theGame.fontRenderer.FONT_HEIGHT * 2 / 2, WIDTH - 36, Globals.TEXT_COLOR);
+>>>>>>> d248e1685dde1dafba3323d197ad61200374c3a9
 		if(!wasTex2DEnabled) {
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 		}

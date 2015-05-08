@@ -50,8 +50,14 @@ public class CommandAlias implements SubCommand {
 		List<EntityPlayerMP> playerEntityList = MinecraftServer.getServer().getConfigurationManager().playerEntityList;
 		if(args.length < 2) {
 			String alias = args[0];
+<<<<<<< HEAD
 			for (EntityPlayerMP playerEntity : playerEntityList) {
 				if (playerEntity.getEntityData().getCompoundTag(Globals.NBT_EIRAIRC).getString(Globals.NBT_ALIAS).equals(alias)) {
+=======
+			for(int i = 0; i < playerEntityList.size(); i++) {
+				EntityPlayerMP playerEntity = playerEntityList.get(i);
+				if(playerEntity.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getCompoundTag(Globals.NBT_EIRAIRC).getString(Globals.NBT_ALIAS).equals(alias)) {
+>>>>>>> d248e1685dde1dafba3323d197ad61200374c3a9
 					Utils.sendLocalizedMessage(sender, "irc.alias.lookup", alias, playerEntity.getCommandSenderName());
 					return true;
 				}

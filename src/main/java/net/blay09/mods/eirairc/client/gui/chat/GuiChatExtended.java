@@ -3,6 +3,12 @@
 
 package net.blay09.mods.eirairc.client.gui.chat;
 
+<<<<<<< HEAD
+=======
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+>>>>>>> d248e1685dde1dafba3323d197ad61200374c3a9
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.event.ClientChatEvent;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
@@ -20,9 +26,12 @@ import net.minecraft.client.gui.GuiYesNoCallback;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.util.IChatComponent;
 import net.minecraftforge.client.ClientCommandHandler;
+<<<<<<< HEAD
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+=======
+>>>>>>> d248e1685dde1dafba3323d197ad61200374c3a9
 import org.lwjgl.input.Mouse;
 
 import java.io.IOException;
@@ -34,8 +43,14 @@ public class GuiChatExtended extends GuiChat implements GuiYesNoCallback {
 
 	public static final int COLOR_BACKGROUND = Integer.MIN_VALUE;
 	
+<<<<<<< HEAD
 	private final ChatSessionHandler chatSession;
 	private final String defaultInputText;
+=======
+	private ChatSessionHandler chatSession;
+	private String defaultInputText;
+	private GuiButton btnOptions;
+>>>>>>> d248e1685dde1dafba3323d197ad61200374c3a9
 
 	public GuiChatExtended() {
 		this("");
@@ -53,11 +68,19 @@ public class GuiChatExtended extends GuiChat implements GuiYesNoCallback {
 	}
 
 	@Override
+<<<<<<< HEAD
 	protected void keyTyped(char unicode, int keyCode) throws IOException {
 		if(keyCode == 28 || keyCode == 156) {
 			String s = inputField.getText().trim();
 			if(s.length() > 0) {
 				if(!FMLCommonHandler.instance().bus().post(new ClientChatEvent(inputField.getText()))) {
+=======
+	protected void keyTyped(char unicode, int keyCode) {
+		if(keyCode == 28 || keyCode == 156) {
+			String s = inputField.getText().trim();
+			if(s.length() > 0) {
+				if(!FMLCommonHandler.instance().bus().post(new ClientChatEvent(s))) {
+>>>>>>> d248e1685dde1dafba3323d197ad61200374c3a9
 					if(s.charAt(0) != '/' || ClientCommandHandler.instance.executeCommand(mc.thePlayer, s) != 1) {
 						this.mc.thePlayer.sendChatMessage(s);
 					}

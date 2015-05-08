@@ -1,6 +1,9 @@
 package net.blay09.mods.eirairc.config.settings;
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> d248e1685dde1dafba3323d197ad61200374c3a9
 public enum BotBooleanComponent {
 	RelayDeathMessages("relayDeathMessages", false, "eirairc:config.property.relayDeathMessages"),
 	RelayMinecraftJoinLeave("relayMinecraftJoinLeave", false, "eirairc:config.property.relayMinecraftJoinLeave"),
@@ -35,5 +38,8 @@ public enum BotBooleanComponent {
 		}
 		return null;
 	}
+<<<<<<< HEAD
 
+=======
+>>>>>>> d248e1685dde1dafba3323d197ad61200374c3a9
 }

@@ -10,6 +10,10 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> d248e1685dde1dafba3323d197ad61200374c3a9
 public class HandlerRedirect implements IMessageHandler<MessageRedirect, IMessage> {
 
     @Override

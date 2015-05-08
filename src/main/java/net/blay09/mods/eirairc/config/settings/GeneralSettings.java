@@ -129,7 +129,6 @@ public class GeneralSettings {
 		}
 		return null;
 	}
-
 	public boolean handleConfigCommand(ICommandSender sender, String key, String value) {
 		GeneralBooleanComponent component = GeneralBooleanComponent.fromName(key);
 		if(component != null) {
@@ -138,7 +137,6 @@ public class GeneralSettings {
 		}
 		return false;
 	}
-
 	public static void addOptionsToList(List<String> list, String option) {
 		if(option == null) {
 			for(GeneralBooleanComponent component : GeneralBooleanComponent.values) {

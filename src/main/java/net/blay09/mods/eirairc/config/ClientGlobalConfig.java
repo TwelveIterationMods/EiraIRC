@@ -68,7 +68,7 @@ public class ClientGlobalConfig {
 
 		// Screenshots
 		imageLinkPreview = thisConfig.getBoolean("imageLinkPreview", SCREENSHOTS, imageLinkPreview, I19n.format("eirairc:config.property.imageLinkPreview"), "eirairc:config.property.imageLinkPreview");
-		screenshotHoster = thisConfig.getString("uploadHoster", SCREENSHOTS, screenshotHoster, I19n.format("eirairc:config.property.uploadHoster"), UploadManager.getAvailableHosters(), "eirairc:config.property.uploadHoster");
+		screenshotHoster = thisConfig.getString("uploadHoster", SCREENSHOTS, screenshotHoster, I19n.format("eirairc:config.property.uploadHoster"), "eirairc:config.property.uploadHoster");
 		screenshotAction = ScreenshotAction.valueOf(thisConfig.getString("autoAction", SCREENSHOTS, screenshotAction.name(), I19n.format("eirairc:config.property.autoAction"), ScreenshotAction.NAMES, "eirairc:config.property.autoAction"));
 		uploadBufferSize = thisConfig.getInt("uploadBufferSize", SCREENSHOTS, uploadBufferSize, 256, 4096, I19n.format("eirairc:config.property.uploadBufferSize"), "eirairc:config.property.uploadBufferSize");
 

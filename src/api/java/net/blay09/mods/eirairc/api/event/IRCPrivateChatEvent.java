@@ -2,6 +2,7 @@
 // All rights reserved.
 package net.blay09.mods.eirairc.api.event;
 
+
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
 import net.blay09.mods.eirairc.api.irc.IRCUser;
 import net.minecraftforge.fml.common.eventhandler.Cancelable;

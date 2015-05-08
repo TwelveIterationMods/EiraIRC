@@ -1,5 +1,10 @@
 package net.blay09.mods.eirairc.client.gui.servers;
 
+<<<<<<< HEAD
+=======
+import cpw.mods.fml.client.config.GuiCheckBox;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+>>>>>>> d248e1685dde1dafba3323d197ad61200374c3a9
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.event.IRCConnectEvent;
 import net.blay09.mods.eirairc.api.event.IRCConnectionFailedEvent;
@@ -20,8 +25,11 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.GuiYesNoCallback;
 import net.minecraftforge.common.MinecraftForge;
+<<<<<<< HEAD
 import net.minecraftforge.fml.client.config.GuiCheckBox;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+=======
+>>>>>>> d248e1685dde1dafba3323d197ad61200374c3a9
 import org.lwjgl.input.Keyboard;
 
 import java.nio.charset.Charset;
@@ -69,7 +77,11 @@ public class GuiServerConfigAdvanced extends GuiTabPage implements GuiYesNoCallb
 		} else {
 			oldText = config.getAddress();
 		}
+<<<<<<< HEAD
 		txtAddress = new GuiTextField(0, fontRendererObj, leftX, topY + 15, 100, 15);
+=======
+		txtAddress = new GuiTextField(fontRendererObj, leftX, topY + 15, 100, 15);
+>>>>>>> d248e1685dde1dafba3323d197ad61200374c3a9
 		txtAddress.setEnabled(!isConnected);
 		txtAddress.setText(oldText);
 		textFieldList.add(txtAddress);
@@ -119,6 +131,7 @@ public class GuiServerConfigAdvanced extends GuiTabPage implements GuiYesNoCallb
 		txtServerPassword = new GuiAdvancedTextField(4, fontRendererObj, rightX - 100, topY + 15, 100, 15);
 		txtServerPassword.setEnabled(!isConnected);
 		txtServerPassword.setText(oldText);
+		txtServerPassword.setEnabled(!isConnected);
 		txtServerPassword.setDefaultPasswordChar();
 		textFieldList.add(txtServerPassword);
 
@@ -132,6 +145,7 @@ public class GuiServerConfigAdvanced extends GuiTabPage implements GuiYesNoCallb
 		txtCharset = new GuiAdvancedTextField(5, fontRendererObj, rightX - 100, topY + 55, 100, 15);
 		txtCharset.setEnabled(!isConnected);
 		txtCharset.setDefaultText(Globals.DEFAULT_CHARSET, false);
+		txtCharset.setEnabled(!isConnected);
 		txtCharset.setText(oldText);
 		textFieldList.add(txtCharset);
 
@@ -234,6 +248,7 @@ public class GuiServerConfigAdvanced extends GuiTabPage implements GuiYesNoCallb
 			config.setAddress(txtAddress.getText());
 			ConfigurationHandler.addServerConfig(config);
 		}
+
 		config.setNick(txtNick.getTextOrDefault());
 		// If connected, send nick change to IRC
 		IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(config.getIdentifier());

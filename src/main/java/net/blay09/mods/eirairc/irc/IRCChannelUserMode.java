@@ -20,7 +20,11 @@ public enum IRCChannelUserMode {
 	}
 
 	public static IRCChannelUserMode fromChar(char c) {
+<<<<<<< HEAD
 		for (IRCChannelUserMode value : values) {
+=======
+		for(IRCChannelUserMode value : values) {
+>>>>>>> d248e1685dde1dafba3323d197ad61200374c3a9
 			if (value.modeChar == c) {
 				return value;
 			}

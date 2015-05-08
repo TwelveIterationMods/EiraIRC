@@ -274,7 +274,11 @@ public class MessageFormat {
 		return result;
 	}
 
+<<<<<<< HEAD
 	public static IChatComponent formatChatComponent(String format, IRCConnection connection, IRCContext targetContext, IRCUser user, String message, Target target, Mode mode) {
+=======
+	public static IChatComponent formatChatComponent(String format, IRCConnection connection, IRCContext targetContext, IRCUser sender, String message, Target target, Mode mode) {
+>>>>>>> d248e1685dde1dafba3323d197ad61200374c3a9
 		IChatComponent root = new ChatComponentText("");
 		EnumChatFormatting nextColor = null;
 		StringBuilder sb = new StringBuilder();
@@ -292,18 +296,27 @@ public class MessageFormat {
 					} else if(token.equals("CHANNEL")) {
 						component = new ChatComponentText(targetContext != null ? targetContext.getName() : "#");
 					} else if(token.equals("USER")) {
-						if(user != null) {
-							component = new ChatComponentText(user.getIdentifier());
+						if(sender != null) {
+							component = new ChatComponentText(sender.getIdentifier());
 						} else {
 							component = new ChatComponentText(connection.getIdentifier());
 						}
 					} else if(token.equals("NICK")) {
+<<<<<<< HEAD
 						if(user != null) {
 							String displayName = user.getName();
 							displayName = formatNick(displayName, targetContext, target, mode, user);
 							component = new ChatComponentText(displayName);
 							if(mode != Mode.Emote) {
 								EnumChatFormatting nameColor = IRCFormatting.getColorFormattingForUser(targetContext instanceof IRCChannel ? (IRCChannel) targetContext : null, user);
+=======
+						if(sender != null) {
+							String displayName = sender.getName();
+							displayName = formatNick(displayName, targetContext, target, mode, sender);
+							component = new ChatComponentText(displayName);
+							if(mode != Mode.Emote) {
+								EnumChatFormatting nameColor = IRCFormatting.getColorFormattingForUser(targetContext instanceof IRCChannel ? (IRCChannel) targetContext : null, sender);
+>>>>>>> d248e1685dde1dafba3323d197ad61200374c3a9
 								if(nameColor != null) {
 									component.getChatStyle().setColor(nameColor);
 								}

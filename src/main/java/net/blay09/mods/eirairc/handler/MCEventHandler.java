@@ -36,11 +36,15 @@ import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.AchievementEvent;
+<<<<<<< HEAD
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+=======
+import net.minecraftforge.event.entity.player.PlayerEvent;
+>>>>>>> d248e1685dde1dafba3323d197ad61200374c3a9
 
 import java.util.regex.Pattern;
 
@@ -139,7 +143,10 @@ public class MCEventHandler {
 		}
 		if(ClientGlobalConfig.clientBridge) {
 			relayChatClient(event.message, false, false, null, true);
+<<<<<<< HEAD
 			event.setCanceled(true);
+=======
+>>>>>>> d248e1685dde1dafba3323d197ad61200374c3a9
 			return;
 		}
 		IRCContext chatTarget = EiraIRC.instance.getChatSessionHandler().getChatTarget();
@@ -168,7 +175,10 @@ public class MCEventHandler {
 		EntityPlayer sender = Minecraft.getMinecraft().thePlayer;
 		if(ClientGlobalConfig.clientBridge) {
 			relayChatClient(text, true, false, null, true);
+<<<<<<< HEAD
 			event.setCanceled(true);
+=======
+>>>>>>> d248e1685dde1dafba3323d197ad61200374c3a9
 			return;
 		}
 		IRCContext chatTarget = EiraIRC.instance.getChatSessionHandler().getChatTarget();
@@ -208,7 +218,11 @@ public class MCEventHandler {
 
 	@SubscribeEvent
 	public void onServerChat(ServerChatEvent event) {
+<<<<<<< HEAD
 		IChatComponent senderComponent = event.player.getDisplayName();
+=======
+		IChatComponent senderComponent = event.player.func_145748_c_();
+>>>>>>> d248e1685dde1dafba3323d197ad61200374c3a9
 		EnumChatFormatting nameColor = IRCFormatting.getColorFormattingForPlayer(event.player);
 		if(nameColor != null && nameColor != EnumChatFormatting.WHITE) {
 			senderComponent.getChatStyle().setColor(nameColor);
@@ -373,7 +387,11 @@ public class MCEventHandler {
 					if (channel != null) {
 						GeneralSettings generalSettings = ConfigHelper.getGeneralSettings(channel);
 						BotSettings botSettings = ConfigHelper.getBotSettings(channel);
+<<<<<<< HEAD
 						String ircMessage = MessageFormat.formatMessage(botSettings.getMessageFormat().ircAchievement, channel, event.entityPlayer, event.achievement.getStatName().getUnformattedText(), MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
+=======
+						String ircMessage = MessageFormat.formatMessage(botSettings.getMessageFormat().ircAchievement, channel, event.entityPlayer, event.achievement.func_150951_e().getUnformattedText(), MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
+>>>>>>> d248e1685dde1dafba3323d197ad61200374c3a9
 						if (!generalSettings.isReadOnly() && botSettings.getBoolean(BotBooleanComponent.RelayAchievements)) {
 							channel.message(ircMessage);
 						}

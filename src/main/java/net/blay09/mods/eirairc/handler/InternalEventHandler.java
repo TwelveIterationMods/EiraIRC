@@ -2,6 +2,11 @@
 // All rights reserved.
 package net.blay09.mods.eirairc.handler;
 
+<<<<<<< HEAD
+=======
+import cpw.mods.fml.common.eventhandler.EventPriority;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+>>>>>>> d248e1685dde1dafba3323d197ad61200374c3a9
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.EiraIRCAPI;
 import net.blay09.mods.eirairc.api.IRCReplyCodes;
@@ -22,8 +27,11 @@ import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.IRCFormatting;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraftforge.common.MinecraftForge;
+<<<<<<< HEAD
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+=======
+>>>>>>> d248e1685dde1dafba3323d197ad61200374c3a9
 
 @SuppressWarnings("unused")
 public class InternalEventHandler {
