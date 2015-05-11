@@ -70,7 +70,11 @@ public class ThemeSettings {
 	public Configuration pullDummyConfig() {
 		dummyConfig = new Configuration();
 		for(int i = 0; i < ThemeColorComponent.values().length; i++) {
-			Property property = dummyConfig.get("theme", ThemeColorComponent.values[i].name, String.valueOf(parent.getColor(ThemeColorComponent.values[i]).getColorIndex()));
+			EnumChatFormatting defaultColor = parent.getColor(ThemeColorComponent.values[i]);
+			if(defaultColor == null) {
+				defaultColor = EnumChatFormatting.WHITE;
+			}
+			Property property = dummyConfig.get("theme", ThemeColorComponent.values[i].name, String.valueOf(defaultColor.getColorIndex()));
 			property.setLanguageKey(ThemeColorComponent.values[i].langKey);
 			property.setValidValues(VALID_COLOR_CODES);
 			if(colors.containsKey(ThemeColorComponent.values[i])) {
