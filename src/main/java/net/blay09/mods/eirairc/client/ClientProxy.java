@@ -128,10 +128,11 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public String handleConfigCommand(ICommandSender sender, String key) {
-		if(super.handleConfigCommand(sender, key) == null) {
+		String result = super.handleConfigCommand(sender, key);
+		if(result == null) {
 			return ClientGlobalConfig.handleConfigCommand(sender, key);
 		} else {
-			return null;
+			return result;
 		}
 	}
 
