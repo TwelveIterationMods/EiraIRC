@@ -342,6 +342,14 @@ public class MessageFormat {
 					}
 				}
 			} else if(c == '\u00a7') {
+				if(sb.length() > 0) {
+					IChatComponent newComponent = new ChatComponentText(sb.toString());
+					root.appendSibling(newComponent);
+					if(nextColor != null) {
+						newComponent.getChatStyle().setColor(nextColor);
+					}
+					sb = new StringBuilder();
+				}
 				nextColor = IRCFormatting.getColorFromMCColorCode(format.charAt(currentIdx + 1));
 				currentIdx += 2;
 				continue;
