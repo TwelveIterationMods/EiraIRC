@@ -364,6 +364,10 @@ public class MCEventHandler {
 
 	@SubscribeEvent
 	public void onAchievement(AchievementEvent event) {
+		if(((EntityPlayerMP) event.entityPlayer).func_147099_x().hasAchievementUnlocked(event.achievement)) { // getStatFile
+			// This is necessary because the Achievement event fires even if an achievement is already unlocked.
+			return;
+		}
 		for(ServerConfig serverConfig : ConfigurationHandler.getServerConfigs()) {
 			IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(serverConfig.getIdentifier());
 			if(connection != null) {
