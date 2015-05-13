@@ -45,7 +45,7 @@ public enum IRCFormatting {
 	private static final RGB[] mcColorValues = new RGB[16];
 	private static final Map<String, EnumChatFormatting> twitchColorCache = new HashMap<String, EnumChatFormatting>();
 	static {
-		mcColorValues[EnumChatFormatting.BLACK.getColorIndex()] = new RGB(0f, 0f, 0f);
+//		mcColorValues[EnumChatFormatting.BLACK.getColorIndex()] = new RGB(0f, 0f, 0f);
 		mcColorValues[EnumChatFormatting.DARK_BLUE.getColorIndex()] = new RGB(0f, 0f, 0.66f);
 		mcColorValues[EnumChatFormatting.DARK_GREEN.getColorIndex()] = new RGB(0f, 0.66f, 0f);
 		mcColorValues[EnumChatFormatting.DARK_AQUA.getColorIndex()] = new RGB(0f, 0.66f, 0.66f);
@@ -224,6 +224,9 @@ public enum IRCFormatting {
 			float minDist = Float.MAX_VALUE;
 			EnumChatFormatting minColor = null;
 			for(int i = 0; i < mcColorValues.length; i++) {
+				if(mcColorValues[i] == null) {
+					continue;
+				}
 				float dist = (twitchRGB.r - mcColorValues[i].r) * (twitchRGB.r - mcColorValues[i].r) + (twitchRGB.g - mcColorValues[i].g) * (twitchRGB.g - mcColorValues[i].g) + (twitchRGB.b - mcColorValues[i].b) * (twitchRGB.b - mcColorValues[i].b);
 				if(dist < minDist) {
 					minDist = dist;
