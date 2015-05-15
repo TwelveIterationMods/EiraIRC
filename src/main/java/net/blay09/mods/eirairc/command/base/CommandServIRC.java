@@ -53,7 +53,7 @@ public class CommandServIRC implements ICommand {
 			return;
 		}
 		try {
-			IRCCommandHandler.processCommand(sender, args, false);
+			IRCCommandHandler.processCommand(sender, args, true);
 		} catch (CommandException e) {
 			IChatComponent chatComponent = new ChatComponentTranslation("commands.generic.usage", Utils.getLocalizedMessageNoPrefix(e.getMessage(), e.getErrorObjects()));
 			chatComponent.getChatStyle().setColor(EnumChatFormatting.RED);
