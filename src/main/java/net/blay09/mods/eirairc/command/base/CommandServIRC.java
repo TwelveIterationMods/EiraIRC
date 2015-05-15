@@ -51,7 +51,7 @@ public class CommandServIRC implements ICommand {
 			return;
 		}
 		try {
-			IRCCommandHandler.processCommand(sender, args, false);
+			IRCCommandHandler.processCommand(sender, args, true);
 		} catch (WrongUsageException e) {
 			IChatComponent chatComponent = new ChatComponentTranslation("commands.generic.usage", Utils.getLocalizedMessageNoPrefix(e.getMessage(), e.getErrorOjbects()));
 			chatComponent.getChatStyle().setColor(EnumChatFormatting.RED);
