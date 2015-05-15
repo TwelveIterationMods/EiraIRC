@@ -101,7 +101,7 @@ artifacts {
     archives jarDev
 }
 
-uploadArchives {
+/*uploadArchives {
     dependsOn 'reobf'
     repositories {
         mavenDeployer {
@@ -118,4 +118,4 @@ uploadArchives {
             }
         }
     }
-}
+}*/
