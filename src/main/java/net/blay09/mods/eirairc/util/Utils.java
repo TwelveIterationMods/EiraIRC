@@ -74,7 +74,7 @@ public class Utils {
 	}
 	
 	public static void addMessageToChat(@NotNull IChatComponent chatComponent) {
-		if(MinecraftServer.getServer() != null && !MinecraftServer.getServer().isSinglePlayer()) {
+		if(MinecraftServer.getServer() != null && MinecraftServer.getServer().getConfigurationManager() != null && !MinecraftServer.getServer().isSinglePlayer()) {
 			MinecraftServer.getServer().getConfigurationManager().sendChatMsg(chatComponent);
 		} else {
 			if(Minecraft.getMinecraft().thePlayer != null) {
