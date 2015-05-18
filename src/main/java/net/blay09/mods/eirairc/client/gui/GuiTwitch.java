@@ -112,6 +112,7 @@ public class GuiTwitch extends EiraGuiScreen implements GuiYesNoCallback {
 				config.setServerPassword(txtPassword.getText());
 				config.getGeneralSettings().setBoolean(GeneralBooleanComponent.ReadOnly, false);
 				config.getBotSettings().setString(BotStringComponent.MessageFormat, "Twitch");
+				config.getBotSettings().setBoolean(BotBooleanComponent.RelayIRCJoinLeave, false);
 				if(!config.getNick().isEmpty() && !config.getServerPassword().isEmpty()) {
 					config.getOrCreateChannelConfig("#" + config.getNick());
 					btnConnect.enabled = false;
