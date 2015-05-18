@@ -129,7 +129,7 @@ public class GuiChatExtended extends GuiChat implements GuiYesNoCallback {
 					if(urlMatcher.find()) {
 						String url = urlMatcher.group();
 						try {
-							if(ClientGlobalConfig.imageLinkPreview) {
+							if(ClientGlobalConfig.imageLinkPreview && (url.endsWith(".png") || url.endsWith(".jpg"))) {
 								mc.displayGuiScreen(new GuiImagePreview(new URL(url), null));
 							} else {
 								if(mc.gameSettings.chatLinksPrompt) {
