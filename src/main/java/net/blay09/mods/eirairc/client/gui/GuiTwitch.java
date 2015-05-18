@@ -10,6 +10,7 @@ import net.blay09.mods.eirairc.client.gui.base.GuiAdvancedTextField;
 import net.blay09.mods.eirairc.client.gui.base.GuiLabel;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.ServerConfig;
+import net.blay09.mods.eirairc.config.settings.BotBooleanComponent;
 import net.blay09.mods.eirairc.config.settings.BotStringComponent;
 import net.blay09.mods.eirairc.config.settings.GeneralBooleanComponent;
 import net.blay09.mods.eirairc.util.Globals;
@@ -102,6 +103,7 @@ public class GuiTwitch extends EiraGuiScreen implements GuiYesNoCallback {
 				config.setServerPassword("");
 				config.getGeneralSettings().setBoolean(GeneralBooleanComponent.ReadOnly, true);
 				config.getBotSettings().setString(BotStringComponent.MessageFormat, "Twitch");
+				config.getBotSettings().setBoolean(BotBooleanComponent.RelayIRCJoinLeave, false);
 				btnConnect.enabled = false;
 				ConfigurationHandler.addServerConfig(config);
 				Utils.connectTo(config);

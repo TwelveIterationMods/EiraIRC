@@ -106,6 +106,10 @@ public class BotSettings {
 		return booleans.get(component);
 	}
 
+	public void setBoolean(BotBooleanComponent component, boolean value) {
+		booleans.put(component, value);
+	}
+
 	public MessageFormatConfig getMessageFormat() {
 		return ConfigurationHandler.getMessageFormat(getString(BotStringComponent.MessageFormat));
 	}
@@ -306,6 +310,7 @@ public class BotSettings {
 		}
 		return false;
 	}
+
 	public static void addOptionsToList(List<String> list, String option) {
 		if(option == null) {
 			for(BotBooleanComponent component : BotBooleanComponent.values) {
