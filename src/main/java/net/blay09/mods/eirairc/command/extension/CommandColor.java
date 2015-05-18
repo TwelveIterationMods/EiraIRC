@@ -86,7 +86,7 @@ public class CommandColor implements SubCommand {
 
 	@Override
 	public boolean canCommandSenderUseCommand(ICommandSender sender) {
-		return Utils.isOP(sender);
+		return true;
 	}
 
 	@Override

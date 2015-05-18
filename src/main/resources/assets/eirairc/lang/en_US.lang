@@ -125,7 +125,7 @@ eirairc:irc.alias.notFound=The alias '%s' cannot be found.
 eirairc:irc.color.set=Name color set to '%s'.
 eirairc:irc.color.reset=Name color reset.
 eirairc:irc.color.blacklist=The color '%s' is not allowed on this server.
-eirairc:irc.color.invalid='%s' is not a valid color. USe TAB to loop through valid options.
+eirairc:irc.color.invalid='%s' is not a valid color. Use TAB to loop through valid options.
 
 ## Who
 eirairc:irc.who.usersOnline=[%s] §b%d users §fonline in §e%s§f:
