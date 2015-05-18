@@ -11,6 +11,7 @@ import net.blay09.mods.eirairc.client.gui.screenshot.GuiImagePreview;
 import net.blay09.mods.eirairc.config.ClientGlobalConfig;
 import net.blay09.mods.eirairc.handler.ChatSessionHandler;
 import net.blay09.mods.eirairc.util.Globals;
+import net.blay09.mods.eirairc.util.MessageFormat;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -28,6 +29,7 @@ import org.lwjgl.input.Mouse;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.regex.Matcher;
 
 @SideOnly(Side.CLIENT)
 public class GuiChatExtended extends GuiChat implements GuiYesNoCallback {
@@ -77,6 +79,7 @@ public class GuiChatExtended extends GuiChat implements GuiYesNoCallback {
 			if(clickedComponent != null) {
 				ClickEvent clickEvent = clickedComponent.getChatStyle().getChatClickEvent();
 				if(clickEvent != null) {
+					// TODO try to replace eirairc:// by EiraClickEvent
 					if(clickEvent.getValue().startsWith("eirairc://")) {
 						String[] params = clickEvent.getValue().substring(10).split(";");
 						if(params.length > 0) {
@@ -98,6 +101,7 @@ public class GuiChatExtended extends GuiChat implements GuiYesNoCallback {
 						}
 						return;
 					} else {
+						// If this is an image link and imageLinkPreview is enabled, open the preview GUI. Otherwise, leave it to the super method.
 						if(ClientGlobalConfig.imageLinkPreview && clickEvent.getValue().endsWith(".png") || clickEvent.getValue().endsWith(".jpg")) {
 							try {
 								mc.displayGuiScreen(new GuiImagePreview(new URL(clickEvent.getValue()), null));
@@ -106,6 +110,26 @@ public class GuiChatExtended extends GuiChat implements GuiYesNoCallback {
 								e.printStackTrace();
 							}
 						}
+					}
+				} else {
+					// Attempt to fix MC-30864 (https://bugs.mojang.com/browse/MC-30864) on the client side as a last resort since Mojang is too busy working on their April Fools jokes
+					Matcher urlMatcher = MessageFormat.urlPattern.matcher(clickedComponent.getUnformattedText());
+					if(urlMatcher.find()) {
+						String url = urlMatcher.group();
+						try {
+							if(ClientGlobalConfig.imageLinkPreview) {
+								mc.displayGuiScreen(new GuiImagePreview(new URL(url), null));
+							} else {
+								if(mc.gameSettings.chatLinksPrompt) {
+									mc.displayGuiScreen(new GuiConfirmOpenLink(this, url, 0, false));
+								} else {
+									Utils.openWebpage(url);
+								}
+							}
+						} catch (MalformedURLException e) {
+							e.printStackTrace();
+						}
+						return;
 					}
 				}
 			}
