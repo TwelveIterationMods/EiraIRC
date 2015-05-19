@@ -371,6 +371,7 @@ public class ConfigurationHandler {
 		File configDir = new File(baseConfigDir, "eirairc");
 
 		loadServices(configDir);
+		loadDisplayFormats(new File(configDir, "formats"));
 
 		File legacyConfigFile = new File(baseConfigDir, "eirairc.cfg");
 		if(legacyConfigFile.exists()) {
@@ -382,8 +383,6 @@ public class ConfigurationHandler {
 		} else {
 			EiraIRC.proxy.loadConfig(configDir, true);
 		}
-
-		loadDisplayFormats(new File(configDir, "formats"));
 
 		loadCommands(configDir);
 		loadServers(configDir);
@@ -517,5 +516,9 @@ public class ConfigurationHandler {
 
 	public static List<SuggestedChannel> getSuggestedChannels() {
 		return suggestedChannels;
+	}
+
+	public static String[] getAvailableMessageFormats() {
+		return displayFormats.keySet().toArray(new String[displayFormats.size()]);
 	}
 }

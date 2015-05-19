@@ -4,6 +4,7 @@
 package net.blay09.mods.eirairc.client;
 
 import net.blay09.mods.eirairc.api.upload.UploadHoster;
+import net.blay09.mods.eirairc.config.ClientGlobalConfig;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -20,6 +21,8 @@ public class UploadManager {
 	
 	public static void registerUploadHoster(UploadHoster hoster) {
 		uploadHosters.put(hoster.getName(), hoster);
+		availableHosters = null;
+		ClientGlobalConfig.updateUploadHosters(getAvailableHosters());
 	}
 
 	public static Collection<UploadHoster> getUploadHosters() {

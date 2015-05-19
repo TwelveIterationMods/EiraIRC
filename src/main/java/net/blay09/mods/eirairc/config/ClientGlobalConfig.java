@@ -233,4 +233,8 @@ public class ClientGlobalConfig {
 			Utils.addBooleansToList(list);
 		}
 	}
+
+	public static void updateUploadHosters(String[] availableHosters) {
+		thisConfig.getCategory(SCREENSHOTS).get("uploadHoster").setValidValues(availableHosters);
+	}
 }

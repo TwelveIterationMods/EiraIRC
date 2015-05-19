@@ -142,6 +142,8 @@ public class BotSettings {
 				}
 			}
 		}
+
+		config.getCategory(category).get(BotStringComponent.MessageFormat.name).setValidValues(ConfigurationHandler.getAvailableMessageFormats());
 	}
 
 	public void pushDummyConfig() {
@@ -174,6 +176,7 @@ public class BotSettings {
 				property.set(booleans.get(BotBooleanComponent.values[i]));
 			}
 		}
+		dummyConfig.getCategory("bot").get(BotStringComponent.MessageFormat.name).setValidValues(ConfigurationHandler.getAvailableMessageFormats());
 		return dummyConfig;
 	}
 
