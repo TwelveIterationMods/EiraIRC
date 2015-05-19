@@ -7,6 +7,9 @@ import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import net.blay09.mods.eirairc.CommonProxy;
 import net.blay09.mods.eirairc.EiraIRC;
+import net.blay09.mods.eirairc.addon.DirectUploadHoster;
+import net.blay09.mods.eirairc.addon.ImgurHoster;
+import net.blay09.mods.eirairc.api.EiraIRCAPI;
 import net.blay09.mods.eirairc.api.event.IRCChannelChatEvent;
 import net.blay09.mods.eirairc.client.gui.EiraGui;
 import net.blay09.mods.eirairc.client.gui.GuiEiraIRCRedirect;
@@ -66,6 +69,13 @@ public class ClientProxy extends CommonProxy {
 		try {
 			ConfigurationHandler.loadSuggestedChannels(Minecraft.getMinecraft().getResourceManager());
 		} catch (IOException ignored) {}
+	}
+
+	@Override
+	public void postInit() {
+		super.postInit();
+		EiraIRCAPI.registerUploadHoster(new DirectUploadHoster());
+		EiraIRCAPI.registerUploadHoster(new ImgurHoster());
 	}
 
 	@Override

@@ -88,9 +88,6 @@ public class EiraIRC {
 	public void postInit(FMLPostInitializationEvent event) {
 		event.buildSoftDependProxy("Dynmap", "net.blay09.mods.eirairc.addon.DynmapWebChatAddon");
 
-		EiraIRCAPI.registerUploadHoster(new DirectUploadHoster());
-		EiraIRCAPI.registerUploadHoster(new ImgurHoster());
-
 		proxy.postInit();
 	}
 	
