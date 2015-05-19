@@ -6,6 +6,7 @@ import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.settings.GeneralBooleanComponent;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Utils;
+import net.minecraft.util.ChatComponentText;
 
 import java.util.*;
 
@@ -25,8 +26,8 @@ public class ConnectionManager {
 				}
 				sb.append(s);
 			}
-			Utils.addMessageToChat(sb.toString());
-			Utils.addMessageToChat("See the log for more information.");
+			Utils.addMessageToChat(new ChatComponentText(sb.toString()));
+			Utils.addMessageToChat(new ChatComponentText("See the log for more information."));
 		}
 		for(ServerConfig serverConfig : ConfigurationHandler.getServerConfigs()) {
 			if(serverConfig.getGeneralSettings().getBoolean(GeneralBooleanComponent.AutoJoin) && !serverConfig.isRedirect()) {

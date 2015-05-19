@@ -49,7 +49,6 @@ import java.util.List;
 
 public class Utils {
 
-	private static final int MAX_CHAT_LENGTH = 100;
 	private static final String DEFAULT_USERNAME = "EiraBot";
 	private static final String ENCODING = "UTF-8";
 	
@@ -81,49 +80,6 @@ public class Utils {
 				Minecraft.getMinecraft().thePlayer.addChatMessage(chatComponent);
 			}
 		}
-	}
-	
-	public static void addMessageToChat(String text) {
-		if(text == null) {
-			return;
-		}
-		if(text.length() < MAX_CHAT_LENGTH) {
-			addMessageToChat(new ChatComponentText(text));
-		} else {
-			for(String string : wrapString(text, MAX_CHAT_LENGTH)) {
-				addMessageToChat(new ChatComponentText(string));
-			}
-		}
-	}
-	
-	public static List<String> wrapString(String text, int maxLength) {
-		List<String> tmpStrings = new ArrayList<String>();
-		if(text == null) {
-			return tmpStrings;
-		}
-		text = text.trim();
-		if(text.length() <= maxLength) {
-			tmpStrings.add(text);
-			return tmpStrings;
-		}
-		while(text.length() > maxLength) {
-			int i = maxLength;
-			while(true) {
-				if(text.charAt(i) == ' ') {
-					break;
-				} else if(i == 0) {
-					i = maxLength;
-					break;
-				}
-				i--;
-			}
-			tmpStrings.add(text.substring(0, i));
-			text = text.substring(i + 1).trim();
-		}
-		if(text.length() > 0) {
-			tmpStrings.add(text);
-		}
-		return tmpStrings;
 	}
 	
 	public static String unquote(String s) {
@@ -239,14 +195,14 @@ public class Utils {
 		Collection<IRCUser> userList = channel.getUserList();
 		if(userList.size() == 0) {
 			if(player == null) {
-				addMessageToChat(Utils.getLocalizedMessage("irc.who.noUsersOnline", connection.getHost(), channel.getName()));
+				addMessageToChat(new ChatComponentTranslation("irc.who.noUsersOnline", connection.getHost(), channel.getName()));
 			} else {
 				sendLocalizedMessage(player, "irc.who.noUsersOnline", connection.getHost(), channel.getName());
 			}
 			return;
 		}
 		if(player == null) {
-			addMessageToChat(Utils.getLocalizedMessage("irc.who.usersOnline", connection.getHost(), userList.size(), channel.getName()));
+			addMessageToChat(new ChatComponentTranslation("irc.who.usersOnline", connection.getHost(), userList.size(), channel.getName()));
 		} else {
 			sendLocalizedMessage(player, "irc.who.usersOnline", connection.getHost(), userList.size(), channel.getName());
 		}
@@ -254,7 +210,7 @@ public class Utils {
 		for(IRCUser user : userList) {
 			if(s.length() + user.getName().length() > Globals.CHAT_MAX_LENGTH) {
 				if(player == null) {
-					addMessageToChat(s);
+					addMessageToChat(new ChatComponentText(s));
 				} else {
 					player.addChatMessage(new ChatComponentText(s));
 				}
@@ -267,7 +223,7 @@ public class Utils {
 		}
 		if(s.length() > 3) {
 			if(player == null) {
-				addMessageToChat(s);
+				addMessageToChat(new ChatComponentText(s));
 			} else {
 				player.addChatMessage(new ChatComponentText(s));
 			}

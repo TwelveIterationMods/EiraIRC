@@ -94,9 +94,6 @@ public class EiraIRC {
 		event.buildSoftDependProxy("Dynmap", "net.blay09.mods.eirairc.addon.DynmapWebChatAddon");
 		event.buildSoftDependProxy("TabbyChat2", "net.blay09.mods.eirairc.addon.TabbyChat2Addon");
 
-		EiraIRCAPI.registerUploadHoster(new DirectUploadHoster());
-		EiraIRCAPI.registerUploadHoster(new ImgurHoster());
-
 		proxy.postInit();
 	}
 	
