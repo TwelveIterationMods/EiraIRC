@@ -13,6 +13,9 @@ import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.settings.BotBooleanComponent;
 import net.blay09.mods.eirairc.config.settings.BotSettings;
+import net.blay09.mods.eirairc.config.settings.ThemeColorComponent;
+import net.blay09.mods.eirairc.config.settings.ThemeSettings;
+import net.blay09.mods.eirairc.irc.IRCUserImpl;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.MessageFormat;
 import net.blay09.mods.eirairc.util.Utils;
@@ -20,6 +23,8 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
 import net.minecraftforge.common.MinecraftForge;
 
 import java.util.List;
@@ -60,6 +65,10 @@ public class CommandMessage implements SubCommand {
 		if(message.isEmpty()) {
 			throw new WrongUsageException(getCommandUsage(sender));
 		}
+		boolean isEmote = message.startsWith("/me ");
+		if(isEmote) {
+			message = message.substring(4);
+		}
 		String format = "{MESSAGE}";
 		BotSettings botSettings = ConfigHelper.getBotSettings(target);
 		IRCUser botUser = target.getConnection().getBotUser();
@@ -67,22 +76,33 @@ public class CommandMessage implements SubCommand {
 		String ircMessage = message;
 		if(serverSide) {
 			if(target.getContextType() == IRCContext.ContextType.IRCChannel) {
-				format = botSettings.getMessageFormat().mcSendChannelMessage;
+				format = isEmote ? botSettings.getMessageFormat().mcSendChannelEmote : botSettings.getMessageFormat().mcSendChannelMessage;
 			} else if (target.getContextType() == IRCContext.ContextType.IRCUser) {
-				format = botSettings.getMessageFormat().mcSendChannelMessage;
+				format = isEmote ? botSettings.getMessageFormat().mcSendPrivateEmote : botSettings.getMessageFormat().mcSendPrivateMessage;
 			}
-			ircMessage = MessageFormat.formatMessage(format, target.getConnection(), target, botUser, message, MessageFormat.Target.IRC, MessageFormat.Mode.Message);
+			ircMessage = MessageFormat.formatMessage(format, target.getConnection(), target, botUser, message, MessageFormat.Target.IRC, isEmote ? MessageFormat.Mode.Emote : MessageFormat.Mode.Message);
 		}
 		target.message(ircMessage);
 
 		format = "{MESSAGE}";
 		if(target.getContextType() == IRCContext.ContextType.IRCChannel) {
-			format = ConfigHelper.getBotSettings(target).getMessageFormat().mcSendChannelMessage;
+			format = isEmote ? botSettings.getMessageFormat().mcSendChannelEmote : botSettings.getMessageFormat().mcSendChannelMessage;
 		} else if (target.getContextType() == IRCContext.ContextType.IRCUser) {
-			format = ConfigHelper.getBotSettings(target).getMessageFormat().mcSendChannelMessage;
+			format = isEmote ? botSettings.getMessageFormat().mcSendPrivateEmote : botSettings.getMessageFormat().mcSendPrivateMessage;
 		}
 
-		MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(sender, MessageFormat.formatChatComponent(format, target.getConnection(), target, botUser, message, MessageFormat.Target.IRC, MessageFormat.Mode.Message)));
+		IChatComponent chatComponent = MessageFormat.formatChatComponent(format, target.getConnection(), target, botUser, message, MessageFormat.Target.IRC, isEmote ? MessageFormat.Mode.Emote : MessageFormat.Mode.Message);
+		if(isEmote) {
+			ThemeSettings themeSettings = ConfigHelper.getTheme(target);
+			EnumChatFormatting emoteColor = ((IRCUserImpl) botUser).getNameColor();
+			if(emoteColor == null) {
+				emoteColor = themeSettings.getColor(ThemeColorComponent.emoteTextColor);
+			}
+			if(emoteColor != null) {
+				chatComponent.getChatStyle().setColor(emoteColor);
+			}
+		}
+		MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(sender, chatComponent));
 		return true;
 	}
 
