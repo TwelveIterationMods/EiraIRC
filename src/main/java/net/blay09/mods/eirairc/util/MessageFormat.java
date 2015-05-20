@@ -21,6 +21,11 @@ import java.util.regex.Pattern;
 
 public class MessageFormat {
 
+	public static String killFormattingCodes(String text) {
+
+		return null;
+	}
+
 	public enum Target {
 		IRC,
 		Minecraft
