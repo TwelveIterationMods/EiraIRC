@@ -39,6 +39,8 @@ public class GuiChatExtended extends GuiChat implements GuiYesNoCallback {
 	private final ChatSessionHandler chatSession;
 	private final String defaultInputText;
 
+	private URL clickedURL;
+
 	public GuiChatExtended() {
 		this("");
 	}
@@ -52,6 +54,19 @@ public class GuiChatExtended extends GuiChat implements GuiYesNoCallback {
 	public void initGui() {
 		super.initGui();
 		inputField.setText(defaultInputText);
+	}
+
+	@Override
+	public void confirmClicked(boolean result, int id) {
+		if(id == 1) {
+			if(result) {
+				Utils.openWebpage(clickedURL);
+				clickedURL = null;
+			}
+			mc.displayGuiScreen(this);
+		} else {
+			super.confirmClicked(result, id);
+		}
 	}
 
 	@Override
@@ -89,6 +104,7 @@ public class GuiChatExtended extends GuiChat implements GuiYesNoCallback {
 										mc.displayGuiScreen(new GuiImagePreview(new URL(params[2]), new URL(params[1])));
 									} else {
 										if(mc.gameSettings.chatLinksPrompt) {
+											clickedURL = new URL(params[2]);
 											mc.displayGuiScreen(new GuiConfirmOpenLink(this, params[1], 0, false));
 										} else {
 											Utils.openWebpage(params[1]);
@@ -113,7 +129,7 @@ public class GuiChatExtended extends GuiChat implements GuiYesNoCallback {
 					}
 				} else {
 					// Attempt to fix MC-30864 (https://bugs.mojang.com/browse/MC-30864) on the client side as a last resort since Mojang is too busy working on their April Fools jokes
-					Matcher urlMatcher = MessageFormat.urlPattern.matcher(clickedComponent.getUnformattedText());
+					Matcher urlMatcher = MessageFormat.urlPattern.matcher(killFormattingCodes(clickedComponent.getUnformattedText()));
 					if(urlMatcher.find()) {
 						String url = urlMatcher.group();
 						try {
@@ -121,6 +137,7 @@ public class GuiChatExtended extends GuiChat implements GuiYesNoCallback {
 								mc.displayGuiScreen(new GuiImagePreview(new URL(url), null));
 							} else {
 								if(mc.gameSettings.chatLinksPrompt) {
+									clickedURL = new URL(url);
 									mc.displayGuiScreen(new GuiConfirmOpenLink(this, url, 0, false));
 								} else {
 									Utils.openWebpage(url);
@@ -135,6 +152,10 @@ public class GuiChatExtended extends GuiChat implements GuiYesNoCallback {
 			}
 		}
 		super.mouseClicked(mouseX, mouseY, button);
+	}
+
+	private String killFormattingCodes(String text) {
+		return text.replaceAll("\u00a7[A-Za-z]]", "");
 	}
 
 	@Override
