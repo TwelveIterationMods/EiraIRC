@@ -56,10 +56,6 @@ public class ThemeSettings {
 		return color;
 	}
 
-	public boolean hasColor(ThemeColorComponent component) {
-		return colors.containsKey(component);
-	}
-
 	public void pushDummyConfig() {
 		if(dummyConfig != null) {
 			load(dummyConfig, "theme", false);
