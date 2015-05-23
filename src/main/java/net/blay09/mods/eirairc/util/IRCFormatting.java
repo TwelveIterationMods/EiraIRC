@@ -321,9 +321,7 @@ public enum IRCFormatting {
 		if(nameColorId != -1) {
 			return mcChatFormatting[nameColorId];
 		} else if(Utils.isOP(player)) {
-			if(theme.hasColor(ThemeColorComponent.mcOpNameColor)) {
-				return theme.getColor(ThemeColorComponent.mcOpNameColor);
-			}
+			return theme.getColor(ThemeColorComponent.mcOpNameColor);
 		}
 		return theme.getColor(ThemeColorComponent.mcNameColor);
 	}
@@ -338,13 +336,9 @@ public enum IRCFormatting {
 			return theme.getColor(ThemeColorComponent.ircPrivateNameColor);
 		}
 		if(user.isOperator(channel)) {
-			if(theme.hasColor(ThemeColorComponent.ircOpNameColor)) {
-				return theme.getColor(ThemeColorComponent.ircOpNameColor);
-			}
+			return theme.getColor(ThemeColorComponent.ircOpNameColor);
 		} else if(user.hasVoice(channel)) {
-			if(theme.hasColor(ThemeColorComponent.ircVoiceNameColor)) {
-				return theme.getColor(ThemeColorComponent.ircVoiceNameColor);
-			}
+			return theme.getColor(ThemeColorComponent.ircVoiceNameColor);
 		}
 		return theme.getColor(ThemeColorComponent.ircNameColor);
 	}

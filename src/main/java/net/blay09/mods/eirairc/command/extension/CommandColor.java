@@ -51,7 +51,8 @@ public class CommandColor implements SubCommand {
 			throw new WrongUsageException(Utils.getLocalizedMessage("irc.commands.color"));
 		}
 		String colorName = args[0].toLowerCase();
-		if(!Utils.isOP(sender) && (SharedGlobalConfig.colorBlacklist.contains(colorName) || (SharedGlobalConfig.theme.hasColor(ThemeColorComponent.mcOpNameColor) && SharedGlobalConfig.theme.getColor(ThemeColorComponent.mcOpNameColor).equals(colorName)))) {
+		EnumChatFormatting mcOpColor = SharedGlobalConfig.theme.getColor(ThemeColorComponent.mcOpNameColor);
+		if(!Utils.isOP(sender) && (SharedGlobalConfig.colorBlacklist.contains(colorName) || (mcOpColor != null && mcOpColor.name().toLowerCase().equals(colorName)))) {
 			Utils.sendLocalizedMessage(sender, "irc.color.blackList", colorName);
 			return true;
 		}
