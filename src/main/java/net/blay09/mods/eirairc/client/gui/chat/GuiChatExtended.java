@@ -139,27 +139,6 @@ public class GuiChatExtended extends GuiChat implements GuiYesNoCallback {
 							}
 						}
 					}
-				} else {
-					// Attempt to fix MC-30864 (https://bugs.mojang.com/browse/MC-30864) on the client side as a last resort since Mojang is too busy working on their April Fools jokes
-					Matcher urlMatcher = MessageFormat.urlPattern.matcher(killFormattingCodes(clickedComponent.getUnformattedText()));
-					if(urlMatcher.find()) {
-						String url = urlMatcher.group();
-						try {
-							if(ClientGlobalConfig.imageLinkPreview && (url.endsWith(".png") || url.endsWith(".jpg"))) {
-								mc.displayGuiScreen(new GuiImagePreview(new URL(url), null));
-							} else {
-								if(mc.gameSettings.chatLinksPrompt) {
-									this.clickedURL = new URL(url);
-									mc.displayGuiScreen(new GuiConfirmOpenLink(this, url, 0, false));
-								} else {
-									Utils.openWebpage(url);
-								}
-							}
-						} catch (MalformedURLException e) {
-							e.printStackTrace();
-						}
-						return;
-					}
 				}
 			}
 		}
