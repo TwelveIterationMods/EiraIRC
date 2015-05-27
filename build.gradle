@@ -28,7 +28,7 @@ group = "net.blay09.mods"
 archivesBaseName = "eirairc"
 
 minecraft {
-    version = "1.8-11.14.1.1398"
+    version = "1.8-11.14.1.1419"
     runDir = "eclipse"
     
     // the mappings can be changed at any time, and must be in the following format.
