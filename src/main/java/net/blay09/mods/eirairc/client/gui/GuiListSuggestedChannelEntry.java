@@ -51,7 +51,7 @@ public class GuiListSuggestedChannelEntry extends GuiListEntry {
 		if(exclusiveFail) {
 			s = "\u00a78" + s;
 		}
-		fontRenderer.drawStringWithShadow(s, currentX, currentY, Globals.TEXT_COLOR);
+		fontRenderer.func_175065_a(s, currentX, currentY, Globals.TEXT_COLOR, true); // drawStringWithShadow
 		currentX += fontRenderer.getStringWidth(s) + TEXT_MARGIN;
 		s = " \u00a7o(" + channel.getServerName() + ")";
 		if(exclusiveFail) {
@@ -60,7 +60,7 @@ public class GuiListSuggestedChannelEntry extends GuiListEntry {
 		fontRenderer.drawString(s, currentX, currentY, Globals.TEXT_COLOR);
 		if(channel.getScore() > 0 && channel.isRecommended()) {
 			s = "\u00a72recommended";
-			fontRenderer.drawStringWithShadow(s, x + parentList.getWidth() - fontRenderer.getStringWidth(s) - TEXT_MARGIN, currentY, Globals.TEXT_COLOR);
+			fontRenderer.func_175065_a(s, x + parentList.getWidth() - fontRenderer.getStringWidth(s) - TEXT_MARGIN, currentY, Globals.TEXT_COLOR, true); // drawStringWithShadow
 		}
 		currentY += 15;
 		currentX = x + TEXT_MARGIN + TEXT_MARGIN;

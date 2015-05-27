@@ -27,13 +27,13 @@ public class IRCUserCommandSender implements ICommandSender {
 	}
 	
 	@Override
-	public String getCommandSenderName() {
+	public String getName() {
 		return "[EiraIRC] " + user.getName();
 	}
 
 	@Override
 	public IChatComponent getDisplayName() {
-		return new ChatComponentText(this.getCommandSenderName());
+		return new ChatComponentText(this.getName());
 	}
 
 	@Override
@@ -76,8 +76,5 @@ public class IRCUserCommandSender implements ICommandSender {
 	}
 
 	@Override
-	public void setCommandStat(CommandResultStats.Type type, int amount) {
-
-	}
-
+	public void func_174794_a(CommandResultStats.Type p_174794_1_, int p_174794_2_) {}
 }

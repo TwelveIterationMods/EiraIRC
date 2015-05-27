@@ -17,7 +17,7 @@ public class HandlerHello implements IMessageHandler<MessageHello, IMessage> {
 	public IMessage onMessage(MessageHello packet, MessageContext ctx) {
 		EntityPlayer entityPlayer = ctx.getServerHandler().playerEntity;
 		
-		EiraPlayerInfo playerInfo = EiraIRC.instance.getNetHandler().getPlayerInfo(entityPlayer.getCommandSenderName());
+		EiraPlayerInfo playerInfo = EiraIRC.instance.getNetHandler().getPlayerInfo(entityPlayer.getName());
 		playerInfo.modInstalled = true;
 		playerInfo.modVersion = packet.getVersion();
 
