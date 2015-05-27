@@ -69,6 +69,7 @@ public class IRCReplyCodes {
 	public static final int RPL_WHOISSERVER = 312;
 	public static final int RPL_WHOISOPERATOR = 313;
 	public static final int RPL_WHOISLOGIN = 330;
+	public static final int RPL_WHOISLOGIN2 = 320;
 	public static final int RPL_WHOISIDLE = 317;
 	public static final int RPL_ENDOFWHOIS = 318;
 	public static final int RPL_WHOISCHANNELS = 319;
