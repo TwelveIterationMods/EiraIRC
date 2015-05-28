@@ -12,6 +12,7 @@ import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.client.gui.GuiEiraIRCMenu;
 import net.blay09.mods.eirairc.client.gui.screenshot.GuiImagePreview;
 import net.blay09.mods.eirairc.config.ClientGlobalConfig;
+import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.handler.ChatSessionHandler;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.MessageFormat;
@@ -64,7 +65,9 @@ public class GuiChatExtended extends GuiChat implements GuiYesNoCallback {
 	public void onGuiClosed() {
 		super.onGuiClosed();
 
-		EiraIRC.instance.getChatSessionHandler().setChatTarget(null);
+		if(ClientGlobalConfig.autoResetChat) {
+			EiraIRC.instance.getChatSessionHandler().setChatTarget(null);
+		}
 	}
 
 	@Override

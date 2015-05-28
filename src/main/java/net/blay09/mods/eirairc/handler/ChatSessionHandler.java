@@ -40,7 +40,10 @@ public class ChatSessionHandler {
 
 	public void setChatTarget(IRCContext chatTarget) {
 		this.chatTarget = chatTarget;
-		if(chatTarget instanceof IRCChannel) {
+		if(chatTarget == null) {
+			targetChannelIdx = -1;
+			targetUserIdx = 0;
+		} else if(chatTarget instanceof IRCChannel) {
 			targetUserIdx = 0;
 			targetChannelIdx = validTargetChannels.indexOf(chatTarget);
 		} else if(chatTarget instanceof IRCUser) {
