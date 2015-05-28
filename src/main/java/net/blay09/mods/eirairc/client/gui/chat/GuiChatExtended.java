@@ -4,11 +4,13 @@
 package net.blay09.mods.eirairc.client.gui.chat;
 
 import net.blay09.mods.eirairc.EiraIRC;
+import net.blay09.mods.eirairc.api.EiraIRCAPI;
 import net.blay09.mods.eirairc.api.event.ClientChatEvent;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.client.gui.GuiEiraIRCMenu;
 import net.blay09.mods.eirairc.client.gui.screenshot.GuiImagePreview;
 import net.blay09.mods.eirairc.config.ClientGlobalConfig;
+import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.handler.ChatSessionHandler;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.MessageFormat;
@@ -61,7 +63,16 @@ public class GuiChatExtended extends GuiChat implements GuiYesNoCallback {
 		super.onGuiClosed();
 
 		if(ClientGlobalConfig.autoResetChat) {
-			EiraIRC.instance.getChatSessionHandler().setChatTarget(null);
+			if(SharedGlobalConfig.defaultChat.equals("Minecraft")) {
+				EiraIRC.instance.getChatSessionHandler().setChatTarget(null);
+			} else {
+				IRCContext chatTarget = EiraIRCAPI.parseContext(null, SharedGlobalConfig.defaultChat, IRCContext.ContextType.IRCChannel);
+				if(chatTarget.getContextType() != IRCContext.ContextType.Error) {
+					EiraIRC.instance.getChatSessionHandler().setChatTarget(chatTarget);
+				} else {
+					EiraIRC.instance.getChatSessionHandler().setChatTarget(null);
+				}
+			}
 		}
 	}
 
