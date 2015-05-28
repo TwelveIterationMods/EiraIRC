@@ -7,6 +7,7 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.blay09.mods.eirairc.EiraIRC;
+import net.blay09.mods.eirairc.api.EiraIRCAPI;
 import net.blay09.mods.eirairc.api.event.ClientChatEvent;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.client.gui.GuiEiraIRCMenu;
@@ -66,7 +67,16 @@ public class GuiChatExtended extends GuiChat implements GuiYesNoCallback {
 		super.onGuiClosed();
 
 		if(ClientGlobalConfig.autoResetChat) {
-			EiraIRC.instance.getChatSessionHandler().setChatTarget(null);
+			if(SharedGlobalConfig.defaultChat.equals("Minecraft")) {
+				EiraIRC.instance.getChatSessionHandler().setChatTarget(null);
+			} else {
+				IRCContext chatTarget = EiraIRCAPI.parseContext(null, SharedGlobalConfig.defaultChat, IRCContext.ContextType.IRCChannel);
+				if(chatTarget.getContextType() != IRCContext.ContextType.Error) {
+					EiraIRC.instance.getChatSessionHandler().setChatTarget(chatTarget);
+				} else {
+					EiraIRC.instance.getChatSessionHandler().setChatTarget(null);
+				}
+			}
 		}
 	}
 
