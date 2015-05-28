@@ -57,7 +57,6 @@ public class SharedGlobalConfig {
 
 		// General
 		defaultChat = thisConfig.getString("defaultChat", GENERAL, defaultChat, I19n.format("eirairc:config.property.defaultChat.tooltip"), "eirairc:config.property.defaultChat");
-		autoResetChat = thisConfig.getBoolean("autoResetChat", GENERAL, autoResetChat, I19n.format("eirairc:config.property.autoResetChat.tooltip"), "eirairc:config.property.autoResetChat");
 		enablePlayerAliases = thisConfig.getBoolean("enablePlayerAliases", GENERAL, enablePlayerAliases, I19n.format("eirairc:config.property.enablePlayerAliases.tooltip"), "eirairc:config.property.enablePlayerAliases");
 		enablePlayerColors = thisConfig.getBoolean("enablePlayerColors", GENERAL, enablePlayerColors, I19n.format("eirairc:config.property.enablePlayerColors.tooltip"), "eirairc:config.property.enablePlayerColors");
 		String[] colorBlacklistArray = thisConfig.getStringList("colorBlacklist", GENERAL, Globals.DEFAULT_COLOR_BLACKLIST, I19n.format("eirairc:config.property.colorBlacklist.tooltip"), null, "eirairc:config.property.colorBlacklist");
@@ -96,7 +95,6 @@ public class SharedGlobalConfig {
 
 		// General
 		thisConfig.get(GENERAL, "defaultChat", "", I19n.format("eirairc:config.property.defaultChat")).set(defaultChat);
-		thisConfig.get(GENERAL, "autoResetChat", "", I19n.format("eirairc:config.property.autoResetChat")).set(autoResetChat);
 		thisConfig.get(GENERAL, "enablePlayerAliases", false, I19n.format("eirairc:config.property.enablePlayerAliases.tooltip")).set(enablePlayerAliases);
 		thisConfig.get(GENERAL, "enablePlayerColors", false, I19n.format("eirairc:config.property.enablePlayerColors.tooltip")).set(enablePlayerColors);
 		thisConfig.get(GENERAL, "colorBlacklist", new String[0], I19n.format("eirairc:config.property.colorBlacklist.tooltip")).set(colorBlacklist.toArray(new String[colorBlacklist.size()]));

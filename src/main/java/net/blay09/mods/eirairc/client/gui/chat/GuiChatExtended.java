@@ -60,7 +60,9 @@ public class GuiChatExtended extends GuiChat implements GuiYesNoCallback {
 	public void onGuiClosed() {
 		super.onGuiClosed();
 
-		EiraIRC.instance.getChatSessionHandler().setChatTarget(null);
+		if(ClientGlobalConfig.autoResetChat) {
+			EiraIRC.instance.getChatSessionHandler().setChatTarget(null);
+		}
 	}
 
 	@Override
