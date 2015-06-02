@@ -1,5 +1,6 @@
 package net.blay09.mods.eirairc.client.gui.base.image;
 
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.texture.AbstractTexture;
@@ -35,7 +36,7 @@ public abstract class GuiImage extends AbstractTexture {
 	public abstract BufferedImage loadImage() throws IOException;
 
 	public void draw(int xPos, int yPos, int width, int height, float zLevel) {
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, getGlTextureId());
+		GlStateManager.bindTexture(getGlTextureId());
 		Tessellator tessellator = Tessellator.getInstance();
 		WorldRenderer renderer = tessellator.getWorldRenderer();
 		renderer.startDrawingQuads();

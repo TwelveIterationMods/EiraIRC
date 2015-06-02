@@ -295,6 +295,9 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 	@Override
 	public void onGuiClosed() {
 		super.onGuiClosed();
+		if(imgPreview != null) {
+			imgPreview.dispose();
+		}
 		MinecraftForge.EVENT_BUS.unregister(this);
 		ScreenshotManager.getInstance().save();
 	}
@@ -361,7 +364,7 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 			}
 		} else if(button == btnZoom) {
 			if(!isUploading) {
-				mc.displayGuiScreen(new GuiScreenshotBigPreview(this, imgPreview));
+				mc.displayGuiScreen(new GuiScreenshotBigPreview(this, currentScreenshot));
 			}
 		}
 	}

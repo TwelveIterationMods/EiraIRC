@@ -153,10 +153,6 @@ public class GuiChatExtended extends GuiChat implements GuiYesNoCallback {
 		super.mouseClicked(mouseX, mouseY, button);
 	}
 
-	private String killFormattingCodes(String text) {
-		return text.replaceAll("\u00a7[A-Za-z]]", "");
-	}
-
 	@Override
 	public void drawScreen(int i, int j, float k) {
 		super.drawScreen(i, j, k);
