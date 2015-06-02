@@ -37,9 +37,9 @@ public class BotCommandAlias implements IBotCommand {
 		for(EntityPlayer entity : playerEntityList) {
 			if(Utils.getNickGame(entity).equals(alias) || Utils.getNickIRC(entity, channel).equals(alias)) {
 				if(commandSettings.broadcastsResult() && channel != null) {
-					channel.message(Utils.getLocalizedMessage("irc.alias.lookup", alias, entity.getName()));
+					channel.message(Utils.getLocalizedMessage("irc.alias.lookup", alias, entity.getCommandSenderName()));
 				} else {
-					user.notice(Utils.getLocalizedMessage("irc.alias.lookup", alias, entity.getName()));
+					user.notice(Utils.getLocalizedMessage("irc.alias.lookup", alias, entity.getCommandSenderName()));
 				}
 				return;
 			}

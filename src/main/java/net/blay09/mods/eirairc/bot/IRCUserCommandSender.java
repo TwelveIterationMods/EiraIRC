@@ -18,27 +18,27 @@ public class IRCUserCommandSender implements ICommandSender {
 	private final IRCUser user;
 	private final boolean broadcastResult;
 	private final boolean opEnabled;
-	
+
 	public IRCUserCommandSender(IRCChannel channel, IRCUser user, boolean broadcastResult, boolean opEnabled) {
 		this.channel = channel;
 		this.user = user;
 		this.broadcastResult = broadcastResult;
 		this.opEnabled = opEnabled;
 	}
-	
+
 	@Override
-	public String getName() {
+	public String getCommandSenderName() {
 		return "[EiraIRC] " + user.getName();
 	}
 
 	@Override
 	public IChatComponent getDisplayName() {
-		return new ChatComponentText(this.getName());
+		return new ChatComponentText(this.getCommandSenderName());
 	}
 
 	@Override
 	public void addChatMessage(IChatComponent chatComponent) {
-		if(broadcastResult && channel != null) {
+		if (broadcastResult && channel != null) {
 			channel.message(chatComponent.getUnformattedText());
 		} else {
 			user.notice(chatComponent.getUnformattedText());
@@ -76,5 +76,6 @@ public class IRCUserCommandSender implements ICommandSender {
 	}
 
 	@Override
-	public void func_174794_a(CommandResultStats.Type p_174794_1_, int p_174794_2_) {}
+	public void setCommandStat(CommandResultStats.Type type, int amount) {}
+
 }

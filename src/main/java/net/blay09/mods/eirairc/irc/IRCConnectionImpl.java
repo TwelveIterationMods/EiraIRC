@@ -337,7 +337,7 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 			IRCUserImpl user = (IRCUserImpl) getOrCreateUser(msg.arg(1));
 			user.setAuthLogin(msg.arg(2));
 		} else if(numeric == IRCReplyCodes.RPL_IDENTIFIED || numeric == IRCReplyCodes.RPL_WHOISLOGIN2) {
-			IRCUserImpl user = (IRCUserImpl) getOrCreateUser(msg.arg!(1));
+			IRCUserImpl user = (IRCUserImpl) getOrCreateUser(msg.arg(1));
 			user.setAuthLogin(msg.arg(1));
 		} else if(numeric == IRCReplyCodes.RPL_ENDOFWHOIS) {
 			IRCUserImpl user = (IRCUserImpl) getOrCreateUser(msg.arg(1));

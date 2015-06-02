@@ -194,7 +194,7 @@ public class MessageFormat {
 					if(token.equals("SERVER")) {
 						component = new ChatComponentText(Utils.getCurrentServerName());
 					} else if(token.equals("USER")) {
-						component = new ChatComponentText(sender.getName());
+						component = new ChatComponentText(sender.getCommandSenderName());
 					} else if(token.equals("CHANNEL")) {
 						component = new ChatComponentText(context != null ? context.getName() : "");
 					} else if(token.equals("NICK")) {
@@ -211,7 +211,7 @@ public class MessageFormat {
 								}
 							}
 						} else {
-							component = new ChatComponentText(sender.getName());
+							component = new ChatComponentText(sender.getCommandSenderName());
 						}
 					} else if(token.equals("MESSAGE")) {
 						BotSettings botSettings = ConfigHelper.getBotSettings(context);

@@ -30,6 +30,8 @@ archivesBaseName = "eirairc"
 minecraft {
     version = "1.8-11.14.1.1419"
     runDir = "eclipse"
+
+    mappings = "stable_16"
 }
 
 processResources
@@ -63,6 +65,10 @@ repositories {
         name = "dynmap"
         url = "http://repo.mikeprimm.com/"
     }
+    maven {
+        name = "eiramods"
+        url ="http://repo.blay09.net"
+    }
 }
 
 configurations {
@@ -72,6 +78,7 @@ configurations {
 dependencies {
     compile 'org.jetbrains:annotations:13.0'
     compile 'us.dynmap:DynmapCoreAPI:2.1'
+    compile 'net.blay09.mods:eiramoticons:1.0.45:dev'
     compile files('lib/TabbyChat-2.0.0-beta-api.jar')
     deployerJars "org.apache.maven.wagon:wagon-ftp:2.2"
 }

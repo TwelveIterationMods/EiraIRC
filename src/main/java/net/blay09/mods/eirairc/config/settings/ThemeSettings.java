@@ -70,11 +70,11 @@ public class ThemeSettings {
 			if(defaultColor == null) {
 				defaultColor = EnumChatFormatting.WHITE;
 			}
-			Property property = dummyConfig.get("theme", ThemeColorComponent.values[i].name, String.valueOf(defaultColor.func_175746_b()));
+			Property property = dummyConfig.get("theme", ThemeColorComponent.values[i].name, String.valueOf(defaultColor.getColorIndex()));
 			property.setLanguageKey(ThemeColorComponent.values[i].langKey);
 			property.setValidValues(VALID_COLOR_CODES);
 			if(colors.containsKey(ThemeColorComponent.values[i])) {
-				property.set(String.valueOf(colors.get(ThemeColorComponent.values[i]).func_175746_b())); // getColorIndex
+				property.set(String.valueOf(colors.get(ThemeColorComponent.values[i]).getColorIndex())); // getColorIndex
 			}
 		}
 		return dummyConfig;
@@ -84,7 +84,7 @@ public class ThemeSettings {
 		colors.clear();
 		for(int i = 0; i < ThemeColorComponent.values().length; i++) {
 			if(defaultValues || config.hasKey(category, ThemeColorComponent.values[i].name)) {
-				String value = config.getString(ThemeColorComponent.values[i].name, category, String.valueOf(ThemeColorComponent.values[i].defaultValue.func_175746_b()), I19n.format(ThemeColorComponent.values[i].langKey + ".tooltip"), VALID_COLOR_CODES, ThemeColorComponent.values[i].langKey);
+				String value = config.getString(ThemeColorComponent.values[i].name, category, String.valueOf(ThemeColorComponent.values[i].defaultValue.getColorIndex()), I19n.format(ThemeColorComponent.values[i].langKey + ".tooltip"), VALID_COLOR_CODES, ThemeColorComponent.values[i].langKey);
 				if(!value.isEmpty()) {
 					try {
 						EnumChatFormatting colorValue = getColorFromCode(Integer.parseInt(value));
@@ -111,14 +111,14 @@ public class ThemeSettings {
 		}
 		JsonObject object = new JsonObject();
 		for(Map.Entry<ThemeColorComponent, EnumChatFormatting> entry : colors.entrySet()) {
-			object.addProperty(entry.getKey().name, entry.getValue().func_175746_b());
+			object.addProperty(entry.getKey().name, entry.getValue().getColorIndex());
 		}
 		return object;
 	}
 
 	public void save(Configuration config, String category) {
 		for(Map.Entry<ThemeColorComponent, EnumChatFormatting> entry : colors.entrySet()) {
-			config.get(category, entry.getKey().name, "", I19n.format(entry.getKey().langKey + ".tooltip")).set(entry.getValue().func_175746_b());
+			config.get(category, entry.getKey().name, "", I19n.format(entry.getKey().langKey + ".tooltip")).set(entry.getValue().getColorIndex());
 		}
 	}
 

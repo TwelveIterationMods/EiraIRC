@@ -100,11 +100,11 @@ public class Utils {
 
 	public static String getAliasForPlayer(EntityPlayer player) {
 		if(!SharedGlobalConfig.enablePlayerAliases) {
-			return player.getName();
+			return player.getCommandSenderName();
 		}
 		String name = player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getCompoundTag(Globals.NBT_EIRAIRC).getString(Globals.NBT_ALIAS);
 		if(name.isEmpty()) {
-			name = player.getName();
+			name = player.getCommandSenderName();
 		}
 		return name;
 	}

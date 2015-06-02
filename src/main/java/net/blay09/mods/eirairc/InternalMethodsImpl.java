@@ -29,7 +29,7 @@ public class InternalMethodsImpl implements InternalMethods {
 
 	@Override
 	public boolean hasClientSideInstalled(ICommandSender user) {
-		EiraPlayerInfo playerInfo = EiraIRC.instance.getNetHandler().getPlayerInfo(user.getName());
+		EiraPlayerInfo playerInfo = EiraIRC.instance.getNetHandler().getPlayerInfo(user.getCommandSenderName());
 		return playerInfo.modInstalled;
 	}
 

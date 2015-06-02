@@ -33,13 +33,13 @@ public class DynmapWebChatAddon extends DynmapCommonAPIListener {
 		}
 
 		@Override
-		public String getName() {
+		public String getCommandSenderName() {
 			return "[" + source + "]" + ((name != null && !name.isEmpty()) ? " " + name : "");
 		}
 
 		@Override
 		public IChatComponent getDisplayName() {
-			return new ChatComponentText(this.getName());
+			return new ChatComponentText(this.getCommandSenderName());
 		}
 
 		@Override
@@ -76,7 +76,8 @@ public class DynmapWebChatAddon extends DynmapCommonAPIListener {
 		}
 
 		@Override
-		public void func_174794_a(CommandResultStats.Type p_174794_1_, int p_174794_2_) {}
+		public void setCommandStat(CommandResultStats.Type type, int amount) {}
+
 	}
 
 	private DynmapCommonAPI api;

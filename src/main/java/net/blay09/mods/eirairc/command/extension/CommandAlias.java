@@ -52,7 +52,7 @@ public class CommandAlias implements SubCommand {
 			String alias = args[0];
 			for (EntityPlayerMP playerEntity : playerEntityList) {
 				if (playerEntity.getEntityData().getCompoundTag(Globals.NBT_EIRAIRC).getString(Globals.NBT_ALIAS).equals(alias)) {
-					Utils.sendLocalizedMessage(sender, "irc.alias.lookup", alias, playerEntity.getName());
+					Utils.sendLocalizedMessage(sender, "irc.alias.lookup", alias, playerEntity.getCommandSenderName());
 					return true;
 				}
 			}
