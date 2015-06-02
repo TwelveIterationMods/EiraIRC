@@ -7,6 +7,7 @@ import mnm.mods.tabbychat.api.TabbyAPI;
 import net.blay09.mods.eirairc.api.event.ChatMessageEvent;
 import net.blay09.mods.eirairc.api.event.IRCChannelJoinedEvent;
 import net.blay09.mods.eirairc.api.event.IRCChannelLeftEvent;
+import net.blay09.mods.eirairc.api.event.IRCPrivateChatEvent;
 import net.blay09.mods.eirairc.config.ClientGlobalConfig;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.config.settings.BotStringComponent;
@@ -14,6 +15,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+@SuppressWarnings("unused")
 public class TabbyChat2Addon {
 
     public TabbyChat2Addon() {
@@ -29,7 +31,7 @@ public class TabbyChat2Addon {
     public void onChannelJoined(IRCChannelJoinedEvent event) {
         Channel channel = TabbyAPI.getAPI().getChat().getChannel(event.channel.getName());
         channel.setPrefixHidden(true);
-        channel.setPrefix("/irc msg " + event.channel.getName() + " ");
+        channel.setPrefix("/irc msg " + event.channel.getIdentifier() + " ");
         channel.setActive(true);
     }
 
@@ -37,6 +39,17 @@ public class TabbyChat2Addon {
     public void onChannelLeft(IRCChannelLeftEvent event) {
         Channel channel = TabbyAPI.getAPI().getChat().getChannel(event.channel.getName());
         channel.setActive(false);
+    }
+
+    @SubscribeEvent
+    public void onPrivateMessage(IRCPrivateChatEvent event) {
+        if(event.sender == null) {
+            return;
+        }
+        Channel channel = TabbyAPI.getAPI().getChat().getChannel(event.sender.getName());
+        channel.setPrefixHidden(true);
+        channel.setPrefix("/irc msg " + event.sender.getIdentifier() + " ");
+        channel.setActive(true);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
