@@ -16,21 +16,16 @@ import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.config.base.ServiceConfig;
 import net.blay09.mods.eirairc.config.base.ServiceSettings;
-import net.blay09.mods.eirairc.config.settings.ThemeColorComponent;
-import net.blay09.mods.eirairc.config.settings.ThemeSettings;
 import net.blay09.mods.eirairc.irc.IRCConnectionImpl;
-import net.blay09.mods.eirairc.irc.IRCUserImpl;
 import net.blay09.mods.eirairc.irc.ssl.IRCConnectionSSLImpl;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.*;
 import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.lwjgl.Sys;
 
 import java.awt.*;
@@ -74,7 +69,7 @@ public class Utils {
 	
 	public static void addMessageToChat(@NotNull IChatComponent chatComponent) {
 		if(MinecraftServer.getServer() != null && MinecraftServer.getServer().getConfigurationManager() != null && !MinecraftServer.getServer().isSinglePlayer()) {
-			MinecraftServer.getServer().getConfigurationManager().sendChatMsg(chatComponent);
+			MinecraftServer.getServer().getConfigurationManager().sendChatMsg(translateToDefault(chatComponent));
 		} else {
 			if(Minecraft.getMinecraft().thePlayer != null) {
 				Minecraft.getMinecraft().thePlayer.addChatMessage(chatComponent);
@@ -457,5 +452,49 @@ public class Utils {
 
 	public static String getModpackId() {
 		return "";
+	}
+
+	public static IChatComponent translateToDefault(IChatComponent component) {
+		if(component instanceof ChatComponentText) {
+			return translateChildrenToDefault((ChatComponentText) component);
+		} else if(component instanceof ChatComponentTranslation) {
+			return translateComponentToDefault((ChatComponentTranslation) component);
+		}
+		return null;
+	}
+
+	private static IChatComponent translateChildrenToDefault(ChatComponentText chatComponent) {
+		ChatComponentText copyComponent = new ChatComponentText(chatComponent.getChatComponentText_TextValue());
+		copyComponent.setChatStyle(chatComponent.getChatStyle());
+		for(Object object : chatComponent.getSiblings()) {
+			IChatComponent adjustedComponent = translateToDefault((IChatComponent) object);
+			if(adjustedComponent != null) {
+				copyComponent.appendSibling(adjustedComponent);
+			}
+		}
+		return copyComponent;
+	}
+
+	public static IChatComponent translateComponentToDefault(ChatComponentTranslation chatComponent) {
+		Object[] formatArgs = chatComponent.getFormatArgs();
+		Object[] copyFormatArgs = new Object[formatArgs.length];
+		for(int i = 0; i < formatArgs.length; i++) {
+			if(formatArgs[i] instanceof IChatComponent) {
+				copyFormatArgs[i] = translateToDefault((IChatComponent) formatArgs[i]);
+			} else {
+				ChatComponentText textComponent = new ChatComponentText(formatArgs[i] == null ? "null" : formatArgs[i].toString());
+				textComponent.getChatStyle().setParentStyle(chatComponent.getChatStyle());
+				copyFormatArgs[i] = textComponent;
+			}
+		}
+		ChatComponentText translateComponent = new ChatComponentText(I19n.format(chatComponent.getKey(), copyFormatArgs));
+		translateComponent.setChatStyle(chatComponent.getChatStyle());
+		for(Object object : chatComponent.getSiblings()) {
+			IChatComponent adjustedComponent = translateToDefault((IChatComponent) object);
+			if(adjustedComponent != null) {
+				translateComponent.appendSibling(adjustedComponent);
+			}
+		}
+		return translateComponent;
 	}
 }

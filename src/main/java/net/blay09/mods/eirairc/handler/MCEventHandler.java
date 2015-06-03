@@ -4,6 +4,7 @@
 package net.blay09.mods.eirairc.handler;
 
 import net.blay09.mods.eirairc.EiraIRC;
+import net.blay09.mods.eirairc.api.EiraIRCAPI;
 import net.blay09.mods.eirairc.api.event.ChatMessageEvent;
 import net.blay09.mods.eirairc.api.event.ClientChatEvent;
 import net.blay09.mods.eirairc.api.event.RelayChat;
@@ -15,6 +16,7 @@ import net.blay09.mods.eirairc.command.base.IRCCommandHandler;
 import net.blay09.mods.eirairc.config.*;
 import net.blay09.mods.eirairc.config.settings.*;
 import net.blay09.mods.eirairc.irc.IRCConnectionImpl;
+import net.blay09.mods.eirairc.net.EiraNetHandler;
 import net.blay09.mods.eirairc.net.PacketHandler;
 import net.blay09.mods.eirairc.net.message.MessageRedirect;
 import net.blay09.mods.eirairc.util.ConfigHelper;
@@ -28,6 +30,7 @@ import net.minecraft.command.server.CommandEmote;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
@@ -200,7 +203,11 @@ public class MCEventHandler {
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void onChatMessage(ChatMessageEvent event) {
 		if(event.target != null) {
-			event.target.addChatMessage(event.component);
+			if(!EiraIRCAPI.hasClientSideInstalled(event.target)) {
+				event.target.addChatMessage(Utils.translateToDefault(event.component));
+			} else {
+				event.target.addChatMessage(event.component);
+			}
 		} else {
 			Utils.addMessageToChat(event.component);
 		}
