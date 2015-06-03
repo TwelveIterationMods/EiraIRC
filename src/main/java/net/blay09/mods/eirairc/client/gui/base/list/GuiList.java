@@ -72,7 +72,7 @@ public class GuiList<T extends GuiListEntry> extends Gui {
 	}
 
 	public void setSelectedIdx(int idx) {
-		if(selectedIdx != -1) {
+		if(selectedIdx != -1 && selectedIdx < entries.size()) {
 			entries.get(selectedIdx).setSelected(false);
 		}
 		selectedIdx = idx;
