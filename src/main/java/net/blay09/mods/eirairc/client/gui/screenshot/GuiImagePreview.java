@@ -145,7 +145,7 @@ public class GuiImagePreview extends EiraGuiScreen implements GuiYesNoCallback {
 					if (hoverTime > TOOLTIP_TIME) {
 						tooltipList.clear();
 						tooltipList.add(imageButton.getTooltipText());
-						func_146283_a(tooltipList, mouseX, mouseY);
+						drawHoveringText(tooltipList, mouseX, mouseY);
 					}
 					break;
 				}

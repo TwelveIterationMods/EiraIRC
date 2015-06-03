@@ -154,7 +154,7 @@ public class Utils {
 	}
 
 	public static String getServerName() {
-		ServerData serverData = Minecraft.getMinecraft().func_147104_D(); // getServerData
+		ServerData serverData = Minecraft.getMinecraft().getCurrentServerData();
 		if(serverData != null) {
 			return serverData.serverName;
 		}
@@ -162,7 +162,7 @@ public class Utils {
 	}
 
 	public static String getServerAddress() {
-		ServerData serverData = Minecraft.getMinecraft().func_147104_D(); // getServerData
+		ServerData serverData = Minecraft.getMinecraft().getCurrentServerData();
 		if(serverData != null) {
 			return serverData.serverIP;
 		}

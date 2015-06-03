@@ -122,7 +122,7 @@ public class GuiChatExtended extends GuiChat implements GuiYesNoCallback {
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int button) {
 		if(button == 0 && mc.gameSettings.chatLinks) {
-			IChatComponent clickedComponent = mc.ingameGUI.getChatGUI().func_146236_a(Mouse.getX(), Mouse.getY());
+			IChatComponent clickedComponent = mc.ingameGUI.getChatGUI().getChatComponent(Mouse.getX(), Mouse.getY());
 			if(clickedComponent != null) {
 				ClickEvent clickEvent = clickedComponent.getChatStyle().getChatClickEvent();
 				if(clickEvent != null) {

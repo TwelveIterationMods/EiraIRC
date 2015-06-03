@@ -40,7 +40,7 @@ public class BotCommandMessage implements IBotCommand {
 			user.notice(Utils.getLocalizedMessage("irc.msg.disabled"));
 		}
 		String playerName = args[0];
-		EntityPlayer entityPlayer = MinecraftServer.getServer().getConfigurationManager().func_152612_a(playerName); // getPlayerForUsername
+		EntityPlayer entityPlayer = MinecraftServer.getServer().getConfigurationManager().getPlayerByUsername(playerName);
 		if(entityPlayer == null) {
 			List<EntityPlayer> playerEntityList = MinecraftServer.getServer().getConfigurationManager().playerEntityList;
 			for(EntityPlayer entity : playerEntityList) {

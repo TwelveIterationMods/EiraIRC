@@ -30,6 +30,8 @@ archivesBaseName = "eirairc"
 minecraft {
     version = "1.7.10-10.13.3.1399-1.7.10"
     runDir = "eclipse"
+
+    mappings = "stable_12"
 }
 
 processResources

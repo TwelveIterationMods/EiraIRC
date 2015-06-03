@@ -200,7 +200,7 @@ public class MessageFormat {
 					} else if(token.equals("NICK")) {
 						if(sender instanceof EntityPlayer) {
 							EntityPlayer player = (EntityPlayer) sender;
-							component = player.func_145748_c_().createCopy();
+							component = player.getFormattedCommandSenderName().createCopy();
 							String displayName = component.getUnformattedText();
 							displayName = formatNick(displayName, context, target, mode, null);
 							component = new ChatComponentText(displayName);
