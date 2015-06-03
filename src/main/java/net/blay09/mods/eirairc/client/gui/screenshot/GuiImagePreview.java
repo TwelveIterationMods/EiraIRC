@@ -79,7 +79,7 @@ public class GuiImagePreview extends EiraGuiScreen implements GuiYesNoCallback {
 		if(button == btnClipboard) {
 			Utils.setClipboardString(url.toString());
 		} else if(button == btnZoom) {
-			mc.displayGuiScreen(new GuiScreenshotBigPreview(this, imgPreview));
+			mc.displayGuiScreen(new GuiScreenshotBigPreview(this, directURL));
 		} else if(button == btnGoToURL) {
 			mc.displayGuiScreen(new GuiConfirmOpenLink(this, url.toString(), 0, true));
 		}

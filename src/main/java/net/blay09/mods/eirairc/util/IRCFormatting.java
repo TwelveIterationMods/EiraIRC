@@ -46,7 +46,7 @@ public enum IRCFormatting {
 	private static final Map<String, EnumChatFormatting> twitchColorCache = new HashMap<String, EnumChatFormatting>();
 	static {
 //		mcColorValues[EnumChatFormatting.BLACK.ordinal()] = new RGB(0f, 0f, 0f);
-		mcColorValues[EnumChatFormatting.DARK_BLUE.ordinal()] = new RGB(0f, 0f, 0.66f);
+//		mcColorValues[EnumChatFormatting.DARK_BLUE.ordinal()] = new RGB(0f, 0f, 0.66f);
 		mcColorValues[EnumChatFormatting.DARK_GREEN.ordinal()] = new RGB(0f, 0.66f, 0f);
 		mcColorValues[EnumChatFormatting.DARK_AQUA.ordinal()] = new RGB(0f, 0.66f, 0.66f);
 		mcColorValues[EnumChatFormatting.DARK_RED.ordinal()] = new RGB(0.66f, 0f, 0f);
