@@ -3,6 +3,8 @@
 
 package net.blay09.mods.eirairc.handler;
 
+import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
@@ -10,6 +12,7 @@ import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.blay09.mods.eirairc.EiraIRC;
+import net.blay09.mods.eirairc.api.EiraIRCAPI;
 import net.blay09.mods.eirairc.api.event.ChatMessageEvent;
 import net.blay09.mods.eirairc.api.event.ClientChatEvent;
 import net.blay09.mods.eirairc.api.event.RelayChat;
@@ -199,7 +202,11 @@ public class MCEventHandler {
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void onChatMessage(ChatMessageEvent event) {
 		if(event.target != null) {
-			event.target.addChatMessage(event.component);
+			if(!EiraIRCAPI.hasClientSideInstalled(event.target)) {
+				event.target.addChatMessage(Utils.translateToDefault(event.component));
+			} else {
+				event.target.addChatMessage(event.component);
+			}
 		} else {
 			Utils.addMessageToChat(event.component);
 		}
