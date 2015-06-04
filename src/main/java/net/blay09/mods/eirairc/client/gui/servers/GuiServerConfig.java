@@ -188,13 +188,13 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 					connection = Utils.connectTo(config);
 				}
 				if(connection != null) {
+					btnChannelJoinLeave.enabled = false;
 					ChannelConfig channelConfig = lstChannels.getSelectedItem().getConfig();
 					if (connection.getChannel(channelConfig.getName()) != null) {
 						connection.part(channelConfig.getName());
 					} else {
 						connection.join(channelConfig.getName(), channelConfig.getPassword());
 					}
-					btnChannelJoinLeave.enabled = false;
 				}
 			}
 		} else if(button == btnDelete) {
