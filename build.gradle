@@ -124,6 +124,17 @@ uploadArchives {
                 version = project.version
                 artifactId = project.archivesBaseName
             }
+
+            pom.withXml {
+                asNode().dependencies.dependency.findAll {
+                    it.scope.text() == "compile"
+                }.each {
+                    if(it.optional)
+                        it.optional.value = 'true'
+                    else
+                        it.appendNode('optional', 'true');
+                }
+            }
         }
     }
 }
