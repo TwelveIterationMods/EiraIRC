@@ -15,10 +15,6 @@ The easiest way to add EiraIRC to your development environment is to do some add
 ```
 repositories {
     maven {
-        name = "dynmap"
-        url = "http://repo.mikeprimm.com/"
-    }
-    maven {
         name = "eiramods"
         url ="http://repo.blay09.net"
     }
