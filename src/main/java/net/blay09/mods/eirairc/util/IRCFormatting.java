@@ -131,6 +131,7 @@ public enum IRCFormatting {
 				}
 			}
 		}
+		result = result.replace(MC_FORMATTING_PREFIX, "$");
 		return result;
 	}
 
