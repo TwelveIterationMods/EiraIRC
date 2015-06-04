@@ -15,16 +15,11 @@ The easiest way to add EiraIRC to your development environment is to do some add
 ```
 repositories {
     maven {
-        name = "dynmap"
-        url = "http://repo.mikeprimm.com/"
-    }
-    maven {
         name = "eiramods"
         url ="http://repo.blay09.net"
     }
 }
 ```
-> Note: The reference to the dynmap repository is necessary at the moment because it's stored as a dependency in EiraIRC's maven files. I'm still looking for a way around that.
 
 Then, add a dependency to either just the EiraIRC API (api) or, if you want EiraIRC to be available while testing as well, the deobfuscated version (dev):
 
