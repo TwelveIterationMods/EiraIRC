@@ -126,6 +126,7 @@ public enum IRCFormatting {
 				result = result.replaceFirst(Matcher.quoteReplacement(matcher.group()), MC_FORMATTING_PREFIX + IRCFormatting.getColorFromIRCColorCode(colorCode));
 			}
 		}
+		result = result.replace(MC_FORMATTING_PREFIX, "$");
 		return result;
 	}
 
