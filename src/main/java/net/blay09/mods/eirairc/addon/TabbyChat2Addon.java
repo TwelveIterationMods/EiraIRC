@@ -20,11 +20,7 @@ public class TabbyChat2Addon {
 
     public TabbyChat2Addon() {
         MinecraftForge.EVENT_BUS.register(this);
-        SharedGlobalConfig.botSettings.setString(BotStringComponent.MessageFormat, "TabbyChat2");
-        SharedGlobalConfig.save();
-        ClientGlobalConfig.chatNoOverride = true;
-        ClientGlobalConfig.disableChatToggle = true;
-        ClientGlobalConfig.save();
+        Compatibility.tabbyChatInstalled = true;
     }
 
     @SubscribeEvent

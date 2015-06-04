@@ -4,6 +4,7 @@
 package net.blay09.mods.eirairc.client.gui.chat;
 
 import net.blay09.mods.eirairc.EiraIRC;
+import net.blay09.mods.eirairc.addon.Compatibility;
 import net.blay09.mods.eirairc.api.EiraIRCAPI;
 import net.blay09.mods.eirairc.api.event.ClientChatEvent;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
@@ -156,7 +157,7 @@ public class GuiChatExtended extends GuiChat implements GuiYesNoCallback {
 	@Override
 	public void drawScreen(int i, int j, float k) {
 		super.drawScreen(i, j, k);
-		if(!ClientGlobalConfig.disableChatToggle && !ClientGlobalConfig.clientBridge) {
+		if(!ClientGlobalConfig.disableChatToggle && !ClientGlobalConfig.clientBridge && !Compatibility.tabbyChatInstalled) {
 			IRCContext target = chatSession.getChatTarget();
 			String targetName;
 			if(target == null) {

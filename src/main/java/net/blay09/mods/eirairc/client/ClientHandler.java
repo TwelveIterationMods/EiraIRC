@@ -4,6 +4,7 @@
 package net.blay09.mods.eirairc.client;
 
 import net.blay09.mods.eirairc.EiraIRC;
+import net.blay09.mods.eirairc.addon.Compatibility;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.client.gui.GuiEiraIRCMenu;
 import net.blay09.mods.eirairc.client.gui.GuiWelcome;
@@ -83,7 +84,7 @@ public class ClientHandler {
 					ScreenshotManager.getInstance().uploadScreenshot(screenshot, ScreenshotAction.UploadShare);
 				}
 			} else {
-				if(!ClientGlobalConfig.chatNoOverride) {
+				if(!ClientGlobalConfig.chatNoOverride || Compatibility.tabbyChatInstalled) {
 					GuiScreen currentScreen = Minecraft.getMinecraft().currentScreen;
 					if(currentScreen == null || currentScreen.getClass() == GuiChat.class) {
 						if(Keyboard.getEventKey() == keyChat) {
@@ -117,7 +118,7 @@ public class ClientHandler {
 				Minecraft.getMinecraft().displayGuiScreen(new GuiWelcome());
 			}
 		}
-		if(Minecraft.getMinecraft().currentScreen instanceof GuiChat && !ClientGlobalConfig.disableChatToggle && !ClientGlobalConfig.clientBridge) {
+		if(Minecraft.getMinecraft().currentScreen instanceof GuiChat && !ClientGlobalConfig.disableChatToggle && !ClientGlobalConfig.clientBridge && !Compatibility.tabbyChatInstalled) {
 			if(Keyboard.isKeyDown(ClientGlobalConfig.keyToggleTarget.getKeyCode())) {
 				if(!wasToggleTargetDown) {
 					boolean users = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
@@ -127,7 +128,7 @@ public class ClientHandler {
 					}
 					if(!users || newTarget != null) {
 						chatSession.setChatTarget(newTarget);
-						if(ClientGlobalConfig.chatNoOverride) {
+						if(ClientGlobalConfig.chatNoOverride || Compatibility.tabbyChatInstalled) {
 							Utils.addMessageToChat(new ChatComponentTranslation("eirairc:irc.general.chattingTo", newTarget == null ? "Minecraft" : newTarget.getName()));
 						}
 					}
@@ -135,7 +136,7 @@ public class ClientHandler {
 				} else {
 					if(System.currentTimeMillis() - lastToggleTarget >= 1000) {
 						chatSession.setChatTarget(null);
-						if (ClientGlobalConfig.chatNoOverride) {
+						if (ClientGlobalConfig.chatNoOverride || Compatibility.tabbyChatInstalled) {
 							Utils.addMessageToChat(new ChatComponentTranslation("eirairc:irc.general.chattingTo", "Minecraft"));
 						}
 						lastToggleTarget = System.currentTimeMillis();

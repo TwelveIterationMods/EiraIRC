@@ -3,6 +3,7 @@ package net.blay09.mods.eirairc.config.settings;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import net.blay09.mods.eirairc.addon.Compatibility;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.base.MessageFormatConfig;
 import net.blay09.mods.eirairc.util.I19n;
@@ -111,6 +112,9 @@ public class BotSettings {
 	}
 
 	public MessageFormatConfig getMessageFormat() {
+		if(Compatibility.tabbyChatInstalled) {
+			return ConfigurationHandler.getMessageFormat("TabbyChat2");
+		}
 		return ConfigurationHandler.getMessageFormat(getString(BotStringComponent.MessageFormat));
 	}
 
