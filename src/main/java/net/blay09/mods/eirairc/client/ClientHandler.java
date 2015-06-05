@@ -146,7 +146,7 @@ public class ClientHandler {
 				wasToggleTargetDown = false;
 			}
 		}
-		if(Keyboard.isKeyDown(Minecraft.getMinecraft().gameSettings.keyBindScreenshot.getKeyCode())) {
+		if(Minecraft.getMinecraft().gameSettings.keyBindScreenshot.getKeyCode() > 0 && Keyboard.isKeyDown(Minecraft.getMinecraft().gameSettings.keyBindScreenshot.getKeyCode())) {
 			screenshotCheck = 10;
 		} else if(screenshotCheck > 0) {
 			screenshotCheck--;
