@@ -69,7 +69,7 @@ public class CommandNick implements SubCommand {
 				}
 			} else {
 				IRCConnection connection = context.getConnection();
-				if(connection.getHost().equals(Globals.TWITCH_SERVER)) {
+				if(connection.isTwitch()) {
 					return true;
 				}
 				connection.nick(ConfigHelper.formatNick(nick));

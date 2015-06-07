@@ -150,4 +150,9 @@ public interface IRCConnection extends IRCContext {
 	 * @return the IRCUser object that represents the connection's bot
 	 */
 	IRCUser getBotUser();
+
+	/**
+	 * @return true if this is a Twitch chat connection
+	 */
+	boolean isTwitch();
 }
