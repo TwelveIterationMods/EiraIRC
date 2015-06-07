@@ -372,3 +372,8 @@ key.irc.openScreenshots=Open Screenshot Archive
 key.irc.openMenu=Open EiraIRC Menu
 
 #######################################################################################################################
+
+# EiraMoticons Addon
+eirairc:twitch.channelBroadcaster=Channel Broadcaster
+eirairc:twitch.channelModerator=Channel Moderator
+eirairc:twitch.channelSubscriber=Channel Subscriber

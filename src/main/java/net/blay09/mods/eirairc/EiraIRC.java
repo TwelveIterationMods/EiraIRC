@@ -3,6 +3,7 @@
 
 package net.blay09.mods.eirairc;
 
+import net.blay09.mods.eirairc.addon.Compatibility;
 import net.blay09.mods.eirairc.api.EiraIRCAPI;
 import net.blay09.mods.eirairc.command.base.CommandIRC;
 import net.blay09.mods.eirairc.command.base.CommandServIRC;
@@ -89,6 +90,7 @@ public class EiraIRC {
 	public void postInit(FMLPostInitializationEvent event) {
 		event.buildSoftDependProxy("Dynmap", "net.blay09.mods.eirairc.addon.DynmapWebChatAddon");
 		event.buildSoftDependProxy("TabbyChat2", "net.blay09.mods.eirairc.addon.TabbyChat2Addon");
+		event.buildSoftDependProxy("eiramoticons", "net.blay09.mods.eirairc.addon.EiraMoticonsAddon");
 
 		proxy.postInit();
 	}

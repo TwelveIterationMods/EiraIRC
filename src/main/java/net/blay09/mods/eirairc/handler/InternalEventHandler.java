@@ -92,6 +92,14 @@ public class InternalEventHandler {
                 String targetColor = event.message.substring(lastSpace + 1);
                 IRCUserImpl user = (IRCUserImpl) event.connection.getOrCreateUser(targetNick);
                 user.setNameColor(IRCFormatting.getColorFromTwitch(targetColor));
+            } else if(event.message.startsWith("SPECIALUSER ")) {
+                int lastSpace = event.message.lastIndexOf(' ');
+                String targetNick = event.message.substring(12, lastSpace);
+                String targetType = event.message.substring(lastSpace + 1);
+                if(targetType.equals("subscriber")) {
+                    IRCUserImpl user = (IRCUserImpl) event.connection.getOrCreateUser(targetNick);
+                    user.setSubscriber(true);
+                }
             }
             event.setCanceled(true);
         }

@@ -1,5 +1,7 @@
 package net.blay09.mods.eirairc.util;
 
+import net.blay09.mods.eirairc.addon.Compatibility;
+import net.blay09.mods.eirairc.addon.EiraMoticonsAddon;
 import net.blay09.mods.eirairc.api.event.ApplyEmoticons;
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
@@ -7,6 +9,7 @@ import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.api.irc.IRCUser;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.config.settings.*;
+import net.blay09.mods.eirairc.irc.IRCUserImpl;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.event.ClickEvent;
@@ -17,7 +20,6 @@ import net.minecraftforge.common.MinecraftForge;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 
 public class MessageFormat {
 
@@ -161,6 +163,21 @@ public class MessageFormat {
 			GeneralSettings settings = ConfigHelper.getGeneralSettings(context);
 			if(settings.getBoolean(GeneralBooleanComponent.ShowNameFlags)) {
 				nick = ircUser.getChannelModePrefix((IRCChannel) context) + nick;
+			}
+			if(Compatibility.eiraMoticonsInstalled && SharedGlobalConfig.twitchNameBadges) {
+				if(context.getConnection().getHost().equals(Globals.TWITCH_SERVER)) {
+					if(ircUser.getName().toLowerCase().equals(context.getName().substring(1).toLowerCase())) {
+						nick = EiraMoticonsAddon.casterBadge.getChatString() + " " + nick;
+					} else if(ircUser.isOperator((IRCChannel) context)) {
+						nick = EiraMoticonsAddon.modBadge.getChatString() + " " + nick;
+					}
+					if(((IRCUserImpl) ircUser).isSubscriber()) {
+						String badgeString = EiraMoticonsAddon.getSubscriberBadgeString((IRCChannel) context);
+						if(!badgeString.isEmpty()) {
+							nick = badgeString + "  " + nick;
+						}
+					}
+				}
 			}
 		}
 		return nick;

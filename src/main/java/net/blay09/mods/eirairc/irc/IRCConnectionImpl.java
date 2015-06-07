@@ -397,6 +397,10 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 			if(channelTypes.indexOf(target.charAt(0)) != -1) {
 				if(!EiraIRC.internalBus.post(new IRCChannelChatEvent(this, getChannel(target), user, message, isEmote))) {
 					MinecraftForge.EVENT_BUS.post(new IRCChannelChatEvent(this, getChannel(target), user, message, isEmote));
+					if(user != null) {
+						// Twitch sends "SPECIALUSER nick subscriber" before any message sent - this makes sure there's no incorrect subscriber badges if in several Twitch channels at once
+						user.setSubscriber(false);
+					}
 				}
 			} else if(target.equals(this.nick)) {
 				if(!EiraIRC.internalBus.post(new IRCPrivateChatEvent(this, user, message, isEmote))) {
@@ -450,7 +454,7 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 			users.put(user.getName().toLowerCase(), user);
 			MinecraftForge.EVENT_BUS.post(new IRCUserNickChangeEvent(this, user, oldNick, newNick));
 		} else if(cmd.equals("MODE")) {
-			if(channelTypes.indexOf(msg.arg(0).charAt(0)) != -1 || msg.argcount() < 3) {
+			if(channelTypes.indexOf(msg.arg(0).charAt(0)) == -1 || msg.argcount() < 3) {
 				return false;
 			}
 			IRCChannelImpl channel = (IRCChannelImpl) getOrCreateChannel(msg.arg(0));

@@ -17,7 +17,7 @@ import java.util.*;
 
 public class IRCUserImpl implements IRCUser {
 
-	private static class QueuedAuthCommand {
+		private static class QueuedAuthCommand {
 		public final IRCBot bot;
 		public final IRCChannel channel;
 		public final IBotCommand command;
@@ -38,7 +38,8 @@ public class IRCUserImpl implements IRCUser {
 	private String name;
 	private String authLogin;
 	private EnumChatFormatting nameColor;
-	
+	private boolean isSubscriber;
+
 	public IRCUserImpl(IRCConnectionImpl connection, String name) {
 		this.connection = connection;
 		this.name = name;
@@ -164,6 +165,14 @@ public class IRCUserImpl implements IRCUser {
 				notice(Utils.getLocalizedMessage("irc.bot.noPermission"));
 			}
 		}
+	}
+
+	public void setSubscriber(boolean isSubscriber) {
+		this.isSubscriber = isSubscriber;
+	}
+
+	public boolean isSubscriber() {
+		return isSubscriber;
 	}
 
 	public void setNameColor(EnumChatFormatting nameColor) {
