@@ -78,7 +78,7 @@ configurations {
 dependencies {
     compile 'org.jetbrains:annotations:13.0'
     compile 'us.dynmap:DynmapCoreAPI:2.1'
-    compile 'net.blay09.mods:eiramoticons:1.0.61:dev'
+    compile 'net.blay09.mods:eiramoticons:1.0.63:dev'
     deployerJars "org.apache.maven.wagon:wagon-ftp:2.2"
 }
 
