@@ -38,6 +38,7 @@ public class EiraMoticonsAddon implements IEmoticonLoader {
 
 	public EiraMoticonsAddon() {
 		Compatibility.eiraMoticonsInstalled = true;
+		reloadEmoticons(new ReloadEmoticons());
 		MinecraftForge.EVENT_BUS.register(this);
 		instance = this;
 	}
@@ -103,6 +104,7 @@ public class EiraMoticonsAddon implements IEmoticonLoader {
 					BufferedImage image = ImageIO.read(resource.getInputStream());
 					if(image != null) {
 						emoticon.setImage(image);
+						emoticon.setScale(0.5f, 0.5f);
 					}
 				}
 			} catch (IOException e) {
@@ -113,6 +115,7 @@ public class EiraMoticonsAddon implements IEmoticonLoader {
 				BufferedImage image = ImageIO.read((URL) emoticon.getLoadData());
 				if(image != null) {
 					emoticon.setImage(image);
+					emoticon.setScale(0.5f, 0.5f);
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
