@@ -38,6 +38,7 @@ public class EiraMoticonsAddon implements IEmoticonLoader {
 	public EiraMoticonsAddon() {
 		Compatibility.eiraMoticonsInstalled = true;
 		MinecraftForge.EVENT_BUS.register(this);
+		reloadEmoticons(new ReloadEmoticons());
 		instance = this;
 	}
 
