@@ -153,10 +153,10 @@ public class MCEventHandler {
 		IChatComponent chatComponent;
 		if(chatTarget instanceof IRCChannel) {
 			BotSettings botSettings = ConfigHelper.getBotSettings(chatTarget);
-			chatComponent = MessageFormat.formatChatComponent(botSettings.getMessageFormat().mcSendChannelMessage, chatTarget.getConnection(), chatTarget, ircSender, event.message, MessageFormat.Target.IRC, MessageFormat.Mode.Message);
+			chatComponent = MessageFormat.formatChatComponent(botSettings.getMessageFormat().mcSendChannelMessage, chatTarget.getConnection(), chatTarget, ircSender, event.message, MessageFormat.Target.Minecraft, MessageFormat.Mode.Message);
 		} else if(chatTarget instanceof IRCUser) {
 			BotSettings botSettings = ConfigHelper.getBotSettings(chatTarget);
-			chatComponent = MessageFormat.formatChatComponent(botSettings.getMessageFormat().mcSendPrivateMessage, chatTarget.getConnection(), chatTarget, ircSender, event.message, MessageFormat.Target.IRC, MessageFormat.Mode.Message);
+			chatComponent = MessageFormat.formatChatComponent(botSettings.getMessageFormat().mcSendPrivateMessage, chatTarget.getConnection(), chatTarget, ircSender, event.message, MessageFormat.Target.Minecraft, MessageFormat.Mode.Message);
 		} else {
 			return;
 		}

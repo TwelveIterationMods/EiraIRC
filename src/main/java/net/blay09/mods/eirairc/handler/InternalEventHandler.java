@@ -5,6 +5,8 @@ package net.blay09.mods.eirairc.handler;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.blay09.mods.eirairc.EiraIRC;
+import net.blay09.mods.eirairc.addon.Compatibility;
+import net.blay09.mods.eirairc.addon.EiraMoticonsAddon;
 import net.blay09.mods.eirairc.api.EiraIRCAPI;
 import net.blay09.mods.eirairc.api.IRCReplyCodes;
 import net.blay09.mods.eirairc.api.event.*;
@@ -157,6 +159,10 @@ public class InternalEventHandler {
         EiraIRC.instance.getChatSessionHandler().addTargetChannel(event.channel);
         if(ConfigHelper.getGeneralSettings(event.channel).getBoolean(GeneralBooleanComponent.AutoWho)) {
             Utils.sendUserList(null, event.connection, event.channel);
+        }
+        if(Compatibility.eiraMoticonsInstalled) {
+            // Pre-load this channels sub badge
+            EiraMoticonsAddon.getSubscriberBadge(event.channel);
         }
     }
 
