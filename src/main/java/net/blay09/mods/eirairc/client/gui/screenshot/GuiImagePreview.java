@@ -5,6 +5,7 @@ import net.blay09.mods.eirairc.client.gui.EiraGuiScreen;
 import net.blay09.mods.eirairc.client.gui.base.GuiImageButton;
 import net.blay09.mods.eirairc.client.gui.base.image.GuiImage;
 import net.blay09.mods.eirairc.client.gui.base.image.GuiURLImage;
+import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -39,6 +40,9 @@ public class GuiImagePreview extends EiraGuiScreen implements GuiYesNoCallback {
 		super(null);
 		this.url = url != null ? url : directURL;
 		this.directURL = directURL;
+
+		imgPreview = new GuiURLImage(directURL);
+		imgPreview.loadTexture();
 	}
 
 	@Override
@@ -63,9 +67,6 @@ public class GuiImagePreview extends EiraGuiScreen implements GuiYesNoCallback {
 
 		imgX = leftX + 2;
 		imgY = topY + 10;
-
-		imgPreview = new GuiURLImage(directURL);
-		imgPreview.loadTexture();
 	}
 
 	@Override
@@ -126,6 +127,11 @@ public class GuiImagePreview extends EiraGuiScreen implements GuiYesNoCallback {
 		}
 
 		if(imgPreview != null) {
+			if(!imgPreview.isLoaded()) {
+				String s = "Loading...";
+				mc.fontRendererObj.drawStringWithShadow(s, width / 2 - fontRendererObj.getStringWidth(s) / 2, height / 2 - fontRendererObj.FONT_HEIGHT / 2, Globals.TEXT_COLOR);
+			}
+
 			// Render the preview image
 			imgPreview.draw(imgX, imgY, imgWidth, imgHeight, zLevel);
 		}
