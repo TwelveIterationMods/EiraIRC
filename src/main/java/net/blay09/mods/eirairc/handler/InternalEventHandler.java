@@ -160,7 +160,7 @@ public class InternalEventHandler {
         if(ConfigHelper.getGeneralSettings(event.channel).getBoolean(GeneralBooleanComponent.AutoWho)) {
             Utils.sendUserList(null, event.connection, event.channel);
         }
-        if(Compatibility.eiraMoticonsInstalled) {
+        if(Compatibility.eiraMoticonsInstalled && SharedGlobalConfig.twitchNameBadges && event.channel.getConnection().isTwitch()) {
             // Pre-load this channels sub badge
             EiraMoticonsAddon.getSubscriberBadge(event.channel);
         }
