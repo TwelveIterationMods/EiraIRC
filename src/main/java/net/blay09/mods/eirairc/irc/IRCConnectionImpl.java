@@ -13,6 +13,7 @@ import net.blay09.mods.eirairc.bot.IRCBotImpl;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.config.settings.BotStringComponent;
+import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -59,12 +60,15 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 	private String channelUserModes = "ov";
 	private String channelUserModePrefixes = "@+";
 
+	private boolean isTwitch;
+
 	private Socket socket;
 	protected BufferedWriter writer;
 	protected BufferedReader reader;
 	public IRCConnectionImpl(ServerConfig serverConfig, String nick) {
 		this.serverConfig = serverConfig;
 		this.host = Utils.extractHost(serverConfig.getAddress());
+		this.isTwitch = (this.host.equals(Globals.TWITCH_SERVER));
 		this.ports = Utils.extractPorts(serverConfig.getAddress(), DEFAULT_PORT);
 		this.nick = nick;
 	}
@@ -585,4 +589,8 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 		return connected;
 	}
 
+	@Override
+	public boolean isTwitch() {
+		return isTwitch;
+	}
 }

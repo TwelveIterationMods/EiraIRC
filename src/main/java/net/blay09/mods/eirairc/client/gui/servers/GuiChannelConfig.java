@@ -33,6 +33,7 @@ public class GuiChannelConfig extends GuiTabPage implements GuiYesNoCallback {
 	private GuiButton btnTheme;
 	private GuiButton btnBotSettings;
 	private GuiButton btnOtherSettings;
+	private GuiButton btnOK;
 	private GuiButton btnDelete;
 
 	private boolean isNew;
@@ -95,7 +96,10 @@ public class GuiChannelConfig extends GuiTabPage implements GuiYesNoCallback {
 		chkAutoJoin = new GuiCheckBox(4, leftX, topY + 75, " Auto Join", oldState);
 		buttonList.add(chkAutoJoin);
 
-		btnDelete = new GuiButton(0, rightX - 100, topY + 150, 100, 20, "Delete");
+		btnOK = new GuiButton(4, rightX - 100, topY + 150, 100, 20, "Save");
+		buttonList.add(btnOK);
+
+		btnDelete = new GuiButton(0, leftX, topY + 150, 100, 20, "Delete");
 		btnDelete.packedFGColour = -65536;
 		buttonList.add(btnDelete);
 

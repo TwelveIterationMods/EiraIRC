@@ -165,7 +165,7 @@ public class MessageFormat {
 				nick = ircUser.getChannelModePrefix((IRCChannel) context) + nick;
 			}
 			if(Compatibility.eiraMoticonsInstalled && SharedGlobalConfig.twitchNameBadges) {
-				if(context.getConnection().getHost().equals(Globals.TWITCH_SERVER)) {
+				if(context.getConnection().isTwitch()) {
 					String badges = "";
 					if(ircUser.getName().toLowerCase().equals(context.getName().substring(1).toLowerCase())) {
 						badges += EiraMoticonsAddon.casterBadge.getChatString() + " ";

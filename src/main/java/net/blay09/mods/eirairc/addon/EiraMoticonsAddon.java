@@ -52,30 +52,43 @@ public class EiraMoticonsAddon implements IEmoticonLoader {
 	}
 
 	@Optional.Method(modid = "eiramoticons")
-	public static IEmoticon getSubscriberBadge(IRCChannel channel) {
+	public static IEmoticon getSubscriberBadge(final IRCChannel channel) {
 		IEmoticon subBadge = null;
-		if(!subscriberBadgeMap.containsKey(channel)) {
-			Gson gson = new Gson();
-			try {
-				URL url = new URL(TWITCH_EMOTES_API);
-				InputStream in = url.openStream();
-				Reader reader = new InputStreamReader(in);
-				JsonObject jsonObject = gson.fromJson(reader, JsonObject.class);
-				JsonObject jsonChannels = jsonObject.getAsJsonObject("channels");
-				JsonObject jsonChannel = jsonChannels.getAsJsonObject(channel.getName().substring(1).toLowerCase());
-				if(jsonChannel != null) {
-					subBadge = EiraMoticonsAPI.registerEmoticon("EiraIRC:subBadge" + jsonChannel.get("title").getAsString(), instance);
-					subBadge.setManualOnly(true);
-					subBadge.setLoadData(new URL("http:" + jsonChannel.get("badge").getAsString()));
-					subBadge.setCustomTooltip(new String[] { I19n.format("eirairc:twitch.channelSubscriber") });
-				}
-				in.close();
-			} catch (IOException e) {
-				e.printStackTrace();
+		synchronized (subscriberBadgeMap) {
+			if(!subscriberBadgeMap.containsKey(channel)) {
+				// Put null so we only start looking up this badge once
+				subscriberBadgeMap.put(channel, null);
+
+				// Look up this badge asynchronously
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						Gson gson = new Gson();
+						try {
+							URL url = new URL(TWITCH_EMOTES_API);
+							InputStream in = url.openStream();
+							Reader reader = new InputStreamReader(in);
+							JsonObject jsonObject = gson.fromJson(reader, JsonObject.class);
+							JsonObject jsonChannels = jsonObject.getAsJsonObject("channels");
+							JsonObject jsonChannel = jsonChannels.getAsJsonObject(channel.getName().substring(1).toLowerCase());
+							if (jsonChannel != null) {
+								IEmoticon subBadge = EiraMoticonsAPI.registerEmoticon("EiraIRC:subBadge" + jsonChannel.get("title").getAsString(), instance);
+								subBadge.setManualOnly(true);
+								subBadge.setLoadData(new URL("http:" + jsonChannel.get("badge").getAsString()));
+								subBadge.setCustomTooltip(new String[]{I19n.format("eirairc:twitch.channelSubscriber")});
+								synchronized (subscriberBadgeMap) {
+									subscriberBadgeMap.put(channel, subBadge);
+								}
+							}
+							in.close();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+				}).start();
+			} else {
+				subBadge = subscriberBadgeMap.get(channel);
 			}
-			subscriberBadgeMap.put(channel, subBadge);
-		} else {
-			subBadge = subscriberBadgeMap.get(channel);
 		}
 		return subBadge;
 	}

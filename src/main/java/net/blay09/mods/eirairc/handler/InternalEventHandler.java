@@ -3,6 +3,8 @@
 package net.blay09.mods.eirairc.handler;
 
 import net.blay09.mods.eirairc.EiraIRC;
+import net.blay09.mods.eirairc.addon.Compatibility;
+import net.blay09.mods.eirairc.addon.EiraMoticonsAddon;
 import net.blay09.mods.eirairc.api.EiraIRCAPI;
 import net.blay09.mods.eirairc.api.IRCReplyCodes;
 import net.blay09.mods.eirairc.api.event.*;
@@ -45,7 +47,7 @@ public class InternalEventHandler {
     public void onConnected(IRCConnectEvent event) {
         ServerConfig serverConfig = ConfigHelper.getServerConfig(event.connection);
         // If this is a Twitch connection, tell the server that we're a JTVCLIENT so we receive name colors.
-        if(event.connection.getHost().equals(Globals.TWITCH_SERVER)) {
+        if(event.connection.isTwitch()) {
             event.connection.irc("JTVCLIENT");
         }
         Utils.doNickServ(event.connection, serverConfig);
@@ -85,7 +87,7 @@ public class InternalEventHandler {
             return;
         }
         // Parse Twitch user colors if this is a message from jtv on irc.twitch.tv
-        if(event.sender != null && event.sender.getName().equals("jtv") && event.connection.getHost().equals(Globals.TWITCH_SERVER)) {
+        if(event.sender != null && event.connection.isTwitch() && event.sender.getName().equals("jtv")) {
             if(event.message.startsWith("USERCOLOR ")) {
                 int lastSpace = event.message.lastIndexOf(' ');
                 String targetNick = event.message.substring(10, lastSpace);
@@ -157,6 +159,10 @@ public class InternalEventHandler {
         EiraIRC.instance.getChatSessionHandler().addTargetChannel(event.channel);
         if(ConfigHelper.getGeneralSettings(event.channel).getBoolean(GeneralBooleanComponent.AutoWho)) {
             Utils.sendUserList(null, event.connection, event.channel);
+        }
+        if(Compatibility.eiraMoticonsInstalled && SharedGlobalConfig.twitchNameBadges && event.channel.getConnection().isTwitch()) {
+            // Pre-load this channels sub badge
+            EiraMoticonsAddon.getSubscriberBadge(event.channel);
         }
     }
 

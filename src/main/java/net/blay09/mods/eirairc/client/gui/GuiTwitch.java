@@ -136,21 +136,21 @@ public class GuiTwitch extends EiraGuiScreen implements GuiYesNoCallback {
 
 	@SubscribeEvent
 	public void onSuccess(IRCConnectEvent event) {
-		if(event.connection.getHost().equals(Globals.TWITCH_SERVER)) {
+		if(event.connection.isTwitch()) {
 			gotoPrevious();
 		}
 	}
 
 	@SubscribeEvent
 	public void onFailure(IRCConnectionFailedEvent event) {
-		if(event.connection.getHost().equals(Globals.TWITCH_SERVER)) {
+		if(event.connection.isTwitch()) {
 			btnConnect.enabled = true;
 		}
 	}
 
 	@SubscribeEvent
 	public void onWrongPassword(IRCErrorEvent event) {
-		if(event.numeric == IRCReplyCodes.ERR_PASSWDMISMATCH && event.connection.getHost().equals(Globals.TWITCH_SERVER)) {
+		if(event.numeric == IRCReplyCodes.ERR_PASSWDMISMATCH && event.connection.isTwitch()) {
 			btnConnect.enabled = true;
 		}
 	}

@@ -11,43 +11,69 @@ import org.lwjgl.opengl.GL11;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-public abstract class GuiImage extends AbstractTexture {
+public abstract class GuiImage {
+
+	private int textureId = -1;
+	private BufferedImage loadBuffer;
+	private float imageWidth;
+	private float imageHeight;
 
 	public void loadTexture() {
-		try {
-			loadTexture(null);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					loadBuffer = loadImage();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}).start();
 	}
 
-	@Override
-	public void loadTexture(IResourceManager resourceManager) throws IOException {
-		try {
-			BufferedImage bufferedImage = loadImage();
-			if(bufferedImage != null) {
-				TextureUtil.uploadTextureImage(getGlTextureId(), bufferedImage);
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	public boolean isLoaded() {
+		return textureId != -1;
 	}
 
 	public abstract BufferedImage loadImage() throws IOException;
 
 	public void draw(int xPos, int yPos, int width, int height, float zLevel) {
-		GlStateManager.bindTexture(getGlTextureId());
+		if(loadBuffer != null) {
+			imageWidth = loadBuffer.getWidth();
+			imageHeight = loadBuffer.getHeight();
+			textureId = TextureUtil.glGenTextures();
+			TextureUtil.uploadTextureImage(textureId, loadBuffer);
+			loadBuffer = null;
+		}
+
+		float renderWidth = imageWidth;
+		float renderHeight = imageHeight;
+		float factor;
+		if(renderWidth > width) {
+			factor = width / renderWidth;
+			renderWidth *= factor;
+			renderHeight *= factor;
+		}
+		if(renderHeight > height) {
+			factor = height / renderHeight;
+			renderWidth *= factor;
+			renderHeight *= factor;
+		}
+		float renderX = xPos + width / 2 - renderWidth / 2;
+		float renderY = yPos + height / 2 - renderHeight / 2;
+
+		GlStateManager.bindTexture(textureId);
 		Tessellator tessellator = Tessellator.getInstance();
 		WorldRenderer renderer = tessellator.getWorldRenderer();
 		renderer.startDrawingQuads();
-		renderer.addVertexWithUV(xPos, yPos + height, zLevel, 0, 1);
-		renderer.addVertexWithUV(xPos + width, yPos + height, zLevel, 1, 1);
-		renderer.addVertexWithUV(xPos + width, yPos, zLevel, 1, 0);
-		renderer.addVertexWithUV(xPos, yPos, zLevel, 0, 0);
+		renderer.addVertexWithUV(renderX, renderY + renderHeight, zLevel, 0, 1);
+		renderer.addVertexWithUV(renderX + renderWidth, renderY + renderHeight, zLevel, 1, 1);
+		renderer.addVertexWithUV(renderX + renderWidth, renderY, zLevel, 1, 0);
+		renderer.addVertexWithUV(renderX, renderY, zLevel, 0, 0);
 		tessellator.draw();
 	}
 
 	public void dispose() {
-		TextureUtil.deleteTexture(getGlTextureId());
+		TextureUtil.deleteTexture(textureId);
 	}
 }
