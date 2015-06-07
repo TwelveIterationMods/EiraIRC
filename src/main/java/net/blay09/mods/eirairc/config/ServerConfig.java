@@ -56,7 +56,11 @@ public class ServerConfig {
 	}
 
 	public void setNick(@NotNull String nick) {
-		this.nick = nick;
+		if(address.equals(Globals.TWITCH_SERVER)) {
+			this.nick = nick.toLowerCase();
+		} else {
+			this.nick = nick;
+		}
 	}
 
 	public String getNick() {
@@ -147,7 +151,7 @@ public class ServerConfig {
 	public static ServerConfig loadFromJson(JsonObject object) {
 		ServerConfig config = new ServerConfig(object.get("address").getAsString());
 		if(object.has("nick")) {
-			config.nick = object.get("nick").getAsString();
+			config.setNick(object.get("nick").getAsString());
 		}
 		if(object.has("serverPassword")) {
 			config.serverPassword = object.get("serverPassword").getAsString();
