@@ -167,17 +167,19 @@ public class MessageFormat {
 			}
 			if(Compatibility.eiraMoticonsInstalled && SharedGlobalConfig.twitchNameBadges) {
 				if(context.getConnection().getHost().equals(Globals.TWITCH_SERVER)) {
+					String badges = "";
 					if(ircUser.getName().toLowerCase().equals(context.getName().substring(1).toLowerCase())) {
-						nick = EiraMoticonsAddon.casterBadge.getChatString() + " " + nick;
+						badges += EiraMoticonsAddon.casterBadge.getChatString() + " ";
 					} else if(ircUser.isOperator((IRCChannel) context)) {
-						nick = EiraMoticonsAddon.modBadge.getChatString() + " " + nick;
+						badges += EiraMoticonsAddon.modBadge.getChatString() + " ";
 					}
 					if(((IRCUserImpl) ircUser).isSubscriber()) {
 						String badgeString = EiraMoticonsAddon.getSubscriberBadgeString((IRCChannel) context);
 						if(!badgeString.isEmpty()) {
-							nick = badgeString + " " + nick;
+							badges += badgeString + " ";
 						}
 					}
+					nick = badges + nick;
 				}
 			}
 		}
