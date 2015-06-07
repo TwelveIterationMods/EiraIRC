@@ -174,7 +174,7 @@ public class MessageFormat {
 					if(((IRCUserImpl) ircUser).isSubscriber()) {
 						String badgeString = EiraMoticonsAddon.getSubscriberBadgeString((IRCChannel) context);
 						if(!badgeString.isEmpty()) {
-							nick = badgeString + "  " + nick;
+							nick = badgeString + " " + nick;
 						}
 					}
 				}
