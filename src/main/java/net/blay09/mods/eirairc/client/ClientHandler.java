@@ -119,9 +119,9 @@ public class ClientHandler {
 			}
 		}
 		if(Minecraft.getMinecraft().currentScreen instanceof GuiChat && !ClientGlobalConfig.disableChatToggle && !ClientGlobalConfig.clientBridge && !Compatibility.tabbyChatInstalled) {
-			if(Keyboard.isKeyDown(ClientGlobalConfig.keyToggleTarget.getKeyCode())) {
+			if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) && Keyboard.isKeyDown(ClientGlobalConfig.keyToggleTarget.getKeyCode())) {
 				if(!wasToggleTargetDown) {
-					boolean users = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
+					boolean users = Keyboard.isKeyDown(Keyboard.KEY_LCONTROL);
 					IRCContext newTarget = chatSession.getNextTarget(users);
 					if(!users) {
 						lastToggleTarget = System.currentTimeMillis();

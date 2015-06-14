@@ -46,7 +46,8 @@ eirairc:irc.cmdlist.special=§eSpecial Commands: §ftwitch, color, alias
 
 # GUI
 eirairc:irc.gui.options=Options
-eirairc:irc.gui.chatTarget=Chatting to: %s
+eirairc:gui.chatTarget=Chatting to: %s
+eirairc:gui.shiftToSwitch=Shift+%s to switch channel.
 eirairc:irc.gui.yes=Yes
 eirairc:irc.gui.no=No
 
