@@ -203,9 +203,12 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 		} catch (IOException e) {
 			if(!e.getMessage().equals("Socket closed")) {
 				e.printStackTrace();
+			} else {
+				closeSocket();
 			}
 		} catch (Exception e) {
 			EiraIRC.proxy.handleException(this, e);
+			closeSocket();
 		}
 		EiraIRC.internalBus.post(new IRCDisconnectEvent(this));
 		MinecraftForge.EVENT_BUS.post(new IRCDisconnectEvent(this));
@@ -215,6 +218,7 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 	}
 
 	public void tryReconnect() {
+		closeSocket();
 		if(waitingReconnect == 0) {
 			waitingReconnect = 15000;
 		} else {
@@ -229,20 +233,28 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 		start();
 	}
 
-	@Override
-	public void disconnect(String quitMessage) {
+	private void closeSocket() {
 		try {
-			connected = false;
-			if(writer != null) {
-				writer.write("QUIT :" + quitMessage + "\r\n");
-				writer.flush();
-			}
-			if(socket != null) {
+			if (socket != null) {
 				socket.close();
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public void disconnect(String quitMessage) {
+		connected = false;
+		try {
+			if(writer != null) {
+				writer.write("QUIT :" + quitMessage + "\r\n");
+				writer.flush();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		closeSocket();
 	}
 
 	private void register() {
