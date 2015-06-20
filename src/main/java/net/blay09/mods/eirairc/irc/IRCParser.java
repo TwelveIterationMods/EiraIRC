@@ -12,7 +12,7 @@ public class IRCParser {
 	private String data;
 	private int idx;
 	
-	public IRCMessage parse(String data) {
+	public IRCMessageImpl parse(String data) {
 		this.data = data;
 		String tags = null;
 		if(data.startsWith("@")) {
@@ -31,7 +31,7 @@ public class IRCParser {
 		while((arg = next()) != null) {
 			args.add(arg);
 		}
-		IRCMessage msg = new IRCMessage(tags != null ? tags.split(";") : null, prefix, cmd, args.toArray(new String[args.size()]));
+		IRCMessageImpl msg = new IRCMessageImpl(tags != null ? tags.split(";") : null, prefix, cmd, args.toArray(new String[args.size()]));
 		reset();
 		return msg;
 	}

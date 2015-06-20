@@ -4,8 +4,9 @@ package net.blay09.mods.eirairc.api.event;
 
 import cpw.mods.fml.common.eventhandler.Cancelable;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
+import net.blay09.mods.eirairc.api.irc.IRCMessage;
 import net.blay09.mods.eirairc.api.irc.IRCUser;
-import net.blay09.mods.eirairc.irc.IRCMessage;
+import net.blay09.mods.eirairc.irc.IRCMessageImpl;
 
 /**
  * This event is published on the MinecraftForge.EVENTBUS bus whenever a private message was sent to EiraIRC from IRC.

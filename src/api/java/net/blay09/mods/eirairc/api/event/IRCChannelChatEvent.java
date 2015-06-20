@@ -5,8 +5,8 @@ package net.blay09.mods.eirairc.api.event;
 import cpw.mods.fml.common.eventhandler.Cancelable;
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
+import net.blay09.mods.eirairc.api.irc.IRCMessage;
 import net.blay09.mods.eirairc.api.irc.IRCUser;
-import net.blay09.mods.eirairc.irc.IRCMessage;
 
 /**
  * This event is published on the MinecraftForge.EVENTBUS bus whenever a message was sent to an IRC channel EiraIRC is in.

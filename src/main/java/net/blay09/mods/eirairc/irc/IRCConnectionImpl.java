@@ -199,7 +199,7 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 					System.out.println(line);
 				}
 				if (!line.isEmpty()) {
-					IRCMessage msg = parser.parse(line);
+					IRCMessageImpl msg = parser.parse(line);
 					if (!handleNumericMessage(msg)) {
 						handleMessage(msg);
 					}
@@ -318,7 +318,7 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 		irc("TOPIC " + channelName + " :" + topic);
 	}
 
-	private boolean handleNumericMessage(IRCMessage msg) {
+	private boolean handleNumericMessage(IRCMessageImpl msg) {
 		int numeric = msg.getNumericCommand();
 		if(numeric == -1) {
 			return false;
@@ -399,7 +399,7 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 		return true;
 	}
 
-	private boolean handleMessage(IRCMessage msg) {
+	private boolean handleMessage(IRCMessageImpl msg) {
 		String cmd = msg.getCommand();
 		if(cmd.equals("PING")) {
 			irc("PONG " + msg.arg(0));
