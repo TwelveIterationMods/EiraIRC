@@ -80,11 +80,13 @@ public class IRCMessageImpl implements IRCMessage {
 
 	@Override
 	public String getTagByKey(String key) {
-		for(String tag : tags) {
-			int eqIdx = tag.indexOf('=');
-			if(eqIdx != -1) {
-				if(tag.substring(0, eqIdx).equals(key)) {
-					return tag.substring(eqIdx + 1);
+		if(tags != null) {
+			for (String tag : tags) {
+				int eqIdx = tag.indexOf('=');
+				if (eqIdx != -1) {
+					if (tag.substring(0, eqIdx).equals(key)) {
+						return tag.substring(eqIdx + 1);
+					}
 				}
 			}
 		}
