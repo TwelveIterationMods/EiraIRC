@@ -22,13 +22,6 @@
   },
   {
     "server": "irc.esper.net",
-    "channel": "#FTB",
-    "modpack-display": "Feed The Beast Modpacks",
-    "description": "The official Feed The Beast IRC channel.",
-    "recommended": true
-  },
-  {
-    "server": "irc.esper.net",
     "channel": "#Unabridged",
     "modpack-display": "Unabridged Modpack",
     "modpack-id": "Unabridged",
