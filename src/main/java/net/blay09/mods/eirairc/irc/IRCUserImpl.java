@@ -17,7 +17,7 @@ import java.util.*;
 
 public class IRCUserImpl implements IRCUser {
 
-		private static class QueuedAuthCommand {
+	private static class QueuedAuthCommand {
 		public final IRCBot bot;
 		public final IRCChannel channel;
 		public final IBotCommand command;
@@ -38,7 +38,8 @@ public class IRCUserImpl implements IRCUser {
 	private String name;
 	private String authLogin;
 	private EnumChatFormatting nameColor;
-	private boolean isSubscriber;
+	private boolean isTwitchSubscriber;
+	private boolean isTwitchTurbo;
 
 	public IRCUserImpl(IRCConnectionImpl connection, String name) {
 		this.connection = connection;
@@ -167,12 +168,20 @@ public class IRCUserImpl implements IRCUser {
 		}
 	}
 
-	public void setSubscriber(boolean isSubscriber) {
-		this.isSubscriber = isSubscriber;
+	public void setTwitchSubscriber(boolean isTwitchSubscriber) {
+		this.isTwitchSubscriber = isTwitchSubscriber;
 	}
 
-	public boolean isSubscriber() {
-		return isSubscriber;
+	public boolean isTwitchSubscriber() {
+		return isTwitchSubscriber;
+	}
+
+	public void setTwitchTurbo(boolean isTwitchTurbo) {
+		this.isTwitchTurbo = isTwitchTurbo;
+	}
+
+	public boolean isTwitchTurbo() {
+		return isTwitchTurbo;
 	}
 
 	public void setNameColor(EnumChatFormatting nameColor) {

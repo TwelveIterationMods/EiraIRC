@@ -35,6 +35,7 @@ public class EiraMoticonsAddon implements IEmoticonLoader {
 	public static final Map<IRCChannel, IEmoticon> subscriberBadgeMap = new HashMap<IRCChannel, IEmoticon>();
 	public static IEmoticon casterBadge;
 	public static IEmoticon modBadge;
+	public static IEmoticon turboBadge;
 
 	public EiraMoticonsAddon() {
 		Compatibility.eiraMoticonsInstalled = true;
@@ -105,6 +106,10 @@ public class EiraMoticonsAddon implements IEmoticonLoader {
 		modBadge.setManualOnly(true);
 		modBadge.setLoadData(new ResourceLocation("eirairc", "gfx/modBadge.png"));
 		modBadge.setCustomTooltip(new String[] {I19n.format("eirairc:twitch.channelModerator") });
+		turboBadge = EiraMoticonsAPI.registerEmoticon("EiraIRC:turboBadge", this);
+		turboBadge.setManualOnly(true);
+		turboBadge.setLoadData(new ResourceLocation("eirairc", "gfx/turboBadge.png"));
+		turboBadge.setCustomTooltip(new String[] {I19n.format("eirairc:twitch.turbo") });
 	}
 
 	@Override

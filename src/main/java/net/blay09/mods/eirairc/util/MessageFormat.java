@@ -168,15 +168,21 @@ public class MessageFormat {
 				if(context.getConnection().isTwitch()) {
 					String badges = "";
 					if(ircUser.getName().toLowerCase().equals(context.getName().substring(1).toLowerCase())) {
-						badges += EiraMoticonsAddon.casterBadge.getChatString() + " ";
+						badges += EiraMoticonsAddon.casterBadge.getChatString();
 					} else if(ircUser.isOperator((IRCChannel) context)) {
-						badges += EiraMoticonsAddon.modBadge.getChatString() + " ";
+						badges += EiraMoticonsAddon.modBadge.getChatString();
 					}
-					if(((IRCUserImpl) ircUser).isSubscriber()) {
+					if(((IRCUserImpl) ircUser).isTwitchTurbo()) {
+						badges += EiraMoticonsAddon.turboBadge.getChatString();
+					}
+					if(((IRCUserImpl) ircUser).isTwitchSubscriber()) {
 						String badgeString = EiraMoticonsAddon.getSubscriberBadgeString((IRCChannel) context);
 						if(!badgeString.isEmpty()) {
-							badges += badgeString + " ";
+							badges += badgeString;
 						}
+					}
+					if(badges.length() > 0) {
+						badges += " ";
 					}
 					nick = badges + nick;
 				}

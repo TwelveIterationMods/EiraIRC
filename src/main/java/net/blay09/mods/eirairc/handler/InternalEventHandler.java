@@ -18,6 +18,7 @@ import net.blay09.mods.eirairc.config.settings.BotBooleanComponent;
 import net.blay09.mods.eirairc.config.settings.BotSettings;
 import net.blay09.mods.eirairc.config.settings.GeneralBooleanComponent;
 import net.blay09.mods.eirairc.config.settings.GeneralSettings;
+import net.blay09.mods.eirairc.irc.IRCChannelUserMode;
 import net.blay09.mods.eirairc.irc.IRCUserImpl;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Globals;
@@ -84,33 +85,37 @@ public class InternalEventHandler {
             EiraIRC.internalBus.post(new IRCConnectionFailedEvent(event.connection, new RuntimeException("Wrong username or invalid oauth token.")));
             MinecraftForge.EVENT_BUS.post(new IRCConnectionFailedEvent(event.connection, new RuntimeException("Wrong username or invalid oauth token.")));
             event.setCanceled(true);
-            return;
-        }
-        // Parse Twitch user colors if this is a message from jtv on irc.twitch.tv
-        if(event.sender != null && event.connection.isTwitch() && event.sender.getName().equals("jtv")) {
-            if(event.message.startsWith("USERCOLOR ")) {
-                int lastSpace = event.message.lastIndexOf(' ');
-                String targetNick = event.message.substring(10, lastSpace);
-                String targetColor = event.message.substring(lastSpace + 1);
-                IRCUserImpl user = (IRCUserImpl) event.connection.getOrCreateUser(targetNick);
-                user.setNameColor(IRCFormatting.getColorFromTwitch(targetColor));
-            } else if(event.message.startsWith("SPECIALUSER ")) {
-                int lastSpace = event.message.lastIndexOf(' ');
-                String targetNick = event.message.substring(12, lastSpace);
-                String targetType = event.message.substring(lastSpace + 1);
-                if(targetType.equals("subscriber")) {
-                    IRCUserImpl user = (IRCUserImpl) event.connection.getOrCreateUser(targetNick);
-                    user.setSubscriber(true);
-                }
-            }
-            event.setCanceled(true);
         }
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onChannelChat(IRCChannelChatEvent event) {
-        if(!event.isNotice && event.message.startsWith("!") && ((IRCBotImpl) event.bot).processCommand(event.channel, event.sender, event.message.substring(1))) {
+        if(event.sender != null && event.connection.isTwitch() && event.sender.getName().equals("jtv")) {
             event.setCanceled(true);
+        } else if(!event.isNotice && event.message.startsWith("!") && ((IRCBotImpl) event.bot).processCommand(event.channel, event.sender, event.message.substring(1))) {
+            event.setCanceled(true);
+        } else if(event.connection.isTwitch()) {
+            IRCUserImpl user = (IRCUserImpl) event.sender;
+            if (user != null) {
+                String userColor = event.rawMessage.getTagByKey("color");
+                if (userColor != null && !userColor.isEmpty()) {
+                    user.setNameColor(IRCFormatting.getColorFromTwitch(userColor));
+                }
+                String subscriber = event.rawMessage.getTagByKey("subscriber");
+                if (subscriber != null) {
+                    user.setTwitchSubscriber(subscriber.equals("1"));
+                }
+                String turbo = event.rawMessage.getTagByKey("turbo");
+                if (turbo != null) {
+                    user.setTwitchTurbo(turbo.equals("1"));
+                }
+                String userType = event.rawMessage.getTagByKey("user-type");
+                if (userType != null && !userType.isEmpty()) {
+                    user.setChannelUserMode(event.channel, IRCChannelUserMode.OPER);
+                } else {
+                    user.setChannelUserMode(event.channel, null);
+                }
+            }
         }
     }
 

@@ -5,6 +5,7 @@ package net.blay09.mods.eirairc.api.event;
 
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
+import net.blay09.mods.eirairc.api.irc.IRCMessage;
 import net.blay09.mods.eirairc.api.irc.IRCUser;
 import net.minecraftforge.fml.common.eventhandler.Cancelable;
 
@@ -26,6 +27,11 @@ public class IRCChannelChatEvent extends IRCEvent {
 	public final IRCUser sender;
 
 	/**
+	 * the raw IRC message that was sent
+	 */
+	public IRCMessage rawMessage;
+
+	/**
 	 * the message that was sent
 	 */
 	public final String message;
@@ -45,27 +51,16 @@ public class IRCChannelChatEvent extends IRCEvent {
 	 * @param connection the connection this IRC message came from
 	 * @param channel the channel this IRC message came from
 	 * @param sender the user that sent this IRC message
-	 * @param message the message that was sent
-	 * @param isEmote true, if this message is an emote
-	 */
-	@Deprecated
-	public IRCChannelChatEvent(IRCConnection connection, IRCChannel channel, IRCUser sender, String message, boolean isEmote) {
-		this(connection, channel, sender, message, isEmote, false);
-	}
-
-	/**
-	 * INTERNAL EVENT. YOU SHOULD NOT POST THIS YOURSELF.
-	 * @param connection the connection this IRC message came from
-	 * @param channel the channel this IRC message came from
-	 * @param sender the user that sent this IRC message
+	 * @param rawMessage the raw IRC message that was sent
 	 * @param message the message that was sent
 	 * @param isEmote true, if this message is an emote
 	 * @param isNotice true, if this message was sent as a NOTICE
 	 */
-	public IRCChannelChatEvent(IRCConnection connection, IRCChannel channel, IRCUser sender, String message, boolean isEmote, boolean isNotice) {
+	public IRCChannelChatEvent(IRCConnection connection, IRCChannel channel, IRCUser sender, IRCMessage rawMessage, String message, boolean isEmote, boolean isNotice) {
 		super(connection);
 		this.channel = channel;
 		this.sender = sender;
+		this.rawMessage = rawMessage;
 		this.message = message;
 		this.isEmote = isEmote;
 		this.isNotice = isNotice;

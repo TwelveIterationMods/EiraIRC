@@ -3,13 +3,17 @@
 
 package net.blay09.mods.eirairc.irc;
 
-public class IRCMessage {
+import net.blay09.mods.eirairc.api.irc.IRCMessage;
 
+public class IRCMessageImpl implements IRCMessage {
+
+	private final String[] tags;
 	private final String prefix;
 	private final String command;
 	private final String[] args;
 	
-	public IRCMessage(String prefix, String command, String[] args) {
+	public IRCMessageImpl(String[] tags, String prefix, String command, String[] args) {
+		this.tags = tags;
 		this.prefix = prefix;
 		this.command = command;
 		this.args = args;
@@ -72,5 +76,20 @@ public class IRCMessage {
 
 	public int argcount() {
 		return args.length;
+	}
+
+	@Override
+	public String getTagByKey(String key) {
+		if(tags != null) {
+			for (String tag : tags) {
+				int eqIdx = tag.indexOf('=');
+				if (eqIdx != -1) {
+					if (tag.substring(0, eqIdx).equals(key)) {
+						return tag.substring(eqIdx + 1);
+					}
+				}
+			}
+		}
+		return null;
 	}
 }

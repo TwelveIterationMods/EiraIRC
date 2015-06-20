@@ -12,11 +12,16 @@ public class IRCParser {
 	private String data;
 	private int idx;
 	
-	public IRCMessage parse(String data) {
+	public IRCMessageImpl parse(String data) {
 		this.data = data;
+		String tags = null;
+		if(data.startsWith("@")) {
+			skip(1);
+			tags = next();
+		}
 		String prefix = "";
 		String cmd;
-		if(data.startsWith(":")) {
+		if(data.startsWith(":", idx)) {
 			skip(1);
 			prefix = next();
 		}
@@ -26,7 +31,7 @@ public class IRCParser {
 		while((arg = next()) != null) {
 			args.add(arg);
 		}
-		IRCMessage msg = new IRCMessage(prefix, cmd, args.toArray(new String[args.size()]));
+		IRCMessageImpl msg = new IRCMessageImpl(tags != null ? tags.split(";") : null, prefix, cmd, args.toArray(new String[args.size()]));
 		reset();
 		return msg;
 	}
