@@ -416,16 +416,12 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 				isEmote = true;
 			}
 			if(channelTypes.indexOf(target.charAt(0)) != -1) {
-				if(!EiraIRC.internalBus.post(new IRCChannelChatEvent(this, getChannel(target), user, message, isEmote))) {
-					MinecraftForge.EVENT_BUS.post(new IRCChannelChatEvent(this, getChannel(target), user, message, isEmote));
-					if(user != null) {
-						// Twitch sends "SPECIALUSER nick subscriber" before any message sent - this makes sure there's no incorrect subscriber badges if in several Twitch channels at once
-						user.setSubscriber(false);
-					}
+				if(!EiraIRC.internalBus.post(new IRCChannelChatEvent(this, getChannel(target), user, msg, message, isEmote, false))) {
+					MinecraftForge.EVENT_BUS.post(new IRCChannelChatEvent(this, getChannel(target), user, msg, message, isEmote, false));
 				}
 			} else if(target.equals(this.nick)) {
-				if(!EiraIRC.internalBus.post(new IRCPrivateChatEvent(this, user, message, isEmote))) {
-					MinecraftForge.EVENT_BUS.post(new IRCPrivateChatEvent(this, user, message, isEmote));
+				if(!EiraIRC.internalBus.post(new IRCPrivateChatEvent(this, user, msg, message, isEmote, false))) {
+					MinecraftForge.EVENT_BUS.post(new IRCPrivateChatEvent(this, user, msg, message, isEmote, false));
 				}
 			}
 		} else if(cmd.equals("NOTICE")) {
@@ -436,12 +432,12 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 			String target = msg.arg(0);
 			String message = msg.arg(1);
 			if(channelTypes.indexOf(target.charAt(0)) != -1) {
-				if(!EiraIRC.internalBus.post(new IRCChannelChatEvent(this, getChannel(target), user, message, false, true))) {
-					MinecraftForge.EVENT_BUS.post(new IRCChannelChatEvent(this, getChannel(target), user, message, false, true));
+				if(!EiraIRC.internalBus.post(new IRCChannelChatEvent(this, getChannel(target), user, msg, message, false, true))) {
+					MinecraftForge.EVENT_BUS.post(new IRCChannelChatEvent(this, getChannel(target), user, msg, message, false, true));
 				}
 			} else if(target.equals(this.nick) || target.equals("*")) {
-				if(EiraIRC.internalBus.post(new IRCPrivateChatEvent(this, user, message, false, true))) {
-					MinecraftForge.EVENT_BUS.post(new IRCPrivateChatEvent(this, user, message, false, true));
+				if(EiraIRC.internalBus.post(new IRCPrivateChatEvent(this, user, msg, message, false, true))) {
+					MinecraftForge.EVENT_BUS.post(new IRCPrivateChatEvent(this, user, msg, message, false, true));
 				}
 			}
 		} else if(cmd.equals("JOIN")) {

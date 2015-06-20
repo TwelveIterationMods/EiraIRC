@@ -38,7 +38,8 @@ public class IRCUserImpl implements IRCUser {
 	private String name;
 	private String authLogin;
 	private EnumChatFormatting nameColor;
-	private boolean isSubscriber;
+	private boolean isTwitchSubscriber;
+	private boolean isTwitchTurbo;
 
 	public IRCUserImpl(IRCConnectionImpl connection, String name) {
 		this.connection = connection;
@@ -167,12 +168,20 @@ public class IRCUserImpl implements IRCUser {
 		}
 	}
 
-	public boolean isSubscriber() {
-		return isSubscriber;
+	public boolean isTwitchSubscriber() {
+		return isTwitchSubscriber;
 	}
 
-	public void setSubscriber(boolean isSubscriber) {
-		this.isSubscriber = isSubscriber;
+	public void setTwitchSubscriber(boolean isSubscriber) {
+		this.isTwitchSubscriber = isSubscriber;
+	}
+
+	public boolean isTwitchTurbo() {
+		return isTwitchTurbo;
+	}
+
+	public void setTwitchTurbo(boolean twitchTurbo) {
+		this.isTwitchTurbo = twitchTurbo;
 	}
 
 	public void setNameColor(EnumChatFormatting nameColor) {
