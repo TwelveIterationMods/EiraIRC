@@ -33,6 +33,7 @@ public class SharedGlobalConfig {
 	public static boolean preventUserPing = false;
 	public static boolean twitchNameColors = true;
 	public static boolean twitchNameBadges = true;
+	public static String ircCommandPrefix = "!";
 
 	// Network Settings
 	public static String bindIP = "";
@@ -67,6 +68,7 @@ public class SharedGlobalConfig {
 		preventUserPing = thisConfig.getBoolean("preventUserPing", GENERAL, preventUserPing, I19n.format("eirairc:config.property.preventUserPing.tooltip"), "eirairc:config.property.preventUserPing");
 		twitchNameColors = thisConfig.getBoolean("twitchNameColors", GENERAL, twitchNameColors, I19n.format("eirairc:config.property.twitchNameColors.tooltip"), "eirairc:config.property.twitchNameColors");
 		twitchNameBadges = thisConfig.getBoolean("twitchNameBadges", GENERAL, twitchNameBadges, I19n.format("eirairc:config.property.twitchNameBadges.tooltip"), "eirairc:config.property.twitchNameBadges");
+		ircCommandPrefix = thisConfig.getString("ircCommandPrefix", GENERAL, ircCommandPrefix, I19n.format("eirairc:config.property.ircCommandPrefix.tooltip"), "eirairc:config.property.ircCommandPrefix");
 		debugMode = thisConfig.getBoolean("debugMode", GENERAL, debugMode, I19n.format("eirairc:config.property.debugMode.tooltip"), "eirairc:config.property.debugMode");
 
 		// Network
@@ -104,6 +106,7 @@ public class SharedGlobalConfig {
 		thisConfig.get(GENERAL, "preventUserPing", false, I19n.format("eirairc:config.property.preventUserPing.tooltip")).set(preventUserPing);
 		thisConfig.get(GENERAL, "twitchNameColors", false, I19n.format("eirairc:config.property.twitchNameColors.tooltip")).set(twitchNameColors);
 		thisConfig.get(GENERAL, "twitchNameBadges", false, I19n.format("eirairc:config.property.twitchNameBadges.tooltip")).set(twitchNameBadges);
+		thisConfig.get(GENERAL, "ircCommandPrefix", "", I19n.format("eirairc:config.property.ircCommandPrefix.tooltip")).set(ircCommandPrefix);
 		thisConfig.get(GENERAL, "debugMode", false, I19n.format("eirairc:config.property.debugMode.tooltip")).set(debugMode);
 
 		// Network
@@ -177,6 +180,8 @@ public class SharedGlobalConfig {
 			debugMode = Boolean.parseBoolean(value);
 		} else if(key.equals("antiFloodTime")) {
 			antiFloodTime = Integer.parseInt(value);
+		} else if(key.equals(ircCommandPrefix)) {
+			ircCommandPrefix = value;
 		} else if(key.equals("bindIP")) {
 			bindIP = value;
 		} else if(key.equals("sslTrustAllCerts")) {
@@ -216,6 +221,8 @@ public class SharedGlobalConfig {
 			value = String.valueOf(antiFloodTime);
 		} else if(key.equals("bindIP")) {
 			value = bindIP;
+		} else if(key.equals("ircCommandPrefix")) {
+			value = ircCommandPrefix;
 		} else if(key.equals("sslTrustAllCerts")) {
 			value = String.valueOf(sslTrustAllCerts);
 		} else if(key.equals("sslDisableDiffieHellman")) {
@@ -245,6 +252,7 @@ public class SharedGlobalConfig {
 			list.add("twitchNameBadges");
 			list.add("debugMode");
 			list.add("bindIP");
+			list.add("ircCommandPrefix");
 			list.add("antiFloodTime");
 			list.add("sslCustomTrustStore");
 			list.add("sslTrustAllCerts");
