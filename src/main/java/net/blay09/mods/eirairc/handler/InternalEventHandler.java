@@ -92,7 +92,7 @@ public class InternalEventHandler {
     public void onChannelChat(IRCChannelChatEvent event) {
         if(event.sender != null && event.connection.isTwitch() && event.sender.getName().equals("jtv")) {
             event.setCanceled(true);
-        } else if(!event.isNotice && event.message.startsWith("!") && ((IRCBotImpl) event.bot).processCommand(event.channel, event.sender, event.message.substring(1))) {
+        } else if(!event.isNotice && event.message.startsWith(SharedGlobalConfig.ircCommandPrefix) && ((IRCBotImpl) event.bot).processCommand(event.channel, event.sender, event.message.substring(SharedGlobalConfig.ircCommandPrefix.length()))) {
             event.setCanceled(true);
         } else if(event.connection.isTwitch()) {
             IRCUserImpl user = (IRCUserImpl) event.sender;
