@@ -85,6 +85,8 @@ public class InternalEventHandler {
             EiraIRC.internalBus.post(new IRCConnectionFailedEvent(event.connection, new RuntimeException("Wrong username or invalid oauth token.")));
             MinecraftForge.EVENT_BUS.post(new IRCConnectionFailedEvent(event.connection, new RuntimeException("Wrong username or invalid oauth token.")));
             event.setCanceled(true);
+        } else if(event.sender != null && event.connection.isTwitch() && event.sender.getName().equals("jtv")) {
+            event.setCanceled(true);
         }
     }
 
