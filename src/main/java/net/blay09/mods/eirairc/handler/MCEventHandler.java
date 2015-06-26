@@ -375,6 +375,10 @@ public class MCEventHandler {
 			// This is necessary because the Achievement event fires even if an achievement is already unlocked.
 			return;
 		}
+		if(((EntityPlayerMP) event.entityPlayer).getStatFile().canUnlockAchievement(event.achievement)) {
+			// This is necessary because the Achievement event fires even if an achievement can not be unlocked yet.
+			return;
+		}
 		for(ServerConfig serverConfig : ConfigurationHandler.getServerConfigs()) {
 			IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(serverConfig.getIdentifier());
 			if(connection != null) {
