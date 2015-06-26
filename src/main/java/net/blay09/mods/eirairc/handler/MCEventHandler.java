@@ -30,6 +30,7 @@ import net.minecraft.command.server.CommandEmote;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.stats.Achievement;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
@@ -374,6 +375,10 @@ public class MCEventHandler {
 	public void onAchievement(AchievementEvent event) {
 		if(((EntityPlayerMP) event.entityPlayer).getStatFile().hasAchievementUnlocked(event.achievement)) {
 			// This is necessary because the Achievement event fires even if an achievement is already unlocked.
+			return;
+		}
+		if(((EntityPlayerMP) event.entityPlayer).getStatFile().canUnlockAchievement(event.achievement)) {
+			// This is necessary because the Achievement event fires even if an achievement can not be unlocked yet.
 			return;
 		}
 		for(ServerConfig serverConfig : ConfigurationHandler.getServerConfigs()) {
