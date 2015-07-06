@@ -463,16 +463,36 @@ public class Utils {
 	}
 
 	public static String extractHost(String url) {
-		int portIdx = url.indexOf(':');
-		if(portIdx != -1) {
-			return url.substring(0, portIdx);
+		int colonIdx = url.indexOf(':');
+		int lastColonIdx = url.lastIndexOf(':');
+		boolean isIPV6 = colonIdx != lastColonIdx;
+		if(isIPV6) {
+			int endIdx = url.lastIndexOf(']');
+			if(endIdx != -1) {
+				return url.substring(0, endIdx);
+			} else {
+				return url;
+			}
 		} else {
-			return url;
+			if(lastColonIdx != -1) {
+				return url.substring(0, lastColonIdx);
+			} else {
+				return url;
+			}
 		}
 	}
 
 	public static int[] extractPorts(String url, int defaultPort) {
-		int portIdx = url.indexOf(':');
+		int colonIdx = url.indexOf(':');
+		int lastColonIdx = url.indexOf(':');
+		boolean isIPV6 = colonIdx != lastColonIdx;
+		int portIdx = lastColonIdx;
+		if(isIPV6) {
+			int endIdx = url.lastIndexOf(']');
+			if(endIdx == -1) {
+				portIdx = -1;
+			}
+		}
 		if(portIdx != -1) {
 			try {
 				String[] portRanges = url.substring(portIdx + 1).split("\\+");
