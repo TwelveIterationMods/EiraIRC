@@ -10,20 +10,14 @@ import net.minecraft.util.IChatComponent;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
 /**
- * Base class for events based on an IRC connection.
+ * Base class for events based on a raw IRC message.
  */
-@Event.HasResult
 public abstract class IRCMessageEvent extends IRCEvent {
 
 	/**
 	 * the raw message
 	 */
 	public final IRCMessage rawMessage;
-
-	/**
-	 * the chat output
-	 */
-	public IChatComponent result;
 
 	/**
 	 * INTERNAL EVENT. YOU SHOULD NOT POST THIS YOURSELF.

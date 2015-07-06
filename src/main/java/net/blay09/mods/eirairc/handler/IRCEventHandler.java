@@ -237,17 +237,38 @@ public class IRCEventHandler {
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void onConnectionFailed(IRCConnectionFailedEvent event) {
-		MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(Utils.getLocalizedChatMessage("error.couldNotConnect", event.connection.getHost(), event.exception)));
+		switch (event.getResult()) {
+			case DEFAULT:
+				MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(Utils.getLocalizedChatMessage("error.couldNotConnect", event.connection.getHost(), event.exception)));
+				break;
+			case ALLOW:
+				MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(event.result));
+				break;
+		}
 	}
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void onReconnecting(IRCReconnectEvent event) {
-		MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(Utils.getLocalizedChatMessage("irc.basic.reconnecting", event.connection.getHost(), event.waitingTime / 1000)));
+		switch (event.getResult()) {
+			case DEFAULT:
+				MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(Utils.getLocalizedChatMessage("irc.basic.reconnecting", event.connection.getHost(), event.waitingTime / 1000)));
+				break;
+			case ALLOW:
+				MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(event.result));
+				break;
+		}
 	}
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void onDisconnected(IRCDisconnectEvent event) {
-		MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(Utils.getLocalizedChatMessage("irc.basic.disconnected", event.connection.getHost())));
+		switch (event.getResult()) {
+			case DEFAULT:
+				MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(Utils.getLocalizedChatMessage("irc.basic.disconnected", event.connection.getHost())));
+				break;
+			case ALLOW:
+				MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(event.result));
+				break;
+		}
 	}
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
