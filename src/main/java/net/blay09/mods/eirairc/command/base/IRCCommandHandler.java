@@ -10,6 +10,7 @@ import net.blay09.mods.eirairc.command.interop.InterOpCommandKick;
 import net.blay09.mods.eirairc.command.interop.InterOpCommandMode;
 import net.blay09.mods.eirairc.command.interop.InterOpCommandTopic;
 import net.blay09.mods.eirairc.command.interop.InterOpCommandUserModeBase;
+import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.CommandHandler;
 import net.minecraft.command.ICommandSender;
@@ -122,7 +123,7 @@ public class IRCCommandHandler {
 	}
 
 	public static boolean onChatCommand(EntityPlayer sender, String text, boolean serverSide) {
-		if(text.equals("!who") || text.startsWith("!who ")) {
+		if(text.equals(SharedGlobalConfig.ircCommandPrefix + "who") || text.startsWith(SharedGlobalConfig.ircCommandPrefix + "who ")) {
 			String[] params = text.substring(1).split(" ");
 			try {
 				return processCommand(sender, params, serverSide);
