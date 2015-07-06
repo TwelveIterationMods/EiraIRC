@@ -7,7 +7,7 @@ public interface IRCMessage {
 
     String getCommand();
 
-    String getArg(int i);
+    String arg(int i);
 
-    int argLength();
+    int argCount();
 }

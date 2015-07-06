@@ -66,7 +66,7 @@ public class IRCMessageImpl implements IRCMessage {
 	}
 
 	@Override
-	public String getArg(int idx) {
+	public String arg(int idx) {
 		if(idx >= args.length) {
 			return null;
 		}
@@ -78,7 +78,7 @@ public class IRCMessageImpl implements IRCMessage {
 	}
 
 	@Override
-	public int argLength() {
+	public int argCount() {
 		return args.length;
 	}
 
