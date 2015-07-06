@@ -157,7 +157,7 @@ public class ClientProxy extends CommonProxy {
 	public boolean checkClientBridge(IRCChannelChatEvent event) {
 		if(ClientGlobalConfig.clientBridge) {
 			if(!ClientGlobalConfig.clientBridgeMessageToken.isEmpty()) {
-				if (event.message.endsWith(ClientGlobalConfig.clientBridgeMessageToken) || event.message.endsWith(ClientGlobalConfig.clientBridgeMessageToken + IRCConnectionImpl.EMOTE_END)) {
+				if (event.message.endsWith(ClientGlobalConfig.clientBridgeMessageToken) || event.message.endsWith(ClientGlobalConfig.clientBridgeMessageToken + IRCConnectionImpl.CTCP_END)) {
 					return true;
 				}
 			}

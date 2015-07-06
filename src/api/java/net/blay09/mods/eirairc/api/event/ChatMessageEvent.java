@@ -8,6 +8,8 @@ import net.minecraftforge.fml.common.eventhandler.Cancelable;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
 @Cancelable
+@Deprecated
+// TODO remove this, replace it with the superior @HasResult system.
 public class ChatMessageEvent extends Event {
 
     public final ICommandSender target;

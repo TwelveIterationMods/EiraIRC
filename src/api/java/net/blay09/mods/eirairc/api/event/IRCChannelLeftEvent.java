@@ -4,6 +4,7 @@ package net.blay09.mods.eirairc.api.event;
 
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
+import net.blay09.mods.eirairc.api.irc.IRCMessage;
 
 /**
  * This event is published on the MinecraftForge.EVENTBUS bus whenever EiraIRC leaves a channel.

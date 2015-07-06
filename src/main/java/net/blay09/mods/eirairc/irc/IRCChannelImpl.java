@@ -47,7 +47,17 @@ public class IRCChannelImpl implements IRCChannel {
 	public void notice(String message) {
 		connection.notice(name, message);
 	}
-	
+
+	@Override
+	public void ctcpMessage(String message) {
+		message(IRCConnectionImpl.CTCP_START + message + IRCConnectionImpl.CTCP_END);
+	}
+
+	@Override
+	public void ctcpNotice(String message) {
+		notice(IRCConnectionImpl.CTCP_START + message + IRCConnectionImpl.CTCP_END);
+	}
+
 	public String getName() {
 		return name;
 	}

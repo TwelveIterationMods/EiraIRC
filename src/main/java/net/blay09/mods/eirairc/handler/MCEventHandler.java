@@ -241,21 +241,27 @@ public class MCEventHandler {
 	private void relayChatClient(String message, boolean isEmote, boolean isNotice, IRCContext target, boolean clientBridge) {
 		if(target != null) {
 			if(!ConfigHelper.getGeneralSettings(target).isReadOnly()) {
-				String ircMessage = message;
 				if(isEmote) {
-					ircMessage = IRCConnectionImpl.EMOTE_START + ircMessage + IRCConnectionImpl.EMOTE_END;
-				}
-				if(isNotice) {
-					target.notice(ircMessage);
+					if (isNotice) {
+						target.ctcpNotice("ACTION " + message);
+					} else {
+						target.ctcpMessage("ACTION " + message);
+					}
 				} else {
-					target.message(ircMessage);
+					if (isNotice) {
+						target.notice(message);
+					} else {
+						target.message(message);
+					}
 				}
 			}
 		} else {
 			if(clientBridge) {
 				String ircMessage = message;
+				boolean isCtcp = false;
 				if(isEmote) {
-					ircMessage = IRCConnectionImpl.EMOTE_START + ircMessage + IRCConnectionImpl.EMOTE_END;
+					isCtcp = true;
+					ircMessage = "ACTION " + ircMessage;
 				}
 				if(!ClientGlobalConfig.clientBridgeMessageToken.isEmpty()) {
 					ircMessage = ircMessage + " " + ClientGlobalConfig.clientBridgeMessageToken;
@@ -267,10 +273,18 @@ public class MCEventHandler {
 							IRCChannel channel = connection.getChannel(channelConfig.getName());
 							if (channel != null) {
 								if (!ConfigHelper.getGeneralSettings(channel).isReadOnly()) {
-									if (isNotice) {
-										channel.notice(ircMessage);
+									if (isCtcp) {
+										if (isNotice) {
+											channel.ctcpNotice(ircMessage);
+										} else {
+											channel.ctcpMessage(ircMessage);
+										}
 									} else {
-										channel.message(ircMessage);
+										if (isNotice) {
+											channel.notice(ircMessage);
+										} else {
+											channel.message(ircMessage);
+										}
 									}
 								}
 							}
@@ -280,14 +294,18 @@ public class MCEventHandler {
 			} else {
 				IRCContext chatTarget = EiraIRC.instance.getChatSessionHandler().getChatTarget();
 				if(chatTarget != null && !ConfigHelper.getGeneralSettings(chatTarget).isReadOnly()) {
-					String ircMessage = message;
 					if(isEmote) {
-						ircMessage = IRCConnectionImpl.EMOTE_START + ircMessage + IRCConnectionImpl.EMOTE_END;
-					}
-					if(isNotice) {
-						chatTarget.notice(ircMessage);
+						if (isNotice) {
+							chatTarget.ctcpNotice("ACTION " + message);
+						} else {
+							chatTarget.ctcpMessage("ACTION " + message);
+						}
 					} else {
-						chatTarget.message(ircMessage);
+						if (isNotice) {
+							chatTarget.notice(message);
+						} else {
+							chatTarget.message(message);
+						}
 					}
 				}
 
@@ -307,12 +325,17 @@ public class MCEventHandler {
 				String format = MessageFormat.getMessageFormat(target, isEmote);
 				String ircMessage = MessageFormat.formatMessage(format, target, sender, message, MessageFormat.Target.IRC, (isEmote ? MessageFormat.Mode.Emote : MessageFormat.Mode.Message));
 				if(isEmote) {
-					ircMessage = IRCConnectionImpl.EMOTE_START + ircMessage + IRCConnectionImpl.EMOTE_END;
-				}
-				if(isNotice) {
-					target.notice(ircMessage);
+					if (isNotice) {
+						target.ctcpNotice("ACTION " + ircMessage);
+					} else {
+						target.ctcpMessage("ACTION " + ircMessage);
+					}
 				} else {
-					target.message(ircMessage);
+					if (isNotice) {
+						target.notice(ircMessage);
+					} else {
+						target.message(ircMessage);
+					}
 				}
 			}
 		} else {
@@ -324,14 +347,19 @@ public class MCEventHandler {
 						if(channel != null) {
 							String format = MessageFormat.getMessageFormat(channel, isEmote);
 							String ircMessage = MessageFormat.formatMessage(format, channel, sender, message, MessageFormat.Target.IRC, (isEmote ? MessageFormat.Mode.Emote : MessageFormat.Mode.Message));
-							if (isEmote) {
-								ircMessage = IRCConnectionImpl.EMOTE_START + ircMessage + IRCConnectionImpl.EMOTE_END;
-							}
 							if (!ConfigHelper.getGeneralSettings(channel).isReadOnly()) {
-								if (isNotice) {
-									channel.notice(ircMessage);
+								if(isEmote) {
+									if (isNotice) {
+										channel.ctcpNotice("ACTION " + ircMessage);
+									} else {
+										channel.ctcpMessage("ACTION " + ircMessage);
+									}
 								} else {
-									channel.message(ircMessage);
+									if (isNotice) {
+										channel.notice(ircMessage);
+									} else {
+										channel.message(ircMessage);
+									}
 								}
 							}
 						}

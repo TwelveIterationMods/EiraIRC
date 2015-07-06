@@ -18,11 +18,13 @@ public class IRCMessageImpl implements IRCMessage {
 		this.command = command;
 		this.args = args;
 	}
-	
+
+	@Override
 	public String getPrefix() {
 		return prefix;
 	}
-	
+
+	@Override
 	public String getCommand() {
 		return command;
 	}
@@ -62,8 +64,9 @@ public class IRCMessageImpl implements IRCMessage {
 		}
 		return prefix;
 	}
-	
-	public String arg(int idx) {
+
+	@Override
+	public String getArg(int idx) {
 		if(idx >= args.length) {
 			return null;
 		}
@@ -74,7 +77,8 @@ public class IRCMessageImpl implements IRCMessage {
 		return args;
 	}
 
-	public int argcount() {
+	@Override
+	public int argLength() {
 		return args.length;
 	}
 

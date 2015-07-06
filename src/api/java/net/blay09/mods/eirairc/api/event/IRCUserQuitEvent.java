@@ -3,12 +3,13 @@
 package net.blay09.mods.eirairc.api.event;
 
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
+import net.blay09.mods.eirairc.api.irc.IRCMessage;
 import net.blay09.mods.eirairc.api.irc.IRCUser;
 
 /**
  * This event is published on the MinecraftForge.EVENTBUS bus whenever someone discconnects from IRC and is in a channel EiraIRC is in.
  */
-public class IRCUserQuitEvent extends IRCEvent {
+public class IRCUserQuitEvent extends IRCMessageEvent {
 
 	/**
 	 * the user that disconnected from IRC
@@ -26,8 +27,8 @@ public class IRCUserQuitEvent extends IRCEvent {
 	 * @param user the user that disconnected from IRC
 	 * @param message the quit message that was sent along
 	 */
-	public IRCUserQuitEvent(IRCConnection connection, IRCUser user, String message) {
-		super(connection);
+	public IRCUserQuitEvent(IRCConnection connection, IRCMessage rawMessage, IRCUser user, String message) {
+		super(connection, rawMessage);
 		this.user = user;
 		this.message = message;
 	}
