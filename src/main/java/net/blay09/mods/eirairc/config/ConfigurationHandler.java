@@ -321,7 +321,7 @@ public class ConfigurationHandler {
 		JsonObject genSettings = new JsonObject();
 		genSettings.addProperty("autoJoin", true);
 		genSettings.addProperty("(more)", "(see shared.cfg for more options)");
-		server.add("general", genSettings);
+		server.add("settings", genSettings);
 		JsonObject themeSettings = new JsonObject();
 		themeSettings.addProperty("ircNameColor", "c");
 		themeSettings.addProperty("(more)", "(see shared.cfg for more options)");
