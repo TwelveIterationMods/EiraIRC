@@ -408,38 +408,58 @@ public class Utils {
 	}
 
 	public static String extractHost(String url) {
-		int portIdx = url.indexOf(':');
-		if(portIdx != -1) {
-			return url.substring(0, portIdx);
+		int colonIdx = url.indexOf(':');
+		int lastColonIdx = url.lastIndexOf(':');
+		boolean isIPV6 = colonIdx != lastColonIdx;
+		if(isIPV6) {
+			int endIdx = url.lastIndexOf(']');
+			if(endIdx != -1) {
+				return url.substring(0, endIdx);
+			} else {
+				return url;
+			}
 		} else {
-			return url;
+			if(lastColonIdx != -1) {
+				return url.substring(0, lastColonIdx);
+			} else {
+				return url;
+			}
 		}
 	}
 
 	public static int[] extractPorts(String url, int defaultPort) {
-		int portIdx = url.indexOf(':');
+		int colonIdx = url.indexOf(':');
+		int lastColonIdx = url.indexOf(':');
+		boolean isIPV6 = colonIdx != lastColonIdx;
+		int portIdx = lastColonIdx;
+		if(isIPV6) {
+			int endIdx = url.lastIndexOf(']');
+			if(endIdx == -1) {
+				portIdx = -1;
+			}
+		}
 		if(portIdx != -1) {
 			try {
 				String[] portRanges = url.substring(portIdx + 1).split("\\+");
 				List<Integer> portList = new ArrayList<Integer>();
-				for (String portRange : portRanges) {
-					int sepIdx = portRange.indexOf('-');
-					if (sepIdx != -1) {
-						int min = Integer.parseInt(portRange.substring(0, sepIdx));
-						int max = Integer.parseInt(portRange.substring(sepIdx + 1));
-						if (min > max) {
+				for(int i = 0; i < portRanges.length; i++) {
+					int sepIdx = portRanges[i].indexOf('-');
+					if(sepIdx != -1) {
+						int min = Integer.parseInt(portRanges[i].substring(0, sepIdx));
+						int max = Integer.parseInt(portRanges[i].substring(sepIdx + 1));
+						if(min > max) {
 							int oldMin = min;
 							min = max;
 							max = oldMin;
 						}
-						if (max - min > 5) {
+						if(max - min > 5) {
 							throw new RuntimeException("EiraIRC: Port ranges bigger than 5 are not allowed! Split them up if you really have to.");
 						}
-						for (int j = min; j <= max; j++) {
+						for(int j = min; j <= max; j++) {
 							portList.add(j);
 						}
 					} else {
-						portList.add(Integer.parseInt(portRange));
+						portList.add(Integer.parseInt(portRanges[i]));
 					}
 				}
 				return ArrayUtils.toPrimitive(portList.toArray(new Integer[portList.size()]));
