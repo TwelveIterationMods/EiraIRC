@@ -151,6 +151,16 @@ public class IRCUserImpl implements IRCUser {
 	}
 
 	@Override
+	public void ctcpMessage(String message) {
+		message(IRCConnectionImpl.CTCP_START + message + IRCConnectionImpl.CTCP_END);
+	}
+
+	@Override
+	public void ctcpNotice(String message) {
+		notice(IRCConnectionImpl.CTCP_START + message + IRCConnectionImpl.CTCP_END);
+	}
+
+	@Override
 	public void message(String message) {
 		connection.message(name, message);
 	}

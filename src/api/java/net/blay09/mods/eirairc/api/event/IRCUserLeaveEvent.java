@@ -4,12 +4,13 @@ package net.blay09.mods.eirairc.api.event;
 
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
+import net.blay09.mods.eirairc.api.irc.IRCMessage;
 import net.blay09.mods.eirairc.api.irc.IRCUser;
 
 /**
  * This event is published on the MinecraftForge.EVENTBUS bus whenever someone leaves an IRC channel EiraIRC is in.
  */
-public class IRCUserLeaveEvent extends IRCEvent {
+public class IRCUserLeaveEvent extends IRCMessageEvent {
 
 	/**
 	 * the channel that the user left
@@ -33,8 +34,8 @@ public class IRCUserLeaveEvent extends IRCEvent {
 	 * @param user the user that left the channel
 	 * @param message the quit message that was sent along
 	 */
-	public IRCUserLeaveEvent(IRCConnection connection, IRCChannel channel, IRCUser user, String message) {
-		super(connection);
+	public IRCUserLeaveEvent(IRCConnection connection, IRCMessage rawMessage, IRCChannel channel, IRCUser user, String message) {
+		super(connection, rawMessage);
 		this.channel = channel;
 		this.user = user;
 		this.message = message;

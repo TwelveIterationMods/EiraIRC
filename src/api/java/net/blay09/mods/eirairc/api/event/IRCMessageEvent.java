@@ -4,38 +4,28 @@ package net.blay09.mods.eirairc.api.event;
 
 import net.blay09.mods.eirairc.api.bot.IRCBot;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
+import net.blay09.mods.eirairc.api.irc.IRCMessage;
+import net.minecraft.util.ChatComponentStyle;
 import net.minecraft.util.IChatComponent;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
 /**
- * Base class for events based on an IRC connection.
+ * Base class for events based on a raw IRC message.
  */
-@Event.HasResult
-public abstract class IRCEvent extends Event {
+public abstract class IRCMessageEvent extends IRCEvent {
 
 	/**
-	 * the connection this event is based on
+	 * the raw message
 	 */
-	public final IRCConnection connection;
-
-	/**
-	 * the bot this event is based on
-	 */
-	public final IRCBot bot;
-
-
-	/**
-	 * the chat output
-	 */
-	public IChatComponent result;
+	public final IRCMessage rawMessage;
 
 	/**
 	 * INTERNAL EVENT. YOU SHOULD NOT POST THIS YOURSELF.
 	 * @param connection the connection this event is based on
 	 */
-	public IRCEvent(IRCConnection connection) {
-		this.connection = connection;
-		this.bot = connection.getBot();
+	public IRCMessageEvent(IRCConnection connection, IRCMessage rawMessage) {
+		super(connection);
+		this.rawMessage = rawMessage;
 	}
 	
 }

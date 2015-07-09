@@ -38,8 +38,8 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 
 	public static final int DEFAULT_PORT = 6667;
 
-	public static final String EMOTE_START = "\u0001ACTION ";
-	public static final String EMOTE_END = "\u0001";
+	public static final String CTCP_START = "\u0001";
+	public static final String CTCP_END = "\u0001";
 	protected static final int DEFAULT_PROXY_PORT = 1080;
 	private final IRCParser parser = new IRCParser();
 
@@ -336,18 +336,18 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 				user.addChannel(channel);
 				channel.addUser(user);
 			}
-			EiraIRC.internalBus.post(new IRCChannelJoinedEvent(this, channel));
-			MinecraftForge.EVENT_BUS.post(new IRCChannelJoinedEvent(this, channel));
+			EiraIRC.internalBus.post(new IRCChannelJoinedEvent(this, msg, channel));
+			MinecraftForge.EVENT_BUS.post(new IRCChannelJoinedEvent(this, msg, channel));
 		} else if(numeric == IRCReplyCodes.RPL_WELCOME) {
 			connected = true;
 			waitingReconnect = 0;
-			EiraIRC.internalBus.post(new IRCConnectEvent(this));
-			MinecraftForge.EVENT_BUS.post(new IRCConnectEvent(this));
+			EiraIRC.internalBus.post(new IRCConnectEvent(this, msg));
+			MinecraftForge.EVENT_BUS.post(new IRCConnectEvent(this, msg));
 		} else if(numeric == IRCReplyCodes.RPL_TOPIC) {
 			IRCChannelImpl channel = (IRCChannelImpl) getChannel(msg.arg(1));
 			if(channel != null) {
 				channel.setTopic(msg.arg(2));
-				MinecraftForge.EVENT_BUS.post(new IRCChannelTopicEvent(this, channel, null, channel.getTopic()));
+				MinecraftForge.EVENT_BUS.post(new IRCChannelTopicEvent(this, msg, channel, null, channel.getTopic()));
 			}
 		} else if(numeric == IRCReplyCodes.RPL_WHOISLOGIN) {
 			IRCUserImpl user = (IRCUserImpl) getOrCreateUser(msg.arg(1));
@@ -361,10 +361,10 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 				user.setAuthLogin(null);
 			}
 		} else if(numeric == IRCReplyCodes.ERR_NICKNAMEINUSE || numeric == IRCReplyCodes.ERR_ERRONEUSNICKNAME || numeric == IRCReplyCodes.ERR_PASSWDMISMATCH) {
-			EiraIRC.internalBus.post(new IRCErrorEvent(this, msg.getNumericCommand(), msg.args()));
-			MinecraftForge.EVENT_BUS.post(new IRCErrorEvent(this, msg.getNumericCommand(), msg.args()));
+			EiraIRC.internalBus.post(new IRCErrorEvent(this, msg, msg.getNumericCommand(), msg.args()));
+			MinecraftForge.EVENT_BUS.post(new IRCErrorEvent(this, msg, msg.getNumericCommand(), msg.args()));
 		} else if(numeric == IRCReplyCodes.RPL_ISUPPORT) {
-			for(int i = 0; i < msg.argcount(); i++) {
+			for(int i = 0; i < msg.argCount(); i++) {
 				if(msg.arg(i).startsWith("CHANTYPES=")) {
 					channelTypes = msg.arg(i).substring(10);
 				} else if(msg.arg(i).startsWith("PREFIX=")) {
@@ -384,11 +384,11 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 			}
 		} else if(numeric == IRCReplyCodes.RPL_MOTD || numeric <= 4 || numeric == 251 || numeric == 252 || numeric == 254 || numeric == 255 || numeric == 265 || numeric == 266 || numeric == 250 || numeric == 375) {
 			if(SharedGlobalConfig.debugMode) {
-				System.out.println("Ignored message code: " + msg.getCommand() + " (" + msg.argcount() + " arguments)");
+				System.out.println("Ignored message code: " + msg.getCommand() + " (" + msg.argCount() + " arguments)");
 			}
 		} else {
 			if(SharedGlobalConfig.debugMode) {
-				System.out.println("Unhandled message code: " + msg.getCommand() + " (" + msg.argcount() + " arguments)");
+				System.out.println("Unhandled message code: " + msg.getCommand() + " (" + msg.argCount() + " arguments)");
 			}
 		}
 		return true;
@@ -406,17 +406,34 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 			String target = msg.arg(0);
 			String message = msg.arg(1);
 			boolean isEmote = false;
-			if(message.startsWith(EMOTE_START)) {
-				message = message.substring(EMOTE_START.length(), message.length() - EMOTE_END.length());
-				isEmote = true;
-			}
-			if(channelTypes.indexOf(target.charAt(0)) != -1) {
-				if(!EiraIRC.internalBus.post(new IRCChannelChatEvent(this, getChannel(target), user, msg, message, isEmote, false))) {
-					MinecraftForge.EVENT_BUS.post(new IRCChannelChatEvent(this, getChannel(target), user, msg, message, isEmote, false));
+			boolean isCtcp = false;
+			if(message.startsWith(CTCP_START)) {
+				message = message.substring(CTCP_START.length(), message.length() - CTCP_END.length());
+				if (message.startsWith("ACTION ")) {
+					message = message.substring("ACTION ".length());
+					isEmote = true; // backwards compatibility
+				} else {
+					isCtcp = true;
+					if(channelTypes.indexOf(target.charAt(0)) != -1) {
+						if(!EiraIRC.internalBus.post(new IRCChannelCTCPEvent(this, getChannel(target), user, msg, message, false))) {
+							MinecraftForge.EVENT_BUS.post(new IRCChannelCTCPEvent(this, getChannel(target), user, msg, message, false));
+						}
+					} else if(target.equals(this.nick)) {
+						if(!EiraIRC.internalBus.post(new IRCPrivateCTCPEvent(this, user, msg, message, false))) {
+							MinecraftForge.EVENT_BUS.post(new IRCPrivateCTCPEvent(this, user, msg, message, false));
+						}
+					}
 				}
-			} else if(target.equals(this.nick)) {
-				if(!EiraIRC.internalBus.post(new IRCPrivateChatEvent(this, user, msg, message, isEmote, false))) {
-					MinecraftForge.EVENT_BUS.post(new IRCPrivateChatEvent(this, user, msg, message, isEmote, false));
+			}
+			if (!isCtcp) {
+				if (channelTypes.indexOf(target.charAt(0)) != -1) {
+					if (!EiraIRC.internalBus.post(new IRCChannelChatEvent(this, getChannel(target), user, msg, message, isEmote, false))) {
+						MinecraftForge.EVENT_BUS.post(new IRCChannelChatEvent(this, getChannel(target), user, msg, message, isEmote, false));
+					}
+				} else if (target.equals(this.nick)) {
+					if (!EiraIRC.internalBus.post(new IRCPrivateChatEvent(this, user, msg, message, isEmote, false))) {
+						MinecraftForge.EVENT_BUS.post(new IRCPrivateChatEvent(this, user, msg, message, isEmote, false));
+					}
 				}
 			}
 		} else if(cmd.equals("NOTICE")) {
@@ -426,13 +443,26 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 			}
 			String target = msg.arg(0);
 			String message = msg.arg(1);
-			if(channelTypes.indexOf(target.charAt(0)) != -1) {
-				if(!EiraIRC.internalBus.post(new IRCChannelChatEvent(this, getChannel(target), user, msg, message, false, true))) {
-					MinecraftForge.EVENT_BUS.post(new IRCChannelChatEvent(this, getChannel(target), user, msg, message, false, true));
+			if(message.startsWith(CTCP_START)) {
+				message = message.substring(CTCP_START.length(), message.length() - CTCP_END.length());
+				if(channelTypes.indexOf(target.charAt(0)) != -1) {
+					if(!EiraIRC.internalBus.post(new IRCChannelCTCPEvent(this, getChannel(target), user, msg, message, true))) {
+						MinecraftForge.EVENT_BUS.post(new IRCChannelCTCPEvent(this, getChannel(target), user, msg, message, true));
+					}
+				} else if(target.equals(this.nick)) {
+					if (!EiraIRC.internalBus.post(new IRCPrivateCTCPEvent(this, user, msg, message, true))) {
+						MinecraftForge.EVENT_BUS.post(new IRCPrivateCTCPEvent(this, user, msg, message, true));
+					}
 				}
-			} else if(target.equals(this.nick) || target.equals("*")) {
-				if(!EiraIRC.internalBus.post(new IRCPrivateChatEvent(this, user, msg, message, false, true))) {
-					MinecraftForge.EVENT_BUS.post(new IRCPrivateChatEvent(this, user, msg, message, false, true));
+			} else {
+				if (channelTypes.indexOf(target.charAt(0)) != -1) {
+					if (!EiraIRC.internalBus.post(new IRCChannelChatEvent(this, getChannel(target), user, msg, message, false, true))) {
+						MinecraftForge.EVENT_BUS.post(new IRCChannelChatEvent(this, getChannel(target), user, msg, message, false, true));
+					}
+				} else if (target.equals(this.nick) || target.equals("*")) {
+					if (!EiraIRC.internalBus.post(new IRCPrivateChatEvent(this, user, msg, message, false, true))) {
+						MinecraftForge.EVENT_BUS.post(new IRCPrivateChatEvent(this, user, msg, message, false, true));
+					}
 				}
 			}
 		} else if(cmd.equals("JOIN")) {
@@ -440,22 +470,22 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 			IRCChannelImpl channel = (IRCChannelImpl) getOrCreateChannel(msg.arg(0));
 			channel.addUser(user);
 			user.addChannel(channel);
-			EiraIRC.internalBus.post(new IRCUserJoinEvent(this, channel, user));
-			MinecraftForge.EVENT_BUS.post(new IRCUserJoinEvent(this, channel, user));
+			EiraIRC.internalBus.post(new IRCUserJoinEvent(this, msg, channel, user));
+			MinecraftForge.EVENT_BUS.post(new IRCUserJoinEvent(this, msg, channel, user));
 		} else if(cmd.equals("PART")) {
 			IRCUserImpl user = (IRCUserImpl) getOrCreateUser(msg.getNick());
 			IRCChannelImpl channel = (IRCChannelImpl) getChannel(msg.arg(0));
 			if(channel != null) {
 				channel.removeUser(user);
 				user.removeChannel(channel);
-				MinecraftForge.EVENT_BUS.post(new IRCUserLeaveEvent(this, channel, user, msg.arg(1)));
+				MinecraftForge.EVENT_BUS.post(new IRCUserLeaveEvent(this, msg, channel, user, msg.arg(1)));
 			}
 		} else if(cmd.equals("TOPIC")) {
 			IRCUser user = getOrCreateUser(msg.getNick());
 			IRCChannelImpl channel = (IRCChannelImpl) getChannel(msg.arg(0));
 			if(channel != null) {
 				channel.setTopic(msg.arg(1));
-				MinecraftForge.EVENT_BUS.post(new IRCChannelTopicEvent(this, channel, user, channel.getTopic()));
+				MinecraftForge.EVENT_BUS.post(new IRCChannelTopicEvent(this, msg, channel, user, channel.getTopic()));
 			}
 		} else if(cmd.equals("NICK")) {
 			String newNick = msg.arg(0);
@@ -464,9 +494,9 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 			String oldNick = user.getName();
 			user.setName(newNick);
 			users.put(user.getName().toLowerCase(), user);
-			MinecraftForge.EVENT_BUS.post(new IRCUserNickChangeEvent(this, user, oldNick, newNick));
+			MinecraftForge.EVENT_BUS.post(new IRCUserNickChangeEvent(this, msg, user, oldNick, newNick));
 		} else if(cmd.equals("MODE")) {
-			if(channelTypes.indexOf(msg.arg(0).charAt(0)) == -1 || msg.argcount() < 3) {
+			if(channelTypes.indexOf(msg.arg(0).charAt(0)) == -1 || msg.argCount() < 3) {
 				return false;
 			}
 			IRCChannelImpl channel = (IRCChannelImpl) getOrCreateChannel(msg.arg(0));
@@ -502,7 +532,7 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 			}
 		} else if(cmd.equals("QUIT")) {
 			IRCUser user = getOrCreateUser(msg.getNick());
-			MinecraftForge.EVENT_BUS.post(new IRCUserQuitEvent(this, user, msg.arg(0)));
+			MinecraftForge.EVENT_BUS.post(new IRCUserQuitEvent(this, msg, user, msg.arg(0)));
 			for(IRCChannel channel : user.getChannels()) {
 				((IRCChannelImpl) channel).removeUser(user);
 			}
@@ -583,6 +613,12 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 
 	@Override
 	public void notice(String message) {}
+
+	@Override
+	public void ctcpMessage(String message) {}
+
+	@Override
+	public void ctcpNotice(String message) {}
 
 	@Override
 	public int[] getPorts() {
