@@ -4,13 +4,14 @@ package net.blay09.mods.eirairc.api.event;
 
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
+import net.blay09.mods.eirairc.api.irc.IRCMessage;
 import net.blay09.mods.eirairc.api.irc.IRCUser;
 
 /**
  * This event is published on the MinecraftForge.EVENTBUS bus whenever the topic of a channel changes.
  * It is also published once when joining a channel, if a topic is set.
  */
-public class IRCChannelTopicEvent extends IRCEvent {
+public class IRCChannelTopicEvent extends IRCMessageEvent {
 
 	/**
 	 * the channel that had it's topic changed
@@ -32,8 +33,8 @@ public class IRCChannelTopicEvent extends IRCEvent {
 	 * @param connection the connection the channel that was left is on
 	 * @param channel the channel that was left
 	 */
-	public IRCChannelTopicEvent(IRCConnection connection, IRCChannel channel, IRCUser user, String topic) {
-		super(connection);
+	public IRCChannelTopicEvent(IRCConnection connection, IRCMessage rawMessage, IRCChannel channel, IRCUser user, String topic) {
+		super(connection, rawMessage);
 		this.channel = channel;
 		this.user = user;
 		this.topic = topic;

@@ -48,4 +48,10 @@ public enum IRCTargetError implements IRCContext {
 	@Override
 	public void notice(String message) {}
 
+	@Override
+	public void ctcpMessage(String message) {}
+
+	@Override
+	public void ctcpNotice(String message) {}
+
 }

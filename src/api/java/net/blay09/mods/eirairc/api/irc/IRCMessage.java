@@ -4,4 +4,11 @@ public interface IRCMessage {
 
     String getTagByKey(String key);
 
+    String getPrefix();
+
+    String getCommand();
+
+    String arg(int i);
+
+    int argCount();
 }

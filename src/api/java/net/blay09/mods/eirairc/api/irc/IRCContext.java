@@ -52,4 +52,20 @@ public interface IRCContext {
 	 */
 	void notice(String message);
 
+	/**
+	 * Sends a CTCP message to this IRC context.
+	 * Raw IRC Equivalent: PRIVMSG getName() :\001message\001
+	 * Does nothing for types IRCConnection and Error.
+	 * @param message the message to be sent to this context
+	 */
+	void ctcpMessage(String message);
+
+	/**
+	 * Sends a CTCP notice to this IRC context.
+	 * Raw IRC Equivalent: NOTICE getName() :\001message\001
+	 * Does nothing for types IRCConnection and Error.
+	 * @param message the message to be sent to this context
+	 */
+	void ctcpNotice(String message);
+
 }

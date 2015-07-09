@@ -81,4 +81,13 @@ public class IRCChannelImpl implements IRCChannel {
 		return connection.getIdentifier() + "/" + name.toLowerCase();
 	}
 
+	@Override
+	public void ctcpMessage(String message) {
+		message(IRCConnectionImpl.CTCP_START + message + IRCConnectionImpl.CTCP_END);
+	}
+
+	@Override
+	public void ctcpNotice(String message) {
+		notice(IRCConnectionImpl.CTCP_START + message + IRCConnectionImpl.CTCP_END);
+	}
 }

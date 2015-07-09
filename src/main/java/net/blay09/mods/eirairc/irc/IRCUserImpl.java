@@ -155,6 +155,16 @@ public class IRCUserImpl implements IRCUser {
 		connection.message(name, message);
 	}
 
+	@Override
+	public void ctcpMessage(String message) {
+		message(IRCConnectionImpl.CTCP_START + message + IRCConnectionImpl.CTCP_END);
+	}
+
+	@Override
+	public void ctcpNotice(String message) {
+		notice(IRCConnectionImpl.CTCP_START + message + IRCConnectionImpl.CTCP_END);
+	}
+
 	public void queueAuthCommand(IRCBotImpl bot, IRCChannel channel, IBotCommand botCommand, String[] args) {
 		if(authLogin == null) {
 			whois();

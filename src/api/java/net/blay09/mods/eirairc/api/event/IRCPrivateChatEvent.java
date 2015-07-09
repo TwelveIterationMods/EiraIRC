@@ -12,7 +12,7 @@ import net.blay09.mods.eirairc.api.irc.IRCUser;
  * If this event is cancelled, EiraIRC will not post the message in chat.
  */
 @Cancelable
-public class IRCPrivateChatEvent extends IRCEvent {
+public class IRCPrivateChatEvent extends IRCMessageEvent {
 
 	/**
 	 * the user that sent this IRC message
@@ -22,6 +22,7 @@ public class IRCPrivateChatEvent extends IRCEvent {
 	/**
 	 * the raw IRC message that was sent
 	 */
+	@Deprecated
 	public final IRCMessage rawMessage;
 
 	/**
@@ -49,7 +50,7 @@ public class IRCPrivateChatEvent extends IRCEvent {
 	 * @param isNotice true, if this message was sent as a NOTICE
 	 */
 	public IRCPrivateChatEvent(IRCConnection connection, IRCUser sender, IRCMessage rawMessage, String message, boolean isEmote, boolean isNotice) {
-		super(connection);
+		super(connection, rawMessage);
 		this.sender = sender;
 		this.rawMessage = rawMessage;
 		this.message = message;

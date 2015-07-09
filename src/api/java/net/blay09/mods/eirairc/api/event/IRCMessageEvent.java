@@ -1,0 +1,27 @@
+// Copyright (c) 2014, Christopher "blay09" Baker
+// All rights reserved.
+package net.blay09.mods.eirairc.api.event;
+
+import net.blay09.mods.eirairc.api.irc.IRCConnection;
+import net.blay09.mods.eirairc.api.irc.IRCMessage;
+
+/**
+ * Base class for events based on a raw IRC message.
+ */
+public abstract class IRCMessageEvent extends IRCEvent {
+
+    /**
+     * the raw message
+     */
+    public final IRCMessage rawMessage;
+
+    /**
+     * INTERNAL EVENT. YOU SHOULD NOT POST THIS YOURSELF.
+     * @param connection the connection this event is based on
+     */
+    public IRCMessageEvent(IRCConnection connection, IRCMessage rawMessage) {
+        super(connection);
+        this.rawMessage = rawMessage;
+    }
+
+}

@@ -177,4 +177,16 @@ public class InternalEventHandler {
     public void onChannelLeft(IRCChannelLeftEvent event) {
         EiraIRC.instance.getChatSessionHandler().removeTargetChannel(event.channel);
     }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onChannelCTCP(IRCChannelCTCPEvent event) {
+        // TODO
+        // PS: VERSION replies should NOT be enforced. That is, they should be disableable, overridable, and multiple replies should also be allowed.
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onPrivateCTCP(IRCPrivateCTCPEvent event) {
+        // TODO
+        // PS: VERSION replies should NOT be enforced. That is, they should be disableable, overridable, and multiple replies should also be allowed.
+    }
 }
