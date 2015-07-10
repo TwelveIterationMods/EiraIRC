@@ -12,7 +12,6 @@ import net.minecraftforge.fml.common.eventhandler.Cancelable;
  * This event is published on the MinecraftForge.EVENTBUS bus whenever a private message was sent to EiraIRC from IRC.
  * If this event is cancelled, EiraIRC will not post the message in chat.
  */
-@Cancelable
 public class IRCPrivateChatEvent extends IRCPrivateChatOrCTCPEvent {
 
 	/**
