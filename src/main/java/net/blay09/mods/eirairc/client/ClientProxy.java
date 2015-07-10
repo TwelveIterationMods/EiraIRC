@@ -8,10 +8,9 @@ import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.addon.DirectUploadHoster;
 import net.blay09.mods.eirairc.addon.ImgurHoster;
 import net.blay09.mods.eirairc.api.EiraIRCAPI;
-import net.blay09.mods.eirairc.api.event.IRCChannelChatEvent;
+import net.blay09.mods.eirairc.api.event.IRCChannelChatOrCTCPEvent;
 import net.blay09.mods.eirairc.client.gui.EiraGui;
 import net.blay09.mods.eirairc.client.gui.GuiEiraIRCRedirect;
-import net.blay09.mods.eirairc.client.gui.overlay.OverlayNotification;
 import net.blay09.mods.eirairc.client.screenshot.ScreenshotManager;
 import net.blay09.mods.eirairc.command.base.IRCCommandHandler;
 import net.blay09.mods.eirairc.config.*;
@@ -154,7 +153,7 @@ public class ClientProxy extends CommonProxy {
 	}
 
 	@Override
-	public boolean checkClientBridge(IRCChannelChatEvent event) {
+	public boolean checkClientBridge(IRCChannelChatOrCTCPEvent event) {
 		if(ClientGlobalConfig.clientBridge) {
 			if(!ClientGlobalConfig.clientBridgeMessageToken.isEmpty()) {
 				if (event.message.endsWith(ClientGlobalConfig.clientBridgeMessageToken) || event.message.endsWith(ClientGlobalConfig.clientBridgeMessageToken + IRCConnectionImpl.CTCP_END)) {

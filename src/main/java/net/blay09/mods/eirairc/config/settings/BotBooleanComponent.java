@@ -12,7 +12,8 @@ public enum BotBooleanComponent {
 	SendAutoWho("sendAutoWho", false, "eirairc:config.property.sendAutoWho"),
 	RelayBroadcasts("relayBroadcasts", true, "eirairc:config.property.relayBroadcasts"),
 	InterOp("interOp", true, "eirairc:config.property.interOp"),
-	RelayAchievements("relayAchievements", false, "eirairc:config.property.relayAchievements");
+	RelayAchievements("relayAchievements", false, "eirairc:config.property.relayAchievements"),
+	AllowCTCP("allowCTCP", false, "eirairc:config.property.allowCTCP");
 
 	public static final BotBooleanComponent[] values = values();
 

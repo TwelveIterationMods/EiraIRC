@@ -13,21 +13,30 @@ import net.minecraftforge.fml.common.eventhandler.Cancelable;
  * If this event is cancelled, EiraIRC will not post the message in chat.
  */
 @Cancelable
-public class IRCPrivateCTCPEvent extends IRCMessageEvent {
+public class IRCPrivateCTCPEvent extends IRCPrivateChatOrCTCPEvent {
 
 	/**
 	 * the user that sent this IRC message
+	 *
+	 * DEPRECATED: use IRCChatOrCTCPEvent's sender instead
 	 */
+	@Deprecated
 	public final IRCUser sender;
 
 	/**
 	 * the message that was sent
+	 *
+	 * DEPRECATED: use IRCChatOrCTCPEvent's message instead
 	 */
+	@Deprecated
 	public final String message;
 
 	/**
 	 * true, fi this message was sent as a NOTICE
+	 *
+	 * DEPRECATED: use IRCChatOrCTCPEvent's isNotice instead
 	 */
+	@Deprecated
 	public final boolean isNotice;
 
 	/**
@@ -39,7 +48,7 @@ public class IRCPrivateCTCPEvent extends IRCMessageEvent {
 	 * @param isNotice true, if this message was sent as a NOTICE
 	 */
 	public IRCPrivateCTCPEvent(IRCConnection connection, IRCUser sender, IRCMessage rawMessage, String message, boolean isNotice) {
-		super(connection, rawMessage);
+		super(connection, rawMessage, sender, message, isNotice);
 		this.sender = sender;
 		this.message = message;
 		this.isNotice = isNotice;

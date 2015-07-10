@@ -14,6 +14,7 @@ eirairc:irc.commands.leave.short=/leave [server/]<channel> (ex. irc.esper.net/#E
 eirairc:irc.commands.who=/[serv]irc who [(<server>|<channel>)]
 eirairc:irc.commands.who.short=/who [(<server>|<channel>)]
 eirairc:irc.commands.msg=/[serv]irc msg <channel|nick> <message ...>
+eirairc:irc.commands.ctcp=/[serv]irc ctcp <channel|nick> <ctcp query ...>
 eirairc:irc.commands.help=/[serv]irc help <topic>
 eirairc:irc.commands.nick=/[serv]irc nick [server] <nick>
 eirairc:irc.commands.nick.short=/nick [server] <nick>
@@ -134,6 +135,9 @@ eirairc:irc.who.noUsersOnline=[%s] No users online in %s.
 
 ## Msg
 eirairc:irc.msg.disabled=Private messages are not enabled.
+
+## CTCP
+eirairc:irc.ctcp.disabled=CTCP queries are not enabled.
 
 ## Config
 eirairc:irc.config.noAbuse=To prevent abuse, this setting can only be changed in the config file.
@@ -309,6 +313,8 @@ eirairc:config.property.convertColors=Convert Color Codes
 eirairc:config.property.convertColors.tooltip=If set to true, colors from this IRC context will be translated into Minecraft colors and vice-versa.
 eirairc:config.property.allowPrivateMessages=Allow Private Messages
 eirairc:config.property.allowPrivateMessages.tooltip=If set to true, private messages can be sent and received from this IRC context.
+eirairc:config.property.allowCTCP=Allow CTCP Queries
+eirairc:config.property.allowCTCP.tooltip=If set to true, CTCP queries can be sent and received from this IRC context.
 eirairc:config.property.sendAutoWho=Send Auto Who
 eirairc:config.property.sendAutoWho.tooltip=If set to true, users who join this IRC context will be sent a list of all online Minecraft players.
 eirairc:config.property.relayBroadcasts=Relay Broadcast Messages
