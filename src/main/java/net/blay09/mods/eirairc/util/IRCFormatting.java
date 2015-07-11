@@ -20,7 +20,7 @@ public enum IRCFormatting {
 
 	BOLD("\u0002", "l"),
 	UNDERLINE("\u001f", "n"),
-	ITALIC("\u0016", "o"),
+	SECRET("\u0016", "k"),
 	RESET("\u000f", "r");
 
 	public static final String IRC_COLOR_PREFIX = "\u0003";
@@ -110,6 +110,7 @@ public enum IRCFormatting {
 
 	public static String toMC(String s, boolean killFormatting) {
 		String result = s;
+		result = result.replace(MC_FORMATTING_PREFIX, "$");
 		for(IRCFormatting format : values) {
 			result = result.replaceAll(format.ircCode, killFormatting ? "" : format.mcCode);
 		}
@@ -126,7 +127,6 @@ public enum IRCFormatting {
 				result = result.replaceFirst(Matcher.quoteReplacement(matcher.group()), MC_FORMATTING_PREFIX + IRCFormatting.getColorFromIRCColorCode(colorCode));
 			}
 		}
-		result = result.replace(MC_FORMATTING_PREFIX, "$");
 		return result;
 	}
 
