@@ -110,4 +110,13 @@ public class InternalMethodsImpl implements InternalMethods {
 		}
 	}
 
+	@Override
+	public void relayChat(ICommandSender sender, String message, boolean isEmote, boolean isNotice, IRCContext target) {
+		if(Utils.isServerSide()) {
+			EiraIRC.instance.getMCEventHandler().relayChatServer(sender, message, isEmote, isEmote, target);
+		} else {
+			EiraIRC.instance.getMCEventHandler().relayChatClient(message, isEmote, isEmote, target);
+		}
+	}
+
 }
