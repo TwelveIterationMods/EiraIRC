@@ -89,9 +89,17 @@ public class IRCCommandHandler {
 	}
 
 	public static List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
-		if(args.length == 0) {
+		if(args.length == 1) {
 			List<String> list = new ArrayList<String>();
-			list.addAll(commands.keySet());
+			if(args[0].isEmpty()) {
+				list.addAll(commands.keySet());
+			} else {
+				for(String key : commands.keySet()) {
+					if(key.startsWith(args[0])) {
+						list.add(key);
+					}
+				}
+			}
 			return list;
 		}
 		SubCommandWrapper cmd = commands.get(args[0]);
