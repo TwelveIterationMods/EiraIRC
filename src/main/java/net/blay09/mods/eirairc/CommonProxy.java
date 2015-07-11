@@ -3,7 +3,6 @@
 
 package net.blay09.mods.eirairc;
 
-import net.blay09.mods.eirairc.api.event.IRCChannelChatEvent;
 import net.blay09.mods.eirairc.api.event.IRCChannelChatOrCTCPEvent;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
 import net.blay09.mods.eirairc.config.ServerConfig;
@@ -104,6 +103,8 @@ public class CommonProxy {
 		logText.appendSibling(logFileText);
 		logText.appendText(" for more details.");
 		Utils.addMessageToChat(logText);
+
+		e.printStackTrace();
 	}
 
 }
