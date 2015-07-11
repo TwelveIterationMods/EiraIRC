@@ -12,24 +12,7 @@ import net.minecraftforge.fml.common.eventhandler.Cancelable;
  * This event is published on the MinecraftForge.EVENTBUS bus whenever a private message was sent to EiraIRC from IRC.
  * If this event is cancelled, EiraIRC will not post the message in chat.
  */
-@Cancelable
-public class IRCPrivateCTCPEvent extends IRCMessageEvent {
-
-	/**
-	 * the user that sent this IRC message
-	 */
-	public final IRCUser sender;
-
-	/**
-	 * the message that was sent
-	 */
-	public final String message;
-
-	/**
-	 * true, fi this message was sent as a NOTICE
-	 */
-	public final boolean isNotice;
-
+public class IRCPrivateCTCPEvent extends IRCPrivateChatOrCTCPEvent {
 	/**
 	 * INTERNAL EVENT. YOU SHOULD NOT POST THIS YOURSELF.
 	 * @param connection the connection this IRC message came from
@@ -39,9 +22,6 @@ public class IRCPrivateCTCPEvent extends IRCMessageEvent {
 	 * @param isNotice true, if this message was sent as a NOTICE
 	 */
 	public IRCPrivateCTCPEvent(IRCConnection connection, IRCUser sender, IRCMessage rawMessage, String message, boolean isNotice) {
-		super(connection, rawMessage);
-		this.sender = sender;
-		this.message = message;
-		this.isNotice = isNotice;
+		super(connection, rawMessage, sender, message, isNotice);
 	}
 }

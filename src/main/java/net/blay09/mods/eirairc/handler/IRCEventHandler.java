@@ -348,7 +348,43 @@ public class IRCEventHandler {
 		switch (event.getResult()) {
 			case DEFAULT:
 				// TODO
+				if (ConfigHelper.getGeneralSettings(event.channel).isMuted()) {
+					return;
+				}
+				if (EiraIRC.proxy.checkClientBridge(event)) {
+					return;
+				}
+				String message = event.message;
+				BotSettings botSettings = ConfigHelper.getBotSettings(event.channel);
+				if (botSettings.getBoolean(BotBooleanComponent.FilterLinks)) {
+					message = MessageFormat.filterLinks(message);
+				}
+				// append CTCP tag
+				message = "[CTCP] " + message;
+				String format;
+				if (event.connection.isTwitch() && event.sender != null && event.sender.getName().equals("twitchnotify")) {
+					format = "{MESSAGE}";
+				} else if (event.isNotice) {
+					format = botSettings.getMessageFormat().mcChannelNotice;
+				} else {
+					format = botSettings.getMessageFormat().mcChannelMessage;
+				}
+				IChatComponent chatComponent = MessageFormat.formatChatComponent(format, event.connection, event.channel, event.sender, message, MessageFormat.Target.Minecraft, MessageFormat.Mode.Message);
+				if (event.isNotice && botSettings.getBoolean(BotBooleanComponent.HideNotices)) {
+					System.out.println(chatComponent.getUnformattedText());
+					return;
+				}
+				ThemeSettings theme = ConfigHelper.getTheme(event.channel);
+				EnumChatFormatting emoteColor = theme.getColor(ThemeColorComponent.emoteTextColor);
+				EnumChatFormatting twitchNameColor = (event.sender != null && SharedGlobalConfig.twitchNameColors) ? ((IRCUserImpl) event.sender).getNameColor() : null;
+				EnumChatFormatting noticeColor = theme.getColor(ThemeColorComponent.ircNoticeTextColor);
+				if (event.isNotice && noticeColor != null) {
+					chatComponent.getChatStyle().setColor(noticeColor);
+				}
+				MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(chatComponent));
+				// TODO
 				// PS: VERSION replies should NOT be enforced. That is, they should be disableable, overridable, and multiple replies should also be allowed.
+
 				break;
 			case ALLOW:
 				MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(event.result));
@@ -361,7 +397,54 @@ public class IRCEventHandler {
 		switch (event.getResult()) {
 			case DEFAULT:
 				// TODO
+				BotSettings botSettings = ConfigHelper.getBotSettings(null);
+				if (ConfigHelper.getGeneralSettings(event.sender).isMuted()) {
+					return;
+				}
+				if (!botSettings.getBoolean(BotBooleanComponent.AllowPrivateMessages)) {
+					if (!event.isNotice && event.sender != null) {
+						event.sender.notice(Utils.getLocalizedMessage("irc.msg.disabled"));
+					}
+					return;
+				}
+				String message = event.message;
+				if (botSettings.getBoolean(BotBooleanComponent.FilterLinks)) {
+					message = MessageFormat.filterLinks(message);
+				}
+				// append CTCP tag
+				message = "[CTCP] " + message;
+				String format;
+				if (event.connection.isTwitch() && event.sender != null && event.sender.getName().equals("twitchnotify")) {
+					format = "{MESSAGE}";
+				} else if (event.isNotice) {
+					format = botSettings.getMessageFormat().mcPrivateNotice;
+				} else {
+					format = botSettings.getMessageFormat().mcPrivateMessage;
+				}
+				IChatComponent chatComponent = MessageFormat.formatChatComponent(format, event.connection, null, event.sender, message, MessageFormat.Target.Minecraft, MessageFormat.Mode.Message);
+				if (event.isNotice && botSettings.getBoolean(BotBooleanComponent.HideNotices)) {
+					System.out.println(chatComponent.getUnformattedText());
+					return;
+				}
+				String notifyMsg = chatComponent.getUnformattedText();
+				if (notifyMsg.length() > 42) {
+					notifyMsg = notifyMsg.substring(0, 42) + "...";
+				}
+				if (!event.isNotice) {
+					EiraIRC.proxy.publishNotification(NotificationType.PrivateMessage, notifyMsg);
+				}
+				EiraIRC.instance.getChatSessionHandler().addTargetUser(event.sender);
+				ThemeSettings theme = ConfigHelper.getTheme(event.sender);
+				EnumChatFormatting emoteColor = theme.getColor(ThemeColorComponent.emoteTextColor);
+				EnumChatFormatting twitchNameColor = (event.sender != null && SharedGlobalConfig.twitchNameColors) ? ((IRCUserImpl) event.sender).getNameColor() : null;
+				EnumChatFormatting noticeColor = theme.getColor(ThemeColorComponent.ircNoticeTextColor);
+				if (event.isNotice && noticeColor != null) {
+					chatComponent.getChatStyle().setColor(noticeColor);
+				}
+				MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(chatComponent));
+				// TODO
 				// PS: VERSION replies should NOT be enforced. That is, they should be disableable, overridable, and multiple replies should also be allowed.
+
 				break;
 			case ALLOW:
 				MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(event.result));

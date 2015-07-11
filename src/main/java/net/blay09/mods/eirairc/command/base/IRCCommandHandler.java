@@ -39,6 +39,7 @@ public class IRCCommandHandler {
 		registerCommand(new CommandConfig());
 		registerCommand(new CommandList());
 		registerCommand(new CommandMessage());
+		registerCommand(new CommandCTCP());
 		registerCommand(new CommandNick());
 		registerCommand(new CommandNickServ());
 		registerCommand(new CommandQuote());
