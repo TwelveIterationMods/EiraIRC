@@ -2,7 +2,7 @@
 // All rights reserved.
 package net.blay09.mods.eirairc.api.event;
 
-import cpw.mods.fml.common.eventhandler.Cancelable;
+
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
 import net.blay09.mods.eirairc.api.irc.IRCMessage;
 import net.blay09.mods.eirairc.api.irc.IRCUser;
@@ -11,23 +11,30 @@ import net.blay09.mods.eirairc.api.irc.IRCUser;
  * This event is published on the MinecraftForge.EVENTBUS bus whenever a private message was sent to EiraIRC from IRC.
  * If this event is cancelled, EiraIRC will not post the message in chat.
  */
-@Cancelable
-public class IRCPrivateChatEvent extends IRCMessageEvent {
+public class IRCPrivateChatEvent extends IRCPrivateChatOrCTCPEvent {
 
 	/**
 	 * the user that sent this IRC message
+	 *
+	 * DEPRECATED: use IRCChatOrCTCPEvent's sender instead
 	 */
+	@Deprecated
 	public final IRCUser sender;
 
 	/**
 	 * the raw IRC message that was sent
+	 *
+	 * DEPRECATED: Use IRCMessageEvent's rawMessage instead
 	 */
 	@Deprecated
 	public final IRCMessage rawMessage;
 
 	/**
 	 * the message that was sent
+	 *
+	 * DEPRECATED: use IRCChatOrCTCPEvent's message instead
 	 */
+	@Deprecated
 	public final String message;
 
 	/**
@@ -37,7 +44,10 @@ public class IRCPrivateChatEvent extends IRCMessageEvent {
 
 	/**
 	 * true, fi this message was sent as a NOTICE
+	 *
+	 * DEPRECATED: use IRCChatOrCTCPEvent's isNotice instead
 	 */
+	@Deprecated
 	public final boolean isNotice;
 
 	/**
@@ -50,7 +60,7 @@ public class IRCPrivateChatEvent extends IRCMessageEvent {
 	 * @param isNotice true, if this message was sent as a NOTICE
 	 */
 	public IRCPrivateChatEvent(IRCConnection connection, IRCUser sender, IRCMessage rawMessage, String message, boolean isEmote, boolean isNotice) {
-		super(connection, rawMessage);
+		super(connection, rawMessage, sender, message, isNotice);
 		this.sender = sender;
 		this.rawMessage = rawMessage;
 		this.message = message;

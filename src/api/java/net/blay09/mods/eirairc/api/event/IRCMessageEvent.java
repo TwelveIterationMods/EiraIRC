@@ -10,18 +10,18 @@ import net.blay09.mods.eirairc.api.irc.IRCMessage;
  */
 public abstract class IRCMessageEvent extends IRCEvent {
 
-    /**
-     * the raw message
-     */
-    public final IRCMessage rawMessage;
+	/**
+	 * the raw message
+	 */
+	public final IRCMessage rawMessage;
 
-    /**
-     * INTERNAL EVENT. YOU SHOULD NOT POST THIS YOURSELF.
-     * @param connection the connection this event is based on
-     */
-    public IRCMessageEvent(IRCConnection connection, IRCMessage rawMessage) {
-        super(connection);
-        this.rawMessage = rawMessage;
-    }
-
+	/**
+	 * INTERNAL EVENT. YOU SHOULD NOT POST THIS YOURSELF.
+	 * @param connection the connection this event is based on
+	 */
+	public IRCMessageEvent(IRCConnection connection, IRCMessage rawMessage) {
+		super(connection);
+		this.rawMessage = rawMessage;
+	}
+	
 }

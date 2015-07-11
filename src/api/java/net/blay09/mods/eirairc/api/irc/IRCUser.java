@@ -14,7 +14,7 @@ public interface IRCUser extends IRCContext {
 	/**
 	 * @param channel the channel to check for the mode prefix
 	 * @return the mode prefix (@, +, etc.) of this user for the given channel
-	 */
+	*/
 	String getChannelModePrefix(IRCChannel channel);
 
 	/**

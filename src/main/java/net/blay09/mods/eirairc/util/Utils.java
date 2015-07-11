@@ -440,6 +440,7 @@ public class Utils {
 		return sb.toString();
 	}
 
+	@Deprecated
 	public static String readString(ByteBuf buf) {
 		short len = buf.readShort();
 		byte[] b = new byte[len];
@@ -452,6 +453,7 @@ public class Utils {
 		return null;
 	}
 
+	@Deprecated
 	public static void writeString(ByteBuf buffer, String s) {
 		try {
 			byte[] b = s.getBytes(ENCODING);

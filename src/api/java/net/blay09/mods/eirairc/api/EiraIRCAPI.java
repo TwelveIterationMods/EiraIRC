@@ -56,7 +56,7 @@ public class EiraIRCAPI {
 	}
 
 	/**
-	 * @param user the player that should be checked
+	 * @param user the player to be checked
 	 * @return true if the player has EiraIRC installed on the client-side
 	 */
 	public static boolean hasClientSideInstalled(ICommandSender user) {

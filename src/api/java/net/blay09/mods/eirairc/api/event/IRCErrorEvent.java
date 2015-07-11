@@ -23,7 +23,7 @@ public class IRCErrorEvent extends IRCMessageEvent {
 	/**
 	 * INTERNAL EVENT. YOU SHOULD NOT POST THIS YOURSELF.
 	 * @param connection the connection that was disconnected
- 	 * @param numeric the numeric error code
+	 * @param numeric the numeric error code
 	 * @param args the arguments sent along with the error
 	 */
 	public IRCErrorEvent(IRCConnection connection, IRCMessage rawMessage, int numeric, String[] args) {

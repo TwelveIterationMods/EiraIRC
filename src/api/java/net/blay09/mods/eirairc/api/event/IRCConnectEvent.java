@@ -6,7 +6,7 @@ import net.blay09.mods.eirairc.api.irc.IRCConnection;
 import net.blay09.mods.eirairc.api.irc.IRCMessage;
 
 /**
- * This event is published on the MinecraftForge.EVENTBUS bus whenever EiraIRC successfully connects to an IRC server
+ * This event is published on the MinecraftForge.EVENTBUS bus whenever EiraIRC successfully connects to an IRC server.
  */
 public class IRCConnectEvent extends IRCMessageEvent {
 

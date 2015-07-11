@@ -31,7 +31,8 @@ public class MessageFormat {
 
 	public enum Mode {
 		Message,
-		Emote
+		Emote,
+		CTCP
 	}
 
 	private static final Pattern playerTagPattern = Pattern.compile("[\\[][^\\]]+[\\]]");

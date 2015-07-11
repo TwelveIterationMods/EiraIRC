@@ -67,5 +67,5 @@ public interface IRCContext {
 	 * @param message the message to be sent to this context
 	 */
 	void ctcpNotice(String message);
-
+	
 }

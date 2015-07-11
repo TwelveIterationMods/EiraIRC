@@ -24,7 +24,7 @@ public class ChatMessageEvent extends Event {
 
     /**
      * INTERNAL EVENT. YOU SHOULD NOT POST THIS YOURSELF.
-     * @param target the receiver of the chat component
+     * @param target  the sender that issued the message
      * @param component the chat component to display
      */
     public ChatMessageEvent(ICommandSender target, IChatComponent component) {
