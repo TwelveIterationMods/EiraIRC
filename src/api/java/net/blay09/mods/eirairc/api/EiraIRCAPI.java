@@ -63,4 +63,15 @@ public class EiraIRCAPI {
 		return internalMethods.hasClientSideInstalled(user);
 	}
 
+	/**
+	 * @param sender the sender of the message - this is ignored on client-side connections (sender is always the player)
+	 * @param message the message that should be send to IRC
+	 * @param isEmote true if this message should be sent as an ACTION
+	 * @param isNotice true if this message should be sent as a NOTICE
+	 * @param target the target context of this message (either a channel or a user)
+	 */
+	public static void relayChat(ICommandSender sender, String message, boolean isEmote, boolean isNotice, IRCContext target) {
+		internalMethods.relayChat(sender, message, isEmote, isNotice, target);
+	}
+
 }

@@ -11,8 +11,10 @@ import net.minecraftforge.fml.common.eventhandler.Event;
  * This event is published on the MinecraftForge.EVENTBUS bus when chat messages are being sent to IRC.
  * Other mods can use this event to send custom messages to IRC or control which messages are sent.
  * If this event is cancelled, the message will not be sent to IRC.
+ * @deprecated It is recommended to use the relayChat method of {@code EiraIRCAPI} instead.
  */
 @Cancelable
+@Deprecated
 public class RelayChat extends Event {
 
 	/**

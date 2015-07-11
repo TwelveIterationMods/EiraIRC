@@ -12,4 +12,5 @@ public interface InternalMethods {
 	void registerSubCommand(SubCommand command);
 	void registerUploadHoster(UploadHoster uploadHoster);
 	boolean hasClientSideInstalled(ICommandSender user);
+	void relayChat(ICommandSender sender, String message, boolean isEmote, boolean isNotice, IRCContext target);
 }

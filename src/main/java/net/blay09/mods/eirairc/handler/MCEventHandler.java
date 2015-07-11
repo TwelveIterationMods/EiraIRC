@@ -142,7 +142,7 @@ public class MCEventHandler {
 			return;
 		}
 		if(ClientGlobalConfig.clientBridge) {
-			relayChatClient(event.message, false, false, null, true);
+			relayChatClient(event.message, false, false, null);
 			event.setCanceled(true);
 			return;
 		}
@@ -161,7 +161,7 @@ public class MCEventHandler {
 		} else {
 			return;
 		}
-		relayChatClient(event.message, false, false, chatTarget, false);
+		relayChatClient(event.message, false, false, chatTarget);
 		MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(chatComponent));
 		event.setCanceled(true);
 	}
@@ -171,7 +171,7 @@ public class MCEventHandler {
 		String text = event.message.substring(4);
 		EntityPlayer sender = Minecraft.getMinecraft().thePlayer;
 		if(ClientGlobalConfig.clientBridge) {
-			relayChatClient(text, true, false, null, true);
+			relayChatClient(text, true, false, null);
 			event.setCanceled(true);
 			return;
 		}
@@ -193,7 +193,7 @@ public class MCEventHandler {
 		} else {
 			return;
 		}
-		relayChatClient(text, true, false, chatTarget, false);
+		relayChatClient(text, true, false, chatTarget);
 		if(emoteColor != null) {
 			chatComponent.getChatStyle().setColor(emoteColor);
 		}
@@ -234,11 +234,11 @@ public class MCEventHandler {
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public void relayChatClient(RelayChat event) {
-		relayChatClient(event.message, event.isEmote, event.isNotice, event.target, ClientGlobalConfig.clientBridge);
+		relayChatClient(event.message, event.isEmote, event.isNotice, event.target);
 	}
 
 	@SideOnly(Side.CLIENT)
-	private void relayChatClient(String message, boolean isEmote, boolean isNotice, IRCContext target, boolean clientBridge) {
+	public void relayChatClient(String message, boolean isEmote, boolean isNotice, IRCContext target) {
 		if(target != null) {
 			if(!ConfigHelper.getGeneralSettings(target).isReadOnly()) {
 				if(isEmote) {
@@ -256,7 +256,7 @@ public class MCEventHandler {
 				}
 			}
 		} else {
-			if(clientBridge) {
+			if(ClientGlobalConfig.clientBridge) {
 				String ircMessage = message;
 				boolean isCtcp = false;
 				if(isEmote) {
@@ -319,7 +319,7 @@ public class MCEventHandler {
 		relayChatServer(event.sender, event.message, event.isEmote, event.isNotice, event.target);
 	}
 
-	private void relayChatServer(ICommandSender sender, String message, boolean isEmote, boolean isNotice, IRCContext target) {
+	public void relayChatServer(ICommandSender sender, String message, boolean isEmote, boolean isNotice, IRCContext target) {
 		if(target != null) {
 			if(!ConfigHelper.getGeneralSettings(target).isReadOnly()) {
 				String format = MessageFormat.getMessageFormat(target, isEmote);

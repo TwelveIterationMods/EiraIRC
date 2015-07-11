@@ -9,11 +9,11 @@ import net.blay09.mods.eirairc.api.irc.IRCUser;
 import net.blay09.mods.eirairc.api.upload.UploadHoster;
 import net.blay09.mods.eirairc.client.UploadManager;
 import net.blay09.mods.eirairc.command.base.IRCCommandHandler;
+import net.blay09.mods.eirairc.handler.IRCEventHandler;
 import net.blay09.mods.eirairc.net.EiraPlayerInfo;
 import net.blay09.mods.eirairc.util.IRCTargetError;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
-
 
 public class InternalMethodsImpl implements InternalMethods {
 
@@ -107,6 +107,15 @@ public class InternalMethodsImpl implements InternalMethods {
 			} else {
 				return connection.getOrCreateUser(contextPath);
 			}
+		}
+	}
+
+	@Override
+	public void relayChat(ICommandSender sender, String message, boolean isEmote, boolean isNotice, IRCContext target) {
+		if(Utils.isServerSide()) {
+			EiraIRC.instance.getMCEventHandler().relayChatServer(sender, message, isEmote, isEmote, target);
+		} else {
+			EiraIRC.instance.getMCEventHandler().relayChatClient(message, isEmote, isEmote, target);
 		}
 	}
 
