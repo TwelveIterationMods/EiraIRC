@@ -529,9 +529,11 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 					user.setChannelUserMode(channel, IRCChannelUserMode.fromChar(c));
 				}
 			}
-			for(char c : unsetList) {
-				if(c == currentMode.modeChar) {
-					user.setChannelUserMode(channel, null);
+			if(currentMode != null) {
+				for (char c : unsetList) {
+					if (c == currentMode.modeChar) {
+						user.setChannelUserMode(channel, null);
+					}
 				}
 			}
 		} else if(cmd.equals("QUIT")) {

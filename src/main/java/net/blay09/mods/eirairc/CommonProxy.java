@@ -107,5 +107,7 @@ public class CommonProxy {
 		logText.appendSibling(logFileText);
 		logText.appendText(" for more details.");
 		Utils.addMessageToChat(logText);
+
+		e.printStackTrace();
 	}
 }
