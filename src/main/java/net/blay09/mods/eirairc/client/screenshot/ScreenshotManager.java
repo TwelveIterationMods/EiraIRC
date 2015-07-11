@@ -213,14 +213,13 @@ public class ScreenshotManager {
 			return;
 		}
 		IRCContext chatTarget = EiraIRC.instance.getChatSessionHandler().getChatTarget();
-		String format = ConfigHelper.getBotSettings(chatTarget).getMessageFormat().ircScreenshotUpload;
-		format = format.replace("{URL}", screenshot.getDirectURL() != null ? screenshot.getDirectURL() : screenshot.getUploadURL());
 		if(chatTarget == null) {
-			format = format.replace("{NICK}", "/me");
-			format = format.replace("{USER}", "/me");
-			Minecraft.getMinecraft().thePlayer.sendChatMessage(format);
+			String format = ConfigHelper.getBotSettings(chatTarget).getMessageFormat().ircScreenshotUpload;
+			format = format.replace("{URL}", screenshot.getDirectURL() != null ? screenshot.getDirectURL() : screenshot.getUploadURL());
+			Minecraft.getMinecraft().thePlayer.sendChatMessage("/me " + format);
 		} else {
 			EntityPlayer sender = Minecraft.getMinecraft().thePlayer;
+			String format;
 			EnumChatFormatting emoteColor;
 			IChatComponent chatComponent;
 			if (chatTarget instanceof IRCChannel) {

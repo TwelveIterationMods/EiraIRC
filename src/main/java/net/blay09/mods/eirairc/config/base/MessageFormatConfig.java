@@ -120,7 +120,7 @@ public class MessageFormatConfig {
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircPlayerJoin", Utils.quote("{NICK} joined the game"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircPlayerLeave", Utils.quote("{NICK} left the game"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircPlayerNickChange", Utils.quote("{OLDNICK} is now known as {NICK}"));
-		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircScreenshotUpload", Utils.quote("{NICK} just uploaded a screenshot: {URL}"));
+		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircScreenshotUpload", Utils.quote("just uploaded a screenshot: {URL}"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircAchievement", Utils.quote("{NICK} just earned an achievement: {MESSAGE}"));
 		config.save();
 		
@@ -148,7 +148,7 @@ public class MessageFormatConfig {
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircPlayerLeave", Utils.quote("{NICK} left the game"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircPlayerNickChange", Utils.quote("{OLDNICK} is now known as {NICK}"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircBroadcastMessage", Utils.quote("*** {MESSAGE} ***"));
-		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircScreenshotUpload", Utils.quote("{NICK} just uploaded a screenshot: {URL}"));
+		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircScreenshotUpload", Utils.quote("just uploaded a screenshot: {URL}"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircAchievement", Utils.quote("{NICK} just earned an achievement: {MESSAGE}"));
 		config.save();
 		
@@ -176,7 +176,7 @@ public class MessageFormatConfig {
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircPlayerLeave", Utils.quote("{NICK} left the game"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircPlayerNickChange", Utils.quote("{OLDNICK} is now known as {NICK}"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircBroadcastMessage", Utils.quote("*** {MESSAGE} ***"));
-		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircScreenshotUpload", Utils.quote("{NICK} just uploaded a screenshot: {URL}"));
+		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircScreenshotUpload", Utils.quote("just uploaded a screenshot: {URL}"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircAchievement", Utils.quote("{NICK} just earned an achievement: {MESSAGE}"));
 		config.save();
 		
@@ -204,7 +204,7 @@ public class MessageFormatConfig {
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircPlayerLeave", Utils.quote("{NICK} left the game"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircPlayerNickChange", Utils.quote("{OLDNICK} is now known as {NICK}"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircBroadcastMessage", Utils.quote("[Server] {MESSAGE}"));
-		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircScreenshotUpload", Utils.quote("{NICK} just uploaded a screenshot: {URL}"));
+		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircScreenshotUpload", Utils.quote("just uploaded a screenshot: {URL}"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircAchievement", Utils.quote("{NICK} just earned an achievement: {MESSAGE}"));
 		config.save();
 		
@@ -232,7 +232,7 @@ public class MessageFormatConfig {
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircPlayerLeave", Utils.quote("{NICK} left the game"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircPlayerNickChange", Utils.quote("{OLDNICK} is now known as {NICK}"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircBroadcastMessage", Utils.quote("[{SERVER}] *** {MESSAGE} ***"));
-		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircScreenshotUpload", Utils.quote("{NICK} just uploaded a screenshot: {URL}"));
+		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircScreenshotUpload", Utils.quote("just uploaded a screenshot: {URL}"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircAchievement", Utils.quote("{NICK} just earned an achievement: {MESSAGE}"));
 		config.save();
 
@@ -260,7 +260,7 @@ public class MessageFormatConfig {
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircPlayerLeave", Utils.quote("{NICK} left the game"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircPlayerNickChange", Utils.quote("{OLDNICK} is now known as {NICK}"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircBroadcastMessage", Utils.quote("*** {MESSAGE} ***"));
-		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircScreenshotUpload", Utils.quote("{NICK} just uploaded a screenshot: {URL}"));
+		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircScreenshotUpload", Utils.quote("just uploaded a screenshot: {URL}"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircAchievement", Utils.quote("{NICK} just earned an achievement: {MESSAGE}"));
 		config.save();
 
@@ -288,7 +288,7 @@ public class MessageFormatConfig {
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircPlayerJoin", Utils.quote("{NICK} joined the game"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircPlayerLeave", Utils.quote("{NICK} left the game"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircPlayerNickChange", Utils.quote("{OLDNICK} is now known as {NICK}"));
-		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircScreenshotUpload", Utils.quote("{NICK} just uploaded a screenshot: {URL}"));
+		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircScreenshotUpload", Utils.quote("just uploaded a screenshot: {URL}"));
 		config.get(CATEGORY_FORMAT + Configuration.CATEGORY_SPLITTER + CATEGORY_FORMAT_IRC, "ircAchievement", Utils.quote("{NICK} just earned an achievement: {MESSAGE}"));
 		config.save();
 
