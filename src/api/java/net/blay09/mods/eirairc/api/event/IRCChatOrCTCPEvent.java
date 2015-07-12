@@ -1,5 +1,6 @@
 package net.blay09.mods.eirairc.api.event;
 
+import cpw.mods.fml.common.eventhandler.Cancelable;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
 import net.blay09.mods.eirairc.api.irc.IRCMessage;
 import net.blay09.mods.eirairc.api.irc.IRCUser;
@@ -9,6 +10,7 @@ import net.blay09.mods.eirairc.api.irc.IRCUser;
  *
  * @author soniex2
  */
+@Cancelable
 public abstract class IRCChatOrCTCPEvent extends IRCMessageEvent {
 
     /**
