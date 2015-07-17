@@ -1,4 +1,4 @@
-// Copyright (c) 2014, Christopher "blay09" Baker
+// Copyright (c) 2015, Christopher "BlayTheNinth" Baker
 
 package net.blay09.mods.eirairc.irc;
 

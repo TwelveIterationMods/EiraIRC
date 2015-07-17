@@ -1,5 +1,5 @@
-// Copyright (c) 2014, Christopher "blay09" Baker
-// All rights reserved.
+// Copyright (c) 2015, Christopher "BlayTheNinth" Baker
+
 package net.blay09.mods.eirairc.handler;
 
 import net.blay09.mods.eirairc.EiraIRC;
@@ -12,6 +12,7 @@ import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.bot.IRCBotImpl;
 import net.blay09.mods.eirairc.config.ChannelConfig;
+import net.blay09.mods.eirairc.config.IgnoreList;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.config.settings.BotBooleanComponent;
@@ -27,14 +28,18 @@ import net.blay09.mods.eirairc.util.Utils;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @SuppressWarnings("unused")
 public class InternalEventHandler {
 
+    private static final Logger logger = LogManager.getLogger();
+
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onUserJoin(IRCUserJoinEvent event) {
         BotSettings botSettings = ConfigHelper.getBotSettings(event.channel);
-        if(botSettings.getBoolean(BotBooleanComponent.SendAutoWho)) {
+        if (botSettings.getBoolean(BotBooleanComponent.SendAutoWho)) {
             Utils.sendPlayerList(event.user);
         }
     }
@@ -48,19 +53,19 @@ public class InternalEventHandler {
     public void onConnected(IRCConnectEvent event) {
         ServerConfig serverConfig = ConfigHelper.getServerConfig(event.connection);
         // If this is a Twitch connection, tell the server that we're a JTVCLIENT so we receive name colors.
-        if(event.connection.isTwitch()) {
+        if (event.connection.isTwitch()) {
             event.connection.irc("JTVCLIENT");
         }
         Utils.doNickServ(event.connection, serverConfig);
-        for(ChannelConfig channelConfig : serverConfig.getChannelConfigs()) {
+        for (ChannelConfig channelConfig : serverConfig.getChannelConfigs()) {
             GeneralSettings generalSettings = channelConfig.getGeneralSettings();
-            if(generalSettings.getBoolean(GeneralBooleanComponent.AutoJoin)) {
+            if (generalSettings.getBoolean(GeneralBooleanComponent.AutoJoin)) {
                 event.connection.join(channelConfig.getName(), channelConfig.getPassword());
             }
         }
-        if(!SharedGlobalConfig.defaultChat.equals("Minecraft")) {
+        if (!SharedGlobalConfig.defaultChat.equals("Minecraft")) {
             IRCContext chatTarget = EiraIRCAPI.parseContext(null, SharedGlobalConfig.defaultChat, IRCContext.ContextType.IRCChannel);
-            if(chatTarget.getContextType() != IRCContext.ContextType.Error) {
+            if (chatTarget.getContextType() != IRCContext.ContextType.Error) {
                 EiraIRC.instance.getChatSessionHandler().setChatTarget(chatTarget);
             }
         }
@@ -68,35 +73,52 @@ public class InternalEventHandler {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onPrivateChat(IRCPrivateChatEvent event) {
-        if(!event.isNotice) {
-            if(((IRCBotImpl) event.bot).processCommand(null, event.sender, event.message)) {
+        if (event.sender == null) {
+            return;
+        }
+        if (IgnoreList.isIgnored(event.sender)) {
+            logger.info("Ignored message by " + event.sender.getName() + ": " + event.message);
+            event.setCanceled(true);
+            return;
+        }
+        if (!event.isNotice) {
+            if (((IRCBotImpl) event.bot).processCommand(null, event.sender, event.message)) {
                 event.setCanceled(true);
                 return;
             } else {
-                if(event.bot.isServerSide()) {
+                if (event.bot.isServerSide()) {
                     event.sender.notice(Utils.getLocalizedMessage("irc.bot.unknownCommand"));
                     event.setCanceled(true);
                     return;
                 }
             }
         }
-        if(event.sender != null && event.sender.getName().equals("tmi.twitch.tv") && event.isNotice && event.connection.getHost().equals(Globals.TWITCH_SERVER) && event.message.equals("Login unsuccessful")) {
+        if (event.sender.getName().equals("tmi.twitch.tv") && event.isNotice && event.connection.getHost().equals(Globals.TWITCH_SERVER) && event.message.equals("Login unsuccessful")) {
             event.connection.disconnect("");
             EiraIRC.internalBus.post(new IRCConnectionFailedEvent(event.connection, new RuntimeException("Wrong username or invalid oauth token.")));
             MinecraftForge.EVENT_BUS.post(new IRCConnectionFailedEvent(event.connection, new RuntimeException("Wrong username or invalid oauth token.")));
             event.setCanceled(true);
-        } else if(event.sender != null && event.connection.isTwitch() && event.sender.getName().equals("jtv")) {
+        } else if (event.connection.isTwitch() && event.sender.getName().equals("jtv")) {
             event.setCanceled(true);
         }
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onChannelChat(IRCChannelChatEvent event) {
-        if(event.sender != null && event.connection.isTwitch() && event.sender.getName().equals("jtv")) {
+        if (event.sender != null && IgnoreList.isIgnored(event.sender)) {
+            logger.info("Ignored message by " + event.sender.getName() + ": " + event.message);
             event.setCanceled(true);
-        } else if(!event.isNotice && event.message.startsWith(SharedGlobalConfig.ircCommandPrefix) && ((IRCBotImpl) event.bot).processCommand(event.channel, event.sender, event.message.substring(SharedGlobalConfig.ircCommandPrefix.length()))) {
+            return;
+        }
+        if (event.sender != null && event.connection.isTwitch() && event.sender.getName().equals("jtv")) {
             event.setCanceled(true);
-        } else if(event.connection.isTwitch()) {
+            return;
+        }
+        if (!event.isNotice && event.message.startsWith(SharedGlobalConfig.ircCommandPrefix) && ((IRCBotImpl) event.bot).processCommand(event.channel, event.sender, event.message.substring(SharedGlobalConfig.ircCommandPrefix.length()))) {
+            event.setCanceled(true);
+            return;
+        }
+        if (event.connection.isTwitch()) {
             IRCUserImpl user = (IRCUserImpl) event.sender;
             if (user != null) {
                 String userColor = event.rawMessage.getTagByKey("color");
@@ -123,8 +145,8 @@ public class InternalEventHandler {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onConnectionFailed(IRCConnectionFailedEvent event) {
-        if(EiraIRC.instance.getConnectionManager().isLatestConnection(event.connection)) {
-            for(IRCChannel channel : event.connection.getChannels()) {
+        if (EiraIRC.instance.getConnectionManager().isLatestConnection(event.connection)) {
+            for (IRCChannel channel : event.connection.getChannels()) {
                 EiraIRC.instance.getChatSessionHandler().removeTargetChannel(channel);
             }
             EiraIRC.instance.getConnectionManager().removeConnection(event.connection);
@@ -133,8 +155,8 @@ public class InternalEventHandler {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onDisconnected(IRCDisconnectEvent event) {
-        if(EiraIRC.instance.getConnectionManager().isLatestConnection(event.connection)) {
-            for(IRCChannel channel : event.connection.getChannels()) {
+        if (EiraIRC.instance.getConnectionManager().isLatestConnection(event.connection)) {
+            for (IRCChannel channel : event.connection.getChannels()) {
                 EiraIRC.instance.getChatSessionHandler().removeTargetChannel(channel);
             }
             EiraIRC.instance.getConnectionManager().removeConnection(event.connection);
@@ -143,7 +165,7 @@ public class InternalEventHandler {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onIRCError(IRCErrorEvent event) {
-        switch(event.numeric) {
+        switch (event.numeric) {
             case IRCReplyCodes.ERR_NICKNAMEINUSE:
             case IRCReplyCodes.ERR_NICKCOLLISION:
                 String failNick = event.args[1];
@@ -154,7 +176,7 @@ public class InternalEventHandler {
             case IRCReplyCodes.ERR_ERRONEUSNICKNAME:
                 Utils.addMessageToChat(Utils.getLocalizedChatMessage("error.nickInvalid", event.args[1]));
                 ServerConfig serverConfig = ConfigHelper.getServerConfig(event.connection);
-                if(serverConfig.getNick() != null) {
+                if (serverConfig.getNick() != null) {
                     serverConfig.setNick(event.connection.getNick());
                 }
                 break;
@@ -164,10 +186,10 @@ public class InternalEventHandler {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onChannelJoined(IRCChannelJoinedEvent event) {
         EiraIRC.instance.getChatSessionHandler().addTargetChannel(event.channel);
-        if(ConfigHelper.getGeneralSettings(event.channel).getBoolean(GeneralBooleanComponent.AutoWho)) {
+        if (ConfigHelper.getGeneralSettings(event.channel).getBoolean(GeneralBooleanComponent.AutoWho)) {
             Utils.sendUserList(null, event.connection, event.channel);
         }
-        if(Compatibility.eiraMoticonsInstalled && SharedGlobalConfig.twitchNameBadges && event.channel.getConnection().isTwitch()) {
+        if (Compatibility.eiraMoticonsInstalled && SharedGlobalConfig.twitchNameBadges && event.channel.getConnection().isTwitch()) {
             // Pre-load this channels sub badge
             EiraMoticonsAddon.getSubscriberBadge(event.channel);
         }
@@ -180,12 +202,22 @@ public class InternalEventHandler {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onChannelCtcp(IRCChannelCTCPEvent event) {
+        if (event.sender != null && IgnoreList.isIgnored(event.sender)) {
+            logger.info("Ignored message by " + event.sender.getName() + ": " + event.message);
+            event.setCanceled(true);
+            return;
+        }
         // TODO
         // PS: VERSION replies should NOT be enforced. That is, they should be disableable, overridable, and multiple replies should also be allowed.
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onPrivateCtcp(IRCPrivateCTCPEvent event) {
+        if (event.sender != null && IgnoreList.isIgnored(event.sender)) {
+            logger.info("Ignored message by " + event.sender.getName() + ": " + event.message);
+            event.setCanceled(true);
+            return;
+        }
         // TODO
         // PS: VERSION replies should NOT be enforced. That is, they should be disableable, overridable, and multiple replies should also be allowed.
     }

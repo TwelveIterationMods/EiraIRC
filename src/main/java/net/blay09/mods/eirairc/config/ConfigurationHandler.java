@@ -1,5 +1,5 @@
-// Copyright (c) 2014, Christopher "blay09" Baker
-// All rights reserved.
+// Copyright (c) 2015, Christopher "BlayTheNinth" Baker
+
 
 package net.blay09.mods.eirairc.config;
 
@@ -387,6 +387,8 @@ public class ConfigurationHandler {
 		loadCommands(configDir);
 		loadServers(configDir);
 		loadTrustedServers(configDir);
+
+		IgnoreList.load(configDir);
 	}
 	
 	public static void save() {
