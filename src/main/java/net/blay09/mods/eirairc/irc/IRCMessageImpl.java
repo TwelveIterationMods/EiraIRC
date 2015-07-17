@@ -36,16 +36,18 @@ public class IRCMessageImpl implements IRCMessage {
 			return -1;
 		}
 	}
-	
-	public String getHostName() {
+
+	@Override
+	public String getPrefixHostname() {
 		int idx = prefix.indexOf('@');
 		if(idx != -1 && idx + 1 < prefix.length()) {
 			return prefix.substring(idx + 1);
 		}
 		return null;
 	}
-	
-	public String getUsername() {
+
+	@Override
+	public String getPrefixUsername() {
 		int start = prefix.indexOf('!');
 		int end = prefix.indexOf('@');
 		if(end == -1) {
@@ -56,8 +58,9 @@ public class IRCMessageImpl implements IRCMessage {
 		}
 		return null;
 	}
-	
-	public String getNick() {
+
+	@Override
+	public String getPrefixNick() {
 		int end = prefix.indexOf('!');
 		if(end != -1) {
 			return prefix.substring(0, end);
