@@ -24,9 +24,19 @@ eirairc:irc.commands.nickserv=/servirc nickserv <username> <password>
 eirairc:irc.commands.color=/irc color <color>
 eirairc:irc.commands.alias=/irc alias <username> <alias> OR /irc alias <alias>
 eirairc:irc.commands.ghost=/irc ghost [server] <username>
+eirairc:irc.commands.ignore=/irc ignore <nick>
+eirairc:irc.commands.unignore=/irc unignore <nick>
 
 ## CTCP
 eirairc:irc.ctcp.disabled=CTCP queries are not enabled.
+
+## Ignore
+eirairc:irc.commands.ignore.alreadyIgnored=The user %s is already on your ignore list.
+eirairc:irc.commands.ignore.added=The user %s has been added to your ignore list.
+
+## Unignore
+eirairc:irc.commands.unignore.notIgnored=The user %s is not on your ignore list.
+eirairc:irc.commands.unignore.removed=The user %s has been removed from your ignore list.
 
 ## InterOP
 eirairc:irc.commands.interop.op=/irc op <channel> <user>

@@ -1,5 +1,4 @@
-// Copyright (c) 2014, Christopher "blay09" Baker
-// All rights reserved.
+// Copyright (c) 2015 Christopher "BlayTheNinth" Baker
 
 package net.blay09.mods.eirairc.command.base;
 
@@ -45,7 +44,9 @@ public class IRCCommandHandler {
 		registerCommand(new CommandColor());
 		registerCommand(new CommandGhost());
 		registerCommand(new CommandAlias());
-		
+		registerCommand(new CommandIgnore());
+		registerCommand(new CommandUnignore());
+
 		registerCommand(new InterOpCommandKick());
 		registerCommand(new InterOpCommandMode());
 		registerCommand(new InterOpCommandTopic());

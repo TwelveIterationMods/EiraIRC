@@ -1,5 +1,5 @@
-// Copyright (c) 2014, Christopher "blay09" Baker
-// All rights reserved.
+// Copyright (c) 2015 Christopher "BlayTheNinth" Baker
+
 
 package net.blay09.mods.eirairc.handler;
 
@@ -9,6 +9,7 @@ import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.IRCReplyCodes;
 import net.blay09.mods.eirairc.api.event.*;
 import net.blay09.mods.eirairc.bot.IRCBotImpl;
+import net.blay09.mods.eirairc.config.IgnoreList;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.config.settings.BotBooleanComponent;
 import net.blay09.mods.eirairc.config.settings.BotSettings;
@@ -26,7 +27,7 @@ public class IRCEventHandler {
 	public void onNickChange(IRCUserNickChangeEvent event) {
 		switch (event.getResult()) {
 			case DEFAULT:
-				if (ConfigHelper.getGeneralSettings(event.user).isMuted()) {
+				if (ConfigHelper.getGeneralSettings(event.user).isMuted() || IgnoreList.isIgnored(event.user)) {
 					return;
 				}
 				if (SharedGlobalConfig.botSettings.getBoolean(BotBooleanComponent.RelayNickChanges)) {

@@ -1,5 +1,5 @@
-// Copyright (c) 2014, Christopher "blay09" Baker
-// All rights reserved.
+// Copyright (c) 2015 Christopher "BlayTheNinth" Baker
+
 package net.blay09.mods.eirairc.handler;
 
 import cpw.mods.fml.common.eventhandler.EventPriority;
@@ -14,6 +14,7 @@ import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.bot.IRCBotImpl;
 import net.blay09.mods.eirairc.config.ChannelConfig;
+import net.blay09.mods.eirairc.config.IgnoreList;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.config.settings.BotBooleanComponent;
@@ -27,9 +28,13 @@ import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.IRCFormatting;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraftforge.common.MinecraftForge;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @SuppressWarnings("unused")
 public class InternalEventHandler {
+
+    private static final Logger logger = LogManager.getLogger();
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onUserJoin(IRCUserJoinEvent event) {
@@ -68,6 +73,11 @@ public class InternalEventHandler {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onPrivateChat(IRCPrivateChatEvent event) {
+        if(event.sender != null && IgnoreList.isIgnored(event.sender)) {
+            logger.info("Ignored message by " + event.sender.getName() + ": " + event.message);
+            event.setCanceled(true);
+            return;
+        }
         if(!event.isNotice) {
             if(((IRCBotImpl) event.bot).processCommand(null, event.sender, event.message)) {
                 event.setCanceled(true);
@@ -92,7 +102,10 @@ public class InternalEventHandler {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onChannelChat(IRCChannelChatEvent event) {
-        if(event.sender != null && event.connection.isTwitch() && event.sender.getName().equals("jtv")) {
+        if(event.sender != null && IgnoreList.isIgnored(event.sender)) {
+            logger.info("Ignored message by " + event.sender.getName() + ": " + event.message);
+            event.setCanceled(true);
+        } else if(event.sender != null && event.connection.isTwitch() && event.sender.getName().equals("jtv")) {
             event.setCanceled(true);
         } else if(!event.isNotice && event.message.startsWith(SharedGlobalConfig.ircCommandPrefix) && ((IRCBotImpl) event.bot).processCommand(event.channel, event.sender, event.message.substring(SharedGlobalConfig.ircCommandPrefix.length()))) {
             event.setCanceled(true);
@@ -180,12 +193,22 @@ public class InternalEventHandler {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onChannelCTCP(IRCChannelCTCPEvent event) {
+        if(event.sender != null && IgnoreList.isIgnored(event.sender)) {
+            logger.info("Ignored message by " + event.sender.getName() + ": " + event.message);
+            event.setCanceled(true);
+            return;
+        }
         // TODO
         // PS: VERSION replies should NOT be enforced. That is, they should be disableable, overridable, and multiple replies should also be allowed.
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onPrivateCTCP(IRCPrivateCTCPEvent event) {
+        if(event.sender != null && IgnoreList.isIgnored(event.sender)) {
+            logger.info("Ignored message by " + event.sender.getName() + ": " + event.message);
+            event.setCanceled(true);
+            return;
+        }
         // TODO
         // PS: VERSION replies should NOT be enforced. That is, they should be disableable, overridable, and multiple replies should also be allowed.
     }
