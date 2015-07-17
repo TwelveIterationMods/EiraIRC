@@ -39,5 +39,4 @@ public interface IRCUser extends IRCContext {
 
 	String getHostname();
 
-	String getHostMask();
 }

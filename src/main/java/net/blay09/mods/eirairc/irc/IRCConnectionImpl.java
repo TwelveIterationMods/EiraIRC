@@ -345,14 +345,12 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 					mode = IRCChannelUserMode.fromChar(channelUserModes.charAt(idx));
 					name = name.substring(1);
 				}
-				IRCUserImpl user = getOrCreateSender(msg);
-				if(user != null) {
-					if (mode != null) {
-						user.setChannelUserMode(channel, mode);
-					}
-					user.addChannel(channel);
-					channel.addUser(user);
+				IRCUserImpl user = (IRCUserImpl) getOrCreateUser(name);
+				if (mode != null) {
+					user.setChannelUserMode(channel, mode);
 				}
+				user.addChannel(channel);
+				channel.addUser(user);
 			}
 			EiraIRC.internalBus.post(new IRCChannelJoinedEvent(this, msg, channel));
 			MinecraftForge.EVENT_BUS.post(new IRCChannelJoinedEvent(this, msg, channel));
@@ -534,20 +532,18 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 					unsetList.add(c);
 				}
 			}
-			IRCUserImpl user = getOrCreateSender(msg);
-			if(user != null) {
-				IRCChannelUserMode currentMode = user.getChannelUserMode(channel);
-				for (char c : setList) {
-					int idx = channelUserModes.indexOf(c);
-					if (idx != -1) {
-						user.setChannelUserMode(channel, IRCChannelUserMode.fromChar(c));
-					}
+			IRCUserImpl user = (IRCUserImpl) getOrCreateUser(param);
+			IRCChannelUserMode currentMode = user.getChannelUserMode(channel);
+			for (char c : setList) {
+				int idx = channelUserModes.indexOf(c);
+				if (idx != -1) {
+					user.setChannelUserMode(channel, IRCChannelUserMode.fromChar(c));
 				}
-				if (currentMode != null) {
-					for (char c : unsetList) {
-						if (c == currentMode.modeChar) {
-							user.setChannelUserMode(channel, null);
-						}
+			}
+			if (currentMode != null) {
+				for (char c : unsetList) {
+					if (c == currentMode.modeChar) {
+						user.setChannelUserMode(channel, null);
 					}
 				}
 			}

@@ -219,8 +219,4 @@ public class IRCUserImpl implements IRCUser {
 		return hostname;
 	}
 
-	@Override
-	public String getHostMask() {
-		return "*!*@" + hostname;
-	}
 }
