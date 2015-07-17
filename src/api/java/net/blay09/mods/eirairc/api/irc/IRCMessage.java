@@ -5,6 +5,12 @@ public interface IRCMessage {
 
     String getPrefix();
 
+    String getPrefixNick();
+
+    String getPrefixUsername();
+
+    String getPrefixHostname();
+
     String getCommand();
 
     String arg(int i);

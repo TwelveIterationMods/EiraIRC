@@ -36,7 +36,9 @@ public class IRCUserImpl implements IRCUser {
 	private final Map<String, IRCChannelUserMode> channelModes = new HashMap<String, IRCChannelUserMode>();
 	private final List<QueuedAuthCommand> authCommandQueue = new ArrayList<QueuedAuthCommand>();
 	private String name;
-	private String authLogin;
+	private String ident;
+	private String hostname;
+	private String accountName;
 	private EnumChatFormatting nameColor;
 	private boolean isTwitchSubscriber;
 	private boolean isTwitchTurbo;
@@ -45,7 +47,15 @@ public class IRCUserImpl implements IRCUser {
 		this.connection = connection;
 		this.name = name;
 	}
-	
+
+	public void setUsername(String ident) {
+		this.ident = ident;
+	}
+
+	public void setHostname(String hostname) {
+		this.hostname = hostname;
+	}
+
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -103,31 +113,28 @@ public class IRCUserImpl implements IRCUser {
 	public void removeChannel(IRCChannelImpl channel) {
 		channels.remove(channel.getName());
 	}
-	
+
+	@Override
 	public Collection<IRCChannel> getChannels() {
 		return channels.values();
 	}
 
+	@Override
 	public String getIdentifier() {
 		return connection.getIdentifier() + "/" + name;
 	}
 	
-	public String getUsername() {
-		// TODO return nick!username@hostname instead
-		return name;
-	}
-
 	public IRCConnectionImpl getConnection() {
 		return connection;
 	}
 
-	public void setAuthLogin(String authLogin) {
-		this.authLogin = authLogin;
-		if(authLogin == null || authLogin.isEmpty()) {
+	public void setAccountName(String accountName) {
+		this.accountName = accountName;
+		if(accountName == null || accountName.isEmpty()) {
 			notice(Utils.getLocalizedMessage("irc.bot.notAuthed"));
 		} else {
 			for (QueuedAuthCommand cmd : authCommandQueue) {
-				if (ConfigHelper.getBotSettings(cmd.channel).containsString(BotStringListComponent.InterOpAuthList, authLogin)) {
+				if (ConfigHelper.getBotSettings(cmd.channel).containsString(BotStringListComponent.InterOpAuthList, accountName)) {
 					cmd.command.processCommand(cmd.bot, cmd.channel, this, cmd.args, cmd.command);
 				} else {
 					notice(Utils.getLocalizedMessage("irc.bot.noPermission"));
@@ -136,13 +143,13 @@ public class IRCUserImpl implements IRCUser {
 		}
 		authCommandQueue.clear();
 	}
-	
-	public String getAuthLogin() {
-		return authLogin;
-	}
 
-	public void whois() {
-		connection.whois(name);
+	@Override
+	public String getAccountName() {
+		if(connection.isTwitch()) {
+			return name;
+		}
+		return accountName;
 	}
 
 	@Override
@@ -166,11 +173,11 @@ public class IRCUserImpl implements IRCUser {
 	}
 
 	public void queueAuthCommand(IRCBotImpl bot, IRCChannel channel, IBotCommand botCommand, String[] args) {
-		if(authLogin == null) {
-			whois();
+		if(accountName == null) {
+			connection.whois(name);
 			authCommandQueue.add(new QueuedAuthCommand(bot, channel, botCommand, args));
 		} else {
-			if(ConfigHelper.getBotSettings(channel).containsString(BotStringListComponent.InterOpAuthList, authLogin)) {
+			if(ConfigHelper.getBotSettings(channel).containsString(BotStringListComponent.InterOpAuthList, accountName)) {
 				botCommand.processCommand(bot, channel, this, args, botCommand);
 			} else {
 				notice(Utils.getLocalizedMessage("irc.bot.noPermission"));
@@ -200,5 +207,20 @@ public class IRCUserImpl implements IRCUser {
 
 	public EnumChatFormatting getNameColor() {
 		return nameColor;
+	}
+
+	@Override
+	public String getUsername() {
+		return ident;
+	}
+
+	@Override
+	public String getHostname() {
+		return hostname;
+	}
+
+	@Override
+	public String getHostMask() {
+		return "*!*@" + hostname;
 	}
 }

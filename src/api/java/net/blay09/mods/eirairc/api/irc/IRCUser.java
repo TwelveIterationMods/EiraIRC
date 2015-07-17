@@ -29,4 +29,15 @@ public interface IRCUser extends IRCContext {
 	 */
 	boolean hasVoice(IRCChannel channel);
 
+	/**
+	 * Returns the NickServ name or null if the user is not registered with services. In the case of Twitch, it will return the all-lowercase username.
+	 * @return NickServ or Twitch username or null if not authenticated with IRC services
+	 */
+	String getAccountName();
+
+	String getUsername();
+
+	String getHostname();
+
+	String getHostMask();
 }

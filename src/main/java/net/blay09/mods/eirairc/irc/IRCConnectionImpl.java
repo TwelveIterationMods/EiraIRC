@@ -8,6 +8,7 @@ import net.blay09.mods.eirairc.api.bot.IRCBot;
 import net.blay09.mods.eirairc.api.event.*;
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
+import net.blay09.mods.eirairc.api.irc.IRCMessage;
 import net.blay09.mods.eirairc.api.irc.IRCUser;
 import net.blay09.mods.eirairc.bot.IRCBotImpl;
 import net.blay09.mods.eirairc.config.ServerConfig;
@@ -109,6 +110,16 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 	@Override
 	public IRCUser getUser(String nick) {
 		return users.get(nick.toLowerCase());
+	}
+
+	private IRCUserImpl getOrCreateSender(IRCMessage msg) {
+		if(msg.getPrefixNick() != null) {
+			IRCUserImpl user = (IRCUserImpl) getOrCreateUser(msg.getPrefixNick());
+			user.setUsername(msg.getPrefixUsername());
+			user.setHostname(msg.getPrefixHostname());
+			return user;
+		}
+		return null;
 	}
 
 	@Override
@@ -334,12 +345,14 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 					mode = IRCChannelUserMode.fromChar(channelUserModes.charAt(idx));
 					name = name.substring(1);
 				}
-				IRCUserImpl user = (IRCUserImpl) getOrCreateUser(name);
-				if(mode != null) {
-					user.setChannelUserMode(channel, mode);
+				IRCUserImpl user = getOrCreateSender(msg);
+				if(user != null) {
+					if (mode != null) {
+						user.setChannelUserMode(channel, mode);
+					}
+					user.addChannel(channel);
+					channel.addUser(user);
 				}
-				user.addChannel(channel);
-				channel.addUser(user);
 			}
 			EiraIRC.internalBus.post(new IRCChannelJoinedEvent(this, msg, channel));
 			MinecraftForge.EVENT_BUS.post(new IRCChannelJoinedEvent(this, msg, channel));
@@ -356,14 +369,14 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 			}
 		} else if(numeric == IRCReplyCodes.RPL_WHOISLOGIN) {
 			IRCUserImpl user = (IRCUserImpl) getOrCreateUser(msg.arg(1));
-			user.setAuthLogin(msg.arg(2));
+			user.setAccountName(msg.arg(2));
 		} else if(numeric == IRCReplyCodes.RPL_IDENTIFIED || numeric == IRCReplyCodes.RPL_WHOISLOGIN2) {
 			IRCUserImpl user = (IRCUserImpl) getOrCreateUser(msg.arg(1));
-			user.setAuthLogin(msg.arg(1));
+			user.setAccountName(msg.arg(1));
 		} else if(numeric == IRCReplyCodes.RPL_ENDOFWHOIS) {
 			IRCUserImpl user = (IRCUserImpl) getOrCreateUser(msg.arg(1));
-			if(user.getAuthLogin() == null || user.getAuthLogin().isEmpty()) {
-				user.setAuthLogin(null);
+			if(user.getAccountName() == null || user.getAccountName().isEmpty()) {
+				user.setAccountName(null);
 			}
 		} else if(numeric == IRCReplyCodes.ERR_NICKNAMEINUSE || numeric == IRCReplyCodes.ERR_ERRONEUSNICKNAME || numeric == IRCReplyCodes.ERR_PASSWDMISMATCH) {
 			EiraIRC.internalBus.post(new IRCErrorEvent(this, msg, msg.getNumericCommand(), msg.args()));
@@ -404,10 +417,7 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 		if(cmd.equals("PING")) {
 			irc("PONG " + msg.arg(0));
 		} else if(cmd.equals("PRIVMSG")) {
-			IRCUserImpl user = null;
-			if(msg.getNick() != null) {
-				user = (IRCUserImpl) getOrCreateUser(msg.getNick());
-			}
+			IRCUserImpl user = getOrCreateSender(msg);
 			String target = msg.arg(0);
 			String message = msg.arg(1);
 			boolean isEmote = false;
@@ -442,10 +452,7 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 				}
 			}
 		} else if(cmd.equals("NOTICE")) {
-			IRCUserImpl user = null;
-			if(msg.getNick() != null) {
-				user = (IRCUserImpl) getOrCreateUser(msg.getNick());
-			}
+			IRCUserImpl user = getOrCreateSender(msg);
 			String target = msg.arg(0);
 			String message = msg.arg(1);
 			if(message.startsWith(CTCP_START)) {
@@ -470,35 +477,41 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 				}
 			}
 		} else if(cmd.equals("JOIN")) {
-			IRCUserImpl user = (IRCUserImpl) getOrCreateUser(msg.getNick());
-			IRCChannelImpl channel = (IRCChannelImpl) getOrCreateChannel(msg.arg(0));
-			channel.addUser(user);
-			user.addChannel(channel);
-			EiraIRC.internalBus.post(new IRCUserJoinEvent(this, msg, channel, user));
-			MinecraftForge.EVENT_BUS.post(new IRCUserJoinEvent(this, msg, channel, user));
+			IRCUserImpl user = getOrCreateSender(msg);
+			if(user != null) {
+				IRCChannelImpl channel = (IRCChannelImpl) getOrCreateChannel(msg.arg(0));
+				channel.addUser(user);
+				user.addChannel(channel);
+				EiraIRC.internalBus.post(new IRCUserJoinEvent(this, msg, channel, user));
+				MinecraftForge.EVENT_BUS.post(new IRCUserJoinEvent(this, msg, channel, user));
+			}
 		} else if(cmd.equals("PART")) {
-			IRCUserImpl user = (IRCUserImpl) getOrCreateUser(msg.getNick());
-			IRCChannelImpl channel = (IRCChannelImpl) getChannel(msg.arg(0));
-			if(channel != null) {
-				channel.removeUser(user);
-				user.removeChannel(channel);
-				MinecraftForge.EVENT_BUS.post(new IRCUserLeaveEvent(this, msg, channel, user, msg.arg(1)));
+			IRCUserImpl user = getOrCreateSender(msg);
+			if(user != null) {
+				IRCChannelImpl channel = (IRCChannelImpl) getChannel(msg.arg(0));
+				if (channel != null) {
+					channel.removeUser(user);
+					user.removeChannel(channel);
+					MinecraftForge.EVENT_BUS.post(new IRCUserLeaveEvent(this, msg, channel, user, msg.arg(1)));
+				}
 			}
 		} else if(cmd.equals("TOPIC")) {
-			IRCUser user = getOrCreateUser(msg.getNick());
+			IRCUser user = getOrCreateSender(msg);
 			IRCChannelImpl channel = (IRCChannelImpl) getChannel(msg.arg(0));
 			if(channel != null) {
 				channel.setTopic(msg.arg(1));
 				MinecraftForge.EVENT_BUS.post(new IRCChannelTopicEvent(this, msg, channel, user, channel.getTopic()));
 			}
 		} else if(cmd.equals("NICK")) {
-			String newNick = msg.arg(0);
-			IRCUserImpl user = (IRCUserImpl) getOrCreateUser(msg.getNick());
-			users.remove(user.getName().toLowerCase());
-			String oldNick = user.getName();
-			user.setName(newNick);
-			users.put(user.getName().toLowerCase(), user);
-			MinecraftForge.EVENT_BUS.post(new IRCUserNickChangeEvent(this, msg, user, oldNick, newNick));
+			IRCUserImpl user = getOrCreateSender(msg);
+			if(user != null) {
+				String newNick = msg.arg(0);
+				users.remove(user.getName().toLowerCase());
+				String oldNick = user.getName();
+				user.setName(newNick);
+				users.put(user.getName().toLowerCase(), user);
+				MinecraftForge.EVENT_BUS.post(new IRCUserNickChangeEvent(this, msg, user, oldNick, newNick));
+			}
 		} else if(cmd.equals("MODE")) {
 			if(channelTypes.indexOf(msg.arg(0).charAt(0)) == -1 || msg.argCount() < 3) {
 				return false;
@@ -521,28 +534,32 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 					unsetList.add(c);
 				}
 			}
-			IRCUserImpl user = (IRCUserImpl) getOrCreateUser(param);
-			IRCChannelUserMode currentMode = user.getChannelUserMode(channel);
-			for(char c : setList) {
-				int idx = channelUserModes.indexOf(c);
-				if(idx != -1) {
-					user.setChannelUserMode(channel, IRCChannelUserMode.fromChar(c));
+			IRCUserImpl user = getOrCreateSender(msg);
+			if(user != null) {
+				IRCChannelUserMode currentMode = user.getChannelUserMode(channel);
+				for (char c : setList) {
+					int idx = channelUserModes.indexOf(c);
+					if (idx != -1) {
+						user.setChannelUserMode(channel, IRCChannelUserMode.fromChar(c));
+					}
 				}
-			}
-			if(currentMode != null) {
-				for (char c : unsetList) {
-					if (c == currentMode.modeChar) {
-						user.setChannelUserMode(channel, null);
+				if (currentMode != null) {
+					for (char c : unsetList) {
+						if (c == currentMode.modeChar) {
+							user.setChannelUserMode(channel, null);
+						}
 					}
 				}
 			}
 		} else if(cmd.equals("QUIT")) {
-			IRCUser user = getOrCreateUser(msg.getNick());
-			MinecraftForge.EVENT_BUS.post(new IRCUserQuitEvent(this, msg, user, msg.arg(0)));
-			for(IRCChannel channel : user.getChannels()) {
-				((IRCChannelImpl) channel).removeUser(user);
+			IRCUser user = getOrCreateSender(msg);
+			if(user != null) {
+				MinecraftForge.EVENT_BUS.post(new IRCUserQuitEvent(this, msg, user, msg.arg(0)));
+				for (IRCChannel channel : user.getChannels()) {
+					((IRCChannelImpl) channel).removeUser(user);
+				}
+				users.remove(user.getName().toLowerCase());
 			}
-			users.remove(user.getName().toLowerCase());
 		}
 		return false;
 	}
