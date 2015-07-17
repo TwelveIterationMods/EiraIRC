@@ -40,11 +40,16 @@ public class CommandUnignore implements SubCommand {
 			Utils.sendLocalizedMessage(sender, target.getName(), args[0]);
 			return true;
 		}
-		if(!IgnoreList.isIgnored((IRCUser) target)) {
+		IRCUser user = (IRCUser) target;
+		if(user.getHostname() == null) {
+			Utils.sendLocalizedMessage(sender, "irc.commands.unignore.notKnown", target.getName());
+			return true;
+		}
+		if(!IgnoreList.isIgnored(user)) {
 			Utils.sendLocalizedMessage(sender, "irc.commands.unignore.notIgnored", target.getName());
 			return true;
 		}
-		IgnoreList.removeFromIgnoreList((IRCUser) target);
+		IgnoreList.removeFromIgnoreList(user);
 		Utils.sendLocalizedMessage(sender, "irc.commands.unignore.removed", target.getName());
 		return true;
 	}
