@@ -32,10 +32,12 @@ eirairc:irc.ctcp.disabled=CTCP queries are not enabled.
 
 ## Ignore
 eirairc:irc.commands.ignore.alreadyIgnored=The user %s is already on your ignore list.
+eirairc:irc.commands.ignore.notKnown=The user %s is not known to EiraIRC yet.
 eirairc:irc.commands.ignore.added=The user %s has been added to your ignore list.
 
 ## Unignore
 eirairc:irc.commands.unignore.notIgnored=The user %s is not on your ignore list.
+eirairc:irc.commands.unignore.notKnown=The user %s is not known to EiraIRC yet.
 eirairc:irc.commands.unignore.removed=The user %s has been removed from your ignore list.
 
 ## InterOP
@@ -191,6 +193,7 @@ eirairc:irc.display.irc.topicChange=§e%s changed the topic for %s: §f%s
 eirairc:irc.target.specifyChannel=You have to specify a channel.
 eirairc:irc.target.specifyServer=You have to specify a server.
 eirairc:irc.target.serverNotFound=The server at %s cannot be found.
+eirairc:irc.target.userNotFound=The user %s cannot be found.
 eirairc:irc.target.invalidTarget=Invalid target. Expected %s.
 eirairc:irc.target.notConnected=You are not connected to the server at %s.
 eirairc:irc.target.notOnChannel=§cYou are not on channel %s

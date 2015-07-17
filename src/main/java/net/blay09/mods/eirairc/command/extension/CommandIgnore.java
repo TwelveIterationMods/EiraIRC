@@ -41,11 +41,16 @@ public class CommandIgnore implements SubCommand {
 			Utils.sendLocalizedMessage(sender, target.getName(), args[0]);
 			return true;
 		}
-		if(IgnoreList.isIgnored((IRCUser) target)) {
+		IRCUser user = (IRCUser) target;
+		if(user.getHostname() == null) {
+			Utils.sendLocalizedMessage(sender, "irc.commands.ignore.notKnown", target.getName());
+			return true;
+		}
+		if(IgnoreList.isIgnored(user)) {
 			Utils.sendLocalizedMessage(sender, "irc.commands.ignore.alreadyIgnored", target.getName());
 			return true;
 		}
-		IgnoreList.addToIgnoreList((IRCUser) target);
+		IgnoreList.addToIgnoreList(user);
 		Utils.sendLocalizedMessage(sender, "irc.commands.ignore.added", target.getName());
 		return true;
 	}
