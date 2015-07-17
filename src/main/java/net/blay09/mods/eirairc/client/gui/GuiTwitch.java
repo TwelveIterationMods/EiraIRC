@@ -8,6 +8,7 @@ import net.blay09.mods.eirairc.api.event.IRCConnectionFailedEvent;
 import net.blay09.mods.eirairc.api.event.IRCErrorEvent;
 import net.blay09.mods.eirairc.client.gui.base.GuiAdvancedTextField;
 import net.blay09.mods.eirairc.client.gui.base.GuiLabel;
+import net.blay09.mods.eirairc.config.AuthManager;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.settings.BotBooleanComponent;
@@ -73,7 +74,7 @@ public class GuiTwitch extends EiraGuiScreen implements GuiYesNoCallback {
 		if(txtPassword != null) {
 			oldText = txtPassword.getText();
 		} else {
-			oldText = config.getServerPassword();
+			oldText = AuthManager.getServerPassword(config.getIdentifier());
 		}
 		txtPassword = new GuiAdvancedTextField(fontRendererObj, width / 2 - 90, topY + 75, 180, 15);
 		txtPassword.setDefaultPasswordChar();
@@ -100,7 +101,7 @@ public class GuiTwitch extends EiraGuiScreen implements GuiYesNoCallback {
 		} else if(button == btnConnect) {
 			if(chkAnonymous.isChecked()) {
 				config.setNick("%ANONYMOUS%");
-				config.setServerPassword("");
+				AuthManager.putServerPassword(config.getIdentifier(), null);
 				config.getGeneralSettings().setBoolean(GeneralBooleanComponent.ReadOnly, true);
 				config.getBotSettings().setString(BotStringComponent.MessageFormat, "Twitch");
 				config.getBotSettings().setBoolean(BotBooleanComponent.RelayIRCJoinLeave, false);
@@ -109,11 +110,11 @@ public class GuiTwitch extends EiraGuiScreen implements GuiYesNoCallback {
 				Utils.connectTo(config);
 			} else {
 				config.setNick(txtUsername.getText());
-				config.setServerPassword(txtPassword.getText());
+				AuthManager.putServerPassword(config.getIdentifier(), txtPassword.getText());
 				config.getGeneralSettings().setBoolean(GeneralBooleanComponent.ReadOnly, false);
 				config.getBotSettings().setString(BotStringComponent.MessageFormat, "Twitch");
 				config.getBotSettings().setBoolean(BotBooleanComponent.RelayIRCJoinLeave, false);
-				if(!config.getNick().isEmpty() && !config.getServerPassword().isEmpty()) {
+				if(!config.getNick().isEmpty() && !txtPassword.getText().isEmpty()) {
 					config.getOrCreateChannelConfig("#" + config.getNick());
 					btnConnect.enabled = false;
 					ConfigurationHandler.addServerConfig(config);

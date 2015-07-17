@@ -12,6 +12,7 @@ import net.blay09.mods.eirairc.client.gui.base.GuiLabel;
 import net.blay09.mods.eirairc.client.gui.base.tab.GuiTabContainer;
 import net.blay09.mods.eirairc.client.gui.base.tab.GuiTabPage;
 import net.blay09.mods.eirairc.client.gui.overlay.OverlayYesNo;
+import net.blay09.mods.eirairc.config.AuthManager;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.settings.GeneralBooleanComponent;
@@ -88,10 +89,11 @@ public class GuiServerConfigAdvanced extends GuiTabPage implements GuiYesNoCallb
 
 		labelList.add(new GuiLabel("NickServ Username", leftX, topY + 80, Globals.TEXT_COLOR));
 
+		AuthManager.NickServData nickServData = AuthManager.getNickServData(config.getIdentifier());
 		if(txtNickServName != null) {
 			oldText = txtNickServName.getText();
 		} else {
-			oldText = config.getNickServName();
+			oldText = nickServData != null ? nickServData.username : "";
 		}
 		txtNickServName = new GuiTextField(fontRendererObj, leftX, topY + 95, 100, 15);
 		txtNickServName.setText(oldText);
@@ -102,7 +104,7 @@ public class GuiServerConfigAdvanced extends GuiTabPage implements GuiYesNoCallb
 		if(txtNickServPassword != null) {
 			oldText = txtNickServPassword.getText();
 		} else {
-			oldText = config.getNickServPassword();
+			oldText = nickServData != null ? nickServData.password : "";
 		}
 		txtNickServPassword = new GuiAdvancedTextField(fontRendererObj, leftX, topY + 135, 100, 15);
 		txtNickServPassword.setText(oldText);
@@ -114,7 +116,7 @@ public class GuiServerConfigAdvanced extends GuiTabPage implements GuiYesNoCallb
 		if(txtServerPassword != null) {
 			oldText = txtServerPassword.getText();
 		} else {
-			oldText = config.getServerPassword();
+			oldText = AuthManager.getServerPassword(config.getIdentifier());
 		}
 		txtServerPassword = new GuiAdvancedTextField(fontRendererObj, rightX - 100, topY + 15, 100, 15);
 		txtServerPassword.setText(oldText);
@@ -198,7 +200,7 @@ public class GuiServerConfigAdvanced extends GuiTabPage implements GuiYesNoCallb
 			txtCharset.setEnabled(false);
 			chkSSL.enabled = false;
 			txtAddress.setText(config.getAddress());
-			txtServerPassword.setText(config.getServerPassword());
+			txtServerPassword.setText(AuthManager.getServerPassword(config.getIdentifier()));
 			txtCharset.setText(config.getCharset());
 			chkSSL.setIsChecked(config.isSSL());
 		}
@@ -241,12 +243,12 @@ public class GuiServerConfigAdvanced extends GuiTabPage implements GuiYesNoCallb
 		if(connection != null && !connection.getNick().equals(config.getNick())) {
 			connection.nick(ConfigHelper.formatNick(config.getNick()));
 		}
-		config.setNickServ(txtNickServName.getText(), txtNickServPassword.getText());
+		AuthManager.putNickServData(config.getIdentifier(), txtNickServName.getText(), txtNickServPassword.getText());
 		// If connected, identify with nickserv
 		if(connection != null) {
 			Utils.doNickServ(connection, config);
 		}
-		config.setServerPassword(txtServerPassword.getText());
+		AuthManager.putServerPassword(config.getIdentifier(), txtServerPassword.getText());
 		config.setIsSSL(chkSSL.isChecked());
 		config.getGeneralSettings().setBoolean(GeneralBooleanComponent.AutoJoin, chkAutoConnect.isChecked());
 		config.setCharset(txtCharset.getTextOrDefault());

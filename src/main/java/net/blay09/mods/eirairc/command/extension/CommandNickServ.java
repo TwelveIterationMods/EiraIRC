@@ -7,6 +7,7 @@ import net.blay09.mods.eirairc.api.EiraIRCAPI;
 import net.blay09.mods.eirairc.api.SubCommand;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
+import net.blay09.mods.eirairc.config.AuthManager;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.util.Utils;
@@ -59,8 +60,7 @@ public class CommandNickServ implements SubCommand {
 			connection = context.getConnection();
 		}
 		ServerConfig serverConfig = ConfigurationHandler.getOrCreateServerConfig(connection.getHost());
-		serverConfig.setNickServ(args[argidx], args[argidx + 1]);
-		ConfigurationHandler.save();
+		AuthManager.putNickServData(serverConfig.getIdentifier(), args[argidx], args[argidx + 1]);
 		Utils.doNickServ(connection, serverConfig);
 		Utils.sendLocalizedMessage(sender, "irc.basic.nickServUpdated", connection.getHost());
 		return true;

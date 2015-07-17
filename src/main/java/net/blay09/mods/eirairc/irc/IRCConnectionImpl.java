@@ -11,6 +11,7 @@ import net.blay09.mods.eirairc.api.irc.IRCConnection;
 import net.blay09.mods.eirairc.api.irc.IRCMessage;
 import net.blay09.mods.eirairc.api.irc.IRCUser;
 import net.blay09.mods.eirairc.bot.IRCBotImpl;
+import net.blay09.mods.eirairc.config.AuthManager;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.config.settings.BotStringComponent;
@@ -275,8 +276,9 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 
 	private void register() {
 		try {
-			if(serverConfig.getServerPassword() != null && !serverConfig.getServerPassword().isEmpty()) {
-				writer.write("PASS " + serverConfig.getServerPassword() + "\r\n");
+			String serverPassword = AuthManager.getServerPassword(getIdentifier());
+			if(serverPassword != null) {
+				writer.write("PASS " + serverPassword + "\r\n");
 			}
 			writer.write("NICK " + nick + "\r\n");
 			writer.write("USER " + serverConfig.getBotSettings().getString(BotStringComponent.Ident) + " \"\" \"\" :" + serverConfig.getBotSettings().getString(BotStringComponent.Description) + "\r\n");

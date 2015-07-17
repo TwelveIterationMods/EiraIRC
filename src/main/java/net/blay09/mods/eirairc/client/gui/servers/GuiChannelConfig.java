@@ -8,6 +8,7 @@ import net.blay09.mods.eirairc.client.gui.base.GuiLabel;
 import net.blay09.mods.eirairc.client.gui.base.tab.GuiTabContainer;
 import net.blay09.mods.eirairc.client.gui.base.tab.GuiTabPage;
 import net.blay09.mods.eirairc.client.gui.overlay.OverlayYesNo;
+import net.blay09.mods.eirairc.config.AuthManager;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.ServerConfig;
@@ -80,7 +81,7 @@ public class GuiChannelConfig extends GuiTabPage implements GuiYesNoCallback {
 		if(txtPassword != null) {
 			oldText = txtPassword.getText();
 		} else {
-			oldText = config.getPassword();
+			oldText = AuthManager.getChannelPassword(config.getIdentifier());
 		}
 		txtPassword = new GuiAdvancedTextField(fontRendererObj, leftX, topY + 55, 100, 15);
 		txtPassword.setText(oldText);
@@ -163,7 +164,7 @@ public class GuiChannelConfig extends GuiTabPage implements GuiYesNoCallback {
 			}
 			serverConfig.removeChannelConfig(config.getName());
 			config.setName(txtName.getText());
-			config.setPassword(txtPassword.getText());
+			AuthManager.putChannelPassword(config.getIdentifier(), txtPassword.getText());
 			config.getGeneralSettings().setBoolean(GeneralBooleanComponent.AutoJoin, chkAutoJoin.isChecked());
 			serverConfig.addChannelConfig(config);
 			isNew = false;

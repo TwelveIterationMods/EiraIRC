@@ -23,7 +23,6 @@ public class ChannelConfig {
 	private final ThemeSettings theme;
 
 	private String name = "";
-	private String password = "";
 
 	public ChannelConfig(ServerConfig serverConfig) {
 		this.serverConfig = serverConfig;
@@ -44,15 +43,11 @@ public class ChannelConfig {
 		return name;
 	}
 
-	public String getPassword() {
-		return password;
-	}
-
 	public static ChannelConfig loadFromJson(ServerConfig serverConfig, JsonObject object) {
 		ChannelConfig config = new ChannelConfig(serverConfig);
 		config.setName(object.get("name").getAsString());
 		if(object.has("password")) {
-			config.password = object.get("password").getAsString();
+			AuthManager.putChannelPassword(config.getIdentifier(), object.get("password").getAsString());
 		}
 		if(object.has("bot")) {
 			config.botSettings.load(object.getAsJsonObject("bot"));
@@ -69,9 +64,6 @@ public class ChannelConfig {
 	public JsonObject toJsonObject() {
 		JsonObject object = new JsonObject();
 		object.addProperty("name", name);
-		if(!password.isEmpty()) {
-			object.addProperty("password", password);
-		}
 		JsonObject botSettingsObject = botSettings.toJsonObject();
 		if(botSettingsObject != null) {
 			object.add("bot", botSettingsObject);
@@ -90,7 +82,10 @@ public class ChannelConfig {
 	public void loadLegacy(Configuration config, ConfigCategory category) {
 		String categoryName = category.getQualifiedName();
 		name = Utils.unquote(config.get(categoryName, "name", "").getString());
-		password = Utils.unquote(config.get(categoryName, "password", "").getString());
+		String password = Utils.unquote(config.get(categoryName, "password", "").getString());
+		if(password != null && !password.isEmpty()) {
+			AuthManager.putChannelPassword(getIdentifier(), password);
+		}
 	}
 
 	public void handleConfigCommand(ICommandSender sender, String key) {
@@ -126,10 +121,6 @@ public class ChannelConfig {
 
 	public ServerConfig getServerConfig() {
 		return serverConfig;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
 	}
 
 	public ThemeSettings getTheme() {

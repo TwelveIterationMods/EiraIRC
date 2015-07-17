@@ -7,6 +7,7 @@ import net.blay09.mods.eirairc.api.EiraIRCAPI;
 import net.blay09.mods.eirairc.api.SubCommand;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
+import net.blay09.mods.eirairc.config.AuthManager;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.base.ServiceConfig;
@@ -49,10 +50,12 @@ public class CommandGhost implements SubCommand {
 			}
 			connection = context.getConnection();
 		}
-		ServerConfig serverConfig = ConfigurationHandler.getOrCreateServerConfig(connection.getHost());
 		ServiceSettings settings = ServiceConfig.getSettings(connection.getHost(), connection.getServerType());
 		if(settings.hasGhostCommand()) {
-			connection.irc(settings.getGhostCommand(serverConfig.getNickServName(), serverConfig.getNickServPassword()));
+			AuthManager.NickServData nickServData = AuthManager.getNickServData(connection.getIdentifier());
+			if(nickServData != null) {
+				connection.irc(settings.getGhostCommand(nickServData.username, nickServData.password));
+			}
 		} else {
 			Utils.sendLocalizedMessage(sender, "irc.general.notSupported", "GHOST");
 		}

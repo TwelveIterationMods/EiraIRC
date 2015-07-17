@@ -7,6 +7,7 @@ import net.blay09.mods.eirairc.api.EiraIRCAPI;
 import net.blay09.mods.eirairc.api.SubCommand;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
+import net.blay09.mods.eirairc.config.AuthManager;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.ServerConfig;
@@ -63,10 +64,10 @@ public class CommandJoin implements SubCommand {
 		}
 		ChannelConfig channelConfig = serverConfig.getOrCreateChannelConfig(channelName);
 		if(args.length >= 2) {
-			channelConfig.setPassword(args[1]);
+			AuthManager.putChannelPassword(channelConfig.getIdentifier(), args[1]);
 		}
 		Utils.sendLocalizedMessage(sender, "irc.basic.joiningChannel", channelConfig.getName(), connection.getHost());
-		connection.join(channelConfig.getName(), channelConfig.getPassword());
+		connection.join(channelConfig.getName(), AuthManager.getChannelPassword(channelConfig.getIdentifier()));
 		return true;
 	}
 

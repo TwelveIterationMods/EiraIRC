@@ -13,10 +13,7 @@ import net.blay09.mods.eirairc.api.event.*;
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.bot.IRCBotImpl;
-import net.blay09.mods.eirairc.config.ChannelConfig;
-import net.blay09.mods.eirairc.config.IgnoreList;
-import net.blay09.mods.eirairc.config.ServerConfig;
-import net.blay09.mods.eirairc.config.SharedGlobalConfig;
+import net.blay09.mods.eirairc.config.*;
 import net.blay09.mods.eirairc.config.settings.BotBooleanComponent;
 import net.blay09.mods.eirairc.config.settings.BotSettings;
 import net.blay09.mods.eirairc.config.settings.GeneralBooleanComponent;
@@ -60,7 +57,7 @@ public class InternalEventHandler {
         for(ChannelConfig channelConfig : serverConfig.getChannelConfigs()) {
             GeneralSettings generalSettings = channelConfig.getGeneralSettings();
             if(generalSettings.getBoolean(GeneralBooleanComponent.AutoJoin)) {
-                event.connection.join(channelConfig.getName(), channelConfig.getPassword());
+                event.connection.join(channelConfig.getName(), AuthManager.getChannelPassword(channelConfig.getIdentifier()));
             }
         }
         if(!SharedGlobalConfig.defaultChat.equals("Minecraft")) {
@@ -73,7 +70,10 @@ public class InternalEventHandler {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onPrivateChat(IRCPrivateChatEvent event) {
-        if(event.sender != null && IgnoreList.isIgnored(event.sender)) {
+        if(event.sender == null) {
+            return;
+        }
+        if(IgnoreList.isIgnored(event.sender)) {
             logger.info("Ignored message by " + event.sender.getName() + ": " + event.message);
             event.setCanceled(true);
             return;
@@ -90,12 +90,12 @@ public class InternalEventHandler {
                 }
             }
         }
-        if(event.sender != null && event.sender.getName().equals("tmi.twitch.tv") && event.isNotice && event.connection.getHost().equals(Globals.TWITCH_SERVER) && event.message.equals("Login unsuccessful")) {
+        if(event.sender.getName().equals("tmi.twitch.tv") && event.isNotice && event.connection.getHost().equals(Globals.TWITCH_SERVER) && event.message.equals("Login unsuccessful")) {
             event.connection.disconnect("");
             EiraIRC.internalBus.post(new IRCConnectionFailedEvent(event.connection, new RuntimeException("Wrong username or invalid oauth token.")));
             MinecraftForge.EVENT_BUS.post(new IRCConnectionFailedEvent(event.connection, new RuntimeException("Wrong username or invalid oauth token.")));
             event.setCanceled(true);
-        } else if(event.sender != null && event.connection.isTwitch() && event.sender.getName().equals("jtv")) {
+        } else if(event.connection.isTwitch() && event.sender.getName().equals("jtv")) {
             event.setCanceled(true);
         }
     }

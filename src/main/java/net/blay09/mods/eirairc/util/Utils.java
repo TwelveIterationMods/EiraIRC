@@ -11,26 +11,22 @@ import net.blay09.mods.eirairc.api.irc.IRCConnection;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.api.irc.IRCUser;
 import net.blay09.mods.eirairc.bot.IRCBotImpl;
+import net.blay09.mods.eirairc.config.AuthManager;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.config.base.ServiceConfig;
 import net.blay09.mods.eirairc.config.base.ServiceSettings;
-import net.blay09.mods.eirairc.config.settings.ThemeColorComponent;
-import net.blay09.mods.eirairc.config.settings.ThemeSettings;
 import net.blay09.mods.eirairc.irc.IRCConnectionImpl;
-import net.blay09.mods.eirairc.irc.IRCUserImpl;
 import net.blay09.mods.eirairc.irc.ssl.IRCConnectionSSLImpl;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.*;
 import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.lwjgl.Sys;
 
 import java.awt.*;
@@ -204,7 +200,7 @@ public class Utils {
 			}
 		} else {
 			for(ChannelConfig channelConfig : serverConfig.getChannelConfigs()) {
-				connection.join(channelConfig.getName(), channelConfig.getPassword());
+				connection.join(channelConfig.getName(), AuthManager.getChannelPassword(channelConfig.getIdentifier()));
 			}
 		}
 		return true;
@@ -230,12 +226,10 @@ public class Utils {
 	
 	public static void doNickServ(IRCConnection connection, ServerConfig config) {
 		ServiceSettings settings = ServiceConfig.getSettings(connection.getHost(), connection.getServerType());
-		String username = config.getNickServName();
-		String password = config.getNickServPassword();
-		if(username == null || username.isEmpty() || password == null || password.isEmpty()) {
-			return;
+		AuthManager.NickServData nickServData = AuthManager.getNickServData(config.getIdentifier());
+		if(nickServData != null) {
+			connection.irc(settings.getIdentifyCommand(nickServData.username, nickServData.password));
 		}
-		connection.irc(settings.getIdentifyCommand(username, password));
 	}
 	
 	public static void sendUserList(ICommandSender player, IRCConnection connection, IRCChannel channel) {
