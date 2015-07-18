@@ -28,6 +28,7 @@ public class ClientGlobalConfig {
 	public static boolean persistentConnection = true;
 	public static boolean showWelcomeScreen = true;
 	public static boolean autoResetChat = false;
+	public static boolean terminalStyleInput = false;
 
 	// Screenshots
 	public static boolean imageLinkPreview = true;
@@ -67,6 +68,7 @@ public class ClientGlobalConfig {
 		persistentConnection = thisConfig.getBoolean("persistentConnection", GENERAL, persistentConnection, I19n.format("eirairc:config.property.persistentConnection"), "eirairc:config.property.persistentConnection");
 		showWelcomeScreen = thisConfig.getBoolean("showWelcomeScreen", GENERAL, showWelcomeScreen, I19n.format("eirairc:config.property.showWelcomeScreen"), "eirairc:config.property.showWelcomeScreen");
 		autoResetChat = thisConfig.getBoolean("autoResetChat", GENERAL, autoResetChat, I19n.format("eirairc:config.property.autoResetChat.tooltip"), "eirairc:config.property.autoResetChat");
+		terminalStyleInput = thisConfig.getBoolean("terminalStyleInput", GENERAL, terminalStyleInput, I19n.format("eirairc:config.property.terminalStyleInput.tooltip"), "eirairc:config.property.terminalStyleInput");
 
 		// Screenshots
 		imageLinkPreview = thisConfig.getBoolean("imageLinkPreview", SCREENSHOTS, imageLinkPreview, I19n.format("eirairc:config.property.imageLinkPreview"), "eirairc:config.property.imageLinkPreview");
@@ -104,6 +106,7 @@ public class ClientGlobalConfig {
 		thisConfig.get(GENERAL, "persistentConnection", false, I19n.format("eirairc:config.property.persistentConnection")).set(persistentConnection);
 		thisConfig.get(GENERAL, "showWelcomeScreen", false, I19n.format("eirairc:config.property.showWelcomeScreen")).set(showWelcomeScreen);
 		thisConfig.get(GENERAL, "autoResetChat", "", I19n.format("eirairc:config.property.autoResetChat")).set(autoResetChat);
+		thisConfig.get(GENERAL, "terminalStyleInput", "", I19n.format("eirairc:config.property.terminalStyleInput")).set(terminalStyleInput);
 
 		// Screenshots
 		thisConfig.get(SCREENSHOTS, "imageLinkPreview", false, I19n.format("eirairc:config.property.imageLinkPreview.tooltip")).set(imageLinkPreview);
@@ -188,6 +191,8 @@ public class ClientGlobalConfig {
 			return String.valueOf(chatNoOverride);
 		} else if(key.equals("autoResetChat")) {
 			return String.valueOf(autoResetChat);
+		} else if(key.equals("terminalStyleInput")) {
+			return String.valueOf(terminalStyleInput);
 		}
 		return null;
 	}
@@ -218,6 +223,8 @@ public class ClientGlobalConfig {
 			chatNoOverride = Boolean.parseBoolean(value);
 		} else if(key.equals("autoResetChat")) {
 			autoResetChat = Boolean.parseBoolean(value);
+		} else if(key.equals("terminalStyleInput")) {
+			terminalStyleInput = Boolean.parseBoolean(value);
 		} else {
 			result = false;
 		}
@@ -237,7 +244,8 @@ public class ClientGlobalConfig {
 			list.add("disableChatToggle");
 			list.add("chatNoOverride");
 			list.add("autoResetChat");
-		} else if(option.equals("persistentConnection") || option.equals("clientBridge") || option.equals("disableChatToggle") || option.equals("showWelcomeScreen") || option.equals("chatNoOverride") || option.equals("autoResetChat")) {
+			list.add("terminalStyleInput");
+		} else if(option.equals("persistentConnection") || option.equals("clientBridge") || option.equals("disableChatToggle") || option.equals("showWelcomeScreen") || option.equals("chatNoOverride") || option.equals("autoResetChat") || option.equals("terminalStyleInput")) {
 			Utils.addBooleansToList(list);
 		}
 	}
