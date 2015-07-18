@@ -20,6 +20,13 @@ public abstract class GuiTabPage extends EiraGuiScreen {
 		this.tabContainer = tabContainer;
 	}
 
+	@Override
+	public void gotoPrevious() {
+		if(requestClose()) {
+			super.gotoPrevious();
+		}
+	}
+
 	public boolean requestClose() {
 		return true;
 	}

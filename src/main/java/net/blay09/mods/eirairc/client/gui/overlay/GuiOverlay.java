@@ -5,7 +5,7 @@ import net.minecraft.client.gui.GuiScreen;
 
 import java.io.IOException;
 
-public class GuiOverlay extends EiraGuiScreen {
+public abstract class GuiOverlay extends EiraGuiScreen {
 
 	public GuiOverlay(GuiScreen parentScreen) {
 		super(parentScreen);

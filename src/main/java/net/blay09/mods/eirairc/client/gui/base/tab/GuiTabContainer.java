@@ -85,10 +85,16 @@ public class GuiTabContainer extends EiraGuiScreen {
 
 	@Override
 	public void gotoPrevious() {
-		if(currentTab.getParentScreen() instanceof GuiTabPage) {
-			setCurrentTab((GuiTabPage) currentTab.getParentScreen(), false);
-		} else {
+		if(currentTab == null) {
 			super.gotoPrevious();
+		} else {
+			if (currentTab.getParentScreen() instanceof GuiTabPage) {
+				setCurrentTab((GuiTabPage) currentTab.getParentScreen(), false);
+			} else {
+				if (currentTab.requestClose()) {
+					super.gotoPrevious();
+				}
+			}
 		}
 	}
 

@@ -5,15 +5,18 @@ import net.blay09.mods.eirairc.client.gui.base.GuiAdvancedTextField;
 import net.blay09.mods.eirairc.client.gui.base.GuiLabel;
 import net.blay09.mods.eirairc.client.gui.base.tab.GuiTabContainer;
 import net.blay09.mods.eirairc.client.gui.base.tab.GuiTabPage;
+import net.blay09.mods.eirairc.client.gui.overlay.GuiOverlay;
 import net.blay09.mods.eirairc.client.gui.overlay.OverlayYesNo;
 import net.blay09.mods.eirairc.config.AuthManager;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.ServerConfig;
+import net.blay09.mods.eirairc.config.settings.BotStringComponent;
 import net.blay09.mods.eirairc.config.settings.GeneralBooleanComponent;
 import net.blay09.mods.eirairc.util.Globals;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.gui.GuiYesNoCallback;
 import net.minecraftforge.common.config.ConfigElement;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
@@ -136,18 +139,40 @@ public class GuiChannelConfig extends GuiTabPage implements GuiYesNoCallback {
 			} else {
 				setOverlay(new OverlayYesNo(this, "Do you really want to delete this channel configuration?", "This can't be undone, so be careful!", 0));
 			}
+		} else if(button == btnOK) {
+
 		}
 	}
 
 	@Override
 	public void confirmClicked(boolean result, int id) {
-		if(result) {
-			if(id == 0) {
-				serverConfig.removeChannelConfig(config.getName());
-				ConfigurationHandler.saveServers();
-				tabContainer.setCurrentTab(parent, false);
-			}
+		switch(id) {
+			case 0:
+				if(result) {
+					serverConfig.removeChannelConfig(config.getName());
+					ConfigurationHandler.saveServers();
+					tabContainer.setCurrentTab(parent, false);
+				}
+				break;
+			case 1:
+				if(result) {
+					serverConfig.getBotSettings().setString(BotStringComponent.MessageFormat, "Classic");
+					ConfigurationHandler.saveServers();
+					tabContainer.setCurrentTab(parent, false);
+				} else {
+					tabContainer.setCurrentTab(parent, false);
+				}
+				break;
 		}
+	}
+
+	@Override
+	public boolean requestClose() {
+		if(serverConfig.getChannelConfigs().size() >= 2 && !serverConfig.getBotSettings().getMessageFormat().mcChannelMessage.contains("{CHANNEL}")) {
+			setOverlay((new OverlayYesNo(this, "You have joined more than one channel.", "Do you want to switch to a message format that includes the channel name?", 1)));
+			return false;
+		}
+		return true;
 	}
 
 	@Override
