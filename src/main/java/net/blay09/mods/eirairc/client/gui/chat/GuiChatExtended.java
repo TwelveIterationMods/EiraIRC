@@ -183,7 +183,20 @@ public class GuiChatExtended extends GuiChat implements GuiYesNoCallback {
 
 	@Override
 	public void drawScreen(int i, int j, float k) {
+		boolean terminalStyleInput = ClientGlobalConfig.terminalStyleInput;
+		String terminalChannel = chatSession.getChatTarget() != null ? (chatSession.getChatTarget().getName() + ": ") : null;
+		if(terminalStyleInput && terminalChannel != null) {
+			int terminalChannelWidth = fontRendererObj.getStringWidth(terminalChannel);
+			inputField.xPosition = 4 + terminalChannelWidth;
+			inputField.width = this.width - 4 - terminalChannelWidth;
+		} else {
+			inputField.xPosition = 4;
+			inputField.width = this.width - 4;
+		}
 		super.drawScreen(i, j, k);
+		if(terminalStyleInput && terminalChannel != null) {
+			fontRendererObj.drawString(terminalChannel, 4, inputField.yPosition, 14737632);
+		}
 		if(!ClientGlobalConfig.disableChatToggle && !ClientGlobalConfig.clientBridge) {
 			IRCContext target = chatSession.getChatTarget();
 			String targetName;

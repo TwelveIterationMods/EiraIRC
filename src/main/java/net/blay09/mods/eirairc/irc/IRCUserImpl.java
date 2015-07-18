@@ -221,7 +221,7 @@ public class IRCUserImpl implements IRCUser {
 	}
 
 	public String getDisplayName() {
-		return displayName;
+		return displayName != null ? displayName : getName();
 	}
 
 	public void setDisplayName(String displayName) {
