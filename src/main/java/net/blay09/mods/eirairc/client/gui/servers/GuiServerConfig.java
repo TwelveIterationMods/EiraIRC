@@ -12,6 +12,7 @@ import net.blay09.mods.eirairc.client.gui.base.list.GuiList;
 import net.blay09.mods.eirairc.client.gui.base.tab.GuiTabContainer;
 import net.blay09.mods.eirairc.client.gui.base.tab.GuiTabPage;
 import net.blay09.mods.eirairc.client.gui.overlay.OverlayYesNo;
+import net.blay09.mods.eirairc.config.AuthManager;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.ServerConfig;
@@ -193,7 +194,7 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 					if (connection.getChannel(channelConfig.getName()) != null) {
 						connection.part(channelConfig.getName());
 					} else {
-						connection.join(channelConfig.getName(), channelConfig.getPassword());
+						connection.join(channelConfig.getName(), AuthManager.getChannelPassword(channelConfig.getIdentifier()));
 					}
 				}
 			}

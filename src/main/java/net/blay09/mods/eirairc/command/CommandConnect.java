@@ -6,6 +6,7 @@ package net.blay09.mods.eirairc.command;
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.SubCommand;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
+import net.blay09.mods.eirairc.config.AuthManager;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.util.Utils;
@@ -45,7 +46,7 @@ public class CommandConnect implements SubCommand {
 		Utils.sendLocalizedMessage(sender, "irc.basic.connecting", host);
 		ServerConfig serverConfig = ConfigurationHandler.getOrCreateServerConfig(host);
 		if(args.length >= 2) {
-			serverConfig.setServerPassword(args[1]);
+			AuthManager.putServerPassword(serverConfig.getIdentifier(), args[1]);
 		}
 		if(Utils.connectTo(serverConfig) != null) {
 			ConfigurationHandler.addServerConfig(serverConfig);

@@ -6,6 +6,7 @@ package net.blay09.mods.eirairc.command.extension;
 import net.blay09.mods.eirairc.api.EiraIRCAPI;
 import net.blay09.mods.eirairc.api.SubCommand;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
+import net.blay09.mods.eirairc.config.AuthManager;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.settings.BotStringComponent;
@@ -61,7 +62,7 @@ public class CommandTwitch implements SubCommand {
 			}
 			ServerConfig serverConfig = ConfigurationHandler.getOrCreateServerConfig(Globals.TWITCH_SERVER);
 			serverConfig.setNick(args[0]);
-			serverConfig.setServerPassword(args[1]);
+			AuthManager.putServerPassword(serverConfig.getIdentifier(), args[1]);
 			serverConfig.getOrCreateChannelConfig("#" + serverConfig.getNick());
 			serverConfig.getGeneralSettings().setBoolean(GeneralBooleanComponent.ReadOnly, false);
 			serverConfig.getBotSettings().setString(BotStringComponent.MessageFormat, "Twitch");

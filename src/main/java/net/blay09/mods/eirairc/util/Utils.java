@@ -11,6 +11,7 @@ import net.blay09.mods.eirairc.api.irc.IRCConnection;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.api.irc.IRCUser;
 import net.blay09.mods.eirairc.bot.IRCBotImpl;
+import net.blay09.mods.eirairc.config.AuthManager;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
@@ -152,7 +153,7 @@ public class Utils {
 			}
 		} else {
 			for(ChannelConfig channelConfig : serverConfig.getChannelConfigs()) {
-				connection.join(channelConfig.getName(), channelConfig.getPassword());
+				connection.join(channelConfig.getName(), AuthManager.getChannelPassword(channelConfig.getIdentifier()));
 			}
 		}
 		return true;
@@ -178,12 +179,10 @@ public class Utils {
 	
 	public static void doNickServ(IRCConnection connection, ServerConfig config) {
 		ServiceSettings settings = ServiceConfig.getSettings(connection.getHost(), connection.getServerType());
-		String username = config.getNickServName();
-		String password = config.getNickServPassword();
-		if(username == null || username.isEmpty() || password == null || password.isEmpty()) {
-			return;
+		AuthManager.NickServData nickServData = AuthManager.getNickServData(config.getIdentifier());
+		if(nickServData != null) {
+			connection.irc(settings.getIdentifyCommand(nickServData.username, nickServData.password));
 		}
-		connection.irc(settings.getIdentifyCommand(username, password));
 	}
 	
 	public static void sendUserList(ICommandSender player, IRCConnection connection, IRCChannel channel) {

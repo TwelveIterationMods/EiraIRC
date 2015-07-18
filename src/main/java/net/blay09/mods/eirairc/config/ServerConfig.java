@@ -31,9 +31,6 @@ public class ServerConfig {
 	private String address = "";
 	private String charset = Globals.DEFAULT_CHARSET;
 	private String nick = Globals.DEFAULT_NICK;
-	private String serverPassword = "";
-	private String nickServName = "";
-	private String nickServPassword = "";
 	private boolean isRedirect;
 	private boolean isSSL = false;
 	private boolean isRemote = false;
@@ -68,22 +65,6 @@ public class ServerConfig {
 		return nick;
 	}
 
-	public String getServerPassword() {
-		return serverPassword;
-	}
-
-	public void setServerPassword(@NotNull String serverPassword) {
-		this.serverPassword = serverPassword;
-	}
-
-	public String getNickServName() {
-		return nickServName;
-	}
-
-	public String getNickServPassword() {
-		return nickServPassword;
-	}
-
 	public ChannelConfig getOrCreateChannelConfig(String channelName) {
 		ChannelConfig channelConfig = channels.get(channelName.toLowerCase());
 		if(channelConfig == null) {
@@ -97,11 +78,6 @@ public class ServerConfig {
 
 	public ChannelConfig getOrCreateChannelConfig(IRCChannel channel) {
 		return getOrCreateChannelConfig(channel.getName());
-	}
-
-	public void setNickServ(@NotNull String nickServName, @NotNull String nickServPassword) {
-		this.nickServName = nickServName;
-		this.nickServPassword = nickServPassword;
 	}
 
 	public void addChannelConfig(@NotNull ChannelConfig channelConfig) {
@@ -130,9 +106,15 @@ public class ServerConfig {
 		if(nick.isEmpty()) {
 			nick = Utils.unquote(legacyConfig.get("global", "nick", Globals.DEFAULT_NICK).getString());
 		}
-		nickServName = Utils.unquote(legacyConfig.get(categoryName, "nickServName", "").getString());
-		nickServPassword = Utils.unquote(legacyConfig.get(categoryName, "nickServPassword", "").getString());
-		serverPassword = Utils.unquote(legacyConfig.get(categoryName, "serverPassword", "").getString());
+		String nickServName = Utils.unquote(legacyConfig.get(categoryName, "nickServName", "").getString());
+		String nickServPassword = Utils.unquote(legacyConfig.get(categoryName, "nickServPassword", "").getString());
+		if(nickServName != null && !nickServName.isEmpty() && nickServPassword != null && !nickServPassword.isEmpty()) {
+			AuthManager.putNickServData(getIdentifier(), nickServName, nickServPassword);
+		}
+		String serverPassword = Utils.unquote(legacyConfig.get(categoryName, "serverPassword", "").getString());
+		if(serverPassword != null && !serverPassword.isEmpty()) {
+			AuthManager.putServerPassword(getIdentifier(), serverPassword);
+		}
 		isSSL = legacyConfig.get(categoryName, "secureConnection", isSSL).getBoolean(isSSL);
 		charset = Utils.unquote(legacyConfig.get("global", "charset", charset).getString());
 
@@ -155,7 +137,7 @@ public class ServerConfig {
 			config.setNick(object.get("nick").getAsString());
 		}
 		if(object.has("serverPassword")) {
-			config.serverPassword = object.get("serverPassword").getAsString();
+			AuthManager.putServerPassword(config.getIdentifier(), object.get("serverPassword").getAsString());
 		}
 		if(object.has("charset")) {
 			config.charset = object.get("charset").getAsString();
@@ -168,8 +150,7 @@ public class ServerConfig {
 		}
 		if(object.has("nickserv")) {
 			JsonObject nickServObject = object.getAsJsonObject("nickserv");
-			config.nickServName = nickServObject.get("username").getAsString();
-			config.nickServPassword = nickServObject.get("password").getAsString();
+			AuthManager.putNickServData(config.getIdentifier(), nickServObject.get("username").getAsString(), nickServObject.get("password").getAsString());
 		}
 		if(object.has("bot")) {
 			config.botSettings.load(object.getAsJsonObject("bot"));
@@ -193,9 +174,6 @@ public class ServerConfig {
 		JsonObject object = new JsonObject();
 		object.addProperty("address", address);
 		object.addProperty("nick", nick);
-		if(!serverPassword.isEmpty()) {
-			object.addProperty("serverPassword", serverPassword);
-		}
 		if(!charset.equals(Globals.DEFAULT_CHARSET)) {
 			object.addProperty("charset", charset);
 		}
@@ -204,12 +182,6 @@ public class ServerConfig {
 		}
 		if(isRedirect) {
 			object.addProperty("isRedirect", true);
-		}
-		if(!nickServName.isEmpty() || !nickServPassword.isEmpty()) {
-			JsonObject nickServObject = new JsonObject();
-			nickServObject.addProperty("username", nickServName);
-			nickServObject.addProperty("password", nickServPassword);
-			object.add("nickserv", nickServObject);
 		}
 		JsonObject botSettingsObject = botSettings.toJsonObject();
 		if(botSettingsObject != null) {

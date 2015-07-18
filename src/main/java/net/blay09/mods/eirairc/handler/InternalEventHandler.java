@@ -11,10 +11,7 @@ import net.blay09.mods.eirairc.api.event.*;
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.bot.IRCBotImpl;
-import net.blay09.mods.eirairc.config.ChannelConfig;
-import net.blay09.mods.eirairc.config.IgnoreList;
-import net.blay09.mods.eirairc.config.ServerConfig;
-import net.blay09.mods.eirairc.config.SharedGlobalConfig;
+import net.blay09.mods.eirairc.config.*;
 import net.blay09.mods.eirairc.config.settings.BotBooleanComponent;
 import net.blay09.mods.eirairc.config.settings.BotSettings;
 import net.blay09.mods.eirairc.config.settings.GeneralBooleanComponent;
@@ -60,7 +57,7 @@ public class InternalEventHandler {
         for (ChannelConfig channelConfig : serverConfig.getChannelConfigs()) {
             GeneralSettings generalSettings = channelConfig.getGeneralSettings();
             if (generalSettings.getBoolean(GeneralBooleanComponent.AutoJoin)) {
-                event.connection.join(channelConfig.getName(), channelConfig.getPassword());
+                event.connection.join(channelConfig.getName(), AuthManager.getChannelPassword(channelConfig.getIdentifier()));
             }
         }
         if (!SharedGlobalConfig.defaultChat.equals("Minecraft")) {
