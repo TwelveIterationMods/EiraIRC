@@ -64,7 +64,7 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 	public void initGui() {
 		super.initGui();
 		Keyboard.enableRepeatEvents(true);
-		MinecraftForge.EVENT_BUS.register(this);
+
 		allowSideClickClose = false;
 		title = config.getAddress().isEmpty() ? "<new>" : config.getAddress();
 
@@ -147,6 +147,8 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 
 		btnAdvanced = new GuiButton(4, rightX - 100, topY + 125, 100, 20, "Advanced");
 		buttonList.add(btnAdvanced);
+
+		MinecraftForge.EVENT_BUS.register(this);
 	}
 
 	@Override
