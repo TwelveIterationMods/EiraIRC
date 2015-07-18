@@ -42,6 +42,7 @@ public class IRCUserImpl implements IRCUser {
 	private EnumChatFormatting nameColor;
 	private boolean isTwitchSubscriber;
 	private boolean isTwitchTurbo;
+	private String displayName;
 
 	public IRCUserImpl(IRCConnectionImpl connection, String name) {
 		this.connection = connection;
@@ -219,4 +220,11 @@ public class IRCUserImpl implements IRCUser {
 		return hostname;
 	}
 
+	public String getDisplayName() {
+		return displayName;
+	}
+
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
+	}
 }

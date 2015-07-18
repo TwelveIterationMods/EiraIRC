@@ -162,22 +162,26 @@ public class MessageFormat {
 				nick = nick.substring(0, 1) + '\u0081' + nick.substring(1);
 			}
 		} else if(target == Target.Minecraft && context instanceof IRCChannel) {
+			IRCUserImpl user = (IRCUserImpl) ircUser;
+			if(context.getConnection().isTwitch()) {
+				nick = user.getDisplayName();
+			}
 			GeneralSettings settings = ConfigHelper.getGeneralSettings(context);
 			if(settings.getBoolean(GeneralBooleanComponent.ShowNameFlags)) {
 				nick = ircUser.getChannelModePrefix((IRCChannel) context) + nick;
 			}
-			if(Compatibility.eiraMoticonsInstalled && SharedGlobalConfig.twitchNameBadges) {
-				if(context.getConnection().isTwitch()) {
+			if(context.getConnection().isTwitch()) {
+				if(Compatibility.eiraMoticonsInstalled && SharedGlobalConfig.twitchNameBadges) {
 					String badges = "";
 					if(ircUser.getName().toLowerCase().equals(context.getName().substring(1).toLowerCase())) {
 						badges += EiraMoticonsAddon.casterBadge.getChatString();
 					} else if(ircUser.isOperator((IRCChannel) context)) {
 						badges += EiraMoticonsAddon.modBadge.getChatString();
 					}
-					if(((IRCUserImpl) ircUser).isTwitchTurbo()) {
+					if(user.isTwitchTurbo()) {
 						badges += EiraMoticonsAddon.turboBadge.getChatString();
 					}
-					if(((IRCUserImpl) ircUser).isTwitchSubscriber()) {
+					if(user.isTwitchSubscriber()) {
 						String badgeString = EiraMoticonsAddon.getSubscriberBadgeString((IRCChannel) context);
 						if(!badgeString.isEmpty()) {
 							badges += badgeString + " ";
@@ -326,8 +330,7 @@ public class MessageFormat {
 						}
 					} else if(token.equals("NICK")) {
 						if(sender != null) {
-							String displayName = sender.getName();
-							displayName = formatNick(displayName, targetContext, target, mode, sender);
+							String displayName = formatNick(sender.getName(), targetContext, target, mode, sender);
 							component = new ChatComponentText(displayName);
 							if(mode != Mode.Emote) {
 								EnumChatFormatting nameColor = IRCFormatting.getColorFormattingForUser(targetContext instanceof IRCChannel ? (IRCChannel) targetContext : null, sender);

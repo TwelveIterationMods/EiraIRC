@@ -130,6 +130,12 @@ public class InternalEventHandler {
                 } else {
                     user.setChannelUserMode(event.channel, null);
                 }
+                String displayName = event.rawMessage.getTagByKey("display-name");
+                if(displayName != null && !displayName.isEmpty()) {
+                    user.setDisplayName(displayName);
+                } else {
+                    user.setDisplayName(null);
+                }
             }
         }
     }
