@@ -25,7 +25,6 @@ public class SharedGlobalConfig {
 
 	// General
 	public static String defaultChat = "Minecraft";
-	public static boolean enablePlayerAliases = false;
 	public static boolean enablePlayerColors = true;
 	public static final List<String> colorBlacklist = new ArrayList<String>();
 	public static boolean hidePlayerTags = false;
@@ -57,7 +56,6 @@ public class SharedGlobalConfig {
 
 		// General
 		defaultChat = thisConfig.getString("defaultChat", GENERAL, defaultChat, I19n.format("eirairc:config.property.defaultChat.tooltip"), "eirairc:config.property.defaultChat");
-		enablePlayerAliases = thisConfig.getBoolean("enablePlayerAliases", GENERAL, enablePlayerAliases, I19n.format("eirairc:config.property.enablePlayerAliases.tooltip"), "eirairc:config.property.enablePlayerAliases");
 		enablePlayerColors = thisConfig.getBoolean("enablePlayerColors", GENERAL, enablePlayerColors, I19n.format("eirairc:config.property.enablePlayerColors.tooltip"), "eirairc:config.property.enablePlayerColors");
 		String[] colorBlacklistArray = thisConfig.getStringList("colorBlacklist", GENERAL, Globals.DEFAULT_COLOR_BLACKLIST, I19n.format("eirairc:config.property.colorBlacklist.tooltip"), null, "eirairc:config.property.colorBlacklist");
 		colorBlacklist.clear();
@@ -99,7 +97,6 @@ public class SharedGlobalConfig {
 
 		// General
 		thisConfig.get(GENERAL, "defaultChat", "", I19n.format("eirairc:config.property.defaultChat")).set(defaultChat);
-		thisConfig.get(GENERAL, "enablePlayerAliases", false, I19n.format("eirairc:config.property.enablePlayerAliases.tooltip")).set(enablePlayerAliases);
 		thisConfig.get(GENERAL, "enablePlayerColors", false, I19n.format("eirairc:config.property.enablePlayerColors.tooltip")).set(enablePlayerColors);
 		thisConfig.get(GENERAL, "colorBlacklist", new String[0], I19n.format("eirairc:config.property.colorBlacklist.tooltip")).set(colorBlacklist.toArray(new String[colorBlacklist.size()]));
 		thisConfig.get(GENERAL, "hidePlayerTags", false, I19n.format("eirairc:config.property.hidePlayerTags.tooltip")).set(hidePlayerTags);
@@ -131,7 +128,6 @@ public class SharedGlobalConfig {
 		thisConfig = new Configuration(new File(configDir, "shared.cfg"));
 
 		// General
-		enablePlayerAliases = legacyConfig.getBoolean("enableAliases", "serveronly", enablePlayerAliases, "");
 		enablePlayerColors = legacyConfig.getBoolean("enableNameColors", "display", enablePlayerColors, "");
 		String[] colorBlacklistArray = legacyConfig.getStringList("colorBlackList", "serveronly", new String[0], "");
 		colorBlacklist.clear();
@@ -168,8 +164,6 @@ public class SharedGlobalConfig {
 			enablePlayerColors = Boolean.parseBoolean(value);
 		} else if(key.equals("preventUserPing")) {
 			preventUserPing = Boolean.parseBoolean(value);
-		} else if(key.equals("enablePlayerAliases")) {
-			enablePlayerAliases = Boolean.parseBoolean(value);
 		} else if(key.equals("hidePlayerTags")) {
 			hidePlayerTags = Boolean.parseBoolean(value);
 		} else if(key.equals("twitchNameColors")) {
@@ -205,8 +199,6 @@ public class SharedGlobalConfig {
 			value = defaultChat;
 		} else if(key.equals("enablePlayerColors")) {
 			value = String.valueOf(enablePlayerColors);
-		} else if(key.equals("enablePlayerAliases")) {
-			value = String.valueOf(enablePlayerAliases);
 		} else if(key.equals("preventUserPing")) {
 			value = String.valueOf(preventUserPing);
 		} else if(key.equals("hidePlayerTags")) {

@@ -1,12 +1,13 @@
 // Copyright (c) 2015 Christopher "BlayTheNinth" Baker
 
-
 package net.blay09.mods.eirairc.command.interop;
 
 import net.blay09.mods.eirairc.api.EiraIRCAPI;
 import net.blay09.mods.eirairc.api.SubCommand;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
+import net.blay09.mods.eirairc.api.irc.IRCUser;
 import net.blay09.mods.eirairc.config.settings.BotBooleanComponent;
+import net.blay09.mods.eirairc.irc.IRCUserImpl;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
@@ -18,10 +19,12 @@ public class InterOpCommandUserModeBase implements SubCommand {
 
 	private String name;
 	private String mode;
+	private boolean useHostMask;
 	
-	public InterOpCommandUserModeBase(String name, String mode) {
+	public InterOpCommandUserModeBase(String name, String mode, boolean useHostMask) {
 		this.name = name;
 		this.mode = mode;
+		this.useHostMask = useHostMask;
 	}
 	
 	@Override
@@ -38,13 +41,18 @@ public class InterOpCommandUserModeBase implements SubCommand {
 			Utils.sendLocalizedMessage(sender, "irc.interop.disabled");
 			return true;
 		}
-		IRCContext targetUser = EiraIRCAPI.parseContext(targetChannel, args[1], IRCContext.ContextType.IRCUser);
-		if(targetUser.getContextType() == IRCContext.ContextType.Error) {
-			Utils.sendLocalizedMessage(sender, targetUser.getName(), args[1]);
-			return true;
+		if(args[1].contains("@")) {
+			targetChannel.getConnection().mode(targetChannel.getName(), mode, args[1]);
+			Utils.sendLocalizedMessage(sender, "irc.interop." + name, args[1], targetChannel.getName());
+		} else {
+			IRCContext targetUser = EiraIRCAPI.parseContext(targetChannel, args[1], IRCContext.ContextType.IRCUser);
+			if(targetUser.getContextType() == IRCContext.ContextType.Error) {
+				Utils.sendLocalizedMessage(sender, targetUser.getName(), args[1]);
+				return true;
+			}
+			targetChannel.getConnection().mode(targetChannel.getName(), mode, useHostMask ? ("*!*@" + ((IRCUser) targetUser).getHostname()) : targetUser.getName());
+			Utils.sendLocalizedMessage(sender, "irc.interop." + name, targetUser.getName(), targetChannel.getName());
 		}
-		targetChannel.getConnection().mode(targetChannel.getName(), mode, targetUser.getName());
-		Utils.sendLocalizedMessage(sender, "irc.interop." + name, targetUser.getName(), targetChannel.getName());
 		return true;
 	}
 

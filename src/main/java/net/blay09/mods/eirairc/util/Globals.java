@@ -25,5 +25,6 @@ public class Globals {
 	public static final String NBT_NAMECOLOR_DEPRECATED = "NameColor";
 	public static final String NBT_NAMECOLOR = "NameColorID";
 
-	public static final String NBT_ALIAS = "Alias";
+	public static final String NBT_ALIAS_GAME = "Alias";
+	public static final String NBT_ALIAS_IRC = "AliasIRC";
 }

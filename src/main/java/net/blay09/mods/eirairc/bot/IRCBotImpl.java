@@ -1,6 +1,5 @@
 // Copyright (c) 2015 Christopher "BlayTheNinth" Baker
 
-
 package net.blay09.mods.eirairc.bot;
 
 import net.blay09.mods.eirairc.api.bot.IBotCommand;
@@ -35,7 +34,6 @@ public class IRCBotImpl implements IRCBot {
 	public void reloadCommands() {
 		commands.clear();
 		if(isServerSide()) {
-			registerCommand(new BotCommandAlias());
 			registerCommand(new BotCommandHelp());
 			registerCommand(new BotCommandMessage());
 			registerCommand(new BotCommandWho());

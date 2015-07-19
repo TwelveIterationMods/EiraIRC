@@ -142,7 +142,7 @@ public class Utils {
 		if(!SharedGlobalConfig.enablePlayerAliases) {
 			return player.getCommandSenderName();
 		}
-		String name = player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getCompoundTag(Globals.NBT_EIRAIRC).getString(Globals.NBT_ALIAS);
+		String name = player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getCompoundTag(Globals.NBT_EIRAIRC).getString(Globals.NBT_ALIAS_GAME);
 		if(name.isEmpty()) {
 			name = player.getCommandSenderName();
 		}

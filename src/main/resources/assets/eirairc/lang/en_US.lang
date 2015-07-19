@@ -22,7 +22,6 @@ eirairc:irc.commands.config=/[serv]irc config (global|<server>|<channel>) <key> 
 eirairc:irc.commands.twitch=/servirc twitch <username> <oauth>
 eirairc:irc.commands.nickserv=/servirc nickserv <username> <password>
 eirairc:irc.commands.color=/irc color <color>
-eirairc:irc.commands.alias=/irc alias <username> <alias> OR /irc alias <alias>
 eirairc:irc.commands.ghost=/irc ghost [server] <username>
 eirairc:irc.commands.ignore=/irc ignore <nick>
 eirairc:irc.commands.unignore=/irc unignore <nick>
@@ -56,7 +55,7 @@ eirairc:irc.commands.interop.topic=/irc topic <channel> <topic>
 eirairc:irc.cmdlist.general=§eGeneral Commands: §fconfig, help, list
 eirairc:irc.cmdlist.irc=§eIRC Commands: §fconnect, disconnect, join, leave, nick, msg, who
 eirairc:irc.cmdlist.interop=§eInterOp Commands: §fop, deop, voice, devoice, kick, ban, unban, umode, mode, topic
-eirairc:irc.cmdlist.special=§eSpecial Commands: §ftwitch, color, alias
+eirairc:irc.cmdlist.special=§eSpecial Commands: §ftwitch, color
 
 #######################################################################################################################
 
@@ -131,13 +130,6 @@ eirairc:error.alreadyJoined=You have joined %s in %s already.
 ## List
 eirairc:irc.list.activeConnections=§eEiraIRC is connected to:
 
-## Alias
-eirairc:irc.alias.set=Alias for %s set to '%s'.
-eirairc:irc.alias.reset=Alias removed for %s.
-eirairc:irc.alias.disabled=Aliases are disabled on this server.
-eirairc:irc.alias.lookup=The username for %s is '%s'.
-eirairc:irc.alias.notFound=The alias '%s' cannot be found.
-
 ## Color
 eirairc:irc.color.set=Name color set to '%s'.
 eirairc:irc.color.reset=Name color reset.
@@ -162,7 +154,7 @@ eirairc:irc.config.reload=Reloading config from file...
 
 ## Help
 eirairc:irc.help.validTopics=§eValid topics are:
-eirairc:irc.help.topicList=* color, alias, twitch, msg, commands, config
+eirairc:irc.help.topicList=* color, twitch, msg, commands, config
 eirairc:irc.help.invalidTopic=§cInvalid help topic '%s'. Valid topics are:
 
 ## Connect
@@ -222,8 +214,6 @@ eirairc:config.category.keybinds=Keybindings
 eirairc:config.category.keybinds.tooltip=Keybindings
 
 ## Properties (Shared)
-eirairc:config.property.enablePlayerAliases=Enable Player Aliases
-eirairc:config.property.enablePlayerAliases.tooltip=[Deprecated] If set to true, OPs can assign an alias for a MC nick that will be used instead.
 eirairc:config.property.enablePlayerColors=Enable Player Colors
 eirairc:config.property.enablePlayerColors.tooltip=If set to true, players can use the '/irc color' command to set a color for their MC nick. See also: colorBlacklist
 eirairc:config.property.colorBlacklist=Player Color Blacklist

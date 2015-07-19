@@ -1,6 +1,5 @@
 // Copyright (c) 2015 Christopher "BlayTheNinth" Baker
 
-
 package net.blay09.mods.eirairc.bot;
 
 import com.google.gson.JsonObject;
@@ -82,8 +81,6 @@ public class BotCommandCustom implements IBotCommand {
 			String overrideName = object.get("override").getAsString();
 			if(overrideName.equals("who")) {
 				cmd.overrideCommand = new BotCommandWho();
-			} else if(overrideName.equals("alias")) {
-				cmd.overrideCommand = new BotCommandAlias();
 			} else if(overrideName.equals("help")) {
 				cmd.overrideCommand = new BotCommandHelp();
 			} else if(overrideName.equals("msg")) {

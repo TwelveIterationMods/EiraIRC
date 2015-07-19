@@ -43,19 +43,18 @@ public class IRCCommandHandler {
 		registerCommand(new CommandWho());
 		registerCommand(new CommandColor());
 		registerCommand(new CommandGhost());
-		registerCommand(new CommandAlias());
 		registerCommand(new CommandIgnore());
 		registerCommand(new CommandUnignore());
 
 		registerCommand(new InterOpCommandKick());
 		registerCommand(new InterOpCommandMode());
 		registerCommand(new InterOpCommandTopic());
-		registerCommand(new InterOpCommandUserModeBase("op", "+o"));
-		registerCommand(new InterOpCommandUserModeBase("deop", "-o"));
-		registerCommand(new InterOpCommandUserModeBase("voice", "+v"));
-		registerCommand(new InterOpCommandUserModeBase("devoice", "-v"));
-		registerCommand(new InterOpCommandUserModeBase("ban", "+b"));
-		registerCommand(new InterOpCommandUserModeBase("unban", "-b"));
+		registerCommand(new InterOpCommandUserModeBase("op", "+o", false));
+		registerCommand(new InterOpCommandUserModeBase("deop", "-o", false));
+		registerCommand(new InterOpCommandUserModeBase("voice", "+v", false));
+		registerCommand(new InterOpCommandUserModeBase("devoice", "-v", false));
+		registerCommand(new InterOpCommandUserModeBase("ban", "+b", true));
+		registerCommand(new InterOpCommandUserModeBase("unban", "-b", true));
 	}
 	
 	public static void registerCommand(SubCommand command) {
