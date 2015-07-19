@@ -37,7 +37,7 @@ public class BotCommandMessage implements IBotCommand {
 	public void processCommand(IRCBot bot, IRCChannel channel, IRCUser user, String[] args, IBotCommand commandSettings) {
 		BotSettings botSettings = ConfigHelper.getBotSettings(channel);
 		if(!botSettings.getBoolean(BotBooleanComponent.AllowPrivateMessages)) {
-			user.notice(Utils.getLocalizedMessage("irc.msg.disabled"));
+			user.notice(Utils.getLocalizedMessage("commands.msg.disabled"));
 		}
 		String playerName = args[0];
 		EntityPlayer entityPlayer = MinecraftServer.getServer().getConfigurationManager().getPlayerByUsername(playerName);
@@ -49,7 +49,7 @@ public class BotCommandMessage implements IBotCommand {
 				}
 			}
 			if(entityPlayer == null) {
-				user.notice(Utils.getLocalizedMessage("irc.general.noSuchPlayer"));
+				user.notice(Utils.getLocalizedMessage("general.noSuchPlayer"));
 				return;
 			}
 		}
@@ -64,7 +64,7 @@ public class BotCommandMessage implements IBotCommand {
 		}
 		EiraIRC.proxy.sendNotification((EntityPlayerMP) entityPlayer, NotificationType.PrivateMessage, notifyMsg);
 		entityPlayer.addChatMessage(chatComponent);
-		user.notice(Utils.getLocalizedMessage("irc.bot.msgSent", playerName, message));
+		user.notice(Utils.getLocalizedMessage("bot.msgSent", playerName, message));
 	}
 
 	@Override

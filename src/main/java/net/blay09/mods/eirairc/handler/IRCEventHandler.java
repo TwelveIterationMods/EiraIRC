@@ -108,7 +108,7 @@ public class IRCEventHandler {
 				}
 				if (!botSettings.getBoolean(BotBooleanComponent.AllowPrivateMessages)) {
 					if (!event.isNotice && event.sender != null) {
-						event.sender.notice(Utils.getLocalizedMessage("irc.msg.disabled"));
+						event.sender.notice(Utils.getLocalizedMessage("commands.msg.disabled"));
 					}
 					return;
 				}
@@ -226,7 +226,7 @@ public class IRCEventHandler {
 	public void onConnected(IRCConnectEvent event) {
 		switch (event.getResult()) {
 			case DEFAULT:
-				EiraIRCAPI.getChatHandler().addChatMessage(Utils.getLocalizedChatMessage("irc.basic.connected", event.connection.getHost()));
+				EiraIRCAPI.getChatHandler().addChatMessage(Utils.getLocalizedChatMessage("general.connected", event.connection.getHost()));
 				break;
 			case ALLOW:
 				EiraIRCAPI.getChatHandler().addChatMessage(event.result);
@@ -250,7 +250,7 @@ public class IRCEventHandler {
 	public void onReconnecting(IRCReconnectEvent event) {
 		switch(event.getResult()) {
 			case DEFAULT:
-				EiraIRCAPI.getChatHandler().addChatMessage(Utils.getLocalizedChatMessage("irc.basic.reconnecting", event.connection.getHost(), event.waitingTime / 1000));
+				EiraIRCAPI.getChatHandler().addChatMessage(Utils.getLocalizedChatMessage("general.reconnecting", event.connection.getHost(), event.waitingTime / 1000));
 				break;
 			case ALLOW:
 				EiraIRCAPI.getChatHandler().addChatMessage(event.result);
@@ -262,7 +262,7 @@ public class IRCEventHandler {
 	public void onDisconnected(IRCDisconnectEvent event) {
 		switch(event.getResult()) {
 			case DEFAULT:
-				EiraIRCAPI.getChatHandler().addChatMessage(Utils.getLocalizedChatMessage("irc.basic.disconnected", event.connection.getHost()));
+				EiraIRCAPI.getChatHandler().addChatMessage(Utils.getLocalizedChatMessage("general.disconnected", event.connection.getHost()));
 				break;
 			case ALLOW:
 				EiraIRCAPI.getChatHandler().addChatMessage(event.result);
@@ -402,7 +402,7 @@ public class IRCEventHandler {
 				}
 				if (!botSettings.getBoolean(BotBooleanComponent.AllowPrivateMessages)) {
 					if (!event.isNotice && event.sender != null) {
-						event.sender.notice(Utils.getLocalizedMessage("irc.msg.disabled"));
+						event.sender.notice(Utils.getLocalizedMessage("commands.ctcp.disabled"));
 					}
 					return;
 				}

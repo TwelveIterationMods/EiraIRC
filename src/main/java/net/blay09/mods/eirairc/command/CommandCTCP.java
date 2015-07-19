@@ -28,7 +28,7 @@ public class CommandCTCP implements SubCommand {
 
     @Override
     public String getCommandUsage(ICommandSender sender) {
-        return "eirairc:irc.commands.ctcp";
+        return "eirairc:commands.ctcp.usage";
     }
 
     @Override
@@ -39,7 +39,7 @@ public class CommandCTCP implements SubCommand {
     @Override
     public boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) throws CommandException {
         if (!ConfigHelper.getBotSettings(context).getBoolean(BotBooleanComponent.AllowCTCP)) {
-            Utils.sendLocalizedMessage(sender, "irc.ctcp.disabled");
+            Utils.sendLocalizedMessage(sender, "commands.ctcp.disabled");
             return true;
         }
         if (args.length < 2) {
@@ -51,7 +51,7 @@ public class CommandCTCP implements SubCommand {
             return true;
         } else if (target.getContextType() == IRCContext.ContextType.IRCUser) {
             if (!ConfigHelper.getBotSettings(context).getBoolean(BotBooleanComponent.AllowPrivateMessages)) {
-                Utils.sendLocalizedMessage(sender, "irc.msg.disabled");
+                Utils.sendLocalizedMessage(sender, "commands.ctcp.disabled");
                 return true;
             }
         }

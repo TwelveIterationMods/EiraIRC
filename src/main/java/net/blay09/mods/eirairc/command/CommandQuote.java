@@ -22,7 +22,7 @@ public class CommandQuote implements SubCommand {
 
 	@Override
 	public String getCommandUsage(ICommandSender sender) {
-		return "eirairc:irc.commands.quote";
+		return "eirairc:commands.quote.usage";
 	}
 
 	@Override
@@ -36,7 +36,7 @@ public class CommandQuote implements SubCommand {
 		IRCConnection connection;
 		if(context == null) {
 			if(args.length < 2) {
-				Utils.sendLocalizedMessage(sender, "irc.target.specifyServer");
+				Utils.sendLocalizedMessage(sender, "error.specifyServer");
 				return true;
 			}
 			IRCContext target = EiraIRCAPI.parseContext(null, args[0], IRCContext.ContextType.IRCConnection).getConnection();

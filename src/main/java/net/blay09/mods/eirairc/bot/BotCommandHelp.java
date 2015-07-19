@@ -32,9 +32,9 @@ public class BotCommandHelp implements IBotCommand {
 				sb.append(command.getCommandName());
 			}
 			if(commandSettings.broadcastsResult()) {
-				channel.message(Utils.getLocalizedMessage("irc.bot.cmdlist", sb.toString()));
+				channel.message(Utils.getLocalizedMessage("bot.cmdlist", sb.toString()));
 			} else {
-				user.notice(Utils.getLocalizedMessage("irc.bot.cmdlist", sb.toString()));
+				user.notice(Utils.getLocalizedMessage("bot.cmdlist", sb.toString()));
 			}
 		} else {
 			user.notice("***** EiraIRC Help *****");

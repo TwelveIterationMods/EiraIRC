@@ -457,10 +457,10 @@ public class ConfigurationHandler {
 		if(target.equals("global")) {
 			boolean result = EiraIRC.proxy.handleConfigCommand(sender, key, value);
 			if(result) {
-				Utils.sendLocalizedMessage(sender, "irc.config.change", "Global", key, value);
+				Utils.sendLocalizedMessage(sender, "commands.config.change", "Global", key, value);
 				ConfigurationHandler.save();
 			} else {
-				Utils.sendLocalizedMessage(sender, "irc.config.invalidOption", "Global", key);
+				Utils.sendLocalizedMessage(sender, "commands.config.invalidOption", "Global", key);
 			}
 		} else {
 			ChannelConfig channelConfig = ConfigHelper.resolveChannelConfig(target);
@@ -471,7 +471,7 @@ public class ConfigurationHandler {
 				if(serverConfig != null) {
 					serverConfig.handleConfigCommand(sender, key, value);
 				} else {
-					Utils.sendLocalizedMessage(sender, "irc.target.targetNotFound", target);
+					Utils.sendLocalizedMessage(sender, "error.targetNotFound", target);
 				}
 			}
 		}
@@ -481,9 +481,9 @@ public class ConfigurationHandler {
 		if(target.equals("global")) {
 			String result = EiraIRC.proxy.handleConfigCommand(sender, key);
 			if(result != null) {
-				Utils.sendLocalizedMessage(sender, "irc.config.lookup", "Global", key, result);
+				Utils.sendLocalizedMessage(sender, "commands.config.lookup", "Global", key, result);
 			} else {
-				Utils.sendLocalizedMessage(sender, "irc.config.invalidOption", "Global", key);
+				Utils.sendLocalizedMessage(sender, "commands.config.invalidOption", "Global", key);
 			}
 		} else {
 			ChannelConfig channelConfig = ConfigHelper.resolveChannelConfig(target);
@@ -494,7 +494,7 @@ public class ConfigurationHandler {
 				if(serverConfig != null) {
 					serverConfig.handleConfigCommand(sender, key);
 				} else {
-					Utils.sendLocalizedMessage(sender, "irc.target.targetNotFound", target);
+					Utils.sendLocalizedMessage(sender, "error.targetNotFound", target);
 				}
 			}
 		}

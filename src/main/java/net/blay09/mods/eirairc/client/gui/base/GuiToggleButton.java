@@ -20,7 +20,7 @@ public class GuiToggleButton extends GuiButton {
 	}
 	
 	public void updateText() {
-		this.displayString = Utils.getLocalizedMessage(textKey, Utils.getLocalizedMessage(state ? "irc.gui.yes" : "irc.gui.no"));
+		this.displayString = Utils.getLocalizedMessage(textKey, Utils.getLocalizedMessage(state ? "gui.yes" : "gui.no"));
 	}
 	
 	public void setState(boolean state) {

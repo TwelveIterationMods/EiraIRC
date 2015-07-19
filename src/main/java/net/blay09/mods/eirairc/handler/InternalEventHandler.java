@@ -84,7 +84,7 @@ public class InternalEventHandler {
                 return;
             } else {
                 if(event.bot.isServerSide()) {
-                    event.sender.notice(Utils.getLocalizedMessage("irc.bot.unknownCommand"));
+                    event.sender.notice(Utils.getLocalizedMessage("bot.unknownCommand"));
                     event.setCanceled(true);
                     return;
                 }
@@ -186,7 +186,7 @@ public class InternalEventHandler {
         if(ConfigHelper.getGeneralSettings(event.channel).getBoolean(GeneralBooleanComponent.AutoWho)) {
             Utils.sendUserList(null, event.connection, event.channel);
         }
-        if(Compatibility.eiraMoticonsInstalled && SharedGlobalConfig.twitchNameBadges && event.channel.getConnection().isTwitch()) {
+        if(Compatibility.isEiraMoticonsInstalled() && SharedGlobalConfig.twitchNameBadges && event.channel.getConnection().isTwitch()) {
             // Pre-load this channels sub badge
             EiraMoticonsAddon.getSubscriberBadge(event.channel);
         }

@@ -91,8 +91,7 @@ public class MCEventHandler {
 				if(emote.length() == 0) {
 					return;
 				}
-				String mcAlias = Utils.getNickGame((EntityPlayer) event.sender);
-				IChatComponent chatComponent = MessageFormat.createChatComponentForMessage("* " + mcAlias + " " + emote);
+				IChatComponent chatComponent = new ChatComponentTranslation("* %s %s", event.sender.getFormattedCommandSenderName(), MessageFormat.createChatComponentForMessage(emote));
 				EnumChatFormatting emoteColor = SharedGlobalConfig.theme.getColor(ThemeColorComponent.emoteTextColor);
 				if(emoteColor != null) {
 					chatComponent.getChatStyle().setColor(emoteColor);
@@ -370,11 +369,6 @@ public class MCEventHandler {
 		}
 	}
 	
-	@SubscribeEvent(priority = EventPriority.HIGHEST)
-	public void onPlayerNameFormat(PlayerEvent.NameFormat event) {
-		event.displayname = Utils.getNickGame(event.entityPlayer);
-	}
-
 	@SubscribeEvent
 	public void onAchievement(AchievementEvent event) {
 		if(((EntityPlayerMP) event.entityPlayer).getStatFile().hasAchievementUnlocked(event.achievement)) { // getStatFile

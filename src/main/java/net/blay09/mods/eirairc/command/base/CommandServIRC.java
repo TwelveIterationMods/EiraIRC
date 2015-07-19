@@ -47,7 +47,7 @@ public class CommandServIRC implements ICommand {
 			return;
 		}
 		if(MinecraftServer.getServer() != null && MinecraftServer.getServer().isSinglePlayer()) {
-			Utils.sendLocalizedMessage(sender, "irc.general.notMultiplayer");
+			Utils.sendLocalizedMessage(sender, "general.notMultiplayer");
 			return;
 		}
 		try {

@@ -131,22 +131,11 @@ public class Utils {
 	}
 	
 	public static String getNickIRC(EntityPlayer player, IRCContext context) {
-		return MessageFormat.formatNick(getAliasForPlayer(player), context, MessageFormat.Target.IRC, MessageFormat.Mode.Message, null);
+		return MessageFormat.formatNick(player.getDisplayName(), context, MessageFormat.Target.IRC, MessageFormat.Mode.Message, null);
 	}
 
 	public static String getNickGame(EntityPlayer player) {
-		return getAliasForPlayer(player);
-	}
-
-	public static String getAliasForPlayer(EntityPlayer player) {
-		if(!SharedGlobalConfig.enablePlayerAliases) {
-			return player.getCommandSenderName();
-		}
-		String name = player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getCompoundTag(Globals.NBT_EIRAIRC).getString(Globals.NBT_ALIAS_GAME);
-		if(name.isEmpty()) {
-			name = player.getCommandSenderName();
-		}
-		return name;
+		return player.getDisplayName();
 	}
 
 	public static String getServerName() {
@@ -236,16 +225,16 @@ public class Utils {
 		Collection<IRCUser> userList = channel.getUserList();
 		if(userList.size() == 0) {
 			if(player == null) {
-				addMessageToChat(Utils.getLocalizedMessage("irc.who.noUsersOnline", connection.getHost(), channel.getName()));
+				addMessageToChat(Utils.getLocalizedMessage("commands.who.noUsersOnline", connection.getHost(), channel.getName()));
 			} else {
-				sendLocalizedMessage(player, "irc.who.noUsersOnline", connection.getHost(), channel.getName());
+				sendLocalizedMessage(player, "commands.who.noUsersOnline", connection.getHost(), channel.getName());
 			}
 			return;
 		}
 		if(player == null) {
-			addMessageToChat(Utils.getLocalizedMessage("irc.who.usersOnline", connection.getHost(), userList.size(), channel.getName()));
+			addMessageToChat(Utils.getLocalizedMessage("commands.who.usersOnline", connection.getHost(), userList.size(), channel.getName()));
 		} else {
-			sendLocalizedMessage(player, "irc.who.usersOnline", connection.getHost(), userList.size(), channel.getName());
+			sendLocalizedMessage(player, "commands.who.usersOnline", connection.getHost(), userList.size(), channel.getName());
 		}
 		String s = " * ";
 		for(IRCUser user : userList) {
@@ -278,16 +267,16 @@ public class Utils {
 		List<EntityPlayer> playerList = MinecraftServer.getServer().getConfigurationManager().playerEntityList;
 		if(playerList.size() == 0) {
 			if(context instanceof IRCUser) {
-				context.notice(getLocalizedMessage("irc.bot.noPlayersOnline"));
+				context.notice(getLocalizedMessage("bot.noPlayersOnline"));
 			} else if(context instanceof IRCChannel) {
-				context.message(getLocalizedMessage("irc.bot.noPlayersOnline"));
+				context.message(getLocalizedMessage("bot.noPlayersOnline"));
 			}
 			return;
 		}
 		if(context instanceof IRCUser) {
-			context.notice(getLocalizedMessage("irc.bot.playersOnline", playerList.size()));
+			context.notice(getLocalizedMessage("bot.playersOnline", playerList.size()));
 		} else if(context instanceof IRCChannel) {
-			context.message(getLocalizedMessage("irc.bot.playersOnline", playerList.size()));
+			context.message(getLocalizedMessage("bot.playersOnline", playerList.size()));
 		}
 		String s = " * ";
 		for(int i = 0; i < playerList.size(); i++) {

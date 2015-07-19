@@ -38,12 +38,12 @@ public class InterOpCommandUserModeBase implements SubCommand {
 			return true;
 		}
 		if(!ConfigHelper.getBotSettings(targetChannel).getBoolean(BotBooleanComponent.InterOp)) {
-			Utils.sendLocalizedMessage(sender, "irc.interop.disabled");
+			Utils.sendLocalizedMessage(sender, "commands.interop.disabled");
 			return true;
 		}
 		if(args[1].contains("@")) {
 			targetChannel.getConnection().mode(targetChannel.getName(), mode, args[1]);
-			Utils.sendLocalizedMessage(sender, "irc.interop." + name, args[1], targetChannel.getName());
+			Utils.sendLocalizedMessage(sender, "commands." + name, args[1], targetChannel.getName());
 		} else {
 			IRCContext targetUser = EiraIRCAPI.parseContext(targetChannel, args[1], IRCContext.ContextType.IRCUser);
 			if(targetUser.getContextType() == IRCContext.ContextType.Error) {
@@ -51,7 +51,7 @@ public class InterOpCommandUserModeBase implements SubCommand {
 				return true;
 			}
 			targetChannel.getConnection().mode(targetChannel.getName(), mode, useHostMask ? ("*!*@" + ((IRCUser) targetUser).getHostname()) : targetUser.getName());
-			Utils.sendLocalizedMessage(sender, "irc.interop." + name, targetUser.getName(), targetChannel.getName());
+			Utils.sendLocalizedMessage(sender, "commands." + name, targetUser.getName(), targetChannel.getName());
 		}
 		return true;
 	}
@@ -68,7 +68,7 @@ public class InterOpCommandUserModeBase implements SubCommand {
 
 	@Override
 	public String getCommandUsage(ICommandSender sender) {
-		return "eirairc:irc.commands.interop." + name;
+		return "eirairc:commands." + name + ".usage";
 	}
 
 	@Override

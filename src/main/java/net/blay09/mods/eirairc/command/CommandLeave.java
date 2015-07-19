@@ -29,7 +29,7 @@ public class CommandLeave implements SubCommand {
 
 	@Override
 	public String getCommandUsage(ICommandSender sender) {
-		return "eirairc:irc.commands.leave";
+		return "eirairc:commands.leave.usage";
 	}
 
 	@Override
@@ -54,7 +54,7 @@ public class CommandLeave implements SubCommand {
 			channelName = IRCResolver.stripPath(args[0]);
 		} else {
 			if(context == null) {
-				Utils.sendLocalizedMessage(sender, "irc.target.specifyServer");
+				Utils.sendLocalizedMessage(sender, "error.specifyServer");
 				return true;
 			}
 			connection = context.getConnection();
@@ -64,9 +64,9 @@ public class CommandLeave implements SubCommand {
 			for(IRCChannel channel : connection.getChannels()) {
 				connection.part(channel.getName());
 			}
-			Utils.sendLocalizedMessage(sender, "irc.basic.leavingChannel", "<all>", connection.getHost());
+			Utils.sendLocalizedMessage(sender, "general.leavingChannel", "<all>", connection.getHost());
 		} else {
-			Utils.sendLocalizedMessage(sender, "irc.basic.leavingChannel", channelName, connection.getHost());
+			Utils.sendLocalizedMessage(sender, "general.leavingChannel", channelName, connection.getHost());
 			connection.part(channelName);
 		}
 		return true;

@@ -132,13 +132,13 @@ public class IRCUserImpl implements IRCUser {
 	public void setAccountName(String accountName) {
 		this.accountName = accountName;
 		if(accountName == null || accountName.isEmpty()) {
-			notice(Utils.getLocalizedMessage("irc.bot.notAuthed"));
+			notice(Utils.getLocalizedMessage("bot.notAuthed"));
 		} else {
 			for (QueuedAuthCommand cmd : authCommandQueue) {
 				if (ConfigHelper.getBotSettings(cmd.channel).containsString(BotStringListComponent.InterOpAuthList, accountName)) {
 					cmd.command.processCommand(cmd.bot, cmd.channel, this, cmd.args, cmd.command);
 				} else {
-					notice(Utils.getLocalizedMessage("irc.bot.noPermission"));
+					notice(Utils.getLocalizedMessage("bot.noPermission"));
 				}
 			}
 		}
@@ -181,7 +181,7 @@ public class IRCUserImpl implements IRCUser {
 			if(ConfigHelper.getBotSettings(channel).containsString(BotStringListComponent.InterOpAuthList, accountName)) {
 				botCommand.processCommand(bot, channel, this, args, botCommand);
 			} else {
-				notice(Utils.getLocalizedMessage("irc.bot.noPermission"));
+				notice(Utils.getLocalizedMessage("bot.noPermission"));
 			}
 		}
 	}

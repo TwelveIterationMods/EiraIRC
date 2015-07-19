@@ -29,7 +29,7 @@ public class CommandColor implements SubCommand {
 
 	@Override
 	public String getCommandUsage(ICommandSender sender) {
-		return "eirairc:irc.commands.color";
+		return "eirairc:commands.color.usage";
 	}
 
 	@Override
@@ -43,21 +43,21 @@ public class CommandColor implements SubCommand {
 			return true;
 		}
 		if(!SharedGlobalConfig.enablePlayerColors) {
-			Utils.sendLocalizedMessage(sender, "irc.color.disabled");
+			Utils.sendLocalizedMessage(sender, "commands.color.disabled");
 			return true;
 		}
 		if(args.length < 1) {
-			throw new WrongUsageException(Utils.getLocalizedMessage("irc.commands.color"));
+			throw new WrongUsageException(Utils.getLocalizedMessage("commands.commands.color"));
 		}
 		String colorName = args[0].toLowerCase();
 		EnumChatFormatting mcOpColor = SharedGlobalConfig.theme.getColor(ThemeColorComponent.mcOpNameColor);
 		if(!Utils.isOP(sender) && (SharedGlobalConfig.colorBlacklist.contains(colorName) || (mcOpColor != null && mcOpColor.name().toLowerCase().equals(colorName)))) {
-			Utils.sendLocalizedMessage(sender, "irc.color.blackList", colorName);
+			Utils.sendLocalizedMessage(sender, "commands.color.blackList", colorName);
 			return true;
 		}
 		boolean isNone = colorName.equals(COLOR_NONE);
 		if(!isNone && !IRCFormatting.isValidColor(colorName)) {
-			Utils.sendLocalizedMessage(sender, "irc.color.invalid", colorName);
+			Utils.sendLocalizedMessage(sender, "commands.color.invalid", colorName);
 			return true;
 		}
 		EntityPlayer entityPlayer = (EntityPlayer) sender;
@@ -77,9 +77,9 @@ public class CommandColor implements SubCommand {
 		entityPlayer.getEntityData().setTag(EntityPlayer.PERSISTED_NBT_TAG, persistentTag);
 		entityPlayer.refreshDisplayName();
 		if(isNone) {
-			Utils.sendLocalizedMessage(sender, "irc.color.reset");
+			Utils.sendLocalizedMessage(sender, "commands.color.reset");
 		} else {
-			Utils.sendLocalizedMessage(sender, "irc.color.set", colorName);
+			Utils.sendLocalizedMessage(sender, "commands.color.set", colorName);
 		}
 		return true;
 	}

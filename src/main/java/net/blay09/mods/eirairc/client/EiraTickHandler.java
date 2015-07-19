@@ -106,7 +106,7 @@ public class EiraTickHandler {
 					if(!users || newTarget != null) {
 						chatSession.setChatTarget(newTarget);
 						if(ClientGlobalConfig.chatNoOverride) {
-							Utils.addMessageToChat(new ChatComponentTranslation("eirairc:irc.general.chattingTo", newTarget == null ? "Minecraft" : newTarget.getName()));
+							Utils.addMessageToChat(new ChatComponentTranslation("eirairc:general.chattingTo", newTarget == null ? "Minecraft" : newTarget.getName()));
 						}
 					}
 					wasToggleTargetDown = true;
@@ -114,7 +114,7 @@ public class EiraTickHandler {
 					if(System.currentTimeMillis() - lastToggleTarget >= 1000) {
 						chatSession.setChatTarget(null);
 						if(ClientGlobalConfig.chatNoOverride) {
-							Utils.addMessageToChat(new ChatComponentTranslation("eirairc:irc.general.chattingTo", "Minecraft"));
+							Utils.addMessageToChat(new ChatComponentTranslation("eirairc:general.chattingTo", "Minecraft"));
 						}
 						lastToggleTarget = System.currentTimeMillis();
 					}

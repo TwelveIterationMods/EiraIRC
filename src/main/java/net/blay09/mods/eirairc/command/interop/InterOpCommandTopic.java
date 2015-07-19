@@ -1,6 +1,5 @@
 // Copyright (c) 2015 Christopher "BlayTheNinth" Baker
 
-
 package net.blay09.mods.eirairc.command.interop;
 
 import net.blay09.mods.eirairc.api.EiraIRCAPI;
@@ -18,7 +17,7 @@ public class InterOpCommandTopic implements SubCommand {
 
 	@Override
 	public String getCommandUsage(ICommandSender sender) {
-		return "eirairc:irc.commands.interop.topic";
+		return "eirairc:commands.topic.usage";
 	}
 
 	@Override
@@ -42,7 +41,7 @@ public class InterOpCommandTopic implements SubCommand {
 			return true;
 		}
 		if(!ConfigHelper.getBotSettings(targetChannel).getBoolean(BotBooleanComponent.InterOp)) {
-			Utils.sendLocalizedMessage(sender, "irc.interop.disabled");
+			Utils.sendLocalizedMessage(sender, "commands.interop.disabled");
 			return true;
 		}
 		String topic = Utils.joinStrings(args, " ", 1).trim();
@@ -50,7 +49,7 @@ public class InterOpCommandTopic implements SubCommand {
 			throw new WrongUsageException(getCommandUsage(sender));
 		}
 		targetChannel.getConnection().topic(targetChannel.getName(), topic);
-		Utils.sendLocalizedMessage(sender, "irc.interop.topic", targetChannel.getName(), topic);
+		Utils.sendLocalizedMessage(sender, "commands.topic", targetChannel.getName(), topic);
 		return true;
 	}
 

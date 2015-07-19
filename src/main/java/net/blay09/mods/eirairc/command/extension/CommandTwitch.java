@@ -26,7 +26,7 @@ public class CommandTwitch implements SubCommand {
 
 	@Override
 	public String getCommandUsage(ICommandSender sender) {
-		return "eirairc:irc.commands.twitch";
+		return "eirairc:commands.twitch.usage";
 	}
 
 	@Override
@@ -37,12 +37,12 @@ public class CommandTwitch implements SubCommand {
 	@Override
 	public boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) {
 		if(EiraIRCAPI.isConnectedTo(Globals.TWITCH_SERVER)) {
-			Utils.sendLocalizedMessage(sender, "irc.general.alreadyConnected", "Twitch");
+			Utils.sendLocalizedMessage(sender, "general.alreadyConnected", "Twitch");
 			return true;
 		}
 		if(args.length == 0) {
 			if(ConfigurationHandler.hasServerConfig(Globals.TWITCH_SERVER)) {
-				Utils.sendLocalizedMessage(sender, "irc.basic.connecting", "Twitch");
+				Utils.sendLocalizedMessage(sender, "general.connecting", "Twitch");
 				ServerConfig serverConfig = ConfigurationHandler.getOrCreateServerConfig(Globals.TWITCH_SERVER);
 				Utils.connectTo(serverConfig);
 				return true;
@@ -50,13 +50,13 @@ public class CommandTwitch implements SubCommand {
 				if(serverSide) {
 					throw new WrongUsageException(getCommandUsage(sender));
 				} else {
-					Utils.sendLocalizedMessage(sender, "irc.general.serverOnlyCommand");
+					Utils.sendLocalizedMessage(sender, "general.serverOnlyCommand");
 					return true;
 				}
 			}
 		} else {
 			if(args.length < 2) {
-				throw new WrongUsageException(Globals.MOD_ID + ":irc.commands.twitch");
+				throw new WrongUsageException(Globals.MOD_ID + ":commands.twitch.usage");
 			}
 			ServerConfig serverConfig = ConfigurationHandler.getOrCreateServerConfig(Globals.TWITCH_SERVER);
 			serverConfig.setNick(args[0]);
@@ -66,7 +66,7 @@ public class CommandTwitch implements SubCommand {
 			serverConfig.getBotSettings().setString(BotStringComponent.MessageFormat, "Twitch");
 			ConfigurationHandler.addServerConfig(serverConfig);
 			ConfigurationHandler.save();
-			Utils.sendLocalizedMessage(sender, "irc.basic.connecting", "Twitch");
+			Utils.sendLocalizedMessage(sender, "general.connecting", "Twitch");
 			Utils.connectTo(serverConfig);
 			return true;
 		}

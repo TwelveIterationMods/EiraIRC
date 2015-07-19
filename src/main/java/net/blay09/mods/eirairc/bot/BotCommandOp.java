@@ -30,7 +30,7 @@ public class BotCommandOp implements IBotCommand {
 	public void processCommand(IRCBot bot, IRCChannel channel, IRCUser user, String[] args, IBotCommand commandSettings) {
 		BotSettings botSettings = ConfigHelper.getBotSettings(channel);
 		if(!botSettings.getBoolean(BotBooleanComponent.InterOp)) {
-			user.notice(Utils.getLocalizedMessage("irc.interop.disabled"));
+			user.notice(Utils.getLocalizedMessage("interop.disabled"));
 			return;
 		}
 		String message = "";
@@ -46,7 +46,7 @@ public class BotCommandOp implements IBotCommand {
 			return;
 		}
 		if(botSettings.stringContains(BotStringListComponent.DisabledInterOpCommands, message)) {
-			user.notice(Utils.getLocalizedMessage("irc.bot.interOpBlacklist"));
+			user.notice(Utils.getLocalizedMessage("bot.interOpBlacklist"));
 			return;
 		}
 		MinecraftServer.getServer().getCommandManager().executeCommand(new IRCUserCommandSender(channel, user, commandSettings.broadcastsResult(), true), message);

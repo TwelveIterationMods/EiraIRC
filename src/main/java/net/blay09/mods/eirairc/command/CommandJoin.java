@@ -28,7 +28,7 @@ public class CommandJoin implements SubCommand {
 
 	@Override
 	public String getCommandUsage(ICommandSender sender) {
-		return "eirairc:irc.commands.join";
+		return "eirairc:commands.join.usage";
 	}
 
 	@Override
@@ -49,7 +49,7 @@ public class CommandJoin implements SubCommand {
 				return true;
 			} else {
 				if(context == null) {
-					Utils.sendLocalizedMessage(sender, "irc.target.specifyServer");
+					Utils.sendLocalizedMessage(sender, "error.specifyServer");
 					return true;
 				}
 				target = context.getConnection();
@@ -66,7 +66,7 @@ public class CommandJoin implements SubCommand {
 		if(args.length >= 2) {
 			AuthManager.putChannelPassword(channelConfig.getIdentifier(), args[1]);
 		}
-		Utils.sendLocalizedMessage(sender, "irc.basic.joiningChannel", channelConfig.getName(), connection.getHost());
+		Utils.sendLocalizedMessage(sender, "general.joiningChannel", channelConfig.getName(), connection.getHost());
 		connection.join(channelConfig.getName(), AuthManager.getChannelPassword(channelConfig.getIdentifier()));
 		return true;
 	}

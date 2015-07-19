@@ -23,7 +23,7 @@ public class CommandList implements SubCommand {
 
 	@Override
 	public String getCommandUsage(ICommandSender sender) {
-		return "eirairc:irc.commands.list";
+		return "eirairc:commands.list.usage";
 	}
 
 	@Override
@@ -34,10 +34,10 @@ public class CommandList implements SubCommand {
 	@Override
 	public boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) {
 		if(EiraIRC.instance.getConnectionManager().getConnectionCount() == 0) {
-			Utils.sendLocalizedMessage(sender, "irc.general.notConnected", "IRC");
+			Utils.sendLocalizedMessage(sender, "general.notConnected", "IRC");
 			return true;
 		}
-		Utils.sendLocalizedMessage(sender, "irc.list.activeConnections");
+		Utils.sendLocalizedMessage(sender, "commands.list.activeConnections");
 		for(IRCConnection connection : EiraIRC.instance.getConnectionManager().getConnections()) {
 			StringBuilder sb = new StringBuilder();
 			for(IRCChannel channel : connection.getChannels()) {

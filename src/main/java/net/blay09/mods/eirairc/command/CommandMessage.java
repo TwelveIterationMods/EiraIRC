@@ -34,7 +34,7 @@ public class CommandMessage implements SubCommand {
 
 	@Override
 	public String getCommandUsage(ICommandSender sender) {
-		return "eirairc:irc.commands.msg";
+		return "eirairc:commands.msg.usage";
 	}
 
 	@Override
@@ -53,7 +53,7 @@ public class CommandMessage implements SubCommand {
 			return true;
 		} else if(target.getContextType() == IRCContext.ContextType.IRCUser) {
 			if(!ConfigHelper.getBotSettings(context).getBoolean(BotBooleanComponent.AllowPrivateMessages)) {
-				Utils.sendLocalizedMessage(sender, "irc.msg.disabled");
+				Utils.sendLocalizedMessage(sender, "commands.msg.disabled");
 				return true;
 			}
 		}

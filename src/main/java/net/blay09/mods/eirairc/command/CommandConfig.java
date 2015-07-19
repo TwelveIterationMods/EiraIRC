@@ -27,7 +27,7 @@ public class CommandConfig implements SubCommand {
 
 	@Override
 	public String getCommandUsage(ICommandSender sender) {
-		return "eirairc:irc.commands.config";
+		return "eirairc:commands.config.usage";
 	}
 
 	@Override
@@ -42,7 +42,7 @@ public class CommandConfig implements SubCommand {
 		}
 		String target = args[0];
 		if(target.equals("reload")) {
-			Utils.sendLocalizedMessage(sender, "irc.config.reload");
+			Utils.sendLocalizedMessage(sender, "commands.config.reload");
 			EiraIRC.instance.getConnectionManager().stopIRC();
 			ConfigurationHandler.reloadAll();
 			EiraIRC.instance.getConnectionManager().startIRC();

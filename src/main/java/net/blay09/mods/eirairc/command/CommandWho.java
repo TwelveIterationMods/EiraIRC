@@ -27,7 +27,7 @@ public class CommandWho implements SubCommand {
 
 	@Override
 	public String getCommandUsage(ICommandSender sender) {
-		return "eirairc:irc.commands.who";
+		return "eirairc:commands.who.usage";
 	}
 
 	@Override

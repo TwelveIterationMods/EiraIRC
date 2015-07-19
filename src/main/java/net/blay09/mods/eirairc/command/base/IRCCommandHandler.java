@@ -124,11 +124,11 @@ public class IRCCommandHandler {
 	}
 	
 	public static void sendUsageHelp(ICommandSender sender) {
-		Utils.sendLocalizedMessage(sender, "irc.general.usage", Utils.getLocalizedMessage("irc.commands.irc"));
-		Utils.sendLocalizedMessage(sender, "irc.cmdlist.general");
-		Utils.sendLocalizedMessage(sender, "irc.cmdlist.irc");
-		Utils.sendLocalizedMessage(sender, "irc.cmdlist.interop");
-		Utils.sendLocalizedMessage(sender, "irc.cmdlist.special");
+		Utils.sendLocalizedMessage(sender, "general.usage", Utils.getLocalizedMessage("commands.irc.usage"));
+		Utils.sendLocalizedMessage(sender, "commands.irc.list.general");
+		Utils.sendLocalizedMessage(sender, "commands.irc.list.irc");
+		Utils.sendLocalizedMessage(sender, "commands.irc.list.interop");
+		Utils.sendLocalizedMessage(sender, "commands.irc.list.special");
 	}
 
 	public static boolean onChatCommand(EntityPlayer sender, String text, boolean serverSide) {
@@ -137,7 +137,7 @@ public class IRCCommandHandler {
 			try {
 				return processCommand(sender, params, serverSide);
 			} catch (WrongUsageException e) {
-				sender.addChatMessage(Utils.getLocalizedChatMessage("irc.general.usage", Utils.getLocalizedMessageNoPrefix(e.getMessage())));
+				sender.addChatMessage(Utils.getLocalizedChatMessage("general.usage", Utils.getLocalizedMessageNoPrefix(e.getMessage())));
 				return true;
 			}
 		}

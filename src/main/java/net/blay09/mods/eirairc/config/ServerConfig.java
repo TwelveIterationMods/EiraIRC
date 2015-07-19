@@ -214,18 +214,18 @@ public class ServerConfig {
 			value = theme.handleConfigCommand(sender, key);
 		}
 		if(value != null) {
-			Utils.sendLocalizedMessage(sender, "irc.config.lookup", address, key, value);
+			Utils.sendLocalizedMessage(sender, "commands.config.lookup", address, key, value);
 		} else {
-			Utils.sendLocalizedMessage(sender, "irc.config.invalidOption", address, key);
+			Utils.sendLocalizedMessage(sender, "commands.config.invalidOption", address, key);
 		}
 	}
 
 	public void handleConfigCommand(ICommandSender sender, String key, String value) {
 		if(!generalSettings.handleConfigCommand(sender, key, value) && !botSettings.handleConfigCommand(sender, key, value) && !theme.handleConfigCommand(sender, key, value)) {
-			Utils.sendLocalizedMessage(sender, "irc.config.invalidOption", address, key, value);
+			Utils.sendLocalizedMessage(sender, "commands.config.invalidOption", address, key, value);
 			return;
 		}
-		Utils.sendLocalizedMessage(sender, "irc.config.change", address, key, value);
+		Utils.sendLocalizedMessage(sender, "commands.config.change", address, key, value);
 		ConfigurationHandler.save();
 	}
 

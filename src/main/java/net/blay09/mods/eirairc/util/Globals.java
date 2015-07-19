@@ -1,6 +1,5 @@
 // Copyright (c) 2015 Christopher "BlayTheNinth" Baker
 
-
 package net.blay09.mods.eirairc.util;
 
 import net.blay09.mods.eirairc.EiraIRC;
@@ -25,6 +24,4 @@ public class Globals {
 	public static final String NBT_NAMECOLOR_DEPRECATED = "NameColor";
 	public static final String NBT_NAMECOLOR = "NameColorID";
 
-	public static final String NBT_ALIAS_GAME = "Alias";
-	public static final String NBT_ALIAS_IRC = "AliasIRC";
 }

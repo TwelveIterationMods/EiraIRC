@@ -132,7 +132,7 @@ public class MessageFormat {
 			if(i > 0) {
 				sb.append(" ");
 			}
-			sb.append(matcher.replaceAll(Utils.getLocalizedMessage("irc.general.linkRemoved")));
+			sb.append(matcher.replaceAll(Utils.getLocalizedMessage("general.linkRemoved")));
 		}
 		return sb.toString();
 	}
@@ -171,7 +171,7 @@ public class MessageFormat {
 				nick = ircUser.getChannelModePrefix((IRCChannel) context) + nick;
 			}
 			if(context.getConnection().isTwitch()) {
-				if(Compatibility.eiraMoticonsInstalled && SharedGlobalConfig.twitchNameBadges) {
+				if(Compatibility.isEiraMoticonsInstalled() && SharedGlobalConfig.twitchNameBadges) {
 					String badges = "";
 					if(ircUser.getName().toLowerCase().equals(context.getName().substring(1).toLowerCase())) {
 						badges += EiraMoticonsAddon.casterBadge.getChatString();

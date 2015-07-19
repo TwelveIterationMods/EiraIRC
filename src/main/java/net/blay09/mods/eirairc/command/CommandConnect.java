@@ -24,7 +24,7 @@ public class CommandConnect implements SubCommand {
 
 	@Override
 	public String getCommandUsage(ICommandSender sender) {
-		return "eirairc:irc.commands.connect";
+		return "eirairc:commands.connect.usage";
 	}
 
 	@Override
@@ -39,10 +39,10 @@ public class CommandConnect implements SubCommand {
 		}
 		String host = args[0];
 		if(EiraIRC.instance.getConnectionManager().isConnectedTo(host)) {
-			Utils.sendLocalizedMessage(sender, "irc.general.alreadyConnected", host);
+			Utils.sendLocalizedMessage(sender, "general.alreadyConnected", host);
 			return true;
 		}
-		Utils.sendLocalizedMessage(sender, "irc.basic.connecting", host);
+		Utils.sendLocalizedMessage(sender, "general.connecting", host);
 		ServerConfig serverConfig = ConfigurationHandler.getOrCreateServerConfig(host);
 		if(args.length >= 2) {
 			AuthManager.putServerPassword(serverConfig.getIdentifier(), args[1]);
@@ -51,7 +51,7 @@ public class CommandConnect implements SubCommand {
 			ConfigurationHandler.addServerConfig(serverConfig);
 			ConfigurationHandler.save();
 		} else {
-			Utils.sendLocalizedMessage(sender, "irc.connect.error", host);
+			Utils.sendLocalizedMessage(sender, "commands.connect.error", host);
 		}
 		return true;
 	}
