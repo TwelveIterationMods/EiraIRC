@@ -2,7 +2,7 @@ package net.blay09.mods.eirairc.util;
 
 import net.blay09.mods.eirairc.addon.Compatibility;
 import net.blay09.mods.eirairc.addon.EiraMoticonsAddon;
-import net.blay09.mods.eirairc.api.event.ApplyEmoticons;
+import net.blay09.mods.eirairc.api.event.FormatMessage;
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
@@ -118,7 +118,7 @@ public class MessageFormat {
 	}
 
 	private static IChatComponent appendTextToRoot(IChatComponent root, String text) {
-		ApplyEmoticons emoticons = new ApplyEmoticons(new ChatComponentText(text));
+		FormatMessage emoticons = new FormatMessage(new ChatComponentText(text));
 		MinecraftForge.EVENT_BUS.post(emoticons);
 		root.appendSibling(emoticons.component);
 		return root;

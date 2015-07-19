@@ -9,7 +9,7 @@ import net.blay09.mods.eirairc.api.irc.IRCUser;
 /**
  * This event is published on the MinecraftForge.EVENTBUS bus whenever someone on an IRC channel EiraIRC is in changes their nick.
  */
-public class IRCUserNickChangeEvent extends IRCMessageEvent {
+public class IRCUserNickChangeEvent extends IRCRawMessageEvent {
 
 	/**
 	 * the user that changed his nick

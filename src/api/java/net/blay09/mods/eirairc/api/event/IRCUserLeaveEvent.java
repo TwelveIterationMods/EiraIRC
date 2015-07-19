@@ -10,7 +10,7 @@ import net.blay09.mods.eirairc.api.irc.IRCUser;
 /**
  * This event is published on the MinecraftForge.EVENTBUS bus whenever someone leaves an IRC channel EiraIRC is in.
  */
-public class IRCUserLeaveEvent extends IRCMessageEvent {
+public class IRCUserLeaveEvent extends IRCRawMessageEvent {
 
 	/**
 	 * the channel that the user left

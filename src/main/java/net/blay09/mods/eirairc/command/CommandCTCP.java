@@ -2,7 +2,6 @@ package net.blay09.mods.eirairc.command;
 
 import net.blay09.mods.eirairc.api.EiraIRCAPI;
 import net.blay09.mods.eirairc.api.SubCommand;
-import net.blay09.mods.eirairc.api.event.ChatMessageEvent;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.api.irc.IRCUser;
 import net.blay09.mods.eirairc.config.settings.BotBooleanComponent;
@@ -14,7 +13,6 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.util.IChatComponent;
-import net.minecraftforge.common.MinecraftForge;
 
 import java.util.List;
 
@@ -79,7 +77,7 @@ public class CommandCTCP implements SubCommand {
         }
 
         IChatComponent chatComponent = MessageFormat.formatChatComponent(format, target.getConnection(), target, botUser, message, MessageFormat.Target.IRC, MessageFormat.Mode.Message);
-        MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(sender, chatComponent));
+        EiraIRCAPI.getChatHandler().addChatMessage(sender, chatComponent);
         return true;
     }
 

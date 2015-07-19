@@ -16,8 +16,8 @@ import net.minecraftforge.common.MinecraftForge;
 import org.dynmap.DynmapCommonAPI;
 import org.dynmap.DynmapCommonAPIListener;
 
-
 @Optional.Interface(iface = "org.dynmap.DynmapCommonAPIListener", modid = "Dynmap")
+@SuppressWarnings("unused")
 public class DynmapWebChatAddon extends DynmapCommonAPIListener {
 
 	public static class WebChatSender implements ICommandSender {

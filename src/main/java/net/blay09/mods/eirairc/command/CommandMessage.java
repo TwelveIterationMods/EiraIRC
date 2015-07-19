@@ -5,7 +5,6 @@ package net.blay09.mods.eirairc.command;
 
 import net.blay09.mods.eirairc.api.EiraIRCAPI;
 import net.blay09.mods.eirairc.api.SubCommand;
-import net.blay09.mods.eirairc.api.event.ChatMessageEvent;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.api.irc.IRCUser;
 import net.blay09.mods.eirairc.config.ChannelConfig;
@@ -21,11 +20,8 @@ import net.blay09.mods.eirairc.util.MessageFormat;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
-import net.minecraftforge.common.MinecraftForge;
 
 import java.util.List;
 
@@ -102,7 +98,7 @@ public class CommandMessage implements SubCommand {
 				chatComponent.getChatStyle().setColor(emoteColor);
 			}
 		}
-		MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(sender, chatComponent));
+		EiraIRCAPI.getChatHandler().addChatMessage(sender, chatComponent);
 		return true;
 	}
 

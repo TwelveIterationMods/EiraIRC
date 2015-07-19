@@ -6,6 +6,7 @@ package net.blay09.mods.eirairc.handler;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.blay09.mods.eirairc.EiraIRC;
+import net.blay09.mods.eirairc.api.EiraIRCAPI;
 import net.blay09.mods.eirairc.api.IRCReplyCodes;
 import net.blay09.mods.eirairc.api.event.*;
 import net.blay09.mods.eirairc.bot.IRCBotImpl;
@@ -33,11 +34,11 @@ public class IRCEventHandler {
 				if (SharedGlobalConfig.botSettings.getBoolean(BotBooleanComponent.RelayNickChanges)) {
 					String format = ConfigHelper.getBotSettings(event.user).getMessageFormat().mcUserNickChange;
 					format = format.replace("{OLDNICK}", event.oldNick);
-					MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(MessageFormat.formatChatComponent(format, event.connection, null, event.user, "", MessageFormat.Target.Minecraft, MessageFormat.Mode.Emote)));
+					EiraIRCAPI.getChatHandler().addChatMessage(MessageFormat.formatChatComponent(format, event.connection, null, event.user, "", MessageFormat.Target.Minecraft, MessageFormat.Mode.Emote));
 				}
 				break;
 			case ALLOW:
-				MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(event.result));
+				EiraIRCAPI.getChatHandler().addChatMessage(event.result);
 				break;
 		}
 	}
@@ -52,11 +53,11 @@ public class IRCEventHandler {
 				BotSettings botSettings = ConfigHelper.getBotSettings(event.channel);
 				if (botSettings.getBoolean(BotBooleanComponent.RelayIRCJoinLeave)) {
 					String format = ConfigHelper.getBotSettings(event.channel).getMessageFormat().mcUserJoin;
-					MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(MessageFormat.formatChatComponent(format, event.connection, event.channel, event.user, "", MessageFormat.Target.Minecraft, MessageFormat.Mode.Emote)));
+					EiraIRCAPI.getChatHandler().addChatMessage(MessageFormat.formatChatComponent(format, event.connection, event.channel, event.user, "", MessageFormat.Target.Minecraft, MessageFormat.Mode.Emote));
 				}
 				break;
 			case ALLOW:
-				MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(event.result));
+				EiraIRCAPI.getChatHandler().addChatMessage(event.result);
 				break;
 		}
 	}
@@ -70,11 +71,11 @@ public class IRCEventHandler {
 				}
 				if (ConfigHelper.getBotSettings(event.channel).getBoolean(BotBooleanComponent.RelayIRCJoinLeave)) {
 					String format = ConfigHelper.getBotSettings(event.channel).getMessageFormat().mcUserLeave;
-					MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(MessageFormat.formatChatComponent(format, event.connection, event.channel, event.user, "", MessageFormat.Target.Minecraft, MessageFormat.Mode.Emote)));
+					EiraIRCAPI.getChatHandler().addChatMessage(MessageFormat.formatChatComponent(format, event.connection, event.channel, event.user, "", MessageFormat.Target.Minecraft, MessageFormat.Mode.Emote));
 				}
 				break;
 			case ALLOW:
-				MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(event.result));
+				EiraIRCAPI.getChatHandler().addChatMessage(event.result);
 				break;
 		}
 	}
@@ -88,11 +89,11 @@ public class IRCEventHandler {
 				}
 				if (SharedGlobalConfig.botSettings.getBoolean(BotBooleanComponent.RelayIRCJoinLeave)) {
 					String format = ConfigHelper.getBotSettings(event.user).getMessageFormat().mcUserQuit;
-					MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(MessageFormat.formatChatComponent(format, event.connection, null, event.user, event.message, MessageFormat.Target.Minecraft, MessageFormat.Mode.Emote)));
+					EiraIRCAPI.getChatHandler().addChatMessage(MessageFormat.formatChatComponent(format, event.connection, null, event.user, event.message, MessageFormat.Target.Minecraft, MessageFormat.Mode.Emote));
 				}
 				break;
 			case ALLOW:
-				MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(event.result));
+				EiraIRCAPI.getChatHandler().addChatMessage(event.result);
 				break;
 		}
 	}
@@ -147,10 +148,10 @@ public class IRCEventHandler {
 				} else if (event.isNotice && noticeColor != null) {
 					chatComponent.getChatStyle().setColor(noticeColor);
 				}
-				MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(chatComponent));
+				EiraIRCAPI.getChatHandler().addChatMessage(chatComponent);
 				break;
 			case ALLOW:
-				MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(event.result));
+				EiraIRCAPI.getChatHandler().addChatMessage(event.result);
 				break;
 		}
 	}
@@ -194,10 +195,10 @@ public class IRCEventHandler {
 				} else if (event.isNotice && noticeColor != null) {
 					chatComponent.getChatStyle().setColor(noticeColor);
 				}
-				MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(chatComponent));
+				EiraIRCAPI.getChatHandler().addChatMessage(chatComponent);
 				break;
 			case ALLOW:
-				MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(event.result));
+				EiraIRCAPI.getChatHandler().addChatMessage(event.result);
 				break;
 		}
 	}
@@ -210,13 +211,13 @@ public class IRCEventHandler {
 					return;
 				}
 				if (event.user == null) {
-					MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(Utils.getLocalizedChatMessage("irc.display.irc.topic", event.channel.getName(), event.channel.getTopic())));
+					EiraIRCAPI.getChatHandler().addChatMessage(Utils.getLocalizedChatMessage("irc.display.irc.topic", event.channel.getName(), event.channel.getTopic()));
 				} else {
-					MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(Utils.getLocalizedChatMessage("irc.display.irc.topicChange", event.user.getName(), event.channel.getName(), event.channel.getTopic())));
+					EiraIRCAPI.getChatHandler().addChatMessage(Utils.getLocalizedChatMessage("irc.display.irc.topicChange", event.user.getName(), event.channel.getName(), event.channel.getTopic()));
 				}
 				break;
 			case ALLOW:
-				MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(event.result));
+				EiraIRCAPI.getChatHandler().addChatMessage(event.result);
 				break;
 		}
 	}
@@ -225,10 +226,10 @@ public class IRCEventHandler {
 	public void onConnected(IRCConnectEvent event) {
 		switch (event.getResult()) {
 			case DEFAULT:
-				MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(Utils.getLocalizedChatMessage("irc.basic.connected", event.connection.getHost())));
+				EiraIRCAPI.getChatHandler().addChatMessage(Utils.getLocalizedChatMessage("irc.basic.connected", event.connection.getHost()));
 				break;
 			case ALLOW:
-				MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(event.result));
+				EiraIRCAPI.getChatHandler().addChatMessage(event.result);
 				break;
 		}
 	}
@@ -237,10 +238,10 @@ public class IRCEventHandler {
 	public void onConnectionFailed(IRCConnectionFailedEvent event) {
 		switch(event.getResult()) {
 			case DEFAULT:
-				MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(Utils.getLocalizedChatMessage("error.couldNotConnect", event.connection.getHost(), event.exception)));
+				EiraIRCAPI.getChatHandler().addChatMessage(Utils.getLocalizedChatMessage("error.couldNotConnect", event.connection.getHost(), event.exception));
 				break;
 			case ALLOW:
-				MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(event.result));
+				EiraIRCAPI.getChatHandler().addChatMessage(event.result);
 				break;
 		}
 	}
@@ -249,10 +250,10 @@ public class IRCEventHandler {
 	public void onReconnecting(IRCReconnectEvent event) {
 		switch(event.getResult()) {
 			case DEFAULT:
-				MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(Utils.getLocalizedChatMessage("irc.basic.reconnecting", event.connection.getHost(), event.waitingTime / 1000)));
+				EiraIRCAPI.getChatHandler().addChatMessage(Utils.getLocalizedChatMessage("irc.basic.reconnecting", event.connection.getHost(), event.waitingTime / 1000));
 				break;
 			case ALLOW:
-				MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(event.result));
+				EiraIRCAPI.getChatHandler().addChatMessage(event.result);
 				break;
 		}
 	}
@@ -261,10 +262,10 @@ public class IRCEventHandler {
 	public void onDisconnected(IRCDisconnectEvent event) {
 		switch(event.getResult()) {
 			case DEFAULT:
-				MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(Utils.getLocalizedChatMessage("irc.basic.disconnected", event.connection.getHost())));
+				EiraIRCAPI.getChatHandler().addChatMessage(Utils.getLocalizedChatMessage("irc.basic.disconnected", event.connection.getHost()));
 				break;
 			case ALLOW:
-				MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(event.result));
+				EiraIRCAPI.getChatHandler().addChatMessage(event.result);
 				break;
 		}
 	}
@@ -275,13 +276,13 @@ public class IRCEventHandler {
 			case DEFAULT:
 				switch (event.numeric) {
 					case IRCReplyCodes.ERR_NONICKCHANGE:
-						MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(Utils.getLocalizedChatMessage("error.noNickChange")));
+						EiraIRCAPI.getChatHandler().addChatMessage(Utils.getLocalizedChatMessage("error.noNickChange"));
 						break;
 					case IRCReplyCodes.ERR_SERVICESDOWN:
-						MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(Utils.getLocalizedChatMessage("error.servicesDown")));
+						EiraIRCAPI.getChatHandler().addChatMessage(Utils.getLocalizedChatMessage("error.servicesDown"));
 						break;
 					case IRCReplyCodes.ERR_TARGETTOOFAST:
-						MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(Utils.getLocalizedChatMessage("error.targetTooFast")));
+						EiraIRCAPI.getChatHandler().addChatMessage(Utils.getLocalizedChatMessage("error.targetTooFast"));
 						break;
 					case IRCReplyCodes.ERR_CANNOTSENDTOCHAN:
 					case IRCReplyCodes.ERR_TOOMANYCHANNELS:
@@ -308,7 +309,7 @@ public class IRCEventHandler {
 					case IRCReplyCodes.ERR_CHANNELISFULL:
 					case IRCReplyCodes.ERR_KEYSET:
 					case IRCReplyCodes.ERR_NEEDMOREPARAMS:
-						MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(Utils.getLocalizedChatMessage("error.genericTarget", event.args[1], event.args[2])));
+						EiraIRCAPI.getChatHandler().addChatMessage(Utils.getLocalizedChatMessage("error.genericTarget", event.args[1], event.args[2]));
 						break;
 					case IRCReplyCodes.ERR_NOORIGIN:
 					case IRCReplyCodes.ERR_NORECIPIENT:
@@ -328,7 +329,7 @@ public class IRCEventHandler {
 					case IRCReplyCodes.ERR_ALREADYREGISTERED:
 					case IRCReplyCodes.ERR_NOPERMFORHOST:
 					case IRCReplyCodes.ERR_CANTKILLSERVER:
-						MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(Utils.getLocalizedChatMessage("error.generic", event.args[1])));
+						EiraIRCAPI.getChatHandler().addChatMessage(Utils.getLocalizedChatMessage("error.generic", event.args[1]));
 						break;
 					default:
 						System.out.println("Unhandled error code: " + event.numeric + " (" + event.args.length + " arguments)");
@@ -336,7 +337,7 @@ public class IRCEventHandler {
 				}
 				break;
 			case ALLOW:
-				MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(event.result));
+				EiraIRCAPI.getChatHandler().addChatMessage(event.result);
 				break;
 		}
 	}
@@ -379,13 +380,13 @@ public class IRCEventHandler {
 				if (event.isNotice && noticeColor != null) {
 					chatComponent.getChatStyle().setColor(noticeColor);
 				}
-				MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(chatComponent));
+				EiraIRCAPI.getChatHandler().addChatMessage(chatComponent);
 				// TODO
 				// PS: VERSION replies should NOT be enforced. That is, they should be disableable, overridable, and multiple replies should also be allowed.
 
 				break;
 			case ALLOW:
-				MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(event.result));
+				EiraIRCAPI.getChatHandler().addChatMessage(event.result);
 				break;
 		}
 	}
@@ -439,13 +440,13 @@ public class IRCEventHandler {
 				if (event.isNotice && noticeColor != null) {
 					chatComponent.getChatStyle().setColor(noticeColor);
 				}
-				MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(chatComponent));
+				EiraIRCAPI.getChatHandler().addChatMessage(chatComponent);
 				// TODO
 				// PS: VERSION replies should NOT be enforced. That is, they should be disableable, overridable, and multiple replies should also be allowed.
 
 				break;
 			case ALLOW:
-				MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(event.result));
+				EiraIRCAPI.getChatHandler().addChatMessage(event.result);
 				break;
 		}
 	}

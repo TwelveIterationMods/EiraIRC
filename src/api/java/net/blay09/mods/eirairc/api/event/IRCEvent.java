@@ -23,7 +23,6 @@ public abstract class IRCEvent extends Event {
 	 */
 	public final IRCBot bot;
 
-
 	/**
 	 * the chat output
 	 */

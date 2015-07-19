@@ -11,7 +11,6 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.EiraIRCAPI;
-import net.blay09.mods.eirairc.api.event.ChatMessageEvent;
 import net.blay09.mods.eirairc.api.event.ClientChatEvent;
 import net.blay09.mods.eirairc.api.event.RelayChat;
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
@@ -38,7 +37,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -159,7 +157,7 @@ public class MCEventHandler {
 			return;
 		}
 		relayChatClient(event.message, false, false, chatTarget);
-		MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(chatComponent));
+		EiraIRCAPI.getChatHandler().addChatMessage(chatComponent);
 		event.setCanceled(true);
 	}
 	
@@ -193,21 +191,8 @@ public class MCEventHandler {
 		if(emoteColor != null) {
 			chatComponent.getChatStyle().setColor(emoteColor);
 		}
-		MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(chatComponent));
+		EiraIRCAPI.getChatHandler().addChatMessage(chatComponent);
 		event.setCanceled(true);
-	}
-
-	@SubscribeEvent(priority = EventPriority.LOWEST)
-	public void onChatMessage(ChatMessageEvent event) {
-		if(event.target != null) {
-			if(!EiraIRCAPI.hasClientSideInstalled(event.target)) {
-				event.target.addChatMessage(Utils.translateToDefault(event.component));
-			} else {
-				event.target.addChatMessage(event.component);
-			}
-		} else {
-			Utils.addMessageToChat(event.component);
-		}
 	}
 
 	@SubscribeEvent

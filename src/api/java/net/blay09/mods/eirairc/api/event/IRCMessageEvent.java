@@ -1,27 +1,46 @@
-// Copyright (c) 2015 Christopher "BlayTheNinth" Baker
-
 package net.blay09.mods.eirairc.api.event;
 
+import cpw.mods.fml.common.eventhandler.Cancelable;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
 import net.blay09.mods.eirairc.api.irc.IRCMessage;
+import net.blay09.mods.eirairc.api.irc.IRCUser;
 
 /**
- * Base class for events based on a raw IRC message.
+ * Base class for events based on a PRIVMSG message. It is "IRCChatOrCTCPEvent" because "IRCMessageEvent" was already taken.
+ *
+ * @author soniex2
  */
-public abstract class IRCMessageEvent extends IRCEvent {
+@Cancelable
+public abstract class IRCMessageEvent extends IRCRawMessageEvent {
 
-	/**
-	 * the raw message
-	 */
-	public final IRCMessage rawMessage;
+    /**
+     * the user that sent this IRC message
+     */
+    public final IRCUser sender;
 
-	/**
-	 * INTERNAL EVENT. YOU SHOULD NOT POST THIS YOURSELF.
-	 * @param connection the connection this event is based on
-	 */
-	public IRCMessageEvent(IRCConnection connection, IRCMessage rawMessage) {
-		super(connection);
-		this.rawMessage = rawMessage;
-	}
-	
+    /**
+     * the message that was sent
+     */
+    public final String message;
+
+    /**
+     * true, if this message was sent as a NOTICE
+     */
+    public final boolean isNotice;
+
+    /**
+     * INTERNAL EVENT. YOU SHOULD NOT POST THIS YOURSELF.
+     *
+     * @param connection the connection this event is based on
+     * @param sender     the user that sent this IRC message
+     * @param rawMessage the raw IRC message that was sent
+     * @param message    the message that was sent
+     * @param isNotice   true, if this message was sent as a NOTICE
+     */
+    public IRCMessageEvent(IRCConnection connection, IRCMessage rawMessage, IRCUser sender, String message, boolean isNotice) {
+        super(connection, rawMessage);
+        this.sender = sender;
+        this.message = message;
+        this.isNotice = isNotice;
+    }
 }

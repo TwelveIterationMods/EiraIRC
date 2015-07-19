@@ -9,6 +9,7 @@ import net.minecraft.command.ICommandSender;
 public class EiraIRCAPI {
 
 	private static InternalMethods internalMethods;
+	private static IChatHandler chatHandler;
 
 	/**
 	 * INTERNAL METHOD. DO NOT CALL.
@@ -19,6 +20,22 @@ public class EiraIRCAPI {
 			throw new RuntimeException("EiraIRC API is already initialized");
 		}
 		EiraIRCAPI.internalMethods = internalMethods;
+	}
+
+	/**
+	 * Registers an alternate chat handler all messages coming from EiraIRC will pass through.
+	 * @param chatHandler an implementation of the IChatHandler interface
+	 */
+	public static void setChatHandler(IChatHandler chatHandler) {
+		EiraIRCAPI.chatHandler = chatHandler;
+	}
+
+	/**
+	 * Returns the chat handler to be used by EiraIRC. Use this to add chat messages that belong to a specific IRC context.
+	 * @return an implementation of the IChatHandler interface
+	 */
+	public static IChatHandler getChatHandler() {
+		return chatHandler;
 	}
 
 	/**
@@ -73,4 +90,5 @@ public class EiraIRCAPI {
 	public static void relayChat(ICommandSender sender, String message, boolean isEmote, boolean isNotice, IRCContext target) {
 		internalMethods.relayChat(sender, message, isEmote, isNotice, target);
 	}
+
 }

@@ -11,7 +11,7 @@ import net.blay09.mods.eirairc.api.irc.IRCUser;
  * This event is published on the MinecraftForge.EVENTBUS bus whenever the topic of a channel changes.
  * It is also published once when joining a channel, if a topic is set.
  */
-public class IRCChannelTopicEvent extends IRCMessageEvent {
+public class IRCChannelTopicEvent extends IRCRawMessageEvent {
 
 	/**
 	 * the channel that had it's topic changed

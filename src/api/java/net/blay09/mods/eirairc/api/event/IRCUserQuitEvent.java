@@ -9,7 +9,7 @@ import net.blay09.mods.eirairc.api.irc.IRCUser;
 /**
  * This event is published on the MinecraftForge.EVENTBUS bus whenever someone discconnects from IRC and is in a channel EiraIRC is in.
  */
-public class IRCUserQuitEvent extends IRCMessageEvent {
+public class IRCUserQuitEvent extends IRCRawMessageEvent {
 
 	/**
 	 * the user that disconnected from IRC
