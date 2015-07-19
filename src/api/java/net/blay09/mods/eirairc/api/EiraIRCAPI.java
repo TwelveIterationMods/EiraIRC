@@ -85,7 +85,7 @@ public class EiraIRCAPI {
 	 * @param message the message that should be send to IRC
 	 * @param isEmote true if this message should be sent as an ACTION
 	 * @param isNotice true if this message should be sent as a NOTICE
-	 * @param target the target context of this message (either a channel or a user)
+	 * @param target the target context of this message (either a channel or a user), null means active channel
 	 */
 	public static void relayChat(ICommandSender sender, String message, boolean isEmote, boolean isNotice, IRCContext target) {
 		internalMethods.relayChat(sender, message, isEmote, isNotice, target);

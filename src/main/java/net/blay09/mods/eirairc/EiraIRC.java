@@ -12,6 +12,7 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.eventhandler.EventBus;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.blay09.mods.eirairc.addon.Compatibility;
 import net.blay09.mods.eirairc.addon.DirectUploadHoster;
 import net.blay09.mods.eirairc.addon.ImgurHoster;
 import net.blay09.mods.eirairc.api.EiraIRCAPI;
@@ -52,8 +53,6 @@ public class EiraIRC {
 	private ConnectionManager connectionManager;
 	private ChatSessionHandler chatSessionHandler;
 	private EiraNetHandler netHandler;
-	private IRCEventHandler ircEventHandler;
-	private InternalEventHandler internalEventHandler;
 	private MCEventHandler mcEventHandler;
 
 	@EventHandler
@@ -69,18 +68,14 @@ public class EiraIRC {
 		chatSessionHandler = new ChatSessionHandler();
 		netHandler = new EiraNetHandler();
 
-		ircEventHandler = new IRCEventHandler();
 		mcEventHandler = new MCEventHandler();
-		internalEventHandler = new InternalEventHandler();
 
 		proxy.init();
 
 		FMLCommonHandler.instance().bus().register(this);
 		FMLCommonHandler.instance().bus().register(mcEventHandler);
 		MinecraftForge.EVENT_BUS.register(mcEventHandler);
-		MinecraftForge.EVENT_BUS.register(ircEventHandler);
 		FMLCommonHandler.instance().bus().register(netHandler);
-		internalBus.register(internalEventHandler);
 
 		I19n.init();
 		PacketHandler.init();
@@ -109,9 +104,7 @@ public class EiraIRC {
 	
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
-		event.buildSoftDependProxy("Dynmap", "net.blay09.mods.eirairc.addon.DynmapWebChatAddon");
-		event.buildSoftDependProxy("eiramoticons", "net.blay09.mods.eirairc.addon.EiraMoticonsAddon");
-
+		Compatibility.postInit(event);
 		proxy.postInit();
 	}
 	

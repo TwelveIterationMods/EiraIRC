@@ -1,6 +1,5 @@
 // Copyright (c) 2015 Christopher "BlayTheNinth" Baker
 
-
 package net.blay09.mods.eirairc.client.screenshot;
 
 import com.google.gson.Gson;
@@ -8,7 +7,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
 import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.api.event.RelayChat;
+import net.blay09.mods.eirairc.api.EiraIRCAPI;
 import net.blay09.mods.eirairc.api.event.ScreenshotUploadEvent;
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
@@ -237,7 +236,7 @@ public class ScreenshotManager {
 			if (emoteColor != null) {
 				chatComponent.getChatStyle().setColor(emoteColor);
 			}
-			MinecraftForge.EVENT_BUS.post(new RelayChat(sender, chatComponent.getUnformattedText(), true));
+			EiraIRCAPI.relayChat(sender, chatComponent.getUnformattedText(), true, false, null);
 			Utils.addMessageToChat(chatComponent);
 		}
 	}

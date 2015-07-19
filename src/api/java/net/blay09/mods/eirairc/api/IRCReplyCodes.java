@@ -3,6 +3,8 @@
 
 package net.blay09.mods.eirairc.api;
 
+import net.blay09.mods.eirairc.util.Utils;
+
 public class IRCReplyCodes {
 
 	public static final int ERR_NOSUCHNICK = 401;
@@ -132,4 +134,57 @@ public class IRCReplyCodes {
 	public static final int RPL_MYPORTIS = 384;
 	public static final int RPL_ISUPPORT = 5;
 	public static final int RPL_WELCOME = 1;
+
+	public static boolean isErrorCode(int numeric) {
+		switch(numeric) {
+			case IRCReplyCodes.ERR_NONICKCHANGE:
+			case IRCReplyCodes.ERR_SERVICESDOWN:
+			case IRCReplyCodes.ERR_TARGETTOOFAST:
+			case IRCReplyCodes.ERR_CANNOTSENDTOCHAN:
+			case IRCReplyCodes.ERR_TOOMANYCHANNELS:
+			case IRCReplyCodes.ERR_TOOMANYTARGETS:
+			case IRCReplyCodes.ERR_UNKNOWNERROR:
+			case IRCReplyCodes.ERR_NOSUCHSERVER:
+			case IRCReplyCodes.ERR_NOSUCHSERVICE:
+			case IRCReplyCodes.ERR_NOTOPLEVEL:
+			case IRCReplyCodes.ERR_WILDTOPLEVEL:
+			case IRCReplyCodes.ERR_BADMASK:
+			case IRCReplyCodes.ERR_UNKNOWNCOMMAND:
+			case IRCReplyCodes.ERR_NOADMININFO:
+			case IRCReplyCodes.ERR_NOTONCHANNEL:
+			case IRCReplyCodes.ERR_WASNOSUCHNICK:
+			case IRCReplyCodes.ERR_NOSUCHNICK:
+			case IRCReplyCodes.ERR_NOSUCHCHANNEL:
+			case IRCReplyCodes.ERR_NOLOGIN:
+			case IRCReplyCodes.ERR_BANNEDFROMCHAN:
+			case IRCReplyCodes.ERR_CHANOPRIVSNEEDED:
+			case IRCReplyCodes.ERR_BADCHANMASK:
+			case IRCReplyCodes.ERR_BADCHANNELKEY:
+			case IRCReplyCodes.ERR_INVITEONLYCHAN:
+			case IRCReplyCodes.ERR_UNKNOWNMODE:
+			case IRCReplyCodes.ERR_CHANNELISFULL:
+			case IRCReplyCodes.ERR_KEYSET:
+			case IRCReplyCodes.ERR_NEEDMOREPARAMS:
+			case IRCReplyCodes.ERR_NOORIGIN:
+			case IRCReplyCodes.ERR_NORECIPIENT:
+			case IRCReplyCodes.ERR_NOTEXTTOSEND:
+			case IRCReplyCodes.ERR_NOMOTD:
+			case IRCReplyCodes.ERR_FILEERROR:
+			case IRCReplyCodes.ERR_NONICKNAMEGIVEN:
+			case IRCReplyCodes.ERR_SUMMONDISABLED:
+			case IRCReplyCodes.ERR_USERSDISABLED:
+			case IRCReplyCodes.ERR_NOTREGISTERED:
+			case IRCReplyCodes.ERR_PASSWDMISMATCH:
+			case IRCReplyCodes.ERR_YOUREBANNEDCREEP:
+			case IRCReplyCodes.ERR_USERSDONTMATCH:
+			case IRCReplyCodes.ERR_UMODEUNKNOWNFLAG:
+			case IRCReplyCodes.ERR_NOOPERHOST:
+			case IRCReplyCodes.ERR_NOPRIVILEGES:
+			case IRCReplyCodes.ERR_ALREADYREGISTERED:
+			case IRCReplyCodes.ERR_NOPERMFORHOST:
+			case IRCReplyCodes.ERR_CANTKILLSERVER:
+				return true;
+		}
+		return false;
+	}
 }

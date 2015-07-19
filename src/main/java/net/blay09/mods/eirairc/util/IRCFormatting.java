@@ -238,13 +238,6 @@ public enum IRCFormatting {
 		}
 	}
 
-	@Deprecated
-	public static boolean isValidColorLegacy(String colorName) {
-		EnumChatFormatting colorFormatting = getColorFormattingLegacy(colorName);
-		return colorFormatting != null && colorFormatting.isColor();
-	}
-
-	@Deprecated
 	public static EnumChatFormatting getColorFormattingLegacy(String colorName) {
 		if(colorName == null || colorName.isEmpty()) {
 			return null;

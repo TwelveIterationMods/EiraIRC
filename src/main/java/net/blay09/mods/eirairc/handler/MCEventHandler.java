@@ -1,9 +1,7 @@
 // Copyright (c) 2015 Christopher "BlayTheNinth" Baker
 
-
 package net.blay09.mods.eirairc.handler;
 
-import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
@@ -41,7 +39,6 @@ import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.AchievementEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
 
 import java.util.regex.Pattern;
 

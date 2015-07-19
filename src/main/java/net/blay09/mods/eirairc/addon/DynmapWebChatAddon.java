@@ -2,10 +2,10 @@ package net.blay09.mods.eirairc.addon;
 
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.blay09.mods.eirairc.api.EiraIRCAPI;
 import net.blay09.mods.eirairc.api.event.IRCChannelChatEvent;
 import net.blay09.mods.eirairc.api.event.IRCUserJoinEvent;
 import net.blay09.mods.eirairc.api.event.IRCUserLeaveEvent;
-import net.blay09.mods.eirairc.api.event.RelayChat;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
@@ -105,7 +105,7 @@ public class DynmapWebChatAddon extends DynmapCommonAPIListener {
 	@Override
 	@Optional.Method(modid = "Dynmap")
 	public boolean webChatEvent(String source, String name, String message) {
-		MinecraftForge.EVENT_BUS.post(new RelayChat(new WebChatSender(source, name), message));
+		EiraIRCAPI.relayChat(new WebChatSender(source, name), message, false, false, null);
 		return true;
 	}
 }

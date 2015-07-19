@@ -3,6 +3,7 @@
 
 package net.blay09.mods.eirairc.net.message;
 
+import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import io.netty.buffer.ByteBuf;
 import net.blay09.mods.eirairc.util.NotificationType;
@@ -24,13 +25,13 @@ public class MessageNotification implements IMessage {
 	@Override
 	public void fromBytes(ByteBuf buf) {
 		typeId = buf.readByte();
-		text = Utils.readString(buf);
+		text = ByteBufUtils.readUTF8String(buf);
 	}
 
 	@Override
 	public void toBytes(ByteBuf buf) {
 		buf.writeByte(typeId);
-		Utils.writeString(buf, text);
+		ByteBufUtils.writeUTF8String(buf, text);
 	}
 
 	public byte getNotificationType() {
