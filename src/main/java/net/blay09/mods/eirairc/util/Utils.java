@@ -45,8 +45,6 @@ import java.util.List;
 
 public class Utils {
 
-	private static final String DEFAULT_USERNAME = "EiraBot";
-
 	public static void sendLocalizedMessage(ICommandSender sender, String key, Object... args) {
 		if(EiraIRCAPI.hasClientSideInstalled(sender)) {
 			sender.addChatMessage(new ChatComponentTranslation("eirairc:" + key, args));
@@ -211,7 +209,7 @@ public class Utils {
 	public static String getUsername() {
 		String username = EiraIRC.proxy.getUsername();
 		if(username == null) {
-			return DEFAULT_USERNAME + Math.round(Math.random() * 10000);
+			return "EiraBot" + Math.round(Math.random() * 10000);
 		}
 		return username;
 	}

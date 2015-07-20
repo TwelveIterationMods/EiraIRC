@@ -5,6 +5,7 @@ package net.blay09.mods.eirairc.client.gui;
 import net.blay09.mods.eirairc.client.gui.base.GuiMenuButton;
 import net.blay09.mods.eirairc.client.gui.screenshot.GuiScreenshots;
 import net.blay09.mods.eirairc.client.gui.servers.GuiServerConfigContainer;
+import net.blay09.mods.eirairc.util.I19n;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -31,23 +32,23 @@ public class GuiEiraIRCMenu extends EiraGuiScreen {
 		final int buttonCenterX = width / 2;
 		final int buttonCenterY = height / 2;
 
-		btnServers = new GuiMenuButton(0, "Servers", buttonCenterX - 132, buttonCenterY - 95, BUTTON_SIZE, BUTTON_SIZE, EiraGui.atlas.findRegion("menu_servers"));
+		btnServers = new GuiMenuButton(0, I19n.format("eirairc:gui.menu.servers"), buttonCenterX - 132, buttonCenterY - 95, BUTTON_SIZE, BUTTON_SIZE, EiraGui.atlas.findRegion("menu_servers"));
 		buttonList.add(btnServers);
 
-		btnTwitch = new GuiMenuButton(1, "Twitch", buttonCenterX - 32, buttonCenterY - 95, BUTTON_SIZE, BUTTON_SIZE, EiraGui.atlas.findRegion("menu_twitch"));
+		btnTwitch = new GuiMenuButton(1, I19n.format("eirairc:gui.menu.twitch"), buttonCenterX - 32, buttonCenterY - 95, BUTTON_SIZE, BUTTON_SIZE, EiraGui.atlas.findRegion("menu_twitch"));
 		buttonList.add(btnTwitch);
 
-		btnScreenshots = new GuiMenuButton(2, "Screenshots", buttonCenterX + 64, buttonCenterY - 95, BUTTON_SIZE, BUTTON_SIZE, EiraGui.atlas.findRegion("menu_screenshots"));
+		btnScreenshots = new GuiMenuButton(2, I19n.format("eirairc:gui.menu.screenshots"), buttonCenterX + 64, buttonCenterY - 95, BUTTON_SIZE, BUTTON_SIZE, EiraGui.atlas.findRegion("menu_screenshots"));
 		buttonList.add(btnScreenshots);
 
-		btnFriends = new GuiMenuButton(3, "EiraIRC Channels", buttonCenterX - 132, buttonCenterY, BUTTON_SIZE, BUTTON_SIZE, EiraGui.atlas.findRegion("menu_friends"));
+		btnFriends = new GuiMenuButton(3, I19n.format("eirairc:gui.menu.channels"), buttonCenterX - 132, buttonCenterY, BUTTON_SIZE, BUTTON_SIZE, EiraGui.atlas.findRegion("menu_friends"));
 		buttonList.add(btnFriends);
 
-		btnHelp = new GuiMenuButton(4, "Help", buttonCenterX - 32, buttonCenterY, BUTTON_SIZE, BUTTON_SIZE, EiraGui.atlas.findRegion("menu_cat"));
+		btnHelp = new GuiMenuButton(4, I19n.format("eirairc:gui.menu.help"), buttonCenterX - 32, buttonCenterY, BUTTON_SIZE, BUTTON_SIZE, EiraGui.atlas.findRegion("menu_cat"));
 		btnHelp.setPlayButtonSound(false);
 		buttonList.add(btnHelp);
 
-		btnSettings = new GuiMenuButton(5, "Settings", buttonCenterX + 64, buttonCenterY, BUTTON_SIZE, BUTTON_SIZE, EiraGui.atlas.findRegion("menu_settings"));
+		btnSettings = new GuiMenuButton(5, I19n.format("eirairc:gui.menu.settings"), buttonCenterX + 64, buttonCenterY, BUTTON_SIZE, BUTTON_SIZE, EiraGui.atlas.findRegion("menu_settings"));
 		buttonList.add(btnSettings);
 	}
 

@@ -2,6 +2,7 @@
 
 package net.blay09.mods.eirairc.client.graphics;
 
+import com.google.common.collect.Maps;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.HashMap;
@@ -9,7 +10,7 @@ import java.util.Map;
 
 public class TextureAtlasPage {
 
-	private final Map<String, TextureRegion> regionMap = new HashMap<String, TextureRegion>();
+	private final Map<String, TextureRegion> regionMap = Maps.newHashMap();
 	public final String fileName;
 	public final ResourceLocation texture;
 

@@ -31,10 +31,6 @@ public class ConfigHelper {
 		return Globals.DEFAULT_NICK;
 	}
 
-	public static String getFormattedNick(ServerConfig serverConfig) {
-		return formatNick(getNick(serverConfig));
-	}
-
 	public static String getQuitMessage(IRCConnection connection) {
 		return ConfigurationHandler.getOrCreateServerConfig(connection.getHost()).getBotSettings().getString(BotStringComponent.QuitMessage);
 	}

@@ -9,6 +9,7 @@ import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.SuggestedChannel;
 import net.blay09.mods.eirairc.util.Globals;
+import net.blay09.mods.eirairc.util.I19n;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 
@@ -61,7 +62,7 @@ public class GuiListSuggestedChannelEntry extends GuiListEntry {
 		}
 		fontRenderer.drawString(s, currentX, currentY, Globals.TEXT_COLOR);
 		if(channel.getScore() > 0 && channel.isRecommended()) {
-			s = "\u00a72recommended";
+			s = "\u00a72" + I19n.format("eirairc:gui.welcome.recommended");
 			fontRenderer.drawStringWithShadow(s, x + parentList.getWidth() - fontRenderer.getStringWidth(s) - TEXT_MARGIN, currentY, Globals.TEXT_COLOR);
 		}
 		currentY += 15;

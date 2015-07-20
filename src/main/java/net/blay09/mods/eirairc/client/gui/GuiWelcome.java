@@ -10,6 +10,7 @@ import net.blay09.mods.eirairc.config.ClientGlobalConfig;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.SuggestedChannel;
 import net.blay09.mods.eirairc.util.Globals;
+import net.blay09.mods.eirairc.util.I19n;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.gui.GuiButton;
 
@@ -30,24 +31,24 @@ public class GuiWelcome extends EiraGuiScreen {
 	public void initGui() {
 		super.initGui();
 
-		GuiLabel lblHeader = new GuiLabel("\u00a7lWelcome to EiraIRC!", menuX, menuY + 5, Globals.TEXT_COLOR);
+		GuiLabel lblHeader = new GuiLabel("\u00a7l" + I19n.format("eirairc:gui.welcome"), menuX, menuY + 5, Globals.TEXT_COLOR);
 		lblHeader.setHAlignment(GuiLabel.HAlignment.Center, menuWidth);
 		labelList.add(lblHeader);
 
-		GuiLabel lblInfo = new GuiLabel("If you just want to find some people to talk to,\n this a list of IRC channels you should check out:", menuX, menuY + 20, Globals.TEXT_COLOR);
+		GuiLabel lblInfo = new GuiLabel(I19n.format("eirairc:gui.welcome.suggestedChannels"), menuX, menuY + 20, Globals.TEXT_COLOR);
 		lblInfo.setHAlignment(GuiLabel.HAlignment.Center, menuWidth);
 		labelList.add(lblInfo);
 
-		chkRecommendedOnly = new GuiCheckBox(0, menuX + 10, menuY + 50, "Show recommended channels only", true);
+		chkRecommendedOnly = new GuiCheckBox(0, menuX + 10, menuY + 50, I19n.format("eirairc:gui.welcome.recommendedOnly"), true);
 		buttonList.add(chkRecommendedOnly);
 
 		lstChannels = new GuiList<>(this, menuX + 10, menuY + 65, menuWidth - 20, 100, 30);
 		listList.add(lstChannels);
 
-		chkDontShowAgain = new GuiCheckBox(1, menuX + 10, menuY + menuHeight - 30, "Don't show this message again", false);
+		chkDontShowAgain = new GuiCheckBox(1, menuX + 10, menuY + menuHeight - 30, I19n.format("eirairc:gui.welcome.dontShowAgain"), false);
 		buttonList.add(chkDontShowAgain);
 
-		btnSubmitChannel = new GuiLinkButton(2, menuX + menuWidth - 85, menuY + menuHeight - 20, mc.fontRendererObj, "\u00a7nSubmit Channel");
+		btnSubmitChannel = new GuiLinkButton(2, menuX + menuWidth - 85, menuY + menuHeight - 20, mc.fontRendererObj, "\u00a7n" + I19n.format("eirairc:gui.welcome.submit"));
 		buttonList.add(btnSubmitChannel);
 
 		updateList(chkRecommendedOnly.isChecked());
@@ -58,7 +59,7 @@ public class GuiWelcome extends EiraGuiScreen {
 		if(button == chkRecommendedOnly) {
 			updateList(chkRecommendedOnly.isChecked());
 		} else if(button == btnSubmitChannel) {
-			Utils.openWebpage("http://goo.gl/forms/2LsJiWIQmS");
+			Utils.openWebpage("https://twitter.com/BlayTheNinth");
 		}
 	}
 

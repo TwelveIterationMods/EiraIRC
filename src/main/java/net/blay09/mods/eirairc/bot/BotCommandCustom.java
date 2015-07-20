@@ -32,10 +32,6 @@ public class BotCommandCustom implements IBotCommand {
 		return true;
 	}
 
-	public boolean runAsOp() {
-		return runAsOp;
-	}
-	
 	@Override
 	public void processCommand(IRCBot bot, IRCChannel channel, IRCUser user, String[] args, IBotCommand commandSettings) {
 		if(overrideCommand != null) {

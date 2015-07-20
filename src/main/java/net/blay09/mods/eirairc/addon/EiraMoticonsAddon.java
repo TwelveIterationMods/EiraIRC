@@ -2,6 +2,7 @@
 
 package net.blay09.mods.eirairc.addon;
 
+import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import cpw.mods.fml.common.Optional;
@@ -33,7 +34,7 @@ public class EiraMoticonsAddon implements IEmoticonLoader {
 	public static final String TWITCH_EMOTES_API = "https://twitchemotes.com/api_cache/v2/subscriber.json";
 
 	private static EiraMoticonsAddon instance;
-	public static final Map<IRCChannel, IEmoticon> subscriberBadgeMap = new HashMap<IRCChannel, IEmoticon>();
+	public static final Map<IRCChannel, IEmoticon> subscriberBadgeMap = Maps.newHashMap();
 	public static IEmoticon casterBadge;
 	public static IEmoticon modBadge;
 	public static IEmoticon turboBadge;
@@ -44,6 +45,7 @@ public class EiraMoticonsAddon implements IEmoticonLoader {
 		instance = this;
 	}
 
+	@Optional.Method(modid = "eiramoticons")
 	public static String getSubscriberBadgeString(IRCChannel channel) {
 		IEmoticon subBadge = getSubscriberBadge(channel);
 		if(subBadge != null) {

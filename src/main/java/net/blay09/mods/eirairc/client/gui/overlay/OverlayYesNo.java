@@ -5,6 +5,7 @@ package net.blay09.mods.eirairc.client.gui.overlay;
 import net.blay09.mods.eirairc.client.gui.EiraGuiScreen;
 import net.blay09.mods.eirairc.client.gui.base.GuiLabel;
 import net.blay09.mods.eirairc.util.Globals;
+import net.blay09.mods.eirairc.util.I19n;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 
@@ -33,9 +34,9 @@ public class OverlayYesNo extends GuiOverlay {
 		lblText.setHAlignment(GuiLabel.HAlignment.Center, width);
 		labelList.add(lblText);
 
-		btnConfirm = new GuiButton(0, width / 2 - 110, height / 2 + 10, 100, 20, "Yes");
+		btnConfirm = new GuiButton(0, width / 2 - 110, height / 2 + 10, 100, 20, I19n.format("eirairc:gui.yes"));
 		buttonList.add(btnConfirm);
-		btnCancel = new GuiButton(1, width / 2 + 10, height / 2 + 10, 100, 20, "No");
+		btnCancel = new GuiButton(1, width / 2 + 10, height / 2 + 10, 100, 20, I19n.format("eirairc:gui.no"));
 		buttonList.add(btnCancel);
 
 		setupMenuSize(width, 80);

@@ -132,9 +132,9 @@ public class ConnectionManager {
 		}
 		IRCConnectionImpl connection;
 		if(config.isSSL()) {
-			connection = new IRCConnectionSSLImpl(config, ConfigHelper.getFormattedNick(config));
+			connection = new IRCConnectionSSLImpl(config, ConfigHelper.formatNick(config.getNick()));
 		} else {
-			connection = new IRCConnectionImpl(config, ConfigHelper.getFormattedNick(config));
+			connection = new IRCConnectionImpl(config, ConfigHelper.formatNick(config.getNick()));
 		}
 		connection.setBot(new IRCBotImpl(connection));
 		if(connection.start()) {

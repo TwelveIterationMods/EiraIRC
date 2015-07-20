@@ -91,6 +91,99 @@ eirairc:gui.chatTarget=Chatting to: %s
 eirairc:gui.shiftToSwitch=Shift+%s to switch channel.
 eirairc:gui.yes=Yes
 eirairc:gui.no=No
+eirairc:gui.none=None
+eirairc:gui.save=Save
+eirairc:gui.back=Back
+eirairc:gui.delete=Delete
+
+eirairc:gui.config=EiraIRC Config
+eirairc:gui.config.theme=Theme (%s)
+eirairc:gui.config.bot=Bot Settings (%s)
+eirairc:gui.config.other=Other Settings (%s)
+
+eirairc:gui.menu.servers=Servers
+eirairc:gui.menu.twitch=Twitch
+eirairc:gui.menu.screenshots=Screenshots
+eirairc:gui.menu.channels=EiraIRC Channels
+eirairc:gui.menu.help=Help
+eirairc:gui.menu.settings=Settings
+
+eirairc:gui.image.loading=Loading...
+eirairc:gui.image.fullscreen=View Fullscreen
+eirairc:gui.image.openBrowser=Open in Browser
+eirairc:gui.image.toClipboard=URL to Clipboard
+eirairc:gui.image.clickToGoBack=Click anywhere to go back.
+
+eirairc:gui.screenshots.openFolder=Open Folder
+eirairc:gui.screenshots.favorite=Favorite
+eirairc:gui.screenshots.upload=Upload
+eirairc:gui.screenshots.reupload=Re-Upload
+eirairc:gui.screenshots.toClipboard=To Clipboard
+eirairc:gui.screenshots.fullscreen=View Fullscreen
+eirairc:gui.screenshots.deleteConfirm=Do you really want to delete this screenshot?
+eirairc:gui.screenshots.deleteNoUndo=This can't be undone, so be careful!
+eirairc:gui.screenshots.uploading=Uploading...
+eirairc:gui.screenshots.all=All
+eirairc:gui.screenshots.favorited=Favorited
+eirairc:gui.screenshots.today=Today
+eirairc:gui.screenshots.thisWeek=This Week
+eirairc:gui.screenshots.thisMonth=This Month
+eirairc:gui.screenshots.thisYear=This Year
+eirairc:gui.screenshots.older=Older
+
+eirairc:gui.override=Override Settings
+eirairc:gui.override.theme=Configure Theme...
+eirairc:gui.override.bot=Configure Bot...
+eirairc:gui.override.other=Other Settings...
+
+eirairc:gui.server.new=<new>
+eirairc:gui.server.address=Address
+eirairc:gui.server.nick=Nick
+eirairc:gui.server.nickServName=Nickserv Username
+eirairc:gui.server.nickServPassword=Nickserv Password
+eirairc:gui.server.serverPassword=Server Password
+eirairc:gui.server.useSSL=Use SSL
+eirairc:gui.server.autoConnect=Auto Connect
+eirairc:gui.server.charset=Charset
+eirairc:gui.server.connect=Connect
+eirairc:gui.server.connecting=Connecting...
+eirairc:gui.server.disconnect=Disconnect
+eirairc:gui.server.disconnecting=Disconnect...
+eirairc:gui.server.channels=Channels
+eirairc:gui.server.advanced=Advanced
+eirairc:gui.server.deleteConfirm=Do you really want to delete this server configuration?
+eirairc:gui.server.deleteNoUndo=This can't be undone, so be careful!
+
+eirairc:gui.channel.name=Channel Name
+eirairc:gui.channel.password=Channel Password
+eirairc:gui.channel.autoJoin=Auto Join
+eirairc:gui.channel.deleteConfirm=Do you really want to delete this channel configuration?
+eirairc:gui.channel.deleteNoUndo=This can't be undone, so be careful!
+eirairc:gui.channel.multiChannel=You have joined more than one channel.
+eirairc:gui.channel.suggestClassic=Do you want to switch to a message format that includes the channel name?
+
+eirairc:gui.welcome=Welcome to EiraIRC!
+eirairc:gui.welcome.suggestedChannels=If you just want to find some people to talk to,\nthis a list of IRC channels you should check out:
+eirairc:gui.welcome.recommendedOnly=Show recommended channels only
+eirairc:gui.welcome.dontShowAgain=Don't show this message again
+eirairc:gui.welcome.submit=Suggest Channel
+eirairc:gui.welcome.recommended=recommended
+
+eirairc:gui.twitch.username=Twitch Username
+eirairc:gui.twitch.oauth=OAuth Token
+eirairc:gui.twitch.anonymous=Login anonymously (read-only)
+eirairc:gui.twitch.connect=Connect
+
+eirairc:gui.error=Oops! Something went wrong.
+eirairc:gui.error.toClipboard=To Clipboard
+
+eirairc:gui.redirect=The server would like to redirect EiraIRC:
+eirairc:gui.redirect.server=Server:
+eirairc:gui.redirect.channels=Channel(s):
+eirairc:gui.redirect.disable=The server would like to disable EiraIRC.
+eirairc:gui.redirect.trust=Always allow this server to redirect me
+eirairc:gui.redirect.allow=Allow
+eirairc:gui.redirect.reject=Reject
 
 ############################################
 #                   Bot                    #

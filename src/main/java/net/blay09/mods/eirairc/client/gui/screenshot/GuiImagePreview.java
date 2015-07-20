@@ -2,12 +2,14 @@
 
 package net.blay09.mods.eirairc.client.gui.screenshot;
 
+import com.google.common.collect.Lists;
 import net.blay09.mods.eirairc.client.gui.EiraGui;
 import net.blay09.mods.eirairc.client.gui.EiraGuiScreen;
 import net.blay09.mods.eirairc.client.gui.base.GuiImageButton;
 import net.blay09.mods.eirairc.client.gui.base.image.GuiImage;
 import net.blay09.mods.eirairc.client.gui.base.image.GuiURLImage;
 import net.blay09.mods.eirairc.util.Globals;
+import net.blay09.mods.eirairc.util.I19n;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -55,15 +57,15 @@ public class GuiImagePreview extends EiraGuiScreen implements GuiYesNoCallback {
 		final int topY = height / 2 - 100;
 
 		btnZoom = new GuiImageButton(0, rightX - 37, topY + 12, EiraGui.atlas.findRegion("button_zoom"));
-		btnZoom.setTooltipText("View Fullscreen");
+		btnZoom.setTooltipText(I19n.format("eirairc:gui.image.fullscreen"));
 		buttonList.add(btnZoom);
 
 		btnGoToURL = new GuiImageButton(1, rightX - 37, topY + 50, EiraGui.atlas.findRegion("button_upload"));
-		btnGoToURL.setTooltipText("Open in Browser");
+		btnGoToURL.setTooltipText(I19n.format("eirairc:gui.image.openBrowser"));
 		buttonList.add(btnGoToURL);
 
 		btnClipboard = new GuiImageButton(2, rightX - 37, topY + 88, EiraGui.atlas.findRegion("button_clipboard"));
-		btnClipboard.setTooltipText("URL to Clipboard");
+		btnClipboard.setTooltipText(I19n.format("eirairc:gui.image.toClipboard"));
 		buttonList.add(btnClipboard);
 
 		imgX = leftX + 2;
@@ -97,7 +99,7 @@ public class GuiImagePreview extends EiraGuiScreen implements GuiYesNoCallback {
 		}
 	}
 
-	private static final List<String> tooltipList = new ArrayList<String>();
+	private static final List<String> tooltipList = Lists.newArrayList();
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float par3) {
 		drawLightBackground(menuX, menuY, menuWidth, menuHeight);
@@ -129,7 +131,7 @@ public class GuiImagePreview extends EiraGuiScreen implements GuiYesNoCallback {
 
 		if(imgPreview != null) {
 			if(!imgPreview.isLoaded()) {
-				String s = "Loading...";
+				String s = I19n.format("eirairc:gui.image.loading");
 				mc.fontRendererObj.drawStringWithShadow(s, width / 2 - fontRendererObj.getStringWidth(s) / 2, height / 2 - fontRendererObj.FONT_HEIGHT / 2, Globals.TEXT_COLOR);
 			}
 

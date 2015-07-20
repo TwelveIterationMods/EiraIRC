@@ -56,8 +56,6 @@ public class DirectUploadHoster implements UploadHoster {
 			in.close();
 			con.disconnect();
 			return new UploadedFile(stringBuilder.toString(), null, null);
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

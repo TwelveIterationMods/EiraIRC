@@ -10,6 +10,7 @@ import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.TrustedServer;
 import net.blay09.mods.eirairc.util.Globals;
+import net.blay09.mods.eirairc.util.I19n;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.gui.GuiButton;
 
@@ -33,18 +34,18 @@ public class GuiEiraIRCRedirect extends EiraGuiScreen {
 		final int centerX = width / 2;
 		final int centerY = height / 2;
 
-		GuiLabel lblTitle = new GuiLabel((serverConfig != null ? "The server would like to redirect EiraIRC:" : "The server would like to disable EiraIRC."), 0, centerY - 70, Globals.TEXT_COLOR);
+		GuiLabel lblTitle = new GuiLabel((serverConfig != null ? I19n.format("eirairc:gui.redirect") : I19n.format("eirairc:gui.redirect.disable")), 0, centerY - 70, Globals.TEXT_COLOR);
 		lblTitle.setHAlignment(GuiLabel.HAlignment.Center, width);
 		labelList.add(lblTitle);
 
 		if(serverConfig != null) {
-			GuiLabel lblServer = new GuiLabel("Server: " + serverConfig.getAddress(), 0, centerY - 40, Globals.TEXT_COLOR);
+			GuiLabel lblServer = new GuiLabel(I19n.format("eirairc:gui.redirect.server") + " " + serverConfig.getAddress(), 0, centerY - 40, Globals.TEXT_COLOR);
 			lblServer.setHAlignment(GuiLabel.HAlignment.Center, width);
 			labelList.add(lblServer);
 
 			StringBuilder sb = new StringBuilder();
 			if (serverConfig.getChannelConfigs().size() == 0) {
-				sb.append("None");
+				sb.append(I19n.format("eirairc:gui.none"));
 			} else {
 				for (ChannelConfig channelConfig : serverConfig.getChannelConfigs()) {
 					if (sb.length() > 0) {
@@ -53,18 +54,18 @@ public class GuiEiraIRCRedirect extends EiraGuiScreen {
 					sb.append(channelConfig.getName());
 				}
 			}
-			GuiLabel lblChannels = new GuiLabel("Channel(s):\n" + sb.toString(), 0, centerY - 20, Globals.TEXT_COLOR);
+			GuiLabel lblChannels = new GuiLabel(I19n.format("eirairc:gui.redirect.channels") + "\n" + sb.toString(), 0, centerY - 20, Globals.TEXT_COLOR);
 			lblChannels.setHAlignment(GuiLabel.HAlignment.Center, width);
 			labelList.add(lblChannels);
 		}
 
-		chkAlwaysAllow = new GuiCheckBox(0, centerX - 105, centerY + 30, "Always allow this server to redirect me", false);
+		chkAlwaysAllow = new GuiCheckBox(0, centerX - 105, centerY + 30, I19n.format("eirairc:gui.redirect.trust"), false);
 		buttonList.add(chkAlwaysAllow);
 
-		btnAllow = new GuiButton(1, centerX + 5, centerY + 50, 100, 20, "Allow");
+		btnAllow = new GuiButton(1, centerX + 5, centerY + 50, 100, 20, I19n.format("eirairc:gui.redirect.allow"));
 		buttonList.add(btnAllow);
 
-		btnReject = new GuiButton(2, centerX - 105, centerY + 50, 100, 20, "Reject");
+		btnReject = new GuiButton(2, centerX - 105, centerY + 50, 100, 20, I19n.format("eirairc:gui.redirect.reject"));
 		buttonList.add(btnReject);
 
 	}
