@@ -2,13 +2,13 @@
 
 package net.blay09.mods.eirairc.client.gui;
 
+import net.blay09.mods.eirairc.ConnectionManager;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
 import net.blay09.mods.eirairc.client.gui.base.list.GuiListEntry;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.SuggestedChannel;
 import net.blay09.mods.eirairc.util.Globals;
-import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 
@@ -34,7 +34,7 @@ public class GuiListSuggestedChannelEntry extends GuiListEntry {
 		super.onDoubleClick();
 		ServerConfig serverConfig = ConfigurationHandler.getOrCreateServerConfig(channel.getServerName());
 		serverConfig.getOrCreateChannelConfig(channel.getChannelName());
-		IRCConnection connection = Utils.connectTo(serverConfig);
+		IRCConnection connection = ConnectionManager.connectTo(serverConfig);
 		if(connection != null) {
 			connection.join(channel.getChannelName(), null);
 		}

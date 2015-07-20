@@ -2,6 +2,7 @@
 
 package net.blay09.mods.eirairc.command;
 
+import net.blay09.mods.eirairc.ConnectionManager;
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.SubCommand;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
@@ -46,7 +47,7 @@ public class CommandConnect implements SubCommand {
 		if(args.length >= 2) {
 			AuthManager.putServerPassword(serverConfig.getIdentifier(), args[1]);
 		}
-		if(Utils.connectTo(serverConfig) != null) {
+		if(ConnectionManager.connectTo(serverConfig) != null) {
 			ConfigurationHandler.addServerConfig(serverConfig);
 			ConfigurationHandler.save();
 		} else {

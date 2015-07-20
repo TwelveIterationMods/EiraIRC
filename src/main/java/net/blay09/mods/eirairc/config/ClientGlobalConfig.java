@@ -128,6 +128,7 @@ public class ClientGlobalConfig {
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	public static boolean handleConfigCommand(ICommandSender sender, String key, String value) {
 		ConfigProperty property = manager.getProperty(key);
 		if (property != null) {
@@ -163,7 +164,8 @@ public class ClientGlobalConfig {
 		} else {
 			ConfigProperty property = manager.getProperty(option);
 			if(property != null && property.get().getClass() == Boolean.class) {
-				Utils.addBooleansToList(list);
+				list.add("true");
+				list.add("false");
 			}
 		}
 	}

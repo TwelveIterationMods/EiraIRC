@@ -5,6 +5,7 @@ package net.blay09.mods.eirairc.client;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import net.blay09.mods.eirairc.CommonProxy;
+import net.blay09.mods.eirairc.ConnectionManager;
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.addon.DirectUploadHoster;
 import net.blay09.mods.eirairc.addon.ImgurHoster;
@@ -126,7 +127,7 @@ public class ClientProxy extends CommonProxy {
 	public void handleRedirect(ServerConfig serverConfig) {
 		TrustedServer server = ConfigurationHandler.getOrCreateTrustedServer(Utils.getServerAddress());
 		if(server.isAllowRedirect()) {
-			Utils.redirectTo(serverConfig, server.isRedirectSolo());
+			ConnectionManager.redirectTo(serverConfig, server.isRedirectSolo());
 		} else {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiEiraIRCRedirect(serverConfig));
 		}

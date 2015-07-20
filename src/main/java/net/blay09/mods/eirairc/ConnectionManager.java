@@ -2,12 +2,19 @@
 
 package net.blay09.mods.eirairc;
 
+import com.google.common.collect.Lists;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
+import net.blay09.mods.eirairc.bot.IRCBotImpl;
+import net.blay09.mods.eirairc.config.AuthManager;
+import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.settings.GeneralBooleanComponent;
+import net.blay09.mods.eirairc.irc.IRCConnectionImpl;
+import net.blay09.mods.eirairc.irc.ssl.IRCConnectionSSLImpl;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Utils;
+import net.minecraft.util.ChatComponentText;
 
 import java.util.*;
 
@@ -26,19 +33,19 @@ public class ConnectionManager {
 				}
 				sb.append(s);
 			}
-			Utils.addMessageToChat(sb.toString());
-			Utils.addMessageToChat("See the log for more information.");
+			Utils.addMessageToChat(new ChatComponentText(sb.toString()));
+			Utils.addMessageToChat(new ChatComponentText("See the log for more information."));
 		}
 		for(ServerConfig serverConfig : ConfigurationHandler.getServerConfigs()) {
 			if(serverConfig.getGeneralSettings().getBoolean(GeneralBooleanComponent.AutoJoin) && !serverConfig.isRedirect()) {
-				Utils.connectTo(serverConfig);
+				connectTo(serverConfig);
 			}
 		}
 		ircRunning = true;
 	}
 
 	public void stopIRC() {
-		List<IRCConnection> dcList = new ArrayList<IRCConnection>();
+		List<IRCConnection> dcList = Lists.newArrayList();
 		for(IRCConnection connection : connections.values()) {
 			dcList.add(connection);
 		}
@@ -93,5 +100,46 @@ public class ConnectionManager {
 	public boolean isLatestConnection(IRCConnection connection) {
 		IRCConnection latestConnection = connections.get(connection.getIdentifier());
 		return latestConnection == null || latestConnection == connection;
+	}
+
+	public static boolean redirectTo(ServerConfig serverConfig, boolean solo) {
+		if(serverConfig == null) {
+			EiraIRC.instance.getConnectionManager().stopIRC();
+			return true;
+		}
+		IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(serverConfig.getIdentifier());
+		if(connection != null && solo) {
+			connection.disconnect("Redirected by server");
+			connection = null;
+		}
+		if(connection == null) {
+			connection = connectTo(serverConfig);
+			if(connection == null) {
+				return false;
+			}
+		} else {
+			for(ChannelConfig channelConfig : serverConfig.getChannelConfigs()) {
+				connection.join(channelConfig.getName(), AuthManager.getChannelPassword(channelConfig.getIdentifier()));
+			}
+		}
+		return true;
+	}
+
+	public static IRCConnectionImpl connectTo(ServerConfig config) {
+		IRCConnection oldConnection = EiraIRC.instance.getConnectionManager().getConnection(config.getIdentifier());
+		if(oldConnection != null) {
+			oldConnection.disconnect("Reconnecting...");
+		}
+		IRCConnectionImpl connection;
+		if(config.isSSL()) {
+			connection = new IRCConnectionSSLImpl(config, ConfigHelper.getFormattedNick(config));
+		} else {
+			connection = new IRCConnectionImpl(config, ConfigHelper.getFormattedNick(config));
+		}
+		connection.setBot(new IRCBotImpl(connection));
+		if(connection.start()) {
+			return connection;
+		}
+		return null;
 	}
 }

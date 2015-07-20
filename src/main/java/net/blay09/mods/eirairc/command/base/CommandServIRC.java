@@ -3,6 +3,7 @@
 package net.blay09.mods.eirairc.command.base;
 
 import net.blay09.mods.eirairc.util.Globals;
+import net.blay09.mods.eirairc.util.I19n;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
@@ -52,7 +53,7 @@ public class CommandServIRC implements ICommand {
 		try {
 			IRCCommandHandler.processCommand(sender, args, true);
 		} catch (WrongUsageException e) {
-			IChatComponent chatComponent = new ChatComponentTranslation("commands.generic.usage", Utils.getLocalizedMessageNoPrefix(e.getMessage(), e.getErrorOjbects()));
+			IChatComponent chatComponent = new ChatComponentTranslation("commands.generic.usage", I19n.format(e.getMessage(), e.getErrorOjbects()));
 			chatComponent.getChatStyle().setColor(EnumChatFormatting.RED);
 			sender.addChatMessage(chatComponent);
 		}

@@ -7,6 +7,7 @@ import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.config.settings.ThemeColorComponent;
 import net.blay09.mods.eirairc.util.Globals;
+import net.blay09.mods.eirairc.util.I19n;
 import net.blay09.mods.eirairc.util.IRCFormatting;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
@@ -46,7 +47,7 @@ public class CommandColor implements SubCommand {
 			return true;
 		}
 		if(args.length < 1) {
-			throw new WrongUsageException(Utils.getLocalizedMessage("commands.commands.color"));
+			throw new WrongUsageException(I19n.format("eirairc:commands.commands.color"));
 		}
 		String colorName = args[0].toLowerCase();
 		EnumChatFormatting mcOpColor = SharedGlobalConfig.theme.getColor(ThemeColorComponent.mcOpNameColor);

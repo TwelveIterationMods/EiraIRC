@@ -10,6 +10,7 @@ import net.blay09.mods.eirairc.command.interop.InterOpCommandMode;
 import net.blay09.mods.eirairc.command.interop.InterOpCommandTopic;
 import net.blay09.mods.eirairc.command.interop.InterOpCommandUserModeBase;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
+import net.blay09.mods.eirairc.util.I19n;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.CommandHandler;
 import net.minecraft.command.ICommandSender;
@@ -124,7 +125,7 @@ public class IRCCommandHandler {
 	}
 	
 	public static void sendUsageHelp(ICommandSender sender) {
-		Utils.sendLocalizedMessage(sender, "general.usage", Utils.getLocalizedMessage("commands.irc.usage"));
+		Utils.sendLocalizedMessage(sender, "general.usage", I19n.format("eirairc:commands.irc.usage"));
 		Utils.sendLocalizedMessage(sender, "commands.irc.list.general");
 		Utils.sendLocalizedMessage(sender, "commands.irc.list.irc");
 		Utils.sendLocalizedMessage(sender, "commands.irc.list.interop");
@@ -132,12 +133,12 @@ public class IRCCommandHandler {
 	}
 
 	public static boolean onChatCommand(EntityPlayer sender, String text, boolean serverSide) {
-		if(text.equals(SharedGlobalConfig.ircCommandPrefix + "who") || text.startsWith(SharedGlobalConfig.ircCommandPrefix + "who ")) {
+		if(text.equals(SharedGlobalConfig.ircCommandPrefix.get() + "who") || text.startsWith(SharedGlobalConfig.ircCommandPrefix.get() + "who ")) {
 			String[] params = text.substring(1).split(" ");
 			try {
 				return processCommand(sender, params, serverSide);
 			} catch (WrongUsageException e) {
-				sender.addChatMessage(Utils.getLocalizedChatMessage("general.usage", Utils.getLocalizedMessageNoPrefix(e.getMessage())));
+				sender.addChatMessage(new ChatComponentTranslation("eirairc:general.usage", I19n.format(e.getMessage())));
 				return true;
 			}
 		}

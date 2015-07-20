@@ -67,7 +67,7 @@ public class GuiChatExtended extends GuiChat implements GuiYesNoCallback {
 	public void initGui() {
 		super.initGui();
 		inputField.setText(defaultInputText);
-		String s = Utils.getLocalizedMessage("gui.options");
+		String s = I19n.format("eirairc:gui.options");
 		int bw = fontRendererObj.getStringWidth(s) + 20;
 		btnOptions = new GuiButton(0, this.width - bw, 0, bw, 20, s);
 		buttonList.add(btnOptions);

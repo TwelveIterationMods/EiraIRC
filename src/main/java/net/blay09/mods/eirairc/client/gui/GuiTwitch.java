@@ -4,6 +4,7 @@ package net.blay09.mods.eirairc.client.gui;
 
 import cpw.mods.fml.client.config.GuiCheckBox;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.blay09.mods.eirairc.ConnectionManager;
 import net.blay09.mods.eirairc.api.IRCReplyCodes;
 import net.blay09.mods.eirairc.api.event.IRCConnectEvent;
 import net.blay09.mods.eirairc.api.event.IRCConnectionFailedEvent;
@@ -24,6 +25,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.input.Keyboard;
 
+@SuppressWarnings("unused")
 public class GuiTwitch extends EiraGuiScreen implements GuiYesNoCallback {
 
 	private static final ResourceLocation twitchLogo = new ResourceLocation("eirairc", "gfx/twitch_logo.png");
@@ -41,6 +43,7 @@ public class GuiTwitch extends EiraGuiScreen implements GuiYesNoCallback {
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public void initGui() {
 		super.initGui();
 		Keyboard.enableRepeatEvents(true);
@@ -108,7 +111,7 @@ public class GuiTwitch extends EiraGuiScreen implements GuiYesNoCallback {
 				config.getBotSettings().setBoolean(BotBooleanComponent.RelayIRCJoinLeave, false);
 				btnConnect.enabled = false;
 				ConfigurationHandler.addServerConfig(config);
-				Utils.connectTo(config);
+				ConnectionManager.connectTo(config);
 			} else {
 				config.setNick(txtUsername.getText());
 				AuthManager.putServerPassword(config.getIdentifier(), txtPassword.getText());
@@ -119,7 +122,7 @@ public class GuiTwitch extends EiraGuiScreen implements GuiYesNoCallback {
 					config.getOrCreateChannelConfig("#" + config.getNick());
 					btnConnect.enabled = false;
 					ConfigurationHandler.addServerConfig(config);
-					Utils.connectTo(config);
+					ConnectionManager.connectTo(config);
 				}
 			}
 			ConfigurationHandler.saveServers();

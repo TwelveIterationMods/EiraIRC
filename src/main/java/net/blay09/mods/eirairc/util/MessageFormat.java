@@ -133,7 +133,7 @@ public class MessageFormat {
 			if(i > 0) {
 				sb.append(" ");
 			}
-			sb.append(matcher.replaceAll(Utils.getLocalizedMessage("general.linkRemoved")));
+			sb.append(matcher.replaceAll(I19n.format("eirairc:general.linkRemoved")));
 		}
 		return sb.toString();
 	}

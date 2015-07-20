@@ -4,6 +4,7 @@ package net.blay09.mods.eirairc.client.gui.servers;
 
 import cpw.mods.fml.client.config.GuiConfig;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.blay09.mods.eirairc.ConnectionManager;
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.event.*;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
@@ -31,6 +32,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.ConfigElement;
 import org.lwjgl.input.Keyboard;
 
+@SuppressWarnings("unused")
 public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 
 	private ServerConfig config;
@@ -62,6 +64,7 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public void initGui() {
 		super.initGui();
 		Keyboard.enableRepeatEvents(true);
@@ -188,7 +191,7 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 			if(lstChannels.hasSelection()) {
 				IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(config.getIdentifier());
 				if(connection == null) {
-					connection = Utils.connectTo(config);
+					connection = ConnectionManager.connectTo(config);
 				}
 				ChannelConfig channelConfig = lstChannels.getSelectedItem().getConfig();
 				if(connection != null) {
@@ -216,7 +219,7 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 			} else {
 				btnConnect.enabled = false;
 				btnConnect.displayString = "Connecting...";
-				Utils.connectTo(config);
+				ConnectionManager.connectTo(config);
 			}
 		}
 	}

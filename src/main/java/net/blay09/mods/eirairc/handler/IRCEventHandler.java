@@ -14,6 +14,7 @@ import net.blay09.mods.eirairc.config.*;
 import net.blay09.mods.eirairc.config.settings.*;
 import net.blay09.mods.eirairc.irc.*;
 import net.blay09.mods.eirairc.util.*;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 import net.minecraftforge.common.MinecraftForge;
@@ -124,7 +125,7 @@ public class IRCEventHandler {
 					return;
 				} else {
 					if (connection.getBot().isServerSide()) {
-						sender.notice(Utils.getLocalizedMessage("bot.unknownCommand"));
+						sender.notice(I19n.format("eirairc:bot.unknownCommand"));
 						return;
 					}
 				}
@@ -148,7 +149,7 @@ public class IRCEventHandler {
 				}
 				if (!botSettings.getBoolean(BotBooleanComponent.AllowPrivateMessages)) {
 					if (!isNotice && sender != null) {
-						sender.notice(Utils.getLocalizedMessage("commands.msg.disabled"));
+						sender.notice(I19n.format("eirairc:commands.msg.disabled"));
 					}
 					return;
 				}
@@ -294,9 +295,9 @@ public class IRCEventHandler {
 					return;
 				}
 				if (user == null) {
-					EiraIRCAPI.getChatHandler().addChatMessage(Utils.getLocalizedChatMessage("irc.display.irc.topic", channel.getName(), channel.getTopic()));
+					EiraIRCAPI.getChatHandler().addChatMessage(new ChatComponentTranslation("eirairc:irc.display.irc.topic", channel.getName(), channel.getTopic()));
 				} else {
-					EiraIRCAPI.getChatHandler().addChatMessage(Utils.getLocalizedChatMessage("irc.display.irc.topicChange", user.getName(), channel.getName(), channel.getTopic()));
+					EiraIRCAPI.getChatHandler().addChatMessage(new ChatComponentTranslation("eirairc:irc.display.irc.topicChange", user.getName(), channel.getName(), channel.getTopic()));
 				}
 				break;
 			case ALLOW:
@@ -320,7 +321,7 @@ public class IRCEventHandler {
 				connection.join(channelConfig.getName(), AuthManager.getChannelPassword(channelConfig.getIdentifier()));
 			}
 		}
-		if(!SharedGlobalConfig.defaultChat.equals("Minecraft")) {
+		if(!SharedGlobalConfig.defaultChat.get().equals("Minecraft")) {
 			IRCContext chatTarget = EiraIRCAPI.parseContext(null, SharedGlobalConfig.defaultChat.get(), IRCContext.ContextType.IRCChannel);
 			if(chatTarget.getContextType() != IRCContext.ContextType.Error) {
 				EiraIRC.instance.getChatSessionHandler().setChatTarget(chatTarget);
@@ -330,7 +331,7 @@ public class IRCEventHandler {
 		MinecraftForge.EVENT_BUS.post(event);
 		switch (event.getResult()) {
 			case DEFAULT:
-				EiraIRCAPI.getChatHandler().addChatMessage(Utils.getLocalizedChatMessage("general.connected", event.connection.getHost()));
+				EiraIRCAPI.getChatHandler().addChatMessage(new ChatComponentTranslation("eirairc:general.connected", event.connection.getHost()));
 				break;
 			case ALLOW:
 				if(event.result != null) {
@@ -351,7 +352,7 @@ public class IRCEventHandler {
 		MinecraftForge.EVENT_BUS.post(event);
 		switch(event.getResult()) {
 			case DEFAULT:
-				EiraIRCAPI.getChatHandler().addChatMessage(Utils.getLocalizedChatMessage("error.couldNotConnect", connection.getHost(), exception));
+				EiraIRCAPI.getChatHandler().addChatMessage(new ChatComponentTranslation("eirairc:error.couldNotConnect", connection.getHost(), exception));
 				break;
 			case ALLOW:
 				if(event.result != null) {
@@ -366,7 +367,7 @@ public class IRCEventHandler {
 		MinecraftForge.EVENT_BUS.post(event);
 		switch(event.getResult()) {
 			case DEFAULT:
-				EiraIRCAPI.getChatHandler().addChatMessage(Utils.getLocalizedChatMessage("general.reconnecting", connection.getHost(), waitingTime / 1000));
+				EiraIRCAPI.getChatHandler().addChatMessage(new ChatComponentTranslation("eirairc:general.reconnecting", connection.getHost(), waitingTime / 1000));
 				break;
 			case ALLOW:
 				if(event.result != null) {
@@ -386,7 +387,7 @@ public class IRCEventHandler {
 		IRCDisconnectEvent event = new IRCDisconnectEvent(connection);
 		switch(event.getResult()) {
 			case DEFAULT:
-				EiraIRCAPI.getChatHandler().addChatMessage(Utils.getLocalizedChatMessage("general.disconnected", connection.getHost()));
+				EiraIRCAPI.getChatHandler().addChatMessage(new ChatComponentTranslation("eirairc:general.disconnected", connection.getHost()));
 				break;
 			case ALLOW:
 				if(event.result != null) {
@@ -402,11 +403,11 @@ public class IRCEventHandler {
 			case IRCReplyCodes.ERR_NICKCOLLISION:
 				String failNick = args[1];
 				String tryNick = failNick + "_";
-				Utils.addMessageToChat(Utils.getLocalizedChatMessage("error.nickInUse", failNick, tryNick));
+				Utils.addMessageToChat(new ChatComponentTranslation("eirairc:error.nickInUse", failNick, tryNick));
 				connection.nick(tryNick);
 				break;
 			case IRCReplyCodes.ERR_ERRONEUSNICKNAME:
-				Utils.addMessageToChat(Utils.getLocalizedChatMessage("error.nickInvalid", args[1]));
+				Utils.addMessageToChat(new ChatComponentTranslation("eirairc:error.nickInvalid", args[1]));
 				ServerConfig serverConfig = ConfigHelper.getServerConfig(connection);
 				if(serverConfig.getNick() != null) {
 					serverConfig.setNick(connection.getNick());
@@ -418,13 +419,13 @@ public class IRCEventHandler {
 			case DEFAULT:
 				switch (numeric) {
 					case IRCReplyCodes.ERR_NONICKCHANGE:
-						EiraIRCAPI.getChatHandler().addChatMessage(Utils.getLocalizedChatMessage("error.noNickChange"));
+						EiraIRCAPI.getChatHandler().addChatMessage(new ChatComponentTranslation("eirairc:error.noNickChange"));
 						break;
 					case IRCReplyCodes.ERR_SERVICESDOWN:
-						EiraIRCAPI.getChatHandler().addChatMessage(Utils.getLocalizedChatMessage("error.servicesDown"));
+						EiraIRCAPI.getChatHandler().addChatMessage(new ChatComponentTranslation("eirairc:error.servicesDown"));
 						break;
 					case IRCReplyCodes.ERR_TARGETTOOFAST:
-						EiraIRCAPI.getChatHandler().addChatMessage(Utils.getLocalizedChatMessage("error.targetTooFast"));
+						EiraIRCAPI.getChatHandler().addChatMessage(new ChatComponentTranslation("eirairc:error.targetTooFast"));
 						break;
 					case IRCReplyCodes.ERR_CANNOTSENDTOCHAN:
 					case IRCReplyCodes.ERR_TOOMANYCHANNELS:
@@ -451,7 +452,7 @@ public class IRCEventHandler {
 					case IRCReplyCodes.ERR_CHANNELISFULL:
 					case IRCReplyCodes.ERR_KEYSET:
 					case IRCReplyCodes.ERR_NEEDMOREPARAMS:
-						EiraIRCAPI.getChatHandler().addChatMessage(Utils.getLocalizedChatMessage("error.genericTarget", args[1], args[2]));
+						EiraIRCAPI.getChatHandler().addChatMessage(new ChatComponentTranslation("eirairc:error.genericTarget", args[1], args[2]));
 						break;
 					case IRCReplyCodes.ERR_NOORIGIN:
 					case IRCReplyCodes.ERR_NORECIPIENT:
@@ -471,7 +472,7 @@ public class IRCEventHandler {
 					case IRCReplyCodes.ERR_ALREADYREGISTERED:
 					case IRCReplyCodes.ERR_NOPERMFORHOST:
 					case IRCReplyCodes.ERR_CANTKILLSERVER:
-						EiraIRCAPI.getChatHandler().addChatMessage(Utils.getLocalizedChatMessage("error.generic", args[1]));
+						EiraIRCAPI.getChatHandler().addChatMessage(new ChatComponentTranslation("eirairc:error.generic", args[1]));
 						break;
 					default:
 						System.out.println("Unhandled error code: " + numeric + " (" + args.length + " arguments)");
@@ -550,7 +551,7 @@ public class IRCEventHandler {
 				}
 				if (!botSettings.getBoolean(BotBooleanComponent.AllowPrivateMessages)) {
 					if (!event.isNotice && event.sender != null) {
-						event.sender.notice(Utils.getLocalizedMessage("commands.ctcp.disabled"));
+						event.sender.notice(I19n.format("eirairc:commands.ctcp.disabled"));
 					}
 					return;
 				}

@@ -2,6 +2,7 @@
 
 package net.blay09.mods.eirairc.command.extension;
 
+import net.blay09.mods.eirairc.ConnectionManager;
 import net.blay09.mods.eirairc.api.EiraIRCAPI;
 import net.blay09.mods.eirairc.api.SubCommand;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
@@ -44,7 +45,7 @@ public class CommandTwitch implements SubCommand {
 			if(ConfigurationHandler.hasServerConfig(Globals.TWITCH_SERVER)) {
 				Utils.sendLocalizedMessage(sender, "general.connecting", "Twitch");
 				ServerConfig serverConfig = ConfigurationHandler.getOrCreateServerConfig(Globals.TWITCH_SERVER);
-				Utils.connectTo(serverConfig);
+				ConnectionManager.connectTo(serverConfig);
 				return true;
 			} else {
 				if(serverSide) {
@@ -67,7 +68,7 @@ public class CommandTwitch implements SubCommand {
 			ConfigurationHandler.addServerConfig(serverConfig);
 			ConfigurationHandler.save();
 			Utils.sendLocalizedMessage(sender, "general.connecting", "Twitch");
-			Utils.connectTo(serverConfig);
+			ConnectionManager.connectTo(serverConfig);
 			return true;
 		}
 	}

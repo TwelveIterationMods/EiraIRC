@@ -44,31 +44,18 @@ import java.util.List;
 
 public class Utils {
 
-	private static final int MAX_CHAT_LENGTH = 100;
 	private static final String DEFAULT_USERNAME = "EiraBot";
 	private static final String ENCODING = "UTF-8";
 	
 	public static void sendLocalizedMessage(ICommandSender sender, String key, Object... args) {
 		if(EiraIRCAPI.hasClientSideInstalled(sender)) {
-			sender.addChatMessage(getLocalizedChatMessage(key, args));
+			sender.addChatMessage(new ChatComponentTranslation("eirairc:" + key, args));
 		} else {
-			sender.addChatMessage(new ChatComponentText(getLocalizedChatMessage(key, args).getUnformattedText()));
+			sender.addChatMessage(new ChatComponentText(new ChatComponentTranslation("eirairc:" + key, args).getUnformattedText()));
 		}
 	}
 	
-	public static String getLocalizedMessageNoPrefix(String key, Object... args) {
-		return StatCollector.translateToLocalFormatted(key, args);
-	}
-	
-	public static String getLocalizedMessage(String key, Object... args) {
-		return StatCollector.translateToLocalFormatted(EiraIRC.MOD_ID + ":" + key, args);
-	}
-	
-	public static ChatComponentTranslation getLocalizedChatMessage(String key, Object... args) {
-		return new ChatComponentTranslation(EiraIRC.MOD_ID + ":" + key, args);
-	}
-	
-	public static void addMessageToChat(@NotNull IChatComponent chatComponent) {
+	public static void addMessageToChat(IChatComponent chatComponent) {
 		if(MinecraftServer.getServer() != null && MinecraftServer.getServer().getConfigurationManager() != null && !MinecraftServer.getServer().isSinglePlayer()) {
 			MinecraftServer.getServer().getConfigurationManager().sendChatMsg(translateToDefault(chatComponent));
 		} else {
@@ -76,49 +63,6 @@ public class Utils {
 				Minecraft.getMinecraft().thePlayer.addChatMessage(chatComponent);
 			}
 		}
-	}
-	
-	public static void addMessageToChat(String text) {
-		if(text == null) {
-			return;
-		}
-		if(text.length() < MAX_CHAT_LENGTH) {
-			addMessageToChat(new ChatComponentText(text));
-		} else {
-			for(String string : wrapString(text, MAX_CHAT_LENGTH)) {
-				addMessageToChat(new ChatComponentText(string));
-			}
-		}
-	}
-	
-	public static List<String> wrapString(String text, int maxLength) {
-		List<String> tmpStrings = new ArrayList<String>();
-		if(text == null) {
-			return tmpStrings;
-		}
-		text = text.trim();
-		if(text.length() <= maxLength) {
-			tmpStrings.add(text);
-			return tmpStrings;
-		}
-		while(text.length() > maxLength) {
-			int i = maxLength;
-			while(true) {
-				if(text.charAt(i) == ' ') {
-					break;
-				} else if(i == 0) {
-					i = maxLength;
-					break;
-				}
-				i--;
-			}
-			tmpStrings.add(text.substring(0, i));
-			text = text.substring(i + 1).trim();
-		}
-		if(text.length() > 0) {
-			tmpStrings.add(text);
-		}
-		return tmpStrings;
 	}
 	
 	public static String unquote(String s) {
@@ -135,14 +79,6 @@ public class Utils {
 
 	public static String getNickGame(EntityPlayer player) {
 		return player.getDisplayName();
-	}
-
-	public static String getServerName() {
-		ServerData serverData = Minecraft.getMinecraft().getCurrentServerData();
-		if(serverData != null) {
-			return serverData.serverName;
-		}
-		return null;
 	}
 
 	public static String getServerAddress() {
@@ -163,55 +99,9 @@ public class Utils {
 	public static void addConnectionsToList(List<String> list) {
 		for(IRCConnection connection : EiraIRC.instance.getConnectionManager().getConnections()) {
 			list.add(connection.getHost());
-		}		
+		}
 	}
 
-	public static void addBooleansToList(List<String> list) {
-		list.add("true");
-		list.add("false");		
-	}
-
-	public static boolean redirectTo(ServerConfig serverConfig, boolean solo) {
-		if(serverConfig == null) {
-			EiraIRC.instance.getConnectionManager().stopIRC();
-			return true;
-		}
-		IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(serverConfig.getIdentifier());
-		if(connection != null && solo) {
-			connection.disconnect("Redirected by " + Utils.getCurrentServerName());
-			connection = null;
-		}
-		if(connection == null) {
-			connection = connectTo(serverConfig);
-			if(connection == null) {
-				return false;
-			}
-		} else {
-			for(ChannelConfig channelConfig : serverConfig.getChannelConfigs()) {
-				connection.join(channelConfig.getName(), AuthManager.getChannelPassword(channelConfig.getIdentifier()));
-			}
-		}
-		return true;
-	}
-
-	public static IRCConnectionImpl connectTo(ServerConfig config) {
-		IRCConnection oldConnection = EiraIRC.instance.getConnectionManager().getConnection(config.getIdentifier());
-		if(oldConnection != null) {
-			oldConnection.disconnect("Reconnecting...");
-		}
-		IRCConnectionImpl connection;
-		if(config.isSSL()) {
-			connection = new IRCConnectionSSLImpl(config, ConfigHelper.getFormattedNick(config));
-		} else {
-			connection = new IRCConnectionImpl(config, ConfigHelper.getFormattedNick(config));
-		}
-		connection.setBot(new IRCBotImpl(connection));
-		if(connection.start()) {
-			return connection;
-		}
-		return null;
-	}
-	
 	public static void doNickServ(IRCConnection connection, ServerConfig config) {
 		ServiceSettings settings = ServiceConfig.getSettings(connection.getHost(), connection.getServerType());
 		AuthManager.NickServData nickServData = AuthManager.getNickServData(config.getIdentifier());
@@ -224,14 +114,14 @@ public class Utils {
 		Collection<IRCUser> userList = channel.getUserList();
 		if(userList.size() == 0) {
 			if(player == null) {
-				addMessageToChat(Utils.getLocalizedMessage("commands.who.noUsersOnline", connection.getHost(), channel.getName()));
+				addMessageToChat(new ChatComponentTranslation("eirairc:commands.who.noUsersOnline", connection.getHost(), channel.getName()));
 			} else {
 				sendLocalizedMessage(player, "commands.who.noUsersOnline", connection.getHost(), channel.getName());
 			}
 			return;
 		}
 		if(player == null) {
-			addMessageToChat(Utils.getLocalizedMessage("commands.who.usersOnline", connection.getHost(), userList.size(), channel.getName()));
+			addMessageToChat(new ChatComponentTranslation("eirairc:commands.who.usersOnline", connection.getHost(), userList.size(), channel.getName()));
 		} else {
 			sendLocalizedMessage(player, "commands.who.usersOnline", connection.getHost(), userList.size(), channel.getName());
 		}
@@ -239,7 +129,7 @@ public class Utils {
 		for(IRCUser user : userList) {
 			if(s.length() + user.getName().length() > Globals.CHAT_MAX_LENGTH) {
 				if(player == null) {
-					addMessageToChat(s);
+					addMessageToChat(new ChatComponentText(s));
 				} else {
 					player.addChatMessage(new ChatComponentText(s));
 				}
@@ -252,13 +142,14 @@ public class Utils {
 		}
 		if(s.length() > 3) {
 			if(player == null) {
-				addMessageToChat(s);
+				addMessageToChat(new ChatComponentText(s));
 			} else {
 				player.addChatMessage(new ChatComponentText(s));
 			}
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public static void sendPlayerList(IRCContext context) {
 		if(MinecraftServer.getServer() == null || MinecraftServer.getServer().isSinglePlayer()) {
 			return;
@@ -266,30 +157,29 @@ public class Utils {
 		List<EntityPlayer> playerList = MinecraftServer.getServer().getConfigurationManager().playerEntityList;
 		if(playerList.size() == 0) {
 			if(context instanceof IRCUser) {
-				context.notice(getLocalizedMessage("bot.noPlayersOnline"));
+				context.notice(I19n.format("eirairc:bot.noPlayersOnline"));
 			} else if(context instanceof IRCChannel) {
-				context.message(getLocalizedMessage("bot.noPlayersOnline"));
+				context.message(I19n.format("eirairc:bot.noPlayersOnline"));
 			}
 			return;
 		}
 		if(context instanceof IRCUser) {
-			context.notice(getLocalizedMessage("bot.playersOnline", playerList.size()));
+			context.notice(I19n.format("eirairc:bot.playersOnline", playerList.size()));
 		} else if(context instanceof IRCChannel) {
-			context.message(getLocalizedMessage("bot.playersOnline", playerList.size()));
+			context.message(I19n.format("eirairc:bot.playersOnline", playerList.size()));
 		}
 		String s = " * ";
-		for(int i = 0; i < playerList.size(); i++) {
-			EntityPlayer entityPlayer = playerList.get(i);
+		for (EntityPlayer entityPlayer : playerList) {
 			String alias = getNickIRC(entityPlayer, null);
-			if(s.length() + alias.length() > Globals.CHAT_MAX_LENGTH) {
-				if(context instanceof IRCUser) {
+			if (s.length() + alias.length() > Globals.CHAT_MAX_LENGTH) {
+				if (context instanceof IRCUser) {
 					context.notice(s);
-				} else if(context instanceof IRCChannel) {
+				} else if (context instanceof IRCChannel) {
 					context.message(s);
 				}
 				s = " * ";
 			}
-			if(s.length() > 3) {
+			if (s.length() > 3) {
 				s += ", ";
 			}
 			s += alias;
@@ -351,9 +241,7 @@ public class Utils {
 	public static void openWebpage(String url) {
 		try {
 			openWebpage(new URL(url).toURI());
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		} catch (MalformedURLException e) {
+		} catch (URISyntaxException | MalformedURLException e) {
 			e.printStackTrace();
 		}
 	}

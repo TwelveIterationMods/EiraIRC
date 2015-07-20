@@ -10,6 +10,7 @@ import net.blay09.mods.eirairc.config.settings.BotBooleanComponent;
 import net.blay09.mods.eirairc.config.settings.BotSettings;
 import net.blay09.mods.eirairc.config.settings.BotStringListComponent;
 import net.blay09.mods.eirairc.util.ConfigHelper;
+import net.blay09.mods.eirairc.util.I19n;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.server.MinecraftServer;
 
@@ -29,7 +30,7 @@ public class BotCommandOp implements IBotCommand {
 	public void processCommand(IRCBot bot, IRCChannel channel, IRCUser user, String[] args, IBotCommand commandSettings) {
 		BotSettings botSettings = ConfigHelper.getBotSettings(channel);
 		if(!botSettings.getBoolean(BotBooleanComponent.InterOp)) {
-			user.notice(Utils.getLocalizedMessage("interop.disabled"));
+			user.notice(I19n.format("eirairc:interop.disabled"));
 			return;
 		}
 		String message = "";
@@ -45,7 +46,7 @@ public class BotCommandOp implements IBotCommand {
 			return;
 		}
 		if(botSettings.stringContains(BotStringListComponent.DisabledInterOpCommands, message)) {
-			user.notice(Utils.getLocalizedMessage("bot.interOpBlacklist"));
+			user.notice(I19n.format("eirairc:bot.interOpBlacklist"));
 			return;
 		}
 		MinecraftServer.getServer().getCommandManager().executeCommand(new IRCUserCommandSender(channel, user, commandSettings.broadcastsResult(), true), message);

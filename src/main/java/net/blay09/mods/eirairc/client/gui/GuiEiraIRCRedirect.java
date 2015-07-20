@@ -3,6 +3,7 @@
 package net.blay09.mods.eirairc.client.gui;
 
 import cpw.mods.fml.client.config.GuiCheckBox;
+import net.blay09.mods.eirairc.ConnectionManager;
 import net.blay09.mods.eirairc.client.gui.base.GuiLabel;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
@@ -25,6 +26,7 @@ public class GuiEiraIRCRedirect extends EiraGuiScreen {
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public void initGui() {
 		super.initGui();
 
@@ -80,7 +82,7 @@ public class GuiEiraIRCRedirect extends EiraGuiScreen {
 				ConfigurationHandler.addTrustedServer(server);
 				ConfigurationHandler.saveTrustedServers();
 			}
-			Utils.redirectTo(serverConfig, false);
+			ConnectionManager.redirectTo(serverConfig, false);
 			mc.displayGuiScreen(null);
 		}
 	}

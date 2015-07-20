@@ -329,7 +329,8 @@ public class BotSettings {
 			}
 		} else {
 			if(BotBooleanComponent.fromName(option) != null) {
-				Utils.addBooleansToList(list);
+				list.add("true");
+				list.add("false");
 			}
 		}
 	}

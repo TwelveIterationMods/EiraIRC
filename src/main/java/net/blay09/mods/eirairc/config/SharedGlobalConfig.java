@@ -2,6 +2,7 @@
 
 package net.blay09.mods.eirairc.config;
 
+import com.google.common.collect.Lists;
 import net.blay09.mods.eirairc.config.property.ConfigProperty;
 import net.blay09.mods.eirairc.config.property.ConfigManager;
 import net.blay09.mods.eirairc.config.settings.BotSettings;
@@ -15,6 +16,7 @@ import net.minecraftforge.common.config.Configuration;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class SharedGlobalConfig {
@@ -38,7 +40,7 @@ public class SharedGlobalConfig {
     public static final ConfigProperty<Boolean> twitchNameBadges = new ConfigProperty<>(manager, GENERAL, "twitchNameBadges", true);
     public static final ConfigProperty<String> ircCommandPrefix = new ConfigProperty<>(manager, GENERAL, "ircCommandPrefix", "!");
 
-    public static final List<String> colorBlacklist = new ArrayList<String>();
+    public static final List<String> colorBlacklist = Lists.newArrayList();
 
     // Network Settings
     public static final ConfigProperty<String> bindIP = new ConfigProperty<>(manager, NETWORK, "bindIP", "");
@@ -64,9 +66,7 @@ public class SharedGlobalConfig {
 
         String[] colorBlacklistArray = thisConfig.getStringList("colorBlacklist", GENERAL, Globals.DEFAULT_COLOR_BLACKLIST, I19n.format("eirairc:config.property.colorBlacklist.tooltip"), null, "eirairc:config.property.colorBlacklist");
         colorBlacklist.clear();
-        for (String entry : colorBlacklistArray) {
-            colorBlacklist.add(entry);
-        }
+        Collections.addAll(colorBlacklist, colorBlacklistArray);
 
         // Default Settings
         theme.load(thisConfig, THEME, true);
@@ -175,7 +175,8 @@ public class SharedGlobalConfig {
         } else {
             ConfigProperty property = manager.getProperty(option);
             if(property != null && property.get().getClass() == Boolean.class) {
-                Utils.addBooleansToList(list);
+                list.add("true");
+                list.add("false");
             }
         }
         ThemeSettings.addOptionsToList(list, option, autoCompleteOption);

@@ -28,7 +28,7 @@ public class IRCConnectionSSLImpl extends IRCConnectionImpl {
 	@Override
 	protected Socket connect() throws Exception {
 		if (!SharedGlobalConfig.sslCustomTrustStore.get().isEmpty()) {
-			System.setProperty("javax.net.ssl.trustStore", SharedGlobalConfig.sslCustomTrustStore.getDefaultValue());
+			System.setProperty("javax.net.ssl.trustStore", SharedGlobalConfig.sslCustomTrustStore.get());
 		}
 		SSLSocketFactory socketFactory;
 		if (SharedGlobalConfig.sslTrustAllCerts.get()) {
