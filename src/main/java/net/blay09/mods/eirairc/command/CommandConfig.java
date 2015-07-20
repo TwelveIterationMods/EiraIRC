@@ -12,6 +12,7 @@ import net.blay09.mods.eirairc.util.IRCResolver;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
+import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.List;
 
@@ -52,7 +53,7 @@ public class CommandConfig implements SubCommand {
 		}
 		String config = args[1];
 		if(args.length > 2) {
-			ConfigurationHandler.handleConfigCommand(sender, target, config, Utils.joinStrings(args, " ", 2));
+			ConfigurationHandler.handleConfigCommand(sender, target, config, String.join(" ", ArrayUtils.subarray(args, 2, args.length)));
 		} else {
 			ConfigurationHandler.handleConfigCommand(sender, target, config);
 		}

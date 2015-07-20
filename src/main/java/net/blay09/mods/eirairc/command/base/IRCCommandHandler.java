@@ -18,6 +18,7 @@ import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
+import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -80,7 +81,7 @@ public class IRCCommandHandler {
 	public static boolean isUsernameIndex(String[] args, int idx) {
 		SubCommandWrapper cmd = commands.get(args[0]);
 		if(cmd != null) {
-			String[] shiftedArgs = Utils.shiftArgs(args, 1);
+			String[] shiftedArgs = ArrayUtils.subarray(args, 1, args.length);
 			return cmd.isUsernameIndex(shiftedArgs, idx - 1);
 		}
 		return false;
@@ -102,7 +103,7 @@ public class IRCCommandHandler {
 		}
 		SubCommandWrapper cmd = commands.get(args[0]);
 		if(cmd != null) {
-			String[] shiftedArgs = Utils.shiftArgs(args, 1);
+			String[] shiftedArgs = ArrayUtils.subarray(args, 1, args.length);
 			return cmd.addTabCompletionOptions(sender, shiftedArgs);
 		}
 		return null;
@@ -120,7 +121,7 @@ public class IRCCommandHandler {
             sender.addChatMessage(chatComponent);
             return true;
 		}
-		String[] shiftedArgs = Utils.shiftArgs(args, 1);
+		String[] shiftedArgs = ArrayUtils.subarray(args, 1, args.length);
 		return cmd.command.processCommand(sender, Utils.getSuggestedTarget(), shiftedArgs, serverSide);
 	}
 	

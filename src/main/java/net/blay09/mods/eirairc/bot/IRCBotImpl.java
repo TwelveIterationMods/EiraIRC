@@ -15,6 +15,7 @@ import net.blay09.mods.eirairc.irc.IRCUserImpl;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraftforge.common.MinecraftForge;
+import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -68,7 +69,7 @@ public class IRCBotImpl implements IRCBot {
 		if(botCommand == null || (channel != null && !botCommand.isChannelCommand())) {
 			return false;
 		}
-		String[] shiftedArgs = Utils.shiftArgs(args, 1);
+		String[] shiftedArgs = ArrayUtils.subarray(args, 1, args.length);
 		if(botCommand.requiresAuth()) {
 			((IRCUserImpl) sender).queueAuthCommand(this, channel, botCommand, shiftedArgs);
 		} else {

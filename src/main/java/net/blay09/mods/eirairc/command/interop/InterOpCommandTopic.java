@@ -10,6 +10,7 @@ import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
+import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.List;
 
@@ -44,7 +45,7 @@ public class InterOpCommandTopic implements SubCommand {
 			Utils.sendLocalizedMessage(sender, "commands.interop.disabled");
 			return true;
 		}
-		String topic = Utils.joinStrings(args, " ", 1).trim();
+		String topic = String.join(" ", ArrayUtils.subarray(args, 1, args.length)).trim();
 		if(topic.isEmpty()) {
 			throw new WrongUsageException(getCommandUsage(sender));
 		}

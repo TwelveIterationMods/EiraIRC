@@ -2,6 +2,7 @@
 
 package net.blay09.mods.eirairc.util;
 
+import com.google.common.collect.Lists;
 import io.netty.buffer.ByteBuf;
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.EiraIRCAPI;
@@ -45,8 +46,7 @@ import java.util.List;
 public class Utils {
 
 	private static final String DEFAULT_USERNAME = "EiraBot";
-	private static final String ENCODING = "UTF-8";
-	
+
 	public static void sendLocalizedMessage(ICommandSender sender, String key, Object... args) {
 		if(EiraIRCAPI.hasClientSideInstalled(sender)) {
 			sender.addChatMessage(new ChatComponentTranslation("eirairc:" + key, args));
@@ -95,7 +95,7 @@ public class Utils {
 		}
 		return sender.canCommandSenderUseCommand(3, "");
 	}
-	
+
 	public static void addConnectionsToList(List<String> list) {
 		for(IRCConnection connection : EiraIRC.instance.getConnectionManager().getConnections()) {
 			list.add(connection.getHost());
@@ -291,49 +291,6 @@ public class Utils {
 		return MinecraftServer.getServer() != null && !MinecraftServer.getServer().isSinglePlayer();
 	}
 	
-	public static String[] shiftArgs(String[] args, int offset) {
-		String[] shiftedArgs = new String[args.length - offset];
-		for(int i = offset; i < args.length; i++) {
-			shiftedArgs[i - offset] = args[i];
-		}
-		return shiftedArgs;
-	}
-	
-	public static String joinStrings(String[] args, String delimiter, int startIdx) {
-		StringBuilder sb = new StringBuilder();
-		for(int i = startIdx; i < args.length; i++) {
-			if(i > startIdx) {
-				sb.append(delimiter);
-			}
-			sb.append(args[i]);
-		}
-		return sb.toString();
-	}
-
-	@Deprecated
-	public static String readString(ByteBuf buf) {
-		short len = buf.readShort();
-		byte[] b = new byte[len];
-		buf.readBytes(b);
-		try {
-			return new String(b, ENCODING);
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	@Deprecated
-	public static void writeString(ByteBuf buffer, String s) {
-		try {
-			byte[] b = s.getBytes(ENCODING);
-			buffer.writeShort(b.length);
-			buffer.writeBytes(b);
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-	}
-
 	public static String extractHost(String url) {
 		int colonIdx = url.indexOf(':');
 		int lastColonIdx = url.lastIndexOf(':');
@@ -368,25 +325,25 @@ public class Utils {
 		if(portIdx != -1) {
 			try {
 				String[] portRanges = url.substring(portIdx + 1).split("\\+");
-				List<Integer> portList = new ArrayList<Integer>();
-				for(int i = 0; i < portRanges.length; i++) {
-					int sepIdx = portRanges[i].indexOf('-');
-					if(sepIdx != -1) {
-						int min = Integer.parseInt(portRanges[i].substring(0, sepIdx));
-						int max = Integer.parseInt(portRanges[i].substring(sepIdx + 1));
-						if(min > max) {
+				List<Integer> portList = Lists.newArrayList();
+				for (String portRange : portRanges) {
+					int sepIdx = portRange.indexOf('-');
+					if (sepIdx != -1) {
+						int min = Integer.parseInt(portRange.substring(0, sepIdx));
+						int max = Integer.parseInt(portRange.substring(sepIdx + 1));
+						if (min > max) {
 							int oldMin = min;
 							min = max;
 							max = oldMin;
 						}
-						if(max - min > 5) {
+						if (max - min > 5) {
 							throw new RuntimeException("EiraIRC: Port ranges bigger than 5 are not allowed! Split them up if you really have to.");
 						}
-						for(int j = min; j <= max; j++) {
+						for (int j = min; j <= max; j++) {
 							portList.add(j);
 						}
 					} else {
-						portList.add(Integer.parseInt(portRanges[i]));
+						portList.add(Integer.parseInt(portRange));
 					}
 				}
 				return ArrayUtils.toPrimitive(portList.toArray(new Integer[portList.size()]));

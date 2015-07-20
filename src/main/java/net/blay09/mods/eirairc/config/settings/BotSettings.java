@@ -273,7 +273,7 @@ public class BotSettings {
 		BotStringListComponent stringListComponent = BotStringListComponent.fromName(key);
 		if(stringListComponent != null) {
 			if (stringLists.containsKey(stringListComponent)) {
-				return Utils.joinStrings(stringLists.get(stringListComponent), ", ", 0);
+				return String.join(", ", stringLists.get(stringListComponent));
 			} else {
 				return "<inherit>";
 			}
