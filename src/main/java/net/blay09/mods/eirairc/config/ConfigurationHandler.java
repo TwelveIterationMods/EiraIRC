@@ -194,7 +194,8 @@ public class ConfigurationHandler {
 		tps.addProperty("runAsOp", true);
 		tps.addProperty("requireAuth", false);
 		tps.addProperty("allowArgs", false);
-		tps.addProperty("description", "Broadcasts the current TPS to the channel.");
+		tps.addProperty("outputFilter", "Dimension 0:.+");
+		tps.addProperty("description", "Broadcasts the current TPS to the channel, filtering the output for the overworld only.");
 		root.add(tps);
 		JsonObject alias = new JsonObject();
 		alias.addProperty("name", "players");
@@ -216,15 +217,6 @@ public class ConfigurationHandler {
 		ban.addProperty("allowArgs", true);
 		ban.addProperty("description", "Bans the specified player with an optional reason from the server. /ban <name> [reason ...]. Authed only.");
 		root.add(ban);
-		JsonObject banip = new JsonObject();
-		banip.addProperty("name", "ban-ip");
-		banip.addProperty("command", "ban-ip");
-		banip.addProperty("broadcastResult", false);
-		banip.addProperty("runAsOp", true);
-		banip.addProperty("requireAuth", true);
-		banip.addProperty("allowArgs", true);
-		banip.addProperty("description", "Bans the specified IP address with an optional reason from the server. /ban <address|name> [reason ...]. Authed only.");
-		root.add(banip);
 		JsonObject banlist = new JsonObject();
 		banlist.addProperty("name", "banlist");
 		banlist.addProperty("command", "banlist");
@@ -243,15 +235,6 @@ public class ConfigurationHandler {
 		pardon.addProperty("allowArgs", true);
 		pardon.addProperty("description", "Unbans (pardons) the specified player on the server. /pardon <name>. Authed only.");
 		root.add(pardon);
-		JsonObject pardonip = new JsonObject();
-		pardonip.addProperty("name", "pardon-ip");
-		pardonip.addProperty("command", "pardon-ip");
-		pardonip.addProperty("broadcastResult", false);
-		pardonip.addProperty("runAsOp", true);
-		pardonip.addProperty("requireAuth", true);
-		pardonip.addProperty("allowArgs", true);
-		pardonip.addProperty("description", "Unbans (pardons) the specified IP address on the server. /pardon-ip <address>. Authed only.");
-		root.add(pardonip);
 		Gson gson = new Gson();
 		try {
 			JsonWriter writer = new JsonWriter(new FileWriter(new File(baseConfigDir, "eirairc/commands.json.example.txt")));
