@@ -45,7 +45,7 @@ public class CommandDisconnect implements SubCommand {
 			target = args[0];
 		}
 		if(target.equals(TARGET_ALL)) {
-			Utils.sendLocalizedMessage(sender, "general.disconnecting", "IRC");
+			Utils.sendLocalizedMessage(sender, "commands.disconnect", "IRC");
 			for(IRCConnection connection : EiraIRC.instance.getConnectionManager().getConnections()) {
 				connection.disconnect(ConfigHelper.getQuitMessage(connection));
 			}
@@ -53,10 +53,10 @@ public class CommandDisconnect implements SubCommand {
 		} else {
 			IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(target);
 			if(connection == null) {
-				Utils.sendLocalizedMessage(sender, "general.notConnected", target);
+				Utils.sendLocalizedMessage(sender, "error.notConnected", target);
 				return true;
 			}
-			Utils.sendLocalizedMessage(sender, "general.disconnecting", target);
+			Utils.sendLocalizedMessage(sender, "commands.disconnect", target);
 			connection.disconnect(ConfigHelper.getQuitMessage(connection));
 		}
 		return true;

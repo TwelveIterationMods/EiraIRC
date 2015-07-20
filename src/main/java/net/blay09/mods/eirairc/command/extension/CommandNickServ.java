@@ -61,7 +61,7 @@ public class CommandNickServ implements SubCommand {
 		ServerConfig serverConfig = ConfigurationHandler.getOrCreateServerConfig(connection.getHost());
 		AuthManager.putNickServData(serverConfig.getIdentifier(), args[argidx], args[argidx + 1]);
 		Utils.doNickServ(connection, serverConfig);
-		Utils.sendLocalizedMessage(sender, "general.nickServUpdated", connection.getHost());
+		Utils.sendLocalizedMessage(sender, "commands.nickserv", connection.getHost());
 		return true;
 	}
 

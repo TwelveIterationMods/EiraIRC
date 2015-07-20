@@ -63,9 +63,9 @@ public class CommandLeave implements SubCommand {
 			for(IRCChannel channel : connection.getChannels()) {
 				connection.part(channel.getName());
 			}
-			Utils.sendLocalizedMessage(sender, "general.leavingChannel", "<all>", connection.getHost());
+			Utils.sendLocalizedMessage(sender, "commands.leave", "<all>", connection.getHost());
 		} else {
-			Utils.sendLocalizedMessage(sender, "general.leavingChannel", channelName, connection.getHost());
+			Utils.sendLocalizedMessage(sender, "commands.leave", channelName, connection.getHost());
 			connection.part(channelName);
 		}
 		return true;

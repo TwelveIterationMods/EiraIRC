@@ -65,7 +65,7 @@ public class CommandJoin implements SubCommand {
 		if(args.length >= 2) {
 			AuthManager.putChannelPassword(channelConfig.getIdentifier(), args[1]);
 		}
-		Utils.sendLocalizedMessage(sender, "general.joiningChannel", channelConfig.getName(), connection.getHost());
+		Utils.sendLocalizedMessage(sender, "commands.join", channelConfig.getName(), connection.getHost());
 		connection.join(channelConfig.getName(), AuthManager.getChannelPassword(channelConfig.getIdentifier()));
 		return true;
 	}

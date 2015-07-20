@@ -38,7 +38,7 @@ public class CommandTwitch implements SubCommand {
 	@Override
 	public boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) {
 		if(EiraIRCAPI.isConnectedTo(Globals.TWITCH_SERVER)) {
-			Utils.sendLocalizedMessage(sender, "general.alreadyConnected", "Twitch");
+			Utils.sendLocalizedMessage(sender, "error.alreadyConnected", "Twitch");
 			return true;
 		}
 		if(args.length == 0) {
