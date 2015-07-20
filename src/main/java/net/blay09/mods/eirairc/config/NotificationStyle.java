@@ -1,6 +1,7 @@
+// Copyright (c) 2015 Christopher "BlayTheNinth" Baker
+
 package net.blay09.mods.eirairc.config;
 
- // Notifications
 public enum NotificationStyle {
 	None,
 	TextOnly,

@@ -1,6 +1,5 @@
 // Copyright (c) 2015 Christopher "BlayTheNinth" Baker
 
-
 package net.blay09.mods.eirairc.config;
 
 import com.google.gson.JsonObject;
@@ -113,10 +112,10 @@ public class ChannelConfig {
 		ConfigurationHandler.save();
 	}
 
-	public static void addOptionsToList(List<String> list, String option) {
-		ThemeSettings.addOptionsToList(list, option);
-		BotSettings.addOptionsToList(list, option);
-		GeneralSettings.addOptionsToList(list, option);
+	public static void addOptionsToList(List<String> list, String option, boolean autoCompleteOption) {
+		ThemeSettings.addOptionsToList(list, option, autoCompleteOption);
+		BotSettings.addOptionsToList(list, option, autoCompleteOption);
+		GeneralSettings.addOptionsToList(list, option, autoCompleteOption);
 	}
 
 	public ServerConfig getServerConfig() {

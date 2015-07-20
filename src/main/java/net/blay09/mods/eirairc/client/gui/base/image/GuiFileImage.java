@@ -1,10 +1,11 @@
+// Copyright (c) 2015 Christopher "BlayTheNinth" Baker
+
 package net.blay09.mods.eirairc.client.gui.base.image;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-
 
 public class GuiFileImage extends GuiImage {
 

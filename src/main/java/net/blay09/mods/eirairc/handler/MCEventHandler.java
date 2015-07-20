@@ -42,6 +42,7 @@ import net.minecraftforge.event.entity.player.AchievementEvent;
 
 import java.util.regex.Pattern;
 
+@SuppressWarnings("unused")
 public class MCEventHandler {
 
 	@SubscribeEvent
@@ -133,7 +134,7 @@ public class MCEventHandler {
 			event.setCanceled(true);
 			return;
 		}
-		if(ClientGlobalConfig.clientBridge) {
+		if(ClientGlobalConfig.clientBridge.get()) {
 			relayChatClient(event.message, false, false, null);
 			return;
 		}
@@ -161,7 +162,7 @@ public class MCEventHandler {
 	public void onClientEmote(ClientChatEvent event) {
 		String text = event.message.substring(4);
 		EntityPlayer sender = Minecraft.getMinecraft().thePlayer;
-		if(ClientGlobalConfig.clientBridge) {
+		if(ClientGlobalConfig.clientBridge.get()) {
 			relayChatClient(text, true, false, null);
 			return;
 		}
@@ -233,14 +234,14 @@ public class MCEventHandler {
 				}
 			}
 		} else {
-			if(ClientGlobalConfig.clientBridge) {
+			if(ClientGlobalConfig.clientBridge.get()) {
 				boolean isCTCP = false;
 				String ircMessage = message;
 				if(isEmote) {
 					isCTCP = true;
 					ircMessage = "ACTION " + ircMessage;
 				}
-				if(!ClientGlobalConfig.clientBridgeMessageToken.isEmpty()) {
+				if(!ClientGlobalConfig.clientBridgeMessageToken.get().isEmpty()) {
 					ircMessage = ircMessage + " " + ClientGlobalConfig.clientBridgeMessageToken;
 				}
 				for(ServerConfig serverConfig : ConfigurationHandler.getServerConfigs()) {

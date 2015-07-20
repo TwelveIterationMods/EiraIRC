@@ -1,3 +1,5 @@
+// Copyright (c) 2015 Christopher "BlayTheNinth" Baker
+
 package net.blay09.mods.eirairc.client.gui.screenshot;
 
 import net.blay09.mods.eirairc.client.gui.EiraGui;
@@ -15,7 +17,6 @@ import net.minecraft.client.gui.GuiYesNoCallback;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-
 
 public class GuiImagePreview extends EiraGuiScreen implements GuiYesNoCallback {
 

@@ -1,3 +1,5 @@
+// Copyright (c) 2015 Christopher "BlayTheNinth" Baker
+
 package net.blay09.mods.eirairc.client.gui;
 
 import cpw.mods.fml.client.config.GuiCheckBox;
@@ -21,7 +23,6 @@ import net.minecraft.client.gui.*;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.input.Keyboard;
-
 
 public class GuiTwitch extends EiraGuiScreen implements GuiYesNoCallback {
 

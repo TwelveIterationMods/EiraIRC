@@ -1,3 +1,5 @@
+// Copyright (c) 2015 Christopher "BlayTheNinth" Baker
+
 package net.blay09.mods.eirairc.client.gui.screenshot;
 
 import net.blay09.mods.eirairc.client.graphics.TextureRegion;
@@ -6,7 +8,6 @@ import net.blay09.mods.eirairc.util.Globals;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import org.lwjgl.opengl.GL11;
-
 
 public abstract class GuiScreenshotPage extends GuiButton {
 

@@ -1,3 +1,5 @@
+// Copyright (c) 2015 Christopher "BlayTheNinth" Baker
+
 package net.blay09.mods.eirairc.client.screenshot;
 
 import net.blay09.mods.eirairc.api.upload.UploadHoster;
@@ -23,7 +25,7 @@ public class AsyncUploadScreenshot implements Runnable {
 	
 	@Override
 	public void run() {
-		uploadedFile = hoster.uploadFile(screenshot.getFile(), ClientGlobalConfig.uploadBufferSize);
+		uploadedFile = hoster.uploadFile(screenshot.getFile(), ClientGlobalConfig.uploadBufferSize.get());
 		if(uploadedFile != null) {
 			screenshot.setUploadedFile(uploadedFile);
 		}

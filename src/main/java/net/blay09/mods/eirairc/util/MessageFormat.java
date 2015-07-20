@@ -1,3 +1,5 @@
+// Copyright (c) 2015 Christopher "BlayTheNinth" Baker
+
 package net.blay09.mods.eirairc.util;
 
 import net.blay09.mods.eirairc.addon.Compatibility;
@@ -20,7 +22,6 @@ import net.minecraftforge.common.MinecraftForge;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 
 public class MessageFormat {
 
@@ -144,9 +145,9 @@ public class MessageFormat {
 	private static String filterAllowedCharacters(String message) {
 		StringBuilder sb = new StringBuilder();
 		char[] charArray = message.toCharArray();
-		for (int i = 0; i < charArray.length; i++) {
-			if (isAllowedCharacter(charArray[i])) {
-				sb.append(charArray[i]);
+		for (char c : charArray) {
+			if (isAllowedCharacter(c)) {
+				sb.append(c);
 			}
 		}
 		return sb.toString();
@@ -154,11 +155,11 @@ public class MessageFormat {
 
 	public static String formatNick(String nick, IRCContext context, Target target, Mode mode, IRCUser ircUser) {
 		if(target == Target.IRC) {
-			if(SharedGlobalConfig.hidePlayerTags) {
+			if(SharedGlobalConfig.hidePlayerTags.get()) {
 				nick = filterPlayerTags(nick);
 			}
 			nick = String.format(ConfigHelper.getBotSettings(context).getString(BotStringComponent.NickFormat), nick);
-			if(SharedGlobalConfig.preventUserPing) {
+			if(SharedGlobalConfig.preventUserPing.get()) {
 				nick = nick.substring(0, 1) + '\u0081' + nick.substring(1);
 			}
 		} else if(target == Target.Minecraft && context instanceof IRCChannel) {
@@ -171,7 +172,7 @@ public class MessageFormat {
 				nick = ircUser.getChannelModePrefix((IRCChannel) context) + nick;
 			}
 			if(context.getConnection().isTwitch()) {
-				if(Compatibility.isEiraMoticonsInstalled() && SharedGlobalConfig.twitchNameBadges) {
+				if(Compatibility.isEiraMoticonsInstalled() && SharedGlobalConfig.twitchNameBadges.get()) {
 					String badges = "";
 					if(ircUser.getName().toLowerCase().equals(context.getName().substring(1).toLowerCase())) {
 						badges += EiraMoticonsAddon.casterBadge.getChatString();
@@ -222,39 +223,46 @@ public class MessageFormat {
 					boolean validToken = true;
 					String token = format.substring(currentIdx + 1, tokenEnd);
 					IChatComponent component = null;
-					if(token.equals("SERVER")) {
-						component = new ChatComponentText(Utils.getCurrentServerName());
-					} else if(token.equals("USER")) {
-						component = new ChatComponentText(sender.getCommandSenderName());
-					} else if(token.equals("CHANNEL")) {
-						component = new ChatComponentText(context != null ? context.getName() : "");
-					} else if(token.equals("NICK")) {
-						if(sender instanceof EntityPlayer) {
-							EntityPlayer player = (EntityPlayer) sender;
-							component = player.getFormattedCommandSenderName().createCopy();
-							String displayName = component.getUnformattedText();
-							displayName = formatNick(displayName, context, target, mode, null);
-							component = new ChatComponentText(displayName);
-							if(mode != Mode.Emote) {
-								EnumChatFormatting nameColor = IRCFormatting.getColorFormattingForPlayer(player);
-								if(nameColor != null && nameColor != EnumChatFormatting.WHITE) {
-									component.getChatStyle().setColor(nameColor);
-								}
-							}
-						} else {
+					switch (token) {
+						case "SERVER":
+							component = new ChatComponentText(Utils.getCurrentServerName());
+							break;
+						case "USER":
 							component = new ChatComponentText(sender.getCommandSenderName());
-						}
-					} else if(token.equals("MESSAGE")) {
-						BotSettings botSettings = ConfigHelper.getBotSettings(context);
-						if(target == Target.Minecraft) {
-							message = IRCFormatting.toMC(message, !botSettings.getBoolean(BotBooleanComponent.ConvertColors));
-							message = filterAllowedCharacters(message);
-						} else if(target == Target.IRC) {
-							message = IRCFormatting.toIRC(message, !botSettings.getBoolean(BotBooleanComponent.ConvertColors));
-						}
-						component = createChatComponentForMessage(message);
-					} else {
-						validToken = false;
+							break;
+						case "CHANNEL":
+							component = new ChatComponentText(context != null ? context.getName() : "");
+							break;
+						case "NICK":
+							if (sender instanceof EntityPlayer) {
+								EntityPlayer player = (EntityPlayer) sender;
+								component = player.getFormattedCommandSenderName().createCopy();
+								String displayName = component.getUnformattedText();
+								displayName = formatNick(displayName, context, target, mode, null);
+								component = new ChatComponentText(displayName);
+								if (mode != Mode.Emote) {
+									EnumChatFormatting nameColor = IRCFormatting.getColorFormattingForPlayer(player);
+									if (nameColor != null && nameColor != EnumChatFormatting.WHITE) {
+										component.getChatStyle().setColor(nameColor);
+									}
+								}
+							} else {
+								component = new ChatComponentText(sender.getCommandSenderName());
+							}
+							break;
+						case "MESSAGE":
+							BotSettings botSettings = ConfigHelper.getBotSettings(context);
+							if (target == Target.Minecraft) {
+								message = IRCFormatting.toMC(message, !botSettings.getBoolean(BotBooleanComponent.ConvertColors));
+								message = filterAllowedCharacters(message);
+							} else if (target == Target.IRC) {
+								message = IRCFormatting.toIRC(message, !botSettings.getBoolean(BotBooleanComponent.ConvertColors));
+							}
+							component = createChatComponentForMessage(message);
+							break;
+						default:
+							validToken = false;
+							break;
 					}
 					if(validToken) {
 						if(sb.length() > 0) {
@@ -318,40 +326,47 @@ public class MessageFormat {
 					boolean validToken = true;
 					String token = format.substring(currentIdx + 1, tokenEnd);
 					IChatComponent component = null;
-					if(token.equals("SERVER")) {
-						component = new ChatComponentText(connection.getIdentifier());
-					} else if(token.equals("CHANNEL")) {
-						component = new ChatComponentText(targetContext != null ? targetContext.getName() : "#");
-					} else if(token.equals("USER")) {
-						if(sender != null) {
-							component = new ChatComponentText(sender.getIdentifier());
-						} else {
+					switch (token) {
+						case "SERVER":
 							component = new ChatComponentText(connection.getIdentifier());
-						}
-					} else if(token.equals("NICK")) {
-						if(sender != null) {
-							String displayName = formatNick(sender.getName(), targetContext, target, mode, sender);
-							component = new ChatComponentText(displayName);
-							if(mode != Mode.Emote) {
-								EnumChatFormatting nameColor = IRCFormatting.getColorFormattingForUser(targetContext instanceof IRCChannel ? (IRCChannel) targetContext : null, sender);
-								if(nameColor != null) {
-									component.getChatStyle().setColor(nameColor);
-								}
+							break;
+						case "CHANNEL":
+							component = new ChatComponentText(targetContext != null ? targetContext.getName() : "#");
+							break;
+						case "USER":
+							if (sender != null) {
+								component = new ChatComponentText(sender.getIdentifier());
+							} else {
+								component = new ChatComponentText(connection.getIdentifier());
 							}
-						} else {
-							component = new ChatComponentText(connection.getIdentifier());
-						}
-					} else if(token.equals("MESSAGE")) {
-						BotSettings botSettings = ConfigHelper.getBotSettings(targetContext);
-						if(target == Target.Minecraft) {
-							message = IRCFormatting.toMC(message, !botSettings.getBoolean(BotBooleanComponent.ConvertColors));
-							message = filterAllowedCharacters(message);
-						} else if(target == Target.IRC) {
-							message = IRCFormatting.toIRC(message, !botSettings.getBoolean(BotBooleanComponent.ConvertColors));
-						}
-						component = createChatComponentForMessage(message);
-					} else {
-						validToken = false;
+							break;
+						case "NICK":
+							if (sender != null) {
+								String displayName = formatNick(sender.getName(), targetContext, target, mode, sender);
+								component = new ChatComponentText(displayName);
+								if (mode != Mode.Emote) {
+									EnumChatFormatting nameColor = IRCFormatting.getColorFormattingForUser(targetContext instanceof IRCChannel ? (IRCChannel) targetContext : null, sender);
+									if (nameColor != null) {
+										component.getChatStyle().setColor(nameColor);
+									}
+								}
+							} else {
+								component = new ChatComponentText(connection.getIdentifier());
+							}
+							break;
+						case "MESSAGE":
+							BotSettings botSettings = ConfigHelper.getBotSettings(targetContext);
+							if (target == Target.Minecraft) {
+								message = IRCFormatting.toMC(message, !botSettings.getBoolean(BotBooleanComponent.ConvertColors));
+								message = filterAllowedCharacters(message);
+							} else if (target == Target.IRC) {
+								message = IRCFormatting.toIRC(message, !botSettings.getBoolean(BotBooleanComponent.ConvertColors));
+							}
+							component = createChatComponentForMessage(message);
+							break;
+						default:
+							validToken = false;
+							break;
 					}
 					if(validToken) {
 						if(sb.length() > 0) {

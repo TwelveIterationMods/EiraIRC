@@ -1,3 +1,5 @@
+// Copyright (c) 2015 Christopher "BlayTheNinth" Baker
+
 package net.blay09.mods.eirairc.irc;
 
 import net.blay09.mods.eirairc.EiraIRC;
@@ -66,7 +68,7 @@ public class IRCSender implements Runnable {
 					}
 				}
 				try {
-					Thread.sleep(antiFlood ? SharedGlobalConfig.antiFloodTime : 100);
+					Thread.sleep(antiFlood ? SharedGlobalConfig.antiFloodTime.get() : 100);
 				} catch (InterruptedException ignored) {}
 			}
 		} catch (SocketException e) {

@@ -1,3 +1,5 @@
+// Copyright (c) 2015 Christopher "BlayTheNinth" Baker
+
 package net.blay09.mods.eirairc.client.gui;
 
 import cpw.mods.fml.client.config.ConfigGuiType;
@@ -15,7 +17,6 @@ import net.minecraftforge.common.config.Property;
 
 import java.util.ArrayList;
 import java.util.List;
-
 
 public class GuiEiraIRCConfig extends GuiConfig {
 

@@ -1,3 +1,5 @@
+// Copyright (c) 2015 Christopher "BlayTheNinth" Baker
+
 package net.blay09.mods.eirairc.client.gui.screenshot;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -22,7 +24,6 @@ import net.minecraftforge.common.MinecraftForge;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
 
 public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 

@@ -1,3 +1,5 @@
+// Copyright (c) 2015 Christopher "BlayTheNinth" Baker
+
 package net.blay09.mods.eirairc;
 
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
@@ -8,7 +10,6 @@ import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Utils;
 
 import java.util.*;
-
 
 public class ConnectionManager {
 

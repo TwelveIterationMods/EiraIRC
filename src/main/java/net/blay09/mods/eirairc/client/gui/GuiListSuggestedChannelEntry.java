@@ -1,3 +1,5 @@
+// Copyright (c) 2015 Christopher "BlayTheNinth" Baker
+
 package net.blay09.mods.eirairc.client.gui;
 
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
@@ -10,7 +12,6 @@ import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 
-
 public class GuiListSuggestedChannelEntry extends GuiListEntry {
 
 	private static final int TEXT_MARGIN = 5;
@@ -19,6 +20,7 @@ public class GuiListSuggestedChannelEntry extends GuiListEntry {
 	private final SuggestedChannel channel;
 	private final boolean altBackground;
 
+	@SuppressWarnings("unchecked")
 	public GuiListSuggestedChannelEntry(FontRenderer fontRenderer, SuggestedChannel channel, boolean altBackground) {
 		this.fontRenderer = fontRenderer;
 		this.channel = channel;

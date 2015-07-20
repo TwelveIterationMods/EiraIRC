@@ -180,7 +180,7 @@ public class IRCEventHandler {
 				EiraIRC.instance.getChatSessionHandler().addTargetUser(sender);
 				ThemeSettings theme = ConfigHelper.getTheme(sender);
 				EnumChatFormatting emoteColor = theme.getColor(ThemeColorComponent.emoteTextColor);
-				EnumChatFormatting twitchNameColor = (sender != null && SharedGlobalConfig.twitchNameColors) ? ((IRCUserImpl) sender).getNameColor() : null;
+				EnumChatFormatting twitchNameColor = (sender != null && SharedGlobalConfig.twitchNameColors.get()) ? ((IRCUserImpl) sender).getNameColor() : null;
 				EnumChatFormatting noticeColor = theme.getColor(ThemeColorComponent.ircNoticeTextColor);
 				if (isEmote && (emoteColor != null || twitchNameColor != null)) {
 					chatComponent.getChatStyle().setColor(twitchNameColor != null ? twitchNameColor : emoteColor);
@@ -202,7 +202,7 @@ public class IRCEventHandler {
 			logger.info("Ignored message by " + sender.getName() + ": " + message);
 			return;
 		}
-		if(!isNotice && message.startsWith(SharedGlobalConfig.ircCommandPrefix) && ((IRCBotImpl) connection.getBot()).processCommand(channel, sender, message.substring(SharedGlobalConfig.ircCommandPrefix.length()))) {
+		if(!isNotice && message.startsWith(SharedGlobalConfig.ircCommandPrefix.get()) && ((IRCBotImpl) connection.getBot()).processCommand(channel, sender, message.substring(SharedGlobalConfig.ircCommandPrefix.get().length()))) {
 			return;
 		}
 		if(connection.isTwitch()) {
@@ -268,7 +268,7 @@ public class IRCEventHandler {
 				}
 				ThemeSettings theme = ConfigHelper.getTheme(event.channel);
 				EnumChatFormatting emoteColor = theme.getColor(ThemeColorComponent.emoteTextColor);
-				EnumChatFormatting twitchNameColor = (sender != null && SharedGlobalConfig.twitchNameColors) ? ((IRCUserImpl) sender).getNameColor() : null;
+				EnumChatFormatting twitchNameColor = (sender != null && SharedGlobalConfig.twitchNameColors.get()) ? ((IRCUserImpl) sender).getNameColor() : null;
 				EnumChatFormatting noticeColor = theme.getColor(ThemeColorComponent.ircNoticeTextColor);
 				if (isEmote && (emoteColor != null || twitchNameColor != null)) {
 					chatComponent.getChatStyle().setColor(twitchNameColor != null ? twitchNameColor : emoteColor);
@@ -321,7 +321,7 @@ public class IRCEventHandler {
 			}
 		}
 		if(!SharedGlobalConfig.defaultChat.equals("Minecraft")) {
-			IRCContext chatTarget = EiraIRCAPI.parseContext(null, SharedGlobalConfig.defaultChat, IRCContext.ContextType.IRCChannel);
+			IRCContext chatTarget = EiraIRCAPI.parseContext(null, SharedGlobalConfig.defaultChat.get(), IRCContext.ContextType.IRCChannel);
 			if(chatTarget.getContextType() != IRCContext.ContextType.Error) {
 				EiraIRC.instance.getChatSessionHandler().setChatTarget(chatTarget);
 			}
@@ -602,7 +602,7 @@ public class IRCEventHandler {
 		if(ConfigHelper.getGeneralSettings(channel).getBoolean(GeneralBooleanComponent.AutoWho)) {
 			Utils.sendUserList(null, connection, channel);
 		}
-		if(Compatibility.isEiraMoticonsInstalled() && SharedGlobalConfig.twitchNameBadges && channel.getConnection().isTwitch()) {
+		if(Compatibility.isEiraMoticonsInstalled() && SharedGlobalConfig.twitchNameBadges.get() && channel.getConnection().isTwitch()) {
 			// Pre-load this channels sub badge
 			EiraMoticonsAddon.getSubscriberBadge(channel);
 		}

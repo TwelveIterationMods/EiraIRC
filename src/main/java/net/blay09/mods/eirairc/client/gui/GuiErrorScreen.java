@@ -1,3 +1,5 @@
+// Copyright (c) 2015 Christopher "BlayTheNinth" Baker
+
 package net.blay09.mods.eirairc.client.gui;
 
 import net.blay09.mods.eirairc.client.gui.base.GuiLabel;
@@ -8,7 +10,6 @@ import net.minecraft.client.gui.GuiButton;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-
 
 public class GuiErrorScreen extends EiraGuiScreen {
 

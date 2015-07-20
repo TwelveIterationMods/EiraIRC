@@ -1,6 +1,5 @@
 // Copyright (c) 2015 Christopher "BlayTheNinth" Baker
 
-
 package net.blay09.mods.eirairc.command.extension;
 
 import net.blay09.mods.eirairc.api.SubCommand;
@@ -42,7 +41,7 @@ public class CommandColor implements SubCommand {
 		if(!(sender instanceof EntityPlayer)) {
 			return true;
 		}
-		if(!SharedGlobalConfig.enablePlayerColors) {
+		if(!SharedGlobalConfig.enablePlayerColors.get()) {
 			Utils.sendLocalizedMessage(sender, "commands.color.disabled");
 			return true;
 		}

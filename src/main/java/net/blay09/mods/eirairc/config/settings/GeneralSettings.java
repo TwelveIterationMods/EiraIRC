@@ -1,3 +1,5 @@
+// Copyright (c) 2015 Christopher "BlayTheNinth" Baker
+
 package net.blay09.mods.eirairc.config.settings;
 
 import com.google.gson.JsonObject;
@@ -11,7 +13,6 @@ import net.minecraftforge.common.config.Property;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
-
 
 public class GeneralSettings {
 
@@ -137,7 +138,7 @@ public class GeneralSettings {
 		}
 		return false;
 	}
-	public static void addOptionsToList(List<String> list, String option) {
+	public static void addOptionsToList(List<String> list, String option, boolean autoCompleteOption) {
 		if(option == null) {
 			for(GeneralBooleanComponent component : GeneralBooleanComponent.values) {
 				list.add(component.name);

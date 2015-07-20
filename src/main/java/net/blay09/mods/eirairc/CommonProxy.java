@@ -1,6 +1,5 @@
 // Copyright (c) 2015 Christopher "BlayTheNinth" Baker
 
-
 package net.blay09.mods.eirairc;
 
 import net.blay09.mods.eirairc.api.event.IRCChannelMessageEvent;
@@ -67,8 +66,8 @@ public class CommonProxy {
 		return SharedGlobalConfig.handleConfigCommand(sender, key);
 	}
 
-	public void addConfigOptionsToList(List<String> list, String option) {
-		SharedGlobalConfig.addOptionsToList(list, option);
+	public void addConfigOptionsToList(List<String> list, String option, boolean autoCompleteOption) {
+		SharedGlobalConfig.addOptionsToList(list, option, autoCompleteOption);
 	}
 
 	public boolean checkClientBridge(IRCChannelMessageEvent event) {

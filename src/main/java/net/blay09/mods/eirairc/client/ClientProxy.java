@@ -1,6 +1,5 @@
 // Copyright (c) 2015 Christopher "BlayTheNinth" Baker
 
-
 package net.blay09.mods.eirairc.client;
 
 import cpw.mods.fml.client.registry.ClientRegistry;
@@ -32,6 +31,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class ClientProxy extends CommonProxy {
 
 	private OverlayNotification notificationGUI;
@@ -61,7 +61,7 @@ public class ClientProxy extends CommonProxy {
 		}
 		
 		EiraIRC.instance.registerCommands(ClientCommandHandler.instance, false);
-		if(ClientGlobalConfig.registerShortCommands) {
+		if(ClientGlobalConfig.registerShortCommands.get()) {
 			IRCCommandHandler.registerQuickCommands(ClientCommandHandler.instance);
 		}
 
@@ -87,16 +87,16 @@ public class ClientProxy extends CommonProxy {
 	public void publishNotification(NotificationType type, String text) {
 		NotificationStyle config = NotificationStyle.None;
 		switch(type) {
-		case FriendJoined: config = ClientGlobalConfig.ntfyFriendJoined; break;
-		case PlayerMentioned: config = ClientGlobalConfig.ntfyNameMentioned; break;
-		case PrivateMessage: config = ClientGlobalConfig.ntfyPrivateMessage; break;
+		case FriendJoined: config = ClientGlobalConfig.ntfyFriendJoined.get(); break;
+		case PlayerMentioned: config = ClientGlobalConfig.ntfyNameMentioned.get(); break;
+		case PrivateMessage: config = ClientGlobalConfig.ntfyPrivateMessage.get(); break;
 		default:
 		}
 		if(config != NotificationStyle.None && config != NotificationStyle.SoundOnly) {
 			notificationGUI.showNotification(type, text);
 		}
 		if(config == NotificationStyle.TextAndSound || config == NotificationStyle.SoundOnly) {
-			Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.createPositionedSoundRecord(new ResourceLocation(ClientGlobalConfig.notificationSound), ClientGlobalConfig.notificationSoundPitch));
+			Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.createPositionedSoundRecord(new ResourceLocation(ClientGlobalConfig.notificationSound.get()), ClientGlobalConfig.notificationSoundPitch.get()));
 		}
 	}
 	
@@ -148,21 +148,21 @@ public class ClientProxy extends CommonProxy {
 	}
 
 	@Override
-	public void addConfigOptionsToList(List<String> list, String option) {
-		super.addConfigOptionsToList(list, option);
-		ClientGlobalConfig.addOptionsToList(list, option);
+	public void addConfigOptionsToList(List<String> list, String option, boolean autoCompleteOption) {
+		super.addConfigOptionsToList(list, option, autoCompleteOption);
+		ClientGlobalConfig.addOptionsToList(list, option, autoCompleteOption);
 	}
 
 	@Override
 	public boolean checkClientBridge(IRCChannelMessageEvent event) {
-		if(ClientGlobalConfig.clientBridge) {
-			if(!ClientGlobalConfig.clientBridgeMessageToken.isEmpty()) {
-				if (event.message.endsWith(ClientGlobalConfig.clientBridgeMessageToken) || event.message.endsWith(ClientGlobalConfig.clientBridgeMessageToken + IRCConnectionImpl.CTCP_END)) {
+		if(ClientGlobalConfig.clientBridge.get()) {
+			if(!ClientGlobalConfig.clientBridgeMessageToken.get().isEmpty()) {
+				if (event.message.endsWith(ClientGlobalConfig.clientBridgeMessageToken.get()) || event.message.endsWith(ClientGlobalConfig.clientBridgeMessageToken + IRCConnectionImpl.CTCP_END)) {
 					return true;
 				}
 			}
-			if(!ClientGlobalConfig.clientBridgeNickToken.isEmpty()) {
-				if (event.sender.getName().endsWith(ClientGlobalConfig.clientBridgeNickToken)) {
+			if(!ClientGlobalConfig.clientBridgeNickToken.get().isEmpty()) {
+				if (event.sender.getName().endsWith(ClientGlobalConfig.clientBridgeNickToken.get())) {
 					return true;
 				}
 			}

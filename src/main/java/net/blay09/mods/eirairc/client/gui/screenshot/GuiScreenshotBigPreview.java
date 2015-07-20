@@ -1,3 +1,5 @@
+// Copyright (c) 2015 Christopher "BlayTheNinth" Baker
+
 package net.blay09.mods.eirairc.client.gui.screenshot;
 
 import net.blay09.mods.eirairc.client.gui.EiraGuiScreen;
@@ -9,7 +11,6 @@ import net.blay09.mods.eirairc.util.Globals;
 import net.minecraft.client.gui.GuiScreen;
 
 import java.net.URL;
-
 
 public class GuiScreenshotBigPreview extends EiraGuiScreen {
 

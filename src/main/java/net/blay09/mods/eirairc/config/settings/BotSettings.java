@@ -1,3 +1,5 @@
+// Copyright (c) 2015 Christopher "BlayTheNinth" Baker
+
 package net.blay09.mods.eirairc.config.settings;
 
 import com.google.gson.JsonArray;
@@ -314,7 +316,7 @@ public class BotSettings {
 		return false;
 	}
 
-	public static void addOptionsToList(List<String> list, String option) {
+	public static void addOptionsToList(List<String> list, String option, boolean autoCompleteOption) {
 		if(option == null) {
 			for(BotBooleanComponent component : BotBooleanComponent.values) {
 				list.add(component.name);

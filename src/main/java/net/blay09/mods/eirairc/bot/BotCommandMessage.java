@@ -1,6 +1,5 @@
 // Copyright (c) 2015 Christopher "BlayTheNinth" Baker
 
-
 package net.blay09.mods.eirairc.bot;
 
 import net.blay09.mods.eirairc.EiraIRC;
@@ -34,6 +33,7 @@ public class BotCommandMessage implements IBotCommand {
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public void processCommand(IRCBot bot, IRCChannel channel, IRCUser user, String[] args, IBotCommand commandSettings) {
 		BotSettings botSettings = ConfigHelper.getBotSettings(channel);
 		if(!botSettings.getBoolean(BotBooleanComponent.AllowPrivateMessages)) {

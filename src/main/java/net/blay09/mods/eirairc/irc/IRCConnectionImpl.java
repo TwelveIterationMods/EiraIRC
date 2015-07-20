@@ -150,11 +150,11 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 	}
 
 	protected Proxy createProxy() {
-		if(!SharedGlobalConfig.proxyHost.isEmpty()) {
-			if(!SharedGlobalConfig.proxyUsername.isEmpty() || !SharedGlobalConfig.proxyPassword.isEmpty()) {
-				Authenticator.setDefault(new ProxyAuthenticator(SharedGlobalConfig.proxyUsername, SharedGlobalConfig.proxyPassword));
+		if(!SharedGlobalConfig.proxyHost.get().isEmpty()) {
+			if(!SharedGlobalConfig.proxyUsername.get().isEmpty() || !SharedGlobalConfig.proxyPassword.get().isEmpty()) {
+				Authenticator.setDefault(new ProxyAuthenticator(SharedGlobalConfig.proxyUsername.get(), SharedGlobalConfig.proxyPassword.get()));
 			}
-			SocketAddress proxyAddr = new InetSocketAddress(Utils.extractHost(SharedGlobalConfig.proxyHost), Utils.extractPorts(SharedGlobalConfig.proxyHost, DEFAULT_PROXY_PORT)[0]);
+			SocketAddress proxyAddr = new InetSocketAddress(Utils.extractHost(SharedGlobalConfig.proxyHost.get()), Utils.extractPorts(SharedGlobalConfig.proxyHost.get(), DEFAULT_PROXY_PORT)[0]);
 			return new Proxy(Proxy.Type.SOCKS, proxyAddr);
 		}
 		return null;
@@ -172,8 +172,8 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 					newSocket = new Socket();
 				}
 
-				if (!SharedGlobalConfig.bindIP.isEmpty()) {
-					newSocket.bind(new InetSocketAddress(SharedGlobalConfig.bindIP, ports[i]));
+				if (!SharedGlobalConfig.bindIP.get().isEmpty()) {
+					newSocket.bind(new InetSocketAddress(SharedGlobalConfig.bindIP.get(), ports[i]));
 				}
 				newSocket.connect(targetAddr);
 				writer = new BufferedWriter(new OutputStreamWriter(newSocket.getOutputStream(), serverConfig.getCharset()));
@@ -204,7 +204,7 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 			sender.start();
 			String line;
 			while ((line = reader.readLine()) != null && sender.isRunning()) {
-				if (SharedGlobalConfig.debugMode) {
+				if (SharedGlobalConfig.debugMode.get()) {
 					System.out.println(line);
 				}
 				if (!line.isEmpty()) {
@@ -390,13 +390,13 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 				}
 			}
 		} else if(numeric == IRCReplyCodes.RPL_MOTD || numeric <= 4 || numeric == 251 || numeric == 252 || numeric == 254 || numeric == 255 || numeric == 265 || numeric == 266 || numeric == 250 || numeric == 375) {
-			if(SharedGlobalConfig.debugMode) {
+			if(SharedGlobalConfig.debugMode.get()) {
 				System.out.println("Ignoring message code: " + msg.getCommand() + " (" + msg.argCount() + " arguments)");
 			}
 		} else if(IRCReplyCodes.isErrorCode(numeric)) {
 			IRCEventHandler.fireIRCErrorEvent(this, msg, msg.getNumericCommand(), msg.args());
 		} else {
-			if(SharedGlobalConfig.debugMode) {
+			if(SharedGlobalConfig.debugMode.get()) {
 				System.out.println("Unhandled message code: " + msg.getCommand() + " (" + msg.argCount() + " arguments)");
 			}
 		}

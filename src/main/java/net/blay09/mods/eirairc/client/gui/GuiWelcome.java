@@ -1,3 +1,5 @@
+// Copyright (c) 2015 Christopher "BlayTheNinth" Baker
+
 package net.blay09.mods.eirairc.client.gui;
 
 import cpw.mods.fml.client.config.GuiCheckBox;
@@ -16,7 +18,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-
 public class GuiWelcome extends EiraGuiScreen {
 
 	private GuiList<GuiListSuggestedChannelEntry> lstChannels;
@@ -25,6 +26,7 @@ public class GuiWelcome extends EiraGuiScreen {
 	private GuiLinkButton btnSubmitChannel;
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public void initGui() {
 		super.initGui();
 
@@ -39,7 +41,7 @@ public class GuiWelcome extends EiraGuiScreen {
 		chkRecommendedOnly = new GuiCheckBox(0, menuX + 10, menuY + 50, "Show recommended channels only", true);
 		buttonList.add(chkRecommendedOnly);
 
-		lstChannels = new GuiList<GuiListSuggestedChannelEntry>(this, menuX + 10, menuY + 65, menuWidth - 20, 100, 30);
+		lstChannels = new GuiList<>(this, menuX + 10, menuY + 65, menuWidth - 20, 100, 30);
 		listList.add(lstChannels);
 
 		chkDontShowAgain = new GuiCheckBox(1, menuX + 10, menuY + menuHeight - 30, "Don't show this message again", false);
@@ -63,7 +65,7 @@ public class GuiWelcome extends EiraGuiScreen {
 	public void updateList(boolean recommendedOnly) {
 		lstChannels.clear();
 		String modpackId = Utils.getModpackId();
-		List<SuggestedChannel> outputList = new ArrayList<SuggestedChannel>();
+		List<SuggestedChannel> outputList = new ArrayList<>();
 		for(SuggestedChannel channel : ConfigurationHandler.getSuggestedChannels()) {
 			if(recommendedOnly) {
 				if(!channel.isRecommended()) {
@@ -94,7 +96,7 @@ public class GuiWelcome extends EiraGuiScreen {
 	@Override
 	public void onGuiClosed() {
 		super.onGuiClosed();
-		ClientGlobalConfig.showWelcomeScreen = !chkDontShowAgain.isChecked();
+		ClientGlobalConfig.showWelcomeScreen.set(!chkDontShowAgain.isChecked());
 		ClientGlobalConfig.save();
 	}
 

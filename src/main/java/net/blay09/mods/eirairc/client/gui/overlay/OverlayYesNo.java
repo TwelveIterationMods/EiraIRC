@@ -1,3 +1,5 @@
+// Copyright (c) 2015 Christopher "BlayTheNinth" Baker
+
 package net.blay09.mods.eirairc.client.gui.overlay;
 
 import net.blay09.mods.eirairc.client.gui.EiraGuiScreen;
@@ -5,7 +7,6 @@ import net.blay09.mods.eirairc.client.gui.base.GuiLabel;
 import net.blay09.mods.eirairc.util.Globals;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
-
 
 public class OverlayYesNo extends GuiOverlay {
 

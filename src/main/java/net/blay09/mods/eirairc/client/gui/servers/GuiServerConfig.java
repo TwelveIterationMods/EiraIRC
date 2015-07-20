@@ -1,3 +1,5 @@
+// Copyright (c) 2015 Christopher "BlayTheNinth" Baker
+
 package net.blay09.mods.eirairc.client.gui.servers;
 
 import cpw.mods.fml.client.config.GuiConfig;
@@ -28,7 +30,6 @@ import net.minecraft.client.gui.GuiYesNoCallback;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.ConfigElement;
 import org.lwjgl.input.Keyboard;
-
 
 public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 

@@ -1,6 +1,5 @@
 // Copyright (c) 2015 Christopher "BlayTheNinth" Baker
 
-
 package net.blay09.mods.eirairc.client.gui.base.image;
 
 import net.minecraft.client.renderer.Tessellator;

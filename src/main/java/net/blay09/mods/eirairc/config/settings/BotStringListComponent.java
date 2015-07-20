@@ -1,5 +1,6 @@
-package net.blay09.mods.eirairc.config.settings;
+// Copyright (c) 2015 Christopher "BlayTheNinth" Baker
 
+package net.blay09.mods.eirairc.config.settings;
 
 public enum BotStringListComponent {
 	InterOpAuthList("interOpAuthList", new String[0], "eirairc:config.property.interOpAuthList", false),

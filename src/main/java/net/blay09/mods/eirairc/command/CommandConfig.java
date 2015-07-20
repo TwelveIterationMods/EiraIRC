@@ -1,6 +1,5 @@
 // Copyright (c) 2015 Christopher "BlayTheNinth" Baker
 
-
 package net.blay09.mods.eirairc.command;
 
 import net.blay09.mods.eirairc.EiraIRC;
@@ -82,22 +81,22 @@ public class CommandConfig implements SubCommand {
 				return;
 			}
 			if(args[0].equals(TARGET_GLOBAL)) {
-				ConfigurationHandler.addOptionsToList(list, null);
+				ConfigurationHandler.addOptionsToList(list, args[1], true);
 			} else if(IRCResolver.isChannel(args[0])) {
-				ChannelConfig.addOptionsToList(list, null);
+				ChannelConfig.addOptionsToList(list, args[1], true);
 			} else {
-				ServerConfig.addOptionsToList(list, null);
+				ServerConfig.addOptionsToList(list, args[1], true);
 			}
 		} else if(args.length == 3) {
 			if(args[0].equals("reload")) {
 				return;
 			}
 			if(args[0].equals(TARGET_GLOBAL)) {
-				ConfigurationHandler.addOptionsToList(list, args[1]);
+				ConfigurationHandler.addOptionsToList(list, args[1], false);
 			} else if(IRCResolver.isChannel(args[0])) {
-				ChannelConfig.addOptionsToList(list, args[1]);
+				ChannelConfig.addOptionsToList(list, args[1], false);
 			} else {
-				ServerConfig.addOptionsToList(list, args[1]);
+				ServerConfig.addOptionsToList(list, args[1], false);
 			}
 		}
 	}

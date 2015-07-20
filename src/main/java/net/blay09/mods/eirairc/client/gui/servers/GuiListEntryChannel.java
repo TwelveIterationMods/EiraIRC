@@ -1,3 +1,5 @@
+// Copyright (c) 2015 Christopher "BlayTheNinth" Baker
+
 package net.blay09.mods.eirairc.client.gui.servers;
 
 import net.blay09.mods.eirairc.EiraIRC;
@@ -8,7 +10,6 @@ import net.blay09.mods.eirairc.client.gui.base.list.GuiListTextEntry;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.util.Globals;
 import net.minecraft.client.gui.FontRenderer;
-
 
 public class GuiListEntryChannel extends GuiListTextEntry {
 

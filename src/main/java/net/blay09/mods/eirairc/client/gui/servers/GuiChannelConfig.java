@@ -1,3 +1,5 @@
+// Copyright (c) 2015 Christopher "BlayTheNinth" Baker
+
 package net.blay09.mods.eirairc.client.gui.servers;
 
 import cpw.mods.fml.client.config.GuiCheckBox;
@@ -20,7 +22,6 @@ import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.GuiYesNoCallback;
 import net.minecraftforge.common.config.ConfigElement;
 import org.lwjgl.input.Keyboard;
-
 
 public class GuiChannelConfig extends GuiTabPage implements GuiYesNoCallback {
 

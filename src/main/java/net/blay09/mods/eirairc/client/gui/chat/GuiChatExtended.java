@@ -1,6 +1,5 @@
 // Copyright (c) 2015 Christopher "BlayTheNinth" Baker
 
-
 package net.blay09.mods.eirairc.client.gui.chat;
 
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -19,7 +18,6 @@ import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.handler.ChatSessionHandler;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.I19n;
-import net.blay09.mods.eirairc.util.MessageFormat;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -37,9 +35,7 @@ import org.lwjgl.input.Mouse;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.regex.Matcher;
 
 @SideOnly(Side.CLIENT)
 public class GuiChatExtended extends GuiChat implements GuiYesNoCallback {
@@ -47,7 +43,7 @@ public class GuiChatExtended extends GuiChat implements GuiYesNoCallback {
 	public static final int COLOR_BACKGROUND = Integer.MIN_VALUE;
 	public static final int SHOW_HELP_TIME = 100;
 
-	private final List<String> foundIRCNames = new ArrayList<String>();
+	private final List<String> foundIRCNames = new ArrayList<>();
 	private ChatSessionHandler chatSession;
 	private String defaultInputText;
 
@@ -67,6 +63,7 @@ public class GuiChatExtended extends GuiChat implements GuiYesNoCallback {
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public void initGui() {
 		super.initGui();
 		inputField.setText(defaultInputText);
@@ -82,11 +79,11 @@ public class GuiChatExtended extends GuiChat implements GuiYesNoCallback {
 	public void onGuiClosed() {
 		super.onGuiClosed();
 
-		if(ClientGlobalConfig.autoResetChat) {
-			if(SharedGlobalConfig.defaultChat.equals("Minecraft")) {
+		if(ClientGlobalConfig.autoResetChat.get()) {
+			if(SharedGlobalConfig.defaultChat.get().equals("Minecraft")) {
 				EiraIRC.instance.getChatSessionHandler().setChatTarget(null);
 			} else {
-				IRCContext chatTarget = EiraIRCAPI.parseContext(null, SharedGlobalConfig.defaultChat, IRCContext.ContextType.IRCChannel);
+				IRCContext chatTarget = EiraIRCAPI.parseContext(null, SharedGlobalConfig.defaultChat.get(), IRCContext.ContextType.IRCChannel);
 				if(chatTarget.getContextType() != IRCContext.ContextType.Error) {
 					EiraIRC.instance.getChatSessionHandler().setChatTarget(chatTarget);
 				} else {
@@ -148,7 +145,7 @@ public class GuiChatExtended extends GuiChat implements GuiYesNoCallback {
 						if(params.length > 0) {
 							if(params[0].equals("screenshot")) {
 								try {
-									if(ClientGlobalConfig.imageLinkPreview && params[2].length() > 0) {
+									if(ClientGlobalConfig.imageLinkPreview.get() && params[2].length() > 0) {
 										mc.displayGuiScreen(new GuiImagePreview(new URL(params[2]), new URL(params[1])));
 									} else {
 										if(mc.gameSettings.chatLinksPrompt) {
@@ -166,7 +163,7 @@ public class GuiChatExtended extends GuiChat implements GuiYesNoCallback {
 						return;
 					} else {
 						// If this is an image link and imageLinkPreview is enabled, open the preview GUI. Otherwise, leave it to the super method.
-						if(ClientGlobalConfig.imageLinkPreview && clickEvent.getValue().endsWith(".png") || clickEvent.getValue().endsWith(".jpg")) {
+						if(ClientGlobalConfig.imageLinkPreview.get() && clickEvent.getValue().endsWith(".png") || clickEvent.getValue().endsWith(".jpg")) {
 							try {
 								mc.displayGuiScreen(new GuiImagePreview(new URL(clickEvent.getValue()), null));
 								return;
@@ -183,7 +180,7 @@ public class GuiChatExtended extends GuiChat implements GuiYesNoCallback {
 
 	@Override
 	public void drawScreen(int i, int j, float k) {
-		boolean terminalStyleInput = ClientGlobalConfig.terminalStyleInput;
+		boolean terminalStyleInput = ClientGlobalConfig.terminalStyleInput.get();
 		String terminalChannel = chatSession.getChatTarget() != null ? (chatSession.getChatTarget().getName() + ": ") : null;
 		if(terminalStyleInput && terminalChannel != null) {
 			int terminalChannelWidth = fontRendererObj.getStringWidth(terminalChannel);
@@ -197,7 +194,7 @@ public class GuiChatExtended extends GuiChat implements GuiYesNoCallback {
 		if(terminalStyleInput && terminalChannel != null) {
 			fontRendererObj.drawString(terminalChannel, 4, inputField.yPosition, 14737632);
 		}
-		if(!ClientGlobalConfig.disableChatToggle && !ClientGlobalConfig.clientBridge) {
+		if(!ClientGlobalConfig.disableChatToggle.get() && !ClientGlobalConfig.clientBridge.get()) {
 			IRCContext target = chatSession.getChatTarget();
 			String targetName;
 			if(target == null) {

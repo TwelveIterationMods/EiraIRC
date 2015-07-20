@@ -2,6 +2,7 @@
 
 package net.blay09.mods.eirairc.client.screenshot;
 
+import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
@@ -57,7 +58,7 @@ public class ScreenshotManager {
 	private static int[] buffer;
 	
 	private final File screenshotDir = new File(Minecraft.getMinecraft().mcDataDir, "screenshots");
-	private final List<Screenshot> screenshots = new ArrayList<Screenshot>();
+	private final List<Screenshot> screenshots = Lists.newArrayList();
 	private final Comparator<Screenshot> comparator = new Comparator<Screenshot>() {
 		@Override
 		public int compare(Screenshot first, Screenshot second) {
@@ -72,7 +73,7 @@ public class ScreenshotManager {
 		}
 	};
 
-	private final List<AsyncUploadScreenshot> uploadTasks = new ArrayList<AsyncUploadScreenshot>();
+	private final List<AsyncUploadScreenshot> uploadTasks = Lists.newArrayList();
 	private long lastScreenshotScan;
 	
 	public void load() {
@@ -182,7 +183,7 @@ public class ScreenshotManager {
 	}
 
 	public void uploadScreenshot(Screenshot screenshot, ScreenshotAction followUpAction) {
-		UploadHoster hoster = UploadManager.getUploadHoster(ClientGlobalConfig.screenshotHoster);
+		UploadHoster hoster = UploadManager.getUploadHoster(ClientGlobalConfig.screenshotHoster.get());
 		if (hoster != null) {
 			uploadTasks.add(new AsyncUploadScreenshot(hoster, screenshot, followUpAction));
 		}
@@ -212,7 +213,7 @@ public class ScreenshotManager {
 		}
 		IRCContext chatTarget = EiraIRC.instance.getChatSessionHandler().getChatTarget();
 		if(chatTarget == null) {
-			String format = ConfigHelper.getBotSettings(chatTarget).getMessageFormat().ircScreenshotUpload;
+			String format = ConfigHelper.getBotSettings(null).getMessageFormat().ircScreenshotUpload;
 			format = format.replace("{URL}", screenshot.getDirectURL() != null ? screenshot.getDirectURL() : screenshot.getUploadURL());
 			Minecraft.getMinecraft().thePlayer.sendChatMessage("/me " + format);
 		} else {
@@ -243,7 +244,7 @@ public class ScreenshotManager {
 
 	public void handleNewScreenshot(Screenshot screenshot) {
 		if (EiraIRC.proxy.isIngame()) {
-			ScreenshotAction action = ClientGlobalConfig.screenshotAction;
+			ScreenshotAction action = ClientGlobalConfig.screenshotAction.get();
 			if(action == ScreenshotAction.UploadClipboard || action == ScreenshotAction.UploadShare) {
 				uploadScreenshot(screenshot, action);
 			}

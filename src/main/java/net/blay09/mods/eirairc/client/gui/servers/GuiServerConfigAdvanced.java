@@ -1,3 +1,5 @@
+// Copyright (c) 2015 Christopher "BlayTheNinth" Baker
+
 package net.blay09.mods.eirairc.client.gui.servers;
 
 import cpw.mods.fml.client.config.GuiCheckBox;
@@ -26,7 +28,6 @@ import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.input.Keyboard;
 
 import java.nio.charset.Charset;
-
 
 public class GuiServerConfigAdvanced extends GuiTabPage implements GuiYesNoCallback {
 

@@ -1,6 +1,5 @@
 // Copyright (c) 2015 Christopher "BlayTheNinth" Baker
 
-
 package net.blay09.mods.eirairc.config;
 
 import com.google.gson.*;
@@ -501,8 +500,8 @@ public class ConfigurationHandler {
 		save();
 	}
 
-	public static void addOptionsToList(List<String> list, String option) {
-		EiraIRC.proxy.addConfigOptionsToList(list, option);
+	public static void addOptionsToList(List<String> list, String option, boolean autoCompleteOption) {
+		EiraIRC.proxy.addConfigOptionsToList(list, option, autoCompleteOption);
 	}
 
 	public static MessageFormatConfig getMessageFormat(String displayMode) {

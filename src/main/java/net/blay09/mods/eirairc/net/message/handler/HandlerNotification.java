@@ -1,6 +1,5 @@
 // Copyright (c) 2015 Christopher "BlayTheNinth" Baker
 
-
 package net.blay09.mods.eirairc.net.message.handler;
 
 import cpw.mods.fml.common.network.simpleimpl.IMessage;

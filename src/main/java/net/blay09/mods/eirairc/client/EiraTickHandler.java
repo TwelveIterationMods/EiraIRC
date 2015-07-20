@@ -1,6 +1,5 @@
 // Copyright (c) 2015 Christopher "BlayTheNinth" Baker
 
-
 package net.blay09.mods.eirairc.client;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -26,6 +25,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ChatComponentTranslation;
 import org.lwjgl.input.Keyboard;
 
+@SuppressWarnings("unused")
 public class EiraTickHandler {
 
 	private final ChatSessionHandler chatSession;
@@ -60,7 +60,7 @@ public class EiraTickHandler {
 					ScreenshotManager.getInstance().uploadScreenshot(screenshot, ScreenshotAction.UploadShare);
 				}
 			} else {
-				if(!ClientGlobalConfig.chatNoOverride) {
+				if(!ClientGlobalConfig.chatNoOverride.get()) {
 					GuiScreen currentScreen = Minecraft.getMinecraft().currentScreen;
 					if(currentScreen == null || currentScreen.getClass() == GuiChat.class) {
 						if(Keyboard.getEventKey() == keyChat) {
@@ -81,7 +81,7 @@ public class EiraTickHandler {
 		if(!EiraIRC.instance.getConnectionManager().isIRCRunning()) {
 			EiraIRC.instance.getConnectionManager().startIRC();
 		}
-		if(ClientGlobalConfig.showWelcomeScreen) {
+		if(ClientGlobalConfig.showWelcomeScreen.get()) {
 			openWelcomeScreen = 20;
 		}
 	}
@@ -95,7 +95,7 @@ public class EiraTickHandler {
 			}
 		}
 
-		if(Minecraft.getMinecraft().currentScreen instanceof GuiChat && !ClientGlobalConfig.disableChatToggle && !ClientGlobalConfig.clientBridge) {
+		if(Minecraft.getMinecraft().currentScreen instanceof GuiChat && !ClientGlobalConfig.disableChatToggle.get() && !ClientGlobalConfig.clientBridge.get()) {
 			if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) && Keyboard.isKeyDown(ClientGlobalConfig.keyToggleTarget.getKeyCode())) {
 				if(!wasToggleTargetDown) {
 					boolean users = Keyboard.isKeyDown(Keyboard.KEY_LCONTROL);
@@ -105,7 +105,7 @@ public class EiraTickHandler {
 					}
 					if(!users || newTarget != null) {
 						chatSession.setChatTarget(newTarget);
-						if(ClientGlobalConfig.chatNoOverride) {
+						if(ClientGlobalConfig.chatNoOverride.get()) {
 							Utils.addMessageToChat(new ChatComponentTranslation("eirairc:general.chattingTo", newTarget == null ? "Minecraft" : newTarget.getName()));
 						}
 					}
@@ -113,7 +113,7 @@ public class EiraTickHandler {
 				} else {
 					if(System.currentTimeMillis() - lastToggleTarget >= 1000) {
 						chatSession.setChatTarget(null);
-						if(ClientGlobalConfig.chatNoOverride) {
+						if(ClientGlobalConfig.chatNoOverride.get()) {
 							Utils.addMessageToChat(new ChatComponentTranslation("eirairc:general.chattingTo", "Minecraft"));
 						}
 						lastToggleTarget = System.currentTimeMillis();

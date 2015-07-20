@@ -1,3 +1,5 @@
+// Copyright (c) 2015 Christopher "BlayTheNinth" Baker
+
 package net.blay09.mods.eirairc;
 
 import net.blay09.mods.eirairc.api.InternalMethods;
@@ -13,7 +15,6 @@ import net.blay09.mods.eirairc.net.EiraPlayerInfo;
 import net.blay09.mods.eirairc.util.IRCTargetError;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
-
 
 public class InternalMethodsImpl implements InternalMethods {
 
