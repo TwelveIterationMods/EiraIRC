@@ -78,7 +78,7 @@ public class EiraMoticonsAddon implements IEmoticonLoader {
 								IEmoticon subBadge = EiraMoticonsAPI.registerEmoticon("EiraIRC:subBadge" + jsonChannel.get("title").getAsString(), instance);
 								subBadge.setManualOnly(true);
 								subBadge.setLoadData(new URL("http:" + jsonChannel.get("badge").getAsString()));
-								subBadge.setCustomTooltip(new String[]{I19n.format("eirairc:twitch.channelSubscriber")});
+								subBadge.setCustomTooltip(new String[]{I19n.format("eirairc:addons.twitch.channelSubscriber")});
 								synchronized (subscriberBadgeMap) {
 									subscriberBadgeMap.put(channel, subBadge);
 								}
@@ -103,15 +103,15 @@ public class EiraMoticonsAddon implements IEmoticonLoader {
 		casterBadge = EiraMoticonsAPI.registerEmoticon("EiraIRC:casterBadge", this);
 		casterBadge.setManualOnly(true);
 		casterBadge.setLoadData(new ResourceLocation("eirairc", "gfx/casterBadge.png"));
-		casterBadge.setCustomTooltip(new String[] {I19n.format("eirairc:twitch.channelBroadcaster") });
+		casterBadge.setCustomTooltip(new String[] {I19n.format("eirairc:addons.twitch.channelBroadcaster") });
 		modBadge = EiraMoticonsAPI.registerEmoticon("EiraIRC:modBadge", this);
 		modBadge.setManualOnly(true);
 		modBadge.setLoadData(new ResourceLocation("eirairc", "gfx/modBadge.png"));
-		modBadge.setCustomTooltip(new String[] {I19n.format("eirairc:twitch.channelModerator") });
+		modBadge.setCustomTooltip(new String[] {I19n.format("eirairc:addons.twitch.channelModerator") });
 		turboBadge = EiraMoticonsAPI.registerEmoticon("EiraIRC:turboBadge", this);
 		turboBadge.setManualOnly(true);
 		turboBadge.setLoadData(new ResourceLocation("eirairc", "gfx/turboBadge.png"));
-		turboBadge.setCustomTooltip(new String[] {I19n.format("eirairc:twitch.turbo") });
+		turboBadge.setCustomTooltip(new String[] {I19n.format("eirairc:addons.twitch.turbo") });
 	}
 
 	@Override

@@ -222,6 +222,7 @@ eirairc:general.connecting=Connecting to %s
 eirairc:general.reconnecting=Reconnecting to %s in %d seconds...
 eirairc:general.connected=Connected to %s
 eirairc:general.disconnected=Disconnected from %s
+eirairc:general.topicChange=§e%s has changed the topic for %s: §f%s
 
 ############################################
 #                  Errors                  #
@@ -443,14 +444,7 @@ key.irc.openMenu=Open EiraIRC Menu
 ############################################
 #                  Addons                  #
 ############################################
-eirairc:twitch.channelBroadcaster=Channel Broadcaster
-eirairc:twitch.channelModerator=Channel Moderator
-eirairc:twitch.channelSubscriber=Channel Subscriber
-eirairc:twitch.turbo=Twitch Turbo
-
-############################################
-#                Deprecated                #
-############################################
-
-eirairc:irc.display.irc.topic=§e[%s] §f%s
-eirairc:irc.display.irc.topicChange=§e%s changed the topic for %s: §f%s
+eirairc:addons.twitch.channelBroadcaster=Channel Broadcaster
+eirairc:addons.twitch.channelModerator=Channel Moderator
+eirairc:addons.twitch.channelSubscriber=Channel Subscriber
+eirairc:addons.twitch.turbo=Twitch Turbo

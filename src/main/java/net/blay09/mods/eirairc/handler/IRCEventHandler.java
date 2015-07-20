@@ -295,9 +295,10 @@ public class IRCEventHandler {
 					return;
 				}
 				if (user == null) {
-					EiraIRCAPI.getChatHandler().addChatMessage(new ChatComponentTranslation("eirairc:irc.display.irc.topic", channel.getName(), channel.getTopic()));
+					IChatComponent chatComponent = MessageFormat.formatChatComponent(ConfigHelper.getBotSettings(channel).getMessageFormat().mcTopic, connection, channel, null, channel.getTopic(), MessageFormat.Target.Minecraft, MessageFormat.Mode.Message);
+					EiraIRCAPI.getChatHandler().addChatMessage(chatComponent);
 				} else {
-					EiraIRCAPI.getChatHandler().addChatMessage(new ChatComponentTranslation("eirairc:irc.display.irc.topicChange", user.getName(), channel.getName(), channel.getTopic()));
+					EiraIRCAPI.getChatHandler().addChatMessage(new ChatComponentTranslation("eirairc:general.topicChange", user.getName(), channel.getName(), channel.getTopic()));
 				}
 				break;
 			case ALLOW:

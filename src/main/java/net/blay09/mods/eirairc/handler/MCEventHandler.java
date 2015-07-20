@@ -60,7 +60,8 @@ public class MCEventHandler {
 							channel.message(ircMessage);
 						}
 						if (channel.getTopic() != null) {
-							Utils.sendLocalizedMessage(event.player, "irc.display.irc.topic", channel.getName(), channel.getTopic());
+							IChatComponent chatComponent = MessageFormat.formatChatComponent(ConfigHelper.getBotSettings(channel).getMessageFormat().mcTopic, connection, channel, null, channel.getTopic(), MessageFormat.Target.Minecraft, MessageFormat.Mode.Message);
+							event.player.addChatMessage(chatComponent);
 						}
 						if (generalSettings.getBoolean(GeneralBooleanComponent.AutoWho)) {
 							Utils.sendUserList(event.player, connection, channel);
