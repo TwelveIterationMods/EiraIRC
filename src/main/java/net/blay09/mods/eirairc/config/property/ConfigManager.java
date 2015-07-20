@@ -20,13 +20,15 @@ public class ConfigManager {
     @SuppressWarnings("unchecked")
     public void load(Configuration config) {
         for(ConfigProperty property : properties.values()) {
-            Object type = property.get();
+            Object type = property.getDefaultValue();
             if(type.getClass() == String.class) {
                 property.set(config.getString(property.getName(), property.getCategory(), (String) property.getDefaultValue(), I19n.format("eirairc:config.property." + property.getName() + ".tooltip"), "eirairc:config.property."+ property.getName()));
             } else if(type.getClass() == Boolean.class) {
                 property.set(config.getBoolean(property.getName(), property.getCategory(), (Boolean) property.getDefaultValue(), I19n.format("eirairc:config.property." + property.getName() + ".tooltip"), "eirairc:config.property." + property.getName()));
             } else if(type.getClass() == Integer.class) {
-                property.set(config.getInt(property.getName(), property.getCategory(), (Integer) property.getDefaultValue(), Integer.MIN_VALUE, Integer.MAX_VALUE, I19n.format("eirairc:config.property." + property.getName() + ".tooltip"), "eirairc:config.property."+ property.getName()));
+                property.set(config.getInt(property.getName(), property.getCategory(), (Integer) property.getDefaultValue(), Integer.MIN_VALUE, Integer.MAX_VALUE, I19n.format("eirairc:config.property." + property.getName() + ".tooltip"), "eirairc:config.property." + property.getName()));
+            } else if(type.getClass() == Float.class) {
+                property.set(config.getFloat(property.getName(), property.getCategory(), (Float) property.getDefaultValue(), Float.MIN_VALUE, Float.MAX_VALUE, I19n.format("eirairc:config.property." + property.getName() + ".tooltip"), "eirairc:config.property." + property.getName()));
             } else if(type instanceof Enum) {
                 property.set(Enum.valueOf((Class<? extends Enum>) type.getClass(), config.getString(property.getName(), property.getCategory(), ((Enum) property.getDefaultValue()).name(), I19n.format("eirairc:config.property." + property.getName() + ".tooltip"), "eirairc:config.property."+ property.getName())));
             }
@@ -42,6 +44,8 @@ public class ConfigManager {
                 config.get(property.getCategory(), property.getName(), false, I19n.format("eirairc:config.property." + property.getName() + ".tooltip")).set((Boolean) value);
             } else if(value.getClass() == Integer.class) {
                 config.get(property.getCategory(), property.getName(), 0, I19n.format("eirairc:config.property." + property.getName() + ".tooltip")).set((Integer) value);
+            } else if(value.getClass() == Float.class) {
+                config.get(property.getCategory(), property.getName(), 0f, I19n.format("eirairc:config.property." + property.getName() + ".tooltip")).set((Float) value);
             } else if(value instanceof Enum) {
                 config.get(property.getCategory(), property.getName(), 0, I19n.format("eirairc:config.property." + property.getName() + ".tooltip")).set(((Enum) value).name());
             }

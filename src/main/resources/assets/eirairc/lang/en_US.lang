@@ -207,6 +207,8 @@ eirairc:config.property.twitchNameBadges=Twitch Name Badges
 eirairc:config.property.twitchNameBadges.tooltip=If enabled, Twitch users will have their subscriber, mod and caster badges in chat. Requires EiraMoticons.
 eirairc:config.property.antiFloodTime=Anti-Flood Time
 eirairc:config.property.antiFloodTime.tooltip=The time in milliseconds to wait in between bigger bunches of messages to prevent Excess Flood issues.
+eirairc:config.property.ircCommandPrefix=IRC Command Prefix
+eirairc:config.property.ircCommandPrefix.tooltip=The prefix to be used for running commands in an IRC channel.
 
 ## Properties (Client)
 eirairc:config.property.imageLinkPreview=Show Image Link Preview

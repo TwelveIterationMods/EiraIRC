@@ -10,10 +10,10 @@ public class ConfigProperty<T> {
     private final T defaultValue;
     private T value;
 
-    public ConfigProperty(ConfigManager manager, String name, String category,  T defaultValue) {
+    public ConfigProperty(ConfigManager manager, String category, String name,   T defaultValue) {
         this.manager = manager;
-        this.name = name;
         this.category = category;
+        this.name = name;
         this.defaultValue = defaultValue;
 
         manager.registerProperty(this);
