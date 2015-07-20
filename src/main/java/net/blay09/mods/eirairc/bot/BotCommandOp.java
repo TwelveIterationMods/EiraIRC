@@ -49,7 +49,7 @@ public class BotCommandOp implements IBotCommand {
 			user.notice(I19n.format("eirairc:bot.interOpBlacklist"));
 			return;
 		}
-		MinecraftServer.getServer().getCommandManager().executeCommand(new IRCUserCommandSender(channel, user, commandSettings.broadcastsResult(), true), message);
+		MinecraftServer.getServer().getCommandManager().executeCommand(new IRCUserCommandSender(channel, user, commandSettings.broadcastsResult(), true, ""), message);
 	}
 
 	@Override

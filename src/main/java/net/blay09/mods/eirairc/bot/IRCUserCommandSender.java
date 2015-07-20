@@ -17,12 +17,14 @@ public class IRCUserCommandSender implements ICommandSender {
 	private final IRCUser user;
 	private final boolean broadcastResult;
 	private final boolean opEnabled;
+	private final String outputFilter;
 	
-	public IRCUserCommandSender(IRCChannel channel, IRCUser user, boolean broadcastResult, boolean opEnabled) {
+	public IRCUserCommandSender(IRCChannel channel, IRCUser user, boolean broadcastResult, boolean opEnabled, String outputFilter) {
 		this.channel = channel;
 		this.user = user;
 		this.broadcastResult = broadcastResult;
 		this.opEnabled = opEnabled;
+		this.outputFilter = outputFilter;
 	}
 	
 	@Override
@@ -37,10 +39,13 @@ public class IRCUserCommandSender implements ICommandSender {
 
 	@Override
 	public void addChatMessage(IChatComponent chatComponent) {
-		if(broadcastResult && channel != null) {
-			channel.message(chatComponent.getUnformattedText());
-		} else {
-			user.notice(chatComponent.getUnformattedText());
+		String message = chatComponent.getUnformattedText();
+		if(outputFilter.isEmpty() || message.matches(outputFilter)) {
+			if(broadcastResult && channel != null) {
+				channel.message(message);
+			} else {
+				user.notice(message);
+			}
 		}
 	}
 

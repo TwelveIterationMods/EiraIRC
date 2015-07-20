@@ -19,6 +19,7 @@ public class BotCommandCustom implements IBotCommand {
 	private boolean runAsOp;
 	private boolean requireAuth;
 	private boolean broadcastResult;
+	private String outputFilter;
 	private IBotCommand overrideCommand;
 
 	@Override
@@ -44,7 +45,7 @@ public class BotCommandCustom implements IBotCommand {
 			if (commandSettings.allowArgs()) {
 				message += " " + String.join(" ", args).trim();
 			}
-			MinecraftServer.getServer().getCommandManager().executeCommand(new IRCUserCommandSender(channel, user, commandSettings.broadcastsResult(), runAsOp), message);
+			MinecraftServer.getServer().getCommandManager().executeCommand(new IRCUserCommandSender(channel, user, commandSettings.broadcastsResult(), runAsOp, outputFilter), message);
 		}
 	}
 
@@ -89,6 +90,7 @@ public class BotCommandCustom implements IBotCommand {
 				cmd.overrideCommand = new BotCommandOp();
 			}
 		}
+		cmd.outputFilter = object.has("outputFilter") ? object.get("outputFilter").getAsString() : "";
 		return cmd;
 	}
 }
