@@ -91,7 +91,11 @@ public class IRCMessageImpl implements IRCMessage {
 				int eqIdx = tag.indexOf('=');
 				if (eqIdx != -1) {
 					if (tag.substring(0, eqIdx).equals(key)) {
-						return tag.substring(eqIdx + 1);
+						String value = tag.substring(eqIdx + 1);
+						value = value.replace("\\:", ";");
+						value = value.replace("\\s", " ");
+						value = value.replace("\\\\", "\\");
+						return value;
 					}
 				}
 			}
