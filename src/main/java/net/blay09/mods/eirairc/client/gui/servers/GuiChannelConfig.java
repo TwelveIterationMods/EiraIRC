@@ -109,13 +109,13 @@ public class GuiChannelConfig extends GuiTabPage implements GuiYesNoCallback {
 
         labelList.add(new GuiLabel(I19n.format("eirairc:gui.override"), rightX - 100, topY + 5, Globals.TEXT_COLOR));
 
-        btnTheme = new GuiButton(1, rightX - 100, topY + 15, 100, 20, "eirairc:gui.override.theme");
+        btnTheme = new GuiButton(1, rightX - 100, topY + 15, 100, 20, I19n.format("eirairc:gui.override.theme"));
         buttonList.add(btnTheme);
 
-        btnBotSettings = new GuiButton(2, rightX - 100, topY + 40, 100, 20, "eirairc:gui.override.bot");
+        btnBotSettings = new GuiButton(2, rightX - 100, topY + 40, 100, 20, I19n.format("eirairc:gui.override.bot"));
         buttonList.add(btnBotSettings);
 
-        btnOtherSettings = new GuiButton(3, rightX - 100, topY + 65, 100, 20, "eirairc:gui.override.other");
+        btnOtherSettings = new GuiButton(3, rightX - 100, topY + 65, 100, 20, I19n.format("eirairc:gui.override.other"));
         buttonList.add(btnOtherSettings);
     }
 

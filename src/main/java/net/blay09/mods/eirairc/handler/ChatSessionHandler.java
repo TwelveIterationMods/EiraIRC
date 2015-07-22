@@ -5,6 +5,7 @@ package net.blay09.mods.eirairc.handler;
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.api.irc.IRCUser;
+import net.blay09.mods.eirairc.util.ConfigHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,7 +77,11 @@ public class ChatSessionHandler {
 			if(targetChannelIdx == -1) {
 				return null;
 			}
-			return validTargetChannels.get(targetChannelIdx);
+			IRCChannel channel = validTargetChannels.get(targetChannelIdx);
+			if(ConfigHelper.getChannelConfig(channel).getGeneralSettings().isReadOnly()) {
+				return getNextTarget(false);
+			}
+			return channel;
 		}
 	}
 
