@@ -242,9 +242,6 @@ public class MCEventHandler {
 					isCTCP = true;
 					ircMessage = "ACTION " + ircMessage;
 				}
-				if(!ClientGlobalConfig.clientBridgeMessageToken.get().isEmpty()) {
-					ircMessage = ircMessage + " " + ClientGlobalConfig.clientBridgeMessageToken;
-				}
 				for(ServerConfig serverConfig : ConfigurationHandler.getServerConfigs()) {
 					IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(serverConfig.getIdentifier());
 					if(connection != null) {

@@ -50,8 +50,6 @@ public class ClientGlobalConfig {
 
 	// Compatibility
 	public static final ConfigProperty<Boolean> clientBridge = new ConfigProperty<>(manager, COMPATIBILITY, "clientBridge", false);
-	public static final ConfigProperty<String> clientBridgeMessageToken = new ConfigProperty<>(manager, COMPATIBILITY, "clientBridgeMessageToken", "[IG]");
-	public static final ConfigProperty<String> clientBridgeNickToken = new ConfigProperty<>(manager, COMPATIBILITY, "clientBridgeNickToken", "");
 	public static final ConfigProperty<Boolean> disableChatToggle = new ConfigProperty<>(manager, COMPATIBILITY, "disableChatToggle", false);
 	public static final ConfigProperty<Boolean> chatNoOverride = new ConfigProperty<>(manager, COMPATIBILITY, "chatNoOverride", false);
 	public static final ConfigProperty<Boolean> registerShortCommands = new ConfigProperty<>(manager, COMPATIBILITY, "registerShortCommands", true);
@@ -112,8 +110,6 @@ public class ClientGlobalConfig {
 
 		// Compatibility
 		clientBridge.set(legacyConfig.get("compatibility", "clientBridge", clientBridge.get()).getBoolean());
-		clientBridgeMessageToken.set(Utils.unquote(legacyConfig.get("compatibility", "clientBridgeMessageToken", clientBridgeMessageToken.get()).getString()));
-		clientBridgeNickToken.set(Utils.unquote(legacyConfig.get("compatibility", "clientBridgeNickToken", clientBridgeNickToken.get()).getString()));
 		disableChatToggle.set(legacyConfig.get("compatibility", "disableChatToggle", disableChatToggle.get()).getBoolean());
 		chatNoOverride.set(legacyConfig.get("compatibility", "chatNoOverride", chatNoOverride.get()).getBoolean());
 

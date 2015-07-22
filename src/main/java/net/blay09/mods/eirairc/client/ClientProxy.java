@@ -2,6 +2,7 @@
 
 package net.blay09.mods.eirairc.client;
 
+import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import net.blay09.mods.eirairc.CommonProxy;
@@ -22,6 +23,8 @@ import net.blay09.mods.eirairc.util.NotificationType;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.gui.GuiPlayerInfo;
+import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ResourceLocation;
@@ -156,14 +159,10 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public boolean checkClientBridge(IRCChannelMessageEvent event) {
-		if(ClientGlobalConfig.clientBridge.get()) {
-			if(!ClientGlobalConfig.clientBridgeMessageToken.get().isEmpty()) {
-				if (event.message.endsWith(ClientGlobalConfig.clientBridgeMessageToken.get()) || event.message.endsWith(ClientGlobalConfig.clientBridgeMessageToken + IRCConnectionImpl.CTCP_END)) {
-					return true;
-				}
-			}
-			if(!ClientGlobalConfig.clientBridgeNickToken.get().isEmpty()) {
-				if (event.sender.getName().endsWith(ClientGlobalConfig.clientBridgeNickToken.get())) {
+		if(event.sender != null && ClientGlobalConfig.clientBridge.get()) {
+			for(Object obj : FMLClientHandler.instance().getClientPlayerEntity().sendQueue.playerInfoList) {
+				GuiPlayerInfo playerInfo = (GuiPlayerInfo) obj;
+				if(event.sender.getName().equalsIgnoreCase(playerInfo.name)) {
 					return true;
 				}
 			}
