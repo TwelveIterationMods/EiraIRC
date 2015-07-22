@@ -81,11 +81,9 @@ public interface IRCConnection extends IRCContext {
 	void disconnect(String quitMessage);
 
 	/**
-	 * Currently not implemented. Supposed to return the server architecture of the connected IRC server in the future.
-	 * @deprecated This function is not implemented yet and will always return null.
-	 * @return the server architecture used
+	 * Returns the server version of the connected IRC server.
+	 * @return the server version used by this IRC server
 	 */
-	@Deprecated
 	String getServerType();
 
 	/**

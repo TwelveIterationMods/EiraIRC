@@ -367,9 +367,11 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 			user.setAccountName(msg.arg(1));
 		} else if(numeric == IRCReplyCodes.RPL_ENDOFWHOIS) {
 			IRCUserImpl user = (IRCUserImpl) getOrCreateUser(msg.arg(1));
-			if(user.getAccountName() == null || user.getAccountName().isEmpty()) {
+			if (user.getAccountName() == null || user.getAccountName().isEmpty()) {
 				user.setAccountName(null);
 			}
+		} else if(numeric == IRCReplyCodes.RPL_MYINFO) {
+			serverType = msg.arg(1);
 		} else if(numeric == IRCReplyCodes.RPL_ISUPPORT) {
 			for(int i = 0; i < msg.argCount(); i++) {
 				if(msg.arg(i).startsWith("CHANTYPES=")) {

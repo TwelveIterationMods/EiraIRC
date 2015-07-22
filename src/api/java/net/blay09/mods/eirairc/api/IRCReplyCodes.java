@@ -1,9 +1,6 @@
 // Copyright (c) 2015 Christopher "BlayTheNinth" Baker
 
-
 package net.blay09.mods.eirairc.api;
-
-import net.blay09.mods.eirairc.util.Utils;
 
 public class IRCReplyCodes {
 
@@ -61,7 +58,8 @@ public class IRCReplyCodes {
 	public static final int ERR_TARGETTOOFAST = 439;
 	public static final int ERR_SERVICESDOWN = 440;
 	public static final int ERR_NONICKCHANGE = 447;
-	
+
+	public static final int RPL_MYINFO = 4;
 	public static final int RPL_NONE = 300;
 	public static final int RPL_USERHOST = 302;
 	public static final int RPL_ISON = 303;

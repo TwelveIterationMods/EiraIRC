@@ -17,7 +17,7 @@ public class InterOpCommandMode implements SubCommand {
 
 	@Override
 	public String getCommandUsage(ICommandSender sender) {
-		return "eirairc:irc.commands.interop.mode";
+		return "eirairc:commands.interop.mode";
 	}
 
 	@Override

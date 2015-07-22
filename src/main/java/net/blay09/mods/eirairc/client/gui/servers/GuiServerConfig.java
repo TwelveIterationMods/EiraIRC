@@ -184,7 +184,7 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 		} else if(button == btnChannelDelete) {
 			if (lstChannels.hasSelection()) {
 				deleteChannel = lstChannels.getSelectedItem().getConfig();
-				setOverlay(new OverlayYesNo(this, I19n.format("eirairc:irc.gui.channel.deleteConfirm"), I19n.format("eirairc:irc.gui.channel.deleteNoUndo"), 1));
+				setOverlay(new OverlayYesNo(this, I19n.format("eirairc:gui.channel.deleteConfirm"), I19n.format("eirairc:gui.channel.deleteNoUndo"), 1));
 			}
 		} else if(button == btnChannelJoinLeave) {
 			applyChanges();
@@ -208,17 +208,17 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 				tabContainer.removePage(this);
 				tabContainer.initGui();
 			} else {
-				setOverlay(new OverlayYesNo(this, I19n.format("eirairc:irc.gui.server.deleteConfirm"), I19n.format("eirairc:irc.gui.server.deleteNoUndo"), 0));
+				setOverlay(new OverlayYesNo(this, I19n.format("eirairc:gui.server.deleteConfirm"), I19n.format("eirairc:gui.server.deleteNoUndo"), 0));
 			}
 		} else if(button == btnConnect) {
 			IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(config.getIdentifier());
 			if(connection != null) {
 				btnConnect.enabled = false;
-				btnConnect.displayString = I19n.format("eirairc:irc.gui.server.disconnecting");
+				btnConnect.displayString = I19n.format("eirairc:gui.server.disconnecting");
 				connection.disconnect("");
 			} else {
 				btnConnect.enabled = false;
-				btnConnect.displayString = I19n.format("eirairc:irc.gui.server.connecting");
+				btnConnect.displayString = I19n.format("eirairc:gui.server.connecting");
 				ConnectionManager.connectTo(config);
 			}
 		}
@@ -249,7 +249,7 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 		if(event.connection.getIdentifier().equals(config.getIdentifier())) {
 			txtAddress.setEnabled(true);
 			btnConnect.enabled = true;
-			btnConnect.displayString =I19n.format("eirairc:irc.gui.server.connect");
+			btnConnect.displayString =I19n.format("eirairc:gui.server.connect");
 			for(GuiListEntryChannel entry : lstChannels.getEntries()) {
 				entry.setJoined(false);
 			}
@@ -263,7 +263,7 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 			txtAddress.setEnabled(false);
 			txtAddress.setText(config.getAddress());
 			btnConnect.enabled = true;
-			btnConnect.displayString = I19n.format("eirairc:irc.gui.server.disconnect");
+			btnConnect.displayString = I19n.format("eirairc:gui.server.disconnect");
 		}
 	}
 
@@ -272,7 +272,7 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 		if(event.connection.getIdentifier().equals(config.getIdentifier())) {
 			txtAddress.setEnabled(true);
 			btnConnect.enabled = true;
-			btnConnect.displayString = I19n.format("eirairc:irc.gui.server.connect");
+			btnConnect.displayString = I19n.format("eirairc:gui.server.connect");
 		}
 	}
 
