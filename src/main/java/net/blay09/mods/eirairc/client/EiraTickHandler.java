@@ -12,6 +12,7 @@ import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.client.gui.GuiEiraIRCMenu;
 import net.blay09.mods.eirairc.client.gui.GuiWelcome;
 import net.blay09.mods.eirairc.client.gui.chat.GuiChatExtended;
+import net.blay09.mods.eirairc.client.gui.chat.GuiSleepExtended;
 import net.blay09.mods.eirairc.client.gui.screenshot.GuiScreenshots;
 import net.blay09.mods.eirairc.client.screenshot.Screenshot;
 import net.blay09.mods.eirairc.client.screenshot.ScreenshotManager;
@@ -22,7 +23,9 @@ import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiSleepMP;
 import net.minecraft.util.ChatComponentTranslation;
+import net.minecraftforge.client.event.GuiScreenEvent;
 import org.lwjgl.input.Keyboard;
 
 @SuppressWarnings("unused")
@@ -88,14 +91,15 @@ public class EiraTickHandler {
 	
 	@SubscribeEvent
 	public void clientTick(ClientTickEvent event) {
-		if(Minecraft.getMinecraft().currentScreen == null && openWelcomeScreen > 0) {
+		GuiScreen currentScreen = Minecraft.getMinecraft().currentScreen;
+		if(currentScreen == null && openWelcomeScreen > 0) {
 			openWelcomeScreen--;
 			if(openWelcomeScreen <= 0) {
 				Minecraft.getMinecraft().displayGuiScreen(new GuiWelcome());
 			}
 		}
 
-		if(Minecraft.getMinecraft().currentScreen instanceof GuiChat && !ClientGlobalConfig.disableChatToggle.get() && !ClientGlobalConfig.clientBridge.get()) {
+		if(currentScreen instanceof GuiChat && !ClientGlobalConfig.disableChatToggle.get() && !ClientGlobalConfig.clientBridge.get()) {
 			if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) && Keyboard.isKeyDown(ClientGlobalConfig.keyToggleTarget.getKeyCode())) {
 				if(!wasToggleTargetDown) {
 					boolean users = Keyboard.isKeyDown(Keyboard.KEY_LCONTROL);
@@ -123,6 +127,11 @@ public class EiraTickHandler {
 				wasToggleTargetDown = false;
 			}
 		}
+
+		if(currentScreen != null && currentScreen.getClass() == GuiSleepMP.class) {
+			Minecraft.getMinecraft().displayGuiScreen(new GuiSleepExtended());
+		}
+
 		if(Minecraft.getMinecraft().gameSettings.keyBindScreenshot.getKeyCode() > 0 && Keyboard.isKeyDown(Minecraft.getMinecraft().gameSettings.keyBindScreenshot.getKeyCode())) {
 			screenshotCheck = 10;
 		} else if(screenshotCheck > 0) {
