@@ -223,6 +223,7 @@ eirairc:general.reconnecting=Reconnecting to %s in %d seconds...
 eirairc:general.connected=Connected to %s
 eirairc:general.disconnected=Disconnected from %s
 eirairc:general.topicChange=§e%s has changed the topic for %s: §f%s
+eirairc:general.readOnly=§cThe channel %s is configured as read-only.
 
 ############################################
 #                  Errors                  #

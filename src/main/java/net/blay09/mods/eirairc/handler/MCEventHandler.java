@@ -32,6 +32,7 @@ import net.minecraft.command.server.CommandEmote;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
@@ -233,6 +234,8 @@ public class MCEventHandler {
 						target.message(message);
 					}
 				}
+			} else {
+				EiraIRCAPI.getChatHandler().addChatMessage(new ChatComponentTranslation("eirairc:general.readOnly", target.getName()));
 			}
 		} else {
 			if(ClientGlobalConfig.clientBridge.get()) {
@@ -269,22 +272,25 @@ public class MCEventHandler {
 				}
 			} else {
 				IRCContext chatTarget = EiraIRC.instance.getChatSessionHandler().getChatTarget();
-				if(chatTarget != null && !ConfigHelper.getGeneralSettings(chatTarget).isReadOnly()) {
-					if(isEmote) {
-						if(isNotice) {
-							chatTarget.ctcpNotice("ACTION " + message);
+				if(chatTarget != null){
+					if(!ConfigHelper.getGeneralSettings(chatTarget).isReadOnly()) {
+						if (isEmote) {
+							if (isNotice) {
+								chatTarget.ctcpNotice("ACTION " + message);
+							} else {
+								chatTarget.ctcpMessage("ACTION " + message);
+							}
 						} else {
-							chatTarget.ctcpMessage("ACTION " + message);
+							if (isNotice) {
+								chatTarget.notice(message);
+							} else {
+								chatTarget.message(message);
+							}
 						}
 					} else {
-						if(isNotice) {
-							chatTarget.notice(message);
-						} else {
-							chatTarget.message(message);
-						}
+						EiraIRCAPI.getChatHandler().addChatMessage(new ChatComponentTranslation("eirairc:general.readOnly", chatTarget.getName()));
 					}
 				}
-
 			}
 		}
 	}
