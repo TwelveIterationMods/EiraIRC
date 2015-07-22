@@ -59,15 +59,11 @@ public class InternalMethodsImpl implements InternalMethods {
 			} else {
 				connection = EiraIRC.instance.getConnectionManager().getConnection(contextPath);
 				if(connection != null) {
-					if(expectedType == IRCContext.ContextType.IRCConnection) {
-						return connection;
-					} else {
-						return IRCTargetError.InvalidTarget;
-					}
+					return connection;
 				}
 				IRCConnection foundConnection = null;
-				for(IRCConnection con : EiraIRC.instance.getConnectionManager().getConnections()) {
-					if(con.getChannel(contextPath) != null || con.getUser(contextPath) != null) {
+				for (IRCConnection con : EiraIRC.instance.getConnectionManager().getConnections()) {
+					if (con.getChannel(contextPath) != null || con.getUser(contextPath) != null) {
 						if (foundConnection != null) {
 							return IRCTargetError.SpecifyServer;
 						}

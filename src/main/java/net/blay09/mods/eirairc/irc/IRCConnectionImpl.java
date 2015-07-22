@@ -273,7 +273,7 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 	private void register() {
 		try {
 			String serverPassword = AuthManager.getServerPassword(getIdentifier());
-			if(serverPassword != null) {
+			if(serverPassword != null && !serverPassword.isEmpty()) {
 				writer.write("PASS " + serverPassword + "\r\n");
 			}
 			writer.write("NICK " + nick + "\r\n");

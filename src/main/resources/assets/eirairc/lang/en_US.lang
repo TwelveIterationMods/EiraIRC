@@ -172,7 +172,7 @@ eirairc:gui.channel.multiChannel=You have joined more than one channel.
 eirairc:gui.channel.suggestClassic=Do you want to switch to a message format that includes the channel name?
 
 eirairc:gui.welcome=Welcome to EiraIRC!
-eirairc:gui.welcome.suggestedChannels=If you just want to find some people to talk to,\nthis a list of IRC channels you should check out:
+eirairc:gui.welcome.suggestedChannels=If you just want to find some people to talk to,\\nthis a list of IRC channels you should check out:
 eirairc:gui.welcome.recommendedOnly=Show recommended channels only
 eirairc:gui.welcome.dontShowAgain=Don't show this message again
 eirairc:gui.welcome.submit=Suggest Channel
