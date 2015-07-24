@@ -22,6 +22,7 @@ import net.minecraft.command.WrongUsageException;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
@@ -57,7 +58,7 @@ public class CommandMessage implements SubCommand {
 				return true;
 			}
 		}
-		String message = String.join(" ", ArrayUtils.subarray(args, 1, args.length)).trim();
+		String message = StringUtils.join(ArrayUtils.subarray(args, 1, args.length), " ").trim();
 		if(message.isEmpty()) {
 			throw new WrongUsageException(getCommandUsage(sender));
 		}

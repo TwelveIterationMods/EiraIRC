@@ -15,6 +15,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.IChatComponent;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
@@ -51,7 +52,7 @@ public class BotCommandMessage implements IBotCommand {
 				return;
 			}
 		}
-		String message = String.join(" ", ArrayUtils.subarray(args, 1, args.length));
+		String message = StringUtils.join(ArrayUtils.subarray(args, 1, args.length), " ");
 		if(botSettings.getBoolean(BotBooleanComponent.FilterLinks)) {
 			message = MessageFormat.filterLinks(message);
 		}

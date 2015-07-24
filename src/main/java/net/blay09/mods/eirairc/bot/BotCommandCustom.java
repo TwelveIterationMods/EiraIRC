@@ -9,6 +9,7 @@ import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.api.irc.IRCUser;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.server.MinecraftServer;
+import org.apache.commons.lang3.StringUtils;
 
 public class BotCommandCustom implements IBotCommand {
 
@@ -39,7 +40,7 @@ public class BotCommandCustom implements IBotCommand {
 		} else {
 			String message = command;
 			if (commandSettings.allowArgs()) {
-				message += " " + String.join(" ", args).trim();
+				message += " " + StringUtils.join(args, " ").trim();
 			}
 			MinecraftServer.getServer().getCommandManager().executeCommand(new IRCUserCommandSender(channel, user, commandSettings.broadcastsResult(), runAsOp, outputFilter), message);
 		}

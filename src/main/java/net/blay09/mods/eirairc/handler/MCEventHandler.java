@@ -40,6 +40,7 @@ import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.AchievementEvent;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.regex.Pattern;
 
@@ -87,7 +88,7 @@ public class MCEventHandler {
 	public void onServerCommand(CommandEvent event) {
 		if(event.command instanceof CommandEmote) {
 			if(event.sender instanceof EntityPlayer) {
-				String emote = String.join(" ", event.parameters).trim();
+				String emote = StringUtils.join(event.parameters, " ").trim();
 				if(emote.length() == 0) {
 					return;
 				}
@@ -111,7 +112,7 @@ public class MCEventHandler {
 						if (channel != null) {
 							GeneralSettings generalSettings = ConfigHelper.getGeneralSettings(channel);
 							BotSettings botSettings = ConfigHelper.getBotSettings(channel);
-							String ircMessage = MessageFormat.formatMessage(botSettings.getMessageFormat().ircBroadcastMessage, channel, event.sender, String.join(" ", event.parameters), MessageFormat.Target.IRC, MessageFormat.Mode.Message);
+							String ircMessage = MessageFormat.formatMessage(botSettings.getMessageFormat().ircBroadcastMessage, channel, event.sender, StringUtils.join(event.parameters, " "), MessageFormat.Target.IRC, MessageFormat.Mode.Message);
 							if (!generalSettings.isReadOnly() && botSettings.getBoolean(BotBooleanComponent.RelayBroadcasts)) {
 								channel.message(ircMessage);
 							}

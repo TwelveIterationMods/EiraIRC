@@ -10,6 +10,7 @@ import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
@@ -49,7 +50,7 @@ public class CommandQuote implements SubCommand {
 		} else {
 			connection = context.getConnection();
 		}
-		String msg = String.join(" ", ArrayUtils.subarray(args, msgIdx, args.length));
+		String msg = StringUtils.join(ArrayUtils.subarray(args, msgIdx, args.length), " ");
 		connection.irc(msg);
 		return true;
 	}

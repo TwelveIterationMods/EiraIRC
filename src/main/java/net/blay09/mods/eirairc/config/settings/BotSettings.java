@@ -13,6 +13,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.EnumMap;
 import java.util.List;
@@ -273,7 +274,7 @@ public class BotSettings {
 		BotStringListComponent stringListComponent = BotStringListComponent.fromName(key);
 		if(stringListComponent != null) {
 			if (stringLists.containsKey(stringListComponent)) {
-				return String.join(", ", stringLists.get(stringListComponent));
+				return StringUtils.join(stringLists.get(stringListComponent), ", ");
 			} else {
 				return "<inherit>";
 			}

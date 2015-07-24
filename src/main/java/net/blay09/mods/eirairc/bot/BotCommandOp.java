@@ -13,6 +13,7 @@ import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.I19n;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.server.MinecraftServer;
+import org.apache.commons.lang3.StringUtils;
 
 public class BotCommandOp implements IBotCommand {
 
@@ -36,7 +37,7 @@ public class BotCommandOp implements IBotCommand {
 		String message = "";
 		if(args.length >= 1) {
 			if(commandSettings.allowArgs()) {
-				message = String.join(" ", args).trim();
+				message = StringUtils.join(args, " ").trim();
 			} else {
 				message = args[0];
 			}
