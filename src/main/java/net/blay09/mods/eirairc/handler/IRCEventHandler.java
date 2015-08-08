@@ -314,6 +314,7 @@ public class IRCEventHandler {
 		// If this is a Twitch connection, tell the server that we're a JTVCLIENT so we receive name colors.
 		if(connection.isTwitch()) {
 			connection.irc("CAP REQ :twitch.tv/tags");
+			connection.irc("CAP REQ :twitch.tv/membership");
 		}
 		Utils.doNickServ(connection, serverConfig);
 		for(ChannelConfig channelConfig : serverConfig.getChannelConfigs()) {
