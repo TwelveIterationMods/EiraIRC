@@ -36,8 +36,8 @@ public class ClientGlobalConfig {
 
 	// Screenshots
 	public static final ConfigProperty<Boolean> imageLinkPreview = new ConfigProperty<>(manager, SCREENSHOTS, "imageLinkPreview", true);
-	public static final ConfigProperty<String> screenshotHoster = new ConfigProperty<>(manager, SCREENSHOTS, "screenshotHoster", "imgur");
-	public static final ConfigProperty<ScreenshotAction> screenshotAction = new ConfigProperty<>(manager, SCREENSHOTS, "screenshotAction", ScreenshotAction.None);
+	public static final ConfigProperty<String> screenshotHoster = new ConfigProperty<>(manager, SCREENSHOTS, "uploadHoster", "imgur");
+	public static final ConfigProperty<ScreenshotAction> screenshotAction = new ConfigProperty<>(manager, SCREENSHOTS, "autoAction", ScreenshotAction.None);
 	public static final ConfigProperty<Integer> uploadBufferSize = new ConfigProperty<>(manager, SCREENSHOTS, "uploadBufferSize", 1024);
 
 	// Notifications

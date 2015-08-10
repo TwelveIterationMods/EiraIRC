@@ -2,6 +2,8 @@
 
 package net.blay09.mods.eirairc.handler;
 
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Loader;
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.addon.Compatibility;
 import net.blay09.mods.eirairc.addon.EiraMoticonsAddon;
@@ -547,6 +549,12 @@ public class IRCEventHandler {
 		MinecraftForge.EVENT_BUS.post(event);
 		switch (event.getResult()) {
 			case DEFAULT:
+				if(sender != null && message.equals("VERSION")) {
+					String modVersion = Loader.instance().getIndexedModList().get("eirairc").getDisplayVersion();
+					String mcVersion = Loader.instance().getMCVersionString();
+					sender.ctcpNotice("EiraIRC " + modVersion + " on " + mcVersion + " - http://blay09.net");
+					return;
+				}
 				BotSettings botSettings = ConfigHelper.getBotSettings(null);
 				if (ConfigHelper.getGeneralSettings(event.sender).isMuted()) {
 					return;
