@@ -40,7 +40,7 @@ public class CommandCTCP implements SubCommand {
 
     @Override
     public boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) throws CommandException {
-        if (!ConfigHelper.getBotSettings(context).getBoolean(BotBooleanComponent.AllowCTCP)) {
+        if (!ConfigHelper.getBotSettings(context).getBoolean(BotBooleanComponent.AllowPrivateMessages)) {
             Utils.sendLocalizedMessage(sender, "commands.ctcp.disabled");
             return true;
         }

@@ -549,13 +549,15 @@ public class IRCEventHandler {
 		MinecraftForge.EVENT_BUS.post(event);
 		switch (event.getResult()) {
 			case DEFAULT:
-				if(sender != null && message.equals("VERSION")) {
-					String modVersion = Loader.instance().getIndexedModList().get("eirairc").getDisplayVersion();
-					String mcVersion = Loader.instance().getMCVersionString();
-					sender.ctcpNotice("EiraIRC " + modVersion + " on " + mcVersion + " - http://blay09.net");
-					return;
+				BotSettings botSettings = ConfigHelper.getBotSettings(connection);
+				if(botSettings.getBoolean(BotBooleanComponent.AllowCTCP) && sender != null && !isNotice) {
+					if(message.startsWith("VERSION ")) {
+						String modVersion = Loader.instance().getIndexedModList().get("eirairc").getDisplayVersion();
+						String mcVersion = Loader.instance().getMCVersionString();
+						sender.ctcpNotice("VERSION EiraIRC " + modVersion + " on " + mcVersion + " - http://blay09.net");
+						return;
+					}
 				}
-				BotSettings botSettings = ConfigHelper.getBotSettings(null);
 				if (ConfigHelper.getGeneralSettings(event.sender).isMuted()) {
 					return;
 				}
