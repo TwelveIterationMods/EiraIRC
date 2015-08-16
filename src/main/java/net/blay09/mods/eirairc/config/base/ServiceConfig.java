@@ -19,8 +19,10 @@ public class ServiceConfig {
 	public static ServiceSettings getSettings(String host, String type) {
 		ServiceSettings settings = serverMap.get(host);
 		if(settings == null) {
-			type = type.replaceAll("[0-9]", "*");
-			settings = serverMap.get(type);
+			if(type != null) {
+				type = type.replaceAll("[0-9]", "*");
+				settings = serverMap.get(type);
+			}
 			if(settings == null) {
 				return defaultSettings;
 			}
