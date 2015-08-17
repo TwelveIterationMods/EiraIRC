@@ -21,7 +21,7 @@ public abstract class GuiScreenshotPage extends GuiButton {
 		regionContent = EiraGui.atlas.findRegion("tab_bg_content");
 		regionRight = EiraGui.atlas.findRegion("tab_bg_topright");
 
-		width = Minecraft.getMinecraft().fontRendererObj.getStringWidth(displayString) + regionRight.getRegionWidth();
+		width = Minecraft.getMinecraft().fontRenderer.getStringWidth(displayString) + regionRight.getRegionWidth();
 		height = regionContent.getRegionHeight();
 	}
 
@@ -50,7 +50,7 @@ public abstract class GuiScreenshotPage extends GuiButton {
 		regionContent.draw(xPosition, yPosition, width - regionRight.getRegionWidth(), regionContent.getRegionHeight());
 		regionRight.draw(xPosition + width - regionRight.getRegionWidth(), yPosition);
 		GL11.glDisable(GL11.GL_BLEND);
-		drawString(mc.fontRendererObj, displayString, xPosition + regionRight.getRegionWidth() / 2, yPosition + (height - 8) / 2, hovered ? -12345678 : Globals.TEXT_COLOR);
+		drawString(mc.fontRenderer, displayString, xPosition + regionRight.getRegionWidth() / 2, yPosition + (height - 8) / 2, hovered ? -12345678 : Globals.TEXT_COLOR);
 	}
 
 	public boolean isActive() {

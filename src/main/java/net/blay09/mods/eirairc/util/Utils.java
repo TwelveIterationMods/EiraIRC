@@ -80,7 +80,7 @@ public class Utils {
 	}
 
 	public static String getServerAddress() {
-		ServerData serverData = Minecraft.getMinecraft().getCurrentServerData();
+		ServerData serverData = Minecraft.getMinecraft().func_147104_D(); // getCurrentServerData
 		if(serverData != null) {
 			return serverData.serverIP;
 		}

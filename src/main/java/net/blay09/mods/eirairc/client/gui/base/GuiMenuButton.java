@@ -25,9 +25,9 @@ public class GuiMenuButton extends GuiButton {
 	}
 
 	@Override
-	public void playPressSound(SoundHandler soundHandlerIn) {
+	public void func_146113_a(SoundHandler soundHandlerIn) { // playPressSound
 		if(playButtonSound) {
-			super.playPressSound(soundHandlerIn);
+			super.func_146113_a(soundHandlerIn); // playPressSound
 		}
 	}
 
@@ -50,7 +50,7 @@ public class GuiMenuButton extends GuiButton {
 		}
 		GL11.glDisable(GL11.GL_BLEND);
 
-		drawCenteredString(mc.fontRendererObj, (hovered ? "\u00a7n" : "") + displayString, xPos + width / 2, yPos + height + 5, !hovered ? Globals.TEXT_COLOR : 16777115);
+		drawCenteredString(mc.fontRenderer, (hovered ? "\u00a7n" : "") + displayString, xPos + width / 2, yPos + height + 5, !hovered ? Globals.TEXT_COLOR : 16777115);
 	}
 
 	public void setPlayButtonSound(boolean playButtonSound) {

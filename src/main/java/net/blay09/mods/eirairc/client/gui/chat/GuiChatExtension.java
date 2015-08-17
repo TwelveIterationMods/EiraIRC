@@ -36,7 +36,7 @@ public class GuiChatExtension {
     public static final int SHOW_HELP_TIME = 100;
 
     private final GuiChat parentScreen;
-    private FontRenderer fontRendererObj;
+    private FontRenderer fontRenderer;
 
     private final List<String> foundIRCNames = Lists.newArrayList();
     private GuiTextField inputField;
@@ -106,10 +106,10 @@ public class GuiChatExtension {
     }
 
     public void initGui(List buttonList) {
-        fontRendererObj = parentScreen.mc.fontRendererObj;
+        fontRenderer = parentScreen.mc.fontRenderer;
 
         String s = I19n.format("eirairc:gui.options");
-        int bw = parentScreen.mc.fontRendererObj.getStringWidth(s) + 20;
+        int bw = parentScreen.mc.fontRenderer.getStringWidth(s) + 20;
         btnOptions = new GuiButton(0, parentScreen.width - bw, 0, bw, 20, s);
         buttonList.add(btnOptions);
 
@@ -153,7 +153,7 @@ public class GuiChatExtension {
         boolean terminalStyleInput = ClientGlobalConfig.terminalStyleInput.get();
         String terminalChannel = chatSession.getChatTarget() != null ? (chatSession.getChatTarget().getName() + ": ") : null;
         if(terminalStyleInput && terminalChannel != null) {
-            int terminalChannelWidth = parentScreen.mc.fontRendererObj.getStringWidth(terminalChannel);
+            int terminalChannelWidth = parentScreen.mc.fontRenderer.getStringWidth(terminalChannel);
             inputField.xPosition = 4 + terminalChannelWidth;
             inputField.width = parentScreen.width - 4 - terminalChannelWidth;
         } else {
@@ -166,7 +166,7 @@ public class GuiChatExtension {
         boolean terminalStyleInput = ClientGlobalConfig.terminalStyleInput.get();
         String terminalChannel = chatSession.getChatTarget() != null ? (chatSession.getChatTarget().getName() + ": ") : null;
         if(terminalStyleInput && terminalChannel != null) {
-            parentScreen.mc.fontRendererObj.drawString(terminalChannel, 4, inputField.yPosition, 14737632);
+            parentScreen.mc.fontRenderer.drawString(terminalChannel, 4, inputField.yPosition, 14737632);
         }
         if(!ClientGlobalConfig.disableChatToggle.get() && !ClientGlobalConfig.clientBridge.get()) {
             IRCContext target = chatSession.getChatTarget();
@@ -178,14 +178,14 @@ public class GuiChatExtension {
             }
             String helpText = showHelpTime > 0 ? I19n.format("eirairc:gui.shiftToSwitch", Keyboard.getKeyName(ClientGlobalConfig.keyToggleTarget.getKeyCode())) : "";
             String text = I19n.format("eirairc:gui.chatTarget", targetName);
-            int rectWidth = Math.max(200, Math.max(fontRendererObj.getStringWidth(helpText), fontRendererObj.getStringWidth(text)) + 10);
-            int rectHeight = showHelpTime > 0 ? fontRendererObj.FONT_HEIGHT * 2 + 12 : fontRendererObj.FONT_HEIGHT + 6;
+            int rectWidth = Math.max(200, Math.max(fontRenderer.getStringWidth(helpText), fontRenderer.getStringWidth(text)) + 10);
+            int rectHeight = showHelpTime > 0 ? fontRenderer.FONT_HEIGHT * 2 + 12 : fontRenderer.FONT_HEIGHT + 6;
             GuiScreen.drawRect(0, 0, rectWidth, rectHeight, COLOR_BACKGROUND);
-            fontRendererObj.drawString(text, 5, 5, Globals.TEXT_COLOR);
+            fontRenderer.drawString(text, 5, 5, Globals.TEXT_COLOR);
 
             if(showHelpTime > 0) {
                 showHelpTime--;
-                fontRendererObj.drawString(helpText, 5, 20, Globals.TEXT_COLOR);
+                fontRenderer.drawString(helpText, 5, 20, Globals.TEXT_COLOR);
             }
         }
     }
@@ -209,7 +209,7 @@ public class GuiChatExtension {
 
     public boolean mouseClicked(int mouseX, int mouseY, int button) {
         if(button == 0 && parentScreen.mc.gameSettings.chatLinks) {
-            IChatComponent clickedComponent = parentScreen.mc.ingameGUI.getChatGUI().getChatComponent(Mouse.getX(), Mouse.getY());
+            IChatComponent clickedComponent = parentScreen.mc.ingameGUI.getChatGUI().func_146236_a(Mouse.getX(), Mouse.getY()); // getChatComponent
             if(clickedComponent != null) {
                 ClickEvent clickEvent = clickedComponent.getChatStyle().getChatClickEvent();
                 if(clickEvent != null) {

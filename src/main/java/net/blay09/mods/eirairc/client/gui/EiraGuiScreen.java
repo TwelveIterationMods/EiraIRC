@@ -76,7 +76,7 @@ public class EiraGuiScreen extends GuiScreen {
 					if(MinecraftForge.EVENT_BUS.post(event))
 						break;
 					selectedButton = event.button;
-					event.button.playPressSound(mc.getSoundHandler());
+					event.button.func_146113_a(mc.getSoundHandler()); // playPressSound
 					actionPerformed(event.button);
 					if(this.equals(mc.currentScreen))
 						MinecraftForge.EVENT_BUS.post(new GuiScreenEvent.ActionPerformedEvent.Post(this, event.button, buttonList));
@@ -110,7 +110,7 @@ public class EiraGuiScreen extends GuiScreen {
 	}
 
 	@Override
-	protected void mouseReleased(int mouseX, int mouseY, int mouseButton) {
+	protected void mouseMovedOrUp(int mouseX, int mouseY, int mouseButton) {
 		if(selectedButton != null && mouseButton == 0) {
 			selectedButton.mouseReleased(mouseX, mouseY);
 			selectedButton = null;
@@ -193,6 +193,6 @@ public class EiraGuiScreen extends GuiScreen {
 	}
 
 	public void drawTooltip(List<String> tooltipList, int mouseX, int mouseY) {
-		drawHoveringText(tooltipList, mouseX, mouseY);
+		func_146283_a(tooltipList, mouseX, mouseY); // drawHoveringText
 	}
 }

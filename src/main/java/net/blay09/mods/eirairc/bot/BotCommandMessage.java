@@ -39,7 +39,7 @@ public class BotCommandMessage implements IBotCommand {
 			user.notice(I19n.format("eirairc:commands.msg.disabled"));
 		}
 		String playerName = args[0];
-		EntityPlayer entityPlayer = MinecraftServer.getServer().getConfigurationManager().getPlayerByUsername(playerName);
+		EntityPlayer entityPlayer = MinecraftServer.getServer().getConfigurationManager().func_152612_a(playerName); // getPlayerByUsername
 		if(entityPlayer == null) {
 			List<EntityPlayer> playerEntityList = MinecraftServer.getServer().getConfigurationManager().playerEntityList;
 			for(EntityPlayer entity : playerEntityList) {

@@ -100,7 +100,7 @@ public class ClientProxy extends CommonProxy {
 			notificationGUI.showNotification(type, text);
 		}
 		if(config == NotificationStyle.TextAndSound || config == NotificationStyle.SoundOnly) {
-			Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.createPositionedSoundRecord(new ResourceLocation(ClientGlobalConfig.notificationSound.get()), ClientGlobalConfig.notificationSoundPitch.get()));
+			Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation(ClientGlobalConfig.notificationSound.get()), ClientGlobalConfig.notificationSoundPitch.get())); // createPositionedSoundRecord
 		}
 	}
 	

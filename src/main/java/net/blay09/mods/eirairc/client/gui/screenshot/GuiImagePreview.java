@@ -17,7 +17,6 @@ import net.minecraft.client.gui.GuiConfirmOpenLink;
 import net.minecraft.client.gui.GuiYesNoCallback;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 
 public class GuiImagePreview extends EiraGuiScreen implements GuiYesNoCallback {
@@ -132,7 +131,7 @@ public class GuiImagePreview extends EiraGuiScreen implements GuiYesNoCallback {
 		if(imgPreview != null) {
 			if(!imgPreview.isLoaded()) {
 				String s = I19n.format("eirairc:gui.image.loading");
-				mc.fontRendererObj.drawStringWithShadow(s, width / 2 - fontRendererObj.getStringWidth(s) / 2, height / 2 - fontRendererObj.FONT_HEIGHT / 2, Globals.TEXT_COLOR);
+				mc.fontRenderer.drawStringWithShadow(s, width / 2 - fontRendererObj.getStringWidth(s) / 2, height / 2 - fontRendererObj.FONT_HEIGHT / 2, Globals.TEXT_COLOR);
 			}
 
 			// Render the preview image
@@ -154,7 +153,7 @@ public class GuiImagePreview extends EiraGuiScreen implements GuiYesNoCallback {
 					if (hoverTime > TOOLTIP_TIME) {
 						tooltipList.clear();
 						tooltipList.add(imageButton.getTooltipText());
-						drawHoveringText(tooltipList, mouseX, mouseY);
+						func_146283_a(tooltipList, mouseX, mouseY); // drawHoveringText
 					}
 					break;
 				}

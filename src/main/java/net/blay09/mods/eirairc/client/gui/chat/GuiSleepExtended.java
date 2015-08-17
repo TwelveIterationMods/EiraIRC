@@ -68,9 +68,9 @@ public class GuiSleepExtended extends GuiSleepMP {
     }
 
     @Override
-    public void autocompletePlayerNames() {
+    public void func_146404_p_() { // autocompletePlayerNames
         if(extension.autocompletePlayernames()) {
-            super.autocompletePlayerNames();
+            super.func_146404_p_(); // autocompletePlayerNames
         }
     }
 
