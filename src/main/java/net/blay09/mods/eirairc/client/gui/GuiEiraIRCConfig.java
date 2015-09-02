@@ -3,6 +3,7 @@ package net.blay09.mods.eirairc.client.gui;
 import net.blay09.mods.eirairc.config.ClientGlobalConfig;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.util.Globals;
+import net.blay09.mods.eirairc.util.I19n;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.common.config.ConfigCategory;
@@ -20,7 +21,7 @@ import java.util.List;
 public class GuiEiraIRCConfig extends GuiConfig {
 
 	public GuiEiraIRCConfig(GuiScreen parentScreen) {
-		super(parentScreen, getCategories(), Globals.MOD_ID, "global", false, false, "EiraIRC Config");
+		super(parentScreen, getCategories(), Globals.MOD_ID, "global", false, false, I19n.format("eirairc:gui.config"));
 	}
 
 	@SuppressWarnings("unchecked")

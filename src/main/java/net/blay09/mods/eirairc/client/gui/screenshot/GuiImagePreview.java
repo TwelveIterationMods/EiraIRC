@@ -5,6 +5,7 @@ import net.blay09.mods.eirairc.client.gui.EiraGuiScreen;
 import net.blay09.mods.eirairc.client.gui.base.GuiImageButton;
 import net.blay09.mods.eirairc.client.gui.base.image.GuiImage;
 import net.blay09.mods.eirairc.client.gui.base.image.GuiURLImage;
+import net.blay09.mods.eirairc.util.I19n;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -49,15 +50,15 @@ public class GuiImagePreview extends EiraGuiScreen implements GuiYesNoCallback {
 		final int topY = height / 2 - 100;
 
 		btnZoom = new GuiImageButton(0, rightX - 37, topY + 12, EiraGui.atlas.findRegion("button_zoom"));
-		btnZoom.setTooltipText("View Fullscreen");
+		btnZoom.setTooltipText(I19n.format("eirairc:gui.image.fullscreen"));
 		buttonList.add(btnZoom);
 
 		btnGoToURL = new GuiImageButton(1, rightX - 37, topY + 50, EiraGui.atlas.findRegion("button_upload"));
-		btnGoToURL.setTooltipText("Open in Browser");
+		btnGoToURL.setTooltipText(I19n.format("eirairc:gui.image.openBrowser"));
 		buttonList.add(btnGoToURL);
 
 		btnClipboard = new GuiImageButton(2, rightX - 37, topY + 88, EiraGui.atlas.findRegion("button_clipboard"));
-		btnClipboard.setTooltipText("URL to Clipboard");
+		btnClipboard.setTooltipText(I19n.format("eirairc:gui.image.toClipboard"));
 		buttonList.add(btnClipboard);
 
 		imgX = leftX + 2;

@@ -27,11 +27,11 @@ public class IRCConnectionSSLImpl extends IRCConnectionImpl {
 
 	@Override
 	protected Socket connect() throws Exception {
-		if (!SharedGlobalConfig.sslCustomTrustStore.isEmpty()) {
-			System.setProperty("javax.net.ssl.trustStore", SharedGlobalConfig.sslCustomTrustStore);
+		if (!SharedGlobalConfig.sslCustomTrustStore.get().isEmpty()) {
+			System.setProperty("javax.net.ssl.trustStore", SharedGlobalConfig.sslCustomTrustStore.get());
 		}
 		SSLSocketFactory socketFactory;
-		if (SharedGlobalConfig.sslTrustAllCerts) {
+		if (SharedGlobalConfig.sslTrustAllCerts.get()) {
 			SSLContext context = SSLContext.getInstance("TLS");
 			context.init(null, new TrustManager[]{new NaiveTrustManager()}, null);
 			socketFactory = context.getSocketFactory();
@@ -45,14 +45,14 @@ public class IRCConnectionSSLImpl extends IRCConnectionImpl {
 				if (proxy != null) {
 					Socket underlying = new Socket(proxy);
 					underlying.connect(new InetSocketAddress(host, ports[i]));
-					sslSocket = (SSLSocket) socketFactory.createSocket(underlying, Utils.extractHost(SharedGlobalConfig.proxyHost), Utils.extractPorts(SharedGlobalConfig.proxyHost, DEFAULT_PROXY_PORT)[0], true);
+					sslSocket = (SSLSocket) socketFactory.createSocket(underlying, Utils.extractHost(SharedGlobalConfig.proxyHost.get()), Utils.extractPorts(SharedGlobalConfig.proxyHost.get(), DEFAULT_PROXY_PORT)[0], true);
 				} else {
 					sslSocket = (SSLSocket) socketFactory.createSocket(host, ports[i]);
 				}
-				if (!SharedGlobalConfig.bindIP.isEmpty()) {
-					sslSocket.bind(new InetSocketAddress(SharedGlobalConfig.bindIP, ports[i]));
+				if (!SharedGlobalConfig.bindIP.get().isEmpty()) {
+					sslSocket.bind(new InetSocketAddress(SharedGlobalConfig.bindIP.get(), ports[i]));
 				}
-				if (SharedGlobalConfig.sslDisableDiffieHellman) {
+				if (SharedGlobalConfig.sslDisableDiffieHellman.get()) {
 					disableDiffieHellman(sslSocket);
 				}
 				sslSocket.startHandshake();

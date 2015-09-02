@@ -7,14 +7,14 @@ import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.irc.IRCConnectionImpl;
 
 public enum IRCTargetError implements IRCContext {
-	SpecifyServer("irc.target.specifyServer"),
-	ServerNotFound("irc.target.serverNotFound"),
-	ChannelNotFound("irc.target.channelNotFound"),
-	UserNotFound("irc.target.userNotFound"), 
-	InvalidTarget("irc.target.invalidTarget"), 
-	TargetNotFound("irc.target.targetNotFound"), 
-	NotConnected("irc.target.notConnected"), 
-	NotOnChannel("irc.target.notOnChannel");
+	SpecifyServer("error.specifyServer"),
+	ServerNotFound("error.serverNotFound"),
+	ChannelNotFound("error.channelNotFound"),
+	UserNotFound("error.userNotFound"),
+	InvalidTarget("error.invalidTarget"),
+	TargetNotFound("error.targetNotFound"),
+	NotConnected("error.notConnected"),
+	NotOnChannel("error.notOnChannel");
 
 	private final String errorString;
 	

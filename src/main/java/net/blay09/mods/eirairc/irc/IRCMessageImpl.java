@@ -17,6 +17,20 @@ public class IRCMessageImpl implements IRCMessage {
 		this.prefix = prefix;
 		this.command = command;
 		this.args = args;
+
+		if(tags != null) {
+			for (int i = 0; i < tags.length; i++) {
+				int eqIdx = tags[i].indexOf('=');
+				if (eqIdx != -1) {
+					String key = tags[i].substring(0, eqIdx);
+					String value = tags[i].substring(eqIdx + 1);
+					value = value.replace("\\:", ";");
+					value = value.replace("\\s", " ");
+					value = value.replace("\\\\", "\\");
+					tags[i] = key + "=" + value;
+				}
+			}
+		}
 	}
 
 	@Override

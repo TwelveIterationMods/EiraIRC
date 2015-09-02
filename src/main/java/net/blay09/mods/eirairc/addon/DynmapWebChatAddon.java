@@ -1,5 +1,6 @@
 package net.blay09.mods.eirairc.addon;
 
+import net.blay09.mods.eirairc.api.EiraIRCAPI;
 import net.blay09.mods.eirairc.api.event.IRCChannelChatEvent;
 import net.blay09.mods.eirairc.api.event.IRCUserJoinEvent;
 import net.blay09.mods.eirairc.api.event.IRCUserLeaveEvent;
@@ -19,8 +20,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.dynmap.DynmapCommonAPI;
 import org.dynmap.DynmapCommonAPIListener;
 
-
 @Optional.Interface(iface = "org.dynmap.DynmapCommonAPIListener", modid = "Dynmap")
+@SuppressWarnings("unused")
 public class DynmapWebChatAddon extends DynmapCommonAPIListener {
 
 	public static class WebChatSender implements ICommandSender {
@@ -33,13 +34,13 @@ public class DynmapWebChatAddon extends DynmapCommonAPIListener {
 		}
 
 		@Override
-		public String getCommandSenderName() {
+		public String getName() {
 			return "[" + source + "]" + ((name != null && !name.isEmpty()) ? " " + name : "");
 		}
 
 		@Override
 		public IChatComponent getDisplayName() {
-			return new ChatComponentText(this.getCommandSenderName());
+			return new ChatComponentText(this.getName());
 		}
 
 		@Override
@@ -76,7 +77,7 @@ public class DynmapWebChatAddon extends DynmapCommonAPIListener {
 		}
 
 		@Override
-		public void setCommandStat(CommandResultStats.Type type, int amount) {}
+		public void func_174794_a(CommandResultStats.Type p_174794_1_, int p_174794_2_) {}
 
 	}
 
@@ -127,7 +128,7 @@ public class DynmapWebChatAddon extends DynmapCommonAPIListener {
 	@Override
 	@Optional.Method(modid = "Dynmap")
 	public boolean webChatEvent(String source, String name, String message) {
-		MinecraftForge.EVENT_BUS.post(new RelayChat(new WebChatSender(source, name), message));
+		EiraIRCAPI.relayChat(new WebChatSender(source, name), message, false, false, null);
 		return true;
 	}
 }

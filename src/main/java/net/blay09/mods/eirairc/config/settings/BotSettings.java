@@ -12,6 +12,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.EnumMap;
 import java.util.List;
@@ -112,7 +113,7 @@ public class BotSettings {
 	}
 
 	public MessageFormatConfig getMessageFormat() {
-		if(Compatibility.tabbyChatInstalled) {
+		if(Compatibility.isTabbyChat2Installed()) {
 			return ConfigurationHandler.getMessageFormat("TabbyChat2");
 		}
 		return ConfigurationHandler.getMessageFormat(getString(BotStringComponent.MessageFormat));
@@ -275,7 +276,7 @@ public class BotSettings {
 		BotStringListComponent stringListComponent = BotStringListComponent.fromName(key);
 		if(stringListComponent != null) {
 			if (stringLists.containsKey(stringListComponent)) {
-				return Utils.joinStrings(stringLists.get(stringListComponent), ", ", 0);
+				return StringUtils.join(stringLists.get(stringListComponent), ", ", 0);
 			} else {
 				return "<inherit>";
 			}
@@ -318,7 +319,7 @@ public class BotSettings {
 		return false;
 	}
 
-	public static void addOptionsToList(List<String> list, String option) {
+	public static void addOptionsToList(List<String> list, String option, boolean autoCompleteOption) {
 		if(option == null) {
 			for(BotBooleanComponent component : BotBooleanComponent.values) {
 				list.add(component.name);
@@ -331,7 +332,8 @@ public class BotSettings {
 			}
 		} else {
 			if(BotBooleanComponent.fromName(option) != null) {
-				Utils.addBooleansToList(list);
+				list.add("true");
+				list.add("false");
 			}
 		}
 	}

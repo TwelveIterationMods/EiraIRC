@@ -137,7 +137,7 @@ public class GeneralSettings {
 		}
 		return false;
 	}
-	public static void addOptionsToList(List<String> list, String option) {
+	public static void addOptionsToList(List<String> list, String option, boolean autoCompleteOption) {
 		if(option == null) {
 			for(GeneralBooleanComponent component : GeneralBooleanComponent.values) {
 				list.add(component.name);

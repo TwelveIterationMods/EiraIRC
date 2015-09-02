@@ -27,7 +27,7 @@ public class CommandNick implements SubCommand {
 
 	@Override
 	public String getCommandUsage(ICommandSender sender) {
-		return "eirairc:irc.commands.nick";
+		return "eirairc:commands.nick.usage";
 	}
 
 	@Override
@@ -43,11 +43,11 @@ public class CommandNick implements SubCommand {
 		if(args.length >= 2) {
 			ServerConfig serverConfig = ConfigHelper.resolveServerConfig(args[0]);
 			if(serverConfig == null) {
-				Utils.sendLocalizedMessage(sender, "irc.target.serverNotFound", args[0]);
+				Utils.sendLocalizedMessage(sender, "error.serverNotFound", args[0]);
 				return true;
 			}
 			String nick = args[1];
-			Utils.sendLocalizedMessage(sender, "irc.basic.changingNick", serverConfig.getAddress(), nick);
+			Utils.sendLocalizedMessage(sender, "commands.nick", serverConfig.getAddress(), nick);
 			serverConfig.setNick(nick);
 			IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(serverConfig.getIdentifier());
 			if(connection != null) {
@@ -56,7 +56,7 @@ public class CommandNick implements SubCommand {
 		} else {
 			String nick = args[0];
 			if(context == null) {
-				Utils.sendLocalizedMessage(sender, "irc.basic.changingNick", "Global", nick);
+				Utils.sendLocalizedMessage(sender, "commands.nick", "Global", nick);
 				for(ServerConfig serverConfig : ConfigurationHandler.getServerConfigs()) {
 					if(serverConfig.getAddress().equals(Globals.TWITCH_SERVER)) {
 						continue;

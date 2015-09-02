@@ -5,7 +5,6 @@ package net.blay09.mods.eirairc.command;
 
 import net.blay09.mods.eirairc.api.EiraIRCAPI;
 import net.blay09.mods.eirairc.api.SubCommand;
-import net.blay09.mods.eirairc.api.event.ChatMessageEvent;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.api.irc.IRCUser;
 import net.blay09.mods.eirairc.config.ChannelConfig;
@@ -22,11 +21,9 @@ import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
-import net.minecraftforge.common.MinecraftForge;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
@@ -39,7 +36,7 @@ public class CommandMessage implements SubCommand {
 
 	@Override
 	public String getCommandUsage(ICommandSender sender) {
-		return "eirairc:irc.commands.msg";
+		return "eirairc:commands.msg.usage";
 	}
 
 	@Override
@@ -58,11 +55,11 @@ public class CommandMessage implements SubCommand {
 			return true;
 		} else if(target.getContextType() == IRCContext.ContextType.IRCUser) {
 			if(!ConfigHelper.getBotSettings(context).getBoolean(BotBooleanComponent.AllowPrivateMessages)) {
-				Utils.sendLocalizedMessage(sender, "irc.msg.disabled");
+				Utils.sendLocalizedMessage(sender, "commands.msg.disabled");
 				return true;
 			}
 		}
-		String message = Utils.joinStrings(args, " ", 1).trim();
+		String message = StringUtils.join(args, " ", 1).trim();
 		if(message.isEmpty()) {
 			throw new WrongUsageException(getCommandUsage(sender));
 		}
@@ -103,7 +100,7 @@ public class CommandMessage implements SubCommand {
 				chatComponent.getChatStyle().setColor(emoteColor);
 			}
 		}
-		MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(sender, chatComponent));
+		EiraIRCAPI.getChatHandler().addChatMessage(sender, chatComponent);
 		return true;
 	}
 

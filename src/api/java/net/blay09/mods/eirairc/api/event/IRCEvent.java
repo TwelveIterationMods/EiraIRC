@@ -1,4 +1,4 @@
-// Copyright (c) 2015, Christopher "BlayTheNinth" Baker
+// Copyright (c) 2015 Christopher "BlayTheNinth" Baker
 
 package net.blay09.mods.eirairc.api.event;
 
@@ -22,7 +22,6 @@ public abstract class IRCEvent extends Event {
 	 * the bot this event is based on
 	 */
 	public final IRCBot bot;
-
 
 	/**
 	 * the chat output

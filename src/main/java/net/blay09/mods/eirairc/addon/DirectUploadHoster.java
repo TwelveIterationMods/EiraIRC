@@ -1,6 +1,5 @@
 // Copyright (c) 2015, Christopher "BlayTheNinth" Baker
 
-
 package net.blay09.mods.eirairc.addon;
 
 import net.blay09.mods.eirairc.api.upload.UploadHoster;
@@ -8,7 +7,6 @@ import net.blay09.mods.eirairc.api.upload.UploadedFile;
 
 import java.io.*;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 public class DirectUploadHoster implements UploadHoster {
@@ -57,8 +55,6 @@ public class DirectUploadHoster implements UploadHoster {
 			in.close();
 			con.disconnect();
 			return new UploadedFile(stringBuilder.toString(), null, null);
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

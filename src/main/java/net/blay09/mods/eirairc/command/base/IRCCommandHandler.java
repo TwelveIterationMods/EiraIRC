@@ -1,6 +1,5 @@
 // Copyright (c) 2015, Christopher "BlayTheNinth" Baker
 
-
 package net.blay09.mods.eirairc.command.base;
 
 import net.blay09.mods.eirairc.api.SubCommand;
@@ -11,6 +10,7 @@ import net.blay09.mods.eirairc.command.interop.InterOpCommandMode;
 import net.blay09.mods.eirairc.command.interop.InterOpCommandTopic;
 import net.blay09.mods.eirairc.command.interop.InterOpCommandUserModeBase;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
+import net.blay09.mods.eirairc.util.I19n;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.CommandHandler;
@@ -21,6 +21,7 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
+import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,19 +48,18 @@ public class IRCCommandHandler {
 		registerCommand(new CommandWho());
 		registerCommand(new CommandColor());
 		registerCommand(new CommandGhost());
-		registerCommand(new CommandAlias());
 		registerCommand(new CommandIgnore());
 		registerCommand(new CommandUnignore());
 
 		registerCommand(new InterOpCommandKick());
 		registerCommand(new InterOpCommandMode());
 		registerCommand(new InterOpCommandTopic());
-		registerCommand(new InterOpCommandUserModeBase("op", "+o"));
-		registerCommand(new InterOpCommandUserModeBase("deop", "-o"));
-		registerCommand(new InterOpCommandUserModeBase("voice", "+v"));
-		registerCommand(new InterOpCommandUserModeBase("devoice", "-v"));
-		registerCommand(new InterOpCommandUserModeBase("ban", "+b"));
-		registerCommand(new InterOpCommandUserModeBase("unban", "-b"));
+		registerCommand(new InterOpCommandUserModeBase("op", "+o", false));
+		registerCommand(new InterOpCommandUserModeBase("deop", "-o", false));
+		registerCommand(new InterOpCommandUserModeBase("voice", "+v", false));
+		registerCommand(new InterOpCommandUserModeBase("devoice", "-v", false));
+		registerCommand(new InterOpCommandUserModeBase("ban", "+b", true));
+		registerCommand(new InterOpCommandUserModeBase("unban", "-b", true));
 	}
 	
 	public static void registerCommand(SubCommand command) {
@@ -84,7 +84,7 @@ public class IRCCommandHandler {
 	public static boolean isUsernameIndex(String[] args, int idx) {
 		SubCommandWrapper cmd = commands.get(args[0]);
 		if(cmd != null) {
-			String[] shiftedArgs = Utils.shiftArgs(args, 1);
+			String[] shiftedArgs = ArrayUtils.subarray(args, 1, args.length);
 			return cmd.isUsernameIndex(shiftedArgs, idx - 1);
 		}
 		return false;
@@ -106,7 +106,7 @@ public class IRCCommandHandler {
 		}
 		SubCommandWrapper cmd = commands.get(args[0]);
 		if(cmd != null) {
-			String[] shiftedArgs = Utils.shiftArgs(args, 1);
+			String[] shiftedArgs = ArrayUtils.subarray(args, 1, args.length);
 			return cmd.addTabCompletionOptions(sender, shiftedArgs, pos);
 		}
 		return null;
@@ -124,16 +124,16 @@ public class IRCCommandHandler {
             sender.addChatMessage(chatComponent);
             return true;
 		}
-		String[] shiftedArgs = Utils.shiftArgs(args, 1);
+		String[] shiftedArgs = ArrayUtils.subarray(args, 1, args.length);
 		return cmd.command.processCommand(sender, Utils.getSuggestedTarget(), shiftedArgs, serverSide);
 	}
 	
 	public static void sendUsageHelp(ICommandSender sender) {
-		Utils.sendLocalizedMessage(sender, "irc.general.usage", Utils.getLocalizedMessage("irc.commands.irc"));
-		Utils.sendLocalizedMessage(sender, "irc.cmdlist.general");
-		Utils.sendLocalizedMessage(sender, "irc.cmdlist.irc");
-		Utils.sendLocalizedMessage(sender, "irc.cmdlist.interop");
-		Utils.sendLocalizedMessage(sender, "irc.cmdlist.special");
+		Utils.sendLocalizedMessage(sender, "general.usage", I19n.format("eirairc:commands.irc.usage"));
+		Utils.sendLocalizedMessage(sender, "commands.irc.list.general");
+		Utils.sendLocalizedMessage(sender, "commands.irc.list.irc");
+		Utils.sendLocalizedMessage(sender, "commands.irc.list.interop");
+		Utils.sendLocalizedMessage(sender, "commands.irc.list.special");
 	}
 
 	public static boolean onChatCommand(EntityPlayer sender, String text, boolean serverSide) {
@@ -142,7 +142,7 @@ public class IRCCommandHandler {
 			try {
 				return processCommand(sender, params, serverSide);
 			} catch (WrongUsageException e) {
-				sender.addChatMessage(Utils.getLocalizedChatMessage("irc.general.usage", Utils.getLocalizedMessageNoPrefix(e.getMessage())));
+				Utils.sendLocalizedMessage(sender, "eirairc:general.usage", I19n.format(e.getMessage()));
 				return true;
 			} catch (CommandException e) {
 				sender.addChatMessage(new ChatComponentText(e.getMessage()));

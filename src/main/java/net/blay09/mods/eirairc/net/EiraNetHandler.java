@@ -1,6 +1,5 @@
 // Copyright (c) 2015, Christopher "BlayTheNinth" Baker
 
-
 package net.blay09.mods.eirairc.net;
 
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -27,7 +26,7 @@ public class EiraNetHandler {
 	@SubscribeEvent
 	public void onPlayerLogout(PlayerLoggedOutEvent event) {
 		synchronized(playerInfoMap) {
-			playerInfoMap.remove(event.player.getCommandSenderName());
+			playerInfoMap.remove(event.player.getName());
 		}
 	}
 	

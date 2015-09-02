@@ -16,6 +16,7 @@ import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.settings.GeneralBooleanComponent;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Globals;
+import net.blay09.mods.eirairc.util.I19n;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
@@ -63,7 +64,7 @@ public class GuiServerConfigAdvanced extends GuiTabPage implements GuiYesNoCallb
 		final int topY = height / 2 - 80;
 		String oldText;
 
-		labelList.add(new GuiLabel("Address", leftX, topY, Globals.TEXT_COLOR));
+		labelList.add(new GuiLabel(I19n.format("eirairc:gui.server.address"), leftX, topY, Globals.TEXT_COLOR));
 
 		if(txtAddress != null) {
 			oldText = txtAddress.getText();
@@ -75,7 +76,7 @@ public class GuiServerConfigAdvanced extends GuiTabPage implements GuiYesNoCallb
 		txtAddress.setText(oldText);
 		textFieldList.add(txtAddress);
 
-		labelList.add(new GuiLabel("Nick", leftX, topY + 40, Globals.TEXT_COLOR));
+		labelList.add(new GuiLabel(I19n.format("eirairc:gui.server.nick"), leftX, topY + 40, Globals.TEXT_COLOR));
 
 		if(txtNick != null) {
 			oldText = txtNick.getText();
@@ -87,7 +88,7 @@ public class GuiServerConfigAdvanced extends GuiTabPage implements GuiYesNoCallb
 		txtNick.setText(oldText);
 		textFieldList.add(txtNick);
 
-		labelList.add(new GuiLabel("NickServ Username", leftX, topY + 80, Globals.TEXT_COLOR));
+		labelList.add(new GuiLabel(I19n.format("eirairc:gui.server.nickServName"), leftX, topY + 80, Globals.TEXT_COLOR));
 
 		AuthManager.NickServData nickServData = AuthManager.getNickServData(config.getIdentifier());
 		if(txtNickServName != null) {
@@ -99,7 +100,7 @@ public class GuiServerConfigAdvanced extends GuiTabPage implements GuiYesNoCallb
 		txtNickServName.setText(oldText);
 		textFieldList.add(txtNickServName);
 
-		labelList.add(new GuiLabel("NickServ Password", leftX, topY + 120, Globals.TEXT_COLOR));
+		labelList.add(new GuiLabel(I19n.format("eirairc:gui.server.nickServPassword"), leftX, topY + 120, Globals.TEXT_COLOR));
 
 		if(txtNickServPassword != null) {
 			oldText = txtNickServPassword.getText();
@@ -111,7 +112,7 @@ public class GuiServerConfigAdvanced extends GuiTabPage implements GuiYesNoCallb
 		txtNickServPassword.setDefaultPasswordChar();
 		textFieldList.add(txtNickServPassword);
 
-		labelList.add(new GuiLabel("Server Password", rightX - 100, topY, Globals.TEXT_COLOR));
+		labelList.add(new GuiLabel(I19n.format("eirairc:gui.server.serverPassword"), rightX - 100, topY, Globals.TEXT_COLOR));
 
 		if(txtServerPassword != null) {
 			oldText = txtServerPassword.getText();
@@ -125,7 +126,7 @@ public class GuiServerConfigAdvanced extends GuiTabPage implements GuiYesNoCallb
 		txtServerPassword.setDefaultPasswordChar();
 		textFieldList.add(txtServerPassword);
 
-		labelList.add(new GuiLabel("Charset", rightX - 100, topY + 40, Globals.TEXT_COLOR));
+		labelList.add(new GuiLabel(I19n.format("eirairc:gui.server.charset"), rightX - 100, topY + 40, Globals.TEXT_COLOR));
 
 		if(txtCharset != null) {
 			oldText = txtCharset.getText();
@@ -145,7 +146,7 @@ public class GuiServerConfigAdvanced extends GuiTabPage implements GuiYesNoCallb
 		} else {
 			oldState = config.isSSL();
 		}
-		chkSSL = new GuiCheckBox(2, rightX - 100, topY + 80, " Use SSL", oldState);
+		chkSSL = new GuiCheckBox(2, rightX - 100, topY + 80, " " + I19n.format("eirairc:gui.server.useSSL"), oldState);
 		chkSSL.enabled = !isConnected;
 		buttonList.add(chkSSL);
 
@@ -154,14 +155,14 @@ public class GuiServerConfigAdvanced extends GuiTabPage implements GuiYesNoCallb
 		} else {
 			oldState = config.getGeneralSettings().getBoolean(GeneralBooleanComponent.AutoJoin);
 		}
-		chkAutoConnect = new GuiCheckBox(3, rightX - 100, topY + 100, " Auto Connect", oldState);
+		chkAutoConnect = new GuiCheckBox(3, rightX - 100, topY + 100, " " + I19n.format("eirairc:gui.server.autoConnect"), oldState);
 		buttonList.add(chkAutoConnect);
 
-		btnDelete = new GuiButton(0, rightX - 100, topY + 150, 100, 20, "Delete");
+		btnDelete = new GuiButton(0, rightX - 100, topY + 150, 100, 20, I19n.format("eirairc:gui.delete"));
 		btnDelete.packedFGColour = -65536;
 		buttonList.add(btnDelete);
 
-		btnBack = new GuiButton(1, rightX - 100, topY + 125, 100, 20, "Back");
+		btnBack = new GuiButton(1, rightX - 100, topY + 125, 100, 20, I19n.format("eirairc:gui.back"));
 		buttonList.add(btnBack);
 	}
 
@@ -181,7 +182,7 @@ public class GuiServerConfigAdvanced extends GuiTabPage implements GuiYesNoCallb
 		if(button == btnBack) {
 			tabContainer.setCurrentTab(parent, false);
 		} else if(button == btnDelete) {
-			setOverlay(new OverlayYesNo(this, "Do you really want to delete this server configuration?", "This can't be undone, so be careful!", 0));
+			setOverlay(new OverlayYesNo(this, I19n.format("eirairc:gui.server.deleteConfirm"), I19n.format("eirairc:gui.server.deleteNoUndo"), 0));
 		}
 	}
 

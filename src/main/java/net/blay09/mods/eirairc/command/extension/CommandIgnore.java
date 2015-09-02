@@ -23,7 +23,7 @@ public class CommandIgnore implements SubCommand {
 
     @Override
     public String getCommandUsage(ICommandSender sender) {
-        return "eirairc:irc.commands.ignore";
+        return "eirairc:commands.ignore.usage";
     }
 
     @Override
@@ -43,15 +43,15 @@ public class CommandIgnore implements SubCommand {
         }
         IRCUser user = (IRCUser) target;
         if(user.getHostname() == null) {
-            Utils.sendLocalizedMessage(sender, "irc.commands.ignore.notKnown", target.getName());
+            Utils.sendLocalizedMessage(sender, "commands.ignore.notKnown", target.getName());
             return true;
         }
         if(IgnoreList.isIgnored(user)) {
-            Utils.sendLocalizedMessage(sender, "irc.commands.ignore.alreadyIgnored", target.getName());
+            Utils.sendLocalizedMessage(sender, "commands.ignore.alreadyIgnored", target.getName());
             return true;
         }
         IgnoreList.addToIgnoreList(user);
-        Utils.sendLocalizedMessage(sender, "irc.commands.ignore.added", target.getName());
+        Utils.sendLocalizedMessage(sender, "commands.ignore.added", target.getName());
         return true;
     }
 

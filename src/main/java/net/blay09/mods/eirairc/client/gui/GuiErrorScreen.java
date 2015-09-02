@@ -24,10 +24,10 @@ public class GuiErrorScreen extends EiraGuiScreen {
 
     @Override
     public void initGui() {
-        labelList.add(new GuiLabel("Oops! Something went wrong.", width / 2 - 90, height / 2 - 90, Globals.TEXT_COLOR));
+        labelList.add(new GuiLabel(I19n.format("eirairc:gui.error"), width / 2 - 90, height / 2 - 90, Globals.TEXT_COLOR));
         labelList.add(new GuiLabel(I19n.format(errorLangKey), width / 2 - 90, height / 2 - 70, Globals.TEXT_COLOR));
 
-        btnClipboard = new GuiButton(0, width / 2 - 50, height / 2 + 50, "To Clipboard");
+        btnClipboard = new GuiButton(0, width / 2 - 50, height / 2 + 50, I19n.format("eirairc:gui.error.toClipboard"));
         buttonList.add(btnClipboard);
     }
 

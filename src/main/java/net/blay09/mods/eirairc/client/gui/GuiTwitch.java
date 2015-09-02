@@ -1,5 +1,6 @@
 package net.blay09.mods.eirairc.client.gui;
 
+import net.blay09.mods.eirairc.ConnectionManager;
 import net.blay09.mods.eirairc.api.IRCReplyCodes;
 import net.blay09.mods.eirairc.api.event.IRCConnectEvent;
 import net.blay09.mods.eirairc.api.event.IRCConnectionFailedEvent;
@@ -13,6 +14,7 @@ import net.blay09.mods.eirairc.config.settings.BotBooleanComponent;
 import net.blay09.mods.eirairc.config.settings.BotStringComponent;
 import net.blay09.mods.eirairc.config.settings.GeneralBooleanComponent;
 import net.blay09.mods.eirairc.util.Globals;
+import net.blay09.mods.eirairc.util.I19n;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
@@ -53,10 +55,10 @@ public class GuiTwitch extends EiraGuiScreen implements GuiYesNoCallback {
 		} else {
 			oldChecked = config.getNick().equals("%ANONYMOUS%");
 		}
-		chkAnonymous = new GuiCheckBox(2, width / 2 - 90, topY, "Login anonymously (read-only)", oldChecked);
+		chkAnonymous = new GuiCheckBox(2, width / 2 - 90, topY, I19n.format("eirairc:gui.twitch.anonymous"), oldChecked);
 		buttonList.add(chkAnonymous);
 
-		labelList.add(new GuiLabel("Twitch Username", width / 2 - 90, topY + 20, Globals.TEXT_COLOR));
+		labelList.add(new GuiLabel(I19n.format("eirairc:gui.twitch.username"), width / 2 - 90, topY + 20, Globals.TEXT_COLOR));
 
 		String oldText;
 		if(txtUsername != null) {
@@ -69,7 +71,7 @@ public class GuiTwitch extends EiraGuiScreen implements GuiYesNoCallback {
 		txtUsername.setText(oldText);
 		textFieldList.add(txtUsername);
 
-		labelList.add(new GuiLabel("O-Auth Token", width / 2 - 90, topY + 60, Globals.TEXT_COLOR));
+		labelList.add(new GuiLabel(I19n.format("eirairc:gui.twitch.oauth"), width / 2 - 90, topY + 60, Globals.TEXT_COLOR));
 
 		if(txtPassword != null) {
 			oldText = txtPassword.getText();
@@ -84,7 +86,7 @@ public class GuiTwitch extends EiraGuiScreen implements GuiYesNoCallback {
 		btnOAuthHelp = new GuiButton(0, width / 2 + 94, topY + 72, 20, 20, "?");
 		buttonList.add(btnOAuthHelp);
 
-		btnConnect = new GuiButton(1, width / 2 - 100, topY + 100, "Connect");
+		btnConnect = new GuiButton(1, width / 2 - 100, topY + 100, I19n.format("eirairc:gui.twitch.connect"));
 		buttonList.add(btnConnect);
 
 		if(chkAnonymous.isChecked()) {
@@ -107,7 +109,7 @@ public class GuiTwitch extends EiraGuiScreen implements GuiYesNoCallback {
 				config.getBotSettings().setBoolean(BotBooleanComponent.RelayIRCJoinLeave, false);
 				btnConnect.enabled = false;
 				ConfigurationHandler.addServerConfig(config);
-				Utils.connectTo(config);
+				ConnectionManager.connectTo(config);
 			} else {
 				config.setNick(txtUsername.getText());
 				AuthManager.putServerPassword(config.getIdentifier(), txtPassword.getText());
@@ -118,7 +120,7 @@ public class GuiTwitch extends EiraGuiScreen implements GuiYesNoCallback {
 					config.getOrCreateChannelConfig("#" + config.getNick());
 					btnConnect.enabled = false;
 					ConfigurationHandler.addServerConfig(config);
-					Utils.connectTo(config);
+					ConnectionManager.connectTo(config);
 				}
 			}
 			ConfigurationHandler.saveServers();

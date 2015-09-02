@@ -2,7 +2,6 @@ package net.blay09.mods.eirairc.command;
 
 import net.blay09.mods.eirairc.api.EiraIRCAPI;
 import net.blay09.mods.eirairc.api.SubCommand;
-import net.blay09.mods.eirairc.api.event.ChatMessageEvent;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.api.irc.IRCUser;
 import net.blay09.mods.eirairc.config.settings.BotBooleanComponent;
@@ -14,7 +13,7 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.util.IChatComponent;
-import net.minecraftforge.common.MinecraftForge;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
@@ -30,7 +29,7 @@ public class CommandCTCP implements SubCommand {
 
     @Override
     public String getCommandUsage(ICommandSender sender) {
-        return "eirairc:irc.commands.ctcp";
+        return "eirairc:commands.ctcp.usage";
     }
 
     @Override
@@ -41,7 +40,7 @@ public class CommandCTCP implements SubCommand {
     @Override
     public boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) throws CommandException {
         if (!ConfigHelper.getBotSettings(context).getBoolean(BotBooleanComponent.AllowCTCP)) {
-            Utils.sendLocalizedMessage(sender, "irc.ctcp.disabled");
+            Utils.sendLocalizedMessage(sender, "commands.ctcp.disabled");
             return true;
         }
         if (args.length < 2) {
@@ -53,11 +52,11 @@ public class CommandCTCP implements SubCommand {
             return true;
         } else if (target.getContextType() == IRCContext.ContextType.IRCUser) {
             if (!ConfigHelper.getBotSettings(context).getBoolean(BotBooleanComponent.AllowPrivateMessages)) {
-                Utils.sendLocalizedMessage(sender, "irc.msg.disabled");
+                Utils.sendLocalizedMessage(sender, "commands.ctcp.disabled");
                 return true;
             }
         }
-        String message = Utils.joinStrings(args, " ", 1).trim();
+        String message = StringUtils.join(args, " ", 1).trim();
         if (message.isEmpty()) {
             throw new WrongUsageException(getCommandUsage(sender));
         }
@@ -79,13 +78,13 @@ public class CommandCTCP implements SubCommand {
         }
 
         IChatComponent chatComponent = MessageFormat.formatChatComponent(format, target.getConnection(), target, botUser, message, MessageFormat.Target.IRC, MessageFormat.Mode.Message);
-        MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(sender, chatComponent));
+        EiraIRCAPI.getChatHandler().addChatMessage(sender, chatComponent);
         return true;
     }
 
     @Override
     public boolean canCommandSenderUseCommand(ICommandSender sender) {
-        return true;
+        return Utils.isOP(sender);
     }
 
     @Override

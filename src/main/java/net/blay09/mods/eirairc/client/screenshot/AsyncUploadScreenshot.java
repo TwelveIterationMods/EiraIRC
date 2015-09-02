@@ -23,7 +23,7 @@ public class AsyncUploadScreenshot implements Runnable {
 	
 	@Override
 	public void run() {
-		uploadedFile = hoster.uploadFile(screenshot.getFile(), ClientGlobalConfig.uploadBufferSize);
+		uploadedFile = hoster.uploadFile(screenshot.getFile(), ClientGlobalConfig.uploadBufferSize.get());
 		if(uploadedFile != null) {
 			screenshot.setUploadedFile(uploadedFile);
 		}

@@ -12,6 +12,7 @@ import net.blay09.mods.eirairc.client.screenshot.Screenshot;
 import net.blay09.mods.eirairc.client.screenshot.ScreenshotManager;
 import net.blay09.mods.eirairc.config.ScreenshotAction;
 import net.blay09.mods.eirairc.util.Globals;
+import net.blay09.mods.eirairc.util.I19n;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -126,10 +127,10 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 
 		txtSearch = new GuiAdvancedTextField(0, fontRendererObj, leftX + 2, topY - 10, 200, 16);
 		txtSearch.setEmptyOnRightClick(true);
-		txtSearch.setDefaultText("Search...", true);
+		txtSearch.setDefaultText(I19n.format("eirairc:gui.screenshots.search"), true);
 		textFieldList.add(txtSearch);
 
-		btnOpenFolder = new GuiButton(0, rightX - 85, topY - 12, 85, 20, "Open Folder");
+		btnOpenFolder = new GuiButton(0, rightX - 85, topY - 12, 85, 20, I19n.format("eirairc:gui.screenshots.openFolder"));
 		buttonList.add(btnOpenFolder);
 
 		txtName = new GuiAdvancedTextField(1, fontRendererObj, width / 2 - 100, topY + 152, 200, 15);
@@ -148,35 +149,35 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 		buttonList.add(btnGoToLast);
 
 		btnFavorite = new GuiImageButton(5, rightX - 37, topY + 12, EiraGui.atlas.findRegion("button_favorite"));
-		btnFavorite.setTooltipText("Favorite");
+		btnFavorite.setTooltipText(I19n.format("eirairc:gui.screenshots.favorite"));
 		buttonList.add(btnFavorite);
 
 		btnUpload = new GuiImageButton(6, rightX - 37, topY + 50, EiraGui.atlas.findRegion("button_upload"));
-		btnUpload.setTooltipText("Upload");
+		btnUpload.setTooltipText(I19n.format("eirairc:gui.screenshots.upload"));
 		buttonList.add(btnUpload);
 
 		btnClipboard = new GuiImageButton(7, rightX - 37, topY + 50, EiraGui.atlas.findRegion("button_clipboard"));
 		btnClipboard.visible = false;
-		btnClipboard.setTooltipText("To Clipboard");
+		btnClipboard.setTooltipText(I19n.format("eirairc:gui.screenshots.toClipboard"));
 		buttonList.add(btnClipboard);
 
 		btnZoom = new GuiImageButton(8, rightX - 37, topY + 135, EiraGui.atlas.findRegion("button_zoom"));
-		btnZoom.setTooltipText("Zoom");
+		btnZoom.setTooltipText(I19n.format("eirairc:gui.screenshots.fullscreen"));
 		buttonList.add(btnZoom);
 
 		btnDelete = new GuiImageButton(9, leftX + 5, topY + 12, EiraGui.atlas.findRegion("button_delete"));
-		btnDelete.setTooltipText("Delete");
+		btnDelete.setTooltipText(I19n.format("eirairc:gui.delete"));
 		buttonList.add(btnDelete);
 
 		btnReupload = new GuiImageButton(10, leftX + 5, topY + 50, EiraGui.atlas.findRegion("button_upload"));
 		btnReupload.visible = false;
-		btnReupload.setTooltipText("Re-Upload");
+		btnReupload.setTooltipText(I19n.format("eirairc:gui.screenshots.reupload"));
 		buttonList.add(btnReupload);
 
 		int pageLeft = rightX - 3;
 		int pageTop = topY + 10;
 
-		GuiScreenshotPage pageAll = new GuiScreenshotPage(11, pageLeft, pageTop, "All") {
+		GuiScreenshotPage pageAll = new GuiScreenshotPage(11, pageLeft, pageTop, I19n.format("eirairc:gui.screenshots.all")) {
 			@Override
 			public void onClick() {
 				setScreenshotGroup(this, ScreenshotManager.getInstance().getScreenshots());
@@ -187,7 +188,7 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 		buttonList.add(pageAll);
 		pageTop += pageAll.height;
 
-		GuiScreenshotPage pageFavorited = new GuiScreenshotPage(11, pageLeft, pageTop, "Favorited") {
+		GuiScreenshotPage pageFavorited = new GuiScreenshotPage(11, pageLeft, pageTop, I19n.format("eirairc:gui.screenshots.favorited")) {
 			@Override
 			public void onClick() {
 				List<Screenshot> groupList = new ArrayList<Screenshot>();
@@ -202,7 +203,7 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 		buttonList.add(pageFavorited);
 		pageTop += pageFavorited.height + 3;
 
-		GuiScreenshotPage pageTimestamp = new GuiScreenshotPage(11, pageLeft, pageTop, "Today") {
+		GuiScreenshotPage pageTimestamp = new GuiScreenshotPage(11, pageLeft, pageTop, I19n.format("eirairc:gui.screenshots.today")) {
 			@Override
 			public void onClick() {
 				List<Screenshot> groupList = new ArrayList<Screenshot>();
@@ -219,7 +220,7 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 		buttonList.add(pageTimestamp);
 		pageTop += pageTimestamp.height;
 
-		pageTimestamp = new GuiScreenshotPage(11, pageLeft, pageTop, "This Week") {
+		pageTimestamp = new GuiScreenshotPage(11, pageLeft, pageTop, I19n.format("eirairc:gui.screenshots.thisWeek")) {
 			@Override
 			public void onClick() {
 				List<Screenshot> groupList = new ArrayList<Screenshot>();
@@ -236,7 +237,7 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 		buttonList.add(pageTimestamp);
 		pageTop += pageTimestamp.height;
 
-		pageTimestamp = new GuiScreenshotPage(11, pageLeft, pageTop, "This Month") {
+		pageTimestamp = new GuiScreenshotPage(11, pageLeft, pageTop, I19n.format("eirairc:gui.screenshots.thisMonth")) {
 			@Override
 			public void onClick() {
 				List<Screenshot> groupList = new ArrayList<Screenshot>();
@@ -253,7 +254,7 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 		buttonList.add(pageTimestamp);
 		pageTop += pageTimestamp.height;
 
-		pageTimestamp = new GuiScreenshotPage(11, pageLeft, pageTop, "This Year") {
+		pageTimestamp = new GuiScreenshotPage(11, pageLeft, pageTop, I19n.format("eirairc:gui.screenshots.thisYear")) {
 			@Override
 			public void onClick() {
 				List<Screenshot> groupList = new ArrayList<Screenshot>();
@@ -270,7 +271,7 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 		buttonList.add(pageTimestamp);
 		pageTop += pageTimestamp.height;
 
-		pageTimestamp = new GuiScreenshotPage(11, pageLeft, pageTop, "Older") {
+		pageTimestamp = new GuiScreenshotPage(11, pageLeft, pageTop, I19n.format("eirairc:gui.screenshots.older")) {
 			@Override
 			public void onClick() {
 				List<Screenshot> groupList = new ArrayList<Screenshot>();
@@ -339,7 +340,7 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 			Utils.openDirectory(new File(mc.mcDataDir, "screenshots"));
 		} else if(button == btnDelete) {
 			if(currentScreenshot != null && !isUploading) {
-				setOverlay(new OverlayYesNo(this, "Do you really want to delete this screenshot?", "This can't be undone, so be careful!", currentIdx));
+				setOverlay(new OverlayYesNo(this, I19n.format("eirairc:gui.screenshots.deleteConfirm"), I19n.format("eirairc:gui.screenshots.deleteNoUndo"), currentIdx));
 			}
 		} else if(button == btnClipboard) {
 			if(currentScreenshot != null) {
@@ -473,7 +474,7 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 		}
 
 		if(isUploading) {
-			drawCenteredString(fontRendererObj, "Uploading...", width / 2, height / 2, Globals.TEXT_COLOR);
+			drawCenteredString(fontRendererObj, I19n.format("eirairc:gui.screenshots.uploading"), width / 2, height / 2, Globals.TEXT_COLOR);
 		}
 	}
 

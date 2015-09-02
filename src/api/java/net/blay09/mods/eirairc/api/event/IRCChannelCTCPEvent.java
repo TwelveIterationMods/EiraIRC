@@ -8,7 +8,7 @@ import net.blay09.mods.eirairc.api.irc.IRCUser;
 /**
  * @author soniex2
  */
-public class IRCChannelCTCPEvent extends IRCChannelChatOrCTCPEvent {
+public class IRCChannelCTCPEvent extends IRCChannelMessageEvent {
     /**
      * INTERNAL EVENT. YOU SHOULD NOT POST THIS YOURSELF.
      *

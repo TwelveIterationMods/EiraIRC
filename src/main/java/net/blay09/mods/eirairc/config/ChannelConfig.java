@@ -98,25 +98,25 @@ public class ChannelConfig {
 			value = theme.handleConfigCommand(sender, key);
 		}
 		if(value != null) {
-			Utils.sendLocalizedMessage(sender, "irc.config.lookup", name, key, value);
+			Utils.sendLocalizedMessage(sender, "commands.config.lookup", name, key, value);
 		} else {
-			Utils.sendLocalizedMessage(sender, "irc.config.invalidOption", name, key);
+			Utils.sendLocalizedMessage(sender, "commands.config.invalidOption", name, key);
 		}
 	}
 
 	public void handleConfigCommand(ICommandSender sender, String key, String value) {
 		if(!generalSettings.handleConfigCommand(sender, key, value) && !botSettings.handleConfigCommand(sender, key, value) && !theme.handleConfigCommand(sender, key, value)) {
-			Utils.sendLocalizedMessage(sender, "irc.config.invalidOption", name, key, value);
+			Utils.sendLocalizedMessage(sender, "commands.config.invalidOption", name, key, value);
 			return;
 		}
-		Utils.sendLocalizedMessage(sender, "irc.config.change", name, key, value);
+		Utils.sendLocalizedMessage(sender, "commands.config.change", name, key, value);
 		ConfigurationHandler.save();
 	}
 
-	public static void addOptionsToList(List<String> list, String option) {
-		ThemeSettings.addOptionsToList(list, option);
-		BotSettings.addOptionsToList(list, option);
-		GeneralSettings.addOptionsToList(list, option);
+	public static void addOptionsToList(List<String> list, String option, boolean autoCompleteOption) {
+		ThemeSettings.addOptionsToList(list, option, autoCompleteOption);
+		BotSettings.addOptionsToList(list, option, autoCompleteOption);
+		GeneralSettings.addOptionsToList(list, option, autoCompleteOption);
 	}
 
 	public ServerConfig getServerConfig() {

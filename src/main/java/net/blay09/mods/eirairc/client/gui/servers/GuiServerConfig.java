@@ -1,5 +1,6 @@
 package net.blay09.mods.eirairc.client.gui.servers;
 
+import net.blay09.mods.eirairc.ConnectionManager;
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.event.*;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
@@ -18,6 +19,7 @@ import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Globals;
+import net.blay09.mods.eirairc.util.I19n;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -51,7 +53,7 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 	private ChannelConfig deleteChannel;
 
 	public GuiServerConfig(GuiTabContainer tabContainer) {
-		super(tabContainer, "<new>");
+		super(tabContainer, I19n.format("eirairc:gui.server.new"));
 		this.config = new ServerConfig();
 		isNew = true;
 	}
@@ -66,7 +68,7 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 		super.initGui();
 		Keyboard.enableRepeatEvents(true);
 		allowSideClickClose = false;
-		title = config.getAddress().isEmpty() ? "<new>" : config.getAddress();
+		title = config.getAddress().isEmpty() ? I19n.format("eirairc:gui.server.new") : config.getAddress();
 
 		final boolean isConnected = EiraIRC.instance.getConnectionManager().isConnectedTo(config.getIdentifier());
 		final int leftX = width / 2 - 130;
@@ -74,7 +76,7 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 		final int topY = height / 2 - 80;
 		String oldText;
 
-		labelList.add(new GuiLabel("Address", leftX, topY, Globals.TEXT_COLOR));
+		labelList.add(new GuiLabel(I19n.format("eirairc:gui.server.address"), leftX, topY, Globals.TEXT_COLOR));
 
 		if(txtAddress != null) {
 			oldText = txtAddress.getText();
@@ -86,7 +88,7 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 		txtAddress.setText(oldText);
 		textFieldList.add(txtAddress);
 
-		labelList.add(new GuiLabel("Nick", leftX, topY + 40, Globals.TEXT_COLOR));
+		labelList.add(new GuiLabel(I19n.format("eirairc:gui.server.nick"), leftX, topY + 40, Globals.TEXT_COLOR));
 
 		if(txtNick != null) {
 			oldText = txtNick.getText();
@@ -100,19 +102,19 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 
 		btnConnect = new GuiButton(8, rightX - 100, topY, 100, 20, "");
 		if(isConnected) {
-			btnConnect.displayString = "Disconnect";
+			btnConnect.displayString = I19n.format("eirairc:gui.server.disconnect");
 		} else {
-			btnConnect.displayString = "Connect";
+			btnConnect.displayString = I19n.format("eirairc:gui.server.connect");
 		}
 		buttonList.add(btnConnect);
 
-		labelList.add(new GuiLabel("Channels", rightX - 100, topY + 25, Globals.TEXT_COLOR));
+		labelList.add(new GuiLabel(I19n.format("eirairc:gui.server.channels"), rightX - 100, topY + 25, Globals.TEXT_COLOR));
 
 		int oldSelectedIdx = -1;
 		if(lstChannels != null) {
 			oldSelectedIdx = lstChannels.getSelectedIdx();
 		}
-		lstChannels = new GuiList<GuiListEntryChannel>(this, rightX - 100, topY + 35, 100, 60, 20);
+		lstChannels = new GuiList<>(this, rightX - 100, topY + 35, 100, 60, 20);
 		for(ChannelConfig channelConfig : config.getChannelConfigs()) {
 			lstChannels.addEntry(new GuiListEntryChannel(this, fontRendererObj, channelConfig, lstChannels.getEntryHeight()));
 		}
@@ -130,22 +132,22 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 		btnChannelDelete = new GuiImageButton(6, rightX - 55, topY + 100, EiraGui.atlas.findRegion("button_remove"));
 		buttonList.add(btnChannelDelete);
 
-		btnDelete = new GuiButton(0, rightX - 100, topY + 150, 100, 20, "Delete");
+		btnDelete = new GuiButton(0, rightX - 100, topY + 150, 100, 20, I19n.format("eirairc:gui.delete"));
 		btnDelete.packedFGColour = -65536;
 		buttonList.add(btnDelete);
 
-		labelList.add(new GuiLabel("Override Settings", leftX, topY + 85, Globals.TEXT_COLOR));
+		labelList.add(new GuiLabel(I19n.format("eirairc:gui.override"), leftX, topY + 85, Globals.TEXT_COLOR));
 
-		btnTheme = new GuiButton(1, leftX, topY + 95, 100, 20, "Configure Theme...");
+		btnTheme = new GuiButton(1, leftX, topY + 95, 100, 20, I19n.format("eirairc:gui.override.theme"));
 		buttonList.add(btnTheme);
 
-		btnBotSettings = new GuiButton(2, leftX, topY + 120, 100, 20, "Configure Bot...");
+		btnBotSettings = new GuiButton(2, leftX, topY + 120, 100, 20, I19n.format("eirairc:gui.override.bot"));
 		buttonList.add(btnBotSettings);
 
-		btnOtherSettings = new GuiButton(3, leftX, topY + 145, 100, 20, "Other Settings...");
+		btnOtherSettings = new GuiButton(3, leftX, topY + 145, 100, 20, I19n.format("eirairc:gui.override.other"));
 		buttonList.add(btnOtherSettings);
 
-		btnAdvanced = new GuiButton(4, rightX - 100, topY + 125, 100, 20, "Advanced");
+		btnAdvanced = new GuiButton(4, rightX - 100, topY + 125, 100, 20, I19n.format("eirairc:gui.server.advanced"));
 		buttonList.add(btnAdvanced);
 
 		MinecraftForge.EVENT_BUS.register(this);
@@ -168,11 +170,11 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 	@SuppressWarnings("unchecked")
 	public void actionPerformed(GuiButton button) {
 		if(button == btnTheme) {
-			mc.displayGuiScreen(new GuiConfig(tabContainer, GuiEiraIRCConfig.getThemeConfigElements(config.getTheme().pullDummyConfig().getCategory("theme"), false), Globals.MOD_ID, "server:" + config.getAddress(), false, false, "Theme (" + config.getAddress() + ")"));
+			mc.displayGuiScreen(new GuiConfig(tabContainer, GuiEiraIRCConfig.getThemeConfigElements(config.getTheme().pullDummyConfig().getCategory("theme"), false), Globals.MOD_ID, "server:" + config.getAddress(), false, false, I19n.format("eirairc:gui.config.theme", config.getAddress())));
 		} else if(button == btnBotSettings) {
-			mc.displayGuiScreen(new GuiConfig(tabContainer, new ConfigElement(config.getBotSettings().pullDummyConfig().getCategory("bot")).getChildElements(), Globals.MOD_ID, "server:" + config.getAddress(), false, false, "Bot Settings (" + config.getAddress() + ")"));
+			mc.displayGuiScreen(new GuiConfig(tabContainer, new ConfigElement(config.getBotSettings().pullDummyConfig().getCategory("bot")).getChildElements(), Globals.MOD_ID, "server:" + config.getAddress(), false, false, I19n.format("eirairc:gui.config.bot", config.getAddress())));
 		} else if(button == btnOtherSettings) {
-			mc.displayGuiScreen(new GuiConfig(tabContainer, new ConfigElement(config.getGeneralSettings().pullDummyConfig().getCategory("settings")).getChildElements(), Globals.MOD_ID, "server:" + config.getAddress(), false, false, "Other Settings (" + config.getAddress() + ")"));
+			mc.displayGuiScreen(new GuiConfig(tabContainer, new ConfigElement(config.getGeneralSettings().pullDummyConfig().getCategory("settings")).getChildElements(), Globals.MOD_ID, "server:" + config.getAddress(), false, false, I19n.format("eirairc:gui.config.other", config.getAddress())));
 		} else if(button == btnAdvanced) {
 			tabContainer.setCurrentTab(new GuiServerConfigAdvanced(tabContainer, this), false);
 		} else if(button == btnChannelAdd) {
@@ -180,14 +182,14 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 		} else if(button == btnChannelDelete) {
 			if (lstChannels.hasSelection()) {
 				deleteChannel = lstChannels.getSelectedItem().getConfig();
-				setOverlay(new OverlayYesNo(this, "Do you really want to delete this channel configuration?", "This can't be undone, so be careful!", 1));
+				setOverlay(new OverlayYesNo(this, I19n.format("eirairc:gui.channel.deleteConfirm"), I19n.format("eirairc:gui.channel.deleteNoUndo"), 1));
 			}
 		} else if(button == btnChannelJoinLeave) {
 			applyChanges();
 			if(lstChannels.hasSelection()) {
 				IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(config.getIdentifier());
 				if(connection == null) {
-					connection = Utils.connectTo(config);
+					connection = ConnectionManager.connectTo(config);
 				}
 				if(connection != null) {
 					btnChannelJoinLeave.enabled = false;
@@ -204,18 +206,18 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 				tabContainer.removePage(this);
 				tabContainer.initGui();
 			} else {
-				setOverlay(new OverlayYesNo(this, "Do you really want to delete this server configuration?", "This can't be undone, so be careful!", 0));
+				setOverlay(new OverlayYesNo(this, I19n.format("eirairc:gui.server.deleteConfirm"), I19n.format("eirairc:gui.server.deleteNoUndo"), 0));
 			}
 		} else if(button == btnConnect) {
 			IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(config.getIdentifier());
 			if(connection != null) {
 				btnConnect.enabled = false;
-				btnConnect.displayString = "Disconnecting...";
+				btnConnect.displayString = I19n.format("eirairc:gui.server.disconnecting");
 				connection.disconnect("");
 			} else {
 				btnConnect.enabled = false;
-				btnConnect.displayString = "Connecting...";
-				Utils.connectTo(config);
+				btnConnect.displayString = I19n.format("eirairc:gui.server.connecting");
+				ConnectionManager.connectTo(config);
 			}
 		}
 	}
@@ -245,7 +247,7 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 		if(event.connection.getIdentifier().equals(config.getIdentifier())) {
 			txtAddress.setEnabled(true);
 			btnConnect.enabled = true;
-			btnConnect.displayString = "Connect";
+			btnConnect.displayString = I19n.format("eirairc:gui.server.connect");
 			for(GuiListEntryChannel entry : lstChannels.getEntries()) {
 				entry.setJoined(false);
 			}
@@ -259,7 +261,7 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 			txtAddress.setEnabled(false);
 			txtAddress.setText(config.getAddress());
 			btnConnect.enabled = true;
-			btnConnect.displayString = "Disconnect";
+			btnConnect.displayString = I19n.format("eirairc:gui.server.disconnect");
 		}
 	}
 
@@ -268,7 +270,7 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 		if(event.connection.getIdentifier().equals(config.getIdentifier())) {
 			txtAddress.setEnabled(true);
 			btnConnect.enabled = true;
-			btnConnect.displayString = "Connect";
+			btnConnect.displayString = I19n.format("eirairc:gui.server.connect");
 		}
 	}
 

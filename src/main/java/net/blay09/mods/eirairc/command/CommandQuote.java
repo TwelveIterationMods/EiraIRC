@@ -10,6 +10,7 @@ import net.blay09.mods.eirairc.api.irc.IRCConnection;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class CommandQuote implements SubCommand {
 
 	@Override
 	public String getCommandUsage(ICommandSender sender) {
-		return "eirairc:irc.commands.quote";
+		return "eirairc:commands.quote.usage";
 	}
 
 	@Override
@@ -36,7 +37,7 @@ public class CommandQuote implements SubCommand {
 		IRCConnection connection;
 		if(context == null) {
 			if(args.length < 2) {
-				Utils.sendLocalizedMessage(sender, "irc.target.specifyServer");
+				Utils.sendLocalizedMessage(sender, "error.specifyServer");
 				return true;
 			}
 			IRCContext target = EiraIRCAPI.parseContext(null, args[0], IRCContext.ContextType.IRCConnection).getConnection();
@@ -49,7 +50,7 @@ public class CommandQuote implements SubCommand {
 		} else {
 			connection = context.getConnection();
 		}
-		String msg = Utils.joinStrings(args, " ", msgIdx);
+		String msg = StringUtils.join(args, " ", msgIdx);
 		connection.irc(msg);
 		return true;
 	}

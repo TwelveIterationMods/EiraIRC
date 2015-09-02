@@ -3,6 +3,7 @@
 
 package net.blay09.mods.eirairc.command.extension;
 
+import net.blay09.mods.eirairc.ConnectionManager;
 import net.blay09.mods.eirairc.api.EiraIRCAPI;
 import net.blay09.mods.eirairc.api.SubCommand;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
@@ -28,7 +29,7 @@ public class CommandTwitch implements SubCommand {
 
 	@Override
 	public String getCommandUsage(ICommandSender sender) {
-		return "eirairc:irc.commands.twitch";
+		return "eirairc:commands.twitch.usage";
 	}
 
 	@Override
@@ -39,26 +40,26 @@ public class CommandTwitch implements SubCommand {
 	@Override
 	public boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) throws CommandException {
 		if(EiraIRCAPI.isConnectedTo(Globals.TWITCH_SERVER)) {
-			Utils.sendLocalizedMessage(sender, "irc.general.alreadyConnected", "Twitch");
+			Utils.sendLocalizedMessage(sender, "error.alreadyConnected", "Twitch");
 			return true;
 		}
 		if(args.length == 0) {
 			if(ConfigurationHandler.hasServerConfig(Globals.TWITCH_SERVER)) {
-				Utils.sendLocalizedMessage(sender, "irc.basic.connecting", "Twitch");
+				Utils.sendLocalizedMessage(sender, "commands.connect", "Twitch");
 				ServerConfig serverConfig = ConfigurationHandler.getOrCreateServerConfig(Globals.TWITCH_SERVER);
-				Utils.connectTo(serverConfig);
+				ConnectionManager.connectTo(serverConfig);
 				return true;
 			} else {
 				if(serverSide) {
 					throw new WrongUsageException(getCommandUsage(sender));
 				} else {
-					Utils.sendLocalizedMessage(sender, "irc.general.serverOnlyCommand");
+					Utils.sendLocalizedMessage(sender, "general.serverOnlyCommand");
 					return true;
 				}
 			}
 		} else {
 			if(args.length < 2) {
-				throw new WrongUsageException(Globals.MOD_ID + ":irc.commands.twitch");
+				throw new WrongUsageException("eirairc:commands.twitch.usage");
 			}
 			ServerConfig serverConfig = ConfigurationHandler.getOrCreateServerConfig(Globals.TWITCH_SERVER);
 			serverConfig.setNick(args[0]);
@@ -68,8 +69,8 @@ public class CommandTwitch implements SubCommand {
 			serverConfig.getBotSettings().setString(BotStringComponent.MessageFormat, "Twitch");
 			ConfigurationHandler.addServerConfig(serverConfig);
 			ConfigurationHandler.save();
-			Utils.sendLocalizedMessage(sender, "irc.basic.connecting", "Twitch");
-			Utils.connectTo(serverConfig);
+			Utils.sendLocalizedMessage(sender, "commands.connect", "Twitch");
+			ConnectionManager.connectTo(serverConfig);
 			return true;
 		}
 	}

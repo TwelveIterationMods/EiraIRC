@@ -6,6 +6,7 @@ import net.blay09.mods.eirairc.client.gui.base.image.GuiImage;
 import net.blay09.mods.eirairc.client.gui.base.image.GuiURLImage;
 import net.blay09.mods.eirairc.client.screenshot.Screenshot;
 import net.blay09.mods.eirairc.util.Globals;
+import net.blay09.mods.eirairc.util.I19n;
 import net.minecraft.client.gui.GuiScreen;
 
 import java.net.URL;
@@ -45,7 +46,7 @@ public class GuiScreenshotBigPreview extends EiraGuiScreen {
 
 		image.draw(0, 0, width, height, zLevel);
 
-		String s = "Click anywhere to go back.";
+		String s = I19n.format("eirairc:gui.image.clickToGoBack");
 		drawString(fontRendererObj, s, width - fontRendererObj.getStringWidth(s) - 5, height - fontRendererObj.FONT_HEIGHT - 5, Globals.TEXT_COLOR);
 	}
 }

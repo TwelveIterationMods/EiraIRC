@@ -1,10 +1,10 @@
 // Copyright (c) 2015, Christopher "BlayTheNinth" Baker
 
-
 package net.blay09.mods.eirairc;
 
 import net.blay09.mods.eirairc.addon.Compatibility;
 import net.blay09.mods.eirairc.api.EiraIRCAPI;
+import net.blay09.mods.eirairc.api.IChatHandler;
 import net.blay09.mods.eirairc.command.base.CommandIRC;
 import net.blay09.mods.eirairc.command.base.CommandServIRC;
 import net.blay09.mods.eirairc.command.base.IRCCommandHandler;
@@ -13,16 +13,17 @@ import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.handler.ChatSessionHandler;
-import net.blay09.mods.eirairc.handler.IRCEventHandler;
-import net.blay09.mods.eirairc.handler.InternalEventHandler;
 import net.blay09.mods.eirairc.handler.MCEventHandler;
 import net.blay09.mods.eirairc.net.EiraNetHandler;
 import net.blay09.mods.eirairc.net.PacketHandler;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.I19n;
+import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.CommandHandler;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.IChatComponent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -34,131 +35,141 @@ import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.eventhandler.EventBus;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-@Mod(modid = EiraIRC.MOD_ID, acceptableRemoteVersions="*", guiFactory = "net.blay09.mods.eirairc.client.gui.EiraIRCGuiFactory")
+@Mod(modid = EiraIRC.MOD_ID, acceptableRemoteVersions = "*", guiFactory = "net.blay09.mods.eirairc.client.gui.EiraIRCGuiFactory")
 public class EiraIRC {
 
-	public static final String MOD_ID = "eirairc";
-	
-	@Instance(MOD_ID)
-	public static EiraIRC instance;
-	
-	@SidedProxy(serverSide = "net.blay09.mods.eirairc.CommonProxy", clientSide = "net.blay09.mods.eirairc.client.ClientProxy")
-	public static CommonProxy proxy;
+    public static final String MOD_ID = "eirairc";
 
-	public static final EventBus internalBus = new EventBus();
+    @Instance(MOD_ID)
+    public static EiraIRC instance;
 
-	private ConnectionManager connectionManager;
-	private ChatSessionHandler chatSessionHandler;
-	private EiraNetHandler netHandler;
-	private IRCEventHandler ircEventHandler;
-	private MCEventHandler mcEventHandler;
-	private InternalEventHandler internalEventHandler;
+    @SidedProxy(serverSide = "net.blay09.mods.eirairc.CommonProxy", clientSide = "net.blay09.mods.eirairc.client.ClientProxy")
+    public static CommonProxy proxy;
 
-	@EventHandler
-	public void preInit(FMLPreInitializationEvent event) {
-		ConfigurationHandler.load(event.getModConfigurationDirectory());
+    public static final EventBus internalBus = new EventBus();
 
-		FMLInterModComms.sendRuntimeMessage(this, "VersionChecker", "addVersionCheck", Globals.UPDATE_URL);
-	}
-	
-	@EventHandler
-	public void init(FMLInitializationEvent event) {
-		connectionManager = new ConnectionManager();
-		chatSessionHandler = new ChatSessionHandler();
-		netHandler = new EiraNetHandler();
+    private ConnectionManager connectionManager;
+    private ChatSessionHandler chatSessionHandler;
+    private EiraNetHandler netHandler;
+    private MCEventHandler mcEventHandler;
 
-		ircEventHandler = new IRCEventHandler();
-		mcEventHandler = new MCEventHandler();
-		internalEventHandler = new InternalEventHandler();
+    @EventHandler
+    public void preInit(FMLPreInitializationEvent event) {
+        ConfigurationHandler.load(event.getModConfigurationDirectory());
 
-		proxy.init();
+        FMLInterModComms.sendRuntimeMessage(this, "VersionChecker", "addVersionCheck", Globals.UPDATE_URL);
+    }
 
-		FMLCommonHandler.instance().bus().register(this);
-		FMLCommonHandler.instance().bus().register(mcEventHandler);
-		MinecraftForge.EVENT_BUS.register(mcEventHandler);
-		MinecraftForge.EVENT_BUS.register(ircEventHandler);
-		FMLCommonHandler.instance().bus().register(netHandler);
-		internalBus.register(internalEventHandler);
-		
-		I19n.init();
-		PacketHandler.init();
+    @EventHandler
+    public void init(FMLInitializationEvent event) {
+        connectionManager = new ConnectionManager();
+        chatSessionHandler = new ChatSessionHandler();
+        netHandler = new EiraNetHandler();
 
-		EiraIRCAPI.internalSetupAPI(new InternalMethodsImpl());
-	}
-	
-	@EventHandler
-	public void postInit(FMLPostInitializationEvent event) {
-		event.buildSoftDependProxy("Dynmap", "net.blay09.mods.eirairc.addon.DynmapWebChatAddon");
-		event.buildSoftDependProxy("TabbyChat2", "net.blay09.mods.eirairc.addon.TabbyChat2Addon");
-		event.buildSoftDependProxy("eiramoticons", "net.blay09.mods.eirairc.addon.EiraMoticonsAddon");
+        mcEventHandler = new MCEventHandler();
 
-		proxy.postInit();
-	}
-	
-	@EventHandler
-	public void serverLoad(FMLServerStartingEvent event) {
-		registerCommands((CommandHandler) event.getServer().getCommandManager(), true);
-		
-		if(!MinecraftServer.getServer().isSinglePlayer()) {
-			connectionManager.startIRC();
-		}
-	}
-	
-	@EventHandler
-	public void serverStop(FMLServerStoppingEvent event) {
-		if(!MinecraftServer.getServer().isSinglePlayer()) {
-			connectionManager.stopIRC();
-		}
-	}
+        proxy.init();
 
-	@SubscribeEvent
-	public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
-		if(event.modID.equals(Globals.MOD_ID)) {
-			if(event.configID.equals("global")) {
-				ConfigurationHandler.lightReload();
-				proxy.saveConfig();
-			} else if(event.configID.startsWith("server:")) {
-				ServerConfig serverConfig = ConfigurationHandler.getOrCreateServerConfig(event.configID.substring(7));
-				serverConfig.getTheme().pushDummyConfig();
-				serverConfig.getBotSettings().pushDummyConfig();
-				serverConfig.getGeneralSettings().pushDummyConfig();
-				ConfigurationHandler.saveServers();
-			} else if(event.configID.startsWith("channel:")) {
-				ChannelConfig channelConfig = ConfigHelper.resolveChannelConfig(event.configID.substring(8));
-				if(channelConfig != null) {
-					channelConfig.getTheme().pushDummyConfig();
-					channelConfig.getBotSettings().pushDummyConfig();
-					channelConfig.getGeneralSettings().pushDummyConfig();
-					ConfigurationHandler.saveServers();
-				}
-			}
-		}
-	}
+        FMLCommonHandler.instance().bus().register(this);
+        FMLCommonHandler.instance().bus().register(mcEventHandler);
+        MinecraftForge.EVENT_BUS.register(mcEventHandler);
+        FMLCommonHandler.instance().bus().register(netHandler);
 
-	public MCEventHandler getMCEventHandler() {
-		return mcEventHandler;
-	}
-	
-	public ChatSessionHandler getChatSessionHandler() {
-		return chatSessionHandler;
-	}
+        I19n.init();
+        PacketHandler.init();
 
-	public EiraNetHandler getNetHandler() {
-		return netHandler;
-	}
-	
-	public void registerCommands(CommandHandler handler, boolean serverSide) {
-		if(serverSide) {
-			handler.registerCommand(new CommandServIRC());
-			handler.registerCommand(new IgnoreCommand("irc"));
-		} else {
-			handler.registerCommand(new CommandIRC());
-		}
-		IRCCommandHandler.registerCommands();
-	}
+        EiraIRCAPI.internalSetupAPI(new InternalMethodsImpl());
+        EiraIRCAPI.setChatHandler(new IChatHandler() {
+            @Override
+            public void addChatMessage(IChatComponent component) {
+                addChatMessage(null, component);
+            }
 
-	public ConnectionManager getConnectionManager() {
-		return connectionManager;
-	}
+            @Override
+            public void addChatMessage(ICommandSender receiver, IChatComponent component) {
+                if (receiver != null) {
+                    if (!EiraIRCAPI.hasClientSideInstalled(receiver)) {
+                        receiver.addChatMessage(Utils.translateToDefault(component));
+                    } else {
+                        receiver.addChatMessage(component);
+                    }
+                } else {
+                    Utils.addMessageToChat(component);
+                }
+            }
+        });
+    }
+
+    @EventHandler
+    public void postInit(FMLPostInitializationEvent event) {
+        Compatibility.postInit(event);
+        proxy.postInit();
+    }
+
+    @EventHandler
+    public void serverLoad(FMLServerStartingEvent event) {
+        registerCommands((CommandHandler) event.getServer().getCommandManager(), true);
+
+        if (!MinecraftServer.getServer().isSinglePlayer()) {
+            connectionManager.startIRC();
+        }
+    }
+
+    @EventHandler
+    public void serverStop(FMLServerStoppingEvent event) {
+        if (!MinecraftServer.getServer().isSinglePlayer()) {
+            connectionManager.stopIRC();
+        }
+    }
+
+    @SubscribeEvent
+    public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
+        if (event.modID.equals(Globals.MOD_ID)) {
+            if (event.configID.equals("global")) {
+                ConfigurationHandler.lightReload();
+                proxy.saveConfig();
+            } else if (event.configID.startsWith("server:")) {
+                ServerConfig serverConfig = ConfigurationHandler.getOrCreateServerConfig(event.configID.substring(7));
+                serverConfig.getTheme().pushDummyConfig();
+                serverConfig.getBotSettings().pushDummyConfig();
+                serverConfig.getGeneralSettings().pushDummyConfig();
+                ConfigurationHandler.saveServers();
+            } else if (event.configID.startsWith("channel:")) {
+                ChannelConfig channelConfig = ConfigHelper.resolveChannelConfig(event.configID.substring(8));
+                if (channelConfig != null) {
+                    channelConfig.getTheme().pushDummyConfig();
+                    channelConfig.getBotSettings().pushDummyConfig();
+                    channelConfig.getGeneralSettings().pushDummyConfig();
+                    ConfigurationHandler.saveServers();
+                }
+            }
+        }
+    }
+
+    public MCEventHandler getMCEventHandler() {
+        return mcEventHandler;
+    }
+
+    public ChatSessionHandler getChatSessionHandler() {
+        return chatSessionHandler;
+    }
+
+    public EiraNetHandler getNetHandler() {
+        return netHandler;
+    }
+
+    public void registerCommands(CommandHandler handler, boolean serverSide) {
+        if (serverSide) {
+            handler.registerCommand(new CommandServIRC());
+            handler.registerCommand(new IgnoreCommand("irc"));
+        } else {
+            handler.registerCommand(new CommandIRC());
+        }
+        IRCCommandHandler.registerCommands();
+    }
+
+    public ConnectionManager getConnectionManager() {
+        return connectionManager;
+    }
 
 }

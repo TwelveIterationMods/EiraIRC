@@ -23,15 +23,16 @@ buildscript {
 apply plugin: 'forge'
 apply plugin: 'maven'
 
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
 version = "3.8." + BUILD_NUMBER
 group = "net.blay09.mods"
 archivesBaseName = "eirairc"
 
 minecraft {
-    version = "1.8-11.14.2.1427"
+    version = "1.8-11.14.3.1450"
     runDir = "eclipse"
-
-    mappings = "stable_16"
 }
 
 processResources

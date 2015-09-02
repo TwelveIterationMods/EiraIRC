@@ -1,3 +1,5 @@
+// Copyright (c) 2015 Christopher "BlayTheNinth" Baker
+
 package net.blay09.mods.eirairc;
 
 import net.blay09.mods.eirairc.api.InternalMethods;
@@ -9,7 +11,6 @@ import net.blay09.mods.eirairc.api.irc.IRCUser;
 import net.blay09.mods.eirairc.api.upload.UploadHoster;
 import net.blay09.mods.eirairc.client.UploadManager;
 import net.blay09.mods.eirairc.command.base.IRCCommandHandler;
-import net.blay09.mods.eirairc.handler.IRCEventHandler;
 import net.blay09.mods.eirairc.net.EiraPlayerInfo;
 import net.blay09.mods.eirairc.util.IRCTargetError;
 import net.blay09.mods.eirairc.util.Utils;
@@ -29,7 +30,7 @@ public class InternalMethodsImpl implements InternalMethods {
 
 	@Override
 	public boolean hasClientSideInstalled(ICommandSender user) {
-		EiraPlayerInfo playerInfo = EiraIRC.instance.getNetHandler().getPlayerInfo(user.getCommandSenderName());
+		EiraPlayerInfo playerInfo = EiraIRC.instance.getNetHandler().getPlayerInfo(user.getName());
 		return playerInfo.modInstalled;
 	}
 
@@ -58,15 +59,11 @@ public class InternalMethodsImpl implements InternalMethods {
 			} else {
 				connection = EiraIRC.instance.getConnectionManager().getConnection(contextPath);
 				if(connection != null) {
-					if(expectedType == IRCContext.ContextType.IRCConnection) {
-						return connection;
-					} else {
-						return IRCTargetError.InvalidTarget;
-					}
+					return connection;
 				}
 				IRCConnection foundConnection = null;
-				for(IRCConnection con : EiraIRC.instance.getConnectionManager().getConnections()) {
-					if(con.getChannel(contextPath) != null || con.getUser(contextPath) != null) {
+				for (IRCConnection con : EiraIRC.instance.getConnectionManager().getConnections()) {
+					if (con.getChannel(contextPath) != null || con.getUser(contextPath) != null) {
 						if (foundConnection != null) {
 							return IRCTargetError.SpecifyServer;
 						}

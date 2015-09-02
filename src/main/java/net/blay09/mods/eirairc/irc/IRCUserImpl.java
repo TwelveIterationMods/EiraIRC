@@ -1,6 +1,5 @@
 // Copyright (c) 2015, Christopher "BlayTheNinth" Baker
 
-
 package net.blay09.mods.eirairc.irc;
 
 import net.blay09.mods.eirairc.api.bot.IBotCommand;
@@ -10,6 +9,7 @@ import net.blay09.mods.eirairc.api.irc.IRCUser;
 import net.blay09.mods.eirairc.bot.IRCBotImpl;
 import net.blay09.mods.eirairc.config.settings.BotStringListComponent;
 import net.blay09.mods.eirairc.util.ConfigHelper;
+import net.blay09.mods.eirairc.util.I19n;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.util.EnumChatFormatting;
 
@@ -144,13 +144,13 @@ public class IRCUserImpl implements IRCUser {
 	public void setAccountName(String accountName) {
 		this.accountName = accountName;
 		if(accountName == null || accountName.isEmpty()) {
-			notice(Utils.getLocalizedMessage("irc.bot.notAuthed"));
+			notice(I19n.format("eirairc:bot.notAuthed"));
 		} else {
 			for (QueuedAuthCommand cmd : authCommandQueue) {
 				if (ConfigHelper.getBotSettings(cmd.channel).containsString(BotStringListComponent.InterOpAuthList, accountName)) {
 					cmd.command.processCommand(cmd.bot, cmd.channel, this, cmd.args, cmd.command);
 				} else {
-					notice(Utils.getLocalizedMessage("irc.bot.noPermission"));
+					notice(I19n.format("eirairc:bot.noPermission"));
 				}
 			}
 		}
@@ -190,7 +190,7 @@ public class IRCUserImpl implements IRCUser {
 			if(ConfigHelper.getBotSettings(channel).containsString(BotStringListComponent.InterOpAuthList, accountName)) {
 				botCommand.processCommand(bot, channel, this, args, botCommand);
 			} else {
-				notice(Utils.getLocalizedMessage("irc.bot.noPermission"));
+				notice(I19n.format("eirairc:bot.noPermission"));
 			}
 		}
 	}

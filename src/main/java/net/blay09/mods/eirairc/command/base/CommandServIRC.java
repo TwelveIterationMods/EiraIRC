@@ -4,6 +4,7 @@
 package net.blay09.mods.eirairc.command.base;
 
 import net.blay09.mods.eirairc.util.Globals;
+import net.blay09.mods.eirairc.util.I19n;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
@@ -32,7 +33,7 @@ public class CommandServIRC implements ICommand {
 
 	@Override
 	public String getCommandUsage(ICommandSender sender) {
-		return Globals.MOD_ID + ":irc.commands.servirc";
+		return "eirairc:commands.servirc.usage";
 	}
 
 	@Override
@@ -49,13 +50,13 @@ public class CommandServIRC implements ICommand {
 			return;
 		}
 		if(MinecraftServer.getServer() != null && MinecraftServer.getServer().isSinglePlayer()) {
-			Utils.sendLocalizedMessage(sender, "irc.general.notMultiplayer");
+			Utils.sendLocalizedMessage(sender, "general.notMultiplayer");
 			return;
 		}
 		try {
 			IRCCommandHandler.processCommand(sender, args, true);
 		} catch (CommandException e) {
-			IChatComponent chatComponent = new ChatComponentTranslation("commands.generic.usage", Utils.getLocalizedMessageNoPrefix(e.getMessage(), e.getErrorObjects()));
+			IChatComponent chatComponent = new ChatComponentTranslation("commands.generic.usage", I19n.format(e.getMessage(), e.getErrorOjbects()));
 			chatComponent.getChatStyle().setColor(EnumChatFormatting.RED);
 			sender.addChatMessage(chatComponent);
 		}

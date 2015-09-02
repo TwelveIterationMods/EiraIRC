@@ -1,6 +1,5 @@
 // Copyright (c) 2015, Christopher "BlayTheNinth" Baker
 
-
 package net.blay09.mods.eirairc.command.interop;
 
 import net.blay09.mods.eirairc.api.EiraIRCAPI;
@@ -12,6 +11,7 @@ import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ public class InterOpCommandTopic implements SubCommand {
 
 	@Override
 	public String getCommandUsage(ICommandSender sender) {
-		return "eirairc:irc.commands.interop.topic";
+		return "eirairc:commands.topic.usage";
 	}
 
 	@Override
@@ -43,15 +43,15 @@ public class InterOpCommandTopic implements SubCommand {
 			return true;
 		}
 		if(!ConfigHelper.getBotSettings(targetChannel).getBoolean(BotBooleanComponent.InterOp)) {
-			Utils.sendLocalizedMessage(sender, "irc.interop.disabled");
+			Utils.sendLocalizedMessage(sender, "commands.interop.disabled");
 			return true;
 		}
-		String topic = Utils.joinStrings(args, " ", 1).trim();
+		String topic = StringUtils.join(args, " ", 1);
 		if(topic.isEmpty()) {
 			throw new WrongUsageException(getCommandUsage(sender));
 		}
 		targetChannel.getConnection().topic(targetChannel.getName(), topic);
-		Utils.sendLocalizedMessage(sender, "irc.interop.topic", targetChannel.getName(), topic);
+		Utils.sendLocalizedMessage(sender, "commands.topic", targetChannel.getName(), topic);
 		return true;
 	}
 

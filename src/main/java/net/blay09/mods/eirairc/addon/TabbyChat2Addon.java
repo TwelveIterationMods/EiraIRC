@@ -4,13 +4,13 @@ package net.blay09.mods.eirairc.addon;
 
 import mnm.mods.tabbychat.api.Channel;
 import mnm.mods.tabbychat.api.TabbyAPI;
-import net.blay09.mods.eirairc.api.event.ChatMessageEvent;
+import net.blay09.mods.eirairc.api.EiraIRCAPI;
+import net.blay09.mods.eirairc.api.IChatHandler;
 import net.blay09.mods.eirairc.api.event.IRCChannelJoinedEvent;
 import net.blay09.mods.eirairc.api.event.IRCChannelLeftEvent;
 import net.blay09.mods.eirairc.api.event.IRCPrivateChatEvent;
-import net.blay09.mods.eirairc.config.ClientGlobalConfig;
-import net.blay09.mods.eirairc.config.SharedGlobalConfig;
-import net.blay09.mods.eirairc.config.settings.BotStringComponent;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.util.IChatComponent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -20,7 +20,24 @@ public class TabbyChat2Addon {
 
     public TabbyChat2Addon() {
         MinecraftForge.EVENT_BUS.register(this);
-        Compatibility.tabbyChatInstalled = true;
+
+        EiraIRCAPI.setChatHandler(new IChatHandler() {
+            @Override
+            public void addChatMessage(IChatComponent component) {
+                String message = component.getUnformattedText();
+                if(message.length() > 0 && message.charAt(0) == '[') {
+                    int idx = message.indexOf(']');
+                    if(idx != -1) {
+                        TabbyAPI.getAPI().getChat().getChannel(message.substring(1, idx)).addMessage(component);
+                    }
+                }
+            }
+
+            @Override
+            public void addChatMessage(ICommandSender receiver, IChatComponent component) {
+                addChatMessage(component);
+            }
+        });
     }
 
     @SubscribeEvent
@@ -46,18 +63,6 @@ public class TabbyChat2Addon {
         channel.setPrefixHidden(true);
         channel.setPrefix("/irc msg " + event.sender.getIdentifier() + " ");
         channel.setActive(true);
-    }
-
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onChatMessage(ChatMessageEvent event) {
-        String message = event.component.getUnformattedText();
-        if(message.length() > 0 && message.charAt(0) == '[') {
-            int idx = message.indexOf(']');
-            if(idx != -1) {
-                TabbyAPI.getAPI().getChat().getChannel(message.substring(1, idx)).addMessage(event.component);
-                event.setCanceled(true);
-            }
-        }
     }
 
 }

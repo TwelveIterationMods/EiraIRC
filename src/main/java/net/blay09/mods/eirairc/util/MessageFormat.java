@@ -2,7 +2,7 @@ package net.blay09.mods.eirairc.util;
 
 import net.blay09.mods.eirairc.addon.Compatibility;
 import net.blay09.mods.eirairc.addon.EiraMoticonsAddon;
-import net.blay09.mods.eirairc.api.event.ApplyEmoticons;
+import net.blay09.mods.eirairc.api.event.FormatMessage;
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
@@ -117,7 +117,7 @@ public class MessageFormat {
 	}
 
 	private static IChatComponent appendTextToRoot(IChatComponent root, String text) {
-		ApplyEmoticons emoticons = new ApplyEmoticons(new ChatComponentText(text));
+		FormatMessage emoticons = new FormatMessage(new ChatComponentText(text));
 		MinecraftForge.EVENT_BUS.post(emoticons);
 		root.appendSibling(emoticons.component);
 		return root;
@@ -131,7 +131,7 @@ public class MessageFormat {
 			if(i > 0) {
 				sb.append(" ");
 			}
-			sb.append(matcher.replaceAll(Utils.getLocalizedMessage("irc.general.linkRemoved")));
+			sb.append(matcher.replaceAll(I19n.format("eirairc:general.linkRemoved")));
 		}
 		return sb.toString();
 	}
@@ -153,11 +153,11 @@ public class MessageFormat {
 
 	public static String formatNick(String nick, IRCContext context, Target target, Mode mode, IRCUser ircUser) {
 		if(target == Target.IRC) {
-			if(SharedGlobalConfig.hidePlayerTags) {
+			if(SharedGlobalConfig.hidePlayerTags.get()) {
 				nick = filterPlayerTags(nick);
 			}
 			nick = String.format(ConfigHelper.getBotSettings(context).getString(BotStringComponent.NickFormat), nick);
-			if(SharedGlobalConfig.preventUserPing) {
+			if(SharedGlobalConfig.preventUserPing.get()) {
 				nick = nick.substring(0, 1) + '\u0081' + nick.substring(1);
 			}
 		} else if(target == Target.Minecraft && context instanceof IRCChannel) {
@@ -170,7 +170,7 @@ public class MessageFormat {
 				nick = ircUser.getChannelModePrefix((IRCChannel) context) + nick;
 			}
 			if(context.getConnection().isTwitch()) {
-				if (Compatibility.eiraMoticonsInstalled && SharedGlobalConfig.twitchNameBadges) {
+				if (Compatibility.isEiraMoticonsInstalled() && SharedGlobalConfig.twitchNameBadges.get()) {
 					String badges = "";
 					if (ircUser.getName().toLowerCase().equals(context.getName().substring(1).toLowerCase())) {
 						badges += EiraMoticonsAddon.casterBadge.getChatString();
@@ -224,7 +224,7 @@ public class MessageFormat {
 					if(token.equals("SERVER")) {
 						component = new ChatComponentText(Utils.getCurrentServerName());
 					} else if(token.equals("USER")) {
-						component = new ChatComponentText(sender.getCommandSenderName());
+						component = new ChatComponentText(sender.getName());
 					} else if(token.equals("CHANNEL")) {
 						component = new ChatComponentText(context != null ? context.getName() : "");
 					} else if(token.equals("NICK")) {
@@ -241,7 +241,7 @@ public class MessageFormat {
 								}
 							}
 						} else {
-							component = new ChatComponentText(sender.getCommandSenderName());
+							component = new ChatComponentText(sender.getName());
 						}
 					} else if(token.equals("MESSAGE")) {
 						BotSettings botSettings = ConfigHelper.getBotSettings(context);

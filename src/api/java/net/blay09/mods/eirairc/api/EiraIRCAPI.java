@@ -1,4 +1,4 @@
-// Copyright (c) 2015, Christopher "BlayTheNinth" Baker
+// Copyright (c) 2015 Christopher "BlayTheNinth" Baker
 
 package net.blay09.mods.eirairc.api;
 
@@ -9,6 +9,7 @@ import net.minecraft.command.ICommandSender;
 public class EiraIRCAPI {
 
 	private static InternalMethods internalMethods;
+	private static IChatHandler chatHandler;
 
 	/**
 	 * INTERNAL METHOD. DO NOT CALL.
@@ -19,6 +20,22 @@ public class EiraIRCAPI {
 			throw new RuntimeException("EiraIRC API is already initialized");
 		}
 		EiraIRCAPI.internalMethods = internalMethods;
+	}
+
+	/**
+	 * Registers an alternate chat handler all messages coming from EiraIRC will pass through.
+	 * @param chatHandler an implementation of the IChatHandler interface
+	 */
+	public static void setChatHandler(IChatHandler chatHandler) {
+		EiraIRCAPI.chatHandler = chatHandler;
+	}
+
+	/**
+	 * Returns the chat handler to be used by EiraIRC. Use this to add chat messages that belong to a specific IRC context.
+	 * @return an implementation of the IChatHandler interface
+	 */
+	public static IChatHandler getChatHandler() {
+		return chatHandler;
 	}
 
 	/**
@@ -68,7 +85,7 @@ public class EiraIRCAPI {
 	 * @param message the message that should be send to IRC
 	 * @param isEmote true if this message should be sent as an ACTION
 	 * @param isNotice true if this message should be sent as a NOTICE
-	 * @param target the target context of this message (either a channel or a user)
+	 * @param target the target context of this message (either a channel or a user), null means active channel
 	 */
 	public static void relayChat(ICommandSender sender, String message, boolean isEmote, boolean isNotice, IRCContext target) {
 		internalMethods.relayChat(sender, message, isEmote, isNotice, target);

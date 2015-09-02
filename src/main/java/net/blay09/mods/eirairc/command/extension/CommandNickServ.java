@@ -26,7 +26,7 @@ public class CommandNickServ implements SubCommand {
 
 	@Override
 	public String getCommandUsage(ICommandSender sender) {
-		return "eirairc:irc.commands.nickserv";
+		return "eirairc:commands.nickserv.usage";
 	}
 
 	@Override
@@ -37,7 +37,7 @@ public class CommandNickServ implements SubCommand {
 	@Override
 	public boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) throws CommandException {
 		if(!serverSide) {
-			Utils.sendLocalizedMessage(sender, "irc.general.serverOnlyCommand");
+			Utils.sendLocalizedMessage(sender, "general.serverOnlyCommand");
 			return true;
 		}
 		if(args.length < 2) {
@@ -55,7 +55,7 @@ public class CommandNickServ implements SubCommand {
 			argidx = 1;
 		} else {
 			if(context == null) {
-				Utils.sendLocalizedMessage(sender, "irc.specifyServer");
+				Utils.sendLocalizedMessage(sender, "error.specifyServer");
 				return true;
 			}
 			connection = context.getConnection();
@@ -64,7 +64,7 @@ public class CommandNickServ implements SubCommand {
 		AuthManager.putNickServData(serverConfig.getIdentifier(), args[argidx], args[argidx + 1]);
 		ConfigurationHandler.save();
 		Utils.doNickServ(connection, serverConfig);
-		Utils.sendLocalizedMessage(sender, "irc.basic.nickServUpdated", connection.getHost());
+		Utils.sendLocalizedMessage(sender, "commands.nickserv", connection.getHost());
 		return true;
 	}
 

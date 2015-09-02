@@ -5,7 +5,6 @@ import net.blay09.mods.eirairc.client.gui.base.GuiAdvancedTextField;
 import net.blay09.mods.eirairc.client.gui.base.GuiLabel;
 import net.blay09.mods.eirairc.client.gui.base.tab.GuiTabContainer;
 import net.blay09.mods.eirairc.client.gui.base.tab.GuiTabPage;
-import net.blay09.mods.eirairc.client.gui.overlay.GuiOverlay;
 import net.blay09.mods.eirairc.client.gui.overlay.OverlayYesNo;
 import net.blay09.mods.eirairc.config.AuthManager;
 import net.blay09.mods.eirairc.config.ChannelConfig;
@@ -14,9 +13,9 @@ import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.settings.BotStringComponent;
 import net.blay09.mods.eirairc.config.settings.GeneralBooleanComponent;
 import net.blay09.mods.eirairc.util.Globals;
+import net.blay09.mods.eirairc.util.I19n;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.gui.GuiYesNoCallback;
 import net.minecraftforge.common.config.ConfigElement;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
@@ -68,7 +67,7 @@ public class GuiChannelConfig extends GuiTabPage implements GuiYesNoCallback {
 		final int topY = height / 2 - 80;
 		String oldText;
 
-		labelList.add(new GuiLabel("Channel Name", leftX, topY, Globals.TEXT_COLOR));
+		labelList.add(new GuiLabel(I19n.format("eirairc:gui.channel.name"), leftX, topY, Globals.TEXT_COLOR));
 
 		if(txtName != null) {
 			oldText = txtName.getText();
@@ -79,7 +78,7 @@ public class GuiChannelConfig extends GuiTabPage implements GuiYesNoCallback {
 		txtName.setText(oldText);
 		textFieldList.add(txtName);
 
-		labelList.add(new GuiLabel("Channel Password", leftX, topY + 40, Globals.TEXT_COLOR));
+		labelList.add(new GuiLabel(I19n.format("eirairc:gui.channel.password"), leftX, topY + 40, Globals.TEXT_COLOR));
 
 		if(txtPassword != null) {
 			oldText = txtPassword.getText();
@@ -97,25 +96,25 @@ public class GuiChannelConfig extends GuiTabPage implements GuiYesNoCallback {
 		} else {
 			oldState = config.getGeneralSettings().getBoolean(GeneralBooleanComponent.AutoJoin);
 		}
-		chkAutoJoin = new GuiCheckBox(4, leftX, topY + 75, " Auto Join", oldState);
+		chkAutoJoin = new GuiCheckBox(4, leftX, topY + 75, " " + I19n.format("eirairc:gui.channel.autoJoin"), oldState);
 		buttonList.add(chkAutoJoin);
 
-		btnOK = new GuiButton(4, rightX - 100, topY + 150, 100, 20, "Save");
+		btnOK = new GuiButton(4, rightX - 100, topY + 150, 100, 20, I19n.format("eirairc:gui.save"));
 		buttonList.add(btnOK);
 
-		btnDelete = new GuiButton(0, leftX, topY + 150, 100, 20, "Delete");
+		btnDelete = new GuiButton(0, leftX, topY + 150, 100, 20, I19n.format("eirairc:gui.delete"));
 		btnDelete.packedFGColour = -65536;
 		buttonList.add(btnDelete);
 
-		labelList.add(new GuiLabel("Override Settings", rightX - 100, topY + 5, Globals.TEXT_COLOR));
+		labelList.add(new GuiLabel(I19n.format("eirairc:gui.override"), rightX - 100, topY + 5, Globals.TEXT_COLOR));
 
-		btnTheme = new GuiButton(1, rightX - 100, topY + 15, 100, 20, "Configure Theme...");
+		btnTheme = new GuiButton(1, rightX - 100, topY + 15, 100, 20, I19n.format("eirairc:gui.override.theme"));
 		buttonList.add(btnTheme);
 
-		btnBotSettings = new GuiButton(2, rightX - 100, topY + 40, 100, 20, "Configure Bot...");
+		btnBotSettings = new GuiButton(2, rightX - 100, topY + 40, 100, 20, I19n.format("eirairc:gui.override.bot"));
 		buttonList.add(btnBotSettings);
 
-		btnOtherSettings = new GuiButton(3, rightX - 100, topY + 65, 100, 20, "Other Settings...");
+		btnOtherSettings = new GuiButton(3, rightX - 100, topY + 65, 100, 20, I19n.format("eirairc:gui.override.other"));
 		buttonList.add(btnOtherSettings);
 	}
 
@@ -127,20 +126,20 @@ public class GuiChannelConfig extends GuiTabPage implements GuiYesNoCallback {
 	@SuppressWarnings("unchecked")
 	public void actionPerformed(GuiButton button) {
 		if(button == btnTheme) {
-			mc.displayGuiScreen(new GuiConfig(tabContainer, GuiEiraIRCConfig.getThemeConfigElements(config.getTheme().pullDummyConfig().getCategory("theme"), false), Globals.MOD_ID, "channel:" + config.getIdentifier(), false, false, "Theme (" + config.getName() + ")"));
+			mc.displayGuiScreen(new GuiConfig(tabContainer, GuiEiraIRCConfig.getThemeConfigElements(config.getTheme().pullDummyConfig().getCategory("theme"), false), Globals.MOD_ID, "channel:" + config.getIdentifier(), false, false, I19n.format("eirairc:gui.config.theme", config.getName())));
 		} else if(button == btnBotSettings) {
-			mc.displayGuiScreen(new GuiConfig(tabContainer, new ConfigElement(config.getBotSettings().pullDummyConfig().getCategory("bot")).getChildElements(), Globals.MOD_ID, "channel:" + config.getIdentifier(), false, false, "Bot Settings (" + config.getName() + ")"));
+			mc.displayGuiScreen(new GuiConfig(tabContainer, new ConfigElement(config.getBotSettings().pullDummyConfig().getCategory("bot")).getChildElements(), Globals.MOD_ID, "channel:" + config.getIdentifier(), false, false, I19n.format("eirairc:gui.config.bot", config.getName())));
 		} else if(button == btnOtherSettings) {
-			mc.displayGuiScreen(new GuiConfig(tabContainer, new ConfigElement(config.getGeneralSettings().pullDummyConfig().getCategory("settings")).getChildElements(), Globals.MOD_ID, "channel:" + config.getIdentifier(), false, false, "Other Settings (" + config.getName() + ")"));
+			mc.displayGuiScreen(new GuiConfig(tabContainer, new ConfigElement(config.getGeneralSettings().pullDummyConfig().getCategory("settings")).getChildElements(), Globals.MOD_ID, "channel:" + config.getIdentifier(), false, false, I19n.format("eirairc:gui.config.other", config.getName())));
 		} else if(button == btnDelete) {
 			if(isNew) {
 				tabContainer.removePage(this);
 				tabContainer.initGui();
 			} else {
-				setOverlay(new OverlayYesNo(this, "Do you really want to delete this channel configuration?", "This can't be undone, so be careful!", 0));
+				setOverlay(new OverlayYesNo(this, I19n.format("eirairc:gui.channel.deleteConfirm"), I19n.format("eirairc:gui.channel.deleteNoUndo"), 0));
 			}
 		} else if(button == btnOK) {
-
+			gotoPrevious();
 		}
 	}
 
@@ -169,7 +168,7 @@ public class GuiChannelConfig extends GuiTabPage implements GuiYesNoCallback {
 	@Override
 	public boolean requestClose() {
 		if(serverConfig.getChannelConfigs().size() >= 2 && !serverConfig.getBotSettings().getMessageFormat().mcChannelMessage.contains("{CHANNEL}")) {
-			setOverlay((new OverlayYesNo(this, "You have joined more than one channel.", "Do you want to switch to a message format that includes the channel name?", 1)));
+			setOverlay((new OverlayYesNo(this, I19n.format("eirairc:gui.channel.multiChannel"), I19n.format("eirairc:gui.channel.suggestClassic"), 1)));
 			return false;
 		}
 		return true;

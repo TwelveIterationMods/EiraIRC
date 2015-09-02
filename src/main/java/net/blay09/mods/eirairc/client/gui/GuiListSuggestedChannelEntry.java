@@ -1,11 +1,13 @@
 package net.blay09.mods.eirairc.client.gui;
 
+import net.blay09.mods.eirairc.ConnectionManager;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
 import net.blay09.mods.eirairc.client.gui.base.list.GuiListEntry;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.SuggestedChannel;
 import net.blay09.mods.eirairc.util.Globals;
+import net.blay09.mods.eirairc.util.I19n;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -32,7 +34,7 @@ public class GuiListSuggestedChannelEntry extends GuiListEntry {
 		super.onDoubleClick();
 		ServerConfig serverConfig = ConfigurationHandler.getOrCreateServerConfig(channel.getServerName());
 		serverConfig.getOrCreateChannelConfig(channel.getChannelName());
-		IRCConnection connection = Utils.connectTo(serverConfig);
+		IRCConnection connection = ConnectionManager.connectTo(serverConfig);
 		if(connection != null) {
 			connection.join(channel.getChannelName(), null);
 		}
@@ -51,7 +53,7 @@ public class GuiListSuggestedChannelEntry extends GuiListEntry {
 		if(exclusiveFail) {
 			s = "\u00a78" + s;
 		}
-		fontRenderer.drawStringWithShadow(s, currentX, currentY, Globals.TEXT_COLOR);
+		fontRenderer.func_175065_a(s, currentX, currentY, Globals.TEXT_COLOR, true); // drawString
 		currentX += fontRenderer.getStringWidth(s) + TEXT_MARGIN;
 		s = " \u00a7o(" + channel.getServerName() + ")";
 		if(exclusiveFail) {
@@ -59,8 +61,8 @@ public class GuiListSuggestedChannelEntry extends GuiListEntry {
 		}
 		fontRenderer.drawString(s, currentX, currentY, Globals.TEXT_COLOR);
 		if(channel.getScore() > 0 && channel.isRecommended()) {
-			s = "\u00a72recommended";
-			fontRenderer.drawStringWithShadow(s, x + parentList.getWidth() - fontRenderer.getStringWidth(s) - TEXT_MARGIN, currentY, Globals.TEXT_COLOR);
+			s = "\u00a72" + I19n.format("eirairc:gui.welcome.recommended");
+			fontRenderer.func_175065_a(s, x + parentList.getWidth() - fontRenderer.getStringWidth(s) - TEXT_MARGIN, currentY, Globals.TEXT_COLOR, true); // drawString
 		}
 		currentY += 15;
 		currentX = x + TEXT_MARGIN + TEXT_MARGIN;

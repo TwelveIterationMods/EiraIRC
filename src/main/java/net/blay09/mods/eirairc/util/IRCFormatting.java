@@ -47,20 +47,20 @@ public enum IRCFormatting {
 	static {
 //		mcColorValues[EnumChatFormatting.BLACK.getColorIndex()] = new RGB(0f, 0f, 0f);
 //		mcColorValues[EnumChatFormatting.DARK_BLUE.getColorIndex()] = new RGB(0f, 0f, 0.66f);
-		mcColorValues[EnumChatFormatting.DARK_GREEN.getColorIndex()] = new RGB(0f, 0.66f, 0f);
-		mcColorValues[EnumChatFormatting.DARK_AQUA.getColorIndex()] = new RGB(0f, 0.66f, 0.66f);
-		mcColorValues[EnumChatFormatting.DARK_RED.getColorIndex()] = new RGB(0.66f, 0f, 0f);
-		mcColorValues[EnumChatFormatting.DARK_PURPLE.getColorIndex()] = new RGB(0.66f, 0f, 0.66f);
-		mcColorValues[EnumChatFormatting.GOLD.getColorIndex()] = new RGB(1f, 0.66f, 0f);
-		mcColorValues[EnumChatFormatting.GRAY.getColorIndex()] = new RGB(0.66f, 0.66f, 0.66f);
-		mcColorValues[EnumChatFormatting.DARK_GRAY.getColorIndex()] = new RGB(0.33f, 0.33f, 0.33f);
-		mcColorValues[EnumChatFormatting.BLUE.getColorIndex()] = new RGB(0.33f, 0.33f, 1f);
-		mcColorValues[EnumChatFormatting.GREEN.getColorIndex()] = new RGB(0.33f, 1f, 0.33f);
-		mcColorValues[EnumChatFormatting.AQUA.getColorIndex()] = new RGB(0.33f, 1f, 1f);
-		mcColorValues[EnumChatFormatting.RED.getColorIndex()] = new RGB(1f, 0.33f, 0.33f);
-		mcColorValues[EnumChatFormatting.LIGHT_PURPLE.getColorIndex()] = new RGB(1f, 0.33f, 1f);
-		mcColorValues[EnumChatFormatting.YELLOW.getColorIndex()] = new RGB(1f, 1f, 0.33f);
-		mcColorValues[EnumChatFormatting.WHITE.getColorIndex()] = new RGB(1f, 1f, 1f);
+		mcColorValues[EnumChatFormatting.DARK_GREEN.func_175746_b()] = new RGB(0f, 0.66f, 0f); // getColorIndex
+		mcColorValues[EnumChatFormatting.DARK_AQUA.func_175746_b()] = new RGB(0f, 0.66f, 0.66f); // getColorIndex
+		mcColorValues[EnumChatFormatting.DARK_RED.func_175746_b()] = new RGB(0.66f, 0f, 0f); // getColorIndex
+		mcColorValues[EnumChatFormatting.DARK_PURPLE.func_175746_b()] = new RGB(0.66f, 0f, 0.66f); // getColorIndex
+		mcColorValues[EnumChatFormatting.GOLD.func_175746_b()] = new RGB(1f, 0.66f, 0f); // getColorIndex
+		mcColorValues[EnumChatFormatting.GRAY.func_175746_b()] = new RGB(0.66f, 0.66f, 0.66f); // getColorIndex
+		mcColorValues[EnumChatFormatting.DARK_GRAY.func_175746_b()] = new RGB(0.33f, 0.33f, 0.33f); // getColorIndex
+		mcColorValues[EnumChatFormatting.BLUE.func_175746_b()] = new RGB(0.33f, 0.33f, 1f); // getColorIndex
+		mcColorValues[EnumChatFormatting.GREEN.func_175746_b()] = new RGB(0.33f, 1f, 0.33f); // getColorIndex
+		mcColorValues[EnumChatFormatting.AQUA.func_175746_b()] = new RGB(0.33f, 1f, 1f); // getColorIndex
+		mcColorValues[EnumChatFormatting.RED.func_175746_b()] = new RGB(1f, 0.33f, 0.33f); // getColorIndex
+		mcColorValues[EnumChatFormatting.LIGHT_PURPLE.func_175746_b()] = new RGB(1f, 0.33f, 1f); // getColorIndex
+		mcColorValues[EnumChatFormatting.YELLOW.func_175746_b()] = new RGB(1f, 1f, 0.33f); // getColorIndex
+		mcColorValues[EnumChatFormatting.WHITE.func_175746_b()] = new RGB(1f, 1f, 1f); // getColorIndex
 
 		twitchColorCache.put("#008000", EnumChatFormatting.DARK_GREEN);
 		twitchColorCache.put("#0000FF", EnumChatFormatting.BLUE);
@@ -256,12 +256,6 @@ public enum IRCFormatting {
 	}
 
 	@Deprecated
-	public static boolean isValidColorLegacy(String colorName) {
-		EnumChatFormatting colorFormatting = getColorFormattingLegacy(colorName);
-		return colorFormatting != null && colorFormatting.isColor();
-	}
-
-	@Deprecated
 	public static EnumChatFormatting getColorFormattingLegacy(String colorName) {
 		if(colorName == null || colorName.isEmpty()) {
 			return null;
@@ -308,7 +302,7 @@ public enum IRCFormatting {
 		NBTTagCompound tagCompound = player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getCompoundTag(Globals.NBT_EIRAIRC);
 		ThemeSettings theme = SharedGlobalConfig.theme;
 		int nameColorId = -1;
-		if(SharedGlobalConfig.enablePlayerColors) {
+		if(SharedGlobalConfig.enablePlayerColors.get()) {
 			if (tagCompound.hasKey(Globals.NBT_NAMECOLOR)) {
 				nameColorId = tagCompound.getInteger(Globals.NBT_NAMECOLOR);
 			} else if (tagCompound.hasKey(Globals.NBT_NAMECOLOR_DEPRECATED)) {
@@ -329,7 +323,7 @@ public enum IRCFormatting {
 
 	public static EnumChatFormatting getColorFormattingForUser(IRCChannel channel, IRCUser user) {
 		EnumChatFormatting nameColor = ((IRCUserImpl) user).getNameColor();
-		if(nameColor != null && SharedGlobalConfig.twitchNameColors) {
+		if(nameColor != null && SharedGlobalConfig.twitchNameColors.get()) {
 			return nameColor;
 		}
 		ThemeSettings theme = ConfigHelper.getTheme(channel);

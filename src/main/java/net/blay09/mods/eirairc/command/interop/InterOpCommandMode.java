@@ -19,7 +19,7 @@ public class InterOpCommandMode implements SubCommand {
 
 	@Override
 	public String getCommandUsage(ICommandSender sender) {
-		return "eirairc:irc.commands.interop.mode";
+		return "eirairc:commands.mode.usage";
 	}
 
 	@Override
@@ -43,7 +43,7 @@ public class InterOpCommandMode implements SubCommand {
 			return true;
 		}
 		if(!ConfigHelper.getBotSettings(targetChannel).getBoolean(BotBooleanComponent.InterOp)) {
-			Utils.sendLocalizedMessage(sender, "irc.interop.disabled");
+			Utils.sendLocalizedMessage(sender, "commands.interop.disabled");
 			return true;
 		}
 		IRCContext targetUser = null;
@@ -56,10 +56,10 @@ public class InterOpCommandMode implements SubCommand {
 		}
 		if(targetUser != null) {
 			targetChannel.getConnection().mode(targetChannel.getName(), args[2], targetUser.getName());
-			Utils.sendLocalizedMessage(sender, "irc.interop.umode", args[2], targetUser.getName(), targetChannel.getName());
+			Utils.sendLocalizedMessage(sender, "commands.umode", args[2], targetUser.getName(), targetChannel.getName());
 		} else {
 			targetChannel.getConnection().mode(targetChannel.getName(), args[1]);
-			Utils.sendLocalizedMessage(sender, "irc.interop.mode", args[1], targetChannel.getName());
+			Utils.sendLocalizedMessage(sender, "commands.mode", args[1], targetChannel.getName());
 		}
 		return true;
 	}

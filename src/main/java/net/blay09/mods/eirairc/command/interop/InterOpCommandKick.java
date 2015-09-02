@@ -19,7 +19,7 @@ public class InterOpCommandKick implements SubCommand {
 
 	@Override
 	public String getCommandUsage(ICommandSender sender) {
-		return "eirairc:irc.commands.interop.kick";
+		return "eirairc:commands.kick.usage";
 	}
 
 	@Override
@@ -43,7 +43,7 @@ public class InterOpCommandKick implements SubCommand {
 			return true;
 		}
 		if(!ConfigHelper.getBotSettings(targetChannel).getBoolean(BotBooleanComponent.InterOp)) {
-			Utils.sendLocalizedMessage(sender, "irc.interop.disabled");
+			Utils.sendLocalizedMessage(sender, "commands.interop.disabled");
 			return true;
 		}
 
@@ -57,7 +57,7 @@ public class InterOpCommandKick implements SubCommand {
 			reason = args[2];
 		}
 		targetChannel.getConnection().kick(targetChannel.getName(), targetUser.getName(), reason);
-		Utils.sendLocalizedMessage(sender, "irc.interop.kick", targetUser.getName(), targetChannel.getName());
+		Utils.sendLocalizedMessage(sender, "commands.kick", targetUser.getName(), targetChannel.getName());
 		return true;
 	}
 

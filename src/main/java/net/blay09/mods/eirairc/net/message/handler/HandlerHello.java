@@ -1,6 +1,5 @@
 // Copyright (c) 2015, Christopher "BlayTheNinth" Baker
 
-
 package net.blay09.mods.eirairc.net.message.handler;
 
 import net.blay09.mods.eirairc.EiraIRC;
@@ -17,7 +16,7 @@ public class HandlerHello implements IMessageHandler<MessageHello, IMessage> {
 	public IMessage onMessage(MessageHello packet, MessageContext ctx) {
 		EntityPlayer entityPlayer = ctx.getServerHandler().playerEntity;
 		
-		EiraPlayerInfo playerInfo = EiraIRC.instance.getNetHandler().getPlayerInfo(entityPlayer.getCommandSenderName());
+		EiraPlayerInfo playerInfo = EiraIRC.instance.getNetHandler().getPlayerInfo(entityPlayer.getName());
 		playerInfo.modInstalled = true;
 		playerInfo.modVersion = packet.getVersion();
 

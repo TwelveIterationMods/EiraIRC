@@ -26,7 +26,7 @@ public class CommandGhost implements SubCommand {
 
 	@Override
 	public String getCommandUsage(ICommandSender sender) {
-		return "eirairc:irc.commands.ghost";
+		return "eirairc:commands.ghost.usage";
 	}
 
 	@Override
@@ -40,12 +40,12 @@ public class CommandGhost implements SubCommand {
 		if(args.length > 0) {
 			connection = EiraIRCAPI.parseContext(null, args[0], null).getConnection();
 			if(connection == null) {
-				Utils.sendLocalizedMessage(sender, "irc.target.serverNotFound", args[0]);
+				Utils.sendLocalizedMessage(sender, "error.serverNotFound", args[0]);
 				return true;
 			}
 		} else {
 			if(context == null) {
-				Utils.sendLocalizedMessage(sender, "irc.specifyServer");
+				Utils.sendLocalizedMessage(sender, "error.specifyServer");
 				return true;
 			}
 			connection = context.getConnection();
@@ -58,7 +58,7 @@ public class CommandGhost implements SubCommand {
 				connection.irc(settings.getGhostCommand(nickServData.username, nickServData.password));
 			}
 		} else {
-			Utils.sendLocalizedMessage(sender, "irc.general.notSupported", "GHOST");
+			Utils.sendLocalizedMessage(sender, "general.notSupported", "GHOST");
 		}
 		return true;
 	}

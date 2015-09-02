@@ -3,6 +3,7 @@
 
 package net.blay09.mods.eirairc.command;
 
+import net.blay09.mods.eirairc.ConnectionManager;
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.SubCommand;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
@@ -16,7 +17,8 @@ import net.minecraft.command.WrongUsageException;
 
 import java.util.List;
 
-public class CommandConnect implements SubCommand {
+public class
+		CommandConnect implements SubCommand {
 
 	@Override
 	public String getCommandName() {
@@ -25,7 +27,7 @@ public class CommandConnect implements SubCommand {
 
 	@Override
 	public String getCommandUsage(ICommandSender sender) {
-		return "eirairc:irc.commands.connect";
+		return "eirairc:commands.connect.usage";
 	}
 
 	@Override
@@ -40,19 +42,19 @@ public class CommandConnect implements SubCommand {
 		}
 		String host = args[0];
 		if(EiraIRC.instance.getConnectionManager().isConnectedTo(host)) {
-			Utils.sendLocalizedMessage(sender, "irc.general.alreadyConnected", host);
+			Utils.sendLocalizedMessage(sender, "general.alreadyConnected", host);
 			return true;
 		}
-		Utils.sendLocalizedMessage(sender, "irc.basic.connecting", host);
+		Utils.sendLocalizedMessage(sender, "general.connecting", host);
 		ServerConfig serverConfig = ConfigurationHandler.getOrCreateServerConfig(host);
 		if(args.length >= 2) {
 			AuthManager.putServerPassword(serverConfig.getIdentifier(), args[1]);
 		}
-		if(Utils.connectTo(serverConfig) != null) {
+		if(ConnectionManager.connectTo(serverConfig) != null) {
 			ConfigurationHandler.addServerConfig(serverConfig);
 			ConfigurationHandler.save();
 		} else {
-			Utils.sendLocalizedMessage(sender, "irc.connect.error", host);
+			Utils.sendLocalizedMessage(sender, "commands.connect.error", host);
 		}
 		return true;
 	}

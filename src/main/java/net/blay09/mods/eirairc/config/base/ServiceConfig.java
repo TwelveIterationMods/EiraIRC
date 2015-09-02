@@ -1,6 +1,5 @@
 // Copyright (c) 2015, Christopher "BlayTheNinth" Baker
 
-
 package net.blay09.mods.eirairc.config.base;
 
 import net.blay09.mods.eirairc.util.Utils;
@@ -20,7 +19,10 @@ public class ServiceConfig {
 	public static ServiceSettings getSettings(String host, String type) {
 		ServiceSettings settings = serverMap.get(host);
 		if(settings == null) {
-			settings = serverMap.get(type);
+			if(type != null) {
+				type = type.replaceAll("[0-9]", "*");
+				settings = serverMap.get(type);
+			}
 			if(settings == null) {
 				return defaultSettings;
 			}
@@ -36,7 +38,10 @@ public class ServiceConfig {
 		
 		config.get(CATEGORY + Configuration.CATEGORY_SPLITTER + "atheme", "cmdIdentify", "PRIVMSG NickServ :IDENTIFY {USER} {PASS}");
 		config.get(CATEGORY + Configuration.CATEGORY_SPLITTER + "atheme", "cmdGhost", "PRIVMSG NickServ :GHOST {NICK} {PASS}");
-		config.get(CATEGORY + Configuration.CATEGORY_SPLITTER + "atheme", "serverList", new String[] { Utils.quote("irc.esper.net") });
+		config.get(CATEGORY + Configuration.CATEGORY_SPLITTER + "atheme", "serverList", new String[] {
+			"\"charybdis-*.*.*-dev\"",
+			"\"irc.esper.net\""
+		});
 		
 		config.get(CATEGORY + Configuration.CATEGORY_SPLITTER + "anope", "cmdIdentify", "PRIVMSG NickServ :IDENTIFY {PASS}");
 		config.get(CATEGORY + Configuration.CATEGORY_SPLITTER + "anope", "cmdGhost", "PRIVMSG NickServ :GHOST {NICK} {PASS}");

@@ -14,6 +14,7 @@ import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class CommandConfig implements SubCommand {
 
 	@Override
 	public String getCommandUsage(ICommandSender sender) {
-		return "eirairc:irc.commands.config";
+		return "eirairc:commands.config.usage";
 	}
 
 	@Override
@@ -43,7 +44,7 @@ public class CommandConfig implements SubCommand {
 		}
 		String target = args[0];
 		if(target.equals("reload")) {
-			Utils.sendLocalizedMessage(sender, "irc.config.reload");
+			Utils.sendLocalizedMessage(sender, "commands.config.reload");
 			EiraIRC.instance.getConnectionManager().stopIRC();
 			ConfigurationHandler.reloadAll();
 			EiraIRC.instance.getConnectionManager().startIRC();
@@ -54,7 +55,7 @@ public class CommandConfig implements SubCommand {
 		}
 		String config = args[1];
 		if(args.length > 2) {
-			ConfigurationHandler.handleConfigCommand(sender, target, config, Utils.joinStrings(args, " ", 2));
+			ConfigurationHandler.handleConfigCommand(sender, target, config, StringUtils.join(args, " ", 2));
 		} else {
 			ConfigurationHandler.handleConfigCommand(sender, target, config);
 		}
@@ -83,22 +84,22 @@ public class CommandConfig implements SubCommand {
 				return;
 			}
 			if(args[0].equals(TARGET_GLOBAL)) {
-				ConfigurationHandler.addOptionsToList(list, null);
+				ConfigurationHandler.addOptionsToList(list, args[1], true);
 			} else if(IRCResolver.isChannel(args[0])) {
-				ChannelConfig.addOptionsToList(list, null);
+				ChannelConfig.addOptionsToList(list, args[1], true);
 			} else {
-				ServerConfig.addOptionsToList(list, null);
+				ServerConfig.addOptionsToList(list, args[1], true);
 			}
 		} else if(args.length == 3) {
 			if(args[0].equals("reload")) {
 				return;
 			}
 			if(args[0].equals(TARGET_GLOBAL)) {
-				ConfigurationHandler.addOptionsToList(list, args[1]);
+				ConfigurationHandler.addOptionsToList(list, args[1], false);
 			} else if(IRCResolver.isChannel(args[0])) {
-				ChannelConfig.addOptionsToList(list, args[1]);
+				ChannelConfig.addOptionsToList(list, args[1], false);
 			} else {
-				ServerConfig.addOptionsToList(list, args[1]);
+				ServerConfig.addOptionsToList(list, args[1], false);
 			}
 		}
 	}

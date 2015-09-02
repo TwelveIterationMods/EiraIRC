@@ -5,7 +5,6 @@ package net.blay09.mods.eirairc.handler;
 
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.EiraIRCAPI;
-import net.blay09.mods.eirairc.api.event.ChatMessageEvent;
 import net.blay09.mods.eirairc.api.event.ClientChatEvent;
 import net.blay09.mods.eirairc.api.event.RelayChat;
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
@@ -15,8 +14,6 @@ import net.blay09.mods.eirairc.api.irc.IRCUser;
 import net.blay09.mods.eirairc.command.base.IRCCommandHandler;
 import net.blay09.mods.eirairc.config.*;
 import net.blay09.mods.eirairc.config.settings.*;
-import net.blay09.mods.eirairc.irc.IRCConnectionImpl;
-import net.blay09.mods.eirairc.net.EiraNetHandler;
 import net.blay09.mods.eirairc.net.PacketHandler;
 import net.blay09.mods.eirairc.net.message.MessageRedirect;
 import net.blay09.mods.eirairc.util.ConfigHelper;
@@ -30,23 +27,18 @@ import net.minecraft.command.server.CommandEmote;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.stats.Achievement;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.AchievementEvent;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.regex.Pattern;
+import org.apache.commons.lang3.StringUtils;
 
 @SuppressWarnings("unused")
 public class MCEventHandler {
@@ -66,7 +58,8 @@ public class MCEventHandler {
 							channel.message(ircMessage);
 						}
 						if (channel.getTopic() != null) {
-							Utils.sendLocalizedMessage(event.player, "irc.display.irc.topic", channel.getName(), channel.getTopic());
+							IChatComponent chatComponent = MessageFormat.formatChatComponent(ConfigHelper.getBotSettings(channel).getMessageFormat().mcTopic, connection, channel, null, channel.getTopic(), MessageFormat.Target.Minecraft, MessageFormat.Mode.Message);
+							event.player.addChatMessage(chatComponent);
 						}
 						if (generalSettings.getBoolean(GeneralBooleanComponent.AutoWho)) {
 							Utils.sendUserList(event.player, connection, channel);
@@ -91,12 +84,11 @@ public class MCEventHandler {
 	public void onServerCommand(CommandEvent event) {
 		if(event.command instanceof CommandEmote) {
 			if(event.sender instanceof EntityPlayer) {
-				String emote = Utils.joinStrings(event.parameters, " ", 0).trim();
+				String emote = StringUtils.join(event.parameters, " ", 0).trim();
 				if(emote.length() == 0) {
 					return;
 				}
-				String mcAlias = Utils.getNickGame((EntityPlayer) event.sender);
-				IChatComponent chatComponent = MessageFormat.createChatComponentForMessage("* " + mcAlias + " " + emote);
+				IChatComponent chatComponent = new ChatComponentTranslation("* %s %s", event.sender.getDisplayName(), MessageFormat.createChatComponentForMessage(emote));
 				EnumChatFormatting emoteColor = SharedGlobalConfig.theme.getColor(ThemeColorComponent.emoteTextColor);
 				if(emoteColor != null) {
 					chatComponent.getChatStyle().setColor(emoteColor);
@@ -116,7 +108,7 @@ public class MCEventHandler {
 						if (channel != null) {
 							GeneralSettings generalSettings = ConfigHelper.getGeneralSettings(channel);
 							BotSettings botSettings = ConfigHelper.getBotSettings(channel);
-							String ircMessage = MessageFormat.formatMessage(botSettings.getMessageFormat().ircBroadcastMessage, channel, event.sender, Utils.joinStrings(event.parameters, " ", 0), MessageFormat.Target.IRC, MessageFormat.Mode.Message);
+							String ircMessage = MessageFormat.formatMessage(botSettings.getMessageFormat().ircBroadcastMessage, channel, event.sender, StringUtils.join(event.parameters, " ", 0), MessageFormat.Target.IRC, MessageFormat.Mode.Message);
 							if (!generalSettings.isReadOnly() && botSettings.getBoolean(BotBooleanComponent.RelayBroadcasts)) {
 								channel.message(ircMessage);
 							}
@@ -141,7 +133,7 @@ public class MCEventHandler {
 			event.setCanceled(true);
 			return;
 		}
-		if(ClientGlobalConfig.clientBridge) {
+		if(ClientGlobalConfig.clientBridge.get()) {
 			relayChatClient(event.message, false, false, null);
 			event.setCanceled(true);
 			return;
@@ -162,7 +154,7 @@ public class MCEventHandler {
 			return;
 		}
 		relayChatClient(event.message, false, false, chatTarget);
-		MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(chatComponent));
+		EiraIRCAPI.getChatHandler().addChatMessage(chatComponent);
 		event.setCanceled(true);
 	}
 	
@@ -170,7 +162,7 @@ public class MCEventHandler {
 	public void onClientEmote(ClientChatEvent event) {
 		String text = event.message.substring(4);
 		EntityPlayer sender = Minecraft.getMinecraft().thePlayer;
-		if(ClientGlobalConfig.clientBridge) {
+		if(ClientGlobalConfig.clientBridge.get()) {
 			relayChatClient(text, true, false, null);
 			event.setCanceled(true);
 			return;
@@ -197,21 +189,8 @@ public class MCEventHandler {
 		if(emoteColor != null) {
 			chatComponent.getChatStyle().setColor(emoteColor);
 		}
-		MinecraftForge.EVENT_BUS.post(new ChatMessageEvent(chatComponent));
+		EiraIRCAPI.getChatHandler().addChatMessage(chatComponent);
 		event.setCanceled(true);
-	}
-
-	@SubscribeEvent(priority = EventPriority.LOWEST)
-	public void onChatMessage(ChatMessageEvent event) {
-		if(event.target != null) {
-			if(!EiraIRCAPI.hasClientSideInstalled(event.target)) {
-				event.target.addChatMessage(Utils.translateToDefault(event.component));
-			} else {
-				event.target.addChatMessage(event.component);
-			}
-		} else {
-			Utils.addMessageToChat(event.component);
-		}
 	}
 
 	@SubscribeEvent
@@ -254,17 +233,16 @@ public class MCEventHandler {
 						target.message(message);
 					}
 				}
+			} else {
+				EiraIRCAPI.getChatHandler().addChatMessage(new ChatComponentTranslation("eirairc:general.readOnly", target.getName()));
 			}
 		} else {
-			if(ClientGlobalConfig.clientBridge) {
+			if(ClientGlobalConfig.clientBridge.get()) {
 				String ircMessage = message;
 				boolean isCtcp = false;
 				if(isEmote) {
 					isCtcp = true;
 					ircMessage = "ACTION " + ircMessage;
-				}
-				if(!ClientGlobalConfig.clientBridgeMessageToken.isEmpty()) {
-					ircMessage = ircMessage + " " + ClientGlobalConfig.clientBridgeMessageToken;
 				}
 				for(ServerConfig serverConfig : ConfigurationHandler.getServerConfigs()) {
 					IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(serverConfig.getIdentifier());
@@ -293,22 +271,25 @@ public class MCEventHandler {
 				}
 			} else {
 				IRCContext chatTarget = EiraIRC.instance.getChatSessionHandler().getChatTarget();
-				if(chatTarget != null && !ConfigHelper.getGeneralSettings(chatTarget).isReadOnly()) {
-					if(isEmote) {
-						if (isNotice) {
-							chatTarget.ctcpNotice("ACTION " + message);
+				if(chatTarget != null) {
+					if(!ConfigHelper.getGeneralSettings(chatTarget).isReadOnly()) {
+						if (isEmote) {
+							if (isNotice) {
+								chatTarget.ctcpNotice("ACTION " + message);
+							} else {
+								chatTarget.ctcpMessage("ACTION " + message);
+							}
 						} else {
-							chatTarget.ctcpMessage("ACTION " + message);
+							if (isNotice) {
+								chatTarget.notice(message);
+							} else {
+								chatTarget.message(message);
+							}
 						}
 					} else {
-						if (isNotice) {
-							chatTarget.notice(message);
-						} else {
-							chatTarget.message(message);
-						}
+						EiraIRCAPI.getChatHandler().addChatMessage(new ChatComponentTranslation("eirairc:general.readOnly", chatTarget.getName()));
 					}
 				}
-
 			}
 		}
 	}
@@ -381,8 +362,8 @@ public class MCEventHandler {
 							GeneralSettings generalSettings = ConfigHelper.getGeneralSettings(channel);
 							BotSettings botSettings = ConfigHelper.getBotSettings(channel);
 							String name = Utils.getNickIRC((EntityPlayer) event.entityLiving, channel);
-							String ircMessage = event.entityLiving.getCombatTracker().getDeathMessage().getUnformattedText(); // getDeathMessage()
-							ircMessage = ircMessage.replace(event.entityLiving.getCommandSenderName(), name);
+							String ircMessage = event.entityLiving.getCombatTracker().func_151521_b().getUnformattedText(); // getDeathMessage()
+							ircMessage = ircMessage.replace(event.entityLiving.getName(), name);
 							ircMessage = IRCFormatting.toIRC(ircMessage, !botSettings.getBoolean(BotBooleanComponent.ConvertColors));
 							if (!generalSettings.isReadOnly() && botSettings.getBoolean(BotBooleanComponent.RelayDeathMessages)) {
 								channel.message(ircMessage);
@@ -394,11 +375,6 @@ public class MCEventHandler {
 		}
 	}
 	
-	@SubscribeEvent(priority = EventPriority.HIGHEST)
-	public void onPlayerNameFormat(net.minecraftforge.event.entity.player.PlayerEvent.NameFormat event) {
-		event.displayname = Utils.getNickGame(event.entityPlayer);
-	}
-
 	@SubscribeEvent
 	public void onAchievement(AchievementEvent event) {
 		if(((EntityPlayerMP) event.entityPlayer).getStatFile().hasAchievementUnlocked(event.achievement)) {

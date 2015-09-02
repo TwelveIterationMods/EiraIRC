@@ -66,7 +66,7 @@ public class IRCSender implements Runnable {
 					}
 				}
 				try {
-					Thread.sleep(antiFlood ? SharedGlobalConfig.antiFloodTime : 100);
+					Thread.sleep(antiFlood ? SharedGlobalConfig.antiFloodTime.get() : 100);
 				} catch (InterruptedException ignored) {}
 			}
 		} catch (SocketException e) {

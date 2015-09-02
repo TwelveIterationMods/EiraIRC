@@ -3,10 +3,7 @@ package net.blay09.mods.eirairc.client.gui.base.image;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
-import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureUtil;
-import net.minecraft.client.resources.IResourceManager;
-import org.lwjgl.opengl.GL11;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -62,7 +59,7 @@ public abstract class GuiImage {
 		float renderX = xPos + width / 2 - renderWidth / 2;
 		float renderY = yPos + height / 2 - renderHeight / 2;
 
-		GlStateManager.bindTexture(textureId);
+		GlStateManager.func_179144_i(textureId); // bindTexture
 		Tessellator tessellator = Tessellator.getInstance();
 		WorldRenderer renderer = tessellator.getWorldRenderer();
 		renderer.startDrawingQuads();

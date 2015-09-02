@@ -1,13 +1,12 @@
 // Copyright (c) 2015, Christopher "BlayTheNinth" Baker
 
-
 package net.blay09.mods.eirairc.bot;
 
 import net.blay09.mods.eirairc.api.bot.IBotCommand;
 import net.blay09.mods.eirairc.api.bot.IRCBot;
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.api.irc.IRCUser;
-import net.blay09.mods.eirairc.util.Utils;
+import net.blay09.mods.eirairc.util.I19n;
 
 public class BotCommandHelp implements IBotCommand {
 
@@ -32,9 +31,9 @@ public class BotCommandHelp implements IBotCommand {
 				sb.append(command.getCommandName());
 			}
 			if(commandSettings.broadcastsResult()) {
-				channel.message(Utils.getLocalizedMessage("irc.bot.cmdlist", sb.toString()));
+				channel.message(I19n.format("eirairc:bot.cmdlist", sb.toString()));
 			} else {
-				user.notice(Utils.getLocalizedMessage("irc.bot.cmdlist", sb.toString()));
+				user.notice(I19n.format("eirairc:bot.cmdlist", sb.toString()));
 			}
 		} else {
 			user.notice("***** EiraIRC Help *****");

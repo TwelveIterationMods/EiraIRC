@@ -1,24 +1,17 @@
 // Copyright (c) 2015, Christopher "BlayTheNinth" Baker
 
-
 package net.blay09.mods.eirairc.util;
 
-import io.netty.buffer.ByteBuf;
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.EiraIRCAPI;
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.api.irc.IRCUser;
-import net.blay09.mods.eirairc.bot.IRCBotImpl;
 import net.blay09.mods.eirairc.config.AuthManager;
-import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
-import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.config.base.ServiceConfig;
 import net.blay09.mods.eirairc.config.base.ServiceSettings;
-import net.blay09.mods.eirairc.irc.IRCConnectionImpl;
-import net.blay09.mods.eirairc.irc.ssl.IRCConnectionSSLImpl;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.command.ICommandSender;
@@ -26,7 +19,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.*;
 import org.apache.commons.lang3.ArrayUtils;
-import org.jetbrains.annotations.NotNull;
 import org.lwjgl.Sys;
 
 import java.awt.*;
@@ -34,7 +26,6 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -45,475 +36,359 @@ import java.util.List;
 
 public class Utils {
 
-	private static final String DEFAULT_USERNAME = "EiraBot";
-	private static final String ENCODING = "UTF-8";
-	
-	public static void sendLocalizedMessage(ICommandSender sender, String key, Object... args) {
-		if(EiraIRCAPI.hasClientSideInstalled(sender)) {
-			sender.addChatMessage(getLocalizedChatMessage(key, args));
-		} else {
-			sender.addChatMessage(new ChatComponentText(getLocalizedChatMessage(key, args).getUnformattedText()));
-		}
-	}
-	
-	public static String getLocalizedMessageNoPrefix(String key, Object... args) {
-		return StatCollector.translateToLocalFormatted(key, args);
-	}
-	
-	public static String getLocalizedMessage(String key, Object... args) {
-		return StatCollector.translateToLocalFormatted(EiraIRC.MOD_ID + ":" + key, args);
-	}
-	
-	public static ChatComponentTranslation getLocalizedChatMessage(String key, Object... args) {
-		return new ChatComponentTranslation(EiraIRC.MOD_ID + ":" + key, args);
-	}
-	
-	public static void addMessageToChat(@NotNull IChatComponent chatComponent) {
-		if(MinecraftServer.getServer() != null && MinecraftServer.getServer().getConfigurationManager() != null && !MinecraftServer.getServer().isSinglePlayer()) {
-			MinecraftServer.getServer().getConfigurationManager().sendChatMsg(translateToDefault(chatComponent));
-		} else {
-			if(Minecraft.getMinecraft().thePlayer != null) {
-				Minecraft.getMinecraft().thePlayer.addChatMessage(chatComponent);
-			}
-		}
-	}
-	
-	public static String unquote(String s) {
-		return s.startsWith("\"") ? s.substring(1, s.length() - 1) : s;
-	}
-	
-	public static String quote(String s) {
-		return "\"" + s + "\"";
-	}
-	
-	public static String getNickIRC(EntityPlayer player, IRCContext context) {
-		return MessageFormat.formatNick(getAliasForPlayer(player), context, MessageFormat.Target.IRC, MessageFormat.Mode.Message, null);
-	}
+    public static void sendLocalizedMessage(ICommandSender sender, String key, Object... args) {
+        if (EiraIRCAPI.hasClientSideInstalled(sender)) {
+            sender.addChatMessage(new ChatComponentTranslation("eirairc:" + key, args));
+        } else {
+            sender.addChatMessage(new ChatComponentText(new ChatComponentTranslation("eirairc:" + key, args).getUnformattedText()));
+        }
+    }
 
-	public static String getNickGame(EntityPlayer player) {
-		return getAliasForPlayer(player);
-	}
+    public static void addMessageToChat(IChatComponent chatComponent) {
+        if (MinecraftServer.getServer() != null && MinecraftServer.getServer().getConfigurationManager() != null && !MinecraftServer.getServer().isSinglePlayer()) {
+            MinecraftServer.getServer().getConfigurationManager().sendChatMsg(translateToDefault(chatComponent));
+        } else {
+            if (Minecraft.getMinecraft().thePlayer != null) {
+                Minecraft.getMinecraft().thePlayer.addChatMessage(chatComponent);
+            }
+        }
+    }
 
-	public static String getAliasForPlayer(EntityPlayer player) {
-		if(!SharedGlobalConfig.enablePlayerAliases) {
-			return player.getCommandSenderName();
-		}
-		String name = player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getCompoundTag(Globals.NBT_EIRAIRC).getString(Globals.NBT_ALIAS);
-		if(name.isEmpty()) {
-			name = player.getCommandSenderName();
-		}
-		return name;
-	}
+    public static String unquote(String s) {
+        return s.startsWith("\"") ? s.substring(1, s.length() - 1) : s;
+    }
 
-	public static String getServerName() {
-		ServerData serverData = Minecraft.getMinecraft().getCurrentServerData();
-		if(serverData != null) {
-			return serverData.serverName;
-		}
-		return null;
-	}
+    public static String quote(String s) {
+        return "\"" + s + "\"";
+    }
 
-	public static String getServerAddress() {
-		ServerData serverData = Minecraft.getMinecraft().getCurrentServerData();
-		if(serverData != null) {
-			return serverData.serverIP;
-		}
-		return null;
-	}
+    public static String getNickIRC(EntityPlayer player, IRCContext context) {
+        return MessageFormat.formatNick(player.getDisplayNameString(), context, MessageFormat.Target.IRC, MessageFormat.Mode.Message, null);
+    }
 
-	public static boolean isOP(ICommandSender sender) {
-		return MinecraftServer.getServer() == null || (MinecraftServer.getServer().isSinglePlayer() && !MinecraftServer.getServer().isDedicatedServer()) || sender.canCommandSenderUseCommand(3, "");
-	}
-	
-	public static void addConnectionsToList(List<String> list) {
-		for(IRCConnection connection : EiraIRC.instance.getConnectionManager().getConnections()) {
-			list.add(connection.getHost());
-		}		
-	}
+    public static String getNickGame(EntityPlayer player) {
+        return player.getDisplayNameString();
+    }
 
-	public static void addBooleansToList(List<String> list) {
-		list.add("true");
-		list.add("false");		
-	}
+    public static String getServerAddress() {
+        ServerData serverData = Minecraft.getMinecraft().getCurrentServerData();
+        if (serverData != null) {
+            return serverData.serverIP;
+        }
+        return null;
+    }
 
-	public static boolean redirectTo(ServerConfig serverConfig, boolean solo) {
-		if(serverConfig == null) {
-			EiraIRC.instance.getConnectionManager().stopIRC();
-			return true;
-		}
-		IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(serverConfig.getIdentifier());
-		if(connection != null && solo) {
-			connection.disconnect("Redirected by " + Utils.getCurrentServerName());
-			connection = null;
-		}
-		if(connection == null) {
-			connection = connectTo(serverConfig);
-			if(connection == null) {
-				return false;
-			}
-		} else {
-			for(ChannelConfig channelConfig : serverConfig.getChannelConfigs()) {
-				connection.join(channelConfig.getName(), AuthManager.getChannelPassword(channelConfig.getIdentifier()));
-			}
-		}
-		return true;
-	}
+    public static boolean isOP(ICommandSender sender) {
+        return MinecraftServer.getServer() == null || (MinecraftServer.getServer().isSinglePlayer() && !MinecraftServer.getServer().isDedicatedServer()) || sender.canCommandSenderUseCommand(3, "");
+    }
 
-	public static IRCConnectionImpl connectTo(ServerConfig config) {
-		IRCConnection oldConnection = EiraIRC.instance.getConnectionManager().getConnection(config.getIdentifier());
-		if(oldConnection != null) {
-			oldConnection.disconnect("Reconnecting...");
-		}
-		IRCConnectionImpl connection;
-		if(config.isSSL()) {
-			connection = new IRCConnectionSSLImpl(config, ConfigHelper.getFormattedNick(config));
-		} else {
-			connection = new IRCConnectionImpl(config, ConfigHelper.getFormattedNick(config));
-		}
-		connection.setBot(new IRCBotImpl(connection));
-		if(connection.start()) {
-			return connection;
-		}
-		return null;
-	}
-	
-	public static void doNickServ(IRCConnection connection, ServerConfig config) {
-		ServiceSettings settings = ServiceConfig.getSettings(connection.getHost(), connection.getServerType());
-		AuthManager.NickServData nickServData = AuthManager.getNickServData(config.getIdentifier());
-		if(nickServData != null) {
-			connection.irc(settings.getIdentifyCommand(nickServData.username, nickServData.password));
-		}
-	}
-	
-	public static void sendUserList(ICommandSender player, IRCConnection connection, IRCChannel channel) {
-		Collection<IRCUser> userList = channel.getUserList();
-		if(userList.size() == 0) {
-			if(player == null) {
-				addMessageToChat(new ChatComponentTranslation("irc.who.noUsersOnline", connection.getHost(), channel.getName()));
-			} else {
-				sendLocalizedMessage(player, "irc.who.noUsersOnline", connection.getHost(), channel.getName());
-			}
-			return;
-		}
-		if(player == null) {
-			addMessageToChat(new ChatComponentTranslation("irc.who.usersOnline", connection.getHost(), userList.size(), channel.getName()));
-		} else {
-			sendLocalizedMessage(player, "irc.who.usersOnline", connection.getHost(), userList.size(), channel.getName());
-		}
-		String s = " * ";
-		for(IRCUser user : userList) {
-			if(s.length() + user.getName().length() > Globals.CHAT_MAX_LENGTH) {
-				if(player == null) {
-					addMessageToChat(new ChatComponentText(s));
-				} else {
-					player.addChatMessage(new ChatComponentText(s));
-				}
-				s = " * ";
-			}
-			if(s.length() > 3) {
-				s += ", ";
-			}
-			s += user.getName();
-		}
-		if(s.length() > 3) {
-			if(player == null) {
-				addMessageToChat(new ChatComponentText(s));
-			} else {
-				player.addChatMessage(new ChatComponentText(s));
-			}
-		}
-	}
+    public static void addConnectionsToList(List<String> list) {
+        for (IRCConnection connection : EiraIRC.instance.getConnectionManager().getConnections()) {
+            list.add(connection.getHost());
+        }
+    }
 
-	public static void sendPlayerList(IRCContext context) {
-		if(MinecraftServer.getServer() == null || MinecraftServer.getServer().isSinglePlayer()) {
-			return;
-		}
-		List<EntityPlayer> playerList = MinecraftServer.getServer().getConfigurationManager().playerEntityList;
-		if(playerList.size() == 0) {
-			if(context instanceof IRCUser) {
-				context.notice(getLocalizedMessage("irc.bot.noPlayersOnline"));
-			} else if(context instanceof IRCChannel) {
-				context.message(getLocalizedMessage("irc.bot.noPlayersOnline"));
-			}
-			return;
-		}
-		if(context instanceof IRCUser) {
-			context.notice(getLocalizedMessage("irc.bot.playersOnline", playerList.size()));
-		} else if(context instanceof IRCChannel) {
-			context.message(getLocalizedMessage("irc.bot.playersOnline", playerList.size()));
-		}
-		String s = " * ";
-		for (EntityPlayer entityPlayer : playerList) {
-			String alias = getNickIRC(entityPlayer, null);
-			if (s.length() + alias.length() > Globals.CHAT_MAX_LENGTH) {
-				if (context instanceof IRCUser) {
-					context.notice(s);
-				} else if (context instanceof IRCChannel) {
-					context.message(s);
-				}
-				s = " * ";
-			}
-			if (s.length() > 3) {
-				s += ", ";
-			}
-			s += alias;
-		}
-		if(s.length() > 3) {
-			if(context instanceof IRCUser) {
-				context.notice(s);
-			} else if(context instanceof IRCChannel) {
-				context.message(s);
-			}
-		}
-	}
-	
-	public static IRCContext getSuggestedTarget() {
-		IRCContext result = EiraIRC.instance.getChatSessionHandler().getChatTarget();
-		if(result == null) {
-			IRCConnection connection = EiraIRC.instance.getConnectionManager().getDefaultConnection();
-			if(connection != null) {
-				if(connection.getChannels().size() == 1) {
-					return connection.getChannels().iterator().next();
-				}
-				return null;
-			}
-			return null;
-		}
-		return result;
-	}
-	
-	public static String getUsername() {
-		String username = EiraIRC.proxy.getUsername();
-		if(username == null) {
-			return DEFAULT_USERNAME + Math.round(Math.random() * 10000);
-		}
-		return username;
-	}
+    public static void doNickServ(IRCConnection connection, ServerConfig config) {
+        ServiceSettings settings = ServiceConfig.getSettings(connection.getHost(), connection.getServerType());
+        AuthManager.NickServData nickServData = AuthManager.getNickServData(config.getIdentifier());
+        if (nickServData != null) {
+            connection.irc(settings.getIdentifyCommand(nickServData.username, nickServData.password));
+        }
+    }
 
-	public static void openDirectory(File dir) {
-		if (Util.getOSType() == Util.EnumOS.OSX) {
-			try {
-				Runtime.getRuntime().exec(new String[] {"/usr/bin/open", dir.getAbsolutePath()});
-				return;
-			} catch (IOException ignored) {}
-		} else if (Util.getOSType() == Util.EnumOS.WINDOWS) {
-			try {
-				Runtime.getRuntime().exec(String.format("cmd.exe /C start \"Open file\" \"%s\"", dir.getAbsolutePath()));
-				return;
-			} catch (IOException ignored) {}
-		}
-		Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
-		if(desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
-			try {
-				desktop.browse(dir.toURI());
-				return;
-			} catch (Exception ignored) {}
-		}
-		Sys.openURL("file://" + dir.getAbsolutePath());
-	}
+    public static void sendUserList(ICommandSender player, IRCConnection connection, IRCChannel channel) {
+        Collection<IRCUser> userList = channel.getUserList();
+        if (userList.size() == 0) {
+            if (player == null) {
+                addMessageToChat(new ChatComponentTranslation("eirairc:commands.who.noUsersOnline", connection.getHost(), channel.getName()));
+            } else {
+                sendLocalizedMessage(player, "commands.who.noUsersOnline", connection.getHost(), channel.getName());
+            }
+            return;
+        }
+        if (player == null) {
+            addMessageToChat(new ChatComponentTranslation("eirairc:commands.who.usersOnline", connection.getHost(), userList.size(), channel.getName()));
+        } else {
+            sendLocalizedMessage(player, "commands.who.usersOnline", connection.getHost(), userList.size(), channel.getName());
+        }
+        String s = " * ";
+        for (IRCUser user : userList) {
+            if (s.length() + user.getName().length() > Globals.CHAT_MAX_LENGTH) {
+                if (player == null) {
+                    addMessageToChat(new ChatComponentText(s));
+                } else {
+                    player.addChatMessage(new ChatComponentText(s));
+                }
+                s = " * ";
+            }
+            if (s.length() > 3) {
+                s += ", ";
+            }
+            s += user.getName();
+        }
+        if (s.length() > 3) {
+            if (player == null) {
+                addMessageToChat(new ChatComponentText(s));
+            } else {
+                player.addChatMessage(new ChatComponentText(s));
+            }
+        }
+    }
 
-	public static void openWebpage(String url) {
-		try {
-			openWebpage(new URL(url).toURI());
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
-	}
+    public static void sendPlayerList(IRCContext context) {
+        if (MinecraftServer.getServer() == null || MinecraftServer.getServer().isSinglePlayer()) {
+            return;
+        }
+        List<EntityPlayer> playerList = MinecraftServer.getServer().getConfigurationManager().playerEntityList;
+        if (playerList.size() == 0) {
+            if (context instanceof IRCUser) {
+                context.notice(I19n.format("eirairc:bot.noPlayersOnline"));
+            } else if (context instanceof IRCChannel) {
+                context.message(I19n.format("eirairc:bot.noPlayersOnline"));
+            }
+            return;
+        }
+        if (context instanceof IRCUser) {
+            context.notice(I19n.format("eirairc:bot.playersOnline", playerList.size()));
+        } else if (context instanceof IRCChannel) {
+            context.message(I19n.format("eirairc:bot.playersOnline", playerList.size()));
+        }
+        String s = " * ";
+        for (EntityPlayer entityPlayer : playerList) {
+            String alias = getNickIRC(entityPlayer, null);
+            if (s.length() + alias.length() > Globals.CHAT_MAX_LENGTH) {
+                if (context instanceof IRCUser) {
+                    context.notice(s);
+                } else if (context instanceof IRCChannel) {
+                    context.message(s);
+                }
+                s = " * ";
+            }
+            if (s.length() > 3) {
+                s += ", ";
+            }
+            s += alias;
+        }
+        if (s.length() > 3) {
+            if (context instanceof IRCUser) {
+                context.notice(s);
+            } else if (context instanceof IRCChannel) {
+                context.message(s);
+            }
+        }
+    }
 
-	public static void openWebpage(URL url) {
-		try {
-			openWebpage(url.toURI());
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
-	}
+    public static IRCContext getSuggestedTarget() {
+        IRCContext result = EiraIRC.instance.getChatSessionHandler().getChatTarget();
+        if (result == null) {
+            IRCConnection connection = EiraIRC.instance.getConnectionManager().getDefaultConnection();
+            if (connection != null) {
+                if (connection.getChannels().size() == 1) {
+                    return connection.getChannels().iterator().next();
+                }
+                return null;
+            }
+            return null;
+        }
+        return result;
+    }
 
-	public static void openWebpage(URI uri) {
-		Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
-		if(desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
-			try {
-				desktop.browse(uri);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
+    public static String getUsername() {
+        String username = EiraIRC.proxy.getUsername();
+        if (username == null) {
+            return "EiraBot" + Math.round(Math.random() * 10000);
+        }
+        return username;
+    }
 
-	public static void setClipboardString(String s) {
-		StringSelection selection = new StringSelection(s);
-		Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-		try {
-			clipboard.setContents(selection, selection);
-		} catch (IllegalStateException e) {
-			e.printStackTrace();
-		}
-	}
+    public static void openDirectory(File dir) {
+        if (Util.getOSType() == Util.EnumOS.OSX) {
+            try {
+                Runtime.getRuntime().exec(new String[]{"/usr/bin/open", dir.getAbsolutePath()});
+                return;
+            } catch (IOException ignored) {
+            }
+        } else if (Util.getOSType() == Util.EnumOS.WINDOWS) {
+            try {
+                Runtime.getRuntime().exec(String.format("cmd.exe /C start \"Open file\" \"%s\"", dir.getAbsolutePath()));
+                return;
+            } catch (IOException ignored) {
+            }
+        }
+        Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+        if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
+            try {
+                desktop.browse(dir.toURI());
+                return;
+            } catch (Exception ignored) {
+            }
+        }
+        Sys.openURL("file://" + dir.getAbsolutePath());
+    }
 
-	public static String getCurrentServerName() {
-		if(MinecraftServer.getServer() != null) {
-			if(MinecraftServer.getServer().isSinglePlayer()) {
-				return "Singleplayer";
-			} else {
-				return MinecraftServer.getServer().getServerHostname();
-			}
-		} else {
-			return "Multiplayer";
-		}
-	}
+    public static void openWebpage(String url) {
+        try {
+            openWebpage(new URL(url).toURI());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+    }
 
-	public static boolean isServerSide() {
-		return MinecraftServer.getServer() != null && !MinecraftServer.getServer().isSinglePlayer();
-	}
-	
-	public static String[] shiftArgs(String[] args, int offset) {
-		String[] shiftedArgs = new String[args.length - offset];
-		System.arraycopy(args, offset, shiftedArgs, 0, args.length - offset);
-		return shiftedArgs;
-	}
-	
-	public static String joinStrings(String[] args, String delimiter, int startIdx) {
-		StringBuilder sb = new StringBuilder();
-		for(int i = startIdx; i < args.length; i++) {
-			if(i > startIdx) {
-				sb.append(delimiter);
-			}
-			sb.append(args[i]);
-		}
-		return sb.toString();
-	}
+    public static void openWebpage(URL url) {
+        try {
+            openWebpage(url.toURI());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+    }
 
-	public static String readString(ByteBuf buf) {
-		short len = buf.readShort();
-		byte[] b = new byte[len];
-		buf.readBytes(b);
-		try {
-			return new String(b, ENCODING);
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
+    public static void openWebpage(URI uri) {
+        Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+        if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
+            try {
+                desktop.browse(uri);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
-	public static void writeString(ByteBuf buffer, String s) {
-		try {
-			byte[] b = s.getBytes(ENCODING);
-			buffer.writeShort(b.length);
-			buffer.writeBytes(b);
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-	}
+    public static void setClipboardString(String s) {
+        StringSelection selection = new StringSelection(s);
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        try {
+            clipboard.setContents(selection, selection);
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        }
+    }
 
-	public static String extractHost(String url) {
-		int colonIdx = url.indexOf(':');
-		int lastColonIdx = url.lastIndexOf(':');
-		boolean isIPV6 = colonIdx != lastColonIdx;
-		if(isIPV6) {
-			int endIdx = url.lastIndexOf(']');
-			if(endIdx != -1) {
-				return url.substring(0, endIdx);
-			} else {
-				return url;
-			}
-		} else {
-			if(lastColonIdx != -1) {
-				return url.substring(0, lastColonIdx);
-			} else {
-				return url;
-			}
-		}
-	}
+    public static String getCurrentServerName() {
+        if (MinecraftServer.getServer() != null) {
+            if (MinecraftServer.getServer().isSinglePlayer()) {
+                return "Singleplayer";
+            } else {
+                return MinecraftServer.getServer().getServerHostname();
+            }
+        } else {
+            return "Multiplayer";
+        }
+    }
 
-	public static int[] extractPorts(String url, int defaultPort) {
-		int colonIdx = url.indexOf(':');
-		int lastColonIdx = url.indexOf(':');
-		boolean isIPV6 = colonIdx != lastColonIdx;
-		int portIdx = lastColonIdx;
-		if(isIPV6) {
-			int endIdx = url.lastIndexOf(']');
-			if(endIdx == -1) {
-				portIdx = -1;
-			}
-		}
-		if(portIdx != -1) {
-			try {
-				String[] portRanges = url.substring(portIdx + 1).split("\\+");
-				List<Integer> portList = new ArrayList<Integer>();
-				for(int i = 0; i < portRanges.length; i++) {
-					int sepIdx = portRanges[i].indexOf('-');
-					if(sepIdx != -1) {
-						int min = Integer.parseInt(portRanges[i].substring(0, sepIdx));
-						int max = Integer.parseInt(portRanges[i].substring(sepIdx + 1));
-						if(min > max) {
-							int oldMin = min;
-							min = max;
-							max = oldMin;
-						}
-						if(max - min > 5) {
-							throw new RuntimeException("EiraIRC: Port ranges bigger than 5 are not allowed! Split them up if you really have to.");
-						}
-						for(int j = min; j <= max; j++) {
-							portList.add(j);
-						}
-					} else {
-						portList.add(Integer.parseInt(portRanges[i]));
-					}
-				}
-				return ArrayUtils.toPrimitive(portList.toArray(new Integer[portList.size()]));
-			} catch (NumberFormatException e) {
-				return new int[] { defaultPort };
-			}
-		}
-		return new int[] { defaultPort };
-	}
+    public static boolean isServerSide() {
+        return MinecraftServer.getServer() != null && !MinecraftServer.getServer().isSinglePlayer();
+    }
 
-	public static String getModpackId() {
-		return "";
-	}
+    public static String extractHost(String url) {
+        int colonIdx = url.indexOf(':');
+        int lastColonIdx = url.lastIndexOf(':');
+        boolean isIPV6 = colonIdx != lastColonIdx;
+        if (isIPV6) {
+            int endIdx = url.lastIndexOf(']');
+            if (endIdx != -1) {
+                return url.substring(0, endIdx);
+            } else {
+                return url;
+            }
+        } else {
+            if (lastColonIdx != -1) {
+                return url.substring(0, lastColonIdx);
+            } else {
+                return url;
+            }
+        }
+    }
 
-	public static IChatComponent translateToDefault(IChatComponent component) {
-		if(component instanceof ChatComponentText) {
-			return translateChildrenToDefault((ChatComponentText) component);
-		} else if(component instanceof ChatComponentTranslation) {
-			return translateComponentToDefault((ChatComponentTranslation) component);
-		}
-		return null;
-	}
+    public static int[] extractPorts(String url, int defaultPort) {
+        int colonIdx = url.indexOf(':');
+        int lastColonIdx = url.indexOf(':');
+        boolean isIPV6 = colonIdx != lastColonIdx;
+        int portIdx = lastColonIdx;
+        if (isIPV6) {
+            int endIdx = url.lastIndexOf(']');
+            if (endIdx == -1) {
+                portIdx = -1;
+            }
+        }
+        if (portIdx != -1) {
+            try {
+                String[] portRanges = url.substring(portIdx + 1).split("\\+");
+                List<Integer> portList = new ArrayList<Integer>();
+                for (int i = 0; i < portRanges.length; i++) {
+                    int sepIdx = portRanges[i].indexOf('-');
+                    if (sepIdx != -1) {
+                        int min = Integer.parseInt(portRanges[i].substring(0, sepIdx));
+                        int max = Integer.parseInt(portRanges[i].substring(sepIdx + 1));
+                        if (min > max) {
+                            int oldMin = min;
+                            min = max;
+                            max = oldMin;
+                        }
+                        if (max - min > 5) {
+                            throw new RuntimeException("EiraIRC: Port ranges bigger than 5 are not allowed! Split them up if you really have to.");
+                        }
+                        for (int j = min; j <= max; j++) {
+                            portList.add(j);
+                        }
+                    } else {
+                        portList.add(Integer.parseInt(portRanges[i]));
+                    }
+                }
+                return ArrayUtils.toPrimitive(portList.toArray(new Integer[portList.size()]));
+            } catch (NumberFormatException e) {
+                return new int[]{defaultPort};
+            }
+        }
+        return new int[]{defaultPort};
+    }
 
-	private static IChatComponent translateChildrenToDefault(ChatComponentText chatComponent) {
-		ChatComponentText copyComponent = new ChatComponentText(chatComponent.getChatComponentText_TextValue());
-		copyComponent.setChatStyle(chatComponent.getChatStyle());
-		for(Object object : chatComponent.getSiblings()) {
-			IChatComponent adjustedComponent = translateToDefault((IChatComponent) object);
-			if(adjustedComponent != null) {
-				copyComponent.appendSibling(adjustedComponent);
-			}
-		}
-		return copyComponent;
-	}
+    public static String getModpackId() {
+        return "";
+    }
 
-	public static IChatComponent translateComponentToDefault(ChatComponentTranslation chatComponent) {
-		Object[] formatArgs = chatComponent.getFormatArgs();
-		Object[] copyFormatArgs = new Object[formatArgs.length];
-		for(int i = 0; i < formatArgs.length; i++) {
-			if(formatArgs[i] instanceof IChatComponent) {
-				copyFormatArgs[i] = translateToDefault((IChatComponent) formatArgs[i]);
-			} else {
-				ChatComponentText textComponent = new ChatComponentText(formatArgs[i] == null ? "null" : formatArgs[i].toString());
-				textComponent.getChatStyle().setParentStyle(chatComponent.getChatStyle());
-				copyFormatArgs[i] = textComponent;
-			}
-		}
-		ChatComponentText translateComponent = new ChatComponentText(I19n.format(chatComponent.getKey(), copyFormatArgs));
-		translateComponent.setChatStyle(chatComponent.getChatStyle());
-		for(Object object : chatComponent.getSiblings()) {
-			IChatComponent adjustedComponent = translateToDefault((IChatComponent) object);
-			if(adjustedComponent != null) {
-				translateComponent.appendSibling(adjustedComponent);
-			}
-		}
-		return translateComponent;
-	}
+    public static IChatComponent translateToDefault(IChatComponent component) {
+        if (component instanceof ChatComponentText) {
+            return translateChildrenToDefault((ChatComponentText) component);
+        } else if (component instanceof ChatComponentTranslation) {
+            return translateComponentToDefault((ChatComponentTranslation) component);
+        }
+        return null;
+    }
+
+    private static IChatComponent translateChildrenToDefault(ChatComponentText chatComponent) {
+        ChatComponentText copyComponent = new ChatComponentText(chatComponent.getChatComponentText_TextValue());
+        copyComponent.setChatStyle(chatComponent.getChatStyle());
+        for (Object object : chatComponent.getSiblings()) {
+            IChatComponent adjustedComponent = translateToDefault((IChatComponent) object);
+            if (adjustedComponent != null) {
+                copyComponent.appendSibling(adjustedComponent);
+            }
+        }
+        return copyComponent;
+    }
+
+    public static IChatComponent translateComponentToDefault(ChatComponentTranslation chatComponent) {
+        Object[] formatArgs = chatComponent.getFormatArgs();
+        Object[] copyFormatArgs = new Object[formatArgs.length];
+        for (int i = 0; i < formatArgs.length; i++) {
+            if (formatArgs[i] instanceof IChatComponent) {
+                copyFormatArgs[i] = translateToDefault((IChatComponent) formatArgs[i]);
+            } else {
+                ChatComponentText textComponent = new ChatComponentText(formatArgs[i] == null ? "null" : formatArgs[i].toString());
+                textComponent.getChatStyle().setParentStyle(chatComponent.getChatStyle());
+                copyFormatArgs[i] = textComponent;
+            }
+        }
+        ChatComponentText translateComponent = new ChatComponentText(I19n.format(chatComponent.getKey(), copyFormatArgs));
+        translateComponent.setChatStyle(chatComponent.getChatStyle());
+        for (Object object : chatComponent.getSiblings()) {
+            IChatComponent adjustedComponent = translateToDefault((IChatComponent) object);
+            if (adjustedComponent != null) {
+                translateComponent.appendSibling(adjustedComponent);
+            }
+        }
+        return translateComponent;
+    }
 }

@@ -1,4 +1,4 @@
-// Copyright (c) 2015, Christopher "BlayTheNinth" Baker
+// Copyright (c) 2015 Christopher "BlayTheNinth" Baker
 
 package net.blay09.mods.eirairc.api.event;
 
@@ -10,7 +10,7 @@ import net.blay09.mods.eirairc.api.irc.IRCUser;
 /**
  * This event is published on the MinecraftForge.EVENTBUS bus whenever someone joins an IRC channel EiraIRC is in.
  */
-public class IRCUserJoinEvent extends IRCMessageEvent {
+public class IRCUserJoinEvent extends IRCRawMessageEvent {
 
 	/**
 	 * the channel that the user joined

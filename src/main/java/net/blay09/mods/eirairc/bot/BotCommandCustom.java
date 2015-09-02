@@ -10,6 +10,7 @@ import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.api.irc.IRCUser;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.server.MinecraftServer;
+import org.apache.commons.lang3.StringUtils;
 
 public class BotCommandCustom implements IBotCommand {
 
@@ -20,6 +21,7 @@ public class BotCommandCustom implements IBotCommand {
 	private boolean runAsOp;
 	private boolean requireAuth;
 	private boolean broadcastResult;
+	private String outputFilter;
 	private IBotCommand overrideCommand;
 
 	@Override
@@ -32,10 +34,6 @@ public class BotCommandCustom implements IBotCommand {
 		return true;
 	}
 
-	public boolean runAsOp() {
-		return runAsOp;
-	}
-	
 	@Override
 	public void processCommand(IRCBot bot, IRCChannel channel, IRCUser user, String[] args, IBotCommand commandSettings) {
 		if(overrideCommand != null) {
@@ -43,9 +41,9 @@ public class BotCommandCustom implements IBotCommand {
 		} else {
 			String message = command;
 			if (commandSettings.allowArgs()) {
-				message += " " + Utils.joinStrings(args, " ", 0).trim();
+				message += " " + StringUtils.join(args, " ", 0).trim();
 			}
-			MinecraftServer.getServer().getCommandManager().executeCommand(new IRCUserCommandSender(channel, user, commandSettings.broadcastsResult(), runAsOp), message);
+			MinecraftServer.getServer().getCommandManager().executeCommand(new IRCUserCommandSender(channel, user, commandSettings.broadcastsResult(), runAsOp, outputFilter), message);
 		}
 	}
 
@@ -82,8 +80,6 @@ public class BotCommandCustom implements IBotCommand {
 			String overrideName = object.get("override").getAsString();
 			if(overrideName.equals("who")) {
 				cmd.overrideCommand = new BotCommandWho();
-			} else if(overrideName.equals("alias")) {
-				cmd.overrideCommand = new BotCommandAlias();
 			} else if(overrideName.equals("help")) {
 				cmd.overrideCommand = new BotCommandHelp();
 			} else if(overrideName.equals("msg")) {
@@ -92,6 +88,7 @@ public class BotCommandCustom implements IBotCommand {
 				cmd.overrideCommand = new BotCommandOp();
 			}
 		}
+		cmd.outputFilter = object.has("outputFilter") ? object.get("outputFilter").getAsString() : "";
 		return cmd;
 	}
 }

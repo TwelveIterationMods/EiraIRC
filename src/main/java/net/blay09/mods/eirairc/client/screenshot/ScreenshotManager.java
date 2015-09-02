@@ -1,13 +1,12 @@
 // Copyright (c) 2015, Christopher "BlayTheNinth" Baker
 
-
 package net.blay09.mods.eirairc.client.screenshot;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.api.event.RelayChat;
+import net.blay09.mods.eirairc.api.EiraIRCAPI;
 import net.blay09.mods.eirairc.api.event.ScreenshotUploadEvent;
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
@@ -184,7 +183,7 @@ public class ScreenshotManager {
 	}
 
 	public void uploadScreenshot(Screenshot screenshot, ScreenshotAction followUpAction) {
-		UploadHoster hoster = UploadManager.getUploadHoster(ClientGlobalConfig.screenshotHoster);
+		UploadHoster hoster = UploadManager.getUploadHoster(ClientGlobalConfig.screenshotHoster.get());
 		if (hoster != null) {
 			uploadTasks.add(new AsyncUploadScreenshot(hoster, screenshot, followUpAction));
 		}
@@ -238,14 +237,14 @@ public class ScreenshotManager {
 			if (emoteColor != null) {
 				chatComponent.getChatStyle().setColor(emoteColor);
 			}
-			MinecraftForge.EVENT_BUS.post(new RelayChat(sender, chatComponent.getUnformattedText(), true));
+			EiraIRCAPI.relayChat(sender, chatComponent.getUnformattedText(), true, false, null);
 			Utils.addMessageToChat(chatComponent);
 		}
 	}
 
 	public void handleNewScreenshot(Screenshot screenshot) {
 		if (EiraIRC.proxy.isIngame()) {
-			ScreenshotAction action = ClientGlobalConfig.screenshotAction;
+			ScreenshotAction action = ClientGlobalConfig.screenshotAction.get();
 			if(action == ScreenshotAction.UploadClipboard || action == ScreenshotAction.UploadShare) {
 				uploadScreenshot(screenshot, action);
 			}

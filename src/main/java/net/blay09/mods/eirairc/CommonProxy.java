@@ -3,7 +3,7 @@
 
 package net.blay09.mods.eirairc;
 
-import net.blay09.mods.eirairc.api.event.IRCChannelChatOrCTCPEvent;
+import net.blay09.mods.eirairc.api.event.IRCChannelMessageEvent;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
@@ -64,11 +64,11 @@ public class CommonProxy {
 		return SharedGlobalConfig.handleConfigCommand(sender, key);
 	}
 
-	public void addConfigOptionsToList(List<String> list, String option) {
-		SharedGlobalConfig.addOptionsToList(list, option);
+	public void addConfigOptionsToList(List<String> list, String option, boolean autoCompleteOption) {
+		SharedGlobalConfig.addOptionsToList(list, option, autoCompleteOption);
 	}
 
-	public boolean checkClientBridge(IRCChannelChatOrCTCPEvent event) {
+	public boolean checkClientBridge(IRCChannelMessageEvent event) {
 		return false;
 	}
 
