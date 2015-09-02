@@ -77,10 +77,10 @@ configurations {
 }
 
 dependencies {
-    compile 'org.jetbrains:annotations:13.0'
     compile 'us.dynmap:DynmapCoreAPI:2.1'
-    compile 'net.blay09.mods:eiramoticons:2.0.19:dev'
-    compile files('lib/TabbyChat-2.0.0-beta-api.jar')
+    compile 'net.blay09.mods:eiramoticons:2.0.30:dev'
+    compile files('lib/MnM-Utils-0.3.1-dev.jar')
+    compile files('lib/TabbyChat-2.0.0-beta3.1-dev.jar')
     deployerJars "org.apache.maven.wagon:wagon-ftp:2.2"
 }
 

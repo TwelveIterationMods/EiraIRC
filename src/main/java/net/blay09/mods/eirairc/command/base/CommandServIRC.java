@@ -1,9 +1,7 @@
 // Copyright (c) 2015, Christopher "BlayTheNinth" Baker
 
-
 package net.blay09.mods.eirairc.command.base;
 
-import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.I19n;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.CommandException;
@@ -14,7 +12,6 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +19,7 @@ import java.util.List;
 public class CommandServIRC implements ICommand {
 
 	@Override
-	public int compareTo(@NotNull Object o) {
+	public int compareTo(Object o) {
 		return getCommandName().compareTo(((ICommand) o).getCommandName());
 	}
 

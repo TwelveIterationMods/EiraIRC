@@ -6,7 +6,6 @@ package net.blay09.mods.eirairc.command.base;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.BlockPos;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +19,7 @@ public class IgnoreCommand implements ICommand {
 	}
 	
 	@Override
-	public int compareTo(@NotNull Object o) {
+	public int compareTo(Object o) {
 		return getCommandName().compareTo(((ICommand) o).getCommandName());
 	}
 

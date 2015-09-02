@@ -3,6 +3,7 @@
 package net.blay09.mods.eirairc.addon;
 
 import mnm.mods.tabbychat.api.Channel;
+import mnm.mods.tabbychat.api.ChannelStatus;
 import mnm.mods.tabbychat.api.TabbyAPI;
 import net.blay09.mods.eirairc.api.EiraIRCAPI;
 import net.blay09.mods.eirairc.api.IChatHandler;
@@ -45,13 +46,13 @@ public class TabbyChat2Addon {
         Channel channel = TabbyAPI.getAPI().getChat().getChannel(event.channel.getName());
         channel.setPrefixHidden(true);
         channel.setPrefix("/irc msg " + event.channel.getIdentifier() + " ");
-        channel.setActive(true);
+        channel.setStatus(ChannelStatus.ACTIVE);
     }
 
     @SubscribeEvent
     public void onChannelLeft(IRCChannelLeftEvent event) {
         Channel channel = TabbyAPI.getAPI().getChat().getChannel(event.channel.getName());
-        channel.setActive(false);
+        TabbyAPI.getAPI().getChat().removeChannel(channel);
     }
 
     @SubscribeEvent
@@ -59,10 +60,10 @@ public class TabbyChat2Addon {
         if(event.sender == null) {
             return;
         }
-        Channel channel = TabbyAPI.getAPI().getChat().getChannel(event.sender.getName());
+        Channel channel = TabbyAPI.getAPI().getChat().getChannel(event.sender.getName(), true);
         channel.setPrefixHidden(true);
         channel.setPrefix("/irc msg " + event.sender.getIdentifier() + " ");
-        channel.setActive(true);
+        channel.setStatus(ChannelStatus.ACTIVE);
     }
 
 }

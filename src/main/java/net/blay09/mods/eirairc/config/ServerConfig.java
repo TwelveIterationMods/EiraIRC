@@ -14,7 +14,6 @@ import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -53,7 +52,7 @@ public class ServerConfig {
 		return address;
 	}
 
-	public void setNick(@NotNull String nick) {
+	public void setNick(String nick) {
 		if(address.equals(Globals.TWITCH_SERVER)) {
 			this.nick = nick.toLowerCase();
 		} else {
@@ -80,15 +79,15 @@ public class ServerConfig {
 		return getOrCreateChannelConfig(channel.getName());
 	}
 
-	public void addChannelConfig(@NotNull ChannelConfig channelConfig) {
+	public void addChannelConfig(ChannelConfig channelConfig) {
 		channels.put(channelConfig.getName().toLowerCase(), channelConfig);
 	}
 
-	public ChannelConfig removeChannelConfig(@NotNull String channelName) {
+	public ChannelConfig removeChannelConfig(String channelName) {
 		return channels.remove(channelName.toLowerCase());
 	}
 
-	public boolean hasChannelConfig(@NotNull String channelName) {
+	public boolean hasChannelConfig(String channelName) {
 		return channels.containsKey(channelName.toLowerCase());
 	}
 
