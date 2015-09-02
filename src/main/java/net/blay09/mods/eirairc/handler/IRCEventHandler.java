@@ -3,6 +3,7 @@
 package net.blay09.mods.eirairc.handler;
 
 import cpw.mods.fml.common.Loader;
+import net.blay09.mods.eirairc.ConnectionManager;
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.addon.Compatibility;
 import net.blay09.mods.eirairc.addon.EiraMoticonsAddon;
@@ -356,11 +357,11 @@ public class IRCEventHandler {
 	}
 
 	public static void fireConnectionFailedEvent(IRCConnection connection, Exception exception) {
-		if(EiraIRC.instance.getConnectionManager().isLatestConnection(connection)) {
+		if(ConnectionManager.isLatestConnection(connection)) {
 			for(IRCChannel channel : connection.getChannels()) {
 				EiraIRC.instance.getChatSessionHandler().removeTargetChannel(channel);
 			}
-			EiraIRC.instance.getConnectionManager().removeConnection(connection);
+			ConnectionManager.removeConnection(connection);
 		}
 		IRCConnectionFailedEvent event = new IRCConnectionFailedEvent(connection, exception);
 		MinecraftForge.EVENT_BUS.post(event);
@@ -392,11 +393,11 @@ public class IRCEventHandler {
 	}
 
 	public static void fireDisconnectEvent(IRCConnection connection) {
-		if(EiraIRC.instance.getConnectionManager().isLatestConnection(connection)) {
+		if(ConnectionManager.isLatestConnection(connection)) {
 			for(IRCChannel channel : connection.getChannels()) {
 				EiraIRC.instance.getChatSessionHandler().removeTargetChannel(channel);
 			}
-			EiraIRC.instance.getConnectionManager().removeConnection(connection);
+			ConnectionManager.removeConnection(connection);
 		}
 		IRCDisconnectEvent event = new IRCDisconnectEvent(connection);
 		switch(event.getResult()) {
@@ -620,7 +621,7 @@ public class IRCEventHandler {
 	}
 
 	public static void fireConnectingEvent(IRCConnection connection) {
-		EiraIRC.instance.getConnectionManager().addConnection(connection);
+		ConnectionManager.addConnection(connection);
 	}
 
 	public static void fireChannelJoinedEvent(IRCConnection connection, IRCMessage message, IRCChannel channel) {

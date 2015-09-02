@@ -4,6 +4,7 @@ package net.blay09.mods.eirairc.client.gui.servers;
 
 import cpw.mods.fml.client.config.GuiCheckBox;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.blay09.mods.eirairc.ConnectionManager;
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.event.IRCConnectEvent;
 import net.blay09.mods.eirairc.api.event.IRCConnectionFailedEvent;
@@ -59,7 +60,7 @@ public class GuiServerConfigAdvanced extends GuiTabPage implements GuiYesNoCallb
 		MinecraftForge.EVENT_BUS.register(this);
 		allowSideClickClose = false;
 
-		final boolean isConnected = EiraIRC.instance.getConnectionManager().isConnectedTo(config.getIdentifier());
+		final boolean isConnected = ConnectionManager.isConnectedTo(config.getIdentifier());
 		final int leftX = width / 2 - 130;
 		final int rightX = width / 2 + 130;
 		final int topY = height / 2 - 80;
@@ -241,7 +242,7 @@ public class GuiServerConfigAdvanced extends GuiTabPage implements GuiYesNoCallb
 
 		config.setNick(txtNick.getTextOrDefault());
 		// If connected, send nick change to IRC
-		IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(config.getIdentifier());
+		IRCConnection connection = ConnectionManager.getConnection(config.getIdentifier());
 		if(connection != null && !connection.getNick().equals(config.getNick())) {
 			connection.nick(ConfigHelper.formatNick(config.getNick()));
 		}

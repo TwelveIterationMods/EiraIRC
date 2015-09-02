@@ -5,6 +5,7 @@ package net.blay09.mods.eirairc.config;
 import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
+import net.blay09.mods.eirairc.ConnectionManager;
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.bot.IBotCommand;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
@@ -30,12 +31,12 @@ public class ConfigurationHandler {
 
 	private static final Logger logger = LogManager.getLogger();
 
-	private static final Map<String, ServerConfig> serverConfigs = new HashMap<String, ServerConfig>();
-	private static final Map<String, MessageFormatConfig> displayFormats = new HashMap<String, MessageFormatConfig>();
-	private static final List<IBotCommand> customCommands = new ArrayList<IBotCommand>();
-	private static final List<SuggestedChannel> suggestedChannels = new ArrayList<SuggestedChannel>();
-	private static final Map<String, TrustedServer> trustedServers = new HashMap<String, TrustedServer>();
-	public static final List<String> failedToLoad = new ArrayList<String>();
+	private static final Map<String, ServerConfig> serverConfigs = new HashMap< >();
+	private static final Map<String, MessageFormatConfig> displayFormats = new HashMap<>();
+	private static final List<IBotCommand> customCommands = new ArrayList<>();
+	private static final List<SuggestedChannel> suggestedChannels = new ArrayList<>();
+	private static final Map<String, TrustedServer> trustedServers = new HashMap<>();
+	public static final List<String> failedToLoad = new ArrayList<>();
 
 	private static File baseConfigDir;
 	private static MessageFormatConfig defaultDisplayFormat;
@@ -384,7 +385,7 @@ public class ConfigurationHandler {
 	public static void reloadAll() {
 		failedToLoad.clear();
 		load(baseConfigDir);
-		for(IRCConnection connection : EiraIRC.instance.getConnectionManager().getConnections()) {
+		for(IRCConnection connection : ConnectionManager.getConnections()) {
 			((IRCBotImpl) connection.getBot()).reloadCommands();
 		}
 	}

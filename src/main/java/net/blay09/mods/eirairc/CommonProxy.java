@@ -6,9 +6,8 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import net.blay09.mods.eirairc.api.event.IRCChannelMessageEvent;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
-import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
-import net.blay09.mods.eirairc.net.PacketHandler;
+import net.blay09.mods.eirairc.net.NetworkHandler;
 import net.blay09.mods.eirairc.net.message.MessageNotification;
 import net.blay09.mods.eirairc.util.NotificationType;
 import net.blay09.mods.eirairc.util.Utils;
@@ -32,23 +31,12 @@ public class CommonProxy {
 
 	public void postInit() {}
 
-	public void sendNotification(EntityPlayerMP entityPlayer, NotificationType type, String text) {
-		PacketHandler.instance.sendTo(new MessageNotification(type, text), entityPlayer);
-	}
-	
 	public void publishNotification(NotificationType type, String text) {
-		PacketHandler.instance.sendToAll(new MessageNotification(type, text));
+		NetworkHandler.instance.sendToAll(new MessageNotification(type, text));
 	}
 	
 	public String getUsername() {
 		return null;
-	}
-
-	public boolean isIngame() {
-		return true;
-	}
-	
-	public void renderTick(float delta) {
 	}
 
 	public void loadConfig(File configDir, boolean reloadFile) {
@@ -57,10 +45,6 @@ public class CommonProxy {
 
 	public void loadLegacyConfig(File configDir, Configuration legacyConfig) {
 		SharedGlobalConfig.loadLegacy(configDir, legacyConfig);
-	}
-
-	public void handleRedirect(ServerConfig serverConfig) {
-
 	}
 
 	public boolean handleConfigCommand(ICommandSender sender, String key, String value) {
@@ -75,14 +59,14 @@ public class CommonProxy {
 		SharedGlobalConfig.addOptionsToList(list, option, autoCompleteOption);
 	}
 
-	public boolean checkClientBridge(IRCChannelMessageEvent event) {
-		return false;
-	}
-
 	public void saveConfig() {
 		if (SharedGlobalConfig.thisConfig.hasChanged()) {
 			SharedGlobalConfig.thisConfig.save();
 		}
+	}
+
+	public boolean checkClientBridge(IRCChannelMessageEvent event) {
+		return false;
 	}
 
 	public void handleException(IRCConnection connection, Exception e) {

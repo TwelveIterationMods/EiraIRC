@@ -2,7 +2,7 @@
 
 package net.blay09.mods.eirairc.command;
 
-import net.blay09.mods.eirairc.EiraIRC;
+import net.blay09.mods.eirairc.ConnectionManager;
 import net.blay09.mods.eirairc.api.SubCommand;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.config.ChannelConfig;
@@ -44,9 +44,9 @@ public class CommandConfig implements SubCommand {
 		String target = args[0];
 		if(target.equals("reload")) {
 			Utils.sendLocalizedMessage(sender, "commands.config.reload");
-			EiraIRC.instance.getConnectionManager().stopIRC();
+			ConnectionManager.stopIRC();
 			ConfigurationHandler.reloadAll();
-			EiraIRC.instance.getConnectionManager().startIRC();
+			ConnectionManager.startIRC();
 			return true;
 		}
 		if(args.length < 2) {

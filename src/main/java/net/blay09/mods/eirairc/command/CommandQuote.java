@@ -2,6 +2,7 @@
 
 package net.blay09.mods.eirairc.command;
 
+import net.blay09.mods.eirairc.ConnectionManager;
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.EiraIRCAPI;
 import net.blay09.mods.eirairc.api.SubCommand;
@@ -63,7 +64,7 @@ public class CommandQuote implements SubCommand {
 	@Override
 	public void addTabCompletionOptions(List<String> list, ICommandSender sender, String[] args) {
 		if(args.length == 0) {
-			for(IRCConnection connection : EiraIRC.instance.getConnectionManager().getConnections()) {
+			for(IRCConnection connection : ConnectionManager.getConnections()) {
 				list.add(connection.getHost());
 			}
 		}

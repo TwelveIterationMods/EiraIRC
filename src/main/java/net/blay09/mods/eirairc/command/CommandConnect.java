@@ -38,7 +38,7 @@ public class CommandConnect implements SubCommand {
 			throw new WrongUsageException(getCommandUsage(sender));
 		}
 		String host = args[0];
-		if(EiraIRC.instance.getConnectionManager().isConnectedTo(host)) {
+		if(ConnectionManager.isConnectedTo(host)) {
 			Utils.sendLocalizedMessage(sender, "general.alreadyConnected", host);
 			return true;
 		}

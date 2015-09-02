@@ -2,13 +2,14 @@
 
 package net.blay09.mods.eirairc.bot;
 
-import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.bot.IBotCommand;
 import net.blay09.mods.eirairc.api.bot.IRCBot;
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.api.irc.IRCUser;
 import net.blay09.mods.eirairc.config.settings.BotBooleanComponent;
 import net.blay09.mods.eirairc.config.settings.BotSettings;
+import net.blay09.mods.eirairc.net.NetworkHandler;
+import net.blay09.mods.eirairc.net.message.MessageNotification;
 import net.blay09.mods.eirairc.util.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -61,7 +62,7 @@ public class BotCommandMessage implements IBotCommand {
 		if(notifyMsg.length() > 42) {
 			notifyMsg = notifyMsg.substring(0, 42) + "...";
 		}
-		EiraIRC.proxy.sendNotification((EntityPlayerMP) entityPlayer, NotificationType.PrivateMessage, notifyMsg);
+		NetworkHandler.instance.sendTo(new MessageNotification(NotificationType.PrivateMessage, notifyMsg), ((EntityPlayerMP) entityPlayer));
 		entityPlayer.addChatMessage(chatComponent);
 		user.notice(I19n.format("eirairc:bot.msgSent", playerName, message));
 	}

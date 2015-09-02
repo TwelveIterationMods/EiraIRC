@@ -2,7 +2,7 @@
 
 package net.blay09.mods.eirairc.command;
 
-import net.blay09.mods.eirairc.EiraIRC;
+import net.blay09.mods.eirairc.ConnectionManager;
 import net.blay09.mods.eirairc.api.SubCommand;
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
@@ -32,12 +32,12 @@ public class CommandList implements SubCommand {
 
 	@Override
 	public boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) {
-		if(EiraIRC.instance.getConnectionManager().getConnectionCount() == 0) {
+		if(ConnectionManager.getConnectionCount() == 0) {
 			Utils.sendLocalizedMessage(sender, "error.notConnected", "IRC");
 			return true;
 		}
 		Utils.sendLocalizedMessage(sender, "commands.list.activeConnections");
-		for(IRCConnection connection : EiraIRC.instance.getConnectionManager().getConnections()) {
+		for(IRCConnection connection : ConnectionManager.getConnections()) {
 			StringBuilder sb = new StringBuilder();
 			for(IRCChannel channel : connection.getChannels()) {
 				if(sb.length() > 0) {

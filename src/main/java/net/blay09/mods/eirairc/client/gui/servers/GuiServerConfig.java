@@ -72,7 +72,7 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 		allowSideClickClose = false;
 		title = config.getAddress().isEmpty() ? I19n.format("eirairc:gui.server.new") : config.getAddress();
 
-		final boolean isConnected = EiraIRC.instance.getConnectionManager().isConnectedTo(config.getIdentifier());
+		final boolean isConnected = ConnectionManager.isConnectedTo(config.getIdentifier());
 		final int leftX = width / 2 - 130;
 		final int rightX = width / 2 + 130;
 		final int topY = height / 2 - 80;
@@ -189,7 +189,7 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 		} else if(button == btnChannelJoinLeave) {
 			applyChanges();
 			if(lstChannels.hasSelection()) {
-				IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(config.getIdentifier());
+				IRCConnection connection = ConnectionManager.getConnection(config.getIdentifier());
 				if(connection == null) {
 					connection = ConnectionManager.connectTo(config);
 				}
@@ -211,7 +211,7 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 				setOverlay(new OverlayYesNo(this, I19n.format("eirairc:gui.server.deleteConfirm"), I19n.format("eirairc:gui.server.deleteNoUndo"), 0));
 			}
 		} else if(button == btnConnect) {
-			IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(config.getIdentifier());
+			IRCConnection connection = ConnectionManager.getConnection(config.getIdentifier());
 			if(connection != null) {
 				btnConnect.enabled = false;
 				btnConnect.displayString = I19n.format("eirairc:gui.server.disconnecting");
@@ -294,7 +294,7 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 
 	private void updateButtonStates() {
 		if(lstChannels.hasSelection()) {
-			IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(config.getIdentifier());
+			IRCConnection connection = ConnectionManager.getConnection(config.getIdentifier());
 			ChannelConfig channelConfig = lstChannels.getSelectedItem().getConfig();
 			if(connection != null && channelConfig != null && connection.getChannel(channelConfig.getName()) != null) {
 				btnChannelJoinLeave.setTextureRegion(EiraGui.atlas.findRegion("button_part"));
@@ -324,7 +324,7 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 			if(id == 0) {
 				ServerConfig serverConfig = ConfigurationHandler.removeServerConfig(config.getAddress());
 				if(serverConfig != null) {
-					IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(serverConfig.getIdentifier());
+					IRCConnection connection = ConnectionManager.getConnection(serverConfig.getIdentifier());
 					if(connection != null) {
 						connection.disconnect("");
 					}
@@ -334,7 +334,7 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 			} else if(id == 1) {
 				ChannelConfig channelConfig = config.removeChannelConfig(deleteChannel.getName());
 				if(channelConfig != null) {
-					IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(channelConfig.getServerConfig().getIdentifier());
+					IRCConnection connection = ConnectionManager.getConnection(channelConfig.getServerConfig().getIdentifier());
 					if(connection != null) {
 						connection.part(channelConfig.getName());
 					}
@@ -366,7 +366,7 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 		}
 		config.setNick(txtNick.getTextOrDefault());
 		// If connected, send nick change to IRC
-		IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(config.getIdentifier());
+		IRCConnection connection = ConnectionManager.getConnection(config.getIdentifier());
 		if(connection != null && !connection.getNick().equals(config.getNick())) {
 			connection.nick(ConfigHelper.formatNick(config.getNick()));
 		}

@@ -2,7 +2,7 @@
 
 package net.blay09.mods.eirairc.command;
 
-import net.blay09.mods.eirairc.EiraIRC;
+import net.blay09.mods.eirairc.ConnectionManager;
 import net.blay09.mods.eirairc.api.SubCommand;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
@@ -47,7 +47,7 @@ public class CommandNick implements SubCommand {
 			String nick = args[1];
 			Utils.sendLocalizedMessage(sender, "commands.nick", serverConfig.getAddress(), nick);
 			serverConfig.setNick(nick);
-			IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(serverConfig.getIdentifier());
+			IRCConnection connection = ConnectionManager.getConnection(serverConfig.getIdentifier());
 			if(connection != null) {
 				connection.nick(nick);
 			}
@@ -60,7 +60,7 @@ public class CommandNick implements SubCommand {
 						continue;
 					}
 					if(serverConfig.getNick() == null || serverConfig.getNick().isEmpty()) {
-						IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(serverConfig.getIdentifier());
+						IRCConnection connection = ConnectionManager.getConnection(serverConfig.getIdentifier());
 						if(connection != null) {
 							connection.nick(ConfigHelper.formatNick(nick));
 						}

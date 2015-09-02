@@ -243,7 +243,7 @@ public class ScreenshotManager {
 	}
 
 	public void handleNewScreenshot(Screenshot screenshot) {
-		if (EiraIRC.proxy.isIngame()) {
+		if (Minecraft.getMinecraft().theWorld != null) {
 			ScreenshotAction action = ClientGlobalConfig.screenshotAction.get();
 			if(action == ScreenshotAction.UploadClipboard || action == ScreenshotAction.UploadShare) {
 				uploadScreenshot(screenshot, action);

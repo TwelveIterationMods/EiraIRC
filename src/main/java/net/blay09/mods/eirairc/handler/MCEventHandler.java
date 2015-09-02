@@ -7,6 +7,7 @@ import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.blay09.mods.eirairc.ConnectionManager;
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.EiraIRCAPI;
 import net.blay09.mods.eirairc.api.event.ClientChatEvent;
@@ -19,7 +20,7 @@ import net.blay09.mods.eirairc.command.base.IRCCommandHandler;
 import net.blay09.mods.eirairc.config.*;
 import net.blay09.mods.eirairc.config.settings.*;
 import net.blay09.mods.eirairc.irc.IRCConnectionImpl;
-import net.blay09.mods.eirairc.net.PacketHandler;
+import net.blay09.mods.eirairc.net.NetworkHandler;
 import net.blay09.mods.eirairc.net.message.MessageRedirect;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.IRCFormatting;
@@ -49,7 +50,7 @@ public class MCEventHandler {
 	@SubscribeEvent
 	public void onPlayerLogin(PlayerLoggedInEvent event) {
 		for(ServerConfig serverConfig : ConfigurationHandler.getServerConfigs()) {
-			IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(serverConfig.getIdentifier());
+			IRCConnection connection = ConnectionManager.getConnection(serverConfig.getIdentifier());
 			if(connection != null) {
 				for(ChannelConfig channelConfig : serverConfig.getChannelConfigs()) {
 					IRCChannel channel = connection.getChannel(channelConfig.getName());
@@ -76,7 +77,7 @@ public class MCEventHandler {
 		if(MinecraftServer.getServer() != null && MinecraftServer.getServer().isDedicatedServer()) {
 			for (ServerConfig serverConfig : ConfigurationHandler.getServerConfigs()) {
 				if (serverConfig.isRedirect()) {
-					PacketHandler.instance.sendTo(new MessageRedirect(serverConfig.toJsonObject().toString()), (EntityPlayerMP) event.player);
+					NetworkHandler.instance.sendTo(new MessageRedirect(serverConfig.toJsonObject().toString()), (EntityPlayerMP) event.player);
 				}
 			}
 		}
@@ -104,7 +105,7 @@ public class MCEventHandler {
 			}
 		} else if(event.command instanceof CommandBroadcast) {
 			for(ServerConfig serverConfig : ConfigurationHandler.getServerConfigs()) {
-				IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(serverConfig.getIdentifier());
+				IRCConnection connection = ConnectionManager.getConnection(serverConfig.getIdentifier());
 				if(connection != null) {
 					for(ChannelConfig channelConfig : serverConfig.getChannelConfigs()) {
 						IRCChannel channel = connection.getChannel(channelConfig.getName());
@@ -132,7 +133,7 @@ public class MCEventHandler {
 			return;
 		}
 		EntityPlayer sender = Minecraft.getMinecraft().thePlayer;
-		if(EiraIRC.instance.getConnectionManager().getConnectionCount() > 0 && IRCCommandHandler.onChatCommand(sender, event.message, false)) {
+		if(ConnectionManager.getConnectionCount() > 0 && IRCCommandHandler.onChatCommand(sender, event.message, false)) {
 			event.setCanceled(true);
 			return;
 		}
@@ -246,7 +247,7 @@ public class MCEventHandler {
 					ircMessage = "ACTION " + ircMessage;
 				}
 				for(ServerConfig serverConfig : ConfigurationHandler.getServerConfigs()) {
-					IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(serverConfig.getIdentifier());
+					IRCConnection connection = ConnectionManager.getConnection(serverConfig.getIdentifier());
 					if(connection != null) {
 						for (ChannelConfig channelConfig : serverConfig.getChannelConfigs()) {
 							IRCChannel channel = connection.getChannel(channelConfig.getName());
@@ -317,7 +318,7 @@ public class MCEventHandler {
 			}
 		} else {
 			for(ServerConfig serverConfig : ConfigurationHandler.getServerConfigs()) {
-				IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(serverConfig.getIdentifier());
+				IRCConnection connection = ConnectionManager.getConnection(serverConfig.getIdentifier());
 				if(connection != null) {
 					for(ChannelConfig channelConfig : serverConfig.getChannelConfigs()) {
 						IRCChannel channel = connection.getChannel(channelConfig.getName());
@@ -350,7 +351,7 @@ public class MCEventHandler {
 	public void onPlayerDeath(LivingDeathEvent event) {
 		if(event.entityLiving instanceof EntityPlayer) {
 			for(ServerConfig serverConfig : ConfigurationHandler.getServerConfigs()) {
-				IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(serverConfig.getIdentifier());
+				IRCConnection connection = ConnectionManager.getConnection(serverConfig.getIdentifier());
 				if(connection != null) {
 					for (ChannelConfig channelConfig : serverConfig.getChannelConfigs()) {
 						IRCChannel channel = connection.getChannel(channelConfig.getName());
@@ -382,7 +383,7 @@ public class MCEventHandler {
 			return;
 		}
 		for(ServerConfig serverConfig : ConfigurationHandler.getServerConfigs()) {
-			IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(serverConfig.getIdentifier());
+			IRCConnection connection = ConnectionManager.getConnection(serverConfig.getIdentifier());
 			if(connection != null) {
 				for (ChannelConfig channelConfig : serverConfig.getChannelConfigs()) {
 					IRCChannel channel = connection.getChannel(channelConfig.getName());
@@ -402,7 +403,7 @@ public class MCEventHandler {
 	@SubscribeEvent
 	public void onPlayerLogout(PlayerLoggedOutEvent event) {
 		for(ServerConfig serverConfig : ConfigurationHandler.getServerConfigs()) {
-			IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(serverConfig.getIdentifier());
+			IRCConnection connection = ConnectionManager.getConnection(serverConfig.getIdentifier());
 			if(connection != null) {
 				for (ChannelConfig channelConfig : serverConfig.getChannelConfigs()) {
 					IRCChannel channel = connection.getChannel(channelConfig.getName());
@@ -425,7 +426,7 @@ public class MCEventHandler {
 		IChatComponent chatComponent = MessageFormat.formatChatComponent(format, null, player, "", MessageFormat.Target.Minecraft, MessageFormat.Mode.Emote);
 		Utils.addMessageToChat(chatComponent);
 		for(ServerConfig serverConfig : ConfigurationHandler.getServerConfigs()) {
-			IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(serverConfig.getIdentifier());
+			IRCConnection connection = ConnectionManager.getConnection(serverConfig.getIdentifier());
 			if(connection != null) {
 				for(ChannelConfig channelConfig : serverConfig.getChannelConfigs()) {
 					IRCChannel channel = connection.getChannel(channelConfig.getName());

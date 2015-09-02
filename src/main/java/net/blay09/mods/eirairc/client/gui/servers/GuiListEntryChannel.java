@@ -2,6 +2,7 @@
 
 package net.blay09.mods.eirairc.client.gui.servers;
 
+import net.blay09.mods.eirairc.ConnectionManager;
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
 import net.blay09.mods.eirairc.client.graphics.TextureRegion;
@@ -22,7 +23,7 @@ public class GuiListEntryChannel extends GuiListTextEntry {
 		this.parent = parent;
 		this.config = config;
 
-		IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(parent.getServerConfig().getIdentifier());
+		IRCConnection connection = ConnectionManager.getConnection(parent.getServerConfig().getIdentifier());
 		setJoined(connection != null && connection.getChannel(config.getName()) != null);
 	}
 

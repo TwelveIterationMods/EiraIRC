@@ -6,7 +6,9 @@ import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.InputEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
+import cpw.mods.fml.common.network.FMLNetworkEvent;
 import net.blay09.mods.eirairc.CommonProxy;
 import net.blay09.mods.eirairc.ConnectionManager;
 import net.blay09.mods.eirairc.EiraIRC;
@@ -14,22 +16,35 @@ import net.blay09.mods.eirairc.addon.DirectUploadHoster;
 import net.blay09.mods.eirairc.addon.ImgurHoster;
 import net.blay09.mods.eirairc.api.EiraIRCAPI;
 import net.blay09.mods.eirairc.api.event.IRCChannelMessageEvent;
+import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.client.gui.EiraGui;
+import net.blay09.mods.eirairc.client.gui.GuiEiraIRCMenu;
 import net.blay09.mods.eirairc.client.gui.GuiEiraIRCRedirect;
+import net.blay09.mods.eirairc.client.gui.GuiWelcome;
+import net.blay09.mods.eirairc.client.gui.chat.GuiChatExtended;
+import net.blay09.mods.eirairc.client.gui.chat.GuiSleepExtended;
 import net.blay09.mods.eirairc.client.gui.overlay.OverlayNotification;
+import net.blay09.mods.eirairc.client.gui.screenshot.GuiScreenshots;
+import net.blay09.mods.eirairc.client.screenshot.Screenshot;
 import net.blay09.mods.eirairc.client.screenshot.ScreenshotManager;
 import net.blay09.mods.eirairc.command.base.IRCCommandHandler;
 import net.blay09.mods.eirairc.config.*;
+import net.blay09.mods.eirairc.handler.ChatSessionHandler;
 import net.blay09.mods.eirairc.util.NotificationType;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiPlayerInfo;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiSleepMP;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.config.Configuration;
+import org.lwjgl.input.Keyboard;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,7 +53,14 @@ import java.util.List;
 @SuppressWarnings("unused")
 public class ClientProxy extends CommonProxy {
 
+	private ChatSessionHandler chatSession;
+	private int keyChat;
+	private int keyCommand;
 	private OverlayNotification notificationGUI;
+	private int screenshotCheck;
+	private int openWelcomeScreen;
+	private long lastToggleTarget;
+	private boolean wasToggleTargetDown;
 
 	private static final KeyBinding[] keyBindings = new KeyBinding[] {
 		ClientGlobalConfig.keyScreenshotShare,
@@ -49,10 +71,13 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public void init() {
-		FMLCommonHandler.instance().bus().register(this);
+		chatSession = EiraIRC.instance.getChatSessionHandler();
+		keyChat = Minecraft.getMinecraft().gameSettings.keyBindChat.getKeyCode();
+		keyCommand = Minecraft.getMinecraft().gameSettings.keyBindCommand.getKeyCode();
 		notificationGUI = new OverlayNotification();
+
 		ScreenshotManager.create();
-		FMLCommonHandler.instance().bus().register(new EiraTickHandler());
+		FMLCommonHandler.instance().bus().register(this);
 
 		for(KeyBinding keyBinding : keyBindings) {
 			ClientRegistry.registerKeyBinding(keyBinding);
@@ -79,15 +104,11 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void postInit() {
 		super.postInit();
+
 		EiraIRCAPI.registerUploadHoster(new DirectUploadHoster());
 		EiraIRCAPI.registerUploadHoster(new ImgurHoster());
 	}
 
-	@Override
-	public void renderTick(float delta) {
-		notificationGUI.updateAndRender(delta);
-	}
-	
 	@Override
 	public void publishNotification(NotificationType type, String text) {
 		NotificationStyle config = NotificationStyle.None;
@@ -104,15 +125,10 @@ public class ClientProxy extends CommonProxy {
 			Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation(ClientGlobalConfig.notificationSound.get()), ClientGlobalConfig.notificationSoundPitch.get())); // createPositionedSoundRecord
 		}
 	}
-	
+
 	@Override
 	public String getUsername() {
 		return Minecraft.getMinecraft().getSession().getUsername();
-	}
-	
-	@Override
-	public boolean isIngame() {
-		return Minecraft.getMinecraft().theWorld != null;
 	}
 
 	@Override
@@ -125,16 +141,6 @@ public class ClientProxy extends CommonProxy {
 	public void loadConfig(File configDir, boolean reloadFile) {
 		super.loadConfig(configDir, reloadFile);
 		ClientGlobalConfig.load(configDir, reloadFile);
-	}
-
-	@Override
-	public void handleRedirect(ServerConfig serverConfig) {
-		TrustedServer server = ConfigurationHandler.getOrCreateTrustedServer(Utils.getServerAddress());
-		if(server.isAllowRedirect()) {
-			ConnectionManager.redirectTo(serverConfig, server.isRedirectSolo());
-		} else {
-			Minecraft.getMinecraft().displayGuiScreen(new GuiEiraIRCRedirect(serverConfig));
-		}
 	}
 
 	@Override
@@ -159,6 +165,14 @@ public class ClientProxy extends CommonProxy {
 	}
 
 	@Override
+	public void saveConfig() {
+		super.saveConfig();
+		if (ClientGlobalConfig.thisConfig.hasChanged()) {
+			ClientGlobalConfig.thisConfig.save();
+		}
+	}
+
+	@Override
 	public boolean checkClientBridge(IRCChannelMessageEvent event) {
 		if(event.sender != null && ClientGlobalConfig.clientBridge.get()) {
 			for(Object obj : FMLClientHandler.instance().getClientPlayerEntity().sendQueue.playerInfoList) {
@@ -171,16 +185,108 @@ public class ClientProxy extends CommonProxy {
 		return false;
 	}
 
-	@Override
-	public void saveConfig() {
-		super.saveConfig();
-		if (ClientGlobalConfig.thisConfig.hasChanged()) {
-			ClientGlobalConfig.thisConfig.save();
+	@SubscribeEvent
+	public void keyInput(InputEvent.KeyInputEvent event) {
+		if(Keyboard.getEventKeyState()) {
+			int keyCode = Keyboard.getEventKey();
+			if(ClientGlobalConfig.keyOpenMenu.getKeyCode() != 0 && keyCode == ClientGlobalConfig.keyOpenMenu.getKeyCode()) {
+				if(Minecraft.getMinecraft().currentScreen == null) {
+					Minecraft.getMinecraft().displayGuiScreen(new GuiEiraIRCMenu());
+				}
+			} else if(ClientGlobalConfig.keyOpenScreenshots.getKeyCode() != 0 && keyCode == ClientGlobalConfig.keyOpenScreenshots.getKeyCode()) {
+				if (Minecraft.getMinecraft().currentScreen == null) {
+					Minecraft.getMinecraft().displayGuiScreen(new GuiScreenshots(null));
+				}
+			} else if(ClientGlobalConfig.keyScreenshotShare.getKeyCode() != 0 && keyCode == ClientGlobalConfig.keyScreenshotShare.getKeyCode()) {
+				Screenshot screenshot = ScreenshotManager.getInstance().takeScreenshot();
+				if(screenshot != null) {
+					ScreenshotManager.getInstance().uploadScreenshot(screenshot, ScreenshotAction.UploadShare);
+				}
+			} else {
+				if(!ClientGlobalConfig.chatNoOverride.get()) {
+					GuiScreen currentScreen = Minecraft.getMinecraft().currentScreen;
+					if(currentScreen == null || currentScreen.getClass() == GuiChat.class) {
+						if(Keyboard.getEventKey() == keyChat) {
+							Minecraft.getMinecraft().gameSettings.keyBindChat.isPressed();
+							Minecraft.getMinecraft().displayGuiScreen(new GuiChatExtended());
+						} else if(Keyboard.getEventKey() == keyCommand) {
+							Minecraft.getMinecraft().gameSettings.keyBindCommand.isPressed();
+							Minecraft.getMinecraft().displayGuiScreen(new GuiChatExtended("/"));
+						}
+					}
+				}
+			}
 		}
 	}
 
 	@SubscribeEvent
-	public void onTick(TickEvent.ClientTickEvent event) {
+	public void worldJoined(FMLNetworkEvent.ClientConnectedToServerEvent event) {
+		if(!ConnectionManager.isIRCRunning()) {
+			ConnectionManager.startIRC();
+		}
+		if(ClientGlobalConfig.showWelcomeScreen.get()) {
+			openWelcomeScreen = 20;
+		}
+	}
+
+	@SubscribeEvent
+	public void clientTick(TickEvent.ClientTickEvent event) {
 		ConnectionManager.tickConnections();
+
+		GuiScreen currentScreen = Minecraft.getMinecraft().currentScreen;
+		if(currentScreen == null && openWelcomeScreen > 0) {
+			openWelcomeScreen--;
+			if(openWelcomeScreen <= 0) {
+				Minecraft.getMinecraft().displayGuiScreen(new GuiWelcome());
+			}
+		}
+
+		if(currentScreen instanceof GuiChat && !ClientGlobalConfig.disableChatToggle.get() && !ClientGlobalConfig.clientBridge.get()) {
+			if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) && Keyboard.isKeyDown(ClientGlobalConfig.keyToggleTarget.getKeyCode())) {
+				if(!wasToggleTargetDown) {
+					boolean users = Keyboard.isKeyDown(Keyboard.KEY_LCONTROL);
+					IRCContext newTarget = chatSession.getNextTarget(users);
+					if(!users) {
+						lastToggleTarget = System.currentTimeMillis();
+					}
+					if(!users || newTarget != null) {
+						chatSession.setChatTarget(newTarget);
+						if(ClientGlobalConfig.chatNoOverride.get()) {
+							Utils.addMessageToChat(new ChatComponentTranslation("eirairc:general.chattingTo", newTarget == null ? "Minecraft" : newTarget.getName()));
+						}
+					}
+					wasToggleTargetDown = true;
+				} else {
+					if(System.currentTimeMillis() - lastToggleTarget >= 1000) {
+						chatSession.setChatTarget(null);
+						if(ClientGlobalConfig.chatNoOverride.get()) {
+							Utils.addMessageToChat(new ChatComponentTranslation("eirairc:general.chattingTo", "Minecraft"));
+						}
+						lastToggleTarget = System.currentTimeMillis();
+					}
+				}
+			} else {
+				wasToggleTargetDown = false;
+			}
+		}
+
+		if(currentScreen != null && currentScreen.getClass() == GuiSleepMP.class) {
+			Minecraft.getMinecraft().displayGuiScreen(new GuiSleepExtended());
+		}
+
+		if(Minecraft.getMinecraft().gameSettings.keyBindScreenshot.getKeyCode() > 0 && Keyboard.isKeyDown(Minecraft.getMinecraft().gameSettings.keyBindScreenshot.getKeyCode())) {
+			screenshotCheck = 10;
+		} else if(screenshotCheck > 0) {
+			screenshotCheck--;
+			if(screenshotCheck == 0) {
+				ScreenshotManager.getInstance().findNewScreenshots(true);
+			}
+		}
+		ScreenshotManager.getInstance().clientTick(event);
+	}
+
+	@SubscribeEvent
+	public void renderTick(TickEvent.RenderTickEvent event) {
+		notificationGUI.updateAndRender(event.renderTickTime);
 	}
 }

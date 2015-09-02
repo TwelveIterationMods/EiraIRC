@@ -3,22 +3,17 @@
 package net.blay09.mods.eirairc.util;
 
 import com.google.common.collect.Lists;
-import io.netty.buffer.ByteBuf;
+import net.blay09.mods.eirairc.ConnectionManager;
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.EiraIRCAPI;
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.api.irc.IRCUser;
-import net.blay09.mods.eirairc.bot.IRCBotImpl;
 import net.blay09.mods.eirairc.config.AuthManager;
-import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
-import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.config.base.ServiceConfig;
 import net.blay09.mods.eirairc.config.base.ServiceSettings;
-import net.blay09.mods.eirairc.irc.IRCConnectionImpl;
-import net.blay09.mods.eirairc.irc.ssl.IRCConnectionSSLImpl;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.command.ICommandSender;
@@ -26,7 +21,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.*;
 import org.apache.commons.lang3.ArrayUtils;
-import org.jetbrains.annotations.NotNull;
 import org.lwjgl.Sys;
 
 import java.awt.*;
@@ -34,12 +28,10 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -95,7 +87,7 @@ public class Utils {
 	}
 
 	public static void addConnectionsToList(List<String> list) {
-		for(IRCConnection connection : EiraIRC.instance.getConnectionManager().getConnections()) {
+		for(IRCConnection connection : ConnectionManager.getConnections()) {
 			list.add(connection.getHost());
 		}
 	}
@@ -194,7 +186,7 @@ public class Utils {
 	public static IRCContext getSuggestedTarget() {
 		IRCContext result = EiraIRC.instance.getChatSessionHandler().getChatTarget();
 		if(result == null) {
-			IRCConnection connection = EiraIRC.instance.getConnectionManager().getDefaultConnection();
+			IRCConnection connection = ConnectionManager.getDefaultConnection();
 			if(connection != null) {
 				if(connection.getChannels().size() == 1) {
 					return connection.getChannels().iterator().next();

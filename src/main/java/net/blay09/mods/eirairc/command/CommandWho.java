@@ -2,6 +2,7 @@
 
 package net.blay09.mods.eirairc.command;
 
+import net.blay09.mods.eirairc.ConnectionManager;
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.EiraIRCAPI;
 import net.blay09.mods.eirairc.api.SubCommand;
@@ -49,7 +50,7 @@ public class CommandWho implements SubCommand {
 			}
 		}
 		if(target == null) {
-			for(IRCConnection connection : EiraIRC.instance.getConnectionManager().getConnections()) {
+			for(IRCConnection connection : ConnectionManager.getConnections()) {
 				for(IRCChannel channel : connection.getChannels()) {
 					Utils.sendUserList(sender, connection, channel);
 				}
