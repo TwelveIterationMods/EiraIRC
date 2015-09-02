@@ -2,6 +2,8 @@
 
 package net.blay09.mods.eirairc;
 
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
 import net.blay09.mods.eirairc.api.event.IRCChannelMessageEvent;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
 import net.blay09.mods.eirairc.config.ServerConfig;
@@ -16,6 +18,7 @@ import net.minecraft.event.ClickEvent;
 import net.minecraft.event.HoverEvent;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 
 import java.io.File;
@@ -23,7 +26,9 @@ import java.util.List;
 
 public class CommonProxy {
 
-	public void init() {}
+	public void init() {
+		MinecraftForge.EVENT_BUS.register(this);
+	}
 
 	public void postInit() {}
 
@@ -108,4 +113,10 @@ public class CommonProxy {
 
 		e.printStackTrace();
 	}
+
+	@SubscribeEvent
+	public void onTick(TickEvent.ServerTickEvent event) {
+		ConnectionManager.tickConnections();
+	}
+
 }

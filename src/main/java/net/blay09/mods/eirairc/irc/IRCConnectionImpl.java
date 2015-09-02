@@ -45,8 +45,8 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 	private final IRCParser parser = new IRCParser();
 
 	protected final IRCSender sender = new IRCSender(this);
-	private final Map<String, IRCChannel> channels = new HashMap<String, IRCChannel>();
-	private final Map<String, IRCUser> users = new HashMap<String, IRCUser>();
+	private final Map<String, IRCChannel> channels = new HashMap<>();
+	private final Map<String, IRCUser> users = new HashMap<>();
 	protected final ServerConfig serverConfig;
 
 	protected final int[] ports;
@@ -55,6 +55,8 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 	private String nick;
 	private boolean connected;
 	private int waitingReconnect;
+	private int waitingFallbackNick;
+	private boolean silentNickFailure;
 
 	private String serverType;
 	private String channelTypes = "#&";
@@ -66,6 +68,7 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 	private Socket socket;
 	protected BufferedWriter writer;
 	protected BufferedReader reader;
+
 	public IRCConnectionImpl(ServerConfig serverConfig, String nick) {
 		this.serverConfig = serverConfig;
 		this.host = Utils.extractHost(serverConfig.getAddress());
@@ -191,6 +194,16 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 		return null;
 	}
 
+	public void tick() {
+		if(waitingFallbackNick > 0) {
+			waitingFallbackNick--;
+			if(waitingFallbackNick <= 0) {
+				setSilentNickFailure(true);
+				nick(serverConfig.getNick());
+			}
+		}
+	}
+
 	@Override
 	public void run() {
 		try {
@@ -293,6 +306,14 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 		if(irc("NICK " + nick)) {
 			this.nick = nick;
 		}
+		waitingFallbackNick = 0;
+	}
+
+	public void fallbackNick(String nick) {
+		if(irc("NICK " + nick)) {
+			this.nick = nick;
+		}
+		waitingFallbackNick = 3000;
 	}
 
 	@Override
@@ -497,8 +518,8 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 			String mode = msg.arg(1);
 			String param = msg.arg(2);
 			boolean set = false;
-			List<Character> setList = new ArrayList<Character>();
-			List<Character> unsetList = new ArrayList<Character>();
+			List<Character> setList = new ArrayList<>();
+			List<Character> unsetList = new ArrayList<>();
 			for(int i = 0; i < mode.length(); i++) {
 				char c = mode.charAt(i);
 				if(c == '+') {
@@ -629,6 +650,14 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 
 	public boolean isConnected() {
 		return connected;
+	}
+
+	public boolean isSilentNickFailure() {
+		return silentNickFailure;
+	}
+
+	public void setSilentNickFailure(boolean silentNickFailure) {
+		this.silentNickFailure = silentNickFailure;
 	}
 
 }

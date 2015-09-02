@@ -5,6 +5,8 @@ package net.blay09.mods.eirairc.client;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
 import net.blay09.mods.eirairc.CommonProxy;
 import net.blay09.mods.eirairc.ConnectionManager;
 import net.blay09.mods.eirairc.EiraIRC;
@@ -18,13 +20,11 @@ import net.blay09.mods.eirairc.client.gui.overlay.OverlayNotification;
 import net.blay09.mods.eirairc.client.screenshot.ScreenshotManager;
 import net.blay09.mods.eirairc.command.base.IRCCommandHandler;
 import net.blay09.mods.eirairc.config.*;
-import net.blay09.mods.eirairc.irc.IRCConnectionImpl;
 import net.blay09.mods.eirairc.util.NotificationType;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiPlayerInfo;
-import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ResourceLocation;
@@ -49,6 +49,7 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public void init() {
+		FMLCommonHandler.instance().bus().register(this);
 		notificationGUI = new OverlayNotification();
 		ScreenshotManager.create();
 		FMLCommonHandler.instance().bus().register(new EiraTickHandler());
@@ -176,5 +177,10 @@ public class ClientProxy extends CommonProxy {
 		if (ClientGlobalConfig.thisConfig.hasChanged()) {
 			ClientGlobalConfig.thisConfig.save();
 		}
+	}
+
+	@SubscribeEvent
+	public void onTick(TickEvent.ClientTickEvent event) {
+		ConnectionManager.tickConnections();
 	}
 }

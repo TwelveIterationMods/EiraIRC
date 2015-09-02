@@ -2,7 +2,6 @@
 
 package net.blay09.mods.eirairc.handler;
 
-import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.addon.Compatibility;
@@ -28,6 +27,13 @@ public class IRCEventHandler {
 	private static final Logger logger = LogManager.getLogger();
 
 	public static void fireNickChangeEvent(IRCConnectionImpl connection, IRCMessage msg, IRCUser user, String oldNick, String newNick) {
+		// Go back to default nick once it's available
+		if(user == connection.getBotUser()) {
+			connection.setSilentNickFailure(false);
+		}
+		if(user != connection.getBotUser() && oldNick.equals(connection.getServerConfig().getNick())) {
+			connection.nick(oldNick);
+		}
 		IRCUserNickChangeEvent event = new IRCUserNickChangeEvent(connection, msg, user, oldNick, newNick);
 		MinecraftForge.EVENT_BUS.post(event);
 		switch (event.getResult()) {
@@ -95,7 +101,11 @@ public class IRCEventHandler {
 		}
 	}
 
-	public static void fireUserQuitEvent(IRCConnection connection, IRCMessage message, IRCUser user, String quitMessage) {
+	public static void fireUserQuitEvent(IRCConnectionImpl connection, IRCMessage message, IRCUser user, String quitMessage) {
+		// Go back to default nick once it's available
+		if(user != connection.getBotUser() && user.getName().equals(connection.getServerConfig().getNick())) {
+			connection.nick(user.getName());
+		}
 		IRCUserQuitEvent event = new IRCUserQuitEvent(connection, message, user, quitMessage);
 		MinecraftForge.EVENT_BUS.post(event);
 		switch (event.getResult()) {
@@ -401,14 +411,17 @@ public class IRCEventHandler {
 		}
 	}
 
-	public static void fireIRCErrorEvent(IRCConnection connection, IRCMessage message, int numeric, String[] args) {
+	public static void fireIRCErrorEvent(IRCConnectionImpl connection, IRCMessage message, int numeric, String[] args) {
 		switch(numeric) {
 			case IRCReplyCodes.ERR_NICKNAMEINUSE:
 			case IRCReplyCodes.ERR_NICKCOLLISION:
 				String failNick = args[1];
 				String tryNick = failNick + "_";
-				Utils.addMessageToChat(new ChatComponentTranslation("eirairc:error.nickInUse", failNick, tryNick));
-				connection.nick(tryNick);
+				if(!connection.isSilentNickFailure()) {
+					Utils.addMessageToChat(new ChatComponentTranslation("eirairc:error.nickInUse", failNick, tryNick));
+				}
+				connection.setSilentNickFailure(false);
+				connection.fallbackNick(tryNick);
 				break;
 			case IRCReplyCodes.ERR_ERRONEUSNICKNAME:
 				Utils.addMessageToChat(new ChatComponentTranslation("eirairc:error.nickInvalid", args[1]));

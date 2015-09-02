@@ -20,11 +20,11 @@ import java.util.*;
 
 public class ConnectionManager {
 
-	private final Map<String, IRCConnection> connections = new HashMap<String, IRCConnection>();
+	private static final Map<String, IRCConnection> connections = new HashMap<>();
 
-	private boolean ircRunning;
+	private static boolean ircRunning;
 
-	public void startIRC() {
+	public static void startIRC() {
 		if(!ConfigurationHandler.failedToLoad.isEmpty()) {
 			StringBuilder sb = new StringBuilder("Failed to load EiraIRC configurations due to syntax errors: ");
 			for(String s : ConfigurationHandler.failedToLoad) {
@@ -44,7 +44,7 @@ public class ConnectionManager {
 		ircRunning = true;
 	}
 
-	public void stopIRC() {
+	public static void stopIRC() {
 		List<IRCConnection> dcList = Lists.newArrayList();
 		for(IRCConnection connection : connections.values()) {
 			dcList.add(connection);
@@ -57,23 +57,23 @@ public class ConnectionManager {
 		ircRunning = false;
 	}
 
-	public boolean isIRCRunning() {
+	public static boolean isIRCRunning() {
 		return ircRunning;
 	}
 
-	public Collection<IRCConnection> getConnections() {
+	public static Collection<IRCConnection> getConnections() {
 		return connections.values();
 	}
 
-	public void addConnection(IRCConnection connection) {
+	public static void addConnection(IRCConnection connection) {
 		connections.put(connection.getIdentifier(), connection);
 	}
 
-	public int getConnectionCount() {
+	public static int getConnectionCount() {
 		return connections.size();
 	}
 
-	public IRCConnection getDefaultConnection() {
+	public static IRCConnection getDefaultConnection() {
 		Iterator<IRCConnection> it = connections.values().iterator();
 		if(it.hasNext()) {
 			return it.next();
@@ -81,33 +81,33 @@ public class ConnectionManager {
 		return null;
 	}
 
-	public IRCConnection getConnection(String identifier) {
+	public static IRCConnection getConnection(String identifier) {
 		return connections.get(identifier);
 	}
 
-	public void removeConnection(IRCConnection connection) {
+	public static void removeConnection(IRCConnection connection) {
 		connections.remove(connection.getHost());
 	}
 
-	public boolean isConnectedTo(String identifier) {
+	public static boolean isConnectedTo(String identifier) {
 		return connections.containsKey(identifier);
 	}
 
-	public void clearConnections() {
+	public static void clearConnections() {
 		connections.clear();
 	}
 
-	public boolean isLatestConnection(IRCConnection connection) {
+	public static boolean isLatestConnection(IRCConnection connection) {
 		IRCConnection latestConnection = connections.get(connection.getIdentifier());
 		return latestConnection == null || latestConnection == connection;
 	}
 
 	public static boolean redirectTo(ServerConfig serverConfig, boolean solo) {
 		if(serverConfig == null) {
-			EiraIRC.instance.getConnectionManager().stopIRC();
+			stopIRC();
 			return true;
 		}
-		IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(serverConfig.getIdentifier());
+		IRCConnection connection = getConnection(serverConfig.getIdentifier());
 		if(connection != null && solo) {
 			connection.disconnect("Redirected by server");
 			connection = null;
@@ -126,7 +126,7 @@ public class ConnectionManager {
 	}
 
 	public static IRCConnectionImpl connectTo(ServerConfig config) {
-		IRCConnection oldConnection = EiraIRC.instance.getConnectionManager().getConnection(config.getIdentifier());
+		IRCConnection oldConnection = getConnection(config.getIdentifier());
 		if(oldConnection != null) {
 			oldConnection.disconnect("Reconnecting...");
 		}
@@ -141,5 +141,11 @@ public class ConnectionManager {
 			return connection;
 		}
 		return null;
+	}
+
+	public static void tickConnections() {
+		for(IRCConnection connection : connections.values()) {
+			((IRCConnectionImpl) connection).tick();
+		}
 	}
 }
