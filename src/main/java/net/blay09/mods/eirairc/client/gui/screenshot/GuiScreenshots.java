@@ -130,7 +130,7 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 
 		txtSearch = new GuiAdvancedTextField(fontRendererObj, leftX + 2, topY - 10, 200, 16);
 		txtSearch.setEmptyOnRightClick(true);
-		txtSearch.setDefaultText("Search...", true);
+		txtSearch.setDefaultText(I19n.format("eirairc:gui.screenshots.search"), true);
 		textFieldList.add(txtSearch);
 
 		btnOpenFolder = new GuiButton(0, rightX - 85, topY - 12, 85, 20, I19n.format("eirairc:gui.screenshots.openFolder"));

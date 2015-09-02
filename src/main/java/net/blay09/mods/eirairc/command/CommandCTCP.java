@@ -86,7 +86,7 @@ public class CommandCTCP implements SubCommand {
 
     @Override
     public boolean canCommandSenderUseCommand(ICommandSender sender) {
-        return true;
+        return Utils.isOP(sender);
     }
 
     @Override

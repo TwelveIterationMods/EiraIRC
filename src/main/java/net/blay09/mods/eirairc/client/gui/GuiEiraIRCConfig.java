@@ -2,10 +2,8 @@
 
 package net.blay09.mods.eirairc.client.gui;
 
-import cpw.mods.fml.client.config.ConfigGuiType;
-import cpw.mods.fml.client.config.DummyConfigElement;
-import cpw.mods.fml.client.config.GuiConfig;
-import cpw.mods.fml.client.config.IConfigElement;
+import cpw.mods.fml.client.config.*;
+import net.blay09.mods.eirairc.client.BetterColorEntry;
 import net.blay09.mods.eirairc.config.ClientGlobalConfig;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.util.Globals;
@@ -73,6 +71,10 @@ public class GuiEiraIRCConfig extends GuiConfig {
 			return ConfigGuiType.COLOR;
 		}
 
+		@Override
+		public Class<? extends GuiConfigEntries.IConfigEntry> getConfigEntryClass() {
+			return BetterColorEntry.class;
+		}
 	}
 
 }

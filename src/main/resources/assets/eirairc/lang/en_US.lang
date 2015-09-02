@@ -123,6 +123,7 @@ eirairc:gui.image.openBrowser=Open in Browser
 eirairc:gui.image.toClipboard=URL to Clipboard
 eirairc:gui.image.clickToGoBack=Click anywhere to go back.
 
+eirairc:gui.screenshots.search=Search...
 eirairc:gui.screenshots.openFolder=Open Folder
 eirairc:gui.screenshots.favorite=Favorite
 eirairc:gui.screenshots.upload=Upload

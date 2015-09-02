@@ -30,7 +30,7 @@ public class CommandServIRC implements ICommand {
 
 	@Override
 	public String getCommandUsage(ICommandSender sender) {
-		return Globals.MOD_ID + ":irc.commands.servirc";
+		return Globals.MOD_ID + ":commands.servirc.usage";
 	}
 
 	@Override

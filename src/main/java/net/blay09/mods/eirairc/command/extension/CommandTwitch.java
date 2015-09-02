@@ -43,7 +43,7 @@ public class CommandTwitch implements SubCommand {
 		}
 		if(args.length == 0) {
 			if(ConfigurationHandler.hasServerConfig(Globals.TWITCH_SERVER)) {
-				Utils.sendLocalizedMessage(sender, "general.connecting", "Twitch");
+				Utils.sendLocalizedMessage(sender, "commands.connect", "Twitch");
 				ServerConfig serverConfig = ConfigurationHandler.getOrCreateServerConfig(Globals.TWITCH_SERVER);
 				ConnectionManager.connectTo(serverConfig);
 				return true;
@@ -67,7 +67,7 @@ public class CommandTwitch implements SubCommand {
 			serverConfig.getBotSettings().setString(BotStringComponent.MessageFormat, "Twitch");
 			ConfigurationHandler.addServerConfig(serverConfig);
 			ConfigurationHandler.save();
-			Utils.sendLocalizedMessage(sender, "general.connecting", "Twitch");
+			Utils.sendLocalizedMessage(sender, "commands.connect", "Twitch");
 			ConnectionManager.connectTo(serverConfig);
 			return true;
 		}

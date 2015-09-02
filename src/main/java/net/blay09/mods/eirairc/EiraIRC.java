@@ -47,8 +47,6 @@ public class EiraIRC {
 	@SidedProxy(serverSide = "net.blay09.mods.eirairc.CommonProxy", clientSide = "net.blay09.mods.eirairc.client.ClientProxy")
 	public static CommonProxy proxy;
 
-	public static final EventBus internalBus = new EventBus();
-
 	private ConnectionManager connectionManager;
 	private ChatSessionHandler chatSessionHandler;
 	private EiraNetHandler netHandler;
