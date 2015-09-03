@@ -50,6 +50,9 @@ public class ConfigProperty<T> {
     }
 
     public T getDefaultValue() {
+        if(parentProperty != null) {
+            return parentProperty.get();
+        }
         return defaultValue;
     }
 

@@ -42,7 +42,7 @@ public abstract class AbstractSettings {
     }
 
     public Configuration pullDummyConfig() {
-        dummyConfig = manager.pullDummyConfig(category);
+        dummyConfig = manager.pullDummyConfig();
         return dummyConfig;
     }
 

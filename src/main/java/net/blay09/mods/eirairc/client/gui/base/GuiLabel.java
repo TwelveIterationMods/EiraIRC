@@ -24,7 +24,7 @@ public class GuiLabel extends Gui {
 
 	public GuiLabel(String text, int posX, int posY, int color) {
 		this.mc = Minecraft.getMinecraft();
-		this.lines = text.split("\n");
+		this.lines = text.split("(\\\\n|\n)");
 		this.posX = posX;
 		this.posY = posY;
 		this.color = color;

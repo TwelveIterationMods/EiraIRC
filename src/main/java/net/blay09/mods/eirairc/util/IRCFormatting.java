@@ -180,6 +180,57 @@ public enum IRCFormatting {
 		return 1;
 	}
 
+	public static final String[] mcColorNames = new String[] {
+		"black", "dark_blue", "dark_green", "dark_aqua", "dark_red", "dark_purple", "gold", "gray", "dark_gray", "blue", "green", "aqua", "red", "light_purple", "yellow", "white"
+	};
+
+	public static EnumChatFormatting getColorFromName(String name) {
+		name = name.toLowerCase();
+		switch(name) {
+			case "black": return EnumChatFormatting.BLACK;
+			case "dark_blue": return EnumChatFormatting.DARK_BLUE;
+			case "dark_green": return EnumChatFormatting.DARK_GREEN;
+			case "dark_aqua": return EnumChatFormatting.DARK_AQUA;
+			case "dark_red": return EnumChatFormatting.DARK_RED;
+			case "dark_purple": return EnumChatFormatting.DARK_PURPLE;
+			case "gold": return EnumChatFormatting.GOLD;
+			case "gray":
+			case "grey": return EnumChatFormatting.GRAY;
+			case "dark_gray":
+			case "dark_grey": return EnumChatFormatting.DARK_GRAY;
+			case "blue": return EnumChatFormatting.BLUE;
+			case "green": return EnumChatFormatting.GREEN;
+			case "aqua": return EnumChatFormatting.AQUA;
+			case "red": return EnumChatFormatting.RED;
+			case "light_purple": return EnumChatFormatting.LIGHT_PURPLE;
+			case "yellow": return EnumChatFormatting.YELLOW;
+			case "white": return EnumChatFormatting.WHITE;
+		}
+		return null;
+	}
+
+	public static String getNameFromColor(EnumChatFormatting color) {
+		switch(color) {
+			case BLACK: return "black";
+			case DARK_BLUE: return "dark_blue";
+			case DARK_GREEN: return "dark_green";
+			case DARK_AQUA: return "dark_aqua";
+			case DARK_RED: return "dark_red";
+			case DARK_PURPLE: return "dark_purple";
+			case GOLD: return "gold";
+			case GRAY: return "gray";
+			case DARK_GRAY: return "dark_gray";
+			case BLUE: return "blue";
+			case GREEN: return "green";
+			case AQUA: return "aqua";
+			case RED: return "red";
+			case LIGHT_PURPLE: return "light_purple";
+			case YELLOW: return "yellow";
+			case WHITE: return "white";
+		}
+		return null;
+	}
+
 	public static EnumChatFormatting getColorFromMCColorCode(char colorCode) {
 		switch(colorCode) {
 			case '0': return EnumChatFormatting.BLACK; // black
@@ -239,6 +290,7 @@ public enum IRCFormatting {
 		}
 	}
 
+	@Deprecated
 	public static EnumChatFormatting getColorFormattingLegacy(String colorName) {
 		if(colorName == null || colorName.isEmpty()) {
 			return null;
@@ -356,11 +408,4 @@ public enum IRCFormatting {
 		}
 	}
 
-	public static EnumChatFormatting getColorFromName(String colorName) {
-		try {
-			return EnumChatFormatting.valueOf(colorName.toUpperCase());
-		} catch (IllegalArgumentException e) {
-			return null;
-		}
-	}
 }

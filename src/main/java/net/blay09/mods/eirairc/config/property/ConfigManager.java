@@ -22,8 +22,14 @@ public class ConfigManager {
     private final Logger logger = LogManager.getLogger();
     private final Map<String, ConfigProperty> properties = Maps.newHashMap();
 
+    private ConfigManager parentManager;
+
+    @SuppressWarnings("unchecked")
     public void registerProperty(ConfigProperty property) {
         properties.put(property.getName(), property);
+        if(parentManager != null) {
+            property.setParentProperty(parentManager.getProperty(property.getName()));
+        }
     }
 
     public void load(Configuration config) {
@@ -58,14 +64,37 @@ public class ConfigManager {
                     property.set(value);
                 }
             } else if(type.getClass() == StringList.class) {
-                String[] value = config.getStringList(property.getName(), property.getCategory(), ((StringList) property.getDefaultValue()).getAsArray(), I19n.format("eirairc:config.property." + property.getName() + ".tooltip"), null, "eirairc:config.property."+ property.getName());
-                if(value.length > 0) {
+                String[] value = config.getStringList(property.getName(), property.getCategory(), ((StringList) property.getDefaultValue()).getAsArray(), I19n.format("eirairc:config.property." + property.getName() + ".tooltip"), null, "eirairc:config.property." + property.getName());
+                if (value.length > 0) {
                     property.set(value);
+                }
+            } else if(type.getClass() == EnumChatFormatting.class) {
+                String stringValue = config.getString(property.getName(), property.getCategory(), IRCFormatting.getNameFromColor((EnumChatFormatting) property.getDefaultValue()), I19n.format("eirairc:config.property." + property.getName() + ".tooltip"), "eirairc:config.property." + property.getName());
+                if(stringValue.isEmpty()) {
+                    continue;
+                }
+                EnumChatFormatting color = IRCFormatting.getColorFromName(stringValue);
+                if(color != null) {
+                    if (!ignoreDefaultValues || !color.equals(property.getDefaultValue())) {
+                        property.set(color);
+                    }
+                } else {
+                    StringBuilder validValues = new StringBuilder();
+                    for(String colorName : IRCFormatting.mcColorNames) {
+                        if(validValues.length() > 0) {
+                            validValues.append(", ");
+                        }
+                        validValues.append(colorName);
+                    }
+                    logger.error("Invalid config value {} for option {} - valid values are: {}", stringValue.toLowerCase(), property.getName(), validValues.toString());
                 }
             } else if(type instanceof Enum) {
                 String stringValue = config.getString(property.getName(), property.getCategory(), ((Enum) property.getDefaultValue()).name(), I19n.format("eirairc:config.property." + property.getName() + ".tooltip"), "eirairc:config.property." + property.getName());
+                if(stringValue.isEmpty()) {
+                    continue;
+                }
                 try {
-                    Enum value = Enum.valueOf((Class<? extends Enum>) type.getClass(), stringValue);
+                    Enum value = Enum.valueOf((Class<? extends Enum>) type.getClass(), stringValue.toUpperCase());
                     if (!ignoreDefaultValues || !value.equals(property.getDefaultValue())) {
                         property.set(value);
                     }
@@ -75,9 +104,9 @@ public class ConfigManager {
                         if(validValues.length() > 0) {
                             validValues.append(", ");
                         }
-                        validValues.append(enumValue.name());
+                        validValues.append(enumValue.name().toLowerCase());
                     }
-                    logger.error("Invalid config value {} for option {} - valid values are: ", stringValue, property.getName(), validValues);
+                    logger.error("Invalid config value {} for option {} - valid values are: {}", stringValue.toLowerCase(), property.getName(), validValues.toString());
                 }
             }
         }
@@ -87,17 +116,19 @@ public class ConfigManager {
         for(ConfigProperty property : properties.values()) {
             Object value = property.get();
             if(value.getClass() == String.class) {
-                config.get(property.getCategory(), property.getName(), "", I19n.format("eirairc:config.property." + property.getName() + ".tooltip")).set((String) value);
+                config.get(property.getCategory(), property.getName(), (String) property.getDefaultValue(), I19n.format("eirairc:config.property." + property.getName() + ".tooltip")).set((String) value);
             } else if(value.getClass() == Boolean.class) {
-                config.get(property.getCategory(), property.getName(), false, I19n.format("eirairc:config.property." + property.getName() + ".tooltip")).set((Boolean) value);
+                config.get(property.getCategory(), property.getName(), (Boolean) property.getDefaultValue(), I19n.format("eirairc:config.property." + property.getName() + ".tooltip")).set((Boolean) value);
             } else if(value.getClass() == Integer.class) {
-                config.get(property.getCategory(), property.getName(), 0, I19n.format("eirairc:config.property." + property.getName() + ".tooltip")).set((Integer) value);
+                config.get(property.getCategory(), property.getName(), (Integer) property.getDefaultValue(), I19n.format("eirairc:config.property." + property.getName() + ".tooltip")).set((Integer) value);
             } else if(value.getClass() == Float.class) {
-                config.get(property.getCategory(), property.getName(), 0f, I19n.format("eirairc:config.property." + property.getName() + ".tooltip")).set((Float) value);
+                config.get(property.getCategory(), property.getName(), (Float) property.getDefaultValue(), I19n.format("eirairc:config.property." + property.getName() + ".tooltip")).set((Float) value);
             } else if(value.getClass() == StringList.class) {
-                config.get(property.getCategory(), property.getName(), new String[0], I19n.format("eirairc:config.property." + property.getName() + ".tooltip")).set(((StringList) value).getAsArray());
+                config.get(property.getCategory(), property.getName(), ((StringList) property.getDefaultValue()).getAsArray(), I19n.format("eirairc:config.property." + property.getName() + ".tooltip")).set(((StringList) value).getAsArray());
+            } else if(value.getClass() == EnumChatFormatting.class) {
+                config.get(property.getCategory(), property.getName(), IRCFormatting.getNameFromColor((EnumChatFormatting) property.getDefaultValue()), I19n.format("eirairc:config.property." + property.getName() + ".tooltip")).set(IRCFormatting.getNameFromColor((EnumChatFormatting) value));
             } else if(value instanceof Enum) {
-                config.get(property.getCategory(), property.getName(), "", I19n.format("eirairc:config.property." + property.getName() + ".tooltip")).set(((Enum) value).name());
+                config.get(property.getCategory(), property.getName(), ((Enum) property.getDefaultValue()).name(), I19n.format("eirairc:config.property." + property.getName() + ".tooltip")).set(((Enum) value).name());
             }
         }
     }
@@ -142,15 +173,25 @@ public class ConfigManager {
             }
             property.set(list);
         } else if(type.getClass() == EnumChatFormatting.class) {
-
+            EnumChatFormatting color = IRCFormatting.getColorFromName(value);
+            if(color != null) {
+                property.set(color);
+            } else {
+                // TODO print error message
+            }
         } else if(type instanceof Enum) {
-            property.set(Enum.valueOf((Class<? extends Enum>) type.getClass(), value));
+            try {
+                property.set(Enum.valueOf((Class<? extends Enum>) type.getClass(), value));
+            } catch (IllegalArgumentException e) {
+                // TODO print error message
+            }
         }
         return true;
     }
 
     @SuppressWarnings("unchecked")
     public void setParentManager(ConfigManager manager) {
+        this.parentManager = manager;
         for(ConfigProperty property : properties.values()) {
             property.setParentProperty(manager.getProperty(property.getName()));
         }
@@ -162,23 +203,25 @@ public class ConfigManager {
         }
     }
 
-    public Configuration pullDummyConfig(String category) {
+    public Configuration pullDummyConfig() {
         Configuration dummyConfig = new Configuration();
         for(ConfigProperty property : properties.values()) {
             Object type = property.getDefaultValue();
             Property dummyProperty;
             if(type.getClass() == String.class) {
-                dummyProperty = dummyConfig.get(property.getCategory(), property.getName(), "", I19n.format("eirairc:config.property." + property.getName() + ".tooltip"));
+                dummyProperty = dummyConfig.get(property.getCategory(), property.getName(), (String) property.getDefaultValue(), I19n.format("eirairc:config.property." + property.getName() + ".tooltip"));
             } else if(type.getClass() == Boolean.class) {
-                dummyProperty = dummyConfig.get(property.getCategory(), property.getName(), false, I19n.format("eirairc:config.property." + property.getName() + ".tooltip"));
+                dummyProperty = dummyConfig.get(property.getCategory(), property.getName(), (Boolean) property.getDefaultValue(), I19n.format("eirairc:config.property." + property.getName() + ".tooltip"));
             } else if(type.getClass() == Integer.class) {
-                dummyProperty = dummyConfig.get(property.getCategory(), property.getName(), 0, I19n.format("eirairc:config.property." + property.getName() + ".tooltip"));
+                dummyProperty = dummyConfig.get(property.getCategory(), property.getName(), (Integer) property.getDefaultValue(), I19n.format("eirairc:config.property." + property.getName() + ".tooltip"));
             } else if(type.getClass() == Float.class) {
-                dummyProperty = dummyConfig.get(property.getCategory(), property.getName(), 0f, I19n.format("eirairc:config.property." + property.getName() + ".tooltip"));
+                dummyProperty = dummyConfig.get(property.getCategory(), property.getName(), (Float) property.getDefaultValue(), I19n.format("eirairc:config.property." + property.getName() + ".tooltip"));
             } else if(type.getClass() == StringList.class) {
-                dummyProperty = dummyConfig.get(property.getCategory(), property.getName(), new String[0], I19n.format("eirairc:config.property." + property.getName() + ".tooltip"));
+                dummyProperty = dummyConfig.get(property.getCategory(), property.getName(), ((StringList) property.getDefaultValue()).getAsArray(), I19n.format("eirairc:config.property." + property.getName() + ".tooltip"));
+            }else if(type.getClass() == EnumChatFormatting.class) {
+                dummyProperty = dummyConfig.get(property.getCategory(), property.getName(), IRCFormatting.getNameFromColor((EnumChatFormatting) property.getDefaultValue()), I19n.format("eirairc:config.property." + property.getName() + ".tooltip"));
             } else if(type instanceof Enum) {
-                dummyProperty = dummyConfig.get(property.getCategory(), property.getName(), "", I19n.format("eirairc:config.property." + property.getName() + ".tooltip"));
+                dummyProperty = dummyConfig.get(property.getCategory(), property.getName(), ((Enum) property.getDefaultValue()).name(), I19n.format("eirairc:config.property." + property.getName() + ".tooltip"));
             } else {
                 continue;
             }
@@ -194,6 +237,8 @@ public class ConfigManager {
                     dummyProperty.set((Float) property.get());
                 } else if(type.getClass() == StringList.class) {
                     dummyProperty.set(((StringList) property.get()).getAsArray());
+                } else if(type.getClass() == EnumChatFormatting.class) {
+                    dummyProperty.set(IRCFormatting.getNameFromColor((EnumChatFormatting) property.get()));
                 } else if(type.getClass() == Enum.class) {
                     dummyProperty.set(((Enum) property.get()).name());
                 }
@@ -220,12 +265,46 @@ public class ConfigManager {
             } else if(type.getClass() == StringList.class) {
                 StringList stringList = new StringList();
                 JsonArray stringArray = object.get(property.getName()).getAsJsonArray();
-                for(int i = 0; i < stringArray.size(); i++) {
+                for (int i = 0; i < stringArray.size(); i++) {
                     stringList.add(stringArray.get(i).getAsString());
                 }
                 property.set(stringList);
+            } else if(type.getClass() == EnumChatFormatting.class) {
+                String stringValue = object.get(property.getName()).getAsString();
+                if(stringValue.isEmpty()) {
+                    continue;
+                }
+                EnumChatFormatting color = IRCFormatting.getColorFromName(stringValue);
+                if(color != null) {
+                    property.set(color);
+                } else {
+                    StringBuilder validValues = new StringBuilder();
+                    for(String colorName : IRCFormatting.mcColorNames) {
+                        if(validValues.length() > 0) {
+                            validValues.append(", ");
+                        }
+                        validValues.append(colorName);
+                    }
+                    logger.error("Invalid config value {} for option {} - valid values are: {}", stringValue.toLowerCase(), property.getName(), validValues.toString());
+                }
             } else if(type instanceof Enum) {
-                property.set(Enum.valueOf((Class<? extends Enum>) type.getClass(), object.get(property.getName()).getAsString()));
+                String stringValue = object.get(property.getName()).getAsString();
+                if(stringValue.isEmpty()) {
+                    continue;
+                }
+                try {
+                    Enum value = Enum.valueOf((Class<? extends Enum>) type.getClass(), stringValue.toUpperCase());
+                    property.set(value);
+                } catch (IllegalArgumentException e) {
+                    StringBuilder validValues = new StringBuilder();
+                    for(Enum enumValue : ((Enum) type).getClass().getEnumConstants()) {
+                        if(validValues.length() > 0) {
+                            validValues.append(", ");
+                        }
+                        validValues.append(enumValue.name().toLowerCase());
+                    }
+                    logger.error("Invalid config value {} for option {} - valid values are: {}", stringValue.toLowerCase(), property.getName(), validValues.toString());
+                }
             }
         }
     }
