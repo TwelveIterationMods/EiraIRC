@@ -6,7 +6,6 @@ import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import io.netty.buffer.ByteBuf;
 import net.blay09.mods.eirairc.util.NotificationType;
-import net.blay09.mods.eirairc.util.Utils;
 
 public class MessageNotification implements IMessage {
 

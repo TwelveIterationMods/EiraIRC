@@ -3,9 +3,7 @@
 package net.blay09.mods.eirairc.client.gui.base.image;
 
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureUtil;
-import net.minecraft.client.resources.IResourceManager;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.image.BufferedImage;

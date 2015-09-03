@@ -5,7 +5,6 @@ package net.blay09.mods.eirairc.client.graphics;
 import com.google.common.collect.Maps;
 import net.minecraft.util.ResourceLocation;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class TextureAtlasPage {

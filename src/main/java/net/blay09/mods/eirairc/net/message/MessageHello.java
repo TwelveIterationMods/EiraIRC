@@ -5,8 +5,6 @@ package net.blay09.mods.eirairc.net.message;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufUtil;
-import net.blay09.mods.eirairc.util.Utils;
 
 public class MessageHello implements IMessage {
 

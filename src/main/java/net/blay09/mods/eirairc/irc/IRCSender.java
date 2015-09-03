@@ -4,8 +4,6 @@ package net.blay09.mods.eirairc.irc;
 
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
-import net.minecraft.client.Minecraft;
-import net.minecraft.crash.CrashReport;
 
 import java.io.BufferedWriter;
 import java.io.IOException;

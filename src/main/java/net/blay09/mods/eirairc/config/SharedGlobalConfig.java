@@ -2,9 +2,8 @@
 
 package net.blay09.mods.eirairc.config;
 
-import net.blay09.mods.eirairc.api.event.InitConfigEvent;
-import net.blay09.mods.eirairc.config.property.ConfigProperty;
 import net.blay09.mods.eirairc.config.property.ConfigManager;
+import net.blay09.mods.eirairc.config.property.ConfigProperty;
 import net.blay09.mods.eirairc.config.property.StringList;
 import net.blay09.mods.eirairc.config.settings.BotSettings;
 import net.blay09.mods.eirairc.config.settings.GeneralSettings;
@@ -13,7 +12,6 @@ import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.I19n;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 
 import java.io.File;

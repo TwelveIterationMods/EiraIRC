@@ -5,7 +5,6 @@ package net.blay09.mods.eirairc.client.gui.servers;
 import cpw.mods.fml.client.config.GuiConfig;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.blay09.mods.eirairc.ConnectionManager;
-import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.event.*;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
 import net.blay09.mods.eirairc.client.gui.EiraGui;

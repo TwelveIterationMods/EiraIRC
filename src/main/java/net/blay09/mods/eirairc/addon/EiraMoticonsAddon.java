@@ -13,8 +13,6 @@ import net.blay09.mods.eirairc.api.event.InitConfigEvent;
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.api.irc.TwitchUser;
-import net.blay09.mods.eirairc.config.SharedGlobalConfig;
-import net.blay09.mods.eirairc.irc.IRCUserImpl;
 import net.blay09.mods.eirairc.util.I19n;
 import net.blay09.mods.eiramoticons.api.EiraMoticonsAPI;
 import net.blay09.mods.eiramoticons.api.IEmoticon;
@@ -34,7 +32,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.Map;
 
 @Optional.Interface(modid = "eiramoticons", iface = "net.blay09.mods.eiramoticons.api.IEmoticonLoader")

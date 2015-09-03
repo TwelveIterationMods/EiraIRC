@@ -4,14 +4,12 @@ package net.blay09.mods.eirairc.config;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.blay09.mods.eirairc.api.event.InitConfigEvent;
 import net.blay09.mods.eirairc.config.property.ConfigManager;
 import net.blay09.mods.eirairc.config.property.ConfigProperty;
 import net.blay09.mods.eirairc.util.I19n;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.command.ICommandSender;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import org.lwjgl.input.Keyboard;
 

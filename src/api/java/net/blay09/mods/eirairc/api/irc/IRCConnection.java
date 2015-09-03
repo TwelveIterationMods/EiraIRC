@@ -3,7 +3,6 @@
 package net.blay09.mods.eirairc.api.irc;
 
 import net.blay09.mods.eirairc.api.bot.IRCBot;
-import net.blay09.mods.eirairc.api.config.IConfigManager;
 
 import java.util.Collection;
 
