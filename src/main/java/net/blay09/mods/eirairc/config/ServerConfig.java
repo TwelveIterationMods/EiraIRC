@@ -228,10 +228,10 @@ public class ServerConfig {
 		ConfigurationHandler.save();
 	}
 
-	public static void addOptionsToList(List<String> list, String option, boolean autoCompleteOption) {
-		GeneralSettings.addOptionsToList(list, option, autoCompleteOption);
-		BotSettings.addOptionsToList(list, option, autoCompleteOption);
-		ThemeSettings.addOptionsToList(list, option, autoCompleteOption);
+	public void addOptionsToList(List<String> list, String option, boolean autoCompleteOption) {
+		generalSettings.addOptionsToList(list, option, autoCompleteOption);
+		botSettings.addOptionsToList(list, option, autoCompleteOption);
+		theme.addOptionsToList(list, option, autoCompleteOption);
 	}
 
 	public boolean isRemote() {

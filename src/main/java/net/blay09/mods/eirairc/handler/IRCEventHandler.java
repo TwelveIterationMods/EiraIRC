@@ -39,10 +39,10 @@ public class IRCEventHandler {
 		MinecraftForge.EVENT_BUS.post(event);
 		switch (event.getResult()) {
 			case DEFAULT:
-				if (ConfigHelper.getGeneralSettings(user).isMuted() || IgnoreList.isIgnored(user)) {
+				if (ConfigHelper.getGeneralSettings(user).muted.get() || IgnoreList.isIgnored(user)) {
 					return;
 				}
-				if (SharedGlobalConfig.botSettings.getBoolean(BotBooleanComponent.RelayNickChanges)) {
+				if (SharedGlobalConfig.botSettings.relayNickChanges.get()) {
 					String format = ConfigHelper.getBotSettings(user).getMessageFormat().mcUserNickChange;
 					format = format.replace("{OLDNICK}", oldNick);
 					EiraIRCAPI.getChatHandler().addChatMessage(MessageFormat.formatChatComponent(format, connection, null, user, "", MessageFormat.Target.Minecraft, MessageFormat.Mode.Emote));
@@ -58,17 +58,17 @@ public class IRCEventHandler {
 
 	public static void fireUserJoinEvent(IRCConnection connection, IRCMessage message, IRCChannel channel, IRCUser user) {
 		BotSettings botSettings = ConfigHelper.getBotSettings(channel);
-		if(botSettings.getBoolean(BotBooleanComponent.SendAutoWho)) {
+		if(botSettings.sendAutoWho.get()) {
 			Utils.sendPlayerList(user);
 		}
 		IRCUserJoinEvent event = new IRCUserJoinEvent(connection, message, channel, user);
 		MinecraftForge.EVENT_BUS.post(event);
 		switch (event.getResult()) {
 			case DEFAULT:
-				if (ConfigHelper.getGeneralSettings(channel).isMuted()) {
+				if (ConfigHelper.getGeneralSettings(channel).muted.get()) {
 					return;
 				}
-				if (botSettings.getBoolean(BotBooleanComponent.RelayIRCJoinLeave)) {
+				if (botSettings.relayIRCJoinLeave.get()) {
 					String format = ConfigHelper.getBotSettings(channel).getMessageFormat().mcUserJoin;
 					EiraIRCAPI.getChatHandler().addChatMessage(MessageFormat.formatChatComponent(format, connection, channel, user, "", MessageFormat.Target.Minecraft, MessageFormat.Mode.Emote));
 				}
@@ -86,10 +86,10 @@ public class IRCEventHandler {
 		MinecraftForge.EVENT_BUS.post(event);
 		switch (event.getResult()) {
 			case DEFAULT:
-				if (ConfigHelper.getGeneralSettings(channel).isMuted()) {
+				if (ConfigHelper.getGeneralSettings(channel).muted.get()) {
 					return;
 				}
-				if (ConfigHelper.getBotSettings(channel).getBoolean(BotBooleanComponent.RelayIRCJoinLeave)) {
+				if (ConfigHelper.getBotSettings(channel).relayIRCJoinLeave.get()) {
 					String format = ConfigHelper.getBotSettings(channel).getMessageFormat().mcUserLeave;
 					EiraIRCAPI.getChatHandler().addChatMessage(MessageFormat.formatChatComponent(format, connection, channel, user, "", MessageFormat.Target.Minecraft, MessageFormat.Mode.Emote));
 				}
@@ -111,10 +111,10 @@ public class IRCEventHandler {
 		MinecraftForge.EVENT_BUS.post(event);
 		switch (event.getResult()) {
 			case DEFAULT:
-				if (ConfigHelper.getGeneralSettings(user).isMuted()) {
+				if (ConfigHelper.getGeneralSettings(user).muted.get()) {
 					return;
 				}
-				if (SharedGlobalConfig.botSettings.getBoolean(BotBooleanComponent.RelayIRCJoinLeave)) {
+				if (SharedGlobalConfig.botSettings.relayIRCJoinLeave.get()) {
 					String format = ConfigHelper.getBotSettings(user).getMessageFormat().mcUserQuit;
 					EiraIRCAPI.getChatHandler().addChatMessage(MessageFormat.formatChatComponent(format, connection, null, user, quitMessage, MessageFormat.Target.Minecraft, MessageFormat.Mode.Emote));
 				}
@@ -154,19 +154,19 @@ public class IRCEventHandler {
 		switch (event.getResult()) {
 			case DEFAULT:
 				BotSettings botSettings = ConfigHelper.getBotSettings(null);
-				if (ConfigHelper.getGeneralSettings(sender).isMuted()) {
+				if (ConfigHelper.getGeneralSettings(sender).muted.get()) {
 					return;
 				}
 				if (connection.isTwitch() && event.sender.getName().equals("jtv")) {
 					return;
 				}
-				if (!botSettings.getBoolean(BotBooleanComponent.AllowPrivateMessages)) {
+				if (!botSettings.allowPrivateMessages.get()) {
 					if (!isNotice && sender != null) {
 						sender.notice(I19n.format("eirairc:commands.msg.disabled"));
 					}
 					return;
 				}
-				if (botSettings.getBoolean(BotBooleanComponent.FilterLinks)) {
+				if (botSettings.filterLinks.get()) {
 					message = MessageFormat.filterLinks(message);
 				}
 				String format;
@@ -180,7 +180,7 @@ public class IRCEventHandler {
 					format = botSettings.getMessageFormat().mcPrivateMessage;
 				}
 				IChatComponent chatComponent = MessageFormat.formatChatComponent(format, connection, null, sender, message, MessageFormat.Target.Minecraft, (isEmote ? MessageFormat.Mode.Emote : MessageFormat.Mode.Message));
-				if (event.isNotice && botSettings.getBoolean(BotBooleanComponent.HideNotices)) {
+				if (event.isNotice && botSettings.hideNotices.get()) {
 					System.out.println(chatComponent.getUnformattedText());
 					return;
 				}
@@ -193,9 +193,9 @@ public class IRCEventHandler {
 				}
 				EiraIRC.instance.getChatSessionHandler().addTargetUser(sender);
 				ThemeSettings theme = ConfigHelper.getTheme(sender);
-				EnumChatFormatting emoteColor = theme.getColor(ThemeColorComponent.emoteTextColor);
+				EnumChatFormatting emoteColor = theme.emoteTextColor.get();
 				EnumChatFormatting twitchNameColor = (sender != null && SharedGlobalConfig.twitchNameColors.get()) ? ((IRCUserImpl) sender).getNameColor() : null;
-				EnumChatFormatting noticeColor = theme.getColor(ThemeColorComponent.ircNoticeTextColor);
+				EnumChatFormatting noticeColor = theme.ircNoticeTextColor.get();
 				if (isEmote && (emoteColor != null || twitchNameColor != null)) {
 					chatComponent.getChatStyle().setColor(twitchNameColor != null ? twitchNameColor : emoteColor);
 				} else if (isNotice && noticeColor != null) {
@@ -252,7 +252,7 @@ public class IRCEventHandler {
 		IRCChannelChatEvent event = new IRCChannelChatEvent(connection, channel, sender, rawMessage, message, isEmote, isNotice);
 		switch (event.getResult()) {
 			case DEFAULT:
-				if (ConfigHelper.getGeneralSettings(channel).isMuted()) {
+				if (ConfigHelper.getGeneralSettings(channel).muted.get()) {
 					return;
 				}
 				if (EiraIRC.proxy.checkClientBridge(event)) {
@@ -262,7 +262,7 @@ public class IRCEventHandler {
 					return;
 				}
 				BotSettings botSettings = ConfigHelper.getBotSettings(channel);
-				if (botSettings.getBoolean(BotBooleanComponent.FilterLinks)) {
+				if (botSettings.filterLinks.get()) {
 					message = MessageFormat.filterLinks(message);
 				}
 				String format;
@@ -276,14 +276,14 @@ public class IRCEventHandler {
 					format = botSettings.getMessageFormat().mcChannelMessage;
 				}
 				IChatComponent chatComponent = MessageFormat.formatChatComponent(format, connection, channel, sender, message, MessageFormat.Target.Minecraft, event.isEmote ? MessageFormat.Mode.Emote : MessageFormat.Mode.Message);
-				if (isNotice && botSettings.getBoolean(BotBooleanComponent.HideNotices)) {
+				if (isNotice && botSettings.hideNotices.get()) {
 					System.out.println(chatComponent.getUnformattedText());
 					return;
 				}
 				ThemeSettings theme = ConfigHelper.getTheme(event.channel);
-				EnumChatFormatting emoteColor = theme.getColor(ThemeColorComponent.emoteTextColor);
+				EnumChatFormatting emoteColor = theme.emoteTextColor.get();
 				EnumChatFormatting twitchNameColor = (sender != null && SharedGlobalConfig.twitchNameColors.get()) ? ((IRCUserImpl) sender).getNameColor() : null;
-				EnumChatFormatting noticeColor = theme.getColor(ThemeColorComponent.ircNoticeTextColor);
+				EnumChatFormatting noticeColor = theme.ircNoticeTextColor.get();
 				if (isEmote && (emoteColor != null || twitchNameColor != null)) {
 					chatComponent.getChatStyle().setColor(twitchNameColor != null ? twitchNameColor : emoteColor);
 				} else if (isNotice && noticeColor != null) {
@@ -304,7 +304,7 @@ public class IRCEventHandler {
 		MinecraftForge.EVENT_BUS.post(event);
 		switch (event.getResult()) {
 			case DEFAULT:
-				if (ConfigHelper.getGeneralSettings(channel).isMuted()) {
+				if (ConfigHelper.getGeneralSettings(channel).muted.get()) {
 					return;
 				}
 				if (user == null) {
@@ -332,7 +332,7 @@ public class IRCEventHandler {
 		Utils.doNickServ(connection, serverConfig);
 		for(ChannelConfig channelConfig : serverConfig.getChannelConfigs()) {
 			GeneralSettings generalSettings = channelConfig.getGeneralSettings();
-			if(generalSettings.getBoolean(GeneralBooleanComponent.AutoJoin)) {
+			if(generalSettings.autoJoin.get()) {
 				connection.join(channelConfig.getName(), AuthManager.getChannelPassword(channelConfig.getIdentifier()));
 			}
 		}
@@ -514,14 +514,14 @@ public class IRCEventHandler {
 		MinecraftForge.EVENT_BUS.post(event);
 		switch (event.getResult()) {
 			case DEFAULT:
-				if (ConfigHelper.getGeneralSettings(event.channel).isMuted()) {
+				if (ConfigHelper.getGeneralSettings(event.channel).muted.get()) {
 					return;
 				}
 				if (EiraIRC.proxy.checkClientBridge(event)) {
 					return;
 				}
 				BotSettings botSettings = ConfigHelper.getBotSettings(event.channel);
-				if (botSettings.getBoolean(BotBooleanComponent.FilterLinks)) {
+				if (botSettings.filterLinks.get()) {
 					message = MessageFormat.filterLinks(message);
 				}
 				// append CTCP tag
@@ -535,12 +535,12 @@ public class IRCEventHandler {
 					format = botSettings.getMessageFormat().mcChannelMessage;
 				}
 				IChatComponent chatComponent = MessageFormat.formatChatComponent(format, event.connection, event.channel, event.sender, message, MessageFormat.Target.Minecraft, MessageFormat.Mode.Message);
-				if (event.isNotice && botSettings.getBoolean(BotBooleanComponent.HideNotices)) {
+				if (event.isNotice && botSettings.hideNotices.get()) {
 					System.out.println(chatComponent.getUnformattedText());
 					return;
 				}
 				ThemeSettings theme = ConfigHelper.getTheme(event.channel);
-				EnumChatFormatting noticeColor = theme.getColor(ThemeColorComponent.ircNoticeTextColor);
+				EnumChatFormatting noticeColor = theme.ircNoticeTextColor.get();
 				if (event.isNotice && noticeColor != null) {
 					chatComponent.getChatStyle().setColor(noticeColor);
 				}
@@ -564,7 +564,7 @@ public class IRCEventHandler {
 		switch (event.getResult()) {
 			case DEFAULT:
 				BotSettings botSettings = ConfigHelper.getBotSettings(connection);
-				if(botSettings.getBoolean(BotBooleanComponent.AllowCTCP) && sender != null && !isNotice) {
+				if(botSettings.allowCTCP.get() && sender != null && !isNotice) {
 					if(message.startsWith("VERSION ")) {
 						String modVersion = Loader.instance().getIndexedModList().get("eirairc").getDisplayVersion();
 						String mcVersion = Loader.instance().getMCVersionString();
@@ -572,16 +572,16 @@ public class IRCEventHandler {
 						return;
 					}
 				}
-				if (ConfigHelper.getGeneralSettings(event.sender).isMuted()) {
+				if (ConfigHelper.getGeneralSettings(event.sender).muted.get()) {
 					return;
 				}
-				if (!botSettings.getBoolean(BotBooleanComponent.AllowPrivateMessages)) {
+				if (!botSettings.allowCTCP.get()) {
 					if (!event.isNotice && event.sender != null) {
 						event.sender.notice(I19n.format("eirairc:commands.ctcp.disabled"));
 					}
 					return;
 				}
-				if (botSettings.getBoolean(BotBooleanComponent.FilterLinks)) {
+				if (botSettings.filterLinks.get()) {
 					message = MessageFormat.filterLinks(message);
 				}
 				// append CTCP tag
@@ -595,7 +595,7 @@ public class IRCEventHandler {
 					format = botSettings.getMessageFormat().mcPrivateMessage;
 				}
 				IChatComponent chatComponent = MessageFormat.formatChatComponent(format, event.connection, null, event.sender, message, MessageFormat.Target.Minecraft, MessageFormat.Mode.Message);
-				if (event.isNotice && botSettings.getBoolean(BotBooleanComponent.HideNotices)) {
+				if (event.isNotice && botSettings.hideNotices.get()) {
 					System.out.println(chatComponent.getUnformattedText());
 					return;
 				}
@@ -608,7 +608,7 @@ public class IRCEventHandler {
 				}
 				EiraIRC.instance.getChatSessionHandler().addTargetUser(event.sender);
 				ThemeSettings theme = ConfigHelper.getTheme(event.sender);
-				EnumChatFormatting noticeColor = theme.getColor(ThemeColorComponent.ircNoticeTextColor);
+				EnumChatFormatting noticeColor = theme.ircNoticeTextColor.get();
 				if (event.isNotice && noticeColor != null) {
 					chatComponent.getChatStyle().setColor(noticeColor);
 				}
@@ -626,7 +626,7 @@ public class IRCEventHandler {
 
 	public static void fireChannelJoinedEvent(IRCConnection connection, IRCMessage message, IRCChannel channel) {
 		EiraIRC.instance.getChatSessionHandler().addTargetChannel(channel);
-		if(ConfigHelper.getGeneralSettings(channel).getBoolean(GeneralBooleanComponent.AutoWho)) {
+		if(ConfigHelper.getGeneralSettings(channel).autoWho.get()) {
 			Utils.sendUserList(null, connection, channel);
 		}
 		if(Compatibility.isEiraMoticonsInstalled() && SharedGlobalConfig.twitchNameBadges.get() && channel.getConnection().isTwitch()) {

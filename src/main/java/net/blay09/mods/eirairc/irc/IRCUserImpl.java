@@ -7,7 +7,6 @@ import net.blay09.mods.eirairc.api.bot.IRCBot;
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.api.irc.IRCUser;
 import net.blay09.mods.eirairc.bot.IRCBotImpl;
-import net.blay09.mods.eirairc.config.settings.BotStringListComponent;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.I19n;
 import net.minecraft.util.EnumChatFormatting;
@@ -32,8 +31,8 @@ public class IRCUserImpl implements IRCUser {
 
 	private final IRCConnectionImpl connection;
 	private final Map<String, IRCChannel> channels = new HashMap<>();
-	private final Map<String, IRCChannelUserMode> channelModes = new HashMap<String, IRCChannelUserMode>();
-	private final List<QueuedAuthCommand> authCommandQueue = new ArrayList<QueuedAuthCommand>();
+	private final Map<String, IRCChannelUserMode> channelModes = new HashMap<>();
+	private final List<QueuedAuthCommand> authCommandQueue = new ArrayList<>();
 	private String name;
 	private String ident;
 	private String hostname;
@@ -134,7 +133,7 @@ public class IRCUserImpl implements IRCUser {
 			notice(I19n.format("eirairc:bot.notAuthed"));
 		} else {
 			for (QueuedAuthCommand cmd : authCommandQueue) {
-				if (ConfigHelper.getBotSettings(cmd.channel).containsString(BotStringListComponent.InterOpAuthList, accountName)) {
+				if (ConfigHelper.getBotSettings(cmd.channel).interOpAuthList.get().containsString(accountName, false)) {
 					cmd.command.processCommand(cmd.bot, cmd.channel, this, cmd.args, cmd.command);
 				} else {
 					notice(I19n.format("eirairc:bot.noPermission"));
@@ -177,7 +176,7 @@ public class IRCUserImpl implements IRCUser {
 			connection.whois(name);
 			authCommandQueue.add(new QueuedAuthCommand(bot, channel, botCommand, args));
 		} else {
-			if(ConfigHelper.getBotSettings(channel).containsString(BotStringListComponent.InterOpAuthList, accountName)) {
+			if(ConfigHelper.getBotSettings(channel).interOpAuthList.get().containsString(accountName, false)) {
 				botCommand.processCommand(bot, channel, this, args, botCommand);
 			} else {
 				notice(I19n.format("eirairc:bot.noPermission"));

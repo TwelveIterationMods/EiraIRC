@@ -6,7 +6,6 @@ import com.google.common.collect.Maps;
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.api.irc.IRCUser;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
-import net.blay09.mods.eirairc.config.settings.ThemeColorComponent;
 import net.blay09.mods.eirairc.config.settings.ThemeSettings;
 import net.blay09.mods.eirairc.irc.IRCUserImpl;
 import net.minecraft.entity.player.EntityPlayer;
@@ -326,9 +325,9 @@ public enum IRCFormatting {
 		if(nameColorId != -1) {
 			return mcChatFormatting[nameColorId];
 		} else if(Utils.isOP(player)) {
-			return theme.getColor(ThemeColorComponent.mcOpNameColor);
+			return theme.mcOpNameColor.get();
 		}
-		return theme.getColor(ThemeColorComponent.mcNameColor);
+		return theme.mcNameColor.get();
 	}
 
 	public static EnumChatFormatting getColorFormattingForUser(IRCChannel channel, IRCUser user) {
@@ -338,14 +337,14 @@ public enum IRCFormatting {
 		}
 		ThemeSettings theme = ConfigHelper.getTheme(channel);
 		if(channel == null) {
-			return theme.getColor(ThemeColorComponent.ircPrivateNameColor);
+			return theme.ircPrivateNameColor.get();
 		}
 		if(user.isOperator(channel)) {
-			return theme.getColor(ThemeColorComponent.ircOpNameColor);
+			return theme.ircOpNameColor.get();
 		} else if(user.hasVoice(channel)) {
-			return theme.getColor(ThemeColorComponent.ircVoiceNameColor);
+			return theme.ircVoiceNameColor.get();
 		}
-		return theme.getColor(ThemeColorComponent.ircNameColor);
+		return theme.ircNameColor.get();
 	}
 
 	public static boolean isValidColor(String colorName) {

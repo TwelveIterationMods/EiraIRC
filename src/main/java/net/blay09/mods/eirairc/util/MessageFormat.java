@@ -158,7 +158,7 @@ public class MessageFormat {
 			if(SharedGlobalConfig.hidePlayerTags.get()) {
 				nick = filterPlayerTags(nick);
 			}
-			nick = String.format(ConfigHelper.getBotSettings(context).getString(BotStringComponent.NickFormat), nick);
+			nick = String.format(ConfigHelper.getBotSettings(context).mcNickFormat.get(), nick);
 			if(SharedGlobalConfig.preventUserPing.get()) {
 				nick = nick.substring(0, 1) + '\u0081' + nick.substring(1);
 			}
@@ -168,7 +168,7 @@ public class MessageFormat {
 				nick = user.getDisplayName();
 			}
 			GeneralSettings settings = ConfigHelper.getGeneralSettings(context);
-			if(settings.getBoolean(GeneralBooleanComponent.ShowNameFlags)) {
+			if(settings.showNameFlags.get()) {
 				nick = ircUser.getChannelModePrefix((IRCChannel) context) + nick;
 			}
 			if(context.getConnection().isTwitch()) {
@@ -202,9 +202,9 @@ public class MessageFormat {
 		String result = formatChatComponent(format, context, sender, message, target, mode).getUnformattedText();
 		BotSettings botSettings = ConfigHelper.getBotSettings(context);
 		if(target == Target.IRC) {
-			result = IRCFormatting.toIRC(result, !botSettings.getBoolean(BotBooleanComponent.ConvertColors));
+			result = IRCFormatting.toIRC(result, !botSettings.convertColors.get());
 		} else if(target == Target.Minecraft) {
-			result = IRCFormatting.toMC(result, !botSettings.getBoolean(BotBooleanComponent.ConvertColors));
+			result = IRCFormatting.toMC(result, !botSettings.convertColors.get());
 			result = filterAllowedCharacters(result);
 		}
 		return result;
@@ -253,10 +253,10 @@ public class MessageFormat {
 						case "MESSAGE":
 							BotSettings botSettings = ConfigHelper.getBotSettings(context);
 							if (target == Target.Minecraft) {
-								message = IRCFormatting.toMC(message, !botSettings.getBoolean(BotBooleanComponent.ConvertColors));
+								message = IRCFormatting.toMC(message, !botSettings.convertColors.get());
 								message = filterAllowedCharacters(message);
 							} else if (target == Target.IRC) {
-								message = IRCFormatting.toIRC(message, !botSettings.getBoolean(BotBooleanComponent.ConvertColors));
+								message = IRCFormatting.toIRC(message, !botSettings.convertColors.get());
 							}
 							component = createChatComponentForMessage(message);
 							break;
@@ -305,9 +305,9 @@ public class MessageFormat {
 		String result = formatChatComponent(format, connection, targetContext, user, message, target, mode).getUnformattedText();
 		BotSettings botSettings = ConfigHelper.getBotSettings(targetContext);
 		if(target == Target.IRC) {
-			result = IRCFormatting.toIRC(result, !botSettings.getBoolean(BotBooleanComponent.ConvertColors));
+			result = IRCFormatting.toIRC(result, !botSettings.convertColors.get());
 		} else if(target == Target.Minecraft) {
-			result = IRCFormatting.toMC(result, !botSettings.getBoolean(BotBooleanComponent.ConvertColors));
+			result = IRCFormatting.toMC(result, !botSettings.convertColors.get());
 			result = filterAllowedCharacters(result);
 		}
 		return result;
@@ -357,10 +357,10 @@ public class MessageFormat {
 						case "MESSAGE":
 							BotSettings botSettings = ConfigHelper.getBotSettings(targetContext);
 							if (target == Target.Minecraft) {
-								message = IRCFormatting.toMC(message, !botSettings.getBoolean(BotBooleanComponent.ConvertColors));
+								message = IRCFormatting.toMC(message, !botSettings.convertColors.get());
 								message = filterAllowedCharacters(message);
 							} else if (target == Target.IRC) {
-								message = IRCFormatting.toIRC(message, !botSettings.getBoolean(BotBooleanComponent.ConvertColors));
+								message = IRCFormatting.toIRC(message, !botSettings.convertColors.get());
 							}
 							component = createChatComponentForMessage(message);
 							break;

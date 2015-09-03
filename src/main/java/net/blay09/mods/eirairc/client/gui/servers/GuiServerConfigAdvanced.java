@@ -5,7 +5,6 @@ package net.blay09.mods.eirairc.client.gui.servers;
 import cpw.mods.fml.client.config.GuiCheckBox;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.blay09.mods.eirairc.ConnectionManager;
-import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.event.IRCConnectEvent;
 import net.blay09.mods.eirairc.api.event.IRCConnectionFailedEvent;
 import net.blay09.mods.eirairc.api.event.IRCDisconnectEvent;
@@ -18,7 +17,6 @@ import net.blay09.mods.eirairc.client.gui.overlay.OverlayYesNo;
 import net.blay09.mods.eirairc.config.AuthManager;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.ServerConfig;
-import net.blay09.mods.eirairc.config.settings.GeneralBooleanComponent;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.I19n;
@@ -153,7 +151,7 @@ public class GuiServerConfigAdvanced extends GuiTabPage implements GuiYesNoCallb
 		if(chkAutoConnect != null) {
 			oldState = chkAutoConnect.isChecked();
 		} else {
-			oldState = config.getGeneralSettings().getBoolean(GeneralBooleanComponent.AutoJoin);
+			oldState = config.getGeneralSettings().autoJoin.get();
 		}
 		chkAutoConnect = new GuiCheckBox(3, rightX - 100, topY + 100, " " + I19n.format("eirairc:gui.server.autoConnect"), oldState);
 		buttonList.add(chkAutoConnect);
@@ -253,7 +251,7 @@ public class GuiServerConfigAdvanced extends GuiTabPage implements GuiYesNoCallb
 		}
 		AuthManager.putServerPassword(config.getIdentifier(), txtServerPassword.getText());
 		config.setIsSSL(chkSSL.isChecked());
-		config.getGeneralSettings().setBoolean(GeneralBooleanComponent.AutoJoin, chkAutoConnect.isChecked());
+		config.getGeneralSettings().autoJoin.set(chkAutoConnect.isChecked());
 		config.setCharset(txtCharset.getTextOrDefault());
 		ConfigurationHandler.saveServers();
 		tabContainer.initGui();

@@ -15,7 +15,6 @@ import net.minecraft.command.ICommandSender;
 import net.minecraftforge.common.config.Configuration;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -69,9 +68,9 @@ public class SharedGlobalConfig {
         Collections.addAll(colorBlacklist, colorBlacklistArray);
 
         // Default Settings
-        theme.load(thisConfig, THEME, true);
-        botSettings.load(thisConfig, BOT, true);
-        generalSettings.load(thisConfig, SETTINGS, true);
+        theme.load(thisConfig, false);
+        botSettings.load(thisConfig, false);
+        generalSettings.load(thisConfig, false);
 
         save();
     }
@@ -88,9 +87,9 @@ public class SharedGlobalConfig {
         thisConfig.get(GENERAL, "colorBlacklist", new String[0], I19n.format("eirairc:config.property.colorBlacklist.tooltip")).set(colorBlacklist.toArray(new String[colorBlacklist.size()]));
 
         // Default Settings
-        theme.save(thisConfig, THEME);
-        botSettings.save(thisConfig, BOT);
-        generalSettings.save(thisConfig, SETTINGS);
+        theme.save(thisConfig);
+        botSettings.save(thisConfig);
+        generalSettings.save(thisConfig);
 
         thisConfig.save();
     }
@@ -117,11 +116,11 @@ public class SharedGlobalConfig {
         proxyPassword.set(Utils.unquote(legacyConfig.getString("proxyPassword", "network", proxyPassword.getDefaultValue(), "")));
 
         // Theme
-        theme.load(thisConfig, THEME, true);
+        theme.load(thisConfig, false);
         theme.loadLegacy(legacyConfig, null);
-        botSettings.load(thisConfig, BOT, true);
+        botSettings.load(thisConfig, false);
         botSettings.loadLegacy(legacyConfig, null);
-        generalSettings.load(thisConfig, SETTINGS, true);
+        generalSettings.load(thisConfig, false);
         generalSettings.loadLegacy(legacyConfig, null);
 
         save();
@@ -179,9 +178,9 @@ public class SharedGlobalConfig {
                 list.add("false");
             }
         }
-        ThemeSettings.addOptionsToList(list, option, autoCompleteOption);
-        GeneralSettings.addOptionsToList(list, option, autoCompleteOption);
-        BotSettings.addOptionsToList(list, option, autoCompleteOption);
+        theme.addOptionsToList(list, option, autoCompleteOption);
+        generalSettings.addOptionsToList(list, option, autoCompleteOption);
+        botSettings.addOptionsToList(list, option, autoCompleteOption);
     }
 
 }

@@ -6,7 +6,6 @@ import net.blay09.mods.eirairc.api.bot.IBotCommand;
 import net.blay09.mods.eirairc.api.bot.IRCBot;
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.api.irc.IRCUser;
-import net.blay09.mods.eirairc.config.settings.BotBooleanComponent;
 import net.blay09.mods.eirairc.config.settings.BotSettings;
 import net.blay09.mods.eirairc.net.NetworkHandler;
 import net.blay09.mods.eirairc.net.message.MessageNotification;
@@ -36,7 +35,7 @@ public class BotCommandMessage implements IBotCommand {
 	@SuppressWarnings("unchecked")
 	public void processCommand(IRCBot bot, IRCChannel channel, IRCUser user, String[] args, IBotCommand commandSettings) {
 		BotSettings botSettings = ConfigHelper.getBotSettings(channel);
-		if(!botSettings.getBoolean(BotBooleanComponent.AllowPrivateMessages)) {
+		if(!botSettings.allowPrivateMessages.get()) {
 			user.notice(I19n.format("eirairc:commands.msg.disabled"));
 		}
 		String playerName = args[0];
@@ -54,7 +53,7 @@ public class BotCommandMessage implements IBotCommand {
 			}
 		}
 		String message = StringUtils.join(ArrayUtils.subarray(args, 1, args.length), " ");
-		if(botSettings.getBoolean(BotBooleanComponent.FilterLinks)) {
+		if(botSettings.filterLinks.get()) {
 			message = MessageFormat.filterLinks(message);
 		}
 		IChatComponent chatComponent = MessageFormat.formatChatComponent(botSettings.getMessageFormat().mcPrivateMessage, bot.getConnection(), null, user, message, MessageFormat.Target.Minecraft, MessageFormat.Mode.Message);

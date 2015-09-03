@@ -9,9 +9,7 @@ import net.blay09.mods.eirairc.api.irc.IRCUser;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.ServerConfig;
-import net.blay09.mods.eirairc.config.settings.BotBooleanComponent;
 import net.blay09.mods.eirairc.config.settings.BotSettings;
-import net.blay09.mods.eirairc.config.settings.ThemeColorComponent;
 import net.blay09.mods.eirairc.config.settings.ThemeSettings;
 import net.blay09.mods.eirairc.irc.IRCUserImpl;
 import net.blay09.mods.eirairc.util.ConfigHelper;
@@ -53,7 +51,7 @@ public class CommandMessage implements SubCommand {
 			Utils.sendLocalizedMessage(sender, target.getName(), args[0]);
 			return true;
 		} else if(target.getContextType() == IRCContext.ContextType.IRCUser) {
-			if(!ConfigHelper.getBotSettings(context).getBoolean(BotBooleanComponent.AllowPrivateMessages)) {
+			if(!ConfigHelper.getBotSettings(context).allowPrivateMessages.get()) {
 				Utils.sendLocalizedMessage(sender, "commands.msg.disabled");
 				return true;
 			}
@@ -93,7 +91,7 @@ public class CommandMessage implements SubCommand {
 			ThemeSettings themeSettings = ConfigHelper.getTheme(target);
 			EnumChatFormatting emoteColor = ((IRCUserImpl) botUser).getNameColor();
 			if(emoteColor == null) {
-				emoteColor = themeSettings.getColor(ThemeColorComponent.emoteTextColor);
+				emoteColor = themeSettings.emoteTextColor.get();
 			}
 			if(emoteColor != null) {
 				chatComponent.getChatStyle().setColor(emoteColor);

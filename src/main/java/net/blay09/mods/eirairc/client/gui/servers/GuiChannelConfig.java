@@ -14,8 +14,6 @@ import net.blay09.mods.eirairc.config.AuthManager;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.ServerConfig;
-import net.blay09.mods.eirairc.config.settings.BotStringComponent;
-import net.blay09.mods.eirairc.config.settings.GeneralBooleanComponent;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.I19n;
 import net.minecraft.client.gui.GuiButton;
@@ -95,7 +93,7 @@ public class GuiChannelConfig extends GuiTabPage implements GuiYesNoCallback {
         if (chkAutoJoin != null) {
             oldState = chkAutoJoin.isChecked();
         } else {
-            oldState = config.getGeneralSettings().getBoolean(GeneralBooleanComponent.AutoJoin);
+            oldState = config.getGeneralSettings().autoJoin.get();
         }
         chkAutoJoin = new GuiCheckBox(4, leftX, topY + 75, " " + I19n.format("eirairc:gui.channel.autoJoin"), oldState);
         buttonList.add(chkAutoJoin);
@@ -156,7 +154,7 @@ public class GuiChannelConfig extends GuiTabPage implements GuiYesNoCallback {
                 break;
             case 1:
                 if (result) {
-                    serverConfig.getBotSettings().setString(BotStringComponent.MessageFormat, "Classic");
+                    serverConfig.getBotSettings().messageFormat.set("Classic");
                     ConfigurationHandler.saveServers();
                     tabContainer.setCurrentTab(parent, false);
                 } else {
@@ -191,7 +189,7 @@ public class GuiChannelConfig extends GuiTabPage implements GuiYesNoCallback {
             serverConfig.removeChannelConfig(config.getName());
             config.setName(txtName.getText());
             AuthManager.putChannelPassword(config.getIdentifier(), txtPassword.getText());
-            config.getGeneralSettings().setBoolean(GeneralBooleanComponent.AutoJoin, chkAutoJoin.isChecked());
+            config.getGeneralSettings().autoJoin.set(chkAutoJoin.isChecked());
             serverConfig.addChannelConfig(config);
             isNew = false;
         }

@@ -14,9 +14,6 @@ import net.blay09.mods.eirairc.client.gui.base.GuiLabel;
 import net.blay09.mods.eirairc.config.AuthManager;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.ServerConfig;
-import net.blay09.mods.eirairc.config.settings.BotBooleanComponent;
-import net.blay09.mods.eirairc.config.settings.BotStringComponent;
-import net.blay09.mods.eirairc.config.settings.GeneralBooleanComponent;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.I19n;
 import net.blay09.mods.eirairc.util.Utils;
@@ -107,18 +104,18 @@ public class GuiTwitch extends EiraGuiScreen implements GuiYesNoCallback {
 			if(chkAnonymous.isChecked()) {
 				config.setNick("%ANONYMOUS%");
 				AuthManager.putServerPassword(config.getIdentifier(), null);
-				config.getGeneralSettings().setBoolean(GeneralBooleanComponent.ReadOnly, true);
-				config.getBotSettings().setString(BotStringComponent.MessageFormat, "Twitch");
-				config.getBotSettings().setBoolean(BotBooleanComponent.RelayIRCJoinLeave, false);
+				config.getGeneralSettings().readOnly.set(true);
+				config.getBotSettings().messageFormat.set("Twitch");
+				config.getBotSettings().relayIRCJoinLeave.set(false);
 				btnConnect.enabled = false;
 				ConfigurationHandler.addServerConfig(config);
 				ConnectionManager.connectTo(config);
 			} else {
 				config.setNick(txtUsername.getText());
 				AuthManager.putServerPassword(config.getIdentifier(), txtPassword.getText());
-				config.getGeneralSettings().setBoolean(GeneralBooleanComponent.ReadOnly, false);
-				config.getBotSettings().setString(BotStringComponent.MessageFormat, "Twitch");
-				config.getBotSettings().setBoolean(BotBooleanComponent.RelayIRCJoinLeave, false);
+				config.getGeneralSettings().readOnly.set(false);
+				config.getBotSettings().messageFormat.set("Twitch");
+				config.getBotSettings().relayIRCJoinLeave.set(false);
 				if(!config.getNick().isEmpty() && !txtPassword.getText().isEmpty()) {
 					config.getOrCreateChannelConfig("#" + config.getNick());
 					btnConnect.enabled = false;

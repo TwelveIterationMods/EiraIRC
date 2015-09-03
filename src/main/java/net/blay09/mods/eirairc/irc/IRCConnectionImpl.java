@@ -13,7 +13,6 @@ import net.blay09.mods.eirairc.bot.IRCBotImpl;
 import net.blay09.mods.eirairc.config.AuthManager;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
-import net.blay09.mods.eirairc.config.settings.BotStringComponent;
 import net.blay09.mods.eirairc.handler.IRCEventHandler;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
@@ -290,7 +289,7 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 				writer.write("PASS " + serverPassword + "\r\n");
 			}
 			writer.write("NICK " + nick + "\r\n");
-			writer.write("USER " + serverConfig.getBotSettings().getString(BotStringComponent.Ident) + " \"\" \"\" :" + serverConfig.getBotSettings().getString(BotStringComponent.Description) + "\r\n");
+			writer.write("USER " + serverConfig.getBotSettings().ident.get() + " \"\" \"\" :" + serverConfig.getBotSettings().description.get() + "\r\n");
 			writer.flush();
 		} catch (IOException e) {
 			e.printStackTrace();

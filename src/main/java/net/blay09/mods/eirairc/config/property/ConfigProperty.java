@@ -9,8 +9,10 @@ public class ConfigProperty<T> {
     private final String category;
     private final T defaultValue;
     private T value;
+    private boolean hasValue;
+    private ConfigProperty<T> parentProperty;
 
-    public ConfigProperty(ConfigManager manager, String category, String name,   T defaultValue) {
+    public ConfigProperty(ConfigManager manager, String category, String name, T defaultValue) {
         this.manager = manager;
         this.category = category;
         this.name = name;
@@ -19,12 +21,24 @@ public class ConfigProperty<T> {
         manager.registerProperty(this);
     }
 
+    public ConfigProperty<T> getParentProperty() {
+        return parentProperty;
+    }
+
+    public void setParentProperty(ConfigProperty<T> parentProperty) {
+        this.parentProperty = parentProperty;
+    }
+
     public T get() {
-        return value;
+        if(!hasValue && parentProperty != null) {
+            return parentProperty.get();
+        }
+        return value != null ? value : defaultValue;
     }
 
     public void set(T value) {
         this.value = value;
+        hasValue = value != defaultValue;
     }
 
     public String getName() {
@@ -38,4 +52,18 @@ public class ConfigProperty<T> {
     public T getDefaultValue() {
         return defaultValue;
     }
+
+    public void reset() {
+        value = defaultValue;
+        hasValue = false;
+    }
+
+    public boolean hasValue() {
+        return hasValue;
+    }
+
+    public String getAsString() {
+        return String.valueOf(value);
+    }
+
 }
