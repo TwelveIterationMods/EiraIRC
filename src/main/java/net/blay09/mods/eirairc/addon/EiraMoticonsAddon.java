@@ -7,8 +7,14 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.blay09.mods.eirairc.api.config.IConfigProperty;
+import net.blay09.mods.eirairc.api.event.FormatNick;
 import net.blay09.mods.eirairc.api.event.InitConfigEvent;
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
+import net.blay09.mods.eirairc.api.irc.IRCContext;
+import net.blay09.mods.eirairc.api.irc.TwitchUser;
+import net.blay09.mods.eirairc.config.SharedGlobalConfig;
+import net.blay09.mods.eirairc.irc.IRCUserImpl;
 import net.blay09.mods.eirairc.util.I19n;
 import net.blay09.mods.eiramoticons.api.EiraMoticonsAPI;
 import net.blay09.mods.eiramoticons.api.IEmoticon;
@@ -16,6 +22,8 @@ import net.blay09.mods.eiramoticons.api.IEmoticonLoader;
 import net.blay09.mods.eiramoticons.api.ReloadEmoticons;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResource;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.IChatComponent;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -40,6 +48,9 @@ public class EiraMoticonsAddon implements IEmoticonLoader {
 	public static IEmoticon modBadge;
 	public static IEmoticon turboBadge;
 
+	public static IConfigProperty<Boolean> alwaysShowSubBadge;
+	public static IConfigProperty<Boolean> twitchNameBadges;
+
 	public EiraMoticonsAddon() {
 		MinecraftForge.EVENT_BUS.register(this);
 		reloadEmoticons(new ReloadEmoticons());
@@ -47,8 +58,13 @@ public class EiraMoticonsAddon implements IEmoticonLoader {
 	}
 
 	@SubscribeEvent
-	public static void initConfig(InitConfigEvent.ThemeSettings event) {
-		event.config.registerProperty("eiramoticons", "alwaysShowSubBadge", "eirairc:config.property.alwaysShowSubBadge", false);
+	public void initConfig(InitConfigEvent.SharedGlobalSettings event) {
+		twitchNameBadges = event.config.getProperty("eirairc", "twitchNameBadges");
+	}
+
+	@SubscribeEvent
+	public void initConfig(InitConfigEvent.ThemeSettings event) {
+		alwaysShowSubBadge = event.config.registerProperty("eiramoticons", "alwaysShowSubBadge", "eirairc:config.property.alwaysShowSubBadge", false);
 	}
 
 	@Optional.Method(modid = "eiramoticons")
@@ -100,6 +116,34 @@ public class EiraMoticonsAddon implements IEmoticonLoader {
 			}
 		}
 		return subBadge;
+	}
+
+	@SubscribeEvent
+	@Optional.Method(modid = "eiramoticons")
+	public void formatNick(FormatNick event) {
+		if(twitchNameBadges.get() && event.context.getConnection().isTwitch() && event.context.getContextType() == IRCContext.ContextType.IRCChannel) {
+			String badges = "";
+			if(event.user.getName().toLowerCase().equals(event.context.getName().substring(1).toLowerCase())) {
+				badges += casterBadge.getChatString();
+			} else if(event.user.isOperator((IRCChannel) event.context)) {
+				badges += modBadge.getChatString();
+			}
+			if(((TwitchUser) event.user).isTwitchTurbo()) {
+				badges += turboBadge.getChatString();
+			}
+			if(((TwitchUser) event.user).isTwitchSubscriber((IRCChannel) event.context) || alwaysShowSubBadge.get()) {
+				String badgeString = getSubscriberBadgeString((IRCChannel) event.context);
+				if(!badgeString.isEmpty()) {
+					badges += badgeString + " ";
+				}
+			}
+			if(badges.length() > 0) {
+				badges += " ";
+			}
+			IChatComponent component = new ChatComponentText(badges);
+			component.appendSibling(event.component);
+			event.component = component;
+		}
 	}
 
 	@SubscribeEvent

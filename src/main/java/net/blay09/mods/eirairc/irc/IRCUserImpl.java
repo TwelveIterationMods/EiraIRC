@@ -7,6 +7,7 @@ import net.blay09.mods.eirairc.api.bot.IRCBot;
 import net.blay09.mods.eirairc.api.config.IConfigManager;
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.api.irc.IRCUser;
+import net.blay09.mods.eirairc.api.irc.TwitchUser;
 import net.blay09.mods.eirairc.bot.IRCBotImpl;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.I19n;
@@ -14,7 +15,7 @@ import net.minecraft.util.EnumChatFormatting;
 
 import java.util.*;
 
-public class IRCUserImpl implements IRCUser {
+public class IRCUserImpl implements IRCUser, TwitchUser {
 
 	private static class QueuedAuthCommand {
 		public final IRCBot bot;
@@ -59,7 +60,7 @@ public class IRCUserImpl implements IRCUser {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	public String getName() {
 		return name;
 	}
@@ -200,7 +201,8 @@ public class IRCUserImpl implements IRCUser {
 		}
 	}
 
-	public boolean isTwitchSubscriber() {
+	@Override
+	public boolean isTwitchSubscriber(IRCChannel channel) {
 		return isTwitchSubscriber;
 	}
 
@@ -208,6 +210,7 @@ public class IRCUserImpl implements IRCUser {
 		this.isTwitchSubscriber = isSubscriber;
 	}
 
+	@Override
 	public boolean isTwitchTurbo() {
 		return isTwitchTurbo;
 	}
@@ -241,4 +244,5 @@ public class IRCUserImpl implements IRCUser {
 	public void setDisplayName(String displayName) {
 		this.displayName = displayName;
 	}
+
 }

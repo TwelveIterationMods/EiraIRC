@@ -40,7 +40,7 @@ public class ConfigManager implements IConfigManager {
 
     @SuppressWarnings("unchecked")
     public void registerProperty(ConfigProperty property) {
-        properties.put(property.getCategory() + ":" + property.getName(), property);
+        properties.put(property.getName(), property);
         if(parentManager != null) {
             property.setParentProperty(parentManager.getProperty(property.getName()));
         }

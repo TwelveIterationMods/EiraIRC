@@ -2,6 +2,8 @@
 
 package net.blay09.mods.eirairc.api.irc;
 
+import net.minecraft.util.IChatComponent;
+
 import java.util.Collection;
 
 public interface IRCUser extends IRCContext {

@@ -2,10 +2,8 @@
 
 package net.blay09.mods.eirairc.util;
 
-import net.blay09.mods.eirairc.addon.Compatibility;
-import net.blay09.mods.eirairc.addon.EiraMoticonsAddon;
-import net.blay09.mods.eirairc.api.config.IConfigProperty;
 import net.blay09.mods.eirairc.api.event.FormatMessage;
+import net.blay09.mods.eirairc.api.event.FormatNick;
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
@@ -154,7 +152,7 @@ public class MessageFormat {
 		return sb.toString();
 	}
 
-	public static String formatNick(String nick, IRCContext context, Target target, Mode mode, IRCUser ircUser) {
+	public static String formatNick(String nick, IRCContext context, Target target, Mode mode) {
 		if(target == Target.IRC) {
 			if(SharedGlobalConfig.hidePlayerTags.get()) {
 				nick = filterPlayerTags(nick);
@@ -162,40 +160,6 @@ public class MessageFormat {
 			nick = String.format(ConfigHelper.getBotSettings(context).mcNickFormat.get(), nick);
 			if(SharedGlobalConfig.preventUserPing.get()) {
 				nick = nick.substring(0, 1) + '\u0081' + nick.substring(1);
-			}
-		} else if(target == Target.Minecraft && context instanceof IRCChannel) {
-			IRCUserImpl user = (IRCUserImpl) ircUser;
-			if(context.getConnection().isTwitch()) {
-				nick = user.getDisplayName();
-			}
-			GeneralSettings settings = ConfigHelper.getGeneralSettings(context);
-			if(settings.showNameFlags.get()) {
-				nick = ircUser.getChannelModePrefix((IRCChannel) context) + nick;
-			}
-			if(context.getConnection().isTwitch()) {
-				// TODO this should be moved to EiraMoticons as soon as the API makes it possible
-				if(Compatibility.isEiraMoticonsInstalled() && SharedGlobalConfig.twitchNameBadges.get()) {
-					String badges = "";
-					if(ircUser.getName().toLowerCase().equals(context.getName().substring(1).toLowerCase())) {
-						badges += EiraMoticonsAddon.casterBadge.getChatString();
-					} else if(ircUser.isOperator((IRCChannel) context)) {
-						badges += EiraMoticonsAddon.modBadge.getChatString();
-					}
-					if(user.isTwitchTurbo()) {
-						badges += EiraMoticonsAddon.turboBadge.getChatString();
-					}
-					IConfigProperty<Boolean> alwaysShowSubBadge = context.getThemeSettings().getProperty("eiramoticons", "alwaysShowSubBadge");
-					if(user.isTwitchSubscriber() || (alwaysShowSubBadge != null && alwaysShowSubBadge.get())) {
-						String badgeString = EiraMoticonsAddon.getSubscriberBadgeString((IRCChannel) context);
-						if(!badgeString.isEmpty()) {
-							badges += badgeString + " ";
-						}
-					}
-					if(badges.length() > 0) {
-						badges += " ";
-					}
-					nick = badges + nick;
-				}
 			}
 		}
 		return nick;
@@ -241,7 +205,7 @@ public class MessageFormat {
 								EntityPlayer player = (EntityPlayer) sender;
 								component = player.func_145748_c_().createCopy(); // getFormattedCommandSenderName
 								String displayName = component.getUnformattedText();
-								displayName = formatNick(displayName, context, target, mode, null);
+								displayName = formatNick(displayName, context, target, mode);
 								component = new ChatComponentText(displayName);
 								if (mode != Mode.Emote) {
 									EnumChatFormatting nameColor = IRCFormatting.getColorFormattingForPlayer(player);
@@ -345,8 +309,15 @@ public class MessageFormat {
 							break;
 						case "NICK":
 							if (sender != null) {
-								String displayName = formatNick(sender.getName(), targetContext, target, mode, sender);
-								component = new ChatComponentText(displayName);
+								FormatNick event = new FormatNick(sender, targetContext, new ChatComponentText(((IRCUserImpl) sender).getDisplayName()));
+								MinecraftForge.EVENT_BUS.post(event);
+								GeneralSettings settings = ConfigHelper.getGeneralSettings(targetContext);
+								if(settings.showNameFlags.get() && targetContext instanceof IRCChannel) {
+									component = new ChatComponentText(sender.getChannelModePrefix((IRCChannel) targetContext));
+									component.appendSibling(event.component);
+								} else {
+									component = event.component;
+								}
 								if (mode != Mode.Emote) {
 									EnumChatFormatting nameColor = IRCFormatting.getColorFormattingForUser(targetContext instanceof IRCChannel ? (IRCChannel) targetContext : null, sender);
 									if (nameColor != null) {
