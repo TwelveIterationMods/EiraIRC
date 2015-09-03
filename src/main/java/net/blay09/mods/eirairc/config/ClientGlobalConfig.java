@@ -4,13 +4,14 @@ package net.blay09.mods.eirairc.config;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.blay09.mods.eirairc.client.UploadManager;
+import net.blay09.mods.eirairc.api.event.InitConfigEvent;
 import net.blay09.mods.eirairc.config.property.ConfigManager;
 import net.blay09.mods.eirairc.config.property.ConfigProperty;
 import net.blay09.mods.eirairc.util.I19n;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.command.ICommandSender;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import org.lwjgl.input.Keyboard;
 
@@ -59,6 +60,10 @@ public class ClientGlobalConfig {
 	public static final KeyBinding keyOpenScreenshots = new KeyBinding("key.irc.openScreenshots", 0, "key.categories.irc");
 	public static final KeyBinding keyToggleTarget = new KeyBinding("key.irc.toggleTarget", Keyboard.KEY_TAB, "key.categories.irc");
 	public static final KeyBinding keyOpenMenu = new KeyBinding("key.irc.openMenu", Keyboard.KEY_I, "key.categories.irc");
+
+	public ClientGlobalConfig() {
+		MinecraftForge.EVENT_BUS.post(new InitConfigEvent.ClientGlobalSettings(manager));
+	}
 
 	public static void load(File configDir, boolean reloadFile) {
 		if(thisConfig == null || reloadFile) {

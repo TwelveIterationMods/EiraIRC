@@ -2,6 +2,7 @@
 
 package net.blay09.mods.eirairc.config;
 
+import net.blay09.mods.eirairc.api.event.InitConfigEvent;
 import net.blay09.mods.eirairc.config.property.ConfigProperty;
 import net.blay09.mods.eirairc.config.property.ConfigManager;
 import net.blay09.mods.eirairc.config.property.StringList;
@@ -12,6 +13,7 @@ import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.I19n;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 
 import java.io.File;
@@ -53,6 +55,10 @@ public class SharedGlobalConfig {
     public static final ThemeSettings theme = new ThemeSettings(null);
     public static final BotSettings botSettings = new BotSettings(null);
     public static final GeneralSettings generalSettings = new GeneralSettings(null);
+
+    public SharedGlobalConfig() {
+        MinecraftForge.EVENT_BUS.post(new InitConfigEvent.SharedGlobalSettings(manager));
+    }
 
     public static void load(File configDir, boolean reloadFile) {
         if (thisConfig == null || reloadFile) {

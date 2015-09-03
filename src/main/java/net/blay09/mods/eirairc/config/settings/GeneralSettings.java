@@ -2,7 +2,9 @@
 
 package net.blay09.mods.eirairc.config.settings;
 
+import net.blay09.mods.eirairc.api.event.InitConfigEvent;
 import net.blay09.mods.eirairc.config.property.ConfigProperty;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 
 public class GeneralSettings extends AbstractSettings {
@@ -17,6 +19,8 @@ public class GeneralSettings extends AbstractSettings {
 
 	public GeneralSettings(GeneralSettings parent) {
 		super(parent, SETTINGS);
+
+		MinecraftForge.EVENT_BUS.post(new InitConfigEvent.GeneralSettings(manager));
 	}
 
 	public void loadLegacy(Configuration legacyConfig, String category) {

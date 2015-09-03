@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.blay09.mods.eirairc.api.event.InitConfigEvent;
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.util.I19n;
 import net.blay09.mods.eiramoticons.api.EiraMoticonsAPI;
@@ -43,6 +44,11 @@ public class EiraMoticonsAddon implements IEmoticonLoader {
 		MinecraftForge.EVENT_BUS.register(this);
 		reloadEmoticons(new ReloadEmoticons());
 		instance = this;
+	}
+
+	@SubscribeEvent
+	public static void initConfig(InitConfigEvent.ThemeSettings event) {
+		event.config.registerProperty("eiramoticons", "alwaysShowSubBadge", false);
 	}
 
 	@Optional.Method(modid = "eiramoticons")

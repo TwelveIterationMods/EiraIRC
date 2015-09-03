@@ -9,15 +9,21 @@ public class ConfigProperty<T> implements IConfigProperty<T> {
     private final ConfigManager manager;
     private final String name;
     private final String category;
+    private final String langKey;
     private final T defaultValue;
     private T value;
     private boolean hasValue;
     private ConfigProperty<T> parentProperty;
 
     public ConfigProperty(ConfigManager manager, String category, String name, T defaultValue) {
+        this(manager, category, name, "eirairc:config.property." + name, defaultValue);
+    }
+
+    public ConfigProperty(ConfigManager manager, String category, String name, String langKey, T defaultValue) {
         this.manager = manager;
         this.category = category;
         this.name = name;
+        this.langKey = langKey;
         this.defaultValue = defaultValue;
 
         manager.registerProperty(this);
@@ -76,4 +82,7 @@ public class ConfigProperty<T> implements IConfigProperty<T> {
         return String.valueOf(value);
     }
 
+    public String getLangKey() {
+        return langKey;
+    }
 }

@@ -2,11 +2,13 @@
 
 package net.blay09.mods.eirairc.config.settings;
 
+import net.blay09.mods.eirairc.api.event.InitConfigEvent;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.base.MessageFormatConfig;
 import net.blay09.mods.eirairc.config.property.ConfigProperty;
 import net.blay09.mods.eirairc.config.property.StringList;
 import net.blay09.mods.eirairc.util.Utils;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 
 public class BotSettings extends AbstractSettings {
@@ -39,6 +41,8 @@ public class BotSettings extends AbstractSettings {
 
 	public BotSettings(BotSettings parent) {
 		super(parent, BOT);
+
+		MinecraftForge.EVENT_BUS.post(new InitConfigEvent.BotSettings(manager));
 	}
 
 	public MessageFormatConfig getMessageFormat() {
