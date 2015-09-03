@@ -61,10 +61,6 @@ public class ClientGlobalConfig {
 	public static final KeyBinding keyToggleTarget = new KeyBinding("key.irc.toggleTarget", Keyboard.KEY_TAB, "key.categories.irc");
 	public static final KeyBinding keyOpenMenu = new KeyBinding("key.irc.openMenu", Keyboard.KEY_I, "key.categories.irc");
 
-	public ClientGlobalConfig() {
-		MinecraftForge.EVENT_BUS.post(new InitConfigEvent.ClientGlobalSettings(manager));
-	}
-
 	public static void load(File configDir, boolean reloadFile) {
 		if(thisConfig == null || reloadFile) {
 			thisConfig = new Configuration(new File(configDir, "client.cfg"));

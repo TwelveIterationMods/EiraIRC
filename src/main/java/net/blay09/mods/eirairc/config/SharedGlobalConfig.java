@@ -56,10 +56,6 @@ public class SharedGlobalConfig {
     public static final BotSettings botSettings = new BotSettings(null);
     public static final GeneralSettings generalSettings = new GeneralSettings(null);
 
-    public SharedGlobalConfig() {
-        MinecraftForge.EVENT_BUS.post(new InitConfigEvent.SharedGlobalSettings(manager));
-    }
-
     public static void load(File configDir, boolean reloadFile) {
         if (thisConfig == null || reloadFile) {
             thisConfig = new Configuration(new File(configDir, "shared.cfg"));
