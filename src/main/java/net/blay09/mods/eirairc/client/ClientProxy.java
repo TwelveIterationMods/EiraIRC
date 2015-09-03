@@ -20,6 +20,7 @@ import net.blay09.mods.eirairc.api.event.IRCChannelMessageEvent;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.client.gui.EiraGui;
 import net.blay09.mods.eirairc.client.gui.GuiEiraIRCMenu;
+import net.blay09.mods.eirairc.client.gui.GuiEiraIRCRedirect;
 import net.blay09.mods.eirairc.client.gui.GuiWelcome;
 import net.blay09.mods.eirairc.client.gui.chat.GuiChatExtended;
 import net.blay09.mods.eirairc.client.gui.chat.GuiSleepExtended;
@@ -296,5 +297,15 @@ public class ClientProxy extends CommonProxy {
 		return ClientGlobalConfig.manager;
 	}
 
+	@Override
+	public void handleRedirect(ServerConfig serverConfig) {
+		super.handleRedirect(serverConfig);
 
+		TrustedServer server = ConfigurationHandler.getOrCreateTrustedServer(Utils.getServerAddress());
+		if(server.isAllowRedirect()) {
+			ConnectionManager.redirectTo(serverConfig, server.isRedirectSolo());
+		} else {
+			Minecraft.getMinecraft().displayGuiScreen(new GuiEiraIRCRedirect(serverConfig));
+		}
+	}
 }

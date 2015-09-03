@@ -7,6 +7,7 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import net.blay09.mods.eirairc.api.config.IConfigManager;
 import net.blay09.mods.eirairc.api.event.IRCChannelMessageEvent;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
+import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.net.NetworkHandler;
 import net.blay09.mods.eirairc.net.message.MessageNotification;
@@ -107,4 +108,6 @@ public class CommonProxy {
 	public IConfigManager getClientGlobalConfig() {
 		return null;
 	}
+
+	public void handleRedirect(ServerConfig serverConfig) {}
 }
