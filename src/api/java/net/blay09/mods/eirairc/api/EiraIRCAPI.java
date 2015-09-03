@@ -2,6 +2,7 @@
 
 package net.blay09.mods.eirairc.api;
 
+import net.blay09.mods.eirairc.api.config.IConfigManager;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.api.upload.UploadHoster;
 import net.minecraft.command.ICommandSender;
@@ -91,4 +92,11 @@ public class EiraIRCAPI {
 		internalMethods.relayChat(sender, message, isEmote, isNotice, target);
 	}
 
+	public static IConfigManager getSharedGlobalConfig() {
+		return internalMethods.getSharedGlobalConfig();
+	}
+
+	public static IConfigManager getClientGlobalConfig() {
+		return internalMethods.getClientGlobalConfig();
+	}
 }

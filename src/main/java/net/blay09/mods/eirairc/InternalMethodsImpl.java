@@ -4,6 +4,7 @@ package net.blay09.mods.eirairc;
 
 import net.blay09.mods.eirairc.api.InternalMethods;
 import net.blay09.mods.eirairc.api.SubCommand;
+import net.blay09.mods.eirairc.api.config.IConfigManager;
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
@@ -11,6 +12,7 @@ import net.blay09.mods.eirairc.api.irc.IRCUser;
 import net.blay09.mods.eirairc.api.upload.UploadHoster;
 import net.blay09.mods.eirairc.client.UploadManager;
 import net.blay09.mods.eirairc.command.base.IRCCommandHandler;
+import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.net.EiraPlayerInfo;
 import net.blay09.mods.eirairc.util.IRCTargetError;
 import net.blay09.mods.eirairc.util.Utils;
@@ -116,4 +118,13 @@ public class InternalMethodsImpl implements InternalMethods {
 		}
 	}
 
+	@Override
+	public IConfigManager getSharedGlobalConfig() {
+		return SharedGlobalConfig.manager;
+	}
+
+	@Override
+	public IConfigManager getClientGlobalConfig() {
+		return EiraIRC.proxy.getClientGlobalConfig();
+	}
 }

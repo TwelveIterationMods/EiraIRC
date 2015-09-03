@@ -2,6 +2,8 @@
 
 package net.blay09.mods.eirairc.api.irc;
 
+import net.blay09.mods.eirairc.api.config.IConfigManager;
+
 public interface IRCContext {
 
 	/**
@@ -67,5 +69,8 @@ public interface IRCContext {
 	 * @param message the message to be sent to this context
 	 */
 	void ctcpNotice(String message);
-	
+
+	IConfigManager getGeneralSettings();
+	IConfigManager getBotSettings();
+	IConfigManager getThemeSettings();
 }

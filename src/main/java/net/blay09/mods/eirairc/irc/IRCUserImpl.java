@@ -4,6 +4,7 @@ package net.blay09.mods.eirairc.irc;
 
 import net.blay09.mods.eirairc.api.bot.IBotCommand;
 import net.blay09.mods.eirairc.api.bot.IRCBot;
+import net.blay09.mods.eirairc.api.config.IConfigManager;
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.api.irc.IRCUser;
 import net.blay09.mods.eirairc.bot.IRCBotImpl;
@@ -169,6 +170,21 @@ public class IRCUserImpl implements IRCUser {
 	@Override
 	public void ctcpNotice(String message) {
 		notice(IRCConnectionImpl.CTCP_START + message + IRCConnectionImpl.CTCP_END);
+	}
+
+	@Override
+	public IConfigManager getGeneralSettings() {
+		return ConfigHelper.getGeneralSettings(this).manager;
+	}
+
+	@Override
+	public IConfigManager getBotSettings() {
+		return ConfigHelper.getBotSettings(this).manager;
+	}
+
+	@Override
+	public IConfigManager getThemeSettings() {
+		return ConfigHelper.getTheme(this).manager;
 	}
 
 	public void queueAuthCommand(IRCBotImpl bot, IRCChannel channel, IBotCommand botCommand, String[] args) {

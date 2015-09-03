@@ -26,7 +26,7 @@ public class SharedGlobalConfig {
     public static final String SETTINGS = "settings";
 
     public static Configuration thisConfig;
-    private static final ConfigManager manager = new ConfigManager();
+    public static final ConfigManager manager = new ConfigManager();
 
     // General
     public static final ConfigProperty<String> defaultChat = new ConfigProperty<>(manager, GENERAL, "defaultChat", "Minecraft");

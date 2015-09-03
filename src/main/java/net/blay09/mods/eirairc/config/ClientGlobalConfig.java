@@ -26,7 +26,7 @@ public class ClientGlobalConfig {
 	public static final String COMPATIBILITY = "compatibility";
 
 	public static Configuration thisConfig;
-	private static final ConfigManager manager = new ConfigManager();
+	public static final ConfigManager manager = new ConfigManager();
 
 	// General
 	public static final ConfigProperty<Boolean> persistentConnection = new ConfigProperty<>(manager, GENERAL, "persistentConnection", true);

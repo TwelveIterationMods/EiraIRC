@@ -2,8 +2,10 @@
 
 package net.blay09.mods.eirairc.irc;
 
+import net.blay09.mods.eirairc.api.config.IConfigManager;
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.api.irc.IRCUser;
+import net.blay09.mods.eirairc.util.ConfigHelper;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -24,7 +26,7 @@ public class IRCChannelImpl implements IRCChannel {
 	public Collection<IRCUser> getUserList() {
 		return users.values();
 	}
-	
+
 	public IRCUser getUser(String nick) {
 		return users.get(nick.toLowerCase());
 	}
@@ -88,5 +90,20 @@ public class IRCChannelImpl implements IRCChannel {
 	@Override
 	public void ctcpNotice(String message) {
 		notice(IRCConnectionImpl.CTCP_START + message + IRCConnectionImpl.CTCP_END);
+	}
+
+	@Override
+	public IConfigManager getGeneralSettings() {
+		return ConfigHelper.getGeneralSettings(this).manager;
+	}
+
+	@Override
+	public IConfigManager getBotSettings() {
+		return ConfigHelper.getBotSettings(this).manager;
+	}
+
+	@Override
+	public IConfigManager getThemeSettings() {
+		return ConfigHelper.getTheme(this).manager;
 	}
 }

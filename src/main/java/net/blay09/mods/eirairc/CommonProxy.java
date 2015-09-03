@@ -4,6 +4,7 @@ package net.blay09.mods.eirairc;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
+import net.blay09.mods.eirairc.api.config.IConfigManager;
 import net.blay09.mods.eirairc.api.event.IRCChannelMessageEvent;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
@@ -103,4 +104,7 @@ public class CommonProxy {
 		ConnectionManager.tickConnections();
 	}
 
+	public IConfigManager getClientGlobalConfig() {
+		return null;
+	}
 }

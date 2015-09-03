@@ -2,7 +2,9 @@
 
 package net.blay09.mods.eirairc.config.property;
 
-public class ConfigProperty<T> {
+import net.blay09.mods.eirairc.api.config.IConfigProperty;
+
+public class ConfigProperty<T> implements IConfigProperty<T> {
 
     private final ConfigManager manager;
     private final String name;
@@ -29,6 +31,7 @@ public class ConfigProperty<T> {
         this.parentProperty = parentProperty;
     }
 
+    @Override
     public T get() {
         if(!hasValue && parentProperty != null) {
             return parentProperty.get();
@@ -36,19 +39,23 @@ public class ConfigProperty<T> {
         return value != null ? value : defaultValue;
     }
 
+    @Override
     public void set(T value) {
         this.value = value;
         hasValue = value != defaultValue;
     }
 
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public String getCategory() {
         return category;
     }
 
+    @Override
     public T getDefaultValue() {
         if(parentProperty != null) {
             return parentProperty.get();

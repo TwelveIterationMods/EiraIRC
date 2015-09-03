@@ -6,6 +6,8 @@ import com.google.common.collect.Maps;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import net.blay09.mods.eirairc.api.config.IConfigManager;
+import net.blay09.mods.eirairc.api.config.IConfigProperty;
 import net.blay09.mods.eirairc.util.I19n;
 import net.blay09.mods.eirairc.util.IRCFormatting;
 import net.minecraft.util.EnumChatFormatting;
@@ -17,16 +19,27 @@ import org.apache.logging.log4j.Logger;
 import java.util.Collection;
 import java.util.Map;
 
-public class ConfigManager {
+public class ConfigManager implements IConfigManager {
 
     private final Logger logger = LogManager.getLogger();
     private final Map<String, ConfigProperty> properties = Maps.newHashMap();
 
     private ConfigManager parentManager;
 
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> IConfigProperty<T> getProperty(String modid, String name) {
+        return getProperty((modid == null || modid.equals("eirairc")) ? name : (modid + "_" + name));
+    }
+
+    @Override
+    public <T> IConfigProperty<T> registerProperty(String modid, String name, T defaultValue) {
+        return new ConfigProperty<>(this, "addons", modid + "_" + name, defaultValue);
+    }
+
     @SuppressWarnings("unchecked")
     public void registerProperty(ConfigProperty property) {
-        properties.put(property.getName(), property);
+        properties.put(property.getCategory() + ":" + property.getName(), property);
         if(parentManager != null) {
             property.setParentProperty(parentManager.getProperty(property.getName()));
         }

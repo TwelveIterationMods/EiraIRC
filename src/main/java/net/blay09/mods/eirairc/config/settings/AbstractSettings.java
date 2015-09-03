@@ -13,7 +13,7 @@ import java.util.List;
 public abstract class AbstractSettings {
 
     protected final String category;
-    protected final ConfigManager manager = new ConfigManager();
+    public final ConfigManager manager = new ConfigManager();
     private final AbstractSettings parent;
     private Configuration dummyConfig;
 

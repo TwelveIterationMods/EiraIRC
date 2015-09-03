@@ -15,6 +15,7 @@ import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.addon.DirectUploadHoster;
 import net.blay09.mods.eirairc.addon.ImgurHoster;
 import net.blay09.mods.eirairc.api.EiraIRCAPI;
+import net.blay09.mods.eirairc.api.config.IConfigManager;
 import net.blay09.mods.eirairc.api.event.IRCChannelMessageEvent;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.client.gui.EiraGui;
@@ -288,5 +289,10 @@ public class ClientProxy extends CommonProxy {
 	@SubscribeEvent
 	public void renderTick(TickEvent.RenderTickEvent event) {
 		notificationGUI.updateAndRender(event.renderTickTime);
+	}
+
+	@Override
+	public IConfigManager getClientGlobalConfig() {
+		return ClientGlobalConfig.manager;
 	}
 }

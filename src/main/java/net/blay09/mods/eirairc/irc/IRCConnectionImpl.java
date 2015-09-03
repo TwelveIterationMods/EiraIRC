@@ -5,6 +5,7 @@ package net.blay09.mods.eirairc.irc;
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.IRCReplyCodes;
 import net.blay09.mods.eirairc.api.bot.IRCBot;
+import net.blay09.mods.eirairc.api.config.IConfigManager;
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
 import net.blay09.mods.eirairc.api.irc.IRCMessage;
@@ -14,6 +15,7 @@ import net.blay09.mods.eirairc.config.AuthManager;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.handler.IRCEventHandler;
+import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
 
@@ -637,6 +639,21 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 
 	@Override
 	public void ctcpNotice(String message) {}
+
+	@Override
+	public IConfigManager getGeneralSettings() {
+		return ConfigHelper.getGeneralSettings(this).manager;
+	}
+
+	@Override
+	public IConfigManager getBotSettings() {
+		return ConfigHelper.getBotSettings(this).manager;
+	}
+
+	@Override
+	public IConfigManager getThemeSettings() {
+		return ConfigHelper.getTheme(this).manager;
+	}
 
 	@Override
 	public int[] getPorts() {
