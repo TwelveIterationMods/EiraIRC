@@ -24,6 +24,7 @@ public class SharedGlobalConfig {
     public static final String THEME = "theme";
     public static final String BOT = "bot";
     public static final String SETTINGS = "settings";
+    public static final String ADDONS = "addons";
 
     public static Configuration thisConfig;
     public static final ConfigManager manager = new ConfigManager();
@@ -35,7 +36,6 @@ public class SharedGlobalConfig {
     public static final ConfigProperty<Boolean> debugMode = new ConfigProperty<>(manager, GENERAL, "debugMode", false);
     public static final ConfigProperty<Boolean> preventUserPing = new ConfigProperty<>(manager, GENERAL, "preventUserPing", false);
     public static final ConfigProperty<Boolean> twitchNameColors = new ConfigProperty<>(manager, GENERAL, "twitchNameColors", true);
-    public static final ConfigProperty<Boolean> twitchNameBadges = new ConfigProperty<>(manager, GENERAL, "twitchNameBadges", true);
     public static final ConfigProperty<String> ircCommandPrefix = new ConfigProperty<>(manager, GENERAL, "ircCommandPrefix", "!");
     public static final ConfigProperty<StringList> colorBlacklist = new ConfigProperty<>(manager, GENERAL, "colorBlacklist", new StringList(Globals.DEFAULT_COLOR_BLACKLIST));
 
@@ -57,6 +57,10 @@ public class SharedGlobalConfig {
     public static void load(File configDir, boolean reloadFile) {
         if (thisConfig == null || reloadFile) {
             thisConfig = new Configuration(new File(configDir, "shared.cfg"));
+            manager.setParentConfig(thisConfig);
+            generalSettings.manager.setParentConfig(thisConfig);
+            botSettings.manager.setParentConfig(thisConfig);
+            theme.manager.setParentConfig(thisConfig);
         }
 
         manager.load(thisConfig);
@@ -89,6 +93,10 @@ public class SharedGlobalConfig {
 
     public static void loadLegacy(File configDir, Configuration legacyConfig) {
         thisConfig = new Configuration(new File(configDir, "shared.cfg"));
+        manager.setParentConfig(thisConfig);
+        generalSettings.manager.setParentConfig(thisConfig);
+        botSettings.manager.setParentConfig(thisConfig);
+        theme.manager.setParentConfig(thisConfig);
 
         // General
         enablePlayerColors.set(legacyConfig.getBoolean("enableNameColors", "display", enablePlayerColors.getDefaultValue(), ""));

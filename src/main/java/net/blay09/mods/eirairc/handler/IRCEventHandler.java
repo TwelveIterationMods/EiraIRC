@@ -619,13 +619,24 @@ public class IRCEventHandler {
 				EiraIRCAPI.getChatHandler().addChatMessage(chatComponent);
 				break;
 			case ALLOW:
-				EiraIRCAPI.getChatHandler().addChatMessage(event.result);
+				if(event.result != null) {
+					EiraIRCAPI.getChatHandler().addChatMessage(event.result);
+				}
 				break;
 		}
 	}
 
 	public static void fireConnectingEvent(IRCConnection connection) {
 		ConnectionManager.addConnection(connection);
+		IRCConnectingEvent event = new IRCConnectingEvent(connection);
+		MinecraftForge.EVENT_BUS.post(event);
+		switch(event.getResult()) {
+			case ALLOW:
+				if(event.result != null) {
+					EiraIRCAPI.getChatHandler().addChatMessage(event.result);
+				}
+				break;
+		}
 	}
 
 	public static void fireChannelJoinedEvent(IRCConnection connection, IRCMessage message, IRCChannel channel) {
@@ -633,13 +644,27 @@ public class IRCEventHandler {
 		if(ConfigHelper.getGeneralSettings(channel).autoWho.get()) {
 			Utils.sendUserList(null, connection, channel);
 		}
-		if(Compatibility.isEiraMoticonsInstalled() && SharedGlobalConfig.twitchNameBadges.get() && channel.getConnection().isTwitch()) {
-			// Pre-load this channels sub badge
-			EiraMoticonsAddon.getSubscriberBadge(channel);
+		IRCChannelJoinedEvent event = new IRCChannelJoinedEvent(connection, message, channel);
+		MinecraftForge.EVENT_BUS.post(event);
+		switch(event.getResult()) {
+			case ALLOW:
+				if(event.result != null) {
+					EiraIRCAPI.getChatHandler().addChatMessage(event.result);
+				}
+				break;
 		}
 	}
 
 	public static void fireChannelLeftEvent(IRCConnection connection, IRCChannel channel) {
 		EiraIRC.instance.getChatSessionHandler().removeTargetChannel(channel);
+		IRCChannelLeftEvent event = new IRCChannelLeftEvent(connection, channel);
+		MinecraftForge.EVENT_BUS.post(event);
+		switch(event.getResult()) {
+			case ALLOW:
+				if(event.result != null) {
+					EiraIRCAPI.getChatHandler().addChatMessage(event.result);
+				}
+				break;
+		}
 	}
 }

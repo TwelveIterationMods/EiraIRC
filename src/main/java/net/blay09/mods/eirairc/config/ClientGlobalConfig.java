@@ -23,6 +23,7 @@ public class ClientGlobalConfig {
 	public static final String SCREENSHOTS = "screenshots";
 	public static final String NOTIFICATIONS = "notifications";
 	public static final String COMPATIBILITY = "compatibility";
+	public static final String ADDONS = "addons";
 
 	public static Configuration thisConfig;
 	public static final ConfigManager manager = new ConfigManager();
@@ -62,6 +63,7 @@ public class ClientGlobalConfig {
 	public static void load(File configDir, boolean reloadFile) {
 		if(thisConfig == null || reloadFile) {
 			thisConfig = new Configuration(new File(configDir, "client.cfg"));
+			manager.setParentConfig(thisConfig);
 		}
 
 		manager.load(thisConfig);
@@ -83,6 +85,7 @@ public class ClientGlobalConfig {
 
 	public static void loadLegacy(File configDir, Configuration legacyConfig) {
 		thisConfig = new Configuration(new File(configDir, "client.cfg"));
+		manager.setParentConfig(thisConfig);
 
 		// General
 		registerShortCommands.set(legacyConfig.getBoolean("registerShortCommands", "global", registerShortCommands.get(), ""));

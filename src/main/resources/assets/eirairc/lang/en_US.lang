@@ -268,6 +268,8 @@ eirairc:config.category.bot=Bot Settings
 eirairc:config.category.bot.tooltip=Bot settings and behaviour for the IRC chat. Can be overridden by servers and channels.
 eirairc:config.category.settings=Chat Settings
 eirairc:config.category.settings.tooltip=General settings for IRC connections. Can be overridden by servers and channels.
+eirairc:config.category.addons=Addon Settings
+eirairc:config.category.addons.tooltip=Settings for EiraIRC addons that are not part of the core of the mod.
 
 # Properties (Shared)
 eirairc:config.property.enablePlayerColors=Enable Player Colors

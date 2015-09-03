@@ -2,12 +2,10 @@
 
 package net.blay09.mods.eirairc.config.settings;
 
-import net.blay09.mods.eirairc.api.event.InitConfigEvent;
 import net.blay09.mods.eirairc.config.property.ConfigProperty;
 import net.blay09.mods.eirairc.util.IRCFormatting;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 
 public class ThemeSettings extends AbstractSettings {
@@ -25,8 +23,6 @@ public class ThemeSettings extends AbstractSettings {
 
 	public ThemeSettings(ThemeSettings parent) {
 		super(parent, THEME);
-
-		MinecraftForge.EVENT_BUS.post(new InitConfigEvent.ThemeSettings(manager));
 	}
 
 	public void loadLegacy(Configuration legacyConfig, String categoryName) {

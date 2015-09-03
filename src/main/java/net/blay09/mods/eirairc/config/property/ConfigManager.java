@@ -8,6 +8,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import net.blay09.mods.eirairc.api.config.IConfigManager;
 import net.blay09.mods.eirairc.api.config.IConfigProperty;
+import net.blay09.mods.eirairc.client.BetterColorEntry;
+import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.util.I19n;
 import net.blay09.mods.eirairc.util.IRCFormatting;
 import net.minecraft.util.EnumChatFormatting;
@@ -26,6 +28,11 @@ public class ConfigManager implements IConfigManager {
     private final Map<String, ConfigProperty> properties = Maps.newHashMap();
 
     private ConfigManager parentManager;
+    private Configuration parentConfig;
+
+    public void setParentConfig(Configuration parentConfig) {
+        this.parentConfig = parentConfig;
+    }
 
     @Override
     @SuppressWarnings("unchecked")
@@ -35,7 +42,11 @@ public class ConfigManager implements IConfigManager {
 
     @Override
     public <T> IConfigProperty<T> registerProperty(String modid, String name, String langKey, T defaultValue) {
-        return new ConfigProperty<>(this, "addons", modid + "_" + name, langKey, defaultValue);
+        ConfigProperty<T> property = new ConfigProperty<>(this, SharedGlobalConfig.ADDONS, modid + "_" + name, langKey, defaultValue);
+        if(parentConfig != null) {
+            getProperty(parentConfig, property);
+        }
+        return property;
     }
 
     @SuppressWarnings("unchecked")
@@ -128,26 +139,53 @@ public class ConfigManager implements IConfigManager {
         for(ConfigProperty property : properties.values()) {
             Object value = property.get();
             if(value.getClass() == String.class) {
-                config.get(property.getCategory(), property.getName(), (String) property.getDefaultValue(), I19n.format(property.getLangKey() + ".tooltip")).set((String) value);
+                getProperty(config, property).set((String) value);
             } else if(value.getClass() == Boolean.class) {
-                config.get(property.getCategory(), property.getName(), (Boolean) property.getDefaultValue(), I19n.format(property.getLangKey() + ".tooltip")).set((Boolean) value);
+                getProperty(config, property).set((Boolean) value);
             } else if(value.getClass() == Integer.class) {
-                config.get(property.getCategory(), property.getName(), (Integer) property.getDefaultValue(), I19n.format(property.getLangKey() + ".tooltip")).set((Integer) value);
+                getProperty(config, property).set((Integer) value);
             } else if(value.getClass() == Float.class) {
-                config.get(property.getCategory(), property.getName(), (Float) property.getDefaultValue(), I19n.format(property.getLangKey() + ".tooltip")).set((Float) value);
+                getProperty(config, property).set((Float) value);
             } else if(value.getClass() == StringList.class) {
-                config.get(property.getCategory(), property.getName(), ((StringList) property.getDefaultValue()).getAsArray(), I19n.format(property.getLangKey() + ".tooltip")).set(((StringList) value).getAsArray());
+                getProperty(config, property).set(((StringList) value).getAsArray());
             } else if(value.getClass() == EnumChatFormatting.class) {
-                config.get(property.getCategory(), property.getName(), IRCFormatting.getNameFromColor((EnumChatFormatting) property.getDefaultValue()), I19n.format(property.getLangKey() + ".tooltip"), IRCFormatting.mcColorNames).set(IRCFormatting.getNameFromColor((EnumChatFormatting) value));
+                getProperty(config, property).set(IRCFormatting.getNameFromColor((EnumChatFormatting) value));
             } else if(value instanceof Enum) {
                 Enum[] enums = ((Enum) value).getClass().getEnumConstants();
                 String[] validValues = new String[enums.length];
                 for(int i = 0; i < validValues.length; i++) {
                     validValues[i] = enums[i].name().toLowerCase();
                 }
-                config.get(property.getCategory(), property.getName(), ((Enum) property.getDefaultValue()).name(), I19n.format(property.getLangKey() + ".tooltip"), validValues).set(((Enum) value).name());
+                getProperty(config, property).set(((Enum) value).name());
             }
         }
+    }
+
+    public Property getProperty(Configuration config, ConfigProperty property) {
+        Object value = property.get();
+        if(value.getClass() == String.class) {
+            return config.get(property.getCategory(), property.getName(), (String) property.getDefaultValue(), I19n.format(property.getLangKey() + ".tooltip"));
+        } else if(value.getClass() == Boolean.class) {
+            return config.get(property.getCategory(), property.getName(), (Boolean) property.getDefaultValue(), I19n.format(property.getLangKey() + ".tooltip"));
+        } else if(value.getClass() == Integer.class) {
+            return config.get(property.getCategory(), property.getName(), (Integer) property.getDefaultValue(), I19n.format(property.getLangKey() + ".tooltip"));
+        } else if(value.getClass() == Float.class) {
+            return config.get(property.getCategory(), property.getName(), (Float) property.getDefaultValue(), I19n.format(property.getLangKey() + ".tooltip"));
+        } else if(value.getClass() == StringList.class) {
+            return config.get(property.getCategory(), property.getName(), ((StringList) property.getDefaultValue()).getAsArray(), I19n.format(property.getLangKey() + ".tooltip"));
+        } else if(value.getClass() == EnumChatFormatting.class) {
+            Property prop = config.get(property.getCategory(), property.getName(), IRCFormatting.getNameFromColor((EnumChatFormatting) property.getDefaultValue()), I19n.format(property.getLangKey() + ".tooltip"), IRCFormatting.mcColorNames);
+            prop.setConfigEntryClass(BetterColorEntry.class);
+            return prop;
+        } else if(value instanceof Enum) {
+            Enum[] enums = ((Enum) value).getClass().getEnumConstants();
+            String[] validValues = new String[enums.length];
+            for(int i = 0; i < validValues.length; i++) {
+                validValues[i] = enums[i].name().toLowerCase();
+            }
+            return config.get(property.getCategory(), property.getName(), ((Enum) property.getDefaultValue()).name(), I19n.format(property.getLangKey() + ".tooltip"), validValues);
+        }
+        return null;
     }
 
     public Collection<ConfigProperty> getProperties() {

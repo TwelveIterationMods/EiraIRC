@@ -125,11 +125,11 @@ public class GuiChannelConfig extends GuiTabPage implements GuiYesNoCallback {
     @SuppressWarnings("unchecked")
     public void actionPerformed(GuiButton button) {
         if (button == btnTheme) {
-            mc.displayGuiScreen(new GuiConfig(tabContainer, GuiEiraIRCConfig.getThemeConfigElements(config.getTheme().pullDummyConfig().getCategory("theme"), false), Globals.MOD_ID, "channel:" + config.getIdentifier(), false, false, I19n.format("eirairc:gui.config.theme", config.getName())));
+            mc.displayGuiScreen(new GuiConfig(tabContainer, GuiEiraIRCConfig.getAllConfigElements(config.getTheme().pullDummyConfig()), Globals.MOD_ID, "channel:" + config.getIdentifier(), false, false, I19n.format("eirairc:gui.config.theme", config.getName())));
         } else if (button == btnBotSettings) {
-            mc.displayGuiScreen(new GuiConfig(tabContainer, new ConfigElement(config.getBotSettings().pullDummyConfig().getCategory("bot")).getChildElements(), Globals.MOD_ID, "channel:" + config.getIdentifier(), false, false, I19n.format("eirairc:gui.config.bot", config.getName())));
+            mc.displayGuiScreen(new GuiConfig(tabContainer, GuiEiraIRCConfig.getAllConfigElements(config.getBotSettings().pullDummyConfig()), Globals.MOD_ID, "channel:" + config.getIdentifier(), false, false, I19n.format("eirairc:gui.config.bot", config.getName())));
         } else if (button == btnOtherSettings) {
-            mc.displayGuiScreen(new GuiConfig(tabContainer, new ConfigElement(config.getGeneralSettings().pullDummyConfig().getCategory("settings")).getChildElements(), Globals.MOD_ID, "channel:" + config.getIdentifier(), false, false, I19n.format("eirairc:gui.config.other", config.getName())));
+            mc.displayGuiScreen(new GuiConfig(tabContainer, GuiEiraIRCConfig.getAllConfigElements(config.getGeneralSettings().pullDummyConfig()), Globals.MOD_ID, "channel:" + config.getIdentifier(), false, false, I19n.format("eirairc:gui.config.other", config.getName())));
         } else if (button == btnDelete) {
             if (isNew) {
                 tabContainer.removePage(this);

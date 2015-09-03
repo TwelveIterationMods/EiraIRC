@@ -171,11 +171,11 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 	@SuppressWarnings("unchecked")
 	public void actionPerformed(GuiButton button) {
 		if(button == btnTheme) {
-			mc.displayGuiScreen(new GuiConfig(tabContainer, GuiEiraIRCConfig.getThemeConfigElements(config.getTheme().pullDummyConfig().getCategory("theme"), false), Globals.MOD_ID, "server:" + config.getAddress(), false, false, I19n.format("gui.config.theme", config.getAddress())));
+			mc.displayGuiScreen(new GuiConfig(tabContainer, GuiEiraIRCConfig.getAllConfigElements(config.getTheme().pullDummyConfig()), Globals.MOD_ID, "server:" + config.getAddress(), false, false, I19n.format("gui.config.theme", config.getAddress())));
 		} else if(button == btnBotSettings) {
-			mc.displayGuiScreen(new GuiConfig(tabContainer, new ConfigElement(config.getBotSettings().pullDummyConfig().getCategory("bot")).getChildElements(), Globals.MOD_ID, "server:" + config.getAddress(), false, false, I19n.format("gui.config.bot", config.getAddress())));
+			mc.displayGuiScreen(new GuiConfig(tabContainer, GuiEiraIRCConfig.getAllConfigElements(config.getBotSettings().pullDummyConfig()), Globals.MOD_ID, "server:" + config.getAddress(), false, false, I19n.format("gui.config.bot", config.getAddress())));
 		} else if(button == btnOtherSettings) {
-			mc.displayGuiScreen(new GuiConfig(tabContainer, new ConfigElement(config.getGeneralSettings().pullDummyConfig().getCategory("settings")).getChildElements(), Globals.MOD_ID, "server:" + config.getAddress(), false, false, I19n.format("gui.config.other", config.getAddress())));
+			mc.displayGuiScreen(new GuiConfig(tabContainer, GuiEiraIRCConfig.getAllConfigElements(config.getGeneralSettings().pullDummyConfig()), Globals.MOD_ID, "server:" + config.getAddress(), false, false, I19n.format("gui.config.other", config.getAddress())));
 		} else if(button == btnAdvanced) {
 			tabContainer.setCurrentTab(new GuiServerConfigAdvanced(tabContainer, this), false);
 		} else if(button == btnChannelAdd) {
