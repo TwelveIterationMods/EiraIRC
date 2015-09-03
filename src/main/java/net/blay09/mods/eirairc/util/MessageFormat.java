@@ -4,6 +4,7 @@ package net.blay09.mods.eirairc.util;
 
 import net.blay09.mods.eirairc.addon.Compatibility;
 import net.blay09.mods.eirairc.addon.EiraMoticonsAddon;
+import net.blay09.mods.eirairc.api.config.IConfigProperty;
 import net.blay09.mods.eirairc.api.event.FormatMessage;
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
@@ -172,6 +173,7 @@ public class MessageFormat {
 				nick = ircUser.getChannelModePrefix((IRCChannel) context) + nick;
 			}
 			if(context.getConnection().isTwitch()) {
+				// TODO this should be moved to EiraMoticons as soon as the API makes it possible
 				if(Compatibility.isEiraMoticonsInstalled() && SharedGlobalConfig.twitchNameBadges.get()) {
 					String badges = "";
 					if(ircUser.getName().toLowerCase().equals(context.getName().substring(1).toLowerCase())) {
@@ -182,7 +184,8 @@ public class MessageFormat {
 					if(user.isTwitchTurbo()) {
 						badges += EiraMoticonsAddon.turboBadge.getChatString();
 					}
-					if(user.isTwitchSubscriber()) {
+					IConfigProperty<Boolean> alwaysShowSubBadge = context.getThemeSettings().getProperty("eiramoticons", "alwaysShowSubBadge");
+					if(user.isTwitchSubscriber() || (alwaysShowSubBadge != null && alwaysShowSubBadge.get())) {
 						String badgeString = EiraMoticonsAddon.getSubscriberBadgeString((IRCChannel) context);
 						if(!badgeString.isEmpty()) {
 							badges += badgeString + " ";

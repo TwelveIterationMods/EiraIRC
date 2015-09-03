@@ -48,7 +48,7 @@ public class EiraMoticonsAddon implements IEmoticonLoader {
 
 	@SubscribeEvent
 	public static void initConfig(InitConfigEvent.ThemeSettings event) {
-		event.config.registerProperty("eiramoticons", "alwaysShowSubBadge", false);
+		event.config.registerProperty("eiramoticons", "alwaysShowSubBadge", "eirairc:config.property.alwaysShowSubBadge", false);
 	}
 
 	@Optional.Method(modid = "eiramoticons")
