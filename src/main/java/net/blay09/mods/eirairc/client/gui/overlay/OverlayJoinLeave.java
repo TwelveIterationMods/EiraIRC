@@ -29,6 +29,7 @@ public class OverlayJoinLeave extends Gui {
     private final Minecraft mc;
     private final FontRenderer fontRenderer;
     private IConfigProperty<Integer> visibleTime;
+    private IConfigProperty<Float> scale;
 
     public OverlayJoinLeave(Minecraft mc, FontRenderer fontRenderer) {
         this.mc = mc;
@@ -37,6 +38,10 @@ public class OverlayJoinLeave extends Gui {
 
     public void setVisibleTime(IConfigProperty<Integer> visibleTime) {
         this.visibleTime = visibleTime;
+    }
+
+    public void setScale(IConfigProperty<Float> scale) {
+        this.scale = scale;
     }
 
     public void addMessage(IChatComponent component) {
@@ -54,7 +59,7 @@ public class OverlayJoinLeave extends Gui {
 
         GL11.glPushMatrix();
         GL11.glTranslatef(guiLeft, guiTop, 0f);
-        GL11.glScalef(0.5f, 0.5f, 1f);
+        GL11.glScalef(scale.get(), scale.get(), 1f);
         GL11.glEnable(GL11.GL_BLEND);
         for(int i = messages.size() - 1; i >= 0; i--) {
             JoinLeaveMessage message = messages.get(i);

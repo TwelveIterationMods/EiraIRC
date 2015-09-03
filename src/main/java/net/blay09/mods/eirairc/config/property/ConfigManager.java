@@ -390,4 +390,22 @@ public class ConfigManager implements IConfigManager {
             }
         }
     }
+
+    public void updateProperty(ConfigProperty property) {
+        if(parentConfig != null) {
+            Property prop = getProperty(parentConfig, property);
+            if(property.getValidValues() != null) {
+                prop.setValidValues(property.getValidValues());
+            }
+            if(property.getMin() != null && property.getMax() != null) {
+                if (property.getDefaultValue().getClass() == Integer.class) {
+                    prop.setMinValue((int) property.getMin());
+                    prop.setMaxValue((int) property.getMax());
+                } else if(property.getDefaultValue().getClass() == Float.class) {
+                    prop.setMinValue((float) property.getMin());
+                    prop.setMaxValue((float) property.getMax());
+                }
+            }
+        }
+    }
 }

@@ -15,6 +15,10 @@ public class ConfigProperty<T> implements IConfigProperty<T> {
     private boolean hasValue;
     private ConfigProperty<T> parentProperty;
 
+    private String[] validValues;
+    private T min;
+    private T max;
+
     public ConfigProperty(ConfigManager manager, String category, String name, T defaultValue) {
         this(manager, category, name, "eirairc:config.property." + name, defaultValue);
     }
@@ -49,6 +53,31 @@ public class ConfigProperty<T> implements IConfigProperty<T> {
     public void set(T value) {
         this.value = value;
         hasValue = value != defaultValue;
+    }
+
+    @Override
+    public void setValidValues(String[] validValues) {
+        this.validValues = validValues;
+        manager.updateProperty(this);
+    }
+
+    public String[] getValidValues() {
+        return validValues;
+    }
+
+    @Override
+    public void setMinMax(T min, T max) {
+        this.min = min;
+        this.max = max;
+        manager.updateProperty(this);
+    }
+
+    public T getMin() {
+        return min;
+    }
+
+    public T getMax() {
+        return max;
     }
 
     @Override

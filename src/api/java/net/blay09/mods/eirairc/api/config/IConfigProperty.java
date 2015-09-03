@@ -8,4 +8,6 @@ public interface IConfigProperty<T> {
     T get();
     void set(T value);
 
+    void setValidValues(String[] validValues);
+    void setMinMax(T min, T max);
 }

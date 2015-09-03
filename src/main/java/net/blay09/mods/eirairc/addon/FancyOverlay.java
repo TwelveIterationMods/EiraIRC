@@ -19,6 +19,7 @@ public class FancyOverlay {
     private final OverlayJoinLeave overlay;
     private IConfigProperty<Boolean> enabled;
     private IConfigProperty<Integer> visibleTime;
+    private IConfigProperty<Float> scale;
 
     public FancyOverlay() {
         overlay = new OverlayJoinLeave(Minecraft.getMinecraft(), Minecraft.getMinecraft().fontRenderer);
@@ -31,7 +32,11 @@ public class FancyOverlay {
     public void onInitConfig(InitConfigEvent.ClientGlobalSettings event) {
         enabled = event.config.registerProperty("eirairc", "enableFancyOverlay", "eirairc:config.property.enableFancyOverlay", true);
         visibleTime = event.config.registerProperty("eirairc", "fancyOverlayLifetime", "eirairc:config.property.fancyOverlayLifetime", 240);
+        visibleTime.setMinMax(120, 2400);
+        scale = event.config.registerProperty("eirairc", "fancyOverlayScale", "eirairc:config.property.fancyOverlayScale", 0.5f);
+        scale.setMinMax(0.5f, 1f);
         overlay.setVisibleTime(visibleTime);
+        overlay.setScale(scale);
     }
 
     @SubscribeEvent
