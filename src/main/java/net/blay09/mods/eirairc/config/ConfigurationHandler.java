@@ -34,9 +34,10 @@ public class ConfigurationHandler {
 
 	private static final Logger logger = LogManager.getLogger();
 
-	private static final Map<String, ServerConfig> serverConfigs = new HashMap< >();
+	private static final Map<String, ServerConfig> serverConfigs = new HashMap<>();
 	private static final Map<String, MessageFormatConfig> displayFormats = new HashMap<>();
 	private static final List<IBotCommand> customCommands = new ArrayList<>();
+	private static final List<RemoteBotCommand> remoteCommands = new ArrayList<>();
 	private static final List<SuggestedChannel> suggestedChannels = new ArrayList<>();
 	private static final Map<String, TrustedServer> trustedServers = new HashMap<>();
 	public static final List<String> failedToLoad = new ArrayList<>();
@@ -177,7 +178,16 @@ public class ConfigurationHandler {
 			jsonReader.setLenient(true);
 			JsonArray commandArray = gson.fromJson(jsonReader, JsonArray.class);
 			for(int i = 0; i < commandArray.size(); i++) {
-				customCommands.add(BotCommandCustom.loadFromJson(commandArray.get(i).getAsJsonObject()));
+				JsonObject obj = commandArray.get(i).getAsJsonObject();
+				String type = "custom";
+				if(obj.has("type")) {
+					type = obj.get("type").getAsString();
+				}
+				if(type.equals("custom")) {
+					customCommands.add(BotCommandCustom.loadFromJson(obj));
+				} else if(type.equals("remote")) {
+					remoteCommands.add(RemoteBotCommand.loadFromJson(obj));
+				}
 			}
 			reader.close();
 		} catch (FileNotFoundException ignored) {
@@ -509,5 +519,14 @@ public class ConfigurationHandler {
 
 	public static String[] getAvailableMessageFormats() {
 		return displayFormats.keySet().toArray(new String[displayFormats.size()]);
+	}
+
+	public static boolean passesRemoteCommand(ICommandSender sender, String message) {
+		for(RemoteBotCommand command : remoteCommands) {
+			if(message.startsWith(command.command) && (!command.requireOp || Utils.isOP(sender))) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

@@ -306,6 +306,9 @@ public class MCEventHandler {
 	public void relayChatServer(ICommandSender sender, String message, boolean isEmote, boolean isNotice, IRCContext target) {
 		if(target != null) {
 			if(!ConfigHelper.getGeneralSettings(target).readOnly.get()) {
+				if(!isEmote && !isNotice && ConfigurationHandler.passesRemoteCommand(sender, message)) {
+					return;
+				}
 				String format = MessageFormat.getMessageFormat(target, isEmote);
 				String ircMessage = MessageFormat.formatMessage(format, target, sender, message, MessageFormat.Target.IRC, (isEmote ? MessageFormat.Mode.Emote : MessageFormat.Mode.Message));
 				if(isEmote) {
