@@ -110,6 +110,14 @@ public class ConfigManager {
         return properties.get(name);
     }
 
+    public String getAsString(String name) {
+        ConfigProperty property = getProperty(name);
+        if(property == null) {
+            return null;
+        }
+        return String.valueOf(property.get());
+    }
+
     @SuppressWarnings("unchecked")
     public boolean setFromString(String name, String value) {
         ConfigProperty property = getProperty(name);
@@ -126,19 +134,13 @@ public class ConfigManager {
         } else if(type.getClass() == Float.class) {
             property.set(Float.parseFloat(value));
         } else if(type.getClass() == StringList.class) {
-            StringList list = (StringList) property.get();
+            StringList list = new StringList(((StringList) property.get()).getAsArray());
             if (value.startsWith("add ")) {
-                if (list == null) {
-                    list = new StringList(value.substring(4));
-                } else {
-                    list.add(value.substring(4));
-                }
-            } else if (value.startsWith("remove ") && list != null) {
+                list.add(value.substring(4));
+            } else if (value.startsWith("remove ")) {
                 list.remove(value.substring(7));
             }
-            if (list != null) {
-                property.set(list);
-            }
+            property.set(list);
         } else if(type.getClass() == EnumChatFormatting.class) {
 
         } else if(type instanceof Enum) {

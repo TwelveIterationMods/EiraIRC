@@ -50,7 +50,7 @@ public class CommandColor implements SubCommand {
 		}
 		String colorName = args[0].toLowerCase();
 		EnumChatFormatting mcOpColor = SharedGlobalConfig.theme.mcOpNameColor.get();
-		if(!Utils.isOP(sender) && (SharedGlobalConfig.colorBlacklist.contains(colorName) || (mcOpColor != null && mcOpColor.name().toLowerCase().equals(colorName)))) {
+		if(!Utils.isOP(sender) && (SharedGlobalConfig.colorBlacklist.get().containsString(colorName, true) || (mcOpColor != null && mcOpColor.name().toLowerCase().equals(colorName)))) {
 			Utils.sendLocalizedMessage(sender, "commands.color.blackList", colorName);
 			return true;
 		}

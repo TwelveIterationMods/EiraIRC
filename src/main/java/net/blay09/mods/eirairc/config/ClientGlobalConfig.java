@@ -117,37 +117,12 @@ public class ClientGlobalConfig {
 	}
 
 	public static String handleConfigCommand(ICommandSender sender, String key) {
-		ConfigProperty property = manager.getProperty(key);
-		if(property != null) {
-			return String.valueOf(property.get());
-		}
-		return null;
+		return manager.getAsString(key);
 	}
 
 	@SuppressWarnings("unchecked")
 	public static boolean handleConfigCommand(ICommandSender sender, String key, String value) {
-		ConfigProperty property = manager.getProperty(key);
-		if (property != null) {
-			Object type = property.get();
-			if (type.getClass() == String.class) {
-				if(property == screenshotHoster && !UploadManager.isValidHoster(value)) {
-					// TODO error message
-					return true;
-				}
-				property.set(value);
-			} else if (type.getClass() == Boolean.class) {
-				property.set(Boolean.parseBoolean(value));
-			} else if (type.getClass() == Integer.class) {
-				property.set(Integer.parseInt(value));
-			} else if (type.getClass() == ScreenshotAction.class) {
-				property.set(ScreenshotAction.valueOf(value));
-			} else if (type.getClass() == NotificationStyle.class) {
-				property.set(NotificationStyle.valueOf(value));
-			}
-		} else {
-			return false;
-		}
-		return true;
+		return manager.setFromString(key, value);
 	}
 
 	public static void addOptionsToList(List<String> list, String option, boolean autoCompleteOption) {

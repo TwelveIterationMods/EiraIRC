@@ -2,9 +2,9 @@
 
 package net.blay09.mods.eirairc.config;
 
-import com.google.common.collect.Lists;
 import net.blay09.mods.eirairc.config.property.ConfigProperty;
 import net.blay09.mods.eirairc.config.property.ConfigManager;
+import net.blay09.mods.eirairc.config.property.StringList;
 import net.blay09.mods.eirairc.config.settings.BotSettings;
 import net.blay09.mods.eirairc.config.settings.GeneralSettings;
 import net.blay09.mods.eirairc.config.settings.ThemeSettings;
@@ -15,7 +15,6 @@ import net.minecraft.command.ICommandSender;
 import net.minecraftforge.common.config.Configuration;
 
 import java.io.File;
-import java.util.Collections;
 import java.util.List;
 
 public class SharedGlobalConfig {
@@ -38,8 +37,7 @@ public class SharedGlobalConfig {
     public static final ConfigProperty<Boolean> twitchNameColors = new ConfigProperty<>(manager, GENERAL, "twitchNameColors", true);
     public static final ConfigProperty<Boolean> twitchNameBadges = new ConfigProperty<>(manager, GENERAL, "twitchNameBadges", true);
     public static final ConfigProperty<String> ircCommandPrefix = new ConfigProperty<>(manager, GENERAL, "ircCommandPrefix", "!");
-
-    public static final List<String> colorBlacklist = Lists.newArrayList();
+    public static final ConfigProperty<StringList> colorBlacklist = new ConfigProperty<>(manager, GENERAL, "colorBlacklist", new StringList(Globals.DEFAULT_COLOR_BLACKLIST));
 
     // Network Settings
     public static final ConfigProperty<String> bindIP = new ConfigProperty<>(manager, NETWORK, "bindIP", "");
@@ -63,10 +61,6 @@ public class SharedGlobalConfig {
 
         manager.load(thisConfig);
 
-        String[] colorBlacklistArray = thisConfig.getStringList("colorBlacklist", GENERAL, Globals.DEFAULT_COLOR_BLACKLIST, I19n.format("eirairc:config.property.colorBlacklist.tooltip"), null, "eirairc:config.property.colorBlacklist");
-        colorBlacklist.clear();
-        Collections.addAll(colorBlacklist, colorBlacklistArray);
-
         // Default Settings
         theme.load(thisConfig, false);
         botSettings.load(thisConfig, false);
@@ -84,7 +78,6 @@ public class SharedGlobalConfig {
         thisConfig.setCategoryComment(SETTINGS, I19n.format("eirairc:config.category.settings.tooltip"));
 
         manager.save(thisConfig);
-        thisConfig.get(GENERAL, "colorBlacklist", new String[0], I19n.format("eirairc:config.property.colorBlacklist.tooltip")).set(colorBlacklist.toArray(new String[colorBlacklist.size()]));
 
         // Default Settings
         theme.save(thisConfig);
@@ -99,11 +92,7 @@ public class SharedGlobalConfig {
 
         // General
         enablePlayerColors.set(legacyConfig.getBoolean("enableNameColors", "display", enablePlayerColors.getDefaultValue(), ""));
-        String[] colorBlacklistArray = legacyConfig.getStringList("colorBlackList", "serveronly", new String[0], "");
-        colorBlacklist.clear();
-        for (String entry : colorBlacklistArray) {
-            colorBlacklist.add(Utils.unquote(entry));
-        }
+        colorBlacklist.set(new StringList(legacyConfig.getStringList("colorBlackList", "serveronly", new String[0], "")));
         debugMode.set(legacyConfig.getBoolean("debugMode", "global", debugMode.getDefaultValue(), ""));
         hidePlayerTags.set(legacyConfig.getBoolean("hidePlayerTags", "display", hidePlayerTags.getDefaultValue(), ""));
 
@@ -128,16 +117,7 @@ public class SharedGlobalConfig {
 
     @SuppressWarnings("unchecked")
     public static boolean handleConfigCommand(ICommandSender sender, String key, String value) {
-        ConfigProperty property = manager.getProperty(key);
-        if (property != null) {
-            Object type = property.get();
-            if (type.getClass() == String.class) {
-                property.set(value);
-            } else if (type.getClass() == Boolean.class) {
-                property.set(Boolean.parseBoolean(value));
-            } else if (type.getClass() == Integer.class) {
-                property.set(Integer.parseInt(value));
-            }
+        if(manager.setFromString(key, value)) {
         } else if (theme.handleConfigCommand(sender, key, value)) {
         } else if (botSettings.handleConfigCommand(sender, key, value)) {
         } else if (generalSettings.handleConfigCommand(sender, key, value)) {
@@ -148,18 +128,15 @@ public class SharedGlobalConfig {
     }
 
     public static String handleConfigCommand(ICommandSender sender, String key) {
-        ConfigProperty property = manager.getProperty(key);
-        String value;
-        if(property != null) {
-            value = String.valueOf(property.get());
-        } else {
+        String value = manager.getAsString(key);
+        if(value == null) {
             value = theme.handleConfigCommand(sender, key);
-            if (value == null) {
-                value = botSettings.handleConfigCommand(sender, key);
-            }
-            if (value == null) {
-                value = generalSettings.handleConfigCommand(sender, key);
-            }
+        }
+        if (value == null) {
+            value = botSettings.handleConfigCommand(sender, key);
+        }
+        if (value == null) {
+            value = generalSettings.handleConfigCommand(sender, key);
         }
         return value;
     }
