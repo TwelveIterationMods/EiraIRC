@@ -10,7 +10,7 @@ import net.blay09.mods.eirairc.command.interop.InterOpCommandMode;
 import net.blay09.mods.eirairc.command.interop.InterOpCommandTopic;
 import net.blay09.mods.eirairc.command.interop.InterOpCommandUserModeBase;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
-import net.blay09.mods.eirairc.util.I19n;
+import net.blay09.mods.eirairc.util.ChatComponentBuilder;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.CommandHandler;
 import net.minecraft.command.ICommandSender;
@@ -116,9 +116,7 @@ public class IRCCommandHandler {
 			return false;
 		}
 		if(!cmd.canCommandSenderUseCommand(sender)) {
-			ChatComponentTranslation chatComponent = new ChatComponentTranslation("commands.generic.permission");
-			chatComponent.getChatStyle().setColor(EnumChatFormatting.RED);
-            sender.addChatMessage(chatComponent);
+			ChatComponentBuilder.create().color('c').lang("commands.generic.permission").send(sender);
             return true;
 		}
 		String[] shiftedArgs = ArrayUtils.subarray(args, 1, args.length);
@@ -126,11 +124,12 @@ public class IRCCommandHandler {
 	}
 	
 	public static void sendUsageHelp(ICommandSender sender) {
-		Utils.sendLocalizedMessage(sender, "general.usage", I19n.format("eirairc:commands.irc.usage"));
-		Utils.sendLocalizedMessage(sender, "commands.irc.list.general");
-		Utils.sendLocalizedMessage(sender, "commands.irc.list.irc");
-		Utils.sendLocalizedMessage(sender, "commands.irc.list.interop");
-		Utils.sendLocalizedMessage(sender, "commands.irc.list.special");
+		ChatComponentBuilder ccb = new ChatComponentBuilder();
+		ccb.color('c').lang("eirairc:general.usage").lang("eirairc:commands.irc.usage").send(sender);
+		ccb.color('e').lang("eirairc:commands.irc.list.general").color('f').text(" config, help, list, ignore, unignore").send(sender);
+		ccb.color('e').lang("eirairc:commands.irc.list.irc").color('f').text(" connect, disconnect, join, leave, nick, msg, who").send(sender);
+		ccb.color('e').lang("eirairc:commands.irc.list.interop").color('f').text(" op, deop, voice, devoice, kick, ban, unban, umode, mode, topic").send(sender);
+		ccb.color('e').lang("eirairc:commands.irc.list.special").color('f').text(" twitch, color, ctcp, ghost, nickserv").send(sender);
 	}
 
 	public static boolean onChatCommand(EntityPlayer sender, String text, boolean serverSide) {
@@ -139,7 +138,8 @@ public class IRCCommandHandler {
 			try {
 				return processCommand(sender, params, serverSide);
 			} catch (WrongUsageException e) {
-				sender.addChatMessage(new ChatComponentTranslation("eirairc:general.usage", I19n.format(e.getMessage())));
+				ChatComponentBuilder ccb = new ChatComponentBuilder();
+				ccb.color('c').lang("commands.generic.usage", ccb.push().lang(e.getMessage(), e.getErrorOjbects()).pop()).send(sender);
 				return true;
 			}
 		}

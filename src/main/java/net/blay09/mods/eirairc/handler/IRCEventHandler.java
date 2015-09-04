@@ -5,8 +5,6 @@ package net.blay09.mods.eirairc.handler;
 import cpw.mods.fml.common.Loader;
 import net.blay09.mods.eirairc.ConnectionManager;
 import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.addon.Compatibility;
-import net.blay09.mods.eirairc.addon.EiraMoticonsAddon;
 import net.blay09.mods.eirairc.api.EiraIRCAPI;
 import net.blay09.mods.eirairc.api.IRCReplyCodes;
 import net.blay09.mods.eirairc.api.event.*;
@@ -315,7 +313,7 @@ public class IRCEventHandler {
 					IChatComponent chatComponent = MessageFormat.formatChatComponent(ConfigHelper.getBotSettings(channel).getMessageFormat().mcTopic, connection, channel, null, channel.getTopic(), MessageFormat.Target.Minecraft, MessageFormat.Mode.Message);
 					EiraIRCAPI.getChatHandler().addChatMessage(chatComponent);
 				} else {
-					EiraIRCAPI.getChatHandler().addChatMessage(new ChatComponentTranslation("eirairc:general.topicChange", user.getName(), channel.getName(), channel.getTopic()));
+					ChatComponentBuilder.create().color('e').lang("eirairc:general.topicChange", user.getName(), channel.getName()).color('f').text(channel.getTopic()).send();
 				}
 				break;
 			case ALLOW:
@@ -357,7 +355,7 @@ public class IRCEventHandler {
 		MinecraftForge.EVENT_BUS.post(event);
 		switch (event.getResult()) {
 			case DEFAULT:
-				EiraIRCAPI.getChatHandler().addChatMessage(new ChatComponentTranslation("eirairc:general.connected", event.connection.getHost()));
+				ChatComponentBuilder.create().lang("eirairc:general.connected", connection.getHost()).send();
 				break;
 			case ALLOW:
 				if(event.result != null) {
@@ -378,7 +376,7 @@ public class IRCEventHandler {
 		MinecraftForge.EVENT_BUS.post(event);
 		switch(event.getResult()) {
 			case DEFAULT:
-				EiraIRCAPI.getChatHandler().addChatMessage(new ChatComponentTranslation("eirairc:error.couldNotConnect", connection.getHost(), exception));
+				ChatComponentBuilder.create().color('c').lang("eirairc:error.couldNotConnect", connection.getHost(), exception).send();
 				break;
 			case ALLOW:
 				if(event.result != null) {
@@ -393,7 +391,7 @@ public class IRCEventHandler {
 		MinecraftForge.EVENT_BUS.post(event);
 		switch(event.getResult()) {
 			case DEFAULT:
-				EiraIRCAPI.getChatHandler().addChatMessage(new ChatComponentTranslation("eirairc:general.reconnecting", connection.getHost(), waitingTime / 1000));
+				ChatComponentBuilder.create().lang("eirairc:general.reconnecting", connection.getHost(), waitingTime / 1000).send();
 				break;
 			case ALLOW:
 				if(event.result != null) {
@@ -414,7 +412,7 @@ public class IRCEventHandler {
 		MinecraftForge.EVENT_BUS.post(event);
 		switch(event.getResult()) {
 			case DEFAULT:
-				EiraIRCAPI.getChatHandler().addChatMessage(new ChatComponentTranslation("eirairc:general.disconnected", connection.getHost()));
+				ChatComponentBuilder.create().lang("eirairc:general.disconnected", connection.getHost()).send();
 				break;
 			case ALLOW:
 				if(event.result != null) {
@@ -431,13 +429,13 @@ public class IRCEventHandler {
 				String failNick = args[1];
 				String tryNick = failNick + "_";
 				if(!connection.isSilentNickFailure()) {
-					Utils.addMessageToChat(new ChatComponentTranslation("eirairc:error.nickInUse", failNick, tryNick));
+					ChatComponentBuilder.create().color('c').lang("eirairc:error.nickInUse", failNick, tryNick).send();
 				}
 				connection.setSilentNickFailure(false);
 				connection.fallbackNick(tryNick);
 				break;
 			case IRCReplyCodes.ERR_ERRONEUSNICKNAME:
-				Utils.addMessageToChat(new ChatComponentTranslation("eirairc:error.nickInvalid", args[1]));
+				ChatComponentBuilder.create().color('c').lang("eirairc:error.nickInvalid", args[1]).send();
 				ServerConfig serverConfig = ConfigHelper.getServerConfig(connection);
 				if(serverConfig.getNick() != null) {
 					serverConfig.setNick(connection.getNick());
@@ -446,7 +444,7 @@ public class IRCEventHandler {
 			case IRCReplyCodes.ERR_MODELESS:
 				AuthManager.NickServData nickServData = AuthManager.getNickServData(connection.getIdentifier());
 				if(nickServData == null) {
-					Utils.addMessageToChat(new ChatComponentTranslation("eirairc:error.notIdentified", args[1]));
+					ChatComponentBuilder.create().color('c').lang("eirairc:error.notIdentified", args[1]).send();
 				}
 				connection.joinAfterNickServ(args[1]);
 				break;
@@ -456,13 +454,13 @@ public class IRCEventHandler {
 			case DEFAULT:
 				switch (numeric) {
 					case IRCReplyCodes.ERR_NONICKCHANGE:
-						EiraIRCAPI.getChatHandler().addChatMessage(new ChatComponentTranslation("eirairc:error.noNickChange"));
+						ChatComponentBuilder.create().color('c').lang("eirairc:error.noNickChange").send();
 						break;
 					case IRCReplyCodes.ERR_SERVICESDOWN:
-						EiraIRCAPI.getChatHandler().addChatMessage(new ChatComponentTranslation("eirairc:error.servicesDown"));
+						ChatComponentBuilder.create().color('c').lang("eirairc:error.servicesDown").send();
 						break;
 					case IRCReplyCodes.ERR_TARGETTOOFAST:
-						EiraIRCAPI.getChatHandler().addChatMessage(new ChatComponentTranslation("eirairc:error.targetTooFast"));
+						ChatComponentBuilder.create().color('c').lang("eirairc:error.targetTooFast").send();
 						break;
 					case IRCReplyCodes.ERR_CANNOTSENDTOCHAN:
 					case IRCReplyCodes.ERR_TOOMANYCHANNELS:
@@ -489,7 +487,7 @@ public class IRCEventHandler {
 					case IRCReplyCodes.ERR_CHANNELISFULL:
 					case IRCReplyCodes.ERR_KEYSET:
 					case IRCReplyCodes.ERR_NEEDMOREPARAMS:
-						EiraIRCAPI.getChatHandler().addChatMessage(new ChatComponentTranslation("eirairc:error.genericTarget", args[1], args[2]));
+						ChatComponentBuilder.create().color('c').lang("eirairc:error.genericTarget", args[1], args[2]);
 						break;
 					case IRCReplyCodes.ERR_NOORIGIN:
 					case IRCReplyCodes.ERR_NORECIPIENT:
@@ -509,7 +507,7 @@ public class IRCEventHandler {
 					case IRCReplyCodes.ERR_ALREADYREGISTERED:
 					case IRCReplyCodes.ERR_NOPERMFORHOST:
 					case IRCReplyCodes.ERR_CANTKILLSERVER:
-						EiraIRCAPI.getChatHandler().addChatMessage(new ChatComponentTranslation("eirairc:error.generic", args[1]));
+						ChatComponentBuilder.create().color('c').lang("eirairc:error.generic", args[1]);
 						break;
 					default:
 						System.out.println("Unhandled error code: " + numeric + " (" + args.length + " arguments)");

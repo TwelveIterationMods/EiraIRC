@@ -10,6 +10,7 @@ import net.blay09.mods.eirairc.config.AuthManager;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.irc.IRCConnectionImpl;
+import net.blay09.mods.eirairc.util.ChatComponentBuilder;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
@@ -36,7 +37,7 @@ public class CommandNickServ implements SubCommand {
 	@Override
 	public boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) {
 		if(!serverSide) {
-			Utils.sendLocalizedMessage(sender, "general.serverOnlyCommand");
+			new ChatComponentBuilder().color('c').lang("eirairc:general.serverOnlyCommand").send(sender);
 			return true;
 		}
 		if(args.length < 2) {

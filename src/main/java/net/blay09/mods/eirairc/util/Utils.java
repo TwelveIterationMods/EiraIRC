@@ -10,10 +10,6 @@ import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.api.irc.IRCUser;
-import net.blay09.mods.eirairc.config.AuthManager;
-import net.blay09.mods.eirairc.config.ServerConfig;
-import net.blay09.mods.eirairc.config.base.ServiceConfig;
-import net.blay09.mods.eirairc.config.base.ServiceSettings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.command.ICommandSender;
@@ -98,18 +94,11 @@ public class Utils {
 	public static void sendUserList(ICommandSender player, IRCConnection connection, IRCChannel channel) {
 		Collection<IRCUser> userList = channel.getUserList();
 		if(userList.size() == 0) {
-			if(player == null) {
-				addMessageToChat(new ChatComponentTranslation("eirairc:commands.who.noUsersOnline", connection.getHost(), channel.getName()));
-			} else {
-				sendLocalizedMessage(player, "commands.who.noUsersOnline", connection.getHost(), channel.getName());
-			}
+			ChatComponentBuilder.create().lang("eirairc:commands.who.noUsersOnline", connection.getHost(), channel.getName()).send(player);
 			return;
 		}
-		if(player == null) {
-			addMessageToChat(new ChatComponentTranslation("eirairc:commands.who.usersOnline", connection.getHost(), userList.size(), channel.getName()));
-		} else {
-			sendLocalizedMessage(player, "commands.who.usersOnline", connection.getHost(), userList.size(), channel.getName());
-		}
+		ChatComponentBuilder ccb = new ChatComponentBuilder(3);
+		ccb.lang("eirairc:commands.who.usersOnline", ccb.text("[" + connection.getHost() + "] ").color('b').text(userList.size()).pop(), ccb.color('e').text(channel.getName()).color('f').text(":").pop()).send(player);
 		String s = " * ";
 		for(IRCUser user : userList) {
 			if(s.length() + user.getName().length() > Globals.CHAT_MAX_LENGTH) {
@@ -339,10 +328,12 @@ public class Utils {
 		return new int[] { defaultPort };
 	}
 
+	@Deprecated
 	public static String getModpackId() {
 		return "";
 	}
 
+	@Deprecated
 	public static IChatComponent translateToDefault(IChatComponent component) {
 		if(component instanceof ChatComponentText) {
 			return translateChildrenToDefault((ChatComponentText) component);
@@ -352,6 +343,7 @@ public class Utils {
 		return null;
 	}
 
+	@Deprecated
 	private static IChatComponent translateChildrenToDefault(ChatComponentText chatComponent) {
 		ChatComponentText copyComponent = new ChatComponentText(chatComponent.getChatComponentText_TextValue());
 		copyComponent.setChatStyle(chatComponent.getChatStyle());
@@ -364,6 +356,7 @@ public class Utils {
 		return copyComponent;
 	}
 
+	@Deprecated
 	public static IChatComponent translateComponentToDefault(ChatComponentTranslation chatComponent) {
 		Object[] formatArgs = chatComponent.getFormatArgs();
 		Object[] copyFormatArgs = new Object[formatArgs.length];

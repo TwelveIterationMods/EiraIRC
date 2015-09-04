@@ -28,6 +28,7 @@ import net.blay09.mods.eirairc.client.screenshot.ScreenshotManager;
 import net.blay09.mods.eirairc.command.base.IRCCommandHandler;
 import net.blay09.mods.eirairc.config.*;
 import net.blay09.mods.eirairc.handler.ChatSessionHandler;
+import net.blay09.mods.eirairc.util.ChatComponentBuilder;
 import net.blay09.mods.eirairc.util.NotificationType;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
@@ -36,6 +37,7 @@ import net.minecraft.client.gui.*;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.IChatComponent;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.client.event.GuiOpenEvent;
@@ -281,7 +283,8 @@ public class ClientProxy extends CommonProxy {
 					if(!users || newTarget != null) {
 						chatSession.setChatTarget(newTarget);
 						if(ClientGlobalConfig.chatNoOverride.get()) {
-							Utils.addMessageToChat(new ChatComponentTranslation("eirairc:general.chattingTo", newTarget == null ? "Minecraft" : newTarget.getName()));
+							ChatComponentBuilder ccb = new ChatComponentBuilder();
+							ccb.text(">> ").lang("eirairc:general.chattingTo", ccb.push().color('6').text(newTarget == null ? "Minecraft" : newTarget.getName()).pop()).text(" <<").send();
 						}
 					}
 					wasToggleTargetDown = true;
@@ -289,7 +292,8 @@ public class ClientProxy extends CommonProxy {
 					if(System.currentTimeMillis() - lastToggleTarget >= 1000) {
 						chatSession.setChatTarget(null);
 						if(ClientGlobalConfig.chatNoOverride.get()) {
-							Utils.addMessageToChat(new ChatComponentTranslation("eirairc:general.chattingTo", "Minecraft"));
+							ChatComponentBuilder ccb = new ChatComponentBuilder();
+							ccb.text(">> ").lang("eirairc:general.chattingTo", ccb.push().color('6').text("Minecraft").pop()).text(" <<").send();
 						}
 						lastToggleTarget = System.currentTimeMillis();
 					}

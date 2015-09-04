@@ -9,6 +9,7 @@ import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.config.AuthManager;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.ServerConfig;
+import net.blay09.mods.eirairc.util.ChatComponentBuilder;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
@@ -36,7 +37,7 @@ public class CommandTwitch implements SubCommand {
 	@Override
 	public boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) {
 		if(EiraIRCAPI.isConnectedTo(Globals.TWITCH_SERVER)) {
-			Utils.sendLocalizedMessage(sender, "error.alreadyConnected", "Twitch");
+			ChatComponentBuilder.create().color('c').lang("eirairc:error.alreadyConnected", "Twitch").send(sender);
 			return true;
 		}
 		if(args.length == 0) {
@@ -49,7 +50,7 @@ public class CommandTwitch implements SubCommand {
 				if(serverSide) {
 					throw new WrongUsageException(getCommandUsage(sender));
 				} else {
-					Utils.sendLocalizedMessage(sender, "general.serverOnlyCommand");
+					ChatComponentBuilder.create().color('c').lang("eirairc:general.serverOnlyCommand").send(sender);
 					return true;
 				}
 			}

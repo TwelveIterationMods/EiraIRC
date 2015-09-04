@@ -7,6 +7,7 @@ import net.blay09.mods.eirairc.api.SubCommand;
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
+import net.blay09.mods.eirairc.util.ChatComponentBuilder;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ChatComponentText;
@@ -36,7 +37,7 @@ public class CommandList implements SubCommand {
 			Utils.sendLocalizedMessage(sender, "error.notConnected", "IRC");
 			return true;
 		}
-		Utils.sendLocalizedMessage(sender, "commands.list.activeConnections");
+		new ChatComponentBuilder().color('e').lang("eirairc:commands.list.activeConnections").send(sender);
 		for(IRCConnection connection : ConnectionManager.getConnections()) {
 			StringBuilder sb = new StringBuilder();
 			for(IRCChannel channel : connection.getChannels()) {

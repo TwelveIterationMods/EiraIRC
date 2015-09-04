@@ -23,10 +23,7 @@ import net.blay09.mods.eirairc.config.settings.GeneralSettings;
 import net.blay09.mods.eirairc.irc.IRCConnectionImpl;
 import net.blay09.mods.eirairc.net.NetworkHandler;
 import net.blay09.mods.eirairc.net.message.MessageRedirect;
-import net.blay09.mods.eirairc.util.ConfigHelper;
-import net.blay09.mods.eirairc.util.IRCFormatting;
-import net.blay09.mods.eirairc.util.MessageFormat;
-import net.blay09.mods.eirairc.util.Utils;
+import net.blay09.mods.eirairc.util.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.server.CommandBroadcast;
@@ -237,7 +234,7 @@ public class MCEventHandler {
 					}
 				}
 			} else {
-				EiraIRCAPI.getChatHandler().addChatMessage(new ChatComponentTranslation("eirairc:general.readOnly", target.getName()));
+				ChatComponentBuilder.create().color('c').lang("eirairc:general.readOnly", target.getName()).send();
 			}
 		} else {
 			if(ClientGlobalConfig.clientBridge.get()) {
@@ -290,7 +287,7 @@ public class MCEventHandler {
 							}
 						}
 					} else {
-						EiraIRCAPI.getChatHandler().addChatMessage(new ChatComponentTranslation("eirairc:general.readOnly", chatTarget.getName()));
+						ChatComponentBuilder.create().color('c').lang("eirairc:general.readOnly", chatTarget.getName()).send();
 					}
 				}
 			}

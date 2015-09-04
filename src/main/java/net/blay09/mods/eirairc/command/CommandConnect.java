@@ -8,6 +8,7 @@ import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.config.AuthManager;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.ServerConfig;
+import net.blay09.mods.eirairc.util.ChatComponentBuilder;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
@@ -38,7 +39,7 @@ public class CommandConnect implements SubCommand {
 		}
 		String host = args[0];
 		if(ConnectionManager.isConnectedTo(host)) {
-			Utils.sendLocalizedMessage(sender, "general.alreadyConnected", host);
+			ChatComponentBuilder.create().color('c').lang("eirairc:error.alreadyConnected", host).send(sender);
 			return true;
 		}
 		Utils.sendLocalizedMessage(sender, "general.connecting", host);

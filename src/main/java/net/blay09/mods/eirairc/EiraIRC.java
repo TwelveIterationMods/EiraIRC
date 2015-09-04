@@ -69,7 +69,6 @@ public class EiraIRC {
 		MinecraftForge.EVENT_BUS.register(mcEventHandler);
 		FMLCommonHandler.instance().bus().register(netHandler);
 
-		I19n.init();
 		NetworkHandler.init();
 
 		EiraIRCAPI.internalSetupAPI(new InternalMethodsImpl());
