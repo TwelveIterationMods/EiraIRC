@@ -411,6 +411,7 @@ public class IRCEventHandler {
 			ConnectionManager.removeConnection(connection);
 		}
 		IRCDisconnectEvent event = new IRCDisconnectEvent(connection);
+		MinecraftForge.EVENT_BUS.post(event);
 		switch(event.getResult()) {
 			case DEFAULT:
 				EiraIRCAPI.getChatHandler().addChatMessage(new ChatComponentTranslation("eirairc:general.disconnected", connection.getHost()));
