@@ -245,6 +245,7 @@ eirairc:error.serverNotFound=The server at %s cannot be found.
 eirairc:error.userNotFound=The user %s cannot be found.
 eirairc:error.invalidTarget=Invalid target. Expected %s.
 eirairc:error.notConnected=You are not connected to the server at %s.
+eirairc:error.notConnectedToIRC=You are not connected to IRC.
 eirairc:error.notOnChannel=You are not on channel %s
 eirairc:error.notIdentified=You need to be identified with IRC services to join %s
 

@@ -34,7 +34,7 @@ public class CommandList implements SubCommand {
 	@Override
 	public boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) {
 		if(ConnectionManager.getConnectionCount() == 0) {
-			Utils.sendLocalizedMessage(sender, "error.notConnected", "IRC");
+			Utils.sendLocalizedMessage(sender, "error.notConnectedToIRC");
 			return true;
 		}
 		new ChatComponentBuilder().color('e').lang("eirairc:commands.list.activeConnections").send(sender);

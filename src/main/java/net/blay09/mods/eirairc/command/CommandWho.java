@@ -12,6 +12,7 @@ import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.irc.IRCChannelImpl;
+import net.blay09.mods.eirairc.util.ChatComponentBuilder;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
 
@@ -49,10 +50,15 @@ public class CommandWho implements SubCommand {
 			}
 		}
 		if(target == null) {
+			boolean foundAny = false;
 			for(IRCConnection connection : ConnectionManager.getConnections()) {
 				for(IRCChannel channel : connection.getChannels()) {
+					foundAny = true;
 					Utils.sendUserList(sender, connection, channel);
 				}
+			}
+			if(!foundAny) {
+				ChatComponentBuilder.create().color('c').lang("eirairc:error.notConnectedToIRC").send(sender);
 			}
 		} else if(target.getContextType() == IRCContext.ContextType.IRCChannel) {
 			Utils.sendUserList(sender, target.getConnection(), (IRCChannelImpl) target);
