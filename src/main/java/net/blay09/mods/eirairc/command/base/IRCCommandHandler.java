@@ -124,8 +124,8 @@ public class IRCCommandHandler {
 	}
 	
 	public static void sendUsageHelp(ICommandSender sender) {
-		ChatComponentBuilder ccb = new ChatComponentBuilder();
-		ccb.color('c').lang("eirairc:general.usage").lang("eirairc:commands.irc.usage").send(sender);
+		ChatComponentBuilder ccb = new ChatComponentBuilder(2);
+		ccb.color('c').lang("commands.generic.usage", ccb.push().lang("eirairc:commands.irc.usage").pop()).send(sender);
 		ccb.color('e').lang("eirairc:commands.irc.list.general").color('f').text(" config, help, list, ignore, unignore").send(sender);
 		ccb.color('e').lang("eirairc:commands.irc.list.irc").color('f').text(" connect, disconnect, join, leave, nick, msg, who").send(sender);
 		ccb.color('e').lang("eirairc:commands.irc.list.interop").color('f').text(" op, deop, voice, devoice, kick, ban, unban, umode, mode, topic").send(sender);
