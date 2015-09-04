@@ -66,7 +66,7 @@ public class GuiEiraIRCMenu extends EiraGuiScreen {
 			Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(meow, 1f)); // createPositionedSoundRecord
 			Utils.openWebpage("http://blay09.net/?page_id=63");
 		} else if(button == btnFriends) {
-			Minecraft.getMinecraft().displayGuiScreen(new GuiWelcome());
+			Minecraft.getMinecraft().displayGuiScreen(new GuiWelcome(this));
 		}
 	}
 

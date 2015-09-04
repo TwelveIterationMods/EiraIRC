@@ -111,6 +111,15 @@ public class GuiTabContainer extends EiraGuiScreen {
 	}
 
 	@Override
+	public void updateScreen() {
+		super.updateScreen();
+
+		if(currentTab != null) {
+			currentTab.updateScreen();
+		}
+	}
+
+	@Override
 	public void onGuiClosed() {
 		super.onGuiClosed();
 

@@ -30,7 +30,7 @@ public class GuiTwitch extends EiraGuiScreen implements GuiYesNoCallback {
 
 	private ServerConfig config;
 	private GuiCheckBox chkAnonymous;
-	private GuiTextField txtUsername;
+	private GuiAdvancedTextField txtUsername;
 	private GuiAdvancedTextField txtPassword;
 	private GuiButton btnOAuthHelp;
 	private GuiButton btnConnect;
@@ -66,7 +66,7 @@ public class GuiTwitch extends EiraGuiScreen implements GuiYesNoCallback {
 		} else {
 			oldText = config.getNick();
 		}
-		txtUsername = new GuiTextField(fontRendererObj, width / 2 - 90, topY + 35, 180, 15);
+		txtUsername = new GuiAdvancedTextField(fontRendererObj, width / 2 - 90, topY + 35, 180, 15);
 		txtUsername.setMaxStringLength(Integer.MAX_VALUE);
 		txtUsername.setText(oldText);
 		textFieldList.add(txtUsername);
@@ -82,6 +82,9 @@ public class GuiTwitch extends EiraGuiScreen implements GuiYesNoCallback {
 		txtPassword.setDefaultPasswordChar();
 		txtPassword.setText(oldText);
 		textFieldList.add(txtPassword);
+
+		txtUsername.setNextTabField(txtPassword);
+		txtPassword.setNextTabField(txtUsername);
 
 		btnOAuthHelp = new GuiButton(0, width / 2 + 94, topY + 72, 20, 20, "?");
 		buttonList.add(btnOAuthHelp);

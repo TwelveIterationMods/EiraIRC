@@ -84,11 +84,15 @@ public class EiraGuiScreen extends GuiScreen {
 				}
 			}
 		}
+		boolean foundFocus = false;
 		for(GuiTextField textField : textFieldList) {
 			textField.mouseClicked(mouseX, mouseY, mouseButton);
 			if (textField.isFocused()) {
-				return true;
+				foundFocus = true;
 			}
+		}
+		if(foundFocus) {
+			return true;
 		}
 		for(GuiList list : listList) {
 			if (list.mouseClicked(mouseX, mouseY, mouseButton)) {

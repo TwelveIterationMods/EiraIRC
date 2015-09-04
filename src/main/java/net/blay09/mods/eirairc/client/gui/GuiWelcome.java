@@ -14,6 +14,7 @@ import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.I19n;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiScreen;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,6 +27,13 @@ public class GuiWelcome extends EiraGuiScreen {
 	private GuiCheckBox chkDontShowAgain;
 	private GuiCheckBox chkRecommendedOnly;
 	private GuiLinkButton btnSubmitChannel;
+
+	public GuiWelcome() {
+	}
+
+	public GuiWelcome(GuiScreen parentScreen) {
+		super(parentScreen);
+	}
 
 	@Override
 	@SuppressWarnings("unchecked")
@@ -49,7 +57,7 @@ public class GuiWelcome extends EiraGuiScreen {
 		chkDontShowAgain = new GuiCheckBox(1, menuX + 10, menuY + menuHeight - 30, I19n.format("eirairc:gui.welcome.dontShowAgain"), false);
 		buttonList.add(chkDontShowAgain);
 
-		btnSubmitChannel = new GuiLinkButton(2, menuX + menuWidth - 85, menuY + menuHeight - 20, mc.fontRenderer, "\u00a7n" + I19n.format("eirairc:gui.welcome.submit"));
+		btnSubmitChannel = new GuiLinkButton(2, menuX + menuWidth - 90, menuY + menuHeight - 20, mc.fontRenderer, "\u00a7n" + I19n.format("eirairc:gui.welcome.submit"));
 		buttonList.add(btnSubmitChannel);
 
 		updateList(chkRecommendedOnly.isChecked());

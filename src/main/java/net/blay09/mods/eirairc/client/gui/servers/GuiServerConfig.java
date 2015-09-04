@@ -35,7 +35,7 @@ import org.lwjgl.input.Keyboard;
 public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 
 	private ServerConfig config;
-	private GuiTextField txtAddress;
+	private GuiAdvancedTextField txtAddress;
 	private GuiAdvancedTextField txtNick;
 	private GuiList<GuiListEntryChannel> lstChannels;
 	private GuiImageButton btnChannelAdd;
@@ -84,7 +84,7 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 		} else {
 			oldText = config.getAddress();
 		}
-		txtAddress = new GuiTextField(fontRendererObj, leftX, topY + 15, 100, 15);
+		txtAddress = new GuiAdvancedTextField(fontRendererObj, leftX, topY + 15, 100, 15);
 		txtAddress.setEnabled(!isConnected);
 		txtAddress.setText(oldText);
 		textFieldList.add(txtAddress);
@@ -100,6 +100,9 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 		txtNick.setDefaultText(Globals.DEFAULT_NICK, false);
 		txtNick.setText(oldText);
 		textFieldList.add(txtNick);
+
+		txtAddress.setNextTabField(txtNick);
+		txtNick.setNextTabField(txtAddress);
 
 		btnConnect = new GuiButton(8, rightX - 100, topY, 100, 20, "");
 		if(isConnected) {

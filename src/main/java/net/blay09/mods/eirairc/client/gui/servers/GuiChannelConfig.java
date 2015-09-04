@@ -28,7 +28,7 @@ public class GuiChannelConfig extends GuiTabPage implements GuiYesNoCallback {
     private final ServerConfig serverConfig;
     private final ChannelConfig config;
 
-    private GuiTextField txtName;
+    private GuiAdvancedTextField txtName;
     private GuiAdvancedTextField txtPassword;
     private GuiCheckBox chkAutoJoin;
 
@@ -73,7 +73,7 @@ public class GuiChannelConfig extends GuiTabPage implements GuiYesNoCallback {
         } else {
             oldText = config.getName();
         }
-        txtName = new GuiTextField(fontRendererObj, leftX, topY + 15, 100, 15);
+        txtName = new GuiAdvancedTextField(fontRendererObj, leftX, topY + 15, 100, 15);
         txtName.setText(oldText);
         textFieldList.add(txtName);
 
@@ -88,6 +88,9 @@ public class GuiChannelConfig extends GuiTabPage implements GuiYesNoCallback {
         txtPassword.setText(oldText);
         txtPassword.setDefaultPasswordChar();
         textFieldList.add(txtPassword);
+
+        txtName.setNextTabField(txtPassword);
+        txtPassword.setNextTabField(txtName);
 
         boolean oldState;
         if (chkAutoJoin != null) {
