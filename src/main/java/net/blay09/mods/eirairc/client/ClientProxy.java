@@ -62,6 +62,7 @@ public class ClientProxy extends CommonProxy {
 	private int openWelcomeScreen;
 	private long lastToggleTarget;
 	private boolean wasToggleTargetDown;
+	private boolean wasScreenshotShareDown;
 
 	private static final KeyBinding[] keyBindings = new KeyBinding[] {
 		ClientGlobalConfig.keyScreenshotShare,
@@ -202,11 +203,12 @@ public class ClientProxy extends CommonProxy {
 				if (Minecraft.getMinecraft().currentScreen == null) {
 					Minecraft.getMinecraft().displayGuiScreen(new GuiScreenshots(null));
 				}
-			} else if(ClientGlobalConfig.keyScreenshotShare.getKeyCode() != 0 && keyCode == ClientGlobalConfig.keyScreenshotShare.getKeyCode()) {
-				Screenshot screenshot = ScreenshotManager.getInstance().takeScreenshot();
-				if(screenshot != null) {
-					ScreenshotManager.getInstance().uploadScreenshot(screenshot, ScreenshotAction.UploadShare);
-				}
+			// Disabled until we get 1.8's KeyInputEvent for GuiScreen
+//			} else if(ClientGlobalConfig.keyScreenshotShare.getKeyCode() != 0 && keyCode == ClientGlobalConfig.keyScreenshotShare.getKeyCode()) {
+//				Screenshot screenshot = ScreenshotManager.getInstance().takeScreenshot();
+//				if(screenshot != null) {
+//					ScreenshotManager.getInstance().uploadScreenshot(screenshot, ScreenshotAction.UploadShare);
+//				}
 			} else {
 				if(!ClientGlobalConfig.chatNoOverride.get()) {
 					GuiScreen currentScreen = Minecraft.getMinecraft().currentScreen;
@@ -244,6 +246,19 @@ public class ClientProxy extends CommonProxy {
 			if(openWelcomeScreen <= 0) {
 				Minecraft.getMinecraft().displayGuiScreen(new GuiWelcome());
 			}
+		}
+
+		// Temporary Workaround for Screenshot Share button since 1.7.10 doesn't have a KeyInput event for when GUI screens are visible
+		if(ClientGlobalConfig.keyScreenshotShare.getKeyCode() > 0 && Keyboard.isKeyDown(ClientGlobalConfig.keyScreenshotShare.getKeyCode())) {
+			if(!wasScreenshotShareDown) {
+				Screenshot screenshot = ScreenshotManager.getInstance().takeScreenshot();
+				if(screenshot != null) {
+					ScreenshotManager.getInstance().uploadScreenshot(screenshot, ScreenshotAction.UploadShare);
+				}
+				wasScreenshotShareDown = true;
+			}
+		} else {
+			wasScreenshotShareDown = false;
 		}
 
 		if(currentScreen instanceof GuiChat && !ClientGlobalConfig.disableChatToggle.get() && !ClientGlobalConfig.clientBridge.get()) {

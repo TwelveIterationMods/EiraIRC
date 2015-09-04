@@ -352,16 +352,16 @@ eirairc:config.property.showWelcomeScreen=Show Welcome Screen
 eirairc:config.property.showWelcomeScreen.tooltip=If set to true, EiraIRC will show the welcome screen with suggested channels when joining a world.
 eirairc:config.property.terminalStyleInput=Terminal Style Input
 eirairc:config.property.terminalStyleInput.tooltip=Puts the target channel name right into the chat box.
-eirairc:config.property.enableFancyOverlay=Enable Fancy Overlay
-eirairc:config.property.enableFancyOverlay.tooltip=Should join/leave messages be displayed on a separate, smaller overlay?
-eirairc:config.property.fancyOverlayLifetime=Fancy Overlay Lifetime
-eirairc:config.property.fancyOverlayLifetime.tooltip=Time in ticks that messages should stay on the overlay.
-eirairc:config.property.fancyOverlayScale=Fancy Overlay Scale
-eirairc:config.property.fancyOverlayScale.tooltip=How should the fancy overlay be scaled compared to the chat?
-eirairc:config.property.twitchNameBadges=Twitch Name Badges
-eirairc:config.property.twitchNameBadges.tooltip=If enabled, Twitch users will have their subscriber, mod and caster badges in chat. Requires EiraMoticons.
-eirairc:config.property.alwaysShowSubBadge=Always Show Subscriber Badges
-eirairc:config.property.alwaysShowSubBadge.tooltip=Should Twitch subscriber badges be visible for every user of a channel, despite their subscription state?
+eirairc:config.property.eirairc_enableFancyOverlay=Enable Fancy Overlay
+eirairc:config.property.eirairc_enableFancyOverlay.tooltip=Should join/leave messages be displayed on a separate, smaller overlay?
+eirairc:config.property.eirairc_fancyOverlayLifetime=Fancy Overlay Lifetime
+eirairc:config.property.eirairc_fancyOverlayLifetime.tooltip=Time in ticks that messages should stay on the overlay.
+eirairc:config.property.eirairc_fancyOverlayScale=Fancy Overlay Scale
+eirairc:config.property.eirairc_fancyOverlayScale.tooltip=How should the fancy overlay be scaled compared to the chat?
+eirairc:config.property.eiramoticons_twitchNameBadges=Twitch Name Badges
+eirairc:config.property.eiramoticons_twitchNameBadges.tooltip=If enabled, Twitch users will have their subscriber, mod and caster badges in chat. Requires EiraMoticons.
+eirairc:config.property.eiramoticons_alwaysShowSubBadge=Always Show Subscriber Badges
+eirairc:config.property.eiramoticons_alwaysShowSubBadge.tooltip=Should Twitch subscriber badges be visible for every user of a channel, despite their subscription state?
 
 ## Properties (Bot)
 eirairc:config.property.relayDeathMessages=Relay Death Messages

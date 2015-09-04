@@ -217,6 +217,7 @@ public class ScreenshotManager {
 		if(chatTarget == null) {
 			String format = ConfigHelper.getBotSettings(null).getMessageFormat().ircScreenshotUpload;
 			format = format.replace("{URL}", screenshot.getDirectURL() != null ? screenshot.getDirectURL() : screenshot.getUploadURL());
+			format = format.replace("{NICK} ", "");
 			Minecraft.getMinecraft().thePlayer.sendChatMessage("/me " + format);
 		} else {
 			EntityPlayer sender = Minecraft.getMinecraft().thePlayer;
@@ -226,11 +227,13 @@ public class ScreenshotManager {
 			if (chatTarget instanceof IRCChannel) {
 				BotSettings botSettings = ConfigHelper.getBotSettings(chatTarget);
 				format = botSettings.getMessageFormat().ircScreenshotUpload.replace("{URL}", screenshot.getDirectURL() != null ? screenshot.getDirectURL() : screenshot.getUploadURL());
+				format = format.replace("{NICK} ", "");
 				emoteColor = ConfigHelper.getTheme(chatTarget).emoteTextColor.get();
 				chatComponent = MessageFormat.formatChatComponent(format, chatTarget, sender, "", MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
 			} else if(chatTarget instanceof IRCUser) {
 				BotSettings botSettings = ConfigHelper.getBotSettings(chatTarget);
 				format = botSettings.getMessageFormat().ircScreenshotUpload.replace("{URL}", screenshot.getDirectURL() != null ? screenshot.getDirectURL() : screenshot.getUploadURL());
+				format = format.replace("{NICK} ", "");
 				emoteColor = ConfigHelper.getTheme(chatTarget).emoteTextColor.get();
 				chatComponent = MessageFormat.formatChatComponent(format, chatTarget, sender, "", MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
 			} else {

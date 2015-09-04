@@ -15,6 +15,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiConfirmOpenLink;
 import net.minecraft.client.gui.GuiYesNoCallback;
+import org.lwjgl.opengl.GL11;
 
 import java.net.URL;
 import java.util.List;
@@ -138,7 +139,9 @@ public class GuiImagePreview extends EiraGuiScreen implements GuiYesNoCallback {
 			imgPreview.draw(imgX, imgY, imgWidth, imgHeight, zLevel);
 		}
 
+		GL11.glEnable(GL11.GL_BLEND);
 		super.drawScreen(mouseX, mouseY, par3);
+		GL11.glDisable(GL11.GL_BLEND);
 
 		for(Object entry : buttonList) {
 			GuiButton button = (GuiButton) entry;
