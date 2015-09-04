@@ -45,7 +45,6 @@ public class GuiImagePreview extends EiraGuiScreen implements GuiYesNoCallback {
 		this.directURL = directURL;
 
 		imgPreview = new GuiURLImage(directURL);
-		imgPreview.loadTexture();
 	}
 
 	@Override
@@ -70,6 +69,10 @@ public class GuiImagePreview extends EiraGuiScreen implements GuiYesNoCallback {
 
 		imgX = leftX + 2;
 		imgY = topY + 10;
+
+		if(!imgPreview.isLoaded()) {
+			imgPreview.loadTexture();
+		}
 	}
 
 	@Override
