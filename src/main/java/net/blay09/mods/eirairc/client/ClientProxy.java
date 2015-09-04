@@ -42,6 +42,7 @@ import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import org.lwjgl.input.Keyboard;
+import scala.tools.nsc.backend.icode.Members;
 
 import java.io.File;
 import java.io.IOException;
@@ -239,7 +240,7 @@ public class ClientProxy extends CommonProxy {
 		if(!ConnectionManager.isIRCRunning()) {
 			ConnectionManager.startIRC();
 		}
-		if(ClientGlobalConfig.showWelcomeScreen.get()) {
+		if(ClientGlobalConfig.showWelcomeScreen.get() && !LocalConfig.disableWelcomeScreen.get() && !LocalConfig.disableModpackIRC.get()) {
 			openWelcomeScreen = 20;
 		}
 	}
@@ -251,7 +252,7 @@ public class ClientProxy extends CommonProxy {
 		GuiScreen currentScreen = Minecraft.getMinecraft().currentScreen;
 		if(currentScreen == null && openWelcomeScreen > 0) {
 			openWelcomeScreen--;
-			if(openWelcomeScreen <= 0 && !LocalConfig.disableModpackIRC.get()) {
+			if(openWelcomeScreen <= 0) {
 				Minecraft.getMinecraft().displayGuiScreen(new GuiWelcome());
 			}
 		}

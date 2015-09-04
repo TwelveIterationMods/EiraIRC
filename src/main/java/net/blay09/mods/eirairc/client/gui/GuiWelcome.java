@@ -8,6 +8,7 @@ import net.blay09.mods.eirairc.client.gui.base.GuiLinkButton;
 import net.blay09.mods.eirairc.client.gui.base.list.GuiList;
 import net.blay09.mods.eirairc.config.ClientGlobalConfig;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
+import net.blay09.mods.eirairc.config.LocalConfig;
 import net.blay09.mods.eirairc.config.SuggestedChannel;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.I19n;
@@ -97,8 +98,8 @@ public class GuiWelcome extends EiraGuiScreen {
 	@Override
 	public void onGuiClosed() {
 		super.onGuiClosed();
-		ClientGlobalConfig.showWelcomeScreen.set(!chkDontShowAgain.isChecked());
-		ClientGlobalConfig.save();
+		LocalConfig.disableWelcomeScreen.set(chkDontShowAgain.isChecked());
+		LocalConfig.save();
 	}
 
 	@Override

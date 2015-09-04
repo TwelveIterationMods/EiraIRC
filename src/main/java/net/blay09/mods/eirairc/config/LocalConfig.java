@@ -15,6 +15,7 @@ public class LocalConfig {
 
     public static final ConfigProperty<Boolean> disableModpackConfirmation = new ConfigProperty<>(manager, GENERAL, "disableModpackConfirmation", false);
     public static final ConfigProperty<Boolean> disableModpackIRC = new ConfigProperty<>(manager, GENERAL, "disableModpackIRC", false);
+    public static final ConfigProperty<Boolean> disableWelcomeScreen = new ConfigProperty<>(manager, GENERAL, "disableWelcomeScreen", false);
 
     public static void load(File configDir, boolean reloadFile) {
         if(thisConfig == null || reloadFile) {
