@@ -1,15 +1,14 @@
 // Copyright (c) 2015, Christopher "BlayTheNinth" Baker
 
-
 package net.blay09.mods.eirairc.bot;
 
-import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.bot.IBotCommand;
 import net.blay09.mods.eirairc.api.bot.IRCBot;
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.api.irc.IRCUser;
-import net.blay09.mods.eirairc.config.settings.BotBooleanComponent;
 import net.blay09.mods.eirairc.config.settings.BotSettings;
+import net.blay09.mods.eirairc.net.NetworkHandler;
+import net.blay09.mods.eirairc.net.message.MessageNotification;
 import net.blay09.mods.eirairc.util.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -34,7 +33,7 @@ public class BotCommandMessage implements IBotCommand {
 	@Override
 	public void processCommand(IRCBot bot, IRCChannel channel, IRCUser user, String[] args, IBotCommand commandSettings) {
 		BotSettings botSettings = ConfigHelper.getBotSettings(channel);
-		if(!botSettings.getBoolean(BotBooleanComponent.AllowPrivateMessages)) {
+		if(!botSettings.allowPrivateMessages.get()) {
 			user.notice(I19n.format("eirairc:commands.msg.disabled"));
 		}
 		String playerName = args[0];
@@ -52,7 +51,7 @@ public class BotCommandMessage implements IBotCommand {
 			}
 		}
 		String message = StringUtils.join(args, " ", 1);
-		if(botSettings.getBoolean(BotBooleanComponent.FilterLinks)) {
+		if(botSettings.filterLinks.get()) {
 			message = MessageFormat.filterLinks(message);
 		}
 		IChatComponent chatComponent = MessageFormat.formatChatComponent(botSettings.getMessageFormat().mcPrivateMessage, bot.getConnection(), null, user, message, MessageFormat.Target.Minecraft, MessageFormat.Mode.Message);
@@ -60,7 +59,7 @@ public class BotCommandMessage implements IBotCommand {
 		if(notifyMsg.length() > 42) {
 			notifyMsg = notifyMsg.substring(0, 42) + "...";
 		}
-		EiraIRC.proxy.sendNotification((EntityPlayerMP) entityPlayer, NotificationType.PrivateMessage, notifyMsg);
+		NetworkHandler.instance.sendTo(new MessageNotification(NotificationType.PrivateMessage, notifyMsg), ((EntityPlayerMP) entityPlayer));
 		entityPlayer.addChatMessage(chatComponent);
 		user.notice(I19n.format("eirairc:bot.msgSent", playerName, message));
 	}

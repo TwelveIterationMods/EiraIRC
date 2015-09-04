@@ -4,6 +4,7 @@ package net.blay09.mods.eirairc;
 
 import net.blay09.mods.eirairc.api.InternalMethods;
 import net.blay09.mods.eirairc.api.SubCommand;
+import net.blay09.mods.eirairc.api.config.IConfigManager;
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
@@ -11,6 +12,7 @@ import net.blay09.mods.eirairc.api.irc.IRCUser;
 import net.blay09.mods.eirairc.api.upload.UploadHoster;
 import net.blay09.mods.eirairc.client.UploadManager;
 import net.blay09.mods.eirairc.command.base.IRCCommandHandler;
+import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.net.EiraPlayerInfo;
 import net.blay09.mods.eirairc.util.IRCTargetError;
 import net.blay09.mods.eirairc.util.Utils;
@@ -36,7 +38,7 @@ public class InternalMethodsImpl implements InternalMethods {
 
 	@Override
 	public boolean isConnectedTo(String serverHost) {
-		return EiraIRC.instance.getConnectionManager().isConnectedTo(serverHost);
+		return ConnectionManager.isConnectedTo(serverHost);
 	}
 
 	@Override
@@ -47,7 +49,7 @@ public class InternalMethodsImpl implements InternalMethods {
 		if(serverIdx != -1) {
 			server = contextPath.substring(0, serverIdx);
 			contextPath = contextPath.substring(serverIdx + 1);
-			connection = EiraIRC.instance.getConnectionManager().getConnection(server);
+			connection = ConnectionManager.getConnection(server);
 			if(connection == null) {
 				return IRCTargetError.NotConnected;
 			} else if(expectedType == IRCContext.ContextType.IRCConnection) {
@@ -57,12 +59,12 @@ public class InternalMethodsImpl implements InternalMethods {
 			if (parentContext != null) {
 				connection = parentContext.getConnection();
 			} else {
-				connection = EiraIRC.instance.getConnectionManager().getConnection(contextPath);
+				connection = ConnectionManager.getConnection(contextPath);
 				if(connection != null) {
 					return connection;
 				}
 				IRCConnection foundConnection = null;
-				for (IRCConnection con : EiraIRC.instance.getConnectionManager().getConnections()) {
+				for (IRCConnection con : ConnectionManager.getConnections()) {
 					if (con.getChannel(contextPath) != null || con.getUser(contextPath) != null) {
 						if (foundConnection != null) {
 							return IRCTargetError.SpecifyServer;
@@ -71,7 +73,7 @@ public class InternalMethodsImpl implements InternalMethods {
 					}
 				}
 				if (foundConnection == null) {
-					foundConnection = EiraIRC.instance.getConnectionManager().getConnectionCount() == 1 ? EiraIRC.instance.getConnectionManager().getDefaultConnection() : null;
+					foundConnection = ConnectionManager.getConnectionCount() == 1 ? ConnectionManager.getDefaultConnection() : null;
 					if(foundConnection == null) {
 						return IRCTargetError.ServerNotFound;
 					}
@@ -116,4 +118,13 @@ public class InternalMethodsImpl implements InternalMethods {
 		}
 	}
 
+	@Override
+	public IConfigManager getSharedGlobalConfig() {
+		return SharedGlobalConfig.manager;
+	}
+
+	@Override
+	public IConfigManager getClientGlobalConfig() {
+		return EiraIRC.proxy.getClientGlobalConfig();
+	}
 }

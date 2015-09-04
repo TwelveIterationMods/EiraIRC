@@ -9,11 +9,6 @@ import java.io.InputStream;
 
 public class I19n {
 	
-	public static void init() {
-        InputStream inputStream = StringTranslate.class.getResourceAsStream("/assets/eirairc/lang/en_US.lang");
-		StringTranslate.inject(inputStream);
-	}
-
 	public static String format(String key, Object... params) {
 		return StatCollector.translateToLocalFormatted(key, params);
 	}

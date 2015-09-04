@@ -10,6 +10,8 @@ import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.config.AuthManager;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.ServerConfig;
+import net.blay09.mods.eirairc.irc.IRCConnectionImpl;
+import net.blay09.mods.eirairc.util.ChatComponentBuilder;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -37,7 +39,7 @@ public class CommandNickServ implements SubCommand {
 	@Override
 	public boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) throws CommandException {
 		if(!serverSide) {
-			Utils.sendLocalizedMessage(sender, "general.serverOnlyCommand");
+			ChatComponentBuilder.create().color('c').lang("eirairc:general.serverOnlyCommand").send(sender);
 			return true;
 		}
 		if(args.length < 2) {
@@ -63,7 +65,7 @@ public class CommandNickServ implements SubCommand {
 		ServerConfig serverConfig = ConfigurationHandler.getOrCreateServerConfig(connection.getHost());
 		AuthManager.putNickServData(serverConfig.getIdentifier(), args[argidx], args[argidx + 1]);
 		ConfigurationHandler.save();
-		Utils.doNickServ(connection, serverConfig);
+		((IRCConnectionImpl) connection).nickServIdentify();
 		Utils.sendLocalizedMessage(sender, "commands.nickserv", connection.getHost());
 		return true;
 	}

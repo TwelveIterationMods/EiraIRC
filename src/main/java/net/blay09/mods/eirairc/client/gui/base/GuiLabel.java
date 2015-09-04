@@ -3,14 +3,13 @@ package net.blay09.mods.eirairc.client.gui.base;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 
-
 public class GuiLabel extends Gui {
 
 	private static final int LINE_SPACING = 3;
 
 	private final Minecraft mc;
-	private final int posX;
-	private final int posY;
+	public int posX;
+	public int posY;
 	private final String[] lines;
 	private final int color;
 	private HAlignment hAlign = HAlignment.Left;
@@ -24,7 +23,7 @@ public class GuiLabel extends Gui {
 
 	public GuiLabel(String text, int posX, int posY, int color) {
 		this.mc = Minecraft.getMinecraft();
-		this.lines = text.split("\n");
+		this.lines = text.split("(\r\n|\\\\n|\n)");
 		this.posX = posX;
 		this.posY = posY;
 		this.color = color;
@@ -33,6 +32,10 @@ public class GuiLabel extends Gui {
 	public void setHAlignment(HAlignment hAlign, int alignWidth) {
 		this.hAlign = hAlign;
 		this.alignWidth = alignWidth;
+	}
+
+	public int getHeight() {
+		return lines.length * (mc.fontRendererObj.FONT_HEIGHT + LINE_SPACING);
 	}
 
 	public void drawLabel() {

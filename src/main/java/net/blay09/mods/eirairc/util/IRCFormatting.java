@@ -1,16 +1,17 @@
+// Copyright (c) 2015 Christopher "BlayTheNinth" Baker
+
 package net.blay09.mods.eirairc.util;
 
+import com.google.common.collect.Maps;
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.api.irc.IRCUser;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
-import net.blay09.mods.eirairc.config.settings.ThemeColorComponent;
 import net.blay09.mods.eirairc.config.settings.ThemeSettings;
 import net.blay09.mods.eirairc.irc.IRCUserImpl;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -43,24 +44,24 @@ public enum IRCFormatting {
 	private static final IRCFormatting[] values = values();
 	private static final EnumChatFormatting[] mcChatFormatting = EnumChatFormatting.values();
 	private static final RGB[] mcColorValues = new RGB[16];
-	private static final Map<String, EnumChatFormatting> twitchColorCache = new HashMap<String, EnumChatFormatting>();
+	private static final Map<String, EnumChatFormatting> twitchColorCache = Maps.newHashMap();
 	static {
-//		mcColorValues[EnumChatFormatting.BLACK.getColorIndex()] = new RGB(0f, 0f, 0f);
-//		mcColorValues[EnumChatFormatting.DARK_BLUE.getColorIndex()] = new RGB(0f, 0f, 0.66f);
-		mcColorValues[EnumChatFormatting.DARK_GREEN.func_175746_b()] = new RGB(0f, 0.66f, 0f); // getColorIndex
-		mcColorValues[EnumChatFormatting.DARK_AQUA.func_175746_b()] = new RGB(0f, 0.66f, 0.66f); // getColorIndex
-		mcColorValues[EnumChatFormatting.DARK_RED.func_175746_b()] = new RGB(0.66f, 0f, 0f); // getColorIndex
-		mcColorValues[EnumChatFormatting.DARK_PURPLE.func_175746_b()] = new RGB(0.66f, 0f, 0.66f); // getColorIndex
-		mcColorValues[EnumChatFormatting.GOLD.func_175746_b()] = new RGB(1f, 0.66f, 0f); // getColorIndex
-		mcColorValues[EnumChatFormatting.GRAY.func_175746_b()] = new RGB(0.66f, 0.66f, 0.66f); // getColorIndex
-		mcColorValues[EnumChatFormatting.DARK_GRAY.func_175746_b()] = new RGB(0.33f, 0.33f, 0.33f); // getColorIndex
-		mcColorValues[EnumChatFormatting.BLUE.func_175746_b()] = new RGB(0.33f, 0.33f, 1f); // getColorIndex
-		mcColorValues[EnumChatFormatting.GREEN.func_175746_b()] = new RGB(0.33f, 1f, 0.33f); // getColorIndex
-		mcColorValues[EnumChatFormatting.AQUA.func_175746_b()] = new RGB(0.33f, 1f, 1f); // getColorIndex
-		mcColorValues[EnumChatFormatting.RED.func_175746_b()] = new RGB(1f, 0.33f, 0.33f); // getColorIndex
-		mcColorValues[EnumChatFormatting.LIGHT_PURPLE.func_175746_b()] = new RGB(1f, 0.33f, 1f); // getColorIndex
-		mcColorValues[EnumChatFormatting.YELLOW.func_175746_b()] = new RGB(1f, 1f, 0.33f); // getColorIndex
-		mcColorValues[EnumChatFormatting.WHITE.func_175746_b()] = new RGB(1f, 1f, 1f); // getColorIndex
+//		mcColorValues[EnumChatFormatting.BLACK.ordinal()] = new RGB(0f, 0f, 0f);
+//		mcColorValues[EnumChatFormatting.DARK_BLUE.ordinal()] = new RGB(0f, 0f, 0.66f);
+		mcColorValues[EnumChatFormatting.DARK_GREEN.ordinal()] = new RGB(0f, 0.66f, 0f);
+		mcColorValues[EnumChatFormatting.DARK_AQUA.ordinal()] = new RGB(0f, 0.66f, 0.66f);
+		mcColorValues[EnumChatFormatting.DARK_RED.ordinal()] = new RGB(0.66f, 0f, 0f);
+		mcColorValues[EnumChatFormatting.DARK_PURPLE.ordinal()] = new RGB(0.66f, 0f, 0.66f);
+		mcColorValues[EnumChatFormatting.GOLD.ordinal()] = new RGB(1f, 0.66f, 0f);
+		mcColorValues[EnumChatFormatting.GRAY.ordinal()] = new RGB(0.66f, 0.66f, 0.66f);
+		mcColorValues[EnumChatFormatting.DARK_GRAY.ordinal()] = new RGB(0.33f, 0.33f, 0.33f);
+		mcColorValues[EnumChatFormatting.BLUE.ordinal()] = new RGB(0.33f, 0.33f, 1f);
+		mcColorValues[EnumChatFormatting.GREEN.ordinal()] = new RGB(0.33f, 1f, 0.33f);
+		mcColorValues[EnumChatFormatting.AQUA.ordinal()] = new RGB(0.33f, 1f, 1f);
+		mcColorValues[EnumChatFormatting.RED.ordinal()] = new RGB(1f, 0.33f, 0.33f);
+		mcColorValues[EnumChatFormatting.LIGHT_PURPLE.ordinal()] = new RGB(1f, 0.33f, 1f);
+		mcColorValues[EnumChatFormatting.YELLOW.ordinal()] = new RGB(1f, 1f, 0.33f);
+		mcColorValues[EnumChatFormatting.WHITE.ordinal()] = new RGB(1f, 1f, 1f);
 
 		twitchColorCache.put("#008000", EnumChatFormatting.DARK_GREEN);
 		twitchColorCache.put("#0000FF", EnumChatFormatting.BLUE);
@@ -124,35 +125,18 @@ public enum IRCFormatting {
 			while(matcher.find()) {
 				String colorMatch = matcher.group(1);
 				int colorCode = Integer.parseInt(colorMatch);
-				result = result.replaceFirst(Matcher.quoteReplacement(matcher.group()), MC_FORMATTING_PREFIX + IRCFormatting.getColorFromIRCColorCode(colorCode));
+				EnumChatFormatting colorFormat = IRCFormatting.getColorFromIRCColorCode(colorCode);
+				if(colorFormat != null) {
+					result = result.replaceFirst(Matcher.quoteReplacement(matcher.group()), colorFormat.toString());
+				} else {
+					result = result.replaceFirst(Matcher.quoteReplacement(matcher.group()), "");
+				}
 			}
 		}
 		return result;
 	}
 
-	public static char getColorFromIRCColorCode(int code) {
-		switch(code) {
-			case 0: return 'f'; // WHITE
-			case 1: return '0'; // BLACK
-			case 2: return '1'; // DARK_BLUE
-			case 3: return '2'; // DARK_GREEN
-			case 4: return 'c'; // RED
-			case 5: return '4'; // DARK_RED
-			case 6: return '5'; // DARK_PURPLE
-			case 7: return '6'; // GOLD
-			case 8: return 'e'; // YELLOW
-			case 9: return 'a'; // GREEN
-			case 10: return 'b'; // AQUA
-			case 11: return '9'; // BLUE
-			case 12: return '3'; // DARK_AQUA
-			case 13: return 'd'; // LIGHT_PURPLE
-			case 14: return '8'; // DARK_GRAY
-			case 15: return '7'; // GRAY
-		}
-		return 'f';
-	}
-
-	public static EnumChatFormatting getColorFormattingFromIRCColorCode(int code) {
+	public static EnumChatFormatting getColorFromIRCColorCode(int code) {
 		switch(code) {
 			case 0: return EnumChatFormatting.WHITE;
 			case 1: return EnumChatFormatting.BLACK;
@@ -194,6 +178,57 @@ public enum IRCFormatting {
 			case 'f': return 0; // white
 		}
 		return 1;
+	}
+
+	public static final String[] mcColorNames = new String[] {
+		"black", "dark_blue", "dark_green", "dark_aqua", "dark_red", "dark_purple", "gold", "gray", "dark_gray", "blue", "green", "aqua", "red", "light_purple", "yellow", "white"
+	};
+
+	public static EnumChatFormatting getColorFromName(String name) {
+		name = name.toLowerCase();
+		switch(name) {
+			case "black": return EnumChatFormatting.BLACK;
+			case "dark_blue": return EnumChatFormatting.DARK_BLUE;
+			case "dark_green": return EnumChatFormatting.DARK_GREEN;
+			case "dark_aqua": return EnumChatFormatting.DARK_AQUA;
+			case "dark_red": return EnumChatFormatting.DARK_RED;
+			case "dark_purple": return EnumChatFormatting.DARK_PURPLE;
+			case "gold": return EnumChatFormatting.GOLD;
+			case "gray":
+			case "grey": return EnumChatFormatting.GRAY;
+			case "dark_gray":
+			case "dark_grey": return EnumChatFormatting.DARK_GRAY;
+			case "blue": return EnumChatFormatting.BLUE;
+			case "green": return EnumChatFormatting.GREEN;
+			case "aqua": return EnumChatFormatting.AQUA;
+			case "red": return EnumChatFormatting.RED;
+			case "light_purple": return EnumChatFormatting.LIGHT_PURPLE;
+			case "yellow": return EnumChatFormatting.YELLOW;
+			case "white": return EnumChatFormatting.WHITE;
+		}
+		return null;
+	}
+
+	public static String getNameFromColor(EnumChatFormatting color) {
+		switch(color) {
+			case BLACK: return "black";
+			case DARK_BLUE: return "dark_blue";
+			case DARK_GREEN: return "dark_green";
+			case DARK_AQUA: return "dark_aqua";
+			case DARK_RED: return "dark_red";
+			case DARK_PURPLE: return "dark_purple";
+			case GOLD: return "gold";
+			case GRAY: return "gray";
+			case DARK_GRAY: return "dark_gray";
+			case BLUE: return "blue";
+			case GREEN: return "green";
+			case AQUA: return "aqua";
+			case RED: return "red";
+			case LIGHT_PURPLE: return "light_purple";
+			case YELLOW: return "yellow";
+			case WHITE: return "white";
+		}
+		return null;
 	}
 
 	public static EnumChatFormatting getColorFromMCColorCode(char colorCode) {
@@ -262,38 +297,64 @@ public enum IRCFormatting {
 		}
 		colorName = colorName.toLowerCase();
 		EnumChatFormatting colorFormatting = null;
-		if(colorName.equals("black")) {
-			colorFormatting = EnumChatFormatting.BLACK;
-		} else if(colorName.equals("darkblue") || colorName.equals("dark blue")) {
-			colorFormatting = EnumChatFormatting.DARK_BLUE;
-		} else if(colorName.equals("green")) {
-			colorFormatting = EnumChatFormatting.DARK_GREEN;
-		} else if(colorName.equals("cyan")) {
-			colorFormatting = EnumChatFormatting.DARK_AQUA;
-		} else if(colorName.equals("darkred") || colorName.equals("dark red")) {
-			colorFormatting = EnumChatFormatting.DARK_RED;
-		} else if(colorName.equals("purple")) {
-			colorFormatting = EnumChatFormatting.DARK_PURPLE;
-		} else if(colorName.equals("gold") || colorName.equals("orange")) {
-			colorFormatting = EnumChatFormatting.GOLD;
-		} else if(colorName.equals("gray") || colorName.equals("grey")) {
-			colorFormatting = EnumChatFormatting.GRAY;
-		} else if(colorName.equals("darkgray") || colorName.equals("darkgrey") || colorName.equals("dark gray") || colorName.equals("dark grey")) {
-			colorFormatting = EnumChatFormatting.DARK_GRAY;
-		} else if(colorName.equals("blue")) {
-			colorFormatting = EnumChatFormatting.BLUE;
-		} else if(colorName.equals("lime")) {
-			colorFormatting = EnumChatFormatting.GREEN;
-		} else if(colorName.equals("lightblue") || colorName.equals("light blue")) {
-			colorFormatting = EnumChatFormatting.AQUA;
-		} else if(colorName.equals("red")) {
-			colorFormatting = EnumChatFormatting.RED;
-		} else if(colorName.equals("magenta") || colorName.equals("pink")) {
-			colorFormatting = EnumChatFormatting.LIGHT_PURPLE;
-		} else if(colorName.equals("yellow")) {
-			colorFormatting = EnumChatFormatting.YELLOW;
-		} else if(colorName.equals("white")) {
-			colorFormatting = EnumChatFormatting.WHITE;
+		switch (colorName) {
+			case "black":
+				colorFormatting = EnumChatFormatting.BLACK;
+				break;
+			case "darkblue":
+			case "dark blue":
+				colorFormatting = EnumChatFormatting.DARK_BLUE;
+				break;
+			case "green":
+				colorFormatting = EnumChatFormatting.DARK_GREEN;
+				break;
+			case "cyan":
+				colorFormatting = EnumChatFormatting.DARK_AQUA;
+				break;
+			case "darkred":
+			case "dark red":
+				colorFormatting = EnumChatFormatting.DARK_RED;
+				break;
+			case "purple":
+				colorFormatting = EnumChatFormatting.DARK_PURPLE;
+				break;
+			case "gold":
+			case "orange":
+				colorFormatting = EnumChatFormatting.GOLD;
+				break;
+			case "gray":
+			case "grey":
+				colorFormatting = EnumChatFormatting.GRAY;
+				break;
+			case "darkgray":
+			case "darkgrey":
+			case "dark gray":
+			case "dark grey":
+				colorFormatting = EnumChatFormatting.DARK_GRAY;
+				break;
+			case "blue":
+				colorFormatting = EnumChatFormatting.BLUE;
+				break;
+			case "lime":
+				colorFormatting = EnumChatFormatting.GREEN;
+				break;
+			case "lightblue":
+			case "light blue":
+				colorFormatting = EnumChatFormatting.AQUA;
+				break;
+			case "red":
+				colorFormatting = EnumChatFormatting.RED;
+				break;
+			case "magenta":
+			case "pink":
+				colorFormatting = EnumChatFormatting.LIGHT_PURPLE;
+				break;
+			case "yellow":
+				colorFormatting = EnumChatFormatting.YELLOW;
+				break;
+			case "white":
+				colorFormatting = EnumChatFormatting.WHITE;
+				break;
 		}
 		return colorFormatting;
 	}
@@ -316,9 +377,9 @@ public enum IRCFormatting {
 		if(nameColorId != -1) {
 			return mcChatFormatting[nameColorId];
 		} else if(Utils.isOP(player)) {
-			return theme.getColor(ThemeColorComponent.mcOpNameColor);
+			return theme.mcOpNameColor.get();
 		}
-		return theme.getColor(ThemeColorComponent.mcNameColor);
+		return theme.mcNameColor.get();
 	}
 
 	public static EnumChatFormatting getColorFormattingForUser(IRCChannel channel, IRCUser user) {
@@ -328,14 +389,14 @@ public enum IRCFormatting {
 		}
 		ThemeSettings theme = ConfigHelper.getTheme(channel);
 		if(channel == null) {
-			return theme.getColor(ThemeColorComponent.ircPrivateNameColor);
+			return theme.ircPrivateNameColor.get();
 		}
 		if(user.isOperator(channel)) {
-			return theme.getColor(ThemeColorComponent.ircOpNameColor);
+			return theme.ircOpNameColor.get();
 		} else if(user.hasVoice(channel)) {
-			return theme.getColor(ThemeColorComponent.ircVoiceNameColor);
+			return theme.ircVoiceNameColor.get();
 		}
-		return theme.getColor(ThemeColorComponent.ircNameColor);
+		return theme.ircNameColor.get();
 	}
 
 	public static boolean isValidColor(String colorName) {
@@ -347,11 +408,4 @@ public enum IRCFormatting {
 		}
 	}
 
-	public static EnumChatFormatting getColorFromName(String colorName) {
-		try {
-			return EnumChatFormatting.valueOf(colorName.toUpperCase());
-		} catch (IllegalArgumentException e) {
-			return null;
-		}
-	}
 }

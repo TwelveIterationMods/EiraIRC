@@ -1,13 +1,13 @@
 // Copyright (c) 2015, Christopher "BlayTheNinth" Baker
 
-
 package net.blay09.mods.eirairc.command;
 
-import net.blay09.mods.eirairc.EiraIRC;
+import net.blay09.mods.eirairc.ConnectionManager;
 import net.blay09.mods.eirairc.api.SubCommand;
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
+import net.blay09.mods.eirairc.util.ChatComponentBuilder;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ChatComponentText;
@@ -33,12 +33,12 @@ public class CommandList implements SubCommand {
 
 	@Override
 	public boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) {
-		if(EiraIRC.instance.getConnectionManager().getConnectionCount() == 0) {
-			Utils.sendLocalizedMessage(sender, "error.notConnected", "IRC");
+		if(ConnectionManager.getConnectionCount() == 0) {
+			Utils.sendLocalizedMessage(sender, "error.notConnectedToIRC");
 			return true;
 		}
-		Utils.sendLocalizedMessage(sender, "commands.list.activeConnections");
-		for(IRCConnection connection : EiraIRC.instance.getConnectionManager().getConnections()) {
+		ChatComponentBuilder.create().color('e').lang("eirairc:commands.list.activeConnections").send(sender);
+		for(IRCConnection connection : ConnectionManager.getConnections()) {
 			StringBuilder sb = new StringBuilder();
 			for(IRCChannel channel : connection.getChannels()) {
 				if(sb.length() > 0) {

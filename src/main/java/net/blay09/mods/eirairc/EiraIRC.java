@@ -15,7 +15,7 @@ import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.handler.ChatSessionHandler;
 import net.blay09.mods.eirairc.handler.MCEventHandler;
 import net.blay09.mods.eirairc.net.EiraNetHandler;
-import net.blay09.mods.eirairc.net.PacketHandler;
+import net.blay09.mods.eirairc.net.NetworkHandler;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.I19n;
@@ -32,7 +32,6 @@ import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.*;
-import net.minecraftforge.fml.common.eventhandler.EventBus;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @Mod(modid = EiraIRC.MOD_ID, acceptableRemoteVersions = "*", guiFactory = "net.blay09.mods.eirairc.client.gui.EiraIRCGuiFactory")
@@ -46,9 +45,6 @@ public class EiraIRC {
     @SidedProxy(serverSide = "net.blay09.mods.eirairc.CommonProxy", clientSide = "net.blay09.mods.eirairc.client.ClientProxy")
     public static CommonProxy proxy;
 
-    public static final EventBus internalBus = new EventBus();
-
-    private ConnectionManager connectionManager;
     private ChatSessionHandler chatSessionHandler;
     private EiraNetHandler netHandler;
     private MCEventHandler mcEventHandler;
@@ -62,7 +58,6 @@ public class EiraIRC {
 
     @EventHandler
     public void init(FMLInitializationEvent event) {
-        connectionManager = new ConnectionManager();
         chatSessionHandler = new ChatSessionHandler();
         netHandler = new EiraNetHandler();
 
@@ -75,8 +70,7 @@ public class EiraIRC {
         MinecraftForge.EVENT_BUS.register(mcEventHandler);
         FMLCommonHandler.instance().bus().register(netHandler);
 
-        I19n.init();
-        PacketHandler.init();
+        NetworkHandler.init();
 
         EiraIRCAPI.internalSetupAPI(new InternalMethodsImpl());
         EiraIRCAPI.setChatHandler(new IChatHandler() {
@@ -111,14 +105,14 @@ public class EiraIRC {
         registerCommands((CommandHandler) event.getServer().getCommandManager(), true);
 
         if (!MinecraftServer.getServer().isSinglePlayer()) {
-            connectionManager.startIRC();
+            ConnectionManager.startIRC();
         }
     }
 
     @EventHandler
     public void serverStop(FMLServerStoppingEvent event) {
         if (!MinecraftServer.getServer().isSinglePlayer()) {
-            connectionManager.stopIRC();
+            ConnectionManager.stopIRC();
         }
     }
 
@@ -166,10 +160,6 @@ public class EiraIRC {
             handler.registerCommand(new CommandIRC());
         }
         IRCCommandHandler.registerCommands();
-    }
-
-    public ConnectionManager getConnectionManager() {
-        return connectionManager;
     }
 
 }

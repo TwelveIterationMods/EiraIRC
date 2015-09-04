@@ -21,9 +21,9 @@ public class EiraGuiScreen extends GuiScreen {
 	private static final ResourceLocation texMenuBackground = new ResourceLocation("eirairc", "gfx/menubg.png");
 
 	protected final GuiScreen parentScreen;
-	protected final List<GuiTextField> textFieldList = new ArrayList<GuiTextField>();
-	protected final List<GuiLabel> labelList = new ArrayList<GuiLabel>();
-	protected final List<GuiList> listList = new ArrayList<GuiList>();
+	protected final List<GuiTextField> textFieldList = new ArrayList<>();
+	protected final List<GuiLabel> labelList = new ArrayList<>();
+	protected final List<GuiList> listList = new ArrayList<>();
 
 	protected GuiOverlay overlay;
 	protected int menuX;
@@ -84,11 +84,15 @@ public class EiraGuiScreen extends GuiScreen {
 				}
 			}
 		}
+		boolean foundFocus = false;
 		for (GuiTextField textField : textFieldList) {
 			textField.mouseClicked(mouseX, mouseY, mouseButton);
 			if (textField.isFocused()) {
-				return true;
+				foundFocus = true;
 			}
+		}
+		if(foundFocus) {
+			return true;
 		}
 		for (GuiList list : listList) {
 			if (list.mouseClicked(mouseX, mouseY, mouseButton)) {

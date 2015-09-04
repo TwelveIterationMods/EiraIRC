@@ -1,10 +1,10 @@
-// Copyright (c) 2015, Christopher "BlayTheNinth" Baker
-
+// Copyright (c) 2015 Christopher "BlayTheNinth" Baker
 
 package net.blay09.mods.eirairc.client.gui.base;
 
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiTextField;
+import org.lwjgl.input.Keyboard;
 
 public class GuiAdvancedTextField extends GuiTextField {
 	
@@ -21,15 +21,22 @@ public class GuiAdvancedTextField extends GuiTextField {
 	private boolean enabled;
 	private boolean emptyOnRightClick;
 
-	public GuiAdvancedTextField(int id, FontRenderer fontRenderer, int par2, int par3, int par4, int par5) {
-		super(id, fontRenderer, par2, par3, par4, par5);
-		this.fontRenderer = fontRenderer;
+	private GuiAdvancedTextField nextTabField;
+
+	public GuiAdvancedTextField(int id, FontRenderer par1FontRenderer, int par2, int par3, int par4, int par5) {
+		super(id, par1FontRenderer, par2, par3, par4, par5);
+		this.fontRenderer = par1FontRenderer;
 		setMaxStringLength(Integer.MAX_VALUE);
 	}
 
 	@Override
 	public boolean textboxKeyTyped(char unicode, int keyCode) {
 		boolean result = super.textboxKeyTyped(unicode, keyCode);
+		if(isFocused() && keyCode == Keyboard.KEY_TAB && nextTabField != null) {
+			setFocused(false);
+			nextTabField.setFocused(true);
+			return true;
+		}
 		if(textCentered) {
 			int textWidth = fontRenderer.getStringWidth(getText());
 			textOffsetX = getWidth() / 2 - textWidth / 2;
@@ -55,11 +62,13 @@ public class GuiAdvancedTextField extends GuiTextField {
 
 	@Override
 	public void setText(String text) {
+		int cursorPosition = getCursorPosition();
 		super.setText(text);
 		if(textCentered) {
 			int textWidth = fontRenderer.getStringWidth(text);
 			textOffsetX = getWidth() / 2 - textWidth / 2;
 		}
+		setCursorPosition(cursorPosition);
 	}
 
 	private boolean isDefaultText() {
@@ -96,6 +105,7 @@ public class GuiAdvancedTextField extends GuiTextField {
 	
 	/**
 	 * Minecraft code makes this ridiculously annoying to do, so it doesn't work yet.
+	 * @param textCentered
 	 */
 	public void setTextCentered(boolean textCentered) {
 		this.textCentered = textCentered;
@@ -141,5 +151,9 @@ public class GuiAdvancedTextField extends GuiTextField {
 
 	public boolean isEmptyOnRightClick() {
 		return emptyOnRightClick;
+	}
+
+	public void setNextTabField(GuiAdvancedTextField nextTabField) {
+		this.nextTabField = nextTabField;
 	}
 }

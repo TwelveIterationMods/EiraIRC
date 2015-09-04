@@ -3,6 +3,7 @@
 
 package net.blay09.mods.eirairc.util;
 
+import net.blay09.mods.eirairc.api.config.IConfigManager;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.irc.IRCConnectionImpl;
 
@@ -53,5 +54,21 @@ public enum IRCTargetError implements IRCContext {
 
 	@Override
 	public void ctcpNotice(String message) {}
+
+	@Override
+	public IConfigManager getGeneralSettings() {
+		return null;
+	}
+
+	@Override
+	public IConfigManager getBotSettings() {
+		return null;
+	}
+
+	@Override
+	public IConfigManager getThemeSettings() {
+		return null;
+	}
+
 
 }

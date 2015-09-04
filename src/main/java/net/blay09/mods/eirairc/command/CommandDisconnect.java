@@ -1,9 +1,8 @@
 // Copyright (c) 2015, Christopher "BlayTheNinth" Baker
 
-
 package net.blay09.mods.eirairc.command;
 
-import net.blay09.mods.eirairc.EiraIRC;
+import net.blay09.mods.eirairc.ConnectionManager;
 import net.blay09.mods.eirairc.api.SubCommand;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
@@ -47,12 +46,12 @@ public class CommandDisconnect implements SubCommand {
 		}
 		if(target.equals(TARGET_ALL)) {
 			Utils.sendLocalizedMessage(sender, "commands.disconnect", "IRC");
-			for(IRCConnection connection : EiraIRC.instance.getConnectionManager().getConnections()) {
+			for(IRCConnection connection : ConnectionManager.getConnections()) {
 				connection.disconnect(ConfigHelper.getQuitMessage(connection));
 			}
-			EiraIRC.instance.getConnectionManager().clearConnections();
+			ConnectionManager.clearConnections();
 		} else {
-			IRCConnection connection = EiraIRC.instance.getConnectionManager().getConnection(target);
+			IRCConnection connection = ConnectionManager.getConnection(target);
 			if(connection == null) {
 				Utils.sendLocalizedMessage(sender, "error.notConnected", target);
 				return true;

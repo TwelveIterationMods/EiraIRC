@@ -14,8 +14,8 @@ import java.util.List;
 public class ChatSessionHandler {
 
     private IRCContext chatTarget = null;
-    private final List<IRCChannel> validTargetChannels = new ArrayList<IRCChannel>();
-    private final List<IRCUser> validTargetUsers = new ArrayList<IRCUser>();
+    private final List<IRCChannel> validTargetChannels = new ArrayList<>();
+    private final List<IRCUser> validTargetUsers = new ArrayList<>();
     private int targetChannelIdx = -1;
     private int targetUserIdx = 0;
 
@@ -79,7 +79,7 @@ public class ChatSessionHandler {
                 return null;
             }
             IRCChannel channel = validTargetChannels.get(targetChannelIdx);
-            if (ConfigHelper.getChannelConfig(channel).getGeneralSettings().isReadOnly()) {
+            if (ConfigHelper.getChannelConfig(channel).getGeneralSettings().readOnly.get()) {
                 return getNextTarget(false);
             }
             return channel;

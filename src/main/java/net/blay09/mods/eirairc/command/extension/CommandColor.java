@@ -6,7 +6,6 @@ package net.blay09.mods.eirairc.command.extension;
 import net.blay09.mods.eirairc.api.SubCommand;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
-import net.blay09.mods.eirairc.config.settings.ThemeColorComponent;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.I19n;
 import net.blay09.mods.eirairc.util.IRCFormatting;
@@ -52,8 +51,8 @@ public class CommandColor implements SubCommand {
 			throw new WrongUsageException(I19n.format("eirairc:commands.color.usage"));
 		}
 		String colorName = args[0].toLowerCase();
-		EnumChatFormatting mcOpColor = SharedGlobalConfig.theme.getColor(ThemeColorComponent.mcOpNameColor);
-		if(!Utils.isOP(sender) && (SharedGlobalConfig.colorBlacklist.contains(colorName) || (mcOpColor != null && mcOpColor.name().toLowerCase().equals(colorName)))) {
+		EnumChatFormatting mcOpColor = SharedGlobalConfig.theme.mcOpNameColor.get();
+		if(!Utils.isOP(sender) && (SharedGlobalConfig.colorBlacklist.get().containsString(colorName, true) || (mcOpColor != null && mcOpColor.name().toLowerCase().equals(colorName)))) {
 			Utils.sendLocalizedMessage(sender, "commands.color.blackList", colorName);
 			return true;
 		}

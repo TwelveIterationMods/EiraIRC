@@ -10,8 +10,7 @@ import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.config.AuthManager;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.ServerConfig;
-import net.blay09.mods.eirairc.config.settings.BotStringComponent;
-import net.blay09.mods.eirairc.config.settings.GeneralBooleanComponent;
+import net.blay09.mods.eirairc.util.ChatComponentBuilder;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.CommandException;
@@ -40,7 +39,7 @@ public class CommandTwitch implements SubCommand {
 	@Override
 	public boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) throws CommandException {
 		if(EiraIRCAPI.isConnectedTo(Globals.TWITCH_SERVER)) {
-			Utils.sendLocalizedMessage(sender, "error.alreadyConnected", "Twitch");
+			ChatComponentBuilder.create().color('c').lang("eirairc:error.alreadyConnected", "Twitch").send(sender);
 			return true;
 		}
 		if(args.length == 0) {
@@ -53,7 +52,7 @@ public class CommandTwitch implements SubCommand {
 				if(serverSide) {
 					throw new WrongUsageException(getCommandUsage(sender));
 				} else {
-					Utils.sendLocalizedMessage(sender, "general.serverOnlyCommand");
+					ChatComponentBuilder.create().color('c').lang("eirairc:general.serverOnlyCommand").send(sender);
 					return true;
 				}
 			}
@@ -65,8 +64,8 @@ public class CommandTwitch implements SubCommand {
 			serverConfig.setNick(args[0]);
 			AuthManager.putServerPassword(serverConfig.getIdentifier(), args[1]);
 			serverConfig.getOrCreateChannelConfig("#" + serverConfig.getNick());
-			serverConfig.getGeneralSettings().setBoolean(GeneralBooleanComponent.ReadOnly, false);
-			serverConfig.getBotSettings().setString(BotStringComponent.MessageFormat, "Twitch");
+			serverConfig.getGeneralSettings().readOnly.set(false);
+			serverConfig.getBotSettings().messageFormat.set("Twitch");
 			ConfigurationHandler.addServerConfig(serverConfig);
 			ConfigurationHandler.save();
 			Utils.sendLocalizedMessage(sender, "commands.connect", "Twitch");

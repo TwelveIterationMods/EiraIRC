@@ -11,6 +11,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiConfirmOpenLink;
 import net.minecraft.client.gui.GuiYesNoCallback;
+import net.minecraft.client.renderer.GlStateManager;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -39,6 +40,7 @@ public class GuiImagePreview extends EiraGuiScreen implements GuiYesNoCallback {
 		super(null);
 		this.url = url != null ? url : directURL;
 		this.directURL = directURL;
+		imgPreview = new GuiURLImage(directURL);
 	}
 
 	@Override
@@ -64,8 +66,9 @@ public class GuiImagePreview extends EiraGuiScreen implements GuiYesNoCallback {
 		imgX = leftX + 2;
 		imgY = topY + 10;
 
-		imgPreview = new GuiURLImage(directURL);
-		imgPreview.loadTexture();
+		if(!imgPreview.isLoaded()) {
+			imgPreview.loadTexture();
+		}
 	}
 
 	@Override
@@ -130,7 +133,9 @@ public class GuiImagePreview extends EiraGuiScreen implements GuiYesNoCallback {
 			imgPreview.draw(imgX, imgY, imgWidth, imgHeight, zLevel);
 		}
 
+		GlStateManager.enableBlend();
 		super.drawScreen(mouseX, mouseY, par3);
+		GlStateManager.disableBlend();
 
 		for(Object entry : buttonList) {
 			GuiButton button = (GuiButton) entry;

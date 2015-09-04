@@ -3,58 +3,55 @@
 
 package net.blay09.mods.eirairc;
 
+import net.blay09.mods.eirairc.api.config.IConfigManager;
 import net.blay09.mods.eirairc.api.event.IRCChannelMessageEvent;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
+import net.blay09.mods.eirairc.config.LocalConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
-import net.blay09.mods.eirairc.net.PacketHandler;
+import net.blay09.mods.eirairc.net.NetworkHandler;
 import net.blay09.mods.eirairc.net.message.MessageNotification;
 import net.blay09.mods.eirairc.util.NotificationType;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.event.HoverEvent;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 import java.io.File;
 import java.util.List;
 
 public class CommonProxy {
 
-	public void init() {}
+	public void init() {
+		MinecraftForge.EVENT_BUS.register(this);
+	}
 
 	public void postInit() {}
 
-	public void sendNotification(EntityPlayerMP entityPlayer, NotificationType type, String text) {
-		PacketHandler.instance.sendTo(new MessageNotification(type, text), entityPlayer);
-	}
-	
 	public void publishNotification(NotificationType type, String text) {
-		PacketHandler.instance.sendToAll(new MessageNotification(type, text));
+		NetworkHandler.instance.sendToAll(new MessageNotification(type, text));
 	}
 	
 	public String getUsername() {
 		return null;
 	}
 
-	public boolean isIngame() {
-		return true;
-	}
-	
 	public void loadConfig(File configDir, boolean reloadFile) {
 		SharedGlobalConfig.load(configDir, reloadFile);
+		LocalConfig.load(configDir, reloadFile);
 	}
 
 	public void loadLegacyConfig(File configDir, Configuration legacyConfig) {
 		SharedGlobalConfig.loadLegacy(configDir, legacyConfig);
 	}
 
-	public void handleRedirect(ServerConfig serverConfig) {
-
-	}
+	public void handleRedirect(ServerConfig serverConfig) {}
 
 	public boolean handleConfigCommand(ICommandSender sender, String key, String value) {
 		return SharedGlobalConfig.handleConfigCommand(sender, key, value);
@@ -75,6 +72,9 @@ public class CommonProxy {
 	public void saveConfig() {
 		if (SharedGlobalConfig.thisConfig.hasChanged()) {
 			SharedGlobalConfig.thisConfig.save();
+		}
+		if(LocalConfig.thisConfig.hasChanged()) {
+			LocalConfig.thisConfig.save();
 		}
 	}
 
@@ -107,4 +107,12 @@ public class CommonProxy {
 		e.printStackTrace();
 	}
 
+	@SubscribeEvent
+	public void onTick(TickEvent.ServerTickEvent event) {
+		ConnectionManager.tickConnections();
+	}
+
+	public IConfigManager getClientGlobalConfig() {
+		return null;
+	}
 }

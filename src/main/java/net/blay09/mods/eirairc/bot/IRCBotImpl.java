@@ -10,7 +10,6 @@ import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
 import net.blay09.mods.eirairc.api.irc.IRCUser;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
-import net.blay09.mods.eirairc.config.settings.BotStringListComponent;
 import net.blay09.mods.eirairc.irc.IRCConnectionImpl;
 import net.blay09.mods.eirairc.irc.IRCUserImpl;
 import net.blay09.mods.eirairc.util.ConfigHelper;
@@ -25,7 +24,7 @@ import java.util.Map;
 public class IRCBotImpl implements IRCBot {
 
 	private final IRCConnectionImpl connection;
-	private final Map<String, IBotCommand> commands = new HashMap<String, IBotCommand>();
+	private final Map<String, IBotCommand> commands = new HashMap<>();
 
 	public IRCBotImpl(IRCConnectionImpl connection) {
 		this.connection = connection;
@@ -63,7 +62,7 @@ public class IRCBotImpl implements IRCBot {
 
 	public boolean processCommand(IRCChannel channel, IRCUser sender, String message) {
 		String[] args = message.split(" ");
-		if(ConfigHelper.getBotSettings(channel).containsString(BotStringListComponent.DisabledNativeCommands, args[0].toLowerCase())) {
+		if(ConfigHelper.getBotSettings(channel).disabledNativeCommands.get().containsString(args[0].toLowerCase(), true)) {
 			return false;
 		}
 		IBotCommand botCommand = commands.get(args[0].toLowerCase());

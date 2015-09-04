@@ -10,6 +10,7 @@ import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.config.AuthManager;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.ServerConfig;
+import net.blay09.mods.eirairc.util.ChatComponentBuilder;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -41,8 +42,8 @@ public class
 			throw new WrongUsageException(getCommandUsage(sender));
 		}
 		String host = args[0];
-		if(EiraIRC.instance.getConnectionManager().isConnectedTo(host)) {
-			Utils.sendLocalizedMessage(sender, "general.alreadyConnected", host);
+		if(ConnectionManager.isConnectedTo(host)) {
+			ChatComponentBuilder.create().color('c').lang("eirairc:error.alreadyConnected", host).send(sender);
 			return true;
 		}
 		Utils.sendLocalizedMessage(sender, "general.connecting", host);

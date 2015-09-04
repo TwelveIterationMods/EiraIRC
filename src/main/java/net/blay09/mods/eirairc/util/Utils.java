@@ -2,6 +2,7 @@
 
 package net.blay09.mods.eirairc.util;
 
+import net.blay09.mods.eirairc.ConnectionManager;
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.EiraIRCAPI;
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
@@ -63,7 +64,7 @@ public class Utils {
     }
 
     public static String getNickIRC(EntityPlayer player, IRCContext context) {
-        return MessageFormat.formatNick(player.getDisplayNameString(), context, MessageFormat.Target.IRC, MessageFormat.Mode.Message, null);
+        return MessageFormat.formatNick(player.getDisplayNameString(), context, MessageFormat.Target.IRC, MessageFormat.Mode.Message);
     }
 
     public static String getNickGame(EntityPlayer player) {
@@ -83,34 +84,19 @@ public class Utils {
     }
 
     public static void addConnectionsToList(List<String> list) {
-        for (IRCConnection connection : EiraIRC.instance.getConnectionManager().getConnections()) {
+        for (IRCConnection connection : ConnectionManager.getConnections()) {
             list.add(connection.getHost());
-        }
-    }
-
-    public static void doNickServ(IRCConnection connection, ServerConfig config) {
-        ServiceSettings settings = ServiceConfig.getSettings(connection.getHost(), connection.getServerType());
-        AuthManager.NickServData nickServData = AuthManager.getNickServData(config.getIdentifier());
-        if (nickServData != null) {
-            connection.irc(settings.getIdentifyCommand(nickServData.username, nickServData.password));
         }
     }
 
     public static void sendUserList(ICommandSender player, IRCConnection connection, IRCChannel channel) {
         Collection<IRCUser> userList = channel.getUserList();
         if (userList.size() == 0) {
-            if (player == null) {
-                addMessageToChat(new ChatComponentTranslation("eirairc:commands.who.noUsersOnline", connection.getHost(), channel.getName()));
-            } else {
-                sendLocalizedMessage(player, "commands.who.noUsersOnline", connection.getHost(), channel.getName());
-            }
+            ChatComponentBuilder.create().lang("eirairc:commands.who.noUsersOnline", connection.getHost(), channel.getName()).send(player);
             return;
         }
-        if (player == null) {
-            addMessageToChat(new ChatComponentTranslation("eirairc:commands.who.usersOnline", connection.getHost(), userList.size(), channel.getName()));
-        } else {
-            sendLocalizedMessage(player, "commands.who.usersOnline", connection.getHost(), userList.size(), channel.getName());
-        }
+        ChatComponentBuilder ccb = new ChatComponentBuilder(3);
+        ccb.lang("eirairc:commands.who.usersOnline", ccb.text("[" + connection.getHost() + "] ").color('b').text(userList.size()).pop(), ccb.color('e').text(channel.getName()).color('f').text(":").pop()).send(player);
         String s = " * ";
         for (IRCUser user : userList) {
             if (s.length() + user.getName().length() > Globals.CHAT_MAX_LENGTH) {
@@ -181,7 +167,7 @@ public class Utils {
     public static IRCContext getSuggestedTarget() {
         IRCContext result = EiraIRC.instance.getChatSessionHandler().getChatTarget();
         if (result == null) {
-            IRCConnection connection = EiraIRC.instance.getConnectionManager().getDefaultConnection();
+            IRCConnection connection = ConnectionManager.getDefaultConnection();
             if (connection != null) {
                 if (connection.getChannels().size() == 1) {
                     return connection.getChannels().iterator().next();
@@ -229,9 +215,7 @@ public class Utils {
     public static void openWebpage(String url) {
         try {
             openWebpage(new URL(url).toURI());
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        } catch (MalformedURLException e) {
+        } catch (URISyntaxException | MalformedURLException e) {
             e.printStackTrace();
         }
     }
@@ -315,7 +299,7 @@ public class Utils {
         if (portIdx != -1) {
             try {
                 String[] portRanges = url.substring(portIdx + 1).split("\\+");
-                List<Integer> portList = new ArrayList<Integer>();
+                List<Integer> portList = new ArrayList<>();
                 for (int i = 0; i < portRanges.length; i++) {
                     int sepIdx = portRanges[i].indexOf('-');
                     if (sepIdx != -1) {
@@ -344,10 +328,12 @@ public class Utils {
         return new int[]{defaultPort};
     }
 
+    @Deprecated
     public static String getModpackId() {
         return "";
     }
 
+    @Deprecated
     public static IChatComponent translateToDefault(IChatComponent component) {
         if (component instanceof ChatComponentText) {
             return translateChildrenToDefault((ChatComponentText) component);
@@ -357,6 +343,7 @@ public class Utils {
         return null;
     }
 
+    @Deprecated
     private static IChatComponent translateChildrenToDefault(ChatComponentText chatComponent) {
         ChatComponentText copyComponent = new ChatComponentText(chatComponent.getChatComponentText_TextValue());
         copyComponent.setChatStyle(chatComponent.getChatStyle());
@@ -369,6 +356,7 @@ public class Utils {
         return copyComponent;
     }
 
+    @Deprecated
     public static IChatComponent translateComponentToDefault(ChatComponentTranslation chatComponent) {
         Object[] formatArgs = chatComponent.getFormatArgs();
         Object[] copyFormatArgs = new Object[formatArgs.length];

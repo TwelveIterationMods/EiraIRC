@@ -4,7 +4,6 @@ import net.blay09.mods.eirairc.api.EiraIRCAPI;
 import net.blay09.mods.eirairc.api.SubCommand;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.api.irc.IRCUser;
-import net.blay09.mods.eirairc.config.settings.BotBooleanComponent;
 import net.blay09.mods.eirairc.config.settings.BotSettings;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.MessageFormat;
@@ -39,7 +38,7 @@ public class CommandCTCP implements SubCommand {
 
     @Override
     public boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) throws CommandException {
-        if (!ConfigHelper.getBotSettings(context).getBoolean(BotBooleanComponent.AllowCTCP)) {
+        if (!ConfigHelper.getBotSettings(context).allowCTCP.get()){
             Utils.sendLocalizedMessage(sender, "commands.ctcp.disabled");
             return true;
         }
@@ -51,7 +50,7 @@ public class CommandCTCP implements SubCommand {
             Utils.sendLocalizedMessage(sender, target.getName(), args[0]);
             return true;
         } else if (target.getContextType() == IRCContext.ContextType.IRCUser) {
-            if (!ConfigHelper.getBotSettings(context).getBoolean(BotBooleanComponent.AllowPrivateMessages)) {
+            if (!ConfigHelper.getBotSettings(context).allowCTCP.get()) {
                 Utils.sendLocalizedMessage(sender, "commands.ctcp.disabled");
                 return true;
             }

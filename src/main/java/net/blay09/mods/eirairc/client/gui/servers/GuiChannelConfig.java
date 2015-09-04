@@ -10,14 +10,11 @@ import net.blay09.mods.eirairc.config.AuthManager;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.ServerConfig;
-import net.blay09.mods.eirairc.config.settings.BotStringComponent;
-import net.blay09.mods.eirairc.config.settings.GeneralBooleanComponent;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.I19n;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.GuiYesNoCallback;
-import net.minecraftforge.common.config.ConfigElement;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
 import net.minecraftforge.fml.client.config.GuiConfig;
 import org.lwjgl.input.Keyboard;
@@ -29,7 +26,7 @@ public class GuiChannelConfig extends GuiTabPage implements GuiYesNoCallback {
 	private final ServerConfig serverConfig;
 	private final ChannelConfig config;
 
-	private GuiTextField txtName;
+	private GuiAdvancedTextField txtName;
 	private GuiAdvancedTextField txtPassword;
 	private GuiCheckBox chkAutoJoin;
 
@@ -74,7 +71,7 @@ public class GuiChannelConfig extends GuiTabPage implements GuiYesNoCallback {
 		} else {
 			oldText = config.getName();
 		}
-		txtName = new GuiTextField(0, fontRendererObj, leftX, topY + 15, 100, 15);
+		txtName = new GuiAdvancedTextField(0, fontRendererObj, leftX, topY + 15, 100, 15);
 		txtName.setText(oldText);
 		textFieldList.add(txtName);
 
@@ -90,11 +87,14 @@ public class GuiChannelConfig extends GuiTabPage implements GuiYesNoCallback {
 		txtPassword.setDefaultPasswordChar();
 		textFieldList.add(txtPassword);
 
+		txtName.setNextTabField(txtPassword);
+		txtPassword.setNextTabField(txtName);
+
 		boolean oldState;
 		if(chkAutoJoin != null) {
 			oldState = chkAutoJoin.isChecked();
 		} else {
-			oldState = config.getGeneralSettings().getBoolean(GeneralBooleanComponent.AutoJoin);
+			oldState = config.getGeneralSettings().autoJoin.get();
 		}
 		chkAutoJoin = new GuiCheckBox(4, leftX, topY + 75, " " + I19n.format("eirairc:gui.channel.autoJoin"), oldState);
 		buttonList.add(chkAutoJoin);
@@ -126,11 +126,11 @@ public class GuiChannelConfig extends GuiTabPage implements GuiYesNoCallback {
 	@SuppressWarnings("unchecked")
 	public void actionPerformed(GuiButton button) {
 		if(button == btnTheme) {
-			mc.displayGuiScreen(new GuiConfig(tabContainer, GuiEiraIRCConfig.getThemeConfigElements(config.getTheme().pullDummyConfig().getCategory("theme"), false), Globals.MOD_ID, "channel:" + config.getIdentifier(), false, false, I19n.format("eirairc:gui.config.theme", config.getName())));
+			mc.displayGuiScreen(new GuiConfig(tabContainer, GuiEiraIRCConfig.getAllConfigElements(config.getTheme().pullDummyConfig()), Globals.MOD_ID, "channel:" + config.getIdentifier(), false, false, I19n.format("eirairc:gui.config.theme", config.getName())));
 		} else if(button == btnBotSettings) {
-			mc.displayGuiScreen(new GuiConfig(tabContainer, new ConfigElement(config.getBotSettings().pullDummyConfig().getCategory("bot")).getChildElements(), Globals.MOD_ID, "channel:" + config.getIdentifier(), false, false, I19n.format("eirairc:gui.config.bot", config.getName())));
+			mc.displayGuiScreen(new GuiConfig(tabContainer, GuiEiraIRCConfig.getAllConfigElements(config.getBotSettings().pullDummyConfig()), Globals.MOD_ID, "channel:" + config.getIdentifier(), false, false, I19n.format("eirairc:gui.config.bot", config.getName())));
 		} else if(button == btnOtherSettings) {
-			mc.displayGuiScreen(new GuiConfig(tabContainer, new ConfigElement(config.getGeneralSettings().pullDummyConfig().getCategory("settings")).getChildElements(), Globals.MOD_ID, "channel:" + config.getIdentifier(), false, false, I19n.format("eirairc:gui.config.other", config.getName())));
+			mc.displayGuiScreen(new GuiConfig(tabContainer, GuiEiraIRCConfig.getAllConfigElements(config.getGeneralSettings().pullDummyConfig()), Globals.MOD_ID, "channel:" + config.getIdentifier(), false, false, I19n.format("eirairc:gui.config.other", config.getName())));
 		} else if(button == btnDelete) {
 			if(isNew) {
 				tabContainer.removePage(this);
@@ -155,7 +155,7 @@ public class GuiChannelConfig extends GuiTabPage implements GuiYesNoCallback {
 				break;
 			case 1:
 				if(result) {
-					serverConfig.getBotSettings().setString(BotStringComponent.MessageFormat, "Classic");
+					serverConfig.getBotSettings().messageFormat.set("Classic");
 					ConfigurationHandler.saveServers();
 					tabContainer.setCurrentTab(parent, false);
 				} else {
@@ -167,7 +167,7 @@ public class GuiChannelConfig extends GuiTabPage implements GuiYesNoCallback {
 
 	@Override
 	public boolean requestClose() {
-		if(serverConfig.getChannelConfigs().size() >= 2 && !serverConfig.getBotSettings().getMessageFormat().mcChannelMessage.contains("{CHANNEL}")) {
+		if(overlay == null && serverConfig.getChannelConfigs().size() >= 2 && !serverConfig.getBotSettings().getMessageFormat().mcChannelMessage.contains("{CHANNEL}")) {
 			setOverlay((new OverlayYesNo(this, I19n.format("eirairc:gui.channel.multiChannel"), I19n.format("eirairc:gui.channel.suggestClassic"), 1)));
 			return false;
 		}
@@ -189,7 +189,7 @@ public class GuiChannelConfig extends GuiTabPage implements GuiYesNoCallback {
 			serverConfig.removeChannelConfig(config.getName());
 			config.setName(txtName.getText());
 			AuthManager.putChannelPassword(config.getIdentifier(), txtPassword.getText());
-			config.getGeneralSettings().setBoolean(GeneralBooleanComponent.AutoJoin, chkAutoJoin.isChecked());
+			config.getGeneralSettings().autoJoin.set(chkAutoJoin.isChecked());
 			serverConfig.addChannelConfig(config);
 			isNew = false;
 		}

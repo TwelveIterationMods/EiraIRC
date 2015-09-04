@@ -16,7 +16,6 @@ import net.blay09.mods.eirairc.client.UploadManager;
 import net.blay09.mods.eirairc.config.ClientGlobalConfig;
 import net.blay09.mods.eirairc.config.ScreenshotAction;
 import net.blay09.mods.eirairc.config.settings.BotSettings;
-import net.blay09.mods.eirairc.config.settings.ThemeColorComponent;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.MessageFormat;
 import net.blay09.mods.eirairc.util.Utils;
@@ -215,6 +214,7 @@ public class ScreenshotManager {
 		if(chatTarget == null) {
 			String format = ConfigHelper.getBotSettings(chatTarget).getMessageFormat().ircScreenshotUpload;
 			format = format.replace("{URL}", screenshot.getDirectURL() != null ? screenshot.getDirectURL() : screenshot.getUploadURL());
+			format = format.replace("{NICK} ", "");
 			Minecraft.getMinecraft().thePlayer.sendChatMessage("/me " + format);
 		} else {
 			EntityPlayer sender = Minecraft.getMinecraft().thePlayer;
@@ -224,12 +224,14 @@ public class ScreenshotManager {
 			if (chatTarget instanceof IRCChannel) {
 				BotSettings botSettings = ConfigHelper.getBotSettings(chatTarget);
 				format = botSettings.getMessageFormat().ircScreenshotUpload.replace("{URL}", screenshot.getDirectURL() != null ? screenshot.getDirectURL() : screenshot.getUploadURL());
-				emoteColor = ConfigHelper.getTheme(chatTarget).getColor(ThemeColorComponent.emoteTextColor);
+				format = format.replace("{NICK} ", "");
+				emoteColor = ConfigHelper.getTheme(chatTarget).emoteTextColor.get();
 				chatComponent = MessageFormat.formatChatComponent(format, chatTarget, sender, "", MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
 			} else if(chatTarget instanceof IRCUser) {
 				BotSettings botSettings = ConfigHelper.getBotSettings(chatTarget);
 				format = botSettings.getMessageFormat().ircScreenshotUpload.replace("{URL}", screenshot.getDirectURL() != null ? screenshot.getDirectURL() : screenshot.getUploadURL());
-				emoteColor = ConfigHelper.getTheme(chatTarget).getColor(ThemeColorComponent.emoteTextColor);
+				format = format.replace("{NICK} ", "");
+				emoteColor = ConfigHelper.getTheme(chatTarget).emoteTextColor.get();
 				chatComponent = MessageFormat.formatChatComponent(format, chatTarget, sender, "", MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
 			} else {
 				return;
@@ -243,7 +245,7 @@ public class ScreenshotManager {
 	}
 
 	public void handleNewScreenshot(Screenshot screenshot) {
-		if (EiraIRC.proxy.isIngame()) {
+		if (Minecraft.getMinecraft().theWorld != null) {
 			ScreenshotAction action = ClientGlobalConfig.screenshotAction.get();
 			if(action == ScreenshotAction.UploadClipboard || action == ScreenshotAction.UploadShare) {
 				uploadScreenshot(screenshot, action);

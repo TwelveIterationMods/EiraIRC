@@ -72,5 +72,6 @@ public abstract class GuiImage {
 
 	public void dispose() {
 		TextureUtil.deleteTexture(textureId);
+		textureId = -1;
 	}
 }

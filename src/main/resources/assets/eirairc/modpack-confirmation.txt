@@ -1,0 +1,8 @@
+This modpack includes EiraIRC, allowing anyone
+playing the pack to live chat with everyone
+else, even across singleplayer worlds.
+You may choose to enable or disable this feature.
+
+Note that enabling this feature means
+that Minecraft will establish a connection
+to an IRC server specified by this modpack.

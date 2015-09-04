@@ -1,21 +1,21 @@
-// Copyright (c) 2015, Christopher "BlayTheNinth" Baker
+// Copyright (c) 2015 Christopher "BlayTheNinth" Baker
 
 package net.blay09.mods.eirairc.irc;
 
 import net.blay09.mods.eirairc.api.bot.IBotCommand;
 import net.blay09.mods.eirairc.api.bot.IRCBot;
+import net.blay09.mods.eirairc.api.config.IConfigManager;
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.api.irc.IRCUser;
+import net.blay09.mods.eirairc.api.irc.TwitchUser;
 import net.blay09.mods.eirairc.bot.IRCBotImpl;
-import net.blay09.mods.eirairc.config.settings.BotStringListComponent;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.I19n;
-import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.util.EnumChatFormatting;
 
 import java.util.*;
 
-public class IRCUserImpl implements IRCUser {
+public class IRCUserImpl implements IRCUser, TwitchUser {
 
 	private static class QueuedAuthCommand {
 		public final IRCBot bot;
@@ -32,11 +32,11 @@ public class IRCUserImpl implements IRCUser {
 	}
 
 	private final IRCConnectionImpl connection;
-	private final Map<String, IRCChannel> channels = new HashMap<String, IRCChannel>();
-	private final Map<String, IRCChannelUserMode> channelModes = new HashMap<String, IRCChannelUserMode>();
-	private final List<QueuedAuthCommand> authCommandQueue = new ArrayList<QueuedAuthCommand>();
+	private final Map<String, IRCChannel> channels = new HashMap<>();
+	private final Map<String, IRCChannelUserMode> channelModes = new HashMap<>();
+	private final List<QueuedAuthCommand> authCommandQueue = new ArrayList<>();
 	private String name;
-	private String username;
+	private String ident;
 	private String hostname;
 	private String accountName;
 	private EnumChatFormatting nameColor;
@@ -49,8 +49,8 @@ public class IRCUserImpl implements IRCUser {
 		this.name = name;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setUsername(String ident) {
+		this.ident = ident;
 	}
 
 	public void setHostname(String hostname) {
@@ -61,7 +61,6 @@ public class IRCUserImpl implements IRCUser {
 		this.name = name;
 	}
 
-	@Override
 	public String getName() {
 		return name;
 	}
@@ -125,18 +124,7 @@ public class IRCUserImpl implements IRCUser {
 	public String getIdentifier() {
 		return connection.getIdentifier() + "/" + name;
 	}
-
-	@Override
-	public String getUsername() {
-		return username;
-	}
-
-	@Override
-	public String getHostname() {
-		return hostname;
-	}
-
-	@Override
+	
 	public IRCConnectionImpl getConnection() {
 		return connection;
 	}
@@ -147,7 +135,7 @@ public class IRCUserImpl implements IRCUser {
 			notice(I19n.format("eirairc:bot.notAuthed"));
 		} else {
 			for (QueuedAuthCommand cmd : authCommandQueue) {
-				if (ConfigHelper.getBotSettings(cmd.channel).containsString(BotStringListComponent.InterOpAuthList, accountName)) {
+				if (ConfigHelper.getBotSettings(cmd.channel).interOpAuthList.get().containsString(accountName, false)) {
 					cmd.command.processCommand(cmd.bot, cmd.channel, this, cmd.args, cmd.command);
 				} else {
 					notice(I19n.format("eirairc:bot.noPermission"));
@@ -159,12 +147,20 @@ public class IRCUserImpl implements IRCUser {
 
 	@Override
 	public String getAccountName() {
+		if(connection.isTwitch()) {
+			return name;
+		}
 		return accountName;
 	}
 
 	@Override
 	public void notice(String message) {
 		connection.notice(name, message);
+	}
+
+	@Override
+	public void message(String message) {
+		connection.message(name, message);
 	}
 
 	@Override
@@ -178,8 +174,18 @@ public class IRCUserImpl implements IRCUser {
 	}
 
 	@Override
-	public void message(String message) {
-		connection.message(name, message);
+	public IConfigManager getGeneralSettings() {
+		return ConfigHelper.getGeneralSettings(this).manager;
+	}
+
+	@Override
+	public IConfigManager getBotSettings() {
+		return ConfigHelper.getBotSettings(this).manager;
+	}
+
+	@Override
+	public IConfigManager getThemeSettings() {
+		return ConfigHelper.getTheme(this).manager;
 	}
 
 	public void queueAuthCommand(IRCBotImpl bot, IRCChannel channel, IBotCommand botCommand, String[] args) {
@@ -187,7 +193,7 @@ public class IRCUserImpl implements IRCUser {
 			connection.whois(name);
 			authCommandQueue.add(new QueuedAuthCommand(bot, channel, botCommand, args));
 		} else {
-			if(ConfigHelper.getBotSettings(channel).containsString(BotStringListComponent.InterOpAuthList, accountName)) {
+			if(ConfigHelper.getBotSettings(channel).interOpAuthList.get().containsString(accountName, false)) {
 				botCommand.processCommand(bot, channel, this, args, botCommand);
 			} else {
 				notice(I19n.format("eirairc:bot.noPermission"));
@@ -195,20 +201,22 @@ public class IRCUserImpl implements IRCUser {
 		}
 	}
 
-	public void setTwitchSubscriber(boolean isTwitchSubscriber) {
-		this.isTwitchSubscriber = isTwitchSubscriber;
-	}
-
-	public boolean isTwitchSubscriber() {
+	@Override
+	public boolean isTwitchSubscriber(IRCChannel channel) {
 		return isTwitchSubscriber;
 	}
 
-	public void setTwitchTurbo(boolean isTwitchTurbo) {
-		this.isTwitchTurbo = isTwitchTurbo;
+	public void setTwitchSubscriber(boolean isSubscriber) {
+		this.isTwitchSubscriber = isSubscriber;
 	}
 
+	@Override
 	public boolean isTwitchTurbo() {
 		return isTwitchTurbo;
+	}
+
+	public void setTwitchTurbo(boolean twitchTurbo) {
+		this.isTwitchTurbo = twitchTurbo;
 	}
 
 	public void setNameColor(EnumChatFormatting nameColor) {
@@ -219,6 +227,16 @@ public class IRCUserImpl implements IRCUser {
 		return nameColor;
 	}
 
+	@Override
+	public String getUsername() {
+		return ident;
+	}
+
+	@Override
+	public String getHostname() {
+		return hostname;
+	}
+
 	public String getDisplayName() {
 		return displayName != null ? displayName : getName();
 	}
@@ -226,4 +244,5 @@ public class IRCUserImpl implements IRCUser {
 	public void setDisplayName(String displayName) {
 		this.displayName = displayName;
 	}
+
 }

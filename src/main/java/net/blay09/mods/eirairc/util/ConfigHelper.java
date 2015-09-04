@@ -1,5 +1,4 @@
-// Copyright (c) 2015, Christopher "BlayTheNinth" Baker
-
+// Copyright (c) 2015 Christopher "BlayTheNinth" Baker
 
 package net.blay09.mods.eirairc.util;
 
@@ -11,7 +10,6 @@ import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.config.settings.BotSettings;
-import net.blay09.mods.eirairc.config.settings.BotStringComponent;
 import net.blay09.mods.eirairc.config.settings.GeneralSettings;
 import net.blay09.mods.eirairc.config.settings.ThemeSettings;
 import net.blay09.mods.eirairc.irc.IRCConnectionImpl;
@@ -33,7 +31,7 @@ public class ConfigHelper {
 	}
 
 	public static String getQuitMessage(IRCConnection connection) {
-		return ConfigurationHandler.getOrCreateServerConfig(connection.getHost()).getBotSettings().getString(BotStringComponent.QuitMessage);
+		return ConfigurationHandler.getOrCreateServerConfig(connection.getHost()).getBotSettings().quitMessage.get();
 	}
 
 	public static ServerConfig getServerConfig(IRCConnection connection) {

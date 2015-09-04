@@ -6,7 +6,6 @@ package net.blay09.mods.eirairc.command.interop;
 import net.blay09.mods.eirairc.api.EiraIRCAPI;
 import net.blay09.mods.eirairc.api.SubCommand;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
-import net.blay09.mods.eirairc.config.settings.BotBooleanComponent;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.CommandException;
@@ -42,7 +41,7 @@ public class InterOpCommandKick implements SubCommand {
 			Utils.sendLocalizedMessage(sender, targetChannel.getName(), args[0]);
 			return true;
 		}
-		if(!ConfigHelper.getBotSettings(targetChannel).getBoolean(BotBooleanComponent.InterOp)) {
+		if(!ConfigHelper.getBotSettings(targetChannel).interOp.get()) {
 			Utils.sendLocalizedMessage(sender, "commands.interop.disabled");
 			return true;
 		}

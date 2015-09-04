@@ -4,10 +4,10 @@
 
 eirairc:commands.irc.usage=/irc <command>
 eirairc:commands.servirc.usage=/servirc <command>
-eirairc:commands.irc.list.general=§eGeneral Commands: §fconfig, help, list, ignore, unignore
-eirairc:commands.irc.list.irc=§eIRC Commands: §fconnect, disconnect, join, leave, nick, msg, who
-eirairc:commands.irc.list.interop=§eInterOp Commands: §fop, deop, voice, devoice, kick, ban, unban, umode, mode, topic
-eirairc:commands.irc.list.special=§eSpecial Commands: §ftwitch, color, ctcp, ghost, nickserv
+eirairc:commands.irc.list.general=General Commands:
+eirairc:commands.irc.list.irc=IRC Commands:
+eirairc:commands.irc.list.interop=InterOp Commands:
+eirairc:commands.irc.list.special=Special Commands:
 
 eirairc:commands.connect.usage=/[serv]irc connect <server> [password]
 eirairc:commands.connect.error=Could not connect to %s
@@ -22,7 +22,7 @@ eirairc:commands.leave.usage=/[serv]irc leave [server/]<channel> (ex. irc.esper.
 eirairc:commands.leave=Leaving channel %s on %s
 
 eirairc:commands.who.usage=/[serv]irc who [(<server>|<channel>)]
-eirairc:commands.who.usersOnline=[%s] §b%d users §fonline in §e%s§f:
+eirairc:commands.who.usersOnline=%s users online in %s
 eirairc:commands.who.noUsersOnline=[%s] No users online in %s.
 
 eirairc:commands.msg.usage=/[serv]irc msg <channel|nick> <message ...>
@@ -80,7 +80,7 @@ eirairc:commands.mode=Mode %s for channel %s
 eirairc:commands.topic.usage=/irc topic <channel> <topic>
 eirairc:commands.topic=Topic for channel %s set to "%s"
 
-eirairc:commands.list.activeConnections=§eEiraIRC is connected to:
+eirairc:commands.list.activeConnections=EiraIRC is connected to:
 
 eirairc:commands.config.usage=/[serv]irc config (global|<server>|<channel>) <key> [value] OR /[serv]irc config reload
 eirairc:commands.config.noAbuse=To prevent abuse, this setting can only be changed in the config file.
@@ -123,6 +123,7 @@ eirairc:gui.image.openBrowser=Open in Browser
 eirairc:gui.image.toClipboard=URL to Clipboard
 eirairc:gui.image.clickToGoBack=Click anywhere to go back.
 
+eirairc:gui.screenshots.search=Search...
 eirairc:gui.screenshots.openFolder=Open Folder
 eirairc:gui.screenshots.favorite=Favorite
 eirairc:gui.screenshots.upload=Upload
@@ -211,19 +212,19 @@ eirairc:bot.interOpBlacklist=This command has been blacklisted from InterOp.
 #                 General                  #
 ############################################
 
-eirairc:general.noSuchPlayer=§cThat player cannot be found.
-eirairc:general.notMultiplayer=§cThis is not a multiplayer world. Use /irc instead.
-eirairc:general.serverOnlyCommand=§cThis command only works on the server side. Use the GUI (default: I) or the config file for the client settings.
-eirairc:general.usage=§cUsage: %s
+eirairc:general.noSuchPlayer=That player cannot be found.
+eirairc:general.notMultiplayer=This is not a multiplayer world. Use /irc instead.
+eirairc:general.serverOnlyCommand=This command only works on the server side. Use the GUI (default: I) or the config file for the client settings.
+eirairc:general.usage=Usage:
 eirairc:general.linkRemoved=<link removed>
 eirairc:general.notSupported=%s is not supported on this server.
-eirairc:general.chattingTo=>> Now chatting to §6%s§f <<
+eirairc:general.chattingTo=Now chatting to %s
 eirairc:general.connecting=Connecting to %s
 eirairc:general.reconnecting=Reconnecting to %s in %d seconds...
 eirairc:general.connected=Connected to %s
 eirairc:general.disconnected=Disconnected from %s
-eirairc:general.topicChange=§e%s has changed the topic for %s: §f%s
-eirairc:general.readOnly=§cThe channel %s is configured as read-only.
+eirairc:general.topicChange=%s has changed the topic for %s:
+eirairc:general.readOnly=The channel %s is configured as read-only.
 
 ############################################
 #                  Errors                  #
@@ -232,11 +233,11 @@ eirairc:general.readOnly=§cThe channel %s is configured as read-only.
 eirairc:error.nickInUse=Nickname %s is already in use. Trying %s
 eirairc:error.nickInvalid=%s is not a valid nickname.
 eirairc:error.couldNotConnect=Could not connect to %s: %s
-eirairc:error.genericTarget=§cIRC Error: '%s' %s
-eirairc:error.generic=§cIRC Error: %s
+eirairc:error.genericTarget=IRC Error: '%s' %s
+eirairc:error.generic=IRC Error: %s
 eirairc:error.targetTooFast=IRC Error: Calm down, you're typing too fast!
 eirairc:error.servicesDown=IRC Error: Services are currently offline.
-eirairc:error.alreadyConnected=§cYou are already connected to %s
+eirairc:error.alreadyConnected=You are already connected to %s
 eirairc:error.alreadyJoined=You have joined %s in %s already.
 eirairc:error.specifyChannel=You have to specify a channel.
 eirairc:error.specifyServer=You have to specify a server.
@@ -244,7 +245,9 @@ eirairc:error.serverNotFound=The server at %s cannot be found.
 eirairc:error.userNotFound=The user %s cannot be found.
 eirairc:error.invalidTarget=Invalid target. Expected %s.
 eirairc:error.notConnected=You are not connected to the server at %s.
-eirairc:error.notOnChannel=§cYou are not on channel %s
+eirairc:error.notConnectedToIRC=You are not connected to IRC.
+eirairc:error.notOnChannel=You are not on channel %s
+eirairc:error.notIdentified=You need to be identified with IRC services to join %s
 
 ############################################
 #                  Config                  #
@@ -267,6 +270,8 @@ eirairc:config.category.bot=Bot Settings
 eirairc:config.category.bot.tooltip=Bot settings and behaviour for the IRC chat. Can be overridden by servers and channels.
 eirairc:config.category.settings=Chat Settings
 eirairc:config.category.settings.tooltip=General settings for IRC connections. Can be overridden by servers and channels.
+eirairc:config.category.addons=Addon Settings
+eirairc:config.category.addons.tooltip=Settings for EiraIRC addons that are not part of the core of the mod.
 
 # Properties (Shared)
 eirairc:config.property.enablePlayerColors=Enable Player Colors
@@ -301,8 +306,6 @@ eirairc:config.property.preventUserPing=Prevent User Ping
 eirairc:config.property.preventUserPing.tooltip=This adds an invisible character to player names sent to IRC to prevent pinging those users of the same name on IRC. Thanks to Simon Meskens!
 eirairc:config.property.twitchNameColors=Twitch Name Colors
 eirairc:config.property.twitchNameColors.tooltip=If enabled, EiraIRC will attempt to map Twitch colors to Minecraft colors for nicks.
-eirairc:config.property.twitchNameBadges=Twitch Name Badges
-eirairc:config.property.twitchNameBadges.tooltip=If enabled, Twitch users will have their subscriber, mod and caster badges in chat. Requires EiraMoticons.
 eirairc:config.property.antiFloodTime=Anti-Flood Time
 eirairc:config.property.antiFloodTime.tooltip=The time in milliseconds to wait in between bigger bunches of messages to prevent Excess Flood issues.
 eirairc:config.property.ircCommandPrefix=IRC Command Prefix
@@ -351,6 +354,16 @@ eirairc:config.property.showWelcomeScreen=Show Welcome Screen
 eirairc:config.property.showWelcomeScreen.tooltip=If set to true, EiraIRC will show the welcome screen with suggested channels when joining a world.
 eirairc:config.property.terminalStyleInput=Terminal Style Input
 eirairc:config.property.terminalStyleInput.tooltip=Puts the target channel name right into the chat box.
+eirairc:config.property.eirairc_enableFancyOverlay=Enable Fancy Overlay
+eirairc:config.property.eirairc_enableFancyOverlay.tooltip=Should join/leave messages be displayed on a separate, smaller overlay?
+eirairc:config.property.eirairc_fancyOverlayLifetime=Fancy Overlay Lifetime
+eirairc:config.property.eirairc_fancyOverlayLifetime.tooltip=Time in ticks that messages should stay on the overlay.
+eirairc:config.property.eirairc_fancyOverlayScale=Fancy Overlay Scale
+eirairc:config.property.eirairc_fancyOverlayScale.tooltip=How should the fancy overlay be scaled compared to the chat?
+eirairc:config.property.eiramoticons_twitchNameBadges=Twitch Name Badges
+eirairc:config.property.eiramoticons_twitchNameBadges.tooltip=If enabled, Twitch users will have their subscriber, mod and caster badges in chat. Requires EiraMoticons.
+eirairc:config.property.eiramoticons_alwaysShowSubBadge=Always Show Subscriber Badges
+eirairc:config.property.eiramoticons_alwaysShowSubBadge.tooltip=Should Twitch subscriber badges be visible for every user of a channel, despite their subscription state?
 
 ## Properties (Bot)
 eirairc:config.property.relayDeathMessages=Relay Death Messages

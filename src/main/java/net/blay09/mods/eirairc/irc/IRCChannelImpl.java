@@ -1,10 +1,11 @@
-// Copyright (c) 2015, Christopher "BlayTheNinth" Baker
-
+// Copyright (c) 2015 Christopher "BlayTheNinth" Baker
 
 package net.blay09.mods.eirairc.irc;
 
+import net.blay09.mods.eirairc.api.config.IConfigManager;
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.api.irc.IRCUser;
+import net.blay09.mods.eirairc.util.ConfigHelper;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -12,10 +13,10 @@ import java.util.Map;
 
 public class IRCChannelImpl implements IRCChannel {
 
-	private final IRCConnectionImpl connection;
-	private final String name;
+	private IRCConnectionImpl connection;
+	private String name;
 	private String topic;
-	private final Map<String, IRCUser> users = new HashMap<String, IRCUser>();
+	private Map<String, IRCUser> users = new HashMap<String, IRCUser>();
 
 	public IRCChannelImpl(IRCConnectionImpl connection, String name) {
 		this.connection = connection;
@@ -25,7 +26,7 @@ public class IRCChannelImpl implements IRCChannel {
 	public Collection<IRCUser> getUserList() {
 		return users.values();
 	}
-	
+
 	public IRCUser getUser(String nick) {
 		return users.get(nick.toLowerCase());
 	}
@@ -47,17 +48,7 @@ public class IRCChannelImpl implements IRCChannel {
 	public void notice(String message) {
 		connection.notice(name, message);
 	}
-
-	@Override
-	public void ctcpMessage(String message) {
-		message(IRCConnectionImpl.CTCP_START + message + IRCConnectionImpl.CTCP_END);
-	}
-
-	@Override
-	public void ctcpNotice(String message) {
-		notice(IRCConnectionImpl.CTCP_START + message + IRCConnectionImpl.CTCP_END);
-	}
-
+	
 	public String getName() {
 		return name;
 	}
@@ -91,4 +82,28 @@ public class IRCChannelImpl implements IRCChannel {
 		return connection.getIdentifier() + "/" + name.toLowerCase();
 	}
 
+	@Override
+	public void ctcpMessage(String message) {
+		message(IRCConnectionImpl.CTCP_START + message + IRCConnectionImpl.CTCP_END);
+	}
+
+	@Override
+	public void ctcpNotice(String message) {
+		notice(IRCConnectionImpl.CTCP_START + message + IRCConnectionImpl.CTCP_END);
+	}
+
+	@Override
+	public IConfigManager getGeneralSettings() {
+		return ConfigHelper.getGeneralSettings(this).manager;
+	}
+
+	@Override
+	public IConfigManager getBotSettings() {
+		return ConfigHelper.getBotSettings(this).manager;
+	}
+
+	@Override
+	public IConfigManager getThemeSettings() {
+		return ConfigHelper.getTheme(this).manager;
+	}
 }
