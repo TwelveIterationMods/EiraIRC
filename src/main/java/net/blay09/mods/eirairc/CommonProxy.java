@@ -7,6 +7,7 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import net.blay09.mods.eirairc.api.config.IConfigManager;
 import net.blay09.mods.eirairc.api.event.IRCChannelMessageEvent;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
+import net.blay09.mods.eirairc.config.LocalConfig;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.net.NetworkHandler;
@@ -42,6 +43,7 @@ public class CommonProxy {
 
 	public void loadConfig(File configDir, boolean reloadFile) {
 		SharedGlobalConfig.load(configDir, reloadFile);
+		LocalConfig.load(configDir, reloadFile);
 	}
 
 	public void loadLegacyConfig(File configDir, Configuration legacyConfig) {
@@ -63,6 +65,9 @@ public class CommonProxy {
 	public void saveConfig() {
 		if (SharedGlobalConfig.thisConfig.hasChanged()) {
 			SharedGlobalConfig.thisConfig.save();
+		}
+		if(LocalConfig.thisConfig.hasChanged()) {
+			LocalConfig.thisConfig.save();
 		}
 	}
 

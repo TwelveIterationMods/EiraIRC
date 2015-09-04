@@ -5,10 +5,7 @@ package net.blay09.mods.eirairc;
 import com.google.common.collect.Lists;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
 import net.blay09.mods.eirairc.bot.IRCBotImpl;
-import net.blay09.mods.eirairc.config.AuthManager;
-import net.blay09.mods.eirairc.config.ChannelConfig;
-import net.blay09.mods.eirairc.config.ConfigurationHandler;
-import net.blay09.mods.eirairc.config.ServerConfig;
+import net.blay09.mods.eirairc.config.*;
 import net.blay09.mods.eirairc.irc.IRCConnectionImpl;
 import net.blay09.mods.eirairc.irc.ssl.IRCConnectionSSLImpl;
 import net.blay09.mods.eirairc.util.ConfigHelper;
@@ -35,9 +32,11 @@ public class ConnectionManager {
 			Utils.addMessageToChat(new ChatComponentText(sb.toString()));
 			Utils.addMessageToChat(new ChatComponentText("See the log for more information."));
 		}
-		for(ServerConfig serverConfig : ConfigurationHandler.getServerConfigs()) {
-			if(serverConfig.getGeneralSettings().autoJoin.get() && !serverConfig.isRedirect()) {
-				connectTo(serverConfig);
+		if(!LocalConfig.disableModpackIRC.get()) {
+			for (ServerConfig serverConfig : ConfigurationHandler.getServerConfigs()) {
+				if (serverConfig.getGeneralSettings().autoJoin.get() && !serverConfig.isRedirect()) {
+					connectTo(serverConfig);
+				}
 			}
 		}
 		ircRunning = true;

@@ -166,7 +166,7 @@ public class GuiChannelConfig extends GuiTabPage implements GuiYesNoCallback {
 
     @Override
     public boolean requestClose() {
-        if (serverConfig.getChannelConfigs().size() >= 2 && !serverConfig.getBotSettings().getMessageFormat().mcChannelMessage.contains("{CHANNEL}")) {
+        if (overlay == null && serverConfig.getChannelConfigs().size() >= 2 && !serverConfig.getBotSettings().getMessageFormat().mcChannelMessage.contains("{CHANNEL}")) {
             setOverlay((new OverlayYesNo(this, I19n.format("eirairc:gui.channel.multiChannel"), I19n.format("eirairc:gui.channel.suggestClassic"), 1)));
             return false;
         }

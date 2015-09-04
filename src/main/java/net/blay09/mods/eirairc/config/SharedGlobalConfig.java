@@ -80,6 +80,7 @@ public class SharedGlobalConfig {
         thisConfig.setCategoryComment(THEME, I19n.format("eirairc:config.category.theme.tooltip"));
         thisConfig.setCategoryComment(BOT, I19n.format("eirairc:config.category.bot.tooltip"));
         thisConfig.setCategoryComment(SETTINGS, I19n.format("eirairc:config.category.settings.tooltip"));
+        thisConfig.setCategoryComment(ADDONS, I19n.format("eirairc:config.category.addons.tooltip"));
 
         manager.save(thisConfig);
 

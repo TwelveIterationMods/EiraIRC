@@ -33,6 +33,7 @@ public class ClientGlobalConfig {
 	public static final ConfigProperty<Boolean> showWelcomeScreen = new ConfigProperty<>(manager, GENERAL, "showWelcomeScreen", true);
 	public static final ConfigProperty<Boolean> autoResetChat = new ConfigProperty<>(manager, GENERAL, "autoResetChat", false);
 	public static final ConfigProperty<Boolean> terminalStyleInput = new ConfigProperty<>(manager, GENERAL, "terminalStyleInput", false);
+	public static final ConfigProperty<Boolean> showModpackConfirmation = new ConfigProperty<>(manager, GENERAL, "showModpackConfirmation", false);
 
 	// Screenshots
 	public static final ConfigProperty<Boolean> imageLinkPreview = new ConfigProperty<>(manager, SCREENSHOTS, "imageLinkPreview", true);
@@ -77,6 +78,7 @@ public class ClientGlobalConfig {
 		thisConfig.setCategoryComment(SCREENSHOTS, I19n.format("eirairc:config.category.screenshots.tooltip"));
 		thisConfig.setCategoryComment(NOTIFICATIONS, I19n.format("eirairc:config.category.notifications.tooltip"));
 		thisConfig.setCategoryComment(COMPATIBILITY, I19n.format("eirairc:config.category.compatibility.tooltip"));
+		thisConfig.setCategoryComment(ADDONS, I19n.format("eirairc:config.category.addons.tooltip"));
 
 		manager.save(thisConfig);
 

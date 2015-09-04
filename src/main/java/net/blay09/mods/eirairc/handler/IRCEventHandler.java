@@ -327,6 +327,13 @@ public class IRCEventHandler {
 	}
 
 	public static void fireConnectedEvent(IRCConnection connection, IRCMessage message) {
+		if(LocalConfig.disableModpackIRC.get()) {
+			// It seems like the user connected to IRC manually - so re-enable the IRC feature and give them another chance to decide on next startup.
+			LocalConfig.disableModpackConfirmation.set(false);
+			LocalConfig.disableModpackIRC.set(false);
+			LocalConfig.save();
+		}
+
 		ServerConfig serverConfig = ConfigHelper.getServerConfig(connection);
 		// If this is a Twitch connection, tell the server that we're a JTVCLIENT so we receive name colors.
 		if(connection.isTwitch()) {

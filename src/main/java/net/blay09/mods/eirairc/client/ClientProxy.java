@@ -18,10 +18,7 @@ import net.blay09.mods.eirairc.api.EiraIRCAPI;
 import net.blay09.mods.eirairc.api.config.IConfigManager;
 import net.blay09.mods.eirairc.api.event.IRCChannelMessageEvent;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
-import net.blay09.mods.eirairc.client.gui.EiraGui;
-import net.blay09.mods.eirairc.client.gui.GuiEiraIRCMenu;
-import net.blay09.mods.eirairc.client.gui.GuiEiraIRCRedirect;
-import net.blay09.mods.eirairc.client.gui.GuiWelcome;
+import net.blay09.mods.eirairc.client.gui.*;
 import net.blay09.mods.eirairc.client.gui.chat.GuiChatExtended;
 import net.blay09.mods.eirairc.client.gui.chat.GuiSleepExtended;
 import net.blay09.mods.eirairc.client.gui.overlay.OverlayNotification;
@@ -35,15 +32,14 @@ import net.blay09.mods.eirairc.util.NotificationType;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.client.gui.GuiChat;
-import net.minecraft.client.gui.GuiPlayerInfo;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiSleepMP;
+import net.minecraft.client.gui.*;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.ClientCommandHandler;
+import net.minecraftforge.client.event.GuiOpenEvent;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import org.lwjgl.input.Keyboard;
 
@@ -63,6 +59,7 @@ public class ClientProxy extends CommonProxy {
 	private long lastToggleTarget;
 	private boolean wasToggleTargetDown;
 	private boolean wasScreenshotShareDown;
+	private boolean isFirstMainMenu = true;
 
 	private static final KeyBinding[] keyBindings = new KeyBinding[] {
 		ClientGlobalConfig.keyScreenshotShare,
@@ -83,6 +80,7 @@ public class ClientProxy extends CommonProxy {
 
 		ScreenshotManager.create();
 
+		MinecraftForge.EVENT_BUS.register(this);
 		FMLCommonHandler.instance().bus().register(this);
 
 		for(KeyBinding keyBinding : keyBindings) {
@@ -192,6 +190,16 @@ public class ClientProxy extends CommonProxy {
 	}
 
 	@SubscribeEvent
+	public void onGuiOpen(GuiOpenEvent event) {
+		if(event.gui instanceof GuiMainMenu) {
+			if (isFirstMainMenu && ClientGlobalConfig.showModpackConfirmation.get() && !LocalConfig.disableModpackConfirmation.get()) {
+				event.gui = new GuiModpackConfirmation();
+				isFirstMainMenu = false;
+			}
+		}
+	}
+
+	@SubscribeEvent
 	public void keyInput(InputEvent.KeyInputEvent event) {
 		if(Keyboard.getEventKeyState()) {
 			int keyCode = Keyboard.getEventKey();
@@ -243,7 +251,7 @@ public class ClientProxy extends CommonProxy {
 		GuiScreen currentScreen = Minecraft.getMinecraft().currentScreen;
 		if(currentScreen == null && openWelcomeScreen > 0) {
 			openWelcomeScreen--;
-			if(openWelcomeScreen <= 0) {
+			if(openWelcomeScreen <= 0 && !LocalConfig.disableModpackIRC.get()) {
 				Minecraft.getMinecraft().displayGuiScreen(new GuiWelcome());
 			}
 		}
