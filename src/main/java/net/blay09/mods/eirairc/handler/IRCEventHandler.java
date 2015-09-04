@@ -340,7 +340,7 @@ public class IRCEventHandler {
 			connection.irc("CAP REQ :twitch.tv/tags");
 			connection.irc("CAP REQ :twitch.tv/membership");
 		}
-		Utils.doNickServ(connection, serverConfig);
+		((IRCConnectionImpl) connection).nickServIdentify();
 		for(ChannelConfig channelConfig : serverConfig.getChannelConfigs()) {
 			GeneralSettings generalSettings = channelConfig.getGeneralSettings();
 			if(generalSettings.autoJoin.get()) {
@@ -441,6 +441,13 @@ public class IRCEventHandler {
 				if(serverConfig.getNick() != null) {
 					serverConfig.setNick(connection.getNick());
 				}
+				break;
+			case IRCReplyCodes.ERR_MODELESS:
+				AuthManager.NickServData nickServData = AuthManager.getNickServData(connection.getIdentifier());
+				if(nickServData == null) {
+					Utils.addMessageToChat(new ChatComponentTranslation("eirairc:error.notIdentified", args[1]));
+				}
+				connection.joinAfterNickServ(args[1]);
 				break;
 		}
 		IRCErrorEvent event = new IRCErrorEvent(connection, message, numeric, args);

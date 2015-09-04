@@ -124,30 +124,32 @@ public class EiraMoticonsAddon implements IEmoticonLoader {
     @SubscribeEvent
     @Optional.Method(modid = "eiramoticons")
     public void formatNick(FormatNick event) {
-        IConfigProperty<Boolean> twitchNameBadges = event.context.getThemeSettings().getProperty("eiramoticons", "twitchNameBadges");
-        if (twitchNameBadges != null && twitchNameBadges.get() && event.context.getConnection().isTwitch() && event.context.getContextType() == IRCContext.ContextType.IRCChannel) {
-            String badges = "";
-            if (event.user.getName().toLowerCase().equals(event.context.getName().substring(1).toLowerCase())) {
-                badges += casterBadge.getChatString();
-            } else if (event.user.isOperator((IRCChannel) event.context)) {
-                badges += modBadge.getChatString();
-            }
-            if (((TwitchUser) event.user).isTwitchTurbo()) {
-                badges += turboBadge.getChatString();
-            }
-            IConfigProperty<Boolean> alwaysShowSubBadge = event.context.getThemeSettings().getProperty("eiramoticons", "alwaysShowSubBadge");
-            if (((TwitchUser) event.user).isTwitchSubscriber((IRCChannel) event.context) || (alwaysShowSubBadge != null && alwaysShowSubBadge.get())) {
-                String badgeString = getSubscriberBadgeString((IRCChannel) event.context);
-                if (!badgeString.isEmpty()) {
-                    badges += badgeString + " ";
+        if(event.context != null) {
+            IConfigProperty<Boolean> twitchNameBadges = event.context.getThemeSettings().getProperty("eiramoticons", "twitchNameBadges");
+            if (twitchNameBadges != null && twitchNameBadges.get() && event.context.getConnection().isTwitch()) {
+                String badges = "";
+                if (event.user.getName().toLowerCase().equals(event.context.getName().substring(1).toLowerCase())) {
+                    badges += casterBadge.getChatString();
+                } else if (event.user.isOperator((IRCChannel) event.context)) {
+                    badges += modBadge.getChatString();
                 }
+                if (((TwitchUser) event.user).isTwitchTurbo()) {
+                    badges += turboBadge.getChatString();
+                }
+                IConfigProperty<Boolean> alwaysShowSubBadge = event.context.getThemeSettings().getProperty("eiramoticons", "alwaysShowSubBadge");
+                if (((TwitchUser) event.user).isTwitchSubscriber((IRCChannel) event.context) || (alwaysShowSubBadge != null && alwaysShowSubBadge.get())) {
+                    String badgeString = getSubscriberBadgeString((IRCChannel) event.context);
+                    if (!badgeString.isEmpty()) {
+                        badges += badgeString + " ";
+                    }
+                }
+                if (badges.length() > 0) {
+                    badges += " ";
+                }
+                IChatComponent component = new ChatComponentText(badges);
+                component.appendSibling(event.component);
+                event.component = component;
             }
-            if (badges.length() > 0) {
-                badges += " ";
-            }
-            IChatComponent component = new ChatComponentText(badges);
-            component.appendSibling(event.component);
-            event.component = component;
         }
     }
 

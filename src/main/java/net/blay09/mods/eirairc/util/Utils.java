@@ -95,14 +95,6 @@ public class Utils {
 		}
 	}
 
-	public static void doNickServ(IRCConnection connection, ServerConfig config) {
-		ServiceSettings settings = ServiceConfig.getSettings(connection.getHost(), connection.getServerType());
-		AuthManager.NickServData nickServData = AuthManager.getNickServData(config.getIdentifier());
-		if(nickServData != null) {
-			connection.irc(settings.getIdentifyCommand(nickServData.username, nickServData.password));
-		}
-	}
-	
 	public static void sendUserList(ICommandSender player, IRCConnection connection, IRCChannel channel) {
 		Collection<IRCUser> userList = channel.getUserList();
 		if(userList.size() == 0) {

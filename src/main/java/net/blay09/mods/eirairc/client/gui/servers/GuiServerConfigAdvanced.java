@@ -17,6 +17,7 @@ import net.blay09.mods.eirairc.client.gui.overlay.OverlayYesNo;
 import net.blay09.mods.eirairc.config.AuthManager;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.ServerConfig;
+import net.blay09.mods.eirairc.irc.IRCConnectionImpl;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.I19n;
@@ -247,7 +248,7 @@ public class GuiServerConfigAdvanced extends GuiTabPage implements GuiYesNoCallb
 		AuthManager.putNickServData(config.getIdentifier(), txtNickServName.getText(), txtNickServPassword.getText());
 		// If connected, identify with nickserv
 		if(connection != null) {
-			Utils.doNickServ(connection, config);
+			((IRCConnectionImpl) connection).nickServIdentify();
 		}
 		AuthManager.putServerPassword(config.getIdentifier(), txtServerPassword.getText());
 		config.setIsSSL(chkSSL.isChecked());

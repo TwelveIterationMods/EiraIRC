@@ -9,6 +9,7 @@ import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.config.AuthManager;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.ServerConfig;
+import net.blay09.mods.eirairc.irc.IRCConnectionImpl;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
@@ -60,7 +61,7 @@ public class CommandNickServ implements SubCommand {
 		}
 		ServerConfig serverConfig = ConfigurationHandler.getOrCreateServerConfig(connection.getHost());
 		AuthManager.putNickServData(serverConfig.getIdentifier(), args[argidx], args[argidx + 1]);
-		Utils.doNickServ(connection, serverConfig);
+		((IRCConnectionImpl) connection).nickServIdentify();
 		Utils.sendLocalizedMessage(sender, "commands.nickserv", connection.getHost());
 		return true;
 	}

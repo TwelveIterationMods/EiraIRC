@@ -58,6 +58,7 @@ public class IRCReplyCodes {
 	public static final int ERR_TARGETTOOFAST = 439;
 	public static final int ERR_SERVICESDOWN = 440;
 	public static final int ERR_NONICKCHANGE = 447;
+	public static final int ERR_MODELESS = 477;
 
 	public static final int RPL_MYINFO = 4;
 	public static final int RPL_NONE = 300;
@@ -183,6 +184,7 @@ public class IRCReplyCodes {
 			case ERR_CANTKILLSERVER:
 			case ERR_NICKNAMEINUSE:
 			case ERR_NICKCOLLISION:
+			case ERR_MODELESS:
 				return true;
 		}
 		return false;
