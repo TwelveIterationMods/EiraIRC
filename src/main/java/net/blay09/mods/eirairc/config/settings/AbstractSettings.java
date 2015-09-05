@@ -1,7 +1,7 @@
 package net.blay09.mods.eirairc.config.settings;
 
 import com.google.gson.JsonObject;
-import net.blay09.mods.eirairc.config.property.ConfigManager;
+import net.blay09.mods.eirairc.config.ConfigManager;
 import net.blay09.mods.eirairc.config.property.ConfigProperty;
 import net.blay09.mods.eirairc.util.IRCFormatting;
 import net.minecraft.command.ICommandSender;

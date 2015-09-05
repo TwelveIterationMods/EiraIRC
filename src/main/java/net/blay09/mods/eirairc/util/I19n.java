@@ -4,8 +4,6 @@ package net.blay09.mods.eirairc.util;
 
 import net.minecraft.util.*;
 
-import java.io.InputStream;
-
 public class I19n {
 
 	public static String format(String key, Object... params) {

@@ -76,13 +76,13 @@ configurations {
 }
 
 dependencies {
-    compile 'org.jetbrains:annotations:13.0'
     compile 'us.dynmap:DynmapCoreAPI:2.1'
     compile 'net.blay09.mods:eiramoticons:1.0.77:dev'
     deployerJars "org.apache.maven.wagon:wagon-ftp:2.2"
 }
 
 jar {
+    from sourceSets.shared.output
     from sourceSets.api.output
     appendix "mc" + minecraft.version
 }
@@ -96,6 +96,7 @@ task jarAPI(type: Jar) {
 
 task jarDev(type: Jar) {
     from sourceSets.main.output
+    from sourceSets.shared.output
     from sourceSets.api.output
 
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
