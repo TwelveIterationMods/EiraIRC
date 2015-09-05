@@ -71,8 +71,14 @@ repositories {
     }
 }
 
+sourceSets {
+    shared
+}
+
 configurations {
     deployerJars
+    sharedCompile.extendsFrom compile
+    sharedRuntime.extendsFrom runtime
 }
 
 dependencies {
