@@ -4,8 +4,8 @@
 package net.blay09.mods.eirairc.net.message.handler;
 
 import net.blay09.mods.eirairc.EiraIRC;
+import net.blay09.mods.eirairc.config.property.NotificationType;
 import net.blay09.mods.eirairc.net.message.MessageNotification;
-import net.blay09.mods.eirairc.util.NotificationType;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;

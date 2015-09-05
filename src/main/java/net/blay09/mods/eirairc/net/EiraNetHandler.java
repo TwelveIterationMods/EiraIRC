@@ -8,6 +8,7 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 import java.util.HashMap;
 import java.util.Map;
 
+@Deprecated
 public class EiraNetHandler {
 
 	private final Map<String, EiraPlayerInfo> playerInfoMap = new HashMap<String, EiraPlayerInfo>();

@@ -3,7 +3,10 @@
 
 package net.blay09.mods.eirairc.config;
 
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import net.blay09.mods.eirairc.ConnectionManager;
@@ -16,6 +19,7 @@ import net.blay09.mods.eirairc.config.base.MessageFormatConfig;
 import net.blay09.mods.eirairc.config.base.ServiceConfig;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Utils;
+import net.blay09.mods.eirairc.wrapper.CommandSender;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ResourceLocation;
@@ -353,7 +357,7 @@ public class ConfigurationHandler {
         ConfigCategory serversCategory = legacyConfig.getCategory("servers");
         for (ConfigCategory serverCategory : serversCategory.getChildren()) {
             ServerConfig serverConfig = new ServerConfig(Utils.unquote(legacyConfig.get(serverCategory.getQualifiedName(), "host", "").getString()));
-            serverConfig.loadLegacy(legacyConfig, serverCategory);
+            Legacy.loadLegacyServer(serverConfig, legacyConfig, serverCategory);
             addServerConfig(serverConfig);
         }
 
@@ -446,7 +450,7 @@ public class ConfigurationHandler {
         return server;
     }
 
-    public static void handleConfigCommand(ICommandSender sender, String target, String key, String value) {
+    public static void handleConfigCommand(CommandSender sender, String target, String key, String value) {
         if (target.equals("global")) {
             boolean result = EiraIRC.proxy.handleConfigCommand(sender, key, value);
             if (result) {
@@ -470,7 +474,7 @@ public class ConfigurationHandler {
         }
     }
 
-    public static void handleConfigCommand(ICommandSender sender, String target, String key) {
+    public static void handleConfigCommand(CommandSender sender, String target, String key) {
         if (target.equals("global")) {
             String result = EiraIRC.proxy.handleConfigCommand(sender, key);
             if (result != null) {

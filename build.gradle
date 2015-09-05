@@ -85,6 +85,7 @@ dependencies {
 }
 
 jar {
+    from sourceSets.shared.output
     from sourceSets.api.output
     appendix "mc" + minecraft.version
 }
@@ -98,6 +99,7 @@ task jarAPI(type: Jar) {
 
 task jarDev(type: Jar) {
     from sourceSets.main.output
+    from sourceSets.shared.output
     from sourceSets.api.output
 
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE

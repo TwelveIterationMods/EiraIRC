@@ -3,7 +3,7 @@
 package net.blay09.mods.eirairc.net.message;
 
 import io.netty.buffer.ByteBuf;
-import net.blay09.mods.eirairc.util.NotificationType;
+import net.blay09.mods.eirairc.config.property.NotificationType;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 

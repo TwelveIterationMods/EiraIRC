@@ -1,0 +1,82 @@
+// Copyright (c) 2015 Christopher "BlayTheNinth" Baker
+
+package net.blay09.mods.eirairc.command;
+
+import net.blay09.mods.eirairc.ConnectionManager;
+import net.blay09.mods.eirairc.api.EiraIRCAPI;
+import net.blay09.mods.eirairc.api.SubCommand;
+import net.blay09.mods.eirairc.api.irc.IRCConnection;
+import net.blay09.mods.eirairc.api.irc.IRCContext;
+import net.blay09.mods.eirairc.util.Utils;
+import net.blay09.mods.eirairc.wrapper.CommandSender;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.List;
+
+public class CommandQuote implements SubCommand {
+
+	@Override
+	public String getCommandName() {
+		return "quote";
+	}
+
+	@Override
+	public String getCommandUsage(CommandSender sender) {
+		return "eirairc:commands.quote.usage";
+	}
+
+	@Override
+	public String[] getAliases() {
+		return null;
+	}
+
+	@Override
+	public boolean processCommand(CommandSender sender, IRCContext context, String[] args, boolean serverSide) {
+		int msgIdx = 0;
+		IRCConnection connection;
+		if(context == null) {
+			if(args.length < 2) {
+				Utils.sendLocalizedMessage(sender, "error.specifyServer");
+				return true;
+			}
+			IRCContext target = EiraIRCAPI.parseContext(null, args[0], IRCContext.ContextType.IRCConnection).getConnection();
+			if(target.getContextType() == IRCContext.ContextType.Error) {
+				Utils.sendLocalizedMessage(sender, target.getName(), args[0]);
+				return true;
+			}
+			connection = target.getConnection();
+			msgIdx = 1;
+		} else {
+			connection = context.getConnection();
+		}
+		String msg = StringUtils.join(ArrayUtils.subarray(args, msgIdx, args.length), " ");
+		connection.irc(msg);
+		return true;
+	}
+
+	@Override
+	public boolean canCommandSenderUseCommand(CommandSender sender) {
+		return Utils.isOP(sender);
+	}
+
+	@Override
+	public void addTabCompletionOptions(List<String> list, CommandSender sender, String[] args) {
+		if(args.length == 0) {
+			for(IRCConnection connection : ConnectionManager.getConnections()) {
+				list.add(connection.getHost());
+			}
+		}
+	}
+
+	@Override
+	public boolean isUsernameIndex(String[] args, int idx) {
+		return false;
+	}
+
+	@Override
+	public boolean hasQuickCommand() {
+		return true;
+	}
+
+}

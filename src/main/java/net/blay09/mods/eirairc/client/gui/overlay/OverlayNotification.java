@@ -3,8 +3,8 @@
 
 package net.blay09.mods.eirairc.client.gui.overlay;
 
+import net.blay09.mods.eirairc.config.property.NotificationType;
 import net.blay09.mods.eirairc.util.Globals;
-import net.blay09.mods.eirairc.util.NotificationType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;

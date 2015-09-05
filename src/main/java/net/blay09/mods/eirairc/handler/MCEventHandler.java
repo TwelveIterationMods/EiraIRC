@@ -14,7 +14,8 @@ import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.api.irc.IRCUser;
 import net.blay09.mods.eirairc.command.base.IRCCommandHandler;
 import net.blay09.mods.eirairc.config.*;
-import net.blay09.mods.eirairc.config.settings.*;
+import net.blay09.mods.eirairc.config.settings.BotSettings;
+import net.blay09.mods.eirairc.config.settings.GeneralSettings;
 import net.blay09.mods.eirairc.net.NetworkHandler;
 import net.blay09.mods.eirairc.net.message.MessageRedirect;
 import net.blay09.mods.eirairc.util.*;
@@ -194,7 +195,7 @@ public class MCEventHandler {
 	@SubscribeEvent
 	public void onServerChat(ServerChatEvent event) {
 		IChatComponent senderComponent = event.player.getDisplayName();
-		EnumChatFormatting nameColor = IRCFormatting.getColorFormattingForPlayer(event.player);
+		EnumChatFormatting nameColor = IRCFormatting.getColorForPlayer(event.player);
 		if(nameColor != null && nameColor != EnumChatFormatting.WHITE) {
 			senderComponent.getChatStyle().setColor(nameColor);
 		}

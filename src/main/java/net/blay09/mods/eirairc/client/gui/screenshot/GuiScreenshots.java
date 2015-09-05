@@ -1,6 +1,8 @@
 package net.blay09.mods.eirairc.client.gui.screenshot;
 
 import net.blay09.mods.eirairc.api.event.ScreenshotUploadEvent;
+import net.blay09.mods.eirairc.client.Screenshot;
+import net.blay09.mods.eirairc.client.ScreenshotManager;
 import net.blay09.mods.eirairc.client.gui.EiraGui;
 import net.blay09.mods.eirairc.client.gui.EiraGuiScreen;
 import net.blay09.mods.eirairc.client.gui.base.GuiAdvancedTextField;
@@ -8,9 +10,7 @@ import net.blay09.mods.eirairc.client.gui.base.GuiImageButton;
 import net.blay09.mods.eirairc.client.gui.base.image.GuiFileImage;
 import net.blay09.mods.eirairc.client.gui.base.image.GuiImage;
 import net.blay09.mods.eirairc.client.gui.overlay.OverlayYesNo;
-import net.blay09.mods.eirairc.client.screenshot.Screenshot;
-import net.blay09.mods.eirairc.client.screenshot.ScreenshotManager;
-import net.blay09.mods.eirairc.config.ScreenshotAction;
+import net.blay09.mods.eirairc.config.property.ScreenshotAction;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.I19n;
 import net.blay09.mods.eirairc.util.Utils;

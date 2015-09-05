@@ -2,7 +2,6 @@ package net.blay09.mods.eirairc.client;
 
 import net.blay09.mods.eirairc.util.IRCFormatting;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.fml.client.config.GuiConfig;
 import net.minecraftforge.fml.client.config.GuiConfigEntries;

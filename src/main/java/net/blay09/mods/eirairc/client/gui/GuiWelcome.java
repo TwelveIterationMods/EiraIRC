@@ -3,7 +3,6 @@ package net.blay09.mods.eirairc.client.gui;
 import net.blay09.mods.eirairc.client.gui.base.GuiLabel;
 import net.blay09.mods.eirairc.client.gui.base.GuiLinkButton;
 import net.blay09.mods.eirairc.client.gui.base.list.GuiList;
-import net.blay09.mods.eirairc.config.ClientGlobalConfig;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.LocalConfig;
 import net.blay09.mods.eirairc.config.SuggestedChannel;
@@ -73,7 +72,7 @@ public class GuiWelcome extends EiraGuiScreen {
 	public void updateList(boolean recommendedOnly) {
 		lstChannels.clear();
 		String modpackId = Utils.getModpackId();
-		List<SuggestedChannel> outputList = new ArrayList<SuggestedChannel>();
+		List<SuggestedChannel> outputList = new ArrayList<>();
 		for(SuggestedChannel channel : ConfigurationHandler.getSuggestedChannels()) {
 			if(recommendedOnly) {
 				if(!channel.isRecommended()) {
