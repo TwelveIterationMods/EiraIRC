@@ -12,8 +12,7 @@ import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
-import net.blay09.mods.eirairc.wrapper.SubCommandWrapper;
-import net.minecraft.command.CommandException;
+import net.minecraft.command.WrongUsageException;
 
 import java.util.List;
 
@@ -35,9 +34,9 @@ public class CommandNick implements SubCommand {
 	}
 
 	@Override
-	public boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) throws CommandException {
+	public boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) {
 		if(args.length < 1) {
-			SubCommandWrapper.throwWrongUsageException(this, sender);
+			throw new WrongUsageException(getCommandUsage(sender));
 		}
 		if(args.length >= 2) {
 			ServerConfig serverConfig = ConfigHelper.resolveServerConfig(args[0]);

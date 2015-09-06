@@ -6,12 +6,13 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import net.blay09.mods.eirairc.api.config.IConfigManager;
 import net.blay09.mods.eirairc.api.event.IRCChannelMessageEvent;
-import net.blay09.mods.eirairc.api.event.InitConfigEvent;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
-import net.blay09.mods.eirairc.config.*;
+import net.blay09.mods.eirairc.config.LocalConfig;
+import net.blay09.mods.eirairc.config.ServerConfig;
+import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.net.NetworkHandler;
 import net.blay09.mods.eirairc.net.message.MessageNotification;
-import net.blay09.mods.eirairc.config.property.NotificationType;
+import net.blay09.mods.eirairc.util.NotificationType;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.event.ClickEvent;
@@ -30,26 +31,7 @@ public class CommonProxy {
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 
-	public void postInit() {
-		MinecraftForge.EVENT_BUS.post(new InitConfigEvent.SharedGlobalSettings(SharedGlobalConfig.manager));
-		if(EiraIRC.proxy.getClientGlobalConfig() != null) {
-			MinecraftForge.EVENT_BUS.post(new InitConfigEvent.ClientGlobalSettings(EiraIRC.proxy.getClientGlobalConfig()));
-		}
-		MinecraftForge.EVENT_BUS.post(new InitConfigEvent.GeneralSettings(SharedGlobalConfig.generalSettings.manager));
-		MinecraftForge.EVENT_BUS.post(new InitConfigEvent.BotSettings(SharedGlobalConfig.botSettings.manager));
-		MinecraftForge.EVENT_BUS.post(new InitConfigEvent.ThemeSettings(SharedGlobalConfig.theme.manager));
-
-		for(ServerConfig serverConfig : ConfigurationHandler.getServerConfigs()) {
-			MinecraftForge.EVENT_BUS.post(new InitConfigEvent.GeneralSettings(serverConfig.getGeneralSettings().manager));
-			MinecraftForge.EVENT_BUS.post(new InitConfigEvent.BotSettings(serverConfig.getBotSettings().manager));
-			MinecraftForge.EVENT_BUS.post(new InitConfigEvent.ThemeSettings(serverConfig.getTheme().manager));
-			for(ChannelConfig channelConfig : serverConfig.getChannelConfigs()) {
-				MinecraftForge.EVENT_BUS.post(new InitConfigEvent.GeneralSettings(channelConfig.getGeneralSettings().manager));
-				MinecraftForge.EVENT_BUS.post(new InitConfigEvent.BotSettings(channelConfig.getBotSettings().manager));
-				MinecraftForge.EVENT_BUS.post(new InitConfigEvent.ThemeSettings(channelConfig.getTheme().manager));
-			}
-		}
-	}
+	public void postInit() {}
 
 	public void publishNotification(NotificationType type, String text) {
 		NetworkHandler.instance.sendToAll(new MessageNotification(type, text));

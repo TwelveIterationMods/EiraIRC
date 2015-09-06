@@ -11,8 +11,7 @@ import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.util.ChatComponentBuilder;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
-import net.blay09.mods.eirairc.wrapper.SubCommandWrapper;
-import net.minecraft.command.CommandException;
+import net.minecraft.command.WrongUsageException;
 
 import java.util.List;
 
@@ -34,9 +33,9 @@ public class CommandConnect implements SubCommand {
 	}
 
 	@Override
-	public boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) throws CommandException {
+	public boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) {
 		if(args.length < 1) {
-			SubCommandWrapper.throwWrongUsageException(this, sender);
+			throw new WrongUsageException(getCommandUsage(sender));
 		}
 		String host = args[0];
 		if(ConnectionManager.isConnectedTo(host)) {

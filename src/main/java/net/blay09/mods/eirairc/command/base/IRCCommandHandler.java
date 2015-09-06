@@ -4,6 +4,7 @@ package net.blay09.mods.eirairc.command.base;
 
 import net.blay09.mods.eirairc.api.SubCommand;
 import net.blay09.mods.eirairc.command.*;
+import net.blay09.mods.eirairc.command.extension.*;
 import net.blay09.mods.eirairc.command.interop.InterOpCommandKick;
 import net.blay09.mods.eirairc.command.interop.InterOpCommandMode;
 import net.blay09.mods.eirairc.command.interop.InterOpCommandTopic;
@@ -11,12 +12,12 @@ import net.blay09.mods.eirairc.command.interop.InterOpCommandUserModeBase;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.util.ChatComponentBuilder;
 import net.blay09.mods.eirairc.util.Utils;
-import net.blay09.mods.eirairc.command.CommandConnect;
-import net.minecraft.command.ICommandSender;
-import net.blay09.mods.eirairc.wrapper.SubCommandWrapper;
 import net.minecraft.command.CommandHandler;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.EnumChatFormatting;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.ArrayList;
@@ -26,7 +27,7 @@ import java.util.Map;
 
 public class IRCCommandHandler {
 
-	private static final Map<String, SubCommandWrapper> commands = new HashMap<>();
+	private static final Map<String, SubCommandWrapper> commands = new HashMap<String, SubCommandWrapper>();
 	
 	public static void registerCommands() {
 		registerCommand(new CommandConnect());
@@ -88,7 +89,7 @@ public class IRCCommandHandler {
 
 	public static List<String> addTabCompletionOptions(ICommandSender sender, String[] args) {
 		if(args.length == 1) {
-			List<String> list = new ArrayList<>();
+			List<String> list = new ArrayList<String>();
 			if(args[0].isEmpty()) {
 				list.addAll(commands.keySet());
 			} else {

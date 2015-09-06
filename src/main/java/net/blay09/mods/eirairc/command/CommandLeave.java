@@ -13,8 +13,7 @@ import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.util.IRCResolver;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
-import net.blay09.mods.eirairc.wrapper.SubCommandWrapper;
-import net.minecraft.command.CommandException;
+import net.minecraft.command.WrongUsageException;
 
 import java.util.List;
 
@@ -38,9 +37,9 @@ public class CommandLeave implements SubCommand {
 	}
 
 	@Override
-	public boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) throws CommandException {
+	public boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) {
 		if(context == null && args.length < 1) {
-			SubCommandWrapper.throwWrongUsageException(this, sender);
+			throw new WrongUsageException(getCommandUsage(sender));
 		}
 		IRCConnection connection;
 		String channelName;

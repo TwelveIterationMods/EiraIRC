@@ -4,9 +4,8 @@ package net.blay09.mods.eirairc.config;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.blay09.mods.eirairc.config.property.ConfigManager;
 import net.blay09.mods.eirairc.config.property.ConfigProperty;
-import net.blay09.mods.eirairc.config.property.NotificationStyle;
-import net.blay09.mods.eirairc.config.property.ScreenshotAction;
 import net.blay09.mods.eirairc.util.I19n;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.settings.KeyBinding;

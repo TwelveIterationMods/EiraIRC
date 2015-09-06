@@ -18,7 +18,6 @@ import net.blay09.mods.eirairc.config.base.MessageFormatConfig;
 import net.blay09.mods.eirairc.config.base.ServiceConfig;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Utils;
-import net.minecraft.command.ICommandSender;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ResourceLocation;
@@ -356,7 +355,7 @@ public class ConfigurationHandler {
 		ConfigCategory serversCategory = legacyConfig.getCategory("servers");
 		for(ConfigCategory serverCategory : serversCategory.getChildren()) {
 			ServerConfig serverConfig = new ServerConfig(Utils.unquote(legacyConfig.get(serverCategory.getQualifiedName(), "host", "").getString()));
-			Legacy.loadLegacyServer(serverConfig, legacyConfig, serverCategory);
+			serverConfig.loadLegacy(legacyConfig, serverCategory);
 			addServerConfig(serverConfig);
 		}
 

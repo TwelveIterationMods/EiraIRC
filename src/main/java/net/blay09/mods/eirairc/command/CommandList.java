@@ -10,6 +10,7 @@ import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.util.ChatComponentBuilder;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.util.ChatComponentText;
 
 import java.util.List;
 
@@ -45,7 +46,7 @@ public class CommandList implements SubCommand {
 				}
 				sb.append(channel.getName());
 			}
-			ChatComponentBuilder.create().text(" * " + connection.getHost() + " (" + sb.toString() + ")").send(sender);
+			sender.addChatMessage(new ChatComponentText(" * " + connection.getHost() + " (" + sb.toString() + ")"));
 		}
 		return true;
 	}

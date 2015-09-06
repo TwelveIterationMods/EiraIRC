@@ -9,8 +9,7 @@ import net.blay09.mods.eirairc.api.irc.IRCUser;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
-import net.blay09.mods.eirairc.wrapper.SubCommandWrapper;
-import net.minecraft.command.CommandException;
+import net.minecraft.command.WrongUsageException;
 
 import java.util.List;
 
@@ -27,9 +26,9 @@ public class InterOpCommandUserModeBase implements SubCommand {
 	}
 	
 	@Override
-	public boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) throws CommandException {
+	public boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) {
 		if(args.length < 2) {
-			SubCommandWrapper.throwWrongUsageException(this, sender);
+			throw new WrongUsageException(getCommandUsage(sender));
 		}
 		IRCContext targetChannel = EiraIRCAPI.parseContext(null, args[0], IRCContext.ContextType.IRCChannel);
 		if(targetChannel.getContextType() == IRCContext.ContextType.Error) {

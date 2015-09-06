@@ -2,15 +2,18 @@
 
 package net.blay09.mods.eirairc.bot;
 
-import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.api.bot.IBotCommand;
 import net.blay09.mods.eirairc.api.bot.IRCBot;
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.api.irc.IRCUser;
 import net.blay09.mods.eirairc.config.settings.BotSettings;
+import net.blay09.mods.eirairc.net.NetworkHandler;
+import net.blay09.mods.eirairc.net.message.MessageNotification;
 import net.blay09.mods.eirairc.util.*;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.IChatComponent;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -53,7 +56,13 @@ public class BotCommandMessage implements IBotCommand {
 		if(botSettings.filterLinks.get()) {
 			message = MessageFormat.filterLinks(message);
 		}
-		MessageFormat.postMessage(bot.getConnection(), null, user, message, false, false);
+		IChatComponent chatComponent = MessageFormat.formatChatComponent(botSettings.getMessageFormat().mcPrivateMessage, bot.getConnection(), null, user, message, MessageFormat.Target.Minecraft, MessageFormat.Mode.Message);
+		String notifyMsg = chatComponent.getUnformattedText();
+		if(notifyMsg.length() > 42) {
+			notifyMsg = notifyMsg.substring(0, 42) + "...";
+		}
+		NetworkHandler.instance.sendTo(new MessageNotification(NotificationType.PrivateMessage, notifyMsg), ((EntityPlayerMP) entityPlayer));
+		entityPlayer.addChatMessage(chatComponent);
 		user.notice(I19n.format("eirairc:bot.msgSent", playerName, message));
 	}
 

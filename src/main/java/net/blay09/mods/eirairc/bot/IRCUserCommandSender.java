@@ -33,7 +33,7 @@ public class IRCUserCommandSender implements ICommandSender {
 	}
 
 	@Override
-	public IChatComponent func_145748_c_() { // getFormattedICommandSenderName
+	public IChatComponent func_145748_c_() { // getFormattedCommandSenderName
 		return new ChatComponentText(this.getCommandSenderName());
 	}
 
@@ -55,7 +55,7 @@ public class IRCUserCommandSender implements ICommandSender {
 	}
 
 	@Override
-	public ChunkCoordinates getPlayerCoordinates() { // getICommandSenderPosition
+	public ChunkCoordinates getPlayerCoordinates() { // getCommandSenderPosition
 		return new ChunkCoordinates(0, 0, 0);
 	}
 

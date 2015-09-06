@@ -6,6 +6,7 @@ import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.base.MessageFormatConfig;
 import net.blay09.mods.eirairc.config.property.ConfigProperty;
 import net.blay09.mods.eirairc.config.property.StringList;
+import net.blay09.mods.eirairc.util.Utils;
 import net.minecraftforge.common.config.Configuration;
 
 public class BotSettings extends AbstractSettings {
@@ -55,6 +56,21 @@ public class BotSettings extends AbstractSettings {
 		Configuration dummyConfig = super.pullDummyConfig();
 		dummyConfig.getCategory(BOT).get(messageFormat.getName()).setValidValues(ConfigurationHandler.getAvailableMessageFormats());
 		return dummyConfig;
+	}
+
+	public void loadLegacy(Configuration legacyConfig, String category) {
+		if(category != null) {
+			description.set(Utils.unquote(legacyConfig.get(category, "description", description.getDefaultValue()).getString()));
+			ident.set(Utils.unquote(legacyConfig.get(category, "ident", ident.getDefaultValue()).getString()));
+			String quitMessageOld = Utils.unquote(legacyConfig.get(category, "quitMessage", "").getString());
+			if(!quitMessageOld.isEmpty()) {
+				quitMessage.set(quitMessageOld);
+			}
+		} else {
+			mcNickFormat.set(Utils.unquote(legacyConfig.get("serveronly", "nickPrefix", "").getString()) + "%s" + Utils.unquote(legacyConfig.get("serveronly", "nickSuffix", "").getString()));
+			hideNotices.set(legacyConfig.get("display", "hideNotices", hideNotices.getDefaultValue()).getBoolean());
+			convertColors.set(legacyConfig.get("display", "enableIRCColors", convertColors.getDefaultValue()).getBoolean());
+		}
 	}
 
 }

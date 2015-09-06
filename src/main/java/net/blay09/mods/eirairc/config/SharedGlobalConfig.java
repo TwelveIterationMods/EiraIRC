@@ -2,6 +2,7 @@
 
 package net.blay09.mods.eirairc.config;
 
+import net.blay09.mods.eirairc.config.property.ConfigManager;
 import net.blay09.mods.eirairc.config.property.ConfigProperty;
 import net.blay09.mods.eirairc.config.property.StringList;
 import net.blay09.mods.eirairc.config.settings.BotSettings;
@@ -114,11 +115,11 @@ public class SharedGlobalConfig {
 
         // Theme
         theme.load(thisConfig, false);
-        Legacy.loadLegacyTheme(theme, legacyConfig, null);
+        theme.loadLegacy(legacyConfig, null);
         botSettings.load(thisConfig, false);
-        Legacy.loadLegacyBot(botSettings, legacyConfig, null);
+        botSettings.loadLegacy(legacyConfig, null);
         generalSettings.load(thisConfig, false);
-        Legacy.loadLegacySettings(generalSettings, legacyConfig, null);
+        generalSettings.loadLegacy(legacyConfig, null);
 
         save();
     }

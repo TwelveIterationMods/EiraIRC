@@ -7,7 +7,6 @@ import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.ConnectionManager;
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.EiraIRCAPI;
@@ -91,7 +90,7 @@ public class MCEventHandler {
 				if(emote.length() == 0) {
 					return;
 				}
-				IChatComponent chatComponent = new ChatComponentTranslation("* %s %s", event.sender.func_145748_c_(), MessageFormat.createChatComponentForMessage(emote)); // getFormattedICommandSenderName
+				IChatComponent chatComponent = new ChatComponentTranslation("* %s %s", event.sender.func_145748_c_(), MessageFormat.createChatComponentForMessage(emote)); // getFormattedCommandSenderName
 				EnumChatFormatting emoteColor = SharedGlobalConfig.theme.emoteTextColor.get();
 				if(emoteColor != null) {
 					chatComponent.getChatStyle().setColor(emoteColor);
@@ -196,8 +195,8 @@ public class MCEventHandler {
 
 	@SubscribeEvent
 	public void onServerChat(ServerChatEvent event) {
-		IChatComponent senderComponent = event.player.func_145748_c_(); // getFormattedICommandSenderName
-		EnumChatFormatting nameColor = IRCFormatting.getColorForPlayer(event.player);
+		IChatComponent senderComponent = event.player.func_145748_c_(); // getFormattedCommandSenderName
+		EnumChatFormatting nameColor = IRCFormatting.getColorFormattingForPlayer(event.player);
 		if(nameColor != null && nameColor != EnumChatFormatting.WHITE) {
 			senderComponent.getChatStyle().setColor(nameColor);
 		}

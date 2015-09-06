@@ -3,7 +3,6 @@
 package net.blay09.mods.eirairc.util;
 
 import com.google.common.collect.Lists;
-import cpw.mods.fml.common.Loader;
 import net.blay09.mods.eirairc.ConnectionManager;
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.EiraIRCAPI;
@@ -53,14 +52,6 @@ public class Utils {
 				Minecraft.getMinecraft().thePlayer.addChatMessage(chatComponent);
 			}
 		}
-	}
-
-	public static String getModVersion() {
-		return Loader.instance().getIndexedModList().get("eirairc").getDisplayVersion();
-	}
-
-	public static String getMCVersion() {
-		return Loader.instance().getMCVersionString();
 	}
 	
 	public static String unquote(String s) {

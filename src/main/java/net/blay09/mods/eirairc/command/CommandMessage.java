@@ -16,7 +16,7 @@ import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.MessageFormat;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
-import net.blay09.mods.eirairc.wrapper.SubCommandWrapper;
+import net.minecraft.command.WrongUsageException;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 import org.apache.commons.lang3.ArrayUtils;
@@ -44,7 +44,7 @@ public class CommandMessage implements SubCommand {
 	@Override
 	public boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) {
 		if(args.length < 2) {
-			SubCommandWrapper.throwWrongUsageException(this, sender);
+			throw new WrongUsageException(getCommandUsage(sender));
 		}
 		IRCContext target = EiraIRCAPI.parseContext(null, args[0], null);
 		if(target.getContextType() == IRCContext.ContextType.Error) {
@@ -58,7 +58,7 @@ public class CommandMessage implements SubCommand {
 		}
 		String message = StringUtils.join(ArrayUtils.subarray(args, 1, args.length), " ").trim();
 		if(message.isEmpty()) {
-			SubCommandWrapper.throwWrongUsageException(this, sender);
+			throw new WrongUsageException(getCommandUsage(sender));
 		}
 		boolean isEmote = message.startsWith("/me ");
 		if(isEmote) {

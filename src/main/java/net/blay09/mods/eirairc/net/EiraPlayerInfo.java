@@ -2,7 +2,6 @@
 
 package net.blay09.mods.eirairc.net;
 
-@Deprecated
 public class EiraPlayerInfo {
 
 	private String username;

@@ -8,9 +8,10 @@ import net.blay09.mods.eirairc.config.settings.BotSettings;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.MessageFormat;
 import net.blay09.mods.eirairc.util.Utils;
-import net.blay09.mods.eirairc.wrapper.SubCommandWrapper;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.command.WrongUsageException;
+import net.minecraft.util.IChatComponent;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -43,7 +44,7 @@ public class CommandCTCP implements SubCommand {
             return true;
         }
         if (args.length < 2) {
-            SubCommandWrapper.throwWrongUsageException(this, sender);
+            throw new WrongUsageException(getCommandUsage(sender));
         }
         IRCContext target = EiraIRCAPI.parseContext(null, args[0], null);
         if (target.getContextType() == IRCContext.ContextType.Error) {
@@ -58,7 +59,7 @@ public class CommandCTCP implements SubCommand {
 
         String message = StringUtils.join(ArrayUtils.subarray(args, 1, args.length), " ").trim();
         if (message.isEmpty()) {
-            SubCommandWrapper.throwWrongUsageException(this, sender);
+            throw new WrongUsageException(getCommandUsage(sender));
         }
         String format = "{MESSAGE}";
         BotSettings botSettings = ConfigHelper.getBotSettings(target);
@@ -76,7 +77,9 @@ public class CommandCTCP implements SubCommand {
         } else if (target.getContextType() == IRCContext.ContextType.IRCUser) {
             format = botSettings.getMessageFormat().mcSendPrivateMessage;
         }
-        EiraIRCAPI.getChatHandler().addChatMessage(sender, MessageFormat.formatChatComponent(format, target.getConnection(), target, botUser, message, MessageFormat.Target.IRC, MessageFormat.Mode.Message));
+
+        IChatComponent chatComponent = MessageFormat.formatChatComponent(format, target.getConnection(), target, botUser, message, MessageFormat.Target.IRC, MessageFormat.Mode.Message);
+        EiraIRCAPI.getChatHandler().addChatMessage(sender, chatComponent);
         return true;
     }
 
