@@ -26,7 +26,7 @@ public final class SubCommandWrapper implements ICommand {
 	
 	@Override
 	public final String getCommandUsage(ICommandSender sender) {
-		return command.getCommandUsage(new ICommandSender(sender));
+		return command.getCommandUsage(sender);
 	}
 	
 	@Override
@@ -44,7 +44,7 @@ public final class SubCommandWrapper implements ICommand {
 	
 	@Override
 	public boolean canCommandSenderUseCommand(ICommandSender sender) {
-		return command.canCommandSenderUseCommand(new ICommandSender(sender));
+		return command.canCommandSenderUseCommand(sender);
 	}
 	
 	@Override
@@ -54,13 +54,13 @@ public final class SubCommandWrapper implements ICommand {
 
 	@Override
 	public void processCommand(ICommandSender sender, String[] args) {
-		command.processCommand(new ICommandSender(sender), Utils.getSuggestedTarget(), args, Utils.isServerSide());
+		command.processCommand(sender, Utils.getSuggestedTarget(), args, Utils.isServerSide());
 	}
 
 	@Override
 	public List addTabCompletionOptions(ICommandSender sender, String[] args) {
 		List<String> list = new ArrayList<>();
-		command.addTabCompletionOptions(list, new ICommandSender(sender), args);
+		command.addTabCompletionOptions(list, sender, args);
 		return list;
 	}
 
