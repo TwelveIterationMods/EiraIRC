@@ -302,6 +302,7 @@ public class MCEventHandler {
 		if(target != null) {
 			if(!ConfigHelper.getGeneralSettings(target).readOnly.get()) {
 				if(!isEmote && !isNotice && ConfigurationHandler.passesRemoteCommand(sender, message)) {
+					target.message(message);
 					return;
 				}
 				String format = MessageFormat.getMessageFormat(target, isEmote);
