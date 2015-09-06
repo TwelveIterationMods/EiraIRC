@@ -194,11 +194,11 @@ public class ClientProxy extends CommonProxy {
             for (Object obj : FMLClientHandler.instance().getClientPlayerEntity().sendQueue.func_175106_d()) {
                 NetworkPlayerInfo playerInfo = (NetworkPlayerInfo) obj;
                 if (event.sender.getName().equalsIgnoreCase(playerInfo.getGameProfile().getName())) {
-                    return false;
+                    return true;
                 }
             }
         }
-        return true;
+        return false;
     }
 
     @Override
