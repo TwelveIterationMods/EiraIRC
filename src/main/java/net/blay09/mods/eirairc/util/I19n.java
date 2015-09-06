@@ -3,6 +3,9 @@
 package net.blay09.mods.eirairc.util;
 
 import net.minecraft.util.StatCollector;
+import net.minecraft.util.StringTranslate;
+
+import java.io.InputStream;
 
 public class I19n {
 	

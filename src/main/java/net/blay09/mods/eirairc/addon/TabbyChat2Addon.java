@@ -13,6 +13,7 @@ import net.blay09.mods.eirairc.api.event.IRCPrivateChatEvent;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.IChatComponent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @SuppressWarnings("unused")

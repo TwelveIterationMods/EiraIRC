@@ -116,7 +116,7 @@ public class ChatComponentBuilder {
                     case 'k': chatStyle.setObfuscated(true); break;
                     case 'r': break;
                     default:
-                        chatStyle.setColor(IRCFormatting.getColorFromCode(c));
+                        chatStyle.setColor(IRCFormatting.getColorFromMCColorCode(c));
                 }
             }
         }

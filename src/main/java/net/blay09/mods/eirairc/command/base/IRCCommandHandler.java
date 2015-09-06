@@ -4,15 +4,15 @@ package net.blay09.mods.eirairc.command.base;
 
 import net.blay09.mods.eirairc.api.SubCommand;
 import net.blay09.mods.eirairc.command.*;
+import net.blay09.mods.eirairc.command.extension.*;
 import net.blay09.mods.eirairc.command.interop.InterOpCommandKick;
 import net.blay09.mods.eirairc.command.interop.InterOpCommandMode;
 import net.blay09.mods.eirairc.command.interop.InterOpCommandTopic;
 import net.blay09.mods.eirairc.command.interop.InterOpCommandUserModeBase;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.util.ChatComponentBuilder;
+import net.blay09.mods.eirairc.util.I19n;
 import net.blay09.mods.eirairc.util.Utils;
-import net.blay09.mods.eirairc.wrapper.CommandSender;
-import net.blay09.mods.eirairc.wrapper.SubCommandWrapper;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.CommandHandler;
 import net.minecraft.command.ICommandSender;
@@ -122,7 +122,7 @@ public class IRCCommandHandler {
             return true;
         }
         String[] shiftedArgs = ArrayUtils.subarray(args, 1, args.length);
-        return cmd.command.processCommand(new CommandSender(sender), Utils.getSuggestedTarget(), shiftedArgs, serverSide);
+        return cmd.command.processCommand(sender, Utils.getSuggestedTarget(), shiftedArgs, serverSide);
     }
 
     public static void sendUsageHelp(ICommandSender sender) {

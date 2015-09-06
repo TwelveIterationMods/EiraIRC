@@ -2,7 +2,6 @@
 
 package net.blay09.mods.eirairc.config.base;
 
-import net.blay09.mods.eirairc.config.ServiceSettings;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;

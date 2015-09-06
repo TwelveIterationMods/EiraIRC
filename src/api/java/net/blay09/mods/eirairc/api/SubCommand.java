@@ -3,7 +3,6 @@
 package net.blay09.mods.eirairc.api;
 
 import net.blay09.mods.eirairc.api.irc.IRCContext;
-import net.blay09.mods.eirairc.wrapper.CommandSender;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 
@@ -31,20 +30,20 @@ public interface SubCommand {
 	 * @param serverSide true if this command was run via the server-side irc command
 	 * @return true if the command was handled
 	 */
-	boolean processCommand(CommandSender sender, IRCContext context, String[] args, boolean serverSide) throws CommandException;
+	boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) throws CommandException;
 
 	/**
 	 * @param list the list to add the tab completion options to
 	 * @param sender the sender that issued the command
 	 * @param args array of arguments the command was run with
 	 */
-	void addTabCompletionOptions(List<String> list, CommandSender sender, String[] args);
+	void addTabCompletionOptions(List<String> list, ICommandSender sender, String[] args);
 
 	/**
 	 * @param sender the sender that issued the command
 	 * @return true if the sender is allowed to use this command
 	 */
-	boolean canCommandSenderUseCommand(CommandSender sender);
+	boolean canCommandSenderUseCommand(ICommandSender sender);
 
 	/**
 	 * @param args array of arguments the command was run with
@@ -57,7 +56,7 @@ public interface SubCommand {
 	 * @param sender the sender that issued the command
 	 * @return a language key to describe the command usage
 	 */
-	String getCommandUsage(CommandSender sender);
+	String getCommandUsage(ICommandSender sender);
 
 	/**
 	 * @return an array of aliases for this command or null

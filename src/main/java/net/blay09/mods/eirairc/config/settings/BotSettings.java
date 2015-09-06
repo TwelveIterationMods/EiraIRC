@@ -58,4 +58,19 @@ public class BotSettings extends AbstractSettings {
 		return dummyConfig;
 	}
 
+	public void loadLegacy(Configuration legacyConfig, String category) {
+		if(category != null) {
+			description.set(Utils.unquote(legacyConfig.get(category, "description", description.getDefaultValue()).getString()));
+			ident.set(Utils.unquote(legacyConfig.get(category, "ident", ident.getDefaultValue()).getString()));
+			String quitMessageOld = Utils.unquote(legacyConfig.get(category, "quitMessage", "").getString());
+			if(!quitMessageOld.isEmpty()) {
+				quitMessage.set(quitMessageOld);
+			}
+		} else {
+			mcNickFormat.set(Utils.unquote(legacyConfig.get("serveronly", "nickPrefix", "").getString()) + "%s" + Utils.unquote(legacyConfig.get("serveronly", "nickSuffix", "").getString()));
+			hideNotices.set(legacyConfig.get("display", "hideNotices", hideNotices.getDefaultValue()).getBoolean());
+			convertColors.set(legacyConfig.get("display", "enableIRCColors", convertColors.getDefaultValue()).getBoolean());
+		}
+	}
+
 }

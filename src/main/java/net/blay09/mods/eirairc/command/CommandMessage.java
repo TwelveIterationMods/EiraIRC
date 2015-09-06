@@ -16,9 +16,9 @@ import net.blay09.mods.eirairc.irc.IRCUserImpl;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.MessageFormat;
 import net.blay09.mods.eirairc.util.Utils;
-import net.blay09.mods.eirairc.wrapper.CommandSender;
-import net.blay09.mods.eirairc.wrapper.SubCommandWrapper;
 import net.minecraft.command.CommandException;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.command.WrongUsageException;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 import org.apache.commons.lang3.StringUtils;
@@ -33,7 +33,7 @@ public class CommandMessage implements SubCommand {
 	}
 
 	@Override
-	public String getCommandUsage(CommandSender sender) {
+	public String getCommandUsage(ICommandSender sender) {
 		return "eirairc:commands.msg.usage";
 	}
 
@@ -43,9 +43,9 @@ public class CommandMessage implements SubCommand {
 	}
 
 	@Override
-	public boolean processCommand(CommandSender sender, IRCContext context, String[] args, boolean serverSide) throws CommandException {
+	public boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) throws CommandException {
 		if(args.length < 2) {
-			SubCommandWrapper.throwWrongUsageException(this, sender);
+			throw new WrongUsageException(getCommandUsage(sender));
 		}
 		IRCContext target = EiraIRCAPI.parseContext(null, args[0], null);
 		if(target.getContextType() == IRCContext.ContextType.Error) {
@@ -59,8 +59,7 @@ public class CommandMessage implements SubCommand {
 		}
 		String message = StringUtils.join(args, " ", 1).trim();
 		if(message.isEmpty()) {
-			SubCommandWrapper.throwWrongUsageException(this, sender);
-
+			throw new WrongUsageException(getCommandUsage(sender));
 		}
 		boolean isEmote = message.startsWith("/me ");
 		if(isEmote) {
@@ -104,12 +103,12 @@ public class CommandMessage implements SubCommand {
 	}
 
 	@Override
-	public boolean canCommandSenderUseCommand(CommandSender sender) {
+	public boolean canCommandSenderUseCommand(ICommandSender sender) {
 		return true;
 	}
 
 	@Override
-	public void addTabCompletionOptions(List<String> list, CommandSender sender, String[] args) {
+	public void addTabCompletionOptions(List<String> list, ICommandSender sender, String[] args) {
 		for(ServerConfig serverConfig : ConfigurationHandler.getServerConfigs()) {
 			for(ChannelConfig channelConfig : serverConfig.getChannelConfigs()) {
 				list.add(channelConfig.getName());

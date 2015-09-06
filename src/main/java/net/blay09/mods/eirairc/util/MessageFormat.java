@@ -2,8 +2,6 @@
 
 package net.blay09.mods.eirairc.util;
 
-import net.blay09.mods.eirairc.EiraIRC;
-import net.blay09.mods.eirairc.api.EiraIRCAPI;
 import net.blay09.mods.eirairc.api.event.FormatMessage;
 import net.blay09.mods.eirairc.api.event.FormatNick;
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
@@ -11,10 +9,8 @@ import net.blay09.mods.eirairc.api.irc.IRCConnection;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.api.irc.IRCUser;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
-import net.blay09.mods.eirairc.config.property.NotificationType;
 import net.blay09.mods.eirairc.config.settings.BotSettings;
 import net.blay09.mods.eirairc.config.settings.GeneralSettings;
-import net.blay09.mods.eirairc.config.settings.ThemeSettings;
 import net.blay09.mods.eirairc.irc.IRCUserImpl;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
@@ -213,7 +209,7 @@ public class MessageFormat {
 								displayName = formatNick(displayName, context, target, mode);
 								component = new ChatComponentText(displayName);
 								if (mode != Mode.Emote) {
-									EnumChatFormatting nameColor = IRCFormatting.getColorForPlayer(player);
+									EnumChatFormatting nameColor = IRCFormatting.getColorFormattingForPlayer(player);
 									if (nameColor != null && nameColor != EnumChatFormatting.WHITE) {
 										component.getChatStyle().setColor(nameColor);
 									}
@@ -255,7 +251,7 @@ public class MessageFormat {
 					}
 				}
 			} else if(c == '\u00a7') {
-				nextColor = IRCFormatting.getColorFromCode(format.charAt(currentIdx + 1));
+				nextColor = IRCFormatting.getColorFromMCColorCode(format.charAt(currentIdx + 1));
 				currentIdx += 2;
 				continue;
 			}
@@ -324,7 +320,7 @@ public class MessageFormat {
 									component = event.component;
 								}
 								if (mode != Mode.Emote) {
-									EnumChatFormatting nameColor = IRCFormatting.getColorForUser(targetContext instanceof IRCChannel ? (IRCChannel) targetContext : null, sender);
+									EnumChatFormatting nameColor = IRCFormatting.getColorFormattingForUser(targetContext instanceof IRCChannel ? (IRCChannel) targetContext : null, sender);
 									if (nameColor != null) {
 										component.getChatStyle().setColor(nameColor);
 									}
@@ -374,7 +370,7 @@ public class MessageFormat {
 					}
 					sb = new StringBuilder();
 				}
-				nextColor = IRCFormatting.getColorFromCode(format.charAt(currentIdx + 1));
+				nextColor = IRCFormatting.getColorFromMCColorCode(format.charAt(currentIdx + 1));
 				currentIdx += 2;
 				continue;
 			}
@@ -394,44 +390,5 @@ public class MessageFormat {
 
 	private static boolean isAllowedCharacter(char c) {
 		return c >= 32 && c != 127;
-	}
-
-	public static void postMessage(IRCConnection connection, IRCContext context, IRCUser sender, String message, boolean isEmote, boolean isNotice) {
-		BotSettings botSettings = ConfigHelper.getBotSettings(context);
-		String format;
-		if (connection.isTwitch() && sender != null && sender.getName().equals("twitchnotify")) {
-			format = "{MESSAGE}";
-		} else if (isNotice) {
-			format = context != null ? botSettings.getMessageFormat().mcChannelNotice : botSettings.getMessageFormat().mcPrivateNotice;
-		} else if (isEmote) {
-			format = context != null ? botSettings.getMessageFormat().mcChannelEmote : botSettings.getMessageFormat().mcPrivateEmote;
-		} else {
-			format = context != null ? botSettings.getMessageFormat().mcChannelMessage : botSettings.getMessageFormat().mcPrivateMessage;
-		}
-		IChatComponent chatComponent = MessageFormat.formatChatComponent(format, connection, context, sender, message, MessageFormat.Target.Minecraft, (isEmote ? MessageFormat.Mode.Emote : MessageFormat.Mode.Message));
-		if (isNotice && botSettings.hideNotices.get()) {
-			System.out.println(chatComponent.getUnformattedText());
-			return;
-		}
-		String notifyMsg = chatComponent.getUnformattedText();
-		if (notifyMsg.length() > 42) {
-			notifyMsg = notifyMsg.substring(0, 42) + "...";
-		}
-		if(context == null) {
-			if (!isNotice) {
-				EiraIRC.proxy.publishNotification(NotificationType.PrivateMessage, notifyMsg);
-				EiraIRC.instance.getChatSessionHandler().addTargetUser(sender);
-			}
-		}
-		ThemeSettings theme = ConfigHelper.getTheme(sender);
-		EnumChatFormatting emoteColor = theme.emoteTextColor.get();
-		EnumChatFormatting twitchNameColor = (sender != null && SharedGlobalConfig.twitchNameColors.get()) ? ((IRCUserImpl) sender).getNameColor() : null;
-		EnumChatFormatting noticeColor = theme.ircNoticeTextColor.get();
-		if (isEmote && (emoteColor != null || twitchNameColor != null)) {
-			chatComponent.getChatStyle().setColor(twitchNameColor != null ? twitchNameColor : emoteColor);
-		} else if (isNotice && noticeColor != null) {
-			chatComponent.getChatStyle().setColor(noticeColor);
-		}
-		EiraIRCAPI.getChatHandler().addChatMessage(chatComponent);
 	}
 }

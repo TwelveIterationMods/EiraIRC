@@ -4,6 +4,7 @@ import net.blay09.mods.eirairc.api.EiraIRCAPI;
 import net.blay09.mods.eirairc.api.event.IRCChannelChatEvent;
 import net.blay09.mods.eirairc.api.event.IRCUserJoinEvent;
 import net.blay09.mods.eirairc.api.event.IRCUserLeaveEvent;
+import net.blay09.mods.eirairc.api.event.RelayChat;
 import net.minecraft.command.CommandResultStats;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
