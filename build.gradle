@@ -52,8 +52,8 @@ repositories {
 dependencies {
     deobfCompile 'net.blay09.mods:eiramoticons:2.1.40'
     compile 'us.dynmap:DynmapCoreAPI:2.1'
-    compile 'mnm.mods:MnM-Utils:0.3.1-SNAPSHOT-14:dev'
-    compile 'mnm.mods:TabbyChat:2.0.0-beta3.1-SNAPSHOT-14:dev'
+    deobfCompile 'mnm.mods:MnM-Utils:0.3.1-SNAPSHOT-14:dev'
+    deobfCompile 'mnm.mods:TabbyChat:2.0.0-beta3.1-SNAPSHOT-14:dev'
 }
 
 jar {
@@ -68,6 +68,13 @@ sourceJar {
 task apiJar(type: Jar) {
     from sourceSets.api.output
     classifier "api"
+    appendix "mc" + minecraft.version
+}
+
+task devJar(type: Jar) {
+    from sourceSets.main.output
+    from sourceSets.api.output
+    classifier "dev"
     appendix "mc" + minecraft.version
 }
 
