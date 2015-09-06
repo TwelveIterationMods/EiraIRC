@@ -5,6 +5,7 @@ import net.blay09.mods.eirairc.client.gui.EiraGuiScreen;
 import net.blay09.mods.eirairc.client.gui.base.GuiImageButton;
 import net.blay09.mods.eirairc.client.gui.base.image.GuiImage;
 import net.blay09.mods.eirairc.client.gui.base.image.GuiURLImage;
+import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.I19n;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
@@ -129,6 +130,11 @@ public class GuiImagePreview extends EiraGuiScreen implements GuiYesNoCallback {
 		}
 
 		if(imgPreview != null) {
+			if(!imgPreview.isLoaded()) {
+				String s = I19n.format("eirairc:gui.image.loading");
+				mc.fontRendererObj.drawStringWithShadow(s, width / 2 - fontRendererObj.getStringWidth(s) / 2, height / 2 - fontRendererObj.FONT_HEIGHT / 2, Globals.TEXT_COLOR);
+			}
+
 			// Render the preview image
 			imgPreview.draw(imgX, imgY, imgWidth, imgHeight, zLevel);
 		}
