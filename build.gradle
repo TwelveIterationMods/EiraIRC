@@ -23,10 +23,9 @@ buildscript {
 apply plugin: 'forge'
 apply plugin: 'maven'
 
+version = "3.9." + BUILD_NUMBER
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
-
-version = "3.8." + BUILD_NUMBER
 group = "net.blay09.mods"
 archivesBaseName = "eirairc"
 
