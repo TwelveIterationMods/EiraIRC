@@ -237,6 +237,11 @@ public class IRCUserImpl implements IRCUser, TwitchUser {
 		return hostname;
 	}
 
+	@Override
+	public TwitchUser getTwitchUser() {
+		return connection.isTwitch() ? this : null;
+	}
+
 	public String getDisplayName() {
 		return displayName != null ? displayName : getName();
 	}
