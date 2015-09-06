@@ -219,14 +219,15 @@ public class ClientProxy extends CommonProxy {
         }
     }
 
-//    @SubscribeEvent
-//    public void keyInput(GuiScreenEvent.KeyInputEvent event) {
-//        if (ClientGlobalConfig.keyScreenshotShare.getKeyCode() != 0 && keyCode == ClientGlobalConfig.keyScreenshotShare.getKeyCode()) {
-//            Screenshot screenshot = ScreenshotManager.getInstance().takeScreenshot();
-//            if (screenshot != null) {
-//                ScreenshotManager.getInstance().uploadScreenshot(screenshot, ScreenshotAction.UploadShare);
-//            }
-//    }
+    @SubscribeEvent
+    public void keyInput(GuiScreenEvent.KeyboardInputEvent.Pre event) {
+        if (ClientGlobalConfig.keyScreenshotShare.getKeyCode() != 0 && Keyboard.getEventKey() == ClientGlobalConfig.keyScreenshotShare.getKeyCode()) {
+            Screenshot screenshot = ScreenshotManager.getInstance().takeScreenshot();
+            if (screenshot != null) {
+                ScreenshotManager.getInstance().uploadScreenshot(screenshot, ScreenshotAction.UploadShare);
+            }
+        }
+    }
 
     @SubscribeEvent
     public void keyInput(InputEvent.KeyInputEvent event) {
