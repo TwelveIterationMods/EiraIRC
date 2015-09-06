@@ -211,7 +211,7 @@ public class MessageFormat {
 						case "NICK":
 							if (sender instanceof EntityPlayer) {
 								EntityPlayer player = (EntityPlayer) sender;
-								component = player.func_145748_c_().createCopy(); // getFormattedCommandSenderName
+								component = player.func_145748_c_().createCopy(); // getFormattedICommandSenderName
 								String displayName = component.getUnformattedText();
 								displayName = formatNick(displayName, context, target, mode);
 								component = new ChatComponentText(displayName);

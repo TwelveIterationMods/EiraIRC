@@ -72,13 +72,15 @@ repositories {
 }
 
 sourceSets {
-    shared
+    main {
+        java {
+            srcDirs "src/main/shared_java"
+        }
+    }
 }
 
 configurations {
     deployerJars
-    sharedCompile.extendsFrom compile
-    sharedRuntime.extendsFrom runtime
 }
 
 dependencies {
@@ -88,7 +90,6 @@ dependencies {
 }
 
 jar {
-    from sourceSets.shared.output
     from sourceSets.api.output
     appendix "mc" + minecraft.version
 }
@@ -102,7 +103,6 @@ task jarAPI(type: Jar) {
 
 task jarDev(type: Jar) {
     from sourceSets.main.output
-    from sourceSets.shared.output
     from sourceSets.api.output
 
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE

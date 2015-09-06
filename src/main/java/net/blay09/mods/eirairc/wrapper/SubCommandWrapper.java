@@ -26,7 +26,7 @@ public final class SubCommandWrapper implements ICommand {
 	
 	@Override
 	public final String getCommandUsage(ICommandSender sender) {
-		return command.getCommandUsage(new CommandSender(sender));
+		return command.getCommandUsage(new ICommandSender(sender));
 	}
 	
 	@Override
@@ -44,7 +44,7 @@ public final class SubCommandWrapper implements ICommand {
 	
 	@Override
 	public boolean canCommandSenderUseCommand(ICommandSender sender) {
-		return command.canCommandSenderUseCommand(new CommandSender(sender));
+		return command.canCommandSenderUseCommand(new ICommandSender(sender));
 	}
 	
 	@Override
@@ -54,13 +54,13 @@ public final class SubCommandWrapper implements ICommand {
 
 	@Override
 	public void processCommand(ICommandSender sender, String[] args) {
-		command.processCommand(new CommandSender(sender), Utils.getSuggestedTarget(), args, Utils.isServerSide());
+		command.processCommand(new ICommandSender(sender), Utils.getSuggestedTarget(), args, Utils.isServerSide());
 	}
 
 	@Override
 	public List addTabCompletionOptions(ICommandSender sender, String[] args) {
 		List<String> list = new ArrayList<>();
-		command.addTabCompletionOptions(list, new CommandSender(sender), args);
+		command.addTabCompletionOptions(list, new ICommandSender(sender), args);
 		return list;
 	}
 
@@ -69,7 +69,7 @@ public final class SubCommandWrapper implements ICommand {
 		return getCommandName().compareTo(((ICommand) o).getCommandName());
 	}
 
-	public static void throwWrongUsageException(SubCommand command, CommandSender sender) {
+	public static void throwWrongUsageException(SubCommand command, ICommandSender sender) {
 		throw new WrongUsageException(command.getCommandUsage(sender));
 	}
 }

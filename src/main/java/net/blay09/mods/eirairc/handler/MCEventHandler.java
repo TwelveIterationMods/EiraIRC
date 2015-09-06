@@ -91,7 +91,7 @@ public class MCEventHandler {
 				if(emote.length() == 0) {
 					return;
 				}
-				IChatComponent chatComponent = new ChatComponentTranslation("* %s %s", event.sender.func_145748_c_(), MessageFormat.createChatComponentForMessage(emote)); // getFormattedCommandSenderName
+				IChatComponent chatComponent = new ChatComponentTranslation("* %s %s", event.sender.func_145748_c_(), MessageFormat.createChatComponentForMessage(emote)); // getFormattedICommandSenderName
 				EnumChatFormatting emoteColor = SharedGlobalConfig.theme.emoteTextColor.get();
 				if(emoteColor != null) {
 					chatComponent.getChatStyle().setColor(emoteColor);
@@ -196,7 +196,7 @@ public class MCEventHandler {
 
 	@SubscribeEvent
 	public void onServerChat(ServerChatEvent event) {
-		IChatComponent senderComponent = event.player.func_145748_c_(); // getFormattedCommandSenderName
+		IChatComponent senderComponent = event.player.func_145748_c_(); // getFormattedICommandSenderName
 		EnumChatFormatting nameColor = IRCFormatting.getColorForPlayer(event.player);
 		if(nameColor != null && nameColor != EnumChatFormatting.WHITE) {
 			senderComponent.getChatStyle().setColor(nameColor);

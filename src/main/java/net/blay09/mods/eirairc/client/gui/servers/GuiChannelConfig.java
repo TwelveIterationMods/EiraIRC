@@ -17,9 +17,7 @@ import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.I19n;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.GuiYesNoCallback;
-import net.minecraftforge.common.config.ConfigElement;
 import org.lwjgl.input.Keyboard;
 
 public class GuiChannelConfig extends GuiTabPage implements GuiYesNoCallback {

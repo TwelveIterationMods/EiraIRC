@@ -12,7 +12,7 @@ import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.util.ChatComponentBuilder;
 import net.blay09.mods.eirairc.util.Utils;
 import net.blay09.mods.eirairc.command.CommandConnect;
-import net.blay09.mods.eirairc.wrapper.CommandSender;
+import net.minecraft.command.ICommandSender;
 import net.blay09.mods.eirairc.wrapper.SubCommandWrapper;
 import net.minecraft.command.CommandHandler;
 import net.minecraft.command.ICommandSender;
@@ -120,7 +120,7 @@ public class IRCCommandHandler {
             return true;
 		}
 		String[] shiftedArgs = ArrayUtils.subarray(args, 1, args.length);
-		return cmd.command.processCommand(new CommandSender(sender), Utils.getSuggestedTarget(), shiftedArgs, serverSide);
+		return cmd.command.processCommand(new ICommandSender(sender), Utils.getSuggestedTarget(), shiftedArgs, serverSide);
 	}
 	
 	public static void sendUsageHelp(ICommandSender sender) {

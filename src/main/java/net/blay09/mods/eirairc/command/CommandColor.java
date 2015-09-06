@@ -8,7 +8,7 @@ import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.IRCFormatting;
 import net.blay09.mods.eirairc.util.Utils;
-import net.blay09.mods.eirairc.wrapper.CommandSender;
+import net.minecraft.command.ICommandSender;
 import net.blay09.mods.eirairc.wrapper.SubCommandWrapper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -26,7 +26,7 @@ public class CommandColor implements SubCommand {
 	}
 
 	@Override
-	public String getCommandUsage(CommandSender sender) {
+	public String getCommandUsage(ICommandSender sender) {
 		return "eirairc:commands.color.usage";
 	}
 
@@ -36,8 +36,8 @@ public class CommandColor implements SubCommand {
 	}
 
 	@Override
-	public boolean processCommand(CommandSender sender, IRCContext context, String[] args, boolean serverSide) {
-		if(!sender.isPlayer()) {
+	public boolean processCommand(ICommandSender sender, IRCContext context, String[] args, boolean serverSide) {
+		if(!(sender instanceof EntityPlayer)) {
 			return true;
 		}
 		if(!SharedGlobalConfig.enablePlayerColors.get()) {
@@ -58,7 +58,7 @@ public class CommandColor implements SubCommand {
 			Utils.sendLocalizedMessage(sender, "commands.color.invalid", colorName);
 			return true;
 		}
-		EntityPlayer entityPlayer = sender.getAsPlayer();
+		EntityPlayer entityPlayer = (EntityPlayer) sender;
 		NBTTagCompound persistentTag = entityPlayer.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG);
 		NBTTagCompound tagCompound = persistentTag.getCompoundTag(Globals.NBT_EIRAIRC);
 		if(isNone) {
@@ -83,12 +83,12 @@ public class CommandColor implements SubCommand {
 	}
 
 	@Override
-	public boolean canCommandSenderUseCommand(CommandSender sender) {
+	public boolean canCommandSenderUseCommand(ICommandSender sender) {
 		return true;
 	}
 
 	@Override
-	public void addTabCompletionOptions(List<String> list, CommandSender sender, String[] args) {
+	public void addTabCompletionOptions(List<String> list, ICommandSender sender, String[] args) {
 		list.add(COLOR_NONE);
 		IRCFormatting.addValidColorsToList(list);
 	}

@@ -37,12 +37,12 @@ public class DynmapWebChatAddon extends DynmapCommonAPIListener {
 		}
 
 		@Override
-		public IChatComponent func_145748_c_() { // getFormattedCommandSenderName
+		public IChatComponent func_145748_c_() { // getFormattedICommandSenderName
 			return new ChatComponentText(this.getCommandSenderName());
 		}
 
 		@Override
-		public ChunkCoordinates getPlayerCoordinates() { // getCommandSenderPosition
+		public ChunkCoordinates getPlayerCoordinates() { // getICommandSenderPosition
 			return new ChunkCoordinates(0, 0, 0);
 		}
 
