@@ -7,7 +7,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import net.blay09.mods.eirairc.api.upload.UploadHoster;
 import net.blay09.mods.eirairc.api.upload.UploadedFile;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -59,7 +58,6 @@ public class ImgurHoster implements UploadHoster {
 		}
 	}
 
-	@Nullable
 	private String handleResponse(InputStream in) {
 		StringBuilder sb = new StringBuilder();
 		Scanner scanner = new Scanner(in);

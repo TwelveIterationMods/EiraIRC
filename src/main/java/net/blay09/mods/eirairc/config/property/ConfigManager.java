@@ -8,7 +8,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import net.blay09.mods.eirairc.api.config.IConfigManager;
 import net.blay09.mods.eirairc.api.config.IConfigProperty;
-import net.blay09.mods.eirairc.client.BetterColorEntry;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.util.I19n;
 import net.blay09.mods.eirairc.util.IRCFormatting;
@@ -24,11 +23,21 @@ import java.util.Map;
 
 public class ConfigManager implements IConfigManager {
 
+    private static Class colorGuiClass;
+
     private final Logger logger = LogManager.getLogger();
     private final Map<String, ConfigProperty> properties = Maps.newHashMap();
 
     private ConfigManager parentManager;
     private Configuration parentConfig;
+
+    public ConfigManager() {
+        if(colorGuiClass == null) {
+            try {
+                colorGuiClass = Class.forName("net.blay09.mods.eirairc.client.BetterColorEntry");
+            } catch (ClassNotFoundException e) {}
+        }
+    }
 
     public void setParentConfig(Configuration parentConfig) {
         this.parentConfig = parentConfig;
@@ -175,7 +184,7 @@ public class ConfigManager implements IConfigManager {
             return config.get(property.getCategory(), property.getName(), ((StringList) property.getDefaultValue()).getAsArray(), I19n.format(property.getLangKey() + ".tooltip"));
         } else if(value.getClass() == EnumChatFormatting.class) {
             Property prop = config.get(property.getCategory(), property.getName(), IRCFormatting.getNameFromColor((EnumChatFormatting) property.getDefaultValue()), I19n.format(property.getLangKey() + ".tooltip"), IRCFormatting.mcColorNames);
-            prop.setConfigEntryClass(BetterColorEntry.class);
+            prop.setConfigEntryClass(colorGuiClass);
             return prop;
         } else if(value instanceof Enum) {
             Enum[] enums = ((Enum) value).getClass().getEnumConstants();
