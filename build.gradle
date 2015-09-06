@@ -80,7 +80,7 @@ task devJar(type: Jar) {
 
 artifacts {
     archives apiJar
-    archives apiDev
+    archives devJar
 }
 
 uploadArchives {
