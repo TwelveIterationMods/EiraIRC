@@ -21,6 +21,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
+import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -151,7 +152,7 @@ public class ConfigurationHandler {
                 return;
             }
         }
-        createExampleCommands();
+        copyExampleFile("commands.json.example.txt");
         Gson gson = new Gson();
         try {
             File file = new File(configDir, "commands.json");
@@ -197,66 +198,6 @@ public class ConfigurationHandler {
         }
     }
 
-    private static void createExampleCommands() {
-        JsonArray root = new JsonArray();
-        JsonObject tps = new JsonObject();
-        tps.addProperty("name", "tps");
-        tps.addProperty("command", "cofh tps");
-        tps.addProperty("broadcastResult", true);
-        tps.addProperty("runAsOp", true);
-        tps.addProperty("requireAuth", false);
-        tps.addProperty("allowArgs", false);
-        tps.addProperty("outputFilter", "Dimension 0:.+");
-        tps.addProperty("description", "Broadcasts the current TPS to the channel.");
-        root.add(tps);
-        JsonObject alias = new JsonObject();
-        alias.addProperty("name", "players");
-        alias.addProperty("override", "who");
-        alias.addProperty("description", "An alias for the who command called players.");
-        root.add(alias);
-        JsonObject override = new JsonObject();
-        override.addProperty("name", "help");
-        override.addProperty("override", "help");
-        override.addProperty("broadcastResult", true);
-        override.addProperty("description", "Changes EiraIRCs help command to broadcast into the channel instead of a private tell.");
-        root.add(override);
-        JsonObject ban = new JsonObject();
-        ban.addProperty("name", "ban");
-        ban.addProperty("command", "ban");
-        ban.addProperty("broadcastResult", false);
-        ban.addProperty("runAsOp", true);
-        ban.addProperty("requireAuth", true);
-        ban.addProperty("allowArgs", true);
-        ban.addProperty("description", "Bans the specified player with an optional reason from the server. /ban <name> [reason ...]. Authed only.");
-        root.add(ban);
-        JsonObject banlist = new JsonObject();
-        banlist.addProperty("name", "banlist");
-        banlist.addProperty("command", "banlist");
-        banlist.addProperty("broadcastResult", false);
-        banlist.addProperty("runAsOp", true);
-        banlist.addProperty("requireAuth", true);
-        banlist.addProperty("allowArgs", true);
-        banlist.addProperty("description", "List IP addresses and names on the server. /banlist [ips|players]. Authed only.");
-        root.add(banlist);
-        JsonObject pardon = new JsonObject();
-        pardon.addProperty("name", "pardon");
-        pardon.addProperty("command", "pardon");
-        pardon.addProperty("broadcastResult", false);
-        pardon.addProperty("runAsOp", true);
-        pardon.addProperty("requireAuth", true);
-        pardon.addProperty("allowArgs", true);
-        pardon.addProperty("description", "Unbans (pardons) the specified player on the server. /pardon <name>. Authed only.");
-        root.add(pardon);
-        Gson gson = new Gson();
-        try {
-            JsonWriter writer = new JsonWriter(new FileWriter(new File(baseConfigDir, "eirairc/commands.json.example.txt")));
-            writer.setIndent("  ");
-            gson.toJson(root, writer);
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     private static void loadServers(File configDir) {
         serverConfigs.clear();
@@ -265,7 +206,7 @@ public class ConfigurationHandler {
                 return;
             }
         }
-        createExampleServers();
+        copyExampleFile("servers.json.example.txt");
         Gson gson = new Gson();
         try {
             Reader reader = new FileReader(new File(configDir, "servers.json"));
@@ -285,52 +226,6 @@ public class ConfigurationHandler {
         }
     }
 
-    private static void createExampleServers() {
-        JsonArray root = new JsonArray();
-        JsonObject server = new JsonObject();
-        server.addProperty("address", "irc.esper.net");
-        server.addProperty("serverPassword", "");
-        server.addProperty("nick", "%USERNAME%");
-        server.addProperty("charset", "UTF-8");
-        server.addProperty("isRedirect", false);
-        server.addProperty("isSSL", false);
-        JsonObject nickserv = new JsonObject();
-        nickserv.addProperty("username", "");
-        nickserv.addProperty("password", "");
-        server.add("nickserv", nickserv);
-        JsonArray channelArray = new JsonArray();
-        JsonObject channel1 = new JsonObject();
-        channel1.addProperty("name", "#EiraIRC");
-        channelArray.add(channel1);
-        JsonObject channel2 = new JsonObject();
-        channel2.addProperty("name", "#minecraft");
-        channel2.addProperty("password", "");
-        channelArray.add(channel2);
-        server.add("channels", channelArray);
-        JsonObject botSettings = new JsonObject();
-        botSettings.addProperty("botProfile", "Server");
-        botSettings.addProperty("relayDeathMessages", false);
-        botSettings.addProperty("(more)", "(see shared.cfg for more options)");
-        server.add("bot", botSettings);
-        JsonObject genSettings = new JsonObject();
-        genSettings.addProperty("autoJoin", true);
-        genSettings.addProperty("(more)", "(see shared.cfg for more options)");
-        server.add("settings", genSettings);
-        JsonObject themeSettings = new JsonObject();
-        themeSettings.addProperty("ircNameColor", "c");
-        themeSettings.addProperty("(more)", "(see shared.cfg for more options)");
-        root.add(server);
-        Gson gson = new Gson();
-        try {
-            JsonWriter writer = new JsonWriter(new FileWriter(new File(baseConfigDir, "eirairc/servers.json.example.txt")));
-            writer.setIndent("  ");
-            gson.toJson(root, writer);
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     public static void saveServers() {
         Gson gson = new Gson();
         try {
@@ -342,6 +237,16 @@ public class ConfigurationHandler {
             writer.setIndent("  ");
             gson.toJson(serverArray, writer);
             writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void copyExampleFile(String fileName) {
+        String exampleFileInput = "/assets/eirairc/" + fileName;
+        File exampleFileOutput = new File(baseConfigDir, "eirairc/" + fileName);
+        try (InputStreamReader reader = new InputStreamReader(ConfigurationHandler.class.getResourceAsStream(exampleFileInput)); FileWriter writer = new FileWriter(exampleFileOutput)) {
+            IOUtils.copy(reader, writer);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -8,7 +8,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import net.blay09.mods.eirairc.api.config.IConfigManager;
 import net.blay09.mods.eirairc.api.config.IConfigProperty;
-import net.blay09.mods.eirairc.client.BetterColorEntry;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.util.I19n;
 import net.blay09.mods.eirairc.util.IRCFormatting;
@@ -27,11 +26,22 @@ public class ConfigManager implements IConfigManager {
     private final Logger logger = LogManager.getLogger();
     private final Map<String, ConfigProperty> properties = Maps.newHashMap();
 
+    private static Class colorGuiClass;
+
     private ConfigManager parentManager;
     private Configuration parentConfig;
 
     public void setParentConfig(Configuration parentConfig) {
         this.parentConfig = parentConfig;
+    }
+
+    public ConfigManager() {
+        if (colorGuiClass == null) {
+            try {
+                colorGuiClass = Class.forName("net.blay09.mods.eirairc.client.BetterColorEntry");
+            } catch (ClassNotFoundException e) {
+            }
+        }
     }
 
     @Override
@@ -43,7 +53,7 @@ public class ConfigManager implements IConfigManager {
     @Override
     public <T> IConfigProperty<T> registerProperty(String modid, String name, String langKey, T defaultValue) {
         ConfigProperty<T> property = new ConfigProperty<>(this, SharedGlobalConfig.ADDONS, modid + "_" + name, langKey, defaultValue);
-        if(parentConfig != null) {
+        if (parentConfig != null) {
             getProperty(parentConfig, property);
         }
         return property;
@@ -52,7 +62,7 @@ public class ConfigManager implements IConfigManager {
     @SuppressWarnings("unchecked")
     public void registerProperty(ConfigProperty property) {
         properties.put(property.getName(), property);
-        if(parentManager != null) {
+        if (parentManager != null) {
             property.setParentProperty(parentManager.getProperty(property.getName()));
         }
     }
@@ -63,64 +73,64 @@ public class ConfigManager implements IConfigManager {
 
     @SuppressWarnings("unchecked")
     public void load(Configuration config, boolean ignoreDefaultValues) {
-        for(ConfigProperty property : properties.values()) {
-            if(ignoreDefaultValues && !config.hasKey(property.getCategory(), property.getName())) {
-               continue;
+        for (ConfigProperty property : properties.values()) {
+            if (ignoreDefaultValues && !config.hasKey(property.getCategory(), property.getName())) {
+                continue;
             }
             Object type = property.getDefaultValue();
-            if(type.getClass() == String.class) {
+            if (type.getClass() == String.class) {
                 String value = config.getString(property.getName(), property.getCategory(), (String) property.getDefaultValue(), I19n.format(property.getLangKey() + ".tooltip"), property.getLangKey());
-                if(!ignoreDefaultValues || !value.equals(property.getDefaultValue())) {
+                if (!ignoreDefaultValues || !value.equals(property.getDefaultValue())) {
                     property.set(value);
                 }
-            } else if(type.getClass() == Boolean.class) {
+            } else if (type.getClass() == Boolean.class) {
                 boolean value = config.getBoolean(property.getName(), property.getCategory(), (Boolean) property.getDefaultValue(), I19n.format(property.getLangKey() + ".tooltip"), property.getLangKey());
-                if(!ignoreDefaultValues || value != (Boolean) property.getDefaultValue()) {
+                if (!ignoreDefaultValues || value != (Boolean) property.getDefaultValue()) {
                     property.set(value);
                 }
-            } else if(type.getClass() == Integer.class) {
+            } else if (type.getClass() == Integer.class) {
                 int value = config.getInt(property.getName(), property.getCategory(), (Integer) property.getDefaultValue(), Integer.MIN_VALUE, Integer.MAX_VALUE, I19n.format(property.getLangKey() + ".tooltip"), property.getLangKey());
-                if(!ignoreDefaultValues || value != (Integer) property.getDefaultValue()) {
+                if (!ignoreDefaultValues || value != (Integer) property.getDefaultValue()) {
                     property.set(value);
                 }
-            } else if(type.getClass() == Float.class) {
+            } else if (type.getClass() == Float.class) {
                 float value = config.getFloat(property.getName(), property.getCategory(), (Float) property.getDefaultValue(), Float.MIN_VALUE, Float.MAX_VALUE, I19n.format(property.getLangKey() + ".tooltip"), property.getLangKey());
                 if (!ignoreDefaultValues || value != (Float) property.getDefaultValue()) {
                     property.set(value);
                 }
-            } else if(type.getClass() == StringList.class) {
+            } else if (type.getClass() == StringList.class) {
                 String[] value = config.getStringList(property.getName(), property.getCategory(), ((StringList) property.getDefaultValue()).getAsArray(), I19n.format(property.getLangKey() + ".tooltip"), null, property.getLangKey());
                 if (value.length > 0) {
                     property.set(value);
                 }
-            } else if(type.getClass() == EnumChatFormatting.class) {
+            } else if (type.getClass() == EnumChatFormatting.class) {
                 String stringValue = config.getString(property.getName(), property.getCategory(), IRCFormatting.getNameFromColor((EnumChatFormatting) property.getDefaultValue()), I19n.format(property.getLangKey() + ".tooltip"), IRCFormatting.mcColorNames, property.getLangKey());
-                if(stringValue.isEmpty()) {
+                if (stringValue.isEmpty()) {
                     continue;
                 }
                 EnumChatFormatting color = IRCFormatting.getColorFromName(stringValue);
-                if(color != null) {
+                if (color != null) {
                     if (!ignoreDefaultValues || !color.equals(property.getDefaultValue())) {
                         property.set(color);
                     }
                 } else {
                     StringBuilder validValues = new StringBuilder();
-                    for(String colorName : IRCFormatting.mcColorNames) {
-                        if(validValues.length() > 0) {
+                    for (String colorName : IRCFormatting.mcColorNames) {
+                        if (validValues.length() > 0) {
                             validValues.append(", ");
                         }
                         validValues.append(colorName);
                     }
                     logger.error("Invalid config value {} for option {} - valid values are: {}", stringValue.toLowerCase(), property.getName(), validValues.toString());
                 }
-            } else if(type instanceof Enum) {
+            } else if (type instanceof Enum) {
                 Enum[] enums = ((Enum) type).getClass().getEnumConstants();
                 String[] validValues = new String[enums.length];
-                for(int i = 0; i < validValues.length; i++) {
+                for (int i = 0; i < validValues.length; i++) {
                     validValues[i] = enums[i].name().toLowerCase();
                 }
                 String stringValue = config.getString(property.getName(), property.getCategory(), ((Enum) property.getDefaultValue()).name(), I19n.format("eirairc:config.property." + property.getName() + ".tooltip"), validValues, "eirairc:config.property." + property.getName());
-                if(stringValue.isEmpty()) {
+                if (stringValue.isEmpty()) {
                     continue;
                 }
                 try {
@@ -136,24 +146,24 @@ public class ConfigManager implements IConfigManager {
     }
 
     public void save(Configuration config) {
-        for(ConfigProperty property : properties.values()) {
+        for (ConfigProperty property : properties.values()) {
             Object value = property.get();
-            if(value.getClass() == String.class) {
+            if (value.getClass() == String.class) {
                 getProperty(config, property).set((String) value);
-            } else if(value.getClass() == Boolean.class) {
+            } else if (value.getClass() == Boolean.class) {
                 getProperty(config, property).set((Boolean) value);
-            } else if(value.getClass() == Integer.class) {
+            } else if (value.getClass() == Integer.class) {
                 getProperty(config, property).set((Integer) value);
-            } else if(value.getClass() == Float.class) {
+            } else if (value.getClass() == Float.class) {
                 getProperty(config, property).set((Float) value);
-            } else if(value.getClass() == StringList.class) {
+            } else if (value.getClass() == StringList.class) {
                 getProperty(config, property).set(((StringList) value).getAsArray());
-            } else if(value.getClass() == EnumChatFormatting.class) {
+            } else if (value.getClass() == EnumChatFormatting.class) {
                 getProperty(config, property).set(IRCFormatting.getNameFromColor((EnumChatFormatting) value));
-            } else if(value instanceof Enum) {
+            } else if (value instanceof Enum) {
                 Enum[] enums = ((Enum) value).getClass().getEnumConstants();
                 String[] validValues = new String[enums.length];
-                for(int i = 0; i < validValues.length; i++) {
+                for (int i = 0; i < validValues.length; i++) {
                     validValues[i] = enums[i].name().toLowerCase();
                 }
                 getProperty(config, property).set(((Enum) value).name());
@@ -163,24 +173,24 @@ public class ConfigManager implements IConfigManager {
 
     public Property getProperty(Configuration config, ConfigProperty property) {
         Object value = property.get();
-        if(value.getClass() == String.class) {
+        if (value.getClass() == String.class) {
             return config.get(property.getCategory(), property.getName(), (String) property.getDefaultValue(), I19n.format(property.getLangKey() + ".tooltip"));
-        } else if(value.getClass() == Boolean.class) {
+        } else if (value.getClass() == Boolean.class) {
             return config.get(property.getCategory(), property.getName(), (Boolean) property.getDefaultValue(), I19n.format(property.getLangKey() + ".tooltip"));
-        } else if(value.getClass() == Integer.class) {
+        } else if (value.getClass() == Integer.class) {
             return config.get(property.getCategory(), property.getName(), (Integer) property.getDefaultValue(), I19n.format(property.getLangKey() + ".tooltip"));
-        } else if(value.getClass() == Float.class) {
+        } else if (value.getClass() == Float.class) {
             return config.get(property.getCategory(), property.getName(), (Float) property.getDefaultValue(), I19n.format(property.getLangKey() + ".tooltip"));
-        } else if(value.getClass() == StringList.class) {
+        } else if (value.getClass() == StringList.class) {
             return config.get(property.getCategory(), property.getName(), ((StringList) property.getDefaultValue()).getAsArray(), I19n.format(property.getLangKey() + ".tooltip"));
-        } else if(value.getClass() == EnumChatFormatting.class) {
+        } else if (value.getClass() == EnumChatFormatting.class) {
             Property prop = config.get(property.getCategory(), property.getName(), IRCFormatting.getNameFromColor((EnumChatFormatting) property.getDefaultValue()), I19n.format(property.getLangKey() + ".tooltip"), IRCFormatting.mcColorNames);
-            prop.setConfigEntryClass(BetterColorEntry.class);
+            prop.setConfigEntryClass(colorGuiClass);
             return prop;
-        } else if(value instanceof Enum) {
+        } else if (value instanceof Enum) {
             Enum[] enums = ((Enum) value).getClass().getEnumConstants();
             String[] validValues = new String[enums.length];
-            for(int i = 0; i < validValues.length; i++) {
+            for (int i = 0; i < validValues.length; i++) {
                 validValues[i] = enums[i].name().toLowerCase();
             }
             return config.get(property.getCategory(), property.getName(), ((Enum) property.getDefaultValue()).name(), I19n.format(property.getLangKey() + ".tooltip"), validValues);
@@ -198,7 +208,7 @@ public class ConfigManager implements IConfigManager {
 
     public String getAsString(String name) {
         ConfigProperty property = getProperty(name);
-        if(property == null) {
+        if (property == null) {
             return null;
         }
         return String.valueOf(property.get());
@@ -207,7 +217,7 @@ public class ConfigManager implements IConfigManager {
     @SuppressWarnings("unchecked")
     public boolean setFromString(String name, String value) {
         ConfigProperty property = getProperty(name);
-        if(property == null) {
+        if (property == null) {
             return false;
         }
         Object type = property.getDefaultValue();
@@ -217,9 +227,9 @@ public class ConfigManager implements IConfigManager {
             property.set(Boolean.parseBoolean(value));
         } else if (type.getClass() == Integer.class) {
             property.set(Integer.parseInt(value));
-        } else if(type.getClass() == Float.class) {
+        } else if (type.getClass() == Float.class) {
             property.set(Float.parseFloat(value));
-        } else if(type.getClass() == StringList.class) {
+        } else if (type.getClass() == StringList.class) {
             StringList list = new StringList(((StringList) property.get()).getAsArray());
             if (value.startsWith("add ")) {
                 list.add(value.substring(4));
@@ -227,14 +237,14 @@ public class ConfigManager implements IConfigManager {
                 list.remove(value.substring(7));
             }
             property.set(list);
-        } else if(type.getClass() == EnumChatFormatting.class) {
+        } else if (type.getClass() == EnumChatFormatting.class) {
             EnumChatFormatting color = IRCFormatting.getColorFromName(value);
-            if(color != null) {
+            if (color != null) {
                 property.set(color);
             } else {
                 // TODO print error message
             }
-        } else if(type instanceof Enum) {
+        } else if (type instanceof Enum) {
             try {
                 property.set(Enum.valueOf((Class<? extends Enum>) type.getClass(), value));
             } catch (IllegalArgumentException e) {
@@ -247,54 +257,54 @@ public class ConfigManager implements IConfigManager {
     @SuppressWarnings("unchecked")
     public void setParentManager(ConfigManager manager) {
         this.parentManager = manager;
-        for(ConfigProperty property : properties.values()) {
+        for (ConfigProperty property : properties.values()) {
             property.setParentProperty(manager.getProperty(property.getName()));
         }
     }
 
     public void resetProperties() {
-        for(ConfigProperty property : properties.values()) {
+        for (ConfigProperty property : properties.values()) {
             property.reset();
         }
     }
 
     public Configuration pullDummyConfig() {
         Configuration dummyConfig = new Configuration();
-        for(ConfigProperty property : properties.values()) {
+        for (ConfigProperty property : properties.values()) {
             Object type = property.getDefaultValue();
             Property dummyProperty;
-            if(type.getClass() == String.class) {
+            if (type.getClass() == String.class) {
                 dummyProperty = dummyConfig.get(property.getCategory(), property.getName(), (String) property.getDefaultValue(), I19n.format(property.getLangKey() + ".tooltip"));
-            } else if(type.getClass() == Boolean.class) {
+            } else if (type.getClass() == Boolean.class) {
                 dummyProperty = dummyConfig.get(property.getCategory(), property.getName(), (Boolean) property.getDefaultValue(), I19n.format(property.getLangKey() + ".tooltip"));
-            } else if(type.getClass() == Integer.class) {
+            } else if (type.getClass() == Integer.class) {
                 dummyProperty = dummyConfig.get(property.getCategory(), property.getName(), (Integer) property.getDefaultValue(), I19n.format(property.getLangKey() + ".tooltip"));
-            } else if(type.getClass() == Float.class) {
+            } else if (type.getClass() == Float.class) {
                 dummyProperty = dummyConfig.get(property.getCategory(), property.getName(), (Float) property.getDefaultValue(), I19n.format(property.getLangKey() + ".tooltip"));
-            } else if(type.getClass() == StringList.class) {
+            } else if (type.getClass() == StringList.class) {
                 dummyProperty = dummyConfig.get(property.getCategory(), property.getName(), ((StringList) property.getDefaultValue()).getAsArray(), I19n.format(property.getLangKey() + ".tooltip"));
-            }else if(type.getClass() == EnumChatFormatting.class) {
+            } else if (type.getClass() == EnumChatFormatting.class) {
                 dummyProperty = dummyConfig.get(property.getCategory(), property.getName(), IRCFormatting.getNameFromColor((EnumChatFormatting) property.getDefaultValue()), I19n.format(property.getLangKey() + ".tooltip"));
-            } else if(type instanceof Enum) {
+            } else if (type instanceof Enum) {
                 dummyProperty = dummyConfig.get(property.getCategory(), property.getName(), ((Enum) property.getDefaultValue()).name(), I19n.format(property.getLangKey() + ".tooltip"));
             } else {
                 continue;
             }
             dummyProperty.setLanguageKey(property.getLangKey());
-            if(property.hasValue()) {
-                if(type.getClass() == String.class) {
+            if (property.hasValue()) {
+                if (type.getClass() == String.class) {
                     dummyProperty.set((String) property.get());
-                } else if(type.getClass() == Boolean.class) {
+                } else if (type.getClass() == Boolean.class) {
                     dummyProperty.set((Boolean) property.get());
-                } else if(type.getClass() == Integer.class) {
+                } else if (type.getClass() == Integer.class) {
                     dummyProperty.set((Integer) property.get());
-                } else if(type.getClass() == Float.class) {
+                } else if (type.getClass() == Float.class) {
                     dummyProperty.set((Float) property.get());
-                } else if(type.getClass() == StringList.class) {
+                } else if (type.getClass() == StringList.class) {
                     dummyProperty.set(((StringList) property.get()).getAsArray());
-                } else if(type.getClass() == EnumChatFormatting.class) {
+                } else if (type.getClass() == EnumChatFormatting.class) {
                     dummyProperty.set(IRCFormatting.getNameFromColor((EnumChatFormatting) property.get()));
-                } else if(type.getClass() == Enum.class) {
+                } else if (type.getClass() == Enum.class) {
                     dummyProperty.set(((Enum) property.get()).name());
                 }
             }
@@ -304,47 +314,47 @@ public class ConfigManager implements IConfigManager {
 
     @SuppressWarnings("unchecked")
     public void load(JsonObject object) {
-        for(ConfigProperty property : properties.values()) {
-            if(!object.has(property.getName())) {
+        for (ConfigProperty property : properties.values()) {
+            if (!object.has(property.getName())) {
                 continue;
             }
             Object type = property.getDefaultValue();
-            if(type.getClass() == String.class) {
+            if (type.getClass() == String.class) {
                 property.set(object.get(property.getName()).getAsString());
-            } else if(type.getClass() == Boolean.class) {
+            } else if (type.getClass() == Boolean.class) {
                 property.set(object.get(property.getName()).getAsBoolean());
-            } else if(type.getClass() == Integer.class) {
+            } else if (type.getClass() == Integer.class) {
                 property.set(object.get(property.getName()).getAsInt());
-            } else if(type.getClass() == Float.class) {
+            } else if (type.getClass() == Float.class) {
                 property.set(object.get(property.getName()).getAsFloat());
-            } else if(type.getClass() == StringList.class) {
+            } else if (type.getClass() == StringList.class) {
                 StringList stringList = new StringList();
                 JsonArray stringArray = object.get(property.getName()).getAsJsonArray();
                 for (int i = 0; i < stringArray.size(); i++) {
                     stringList.add(stringArray.get(i).getAsString());
                 }
                 property.set(stringList);
-            } else if(type.getClass() == EnumChatFormatting.class) {
+            } else if (type.getClass() == EnumChatFormatting.class) {
                 String stringValue = object.get(property.getName()).getAsString();
-                if(stringValue.isEmpty()) {
+                if (stringValue.isEmpty()) {
                     continue;
                 }
                 EnumChatFormatting color = IRCFormatting.getColorFromName(stringValue);
-                if(color != null) {
+                if (color != null) {
                     property.set(color);
                 } else {
                     StringBuilder validValues = new StringBuilder();
-                    for(String colorName : IRCFormatting.mcColorNames) {
-                        if(validValues.length() > 0) {
+                    for (String colorName : IRCFormatting.mcColorNames) {
+                        if (validValues.length() > 0) {
                             validValues.append(", ");
                         }
                         validValues.append(colorName);
                     }
                     logger.error("Invalid config value {} for option {} - valid values are: {}", stringValue.toLowerCase(), property.getName(), validValues.toString());
                 }
-            } else if(type instanceof Enum) {
+            } else if (type instanceof Enum) {
                 String stringValue = object.get(property.getName()).getAsString();
-                if(stringValue.isEmpty()) {
+                if (stringValue.isEmpty()) {
                     continue;
                 }
                 try {
@@ -352,8 +362,8 @@ public class ConfigManager implements IConfigManager {
                     property.set(value);
                 } catch (IllegalArgumentException e) {
                     StringBuilder validValues = new StringBuilder();
-                    for(Enum enumValue : ((Enum) type).getClass().getEnumConstants()) {
-                        if(validValues.length() > 0) {
+                    for (Enum enumValue : ((Enum) type).getClass().getEnumConstants()) {
+                        if (validValues.length() > 0) {
                             validValues.append(", ");
                         }
                         validValues.append(enumValue.name().toLowerCase());
@@ -366,42 +376,42 @@ public class ConfigManager implements IConfigManager {
 
     @SuppressWarnings("unchecked")
     public void save(JsonObject object) {
-        for(ConfigProperty property : properties.values()) {
-            if(!property.hasValue()) {
+        for (ConfigProperty property : properties.values()) {
+            if (!property.hasValue()) {
                 continue;
             }
             Object type = property.getDefaultValue();
-            if(type.getClass() == String.class) {
+            if (type.getClass() == String.class) {
                 object.addProperty(property.getName(), (String) property.get());
-            } else if(type.getClass() == Boolean.class) {
+            } else if (type.getClass() == Boolean.class) {
                 object.addProperty(property.getName(), (Boolean) property.get());
-            } else if(type.getClass() == Integer.class) {
+            } else if (type.getClass() == Integer.class) {
                 object.addProperty(property.getName(), (Integer) property.get());
-            } else if(type.getClass() == Float.class) {
+            } else if (type.getClass() == Float.class) {
                 object.addProperty(property.getName(), (Float) property.get());
-            } else if(type.getClass() == StringList.class) {
+            } else if (type.getClass() == StringList.class) {
                 JsonArray stringArray = new JsonArray();
-                for(String s : (StringList) property.get()) {
+                for (String s : (StringList) property.get()) {
                     stringArray.add(new JsonPrimitive(s));
                 }
                 object.add(property.getName(), stringArray);
-            } else if(type instanceof Enum) {
+            } else if (type instanceof Enum) {
                 object.addProperty(property.getName(), ((Enum) property.get()).name());
             }
         }
     }
 
     public void updateProperty(ConfigProperty property) {
-        if(parentConfig != null) {
+        if (parentConfig != null) {
             Property prop = getProperty(parentConfig, property);
-            if(property.getValidValues() != null) {
+            if (property.getValidValues() != null) {
                 prop.setValidValues(property.getValidValues());
             }
-            if(property.getMin() != null && property.getMax() != null) {
+            if (property.getMin() != null && property.getMax() != null) {
                 if (property.getDefaultValue().getClass() == Integer.class) {
                     prop.setMinValue((int) property.getMin());
                     prop.setMaxValue((int) property.getMax());
-                } else if(property.getDefaultValue().getClass() == Float.class) {
+                } else if (property.getDefaultValue().getClass() == Float.class) {
                     prop.setMinValue((float) property.getMin());
                     prop.setMaxValue((float) property.getMax());
                 }
