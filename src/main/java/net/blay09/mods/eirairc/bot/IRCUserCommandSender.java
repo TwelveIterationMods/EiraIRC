@@ -11,7 +11,7 @@ import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.world.World;
 
-public class IRCUserICommandSender implements ICommandSender {
+public class IRCUserCommandSender implements ICommandSender {
 
 	private final IRCChannel channel;
 	private final IRCUser user;
@@ -19,7 +19,7 @@ public class IRCUserICommandSender implements ICommandSender {
 	private final boolean opEnabled;
 	private final String outputFilter;
 	
-	public IRCUserICommandSender(IRCChannel channel, IRCUser user, boolean broadcastResult, boolean opEnabled, String outputFilter) {
+	public IRCUserCommandSender(IRCChannel channel, IRCUser user, boolean broadcastResult, boolean opEnabled, String outputFilter) {
 		this.channel = channel;
 		this.user = user;
 		this.broadcastResult = broadcastResult;

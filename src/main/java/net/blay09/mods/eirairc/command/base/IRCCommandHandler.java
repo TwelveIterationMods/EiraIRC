@@ -15,7 +15,6 @@ import net.blay09.mods.eirairc.command.CommandConnect;
 import net.minecraft.command.ICommandSender;
 import net.blay09.mods.eirairc.wrapper.SubCommandWrapper;
 import net.minecraft.command.CommandHandler;
-import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
 import org.apache.commons.lang3.ArrayUtils;
@@ -120,7 +119,7 @@ public class IRCCommandHandler {
             return true;
 		}
 		String[] shiftedArgs = ArrayUtils.subarray(args, 1, args.length);
-		return cmd.command.processCommand(new ICommandSender(sender), Utils.getSuggestedTarget(), shiftedArgs, serverSide);
+		return cmd.command.processCommand(sender, Utils.getSuggestedTarget(), shiftedArgs, serverSide);
 	}
 	
 	public static void sendUsageHelp(ICommandSender sender) {
