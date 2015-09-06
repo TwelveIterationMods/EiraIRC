@@ -1,5 +1,6 @@
 package net.blay09.mods.eirairc.addon;
 
+import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.event.InitConfigEvent;
 import net.blay09.mods.eirairc.config.ChannelConfig;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
@@ -32,6 +33,10 @@ public class Compatibility {
             new FancyOverlay();
         }
 
+        MinecraftForge.EVENT_BUS.post(new InitConfigEvent.SharedGlobalSettings(SharedGlobalConfig.manager));
+        if(EiraIRC.proxy.getClientGlobalConfig() != null) {
+            MinecraftForge.EVENT_BUS.post(new InitConfigEvent.ClientGlobalSettings(EiraIRC.proxy.getClientGlobalConfig()));
+        }
         MinecraftForge.EVENT_BUS.post(new InitConfigEvent.GeneralSettings(SharedGlobalConfig.generalSettings.manager));
         MinecraftForge.EVENT_BUS.post(new InitConfigEvent.BotSettings(SharedGlobalConfig.botSettings.manager));
         MinecraftForge.EVENT_BUS.post(new InitConfigEvent.ThemeSettings(SharedGlobalConfig.theme.manager));

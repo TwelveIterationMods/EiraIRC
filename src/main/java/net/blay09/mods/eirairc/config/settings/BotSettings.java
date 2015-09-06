@@ -5,7 +5,7 @@ package net.blay09.mods.eirairc.config.settings;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.base.MessageFormatConfig;
 import net.blay09.mods.eirairc.config.property.ConfigProperty;
-import net.blay09.mods.eirairc.config.property.StringList;
+import net.blay09.mods.eirairc.api.config.StringList;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraftforge.common.config.Configuration;
 

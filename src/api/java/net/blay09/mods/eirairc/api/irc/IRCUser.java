@@ -35,10 +35,19 @@ public interface IRCUser extends IRCContext {
 	 */
 	String getAccountName();
 
+	/**
+	 * @return the username setup in the ident of this user
+	 */
 	String getUsername();
 
+	/**
+	 * @return the hostname of this user
+	 */
 	String getHostname();
 
+	/**
+	 * @return a TwitchUser or null if this user is not from a Twitch connection
+	 */
 	TwitchUser getTwitchUser();
 
 }
