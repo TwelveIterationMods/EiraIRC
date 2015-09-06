@@ -83,7 +83,7 @@ artifacts {
 }
 
 uploadArchives {
-    dependsOn 'reobf'
+    dependsOn 'build'
     repositories {
         mavenDeployer {
             repository(url: MAVEN_REPO) {
