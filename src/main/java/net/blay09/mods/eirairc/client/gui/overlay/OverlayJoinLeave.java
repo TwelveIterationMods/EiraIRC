@@ -45,6 +45,9 @@ public class OverlayJoinLeave extends Gui {
     }
 
     public void addMessage(IChatComponent component) {
+        if(visibleTime == null) {
+            return;
+        }
         for(int i = 0; i < messages.size(); i++) {
             messages.get(i).y -= fontRenderer.FONT_HEIGHT + 2;
         }
@@ -52,6 +55,9 @@ public class OverlayJoinLeave extends Gui {
     }
 
     public void updateAndRender(float renderTickTime) {
+        if(scale == null) {
+            return;
+        }
         ScaledResolution resolution = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
         final int height = 64;
         int guiTop = resolution.getScaledHeight() - height;
