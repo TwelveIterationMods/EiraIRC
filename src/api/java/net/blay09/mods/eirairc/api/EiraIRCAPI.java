@@ -92,10 +92,16 @@ public class EiraIRCAPI {
 		internalMethods.relayChat(sender, message, isEmote, isNotice, target);
 	}
 
+	/**
+	 * @return the config manager for the shared.cfg configuration file
+	 */
 	public static IConfigManager getSharedGlobalConfig() {
 		return internalMethods.getSharedGlobalConfig();
 	}
 
+	/**
+	 * @return the config manager for the client.cfg configuration file
+	 */
 	public static IConfigManager getClientGlobalConfig() {
 		return internalMethods.getClientGlobalConfig();
 	}

@@ -3,8 +3,15 @@ package net.blay09.mods.eirairc.api.event;
 import cpw.mods.fml.common.eventhandler.Event;
 import net.blay09.mods.eirairc.api.config.IConfigManager;
 
+/**
+ * These event are published on the MinecraftForge.EVENTBUS bus for every IConfigManager created by EiraIRC, the event chosen depending on the origin of the config manager.
+ * Mods adding custom addon properties can do so by listening to one of these events and registering them in there.
+ */
 public abstract class InitConfigEvent extends Event {
 
+    /**
+     * the config manager that has been set up
+     */
     public final IConfigManager config;
 
     public InitConfigEvent(IConfigManager config) {
