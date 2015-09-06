@@ -2,8 +2,13 @@ package net.blay09.mods.eirairc.client.gui;
 
 import net.blay09.mods.eirairc.client.gui.base.GuiLabel;
 import net.blay09.mods.eirairc.config.LocalConfig;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiMainMenu;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
 import org.apache.commons.io.FileUtils;
@@ -78,15 +83,18 @@ public class GuiModpackConfirmation extends EiraGuiScreen {
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float delta) {
-        drawDefaultBackground();
+        // Don't ask me why this is necessary. If this isn't done, only a white screen will render.
+        GlStateManager.disableTexture2D();
+        GlStateManager.enableTexture2D();
 
+        drawDefaultBackground();
         final int logoWidth = 145;
         final int logoHeight = 60;
-        GL11.glColor4f(1f, 1f, 1f, 1f);
-        GL11.glEnable(GL11.GL_BLEND);
+        GlStateManager.color(1f, 1f, 1f, 1f);
+        GlStateManager.enableBlend();
         mc.renderEngine.bindTexture(logoTexture);
         drawTexturedModalRect(width / 2 - logoWidth / 2, 0, 0, 0, logoWidth, logoHeight);
-        GL11.glDisable(GL11.GL_BLEND);
+        GlStateManager.disableBlend();
 
         super.drawScreen(mouseX, mouseY, delta);
     }
