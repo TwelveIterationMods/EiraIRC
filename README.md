@@ -24,7 +24,7 @@ Then, add a dependency to either just the EiraIRC API (api) or, if you want Eira
 
 ```
 dependencies {
-    deobfCompile 'net.blay09.mods:eirairc:major.minor.build:sources' // replace major.minor.build with version number
+    deobfCompile 'net.blay09.mods:eirairc:major.minor.build' // replace major.minor.build with version number
     // OR
     // compile 'net.blay09.mods:eirairc:major.minor.build:api' // replace major.minor.build with version number
 }
