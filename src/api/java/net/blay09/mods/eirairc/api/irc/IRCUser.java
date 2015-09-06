@@ -39,4 +39,6 @@ public interface IRCUser extends IRCContext {
 
 	String getHostname();
 
+	TwitchUser getTwitchUser();
+
 }

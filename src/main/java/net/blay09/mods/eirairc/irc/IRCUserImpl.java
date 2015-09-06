@@ -245,4 +245,8 @@ public class IRCUserImpl implements IRCUser, TwitchUser {
 		this.displayName = displayName;
 	}
 
+	@Override
+	public TwitchUser getTwitchUser() {
+		return connection.isTwitch() ? this : null;
+	}
 }
