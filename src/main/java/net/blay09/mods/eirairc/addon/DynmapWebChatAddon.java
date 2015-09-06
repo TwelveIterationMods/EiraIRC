@@ -4,7 +4,6 @@ import net.blay09.mods.eirairc.api.EiraIRCAPI;
 import net.blay09.mods.eirairc.api.event.IRCChannelChatEvent;
 import net.blay09.mods.eirairc.api.event.IRCUserJoinEvent;
 import net.blay09.mods.eirairc.api.event.IRCUserLeaveEvent;
-import net.blay09.mods.eirairc.api.event.RelayChat;
 import net.minecraft.command.CommandResultStats;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
@@ -47,7 +46,7 @@ public class DynmapWebChatAddon extends DynmapCommonAPIListener {
 		public void addChatMessage(IChatComponent p_145747_1_) {}
 
 		@Override
-		public boolean canCommandSenderUseCommand(int p_70003_1_, String p_70003_2_) {
+		public boolean canUseCommand(int permLevel, String commandName) {
 			return false;
 		}
 
@@ -77,7 +76,7 @@ public class DynmapWebChatAddon extends DynmapCommonAPIListener {
 		}
 
 		@Override
-		public void func_174794_a(CommandResultStats.Type p_174794_1_, int p_174794_2_) {}
+		public void setCommandStat(CommandResultStats.Type type, int amount) {}
 
 	}
 

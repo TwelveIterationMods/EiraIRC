@@ -59,7 +59,7 @@ public abstract class GuiImage {
 		float renderX = xPos + width / 2 - renderWidth / 2;
 		float renderY = yPos + height / 2 - renderHeight / 2;
 
-		GlStateManager.func_179144_i(textureId); // bindTexture
+		GlStateManager.bindTexture(textureId);
 		Tessellator tessellator = Tessellator.getInstance();
 		WorldRenderer renderer = tessellator.getWorldRenderer();
 		renderer.startDrawingQuads();

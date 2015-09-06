@@ -8,7 +8,6 @@ import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.SuggestedChannel;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.I19n;
-import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 
@@ -53,7 +52,7 @@ public class GuiListSuggestedChannelEntry extends GuiListEntry {
 		if(exclusiveFail) {
 			s = "\u00a78" + s;
 		}
-		fontRenderer.func_175065_a(s, currentX, currentY, Globals.TEXT_COLOR, true); // drawString
+		fontRenderer.drawString(s, currentX, currentY, Globals.TEXT_COLOR, true);
 		currentX += fontRenderer.getStringWidth(s) + TEXT_MARGIN;
 		s = " \u00a7o(" + channel.getServerName() + ")";
 		if(exclusiveFail) {
@@ -62,7 +61,7 @@ public class GuiListSuggestedChannelEntry extends GuiListEntry {
 		fontRenderer.drawString(s, currentX, currentY, Globals.TEXT_COLOR);
 		if(channel.getScore() > 0 && channel.isRecommended()) {
 			s = "\u00a72" + I19n.format("eirairc:gui.welcome.recommended");
-			fontRenderer.func_175065_a(s, x + parentList.getWidth() - fontRenderer.getStringWidth(s) - TEXT_MARGIN, currentY, Globals.TEXT_COLOR, true); // drawString
+			fontRenderer.drawString(s, x + parentList.getWidth() - fontRenderer.getStringWidth(s) - TEXT_MARGIN, currentY, Globals.TEXT_COLOR, true);
 		}
 		currentY += 15;
 		currentX = x + TEXT_MARGIN + TEXT_MARGIN;

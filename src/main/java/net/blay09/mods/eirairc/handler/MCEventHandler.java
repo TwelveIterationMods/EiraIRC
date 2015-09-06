@@ -364,7 +364,7 @@ public class MCEventHandler {
 							GeneralSettings generalSettings = ConfigHelper.getGeneralSettings(channel);
 							BotSettings botSettings = ConfigHelper.getBotSettings(channel);
 							String name = Utils.getNickIRC((EntityPlayer) event.entityLiving, channel);
-							String ircMessage = event.entityLiving.getCombatTracker().func_151521_b().getUnformattedText(); // getDeathMessage()
+							String ircMessage = event.entityLiving.getCombatTracker().getDeathMessage().getUnformattedText();
 							ircMessage = ircMessage.replace(event.entityLiving.getName(), name);
 							ircMessage = IRCFormatting.toIRC(ircMessage, !botSettings.convertColors.get());
 							if (!generalSettings.readOnly.get() && botSettings.relayDeathMessages.get()) {

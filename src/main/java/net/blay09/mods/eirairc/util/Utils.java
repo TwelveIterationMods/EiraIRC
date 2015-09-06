@@ -80,7 +80,7 @@ public class Utils {
     }
 
     public static boolean isOP(ICommandSender sender) {
-        return MinecraftServer.getServer() == null || (MinecraftServer.getServer().isSinglePlayer() && !MinecraftServer.getServer().isDedicatedServer()) || sender.canCommandSenderUseCommand(3, "");
+        return MinecraftServer.getServer() == null || (MinecraftServer.getServer().isSinglePlayer() && !MinecraftServer.getServer().isDedicatedServer()) || sender.canUseCommand(3, "");
     }
 
     public static void addConnectionsToList(List<String> list) {

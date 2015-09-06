@@ -16,11 +16,11 @@ public class CommandIRC implements ICommand {
 
 	@Override
 	public int compareTo(Object o) {
-		return getCommandName().compareTo(((ICommand) o).getCommandName());
+		return getName().compareTo(((ICommand) o).getName());
 	}
 
 	@Override
-	public String getCommandName() {
+	public String getName() {
 		return "irc";
 	}
 
@@ -30,12 +30,12 @@ public class CommandIRC implements ICommand {
 	}
 
 	@Override
-	public List getCommandAliases() {
+	public List getAliases() {
 		return new ArrayList();
 	}
 
 	@Override
-	public void processCommand(ICommandSender sender, String[] args) throws CommandException {
+	public void execute(ICommandSender sender, String[] args) throws CommandException {
 		if(args.length == 0) {
 			IRCCommandHandler.sendUsageHelp(sender);
 			return;
@@ -44,7 +44,7 @@ public class CommandIRC implements ICommand {
 	}
 
 	@Override
-	public boolean canCommandSenderUseCommand(ICommandSender sender) {
+	public boolean canCommandSenderUse(ICommandSender sender) {
 		return true;
 	}
 

@@ -2,7 +2,6 @@ package net.blay09.mods.eirairc.client;
 
 import net.blay09.mods.eirairc.util.IRCFormatting;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.fml.client.config.GuiConfig;
 import net.minecraftforge.fml.client.config.GuiConfigEntries;
@@ -86,7 +85,7 @@ public class BetterColorEntry extends GuiConfigEntries.ListEntryBase {
         }
         GuiContainer.drawRect(owningEntryList.controlX, y + 3, owningEntryList.controlX + owningEntryList.controlWidth, y + 3 + slotHeight - 6, getIntColorFromIndex(0) | (128 << 24));
         String s = currentValue.toString() + "Example Text";
-        mc.fontRendererObj.func_175065_a(s, owningScreen.entryList.controlX + owningEntryList.controlWidth / 2 - mc.fontRendererObj.getStringWidth(s) / 2, y + slotHeight / 2 - mc.fontRendererObj.FONT_HEIGHT / 2, -1, true); // drawString
+        mc.fontRendererObj.drawString(s, owningScreen.entryList.controlX + owningEntryList.controlWidth / 2 - mc.fontRendererObj.getStringWidth(s) / 2, y + slotHeight / 2 - mc.fontRendererObj.FONT_HEIGHT / 2, -1, true);
     }
 
     @Override

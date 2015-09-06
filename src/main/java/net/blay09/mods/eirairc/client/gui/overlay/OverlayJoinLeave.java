@@ -72,7 +72,7 @@ public class OverlayJoinLeave extends Gui {
                 messages.remove(i);
             }
             String formattedText = message.chatComponent.getFormattedText();
-            fontRenderer.func_175065_a(formattedText, -fontRenderer.getStringWidth(formattedText) - 16, message.y, 16777215 | (alpha << 24), true);
+            fontRenderer.drawString(formattedText, -fontRenderer.getStringWidth(formattedText) - 16, message.y, 16777215 | (alpha << 24), true);
         }
         GL11.glDisable(GL11.GL_BLEND);
         GL11.glPopMatrix();

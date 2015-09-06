@@ -3,16 +3,11 @@
 package net.blay09.mods.eirairc.command.base;
 
 import net.blay09.mods.eirairc.util.ChatComponentBuilder;
-import net.blay09.mods.eirairc.util.I19n;
-import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IChatComponent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,11 +16,11 @@ public class CommandServIRC implements ICommand {
 
 	@Override
 	public int compareTo(Object o) {
-		return getCommandName().compareTo(((ICommand) o).getCommandName());
+		return getName().compareTo(((ICommand) o).getName());
 	}
 
 	@Override
-	public String getCommandName() {
+	public String getName() {
 		return "servirc";
 	}
 
@@ -35,14 +30,14 @@ public class CommandServIRC implements ICommand {
 	}
 
 	@Override
-	public List getCommandAliases() {
+	public List getAliases() {
 		List<String> aliases = new ArrayList<String>();
 		aliases.add("sirc");
 		return aliases;
 	}
 
 	@Override
-	public void processCommand(ICommandSender sender, String[] args) {
+	public void execute(ICommandSender sender, String[] args) {
 		if(args.length == 0) {
 			IRCCommandHandler.sendUsageHelp(sender);
 			return;
@@ -55,12 +50,12 @@ public class CommandServIRC implements ICommand {
 			IRCCommandHandler.processCommand(sender, args, true);
 		} catch (CommandException e) {
 			ChatComponentBuilder ccb = new ChatComponentBuilder();
-			ccb.color('c').lang("commands.generic.usage", ccb.push().lang(e.getMessage(), e.getErrorOjbects()).pop()).send(sender);
+			ccb.color('c').lang("commands.generic.usage", ccb.push().lang(e.getMessage(), e.getErrorObjects()).pop()).send(sender);
 		}
 	}
 
 	@Override
-	public boolean canCommandSenderUseCommand(ICommandSender sender) {
+	public boolean canCommandSenderUse(ICommandSender sender) {
 		return true;
 	}
 

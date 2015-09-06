@@ -1,6 +1,5 @@
 // Copyright (c) 2015, Christopher "BlayTheNinth" Baker
 
-
 package net.blay09.mods.eirairc.command;
 
 import net.blay09.mods.eirairc.api.SubCommand;
@@ -23,7 +22,7 @@ public final class SubCommandWrapper implements ICommand {
 	}
 
 	@Override
-	public String getCommandName() {
+	public String getName() {
 		return command.getCommandName();
 	}
 	
@@ -33,7 +32,7 @@ public final class SubCommandWrapper implements ICommand {
 	}
 	
 	@Override
-	public final List<String> getCommandAliases() {
+	public final List<String> getAliases() {
 		String[] aliases = command.getAliases();
 		if(aliases != null) {
 			List<String> list = new ArrayList<String>();
@@ -42,9 +41,9 @@ public final class SubCommandWrapper implements ICommand {
 		}
 		return new ArrayList<String>();
 	}
-	
+
 	@Override
-	public boolean canCommandSenderUseCommand(ICommandSender sender) {
+	public boolean canCommandSenderUse(ICommandSender sender) {
 		return command.canCommandSenderUseCommand(sender);
 	}
 
@@ -54,7 +53,7 @@ public final class SubCommandWrapper implements ICommand {
 	}
 
 	@Override
-	public void processCommand(ICommandSender sender, String[] args) throws CommandException {
+	public void execute(ICommandSender sender, String[] args) throws CommandException {
 		command.processCommand(sender, Utils.getSuggestedTarget(), args, Utils.isServerSide());
 	}
 
@@ -67,7 +66,7 @@ public final class SubCommandWrapper implements ICommand {
 
 	@Override
 	public int compareTo(Object o) {
-		return getCommandName().compareTo(((ICommand) o).getCommandName());
+		return getName().compareTo(((ICommand) o).getName());
 	}
 	
 }

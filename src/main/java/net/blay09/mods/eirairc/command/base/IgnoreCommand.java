@@ -20,11 +20,11 @@ public class IgnoreCommand implements ICommand {
 	
 	@Override
 	public int compareTo(Object o) {
-		return getCommandName().compareTo(((ICommand) o).getCommandName());
+		return getName().compareTo(((ICommand) o).getName());
 	}
 
 	@Override
-	public String getCommandName() {
+	public String getName() {
 		return name;
 	}
 
@@ -34,17 +34,17 @@ public class IgnoreCommand implements ICommand {
 	}
 
 	@Override
-	public List getCommandAliases() {
+	public List getAliases() {
 		return new ArrayList();
 	}
 
 	@Override
-	public void processCommand(ICommandSender sender, String[] args) {
+	public void execute(ICommandSender sender, String[] args) {
 		System.out.println("Ignoring command " + name + " with " + args.length + " arguments");
 	}
 
 	@Override
-	public boolean canCommandSenderUseCommand(ICommandSender sender) {
+	public boolean canCommandSenderUse(ICommandSender sender) {
 		return true;
 	}
 

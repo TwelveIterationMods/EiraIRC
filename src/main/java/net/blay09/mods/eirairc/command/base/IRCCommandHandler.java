@@ -11,7 +11,6 @@ import net.blay09.mods.eirairc.command.interop.InterOpCommandTopic;
 import net.blay09.mods.eirairc.command.interop.InterOpCommandUserModeBase;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.util.ChatComponentBuilder;
-import net.blay09.mods.eirairc.util.I19n;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.CommandHandler;
@@ -117,7 +116,7 @@ public class IRCCommandHandler {
             sendUsageHelp(sender);
             return false;
         }
-        if (!cmd.canCommandSenderUseCommand(sender)) {
+        if (!cmd.canCommandSenderUse(sender)) {
             ChatComponentBuilder.create().color('c').lang("commands.generic.permission").send(sender);
             return true;
         }
@@ -141,7 +140,7 @@ public class IRCCommandHandler {
                 return processCommand(sender, params, serverSide);
             } catch (WrongUsageException e) {
                 ChatComponentBuilder ccb = new ChatComponentBuilder();
-                ccb.color('c').lang("commands.generic.usage", ccb.push().lang(e.getMessage(), e.getErrorOjbects()).pop()).send(sender);
+                ccb.color('c').lang("commands.generic.usage", ccb.push().lang(e.getMessage(), e.getErrorObjects()).pop()).send(sender);
                 return true;
             } catch (CommandException e) {
                 sender.addChatMessage(new ChatComponentText(e.getMessage()));

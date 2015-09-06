@@ -51,7 +51,7 @@ public class IRCUserCommandSender implements ICommandSender {
 	}
 
 	@Override
-	public boolean canCommandSenderUseCommand(int level, String var2) {
+	public boolean canUseCommand(int permLevel, String commandName) {
 		return opEnabled;
 	}
 
@@ -81,6 +81,6 @@ public class IRCUserCommandSender implements ICommandSender {
 	}
 
 	@Override
-	public void func_174794_a(CommandResultStats.Type p_174794_1_, int p_174794_2_) {}
+	public void setCommandStat(CommandResultStats.Type type, int amount) {}
 
 }
