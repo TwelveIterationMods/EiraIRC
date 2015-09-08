@@ -221,25 +221,28 @@ public class ScreenshotManager {
 			String format;
 			EnumChatFormatting emoteColor;
 			IChatComponent chatComponent;
+			IChatComponent chatComponentIRC;
 			if (chatTarget instanceof IRCChannel) {
 				BotSettings botSettings = ConfigHelper.getBotSettings(chatTarget);
 				format = botSettings.getMessageFormat().ircScreenshotUpload.replace("{URL}", screenshot.getDirectURL() != null ? screenshot.getDirectURL() : screenshot.getUploadURL());
-				format = format.replace("{NICK} ", "");
 				emoteColor = ConfigHelper.getTheme(chatTarget).emoteTextColor.get();
 				chatComponent = MessageFormat.formatChatComponent(format, chatTarget, sender, "", MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
+				format = format.replace("{NICK} ", "");
+				chatComponentIRC = MessageFormat.formatChatComponent(format, chatTarget, sender, "", MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
 			} else if(chatTarget instanceof IRCUser) {
 				BotSettings botSettings = ConfigHelper.getBotSettings(chatTarget);
 				format = botSettings.getMessageFormat().ircScreenshotUpload.replace("{URL}", screenshot.getDirectURL() != null ? screenshot.getDirectURL() : screenshot.getUploadURL());
-				format = format.replace("{NICK} ", "");
 				emoteColor = ConfigHelper.getTheme(chatTarget).emoteTextColor.get();
 				chatComponent = MessageFormat.formatChatComponent(format, chatTarget, sender, "", MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
+				format = format.replace("{NICK} ", "");
+				chatComponentIRC = MessageFormat.formatChatComponent(format, chatTarget, sender, "", MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
 			} else {
 				return;
 			}
 			if (emoteColor != null) {
 				chatComponent.getChatStyle().setColor(emoteColor);
 			}
-			EiraIRCAPI.relayChat(sender, chatComponent.getUnformattedText(), true, false, null);
+			EiraIRCAPI.relayChat(sender, chatComponentIRC.getUnformattedText(), true, false, null);
 			Utils.addMessageToChat(chatComponent);
 		}
 	}

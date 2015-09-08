@@ -221,7 +221,7 @@ public class ClientProxy extends CommonProxy {
 
     @SubscribeEvent
     public void keyInput(GuiScreenEvent.KeyboardInputEvent.Pre event) {
-        if (ClientGlobalConfig.keyScreenshotShare.getKeyCode() != 0 && Keyboard.getEventKey() == ClientGlobalConfig.keyScreenshotShare.getKeyCode()) {
+        if (!(Minecraft.getMinecraft().currentScreen instanceof GuiControls) && ClientGlobalConfig.keyScreenshotShare.getKeyCode() != 0 && Keyboard.getEventKey() == ClientGlobalConfig.keyScreenshotShare.getKeyCode()) {
             Screenshot screenshot = ScreenshotManager.getInstance().takeScreenshot();
             if (screenshot != null) {
                 ScreenshotManager.getInstance().uploadScreenshot(screenshot, ScreenshotAction.UploadShare);
