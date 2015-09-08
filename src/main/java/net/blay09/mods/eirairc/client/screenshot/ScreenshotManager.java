@@ -173,7 +173,7 @@ public class ScreenshotManager {
 
 	public void deleteScreenshot(Screenshot screenshot, boolean keepUploaded) {
 		if(screenshot.getFile().delete()) {
-			System.out.println("Couldn't delete screenshot file " + screenshot.getFile());
+			logger.error("Couldn't delete screenshot file {}", screenshot.getFile());
 		}
 		if(!keepUploaded && screenshot.hasDeleteURL()) {
 			Utils.openWebpage(screenshot.getDeleteURL());

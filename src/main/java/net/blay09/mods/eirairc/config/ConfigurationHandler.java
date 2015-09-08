@@ -287,6 +287,7 @@ public class ConfigurationHandler {
         loadServers(configDir);
         loadTrustedServers(configDir);
 
+        AuthManager.load(new File("."));
         IgnoreList.load(configDir);
     }
 

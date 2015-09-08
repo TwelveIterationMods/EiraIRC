@@ -8,6 +8,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import net.blay09.mods.eirairc.api.upload.UploadHoster;
 import net.blay09.mods.eirairc.api.upload.UploadedFile;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -15,6 +17,8 @@ import java.net.URL;
 import java.util.Scanner;
 
 public class ImgurHoster implements UploadHoster {
+
+	private static final Logger logger = LogManager.getLogger();
 
 	private static final String API = "https://api.imgur.com/3/image.json";
 	private static final String IMAGE_BASE_URL = "https://imgur.com/";
@@ -74,9 +78,10 @@ public class ImgurHoster implements UploadHoster {
 			String imageId = data.get("id").getAsString();
 			String deleteHash = data.get("deletehash").getAsString();
 			String result = IMAGE_BASE_URL + imageId;
-			System.out.println("Uploaded image to imgur at " + result + " (delete hash: " + deleteHash + ")");
+			logger.info("Uploaded image to imgur at {} (delete hash: {})", result, deleteHash);
 			return result;
 		}
+		logger.error("Upload failed due to invalid response: {}", sb.toString());
 		return null;
 	}
 	
@@ -87,7 +92,7 @@ public class ImgurHoster implements UploadHoster {
 			sb.append(scanner.next());
 		}
 		scanner.close();
-		System.out.println("Failed to upload to imgur: " + sb.toString());
+		logger.error("Failed to upload to imgur: {}", sb.toString());
 	}
 
 	@Override

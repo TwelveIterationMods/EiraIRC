@@ -20,12 +20,16 @@ import net.blay09.mods.eirairc.handler.IRCEventHandler;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.net.*;
 import java.util.*;
 
 public class IRCConnectionImpl implements Runnable, IRCConnection {
+
+    private static final Logger logger = LogManager.getLogger();
 
     public static class ProxyAuthenticator extends Authenticator {
         private PasswordAuthentication auth;
@@ -69,6 +73,7 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
     private boolean isTwitch;
     private final List<String> joinAfterNickServ = new ArrayList<>();
     private boolean waitingOnNickServ;
+    private boolean disableLogger;
 
     private Socket socket;
     protected BufferedWriter writer;
@@ -223,7 +228,7 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
             String line;
             while ((line = reader.readLine()) != null && sender.isRunning()) {
                 if (SharedGlobalConfig.debugMode.get()) {
-                    System.out.println(line);
+                    logger.info("< {}", line);
                 }
                 if (!line.isEmpty()) {
                     IRCMessageImpl msg = parser.parse(line);
@@ -269,6 +274,9 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
         connected = false;
         try {
             if (writer != null) {
+                if(SharedGlobalConfig.debugMode.get()) {
+                    logger.info("> QUIT :{}", quitMessage);
+                }
                 writer.write("QUIT :" + quitMessage + "\r\n");
                 writer.flush();
             }
@@ -292,10 +300,18 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
         try {
             String serverPassword = AuthManager.getServerPassword(getIdentifier());
             if (serverPassword != null && !serverPassword.isEmpty()) {
+                if(SharedGlobalConfig.debugMode.get()) {
+                    logger.info("> PASS ***************");
+                }
                 writer.write("PASS " + serverPassword + "\r\n");
             }
+            String user = serverConfig.getBotSettings().ident.get() + " \"\" \"\" :" + serverConfig.getBotSettings().description.get();
+            if(SharedGlobalConfig.debugMode.get()) {
+                logger.info("> NICK {}", nick);
+                logger.info("> USER {}", user);
+            }
             writer.write("NICK " + nick + "\r\n");
-            writer.write("USER " + serverConfig.getBotSettings().ident.get() + " \"\" \"\" :" + serverConfig.getBotSettings().description.get() + "\r\n");
+            writer.write("USER " + user + "\r\n");
             writer.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -419,13 +435,13 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
             }
         } else if (numeric == IRCReplyCodes.RPL_MOTD || numeric <= 4 || numeric == 251 || numeric == 252 || numeric == 254 || numeric == 255 || numeric == 265 || numeric == 266 || numeric == 250 || numeric == 375) {
             if (SharedGlobalConfig.debugMode.get()) {
-                System.out.println("Ignoring message code: " + msg.getCommand() + " (" + msg.argCount() + " arguments)");
+                logger.info("Ignoring message code: {} ({} arguments)", msg.getCommand(), msg.argCount());
             }
         } else if (IRCReplyCodes.isErrorCode(numeric)) {
             IRCEventHandler.fireIRCErrorEvent(this, msg, msg.getNumericCommand(), msg.args());
         } else {
             if (SharedGlobalConfig.debugMode.get()) {
-                System.out.println("Unhandled message code: " + msg.getCommand() + " (" + msg.argCount() + " arguments)");
+                logger.warn("Unhandled message code: {} ({} arguments)", msg.getCommand(), msg.argCount());
             }
         }
         return true;
@@ -594,6 +610,9 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
 
     @Override
     public boolean irc(String message) {
+        if(SharedGlobalConfig.debugMode.get() && !disableLogger) {
+            logger.info("> {}", message);
+        }
         return sender.addToSendQueue(message);
     }
 
@@ -699,7 +718,13 @@ public class IRCConnectionImpl implements Runnable, IRCConnection {
         AuthManager.NickServData nickServData = AuthManager.getNickServData(getIdentifier());
         if (nickServData != null) {
             waitingOnNickServ = true;
-            irc(settings.getIdentifyCommand(nickServData.username, nickServData.password));
+            String command = settings.getIdentifyCommand(nickServData.username, nickServData.password);
+            if(SharedGlobalConfig.debugMode.get()) {
+                logger.info(command.replace(nickServData.password, "***************"));
+            }
+            disableLogger = true;
+            irc(command);
+            disableLogger = false;
         }
     }
 

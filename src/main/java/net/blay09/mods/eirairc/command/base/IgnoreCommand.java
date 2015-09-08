@@ -39,9 +39,7 @@ public class IgnoreCommand implements ICommand {
 	}
 
 	@Override
-	public void execute(ICommandSender sender, String[] args) {
-		System.out.println("Ignoring command " + name + " with " + args.length + " arguments");
-	}
+	public void execute(ICommandSender sender, String[] args) {}
 
 	@Override
 	public boolean canCommandSenderUse(ICommandSender sender) {
