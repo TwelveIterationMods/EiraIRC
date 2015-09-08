@@ -26,6 +26,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 import net.minecraftforge.common.MinecraftForge;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
@@ -42,6 +44,8 @@ import java.util.Date;
 import java.util.List;
 
 public class ScreenshotManager {
+
+	private static final Logger logger = LogManager.getLogger();
 
 	private static ScreenshotManager instance;
 
@@ -176,7 +180,7 @@ public class ScreenshotManager {
 
 	public void deleteScreenshot(Screenshot screenshot, boolean keepUploaded) {
 		if(!screenshot.getFile().delete()) {
-			System.out.println("Couldn't delete screenshot file " + screenshot.getFile());
+			logger.error("Couldn't delete screenshot file {}", screenshot.getFile());
 		}
 		if(!keepUploaded && screenshot.hasDeleteURL()) {
 			Utils.openWebpage(screenshot.getDeleteURL());

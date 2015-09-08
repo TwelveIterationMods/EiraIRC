@@ -183,7 +183,7 @@ public class IRCEventHandler {
 				}
 				IChatComponent chatComponent = MessageFormat.formatChatComponent(format, connection, null, sender, message, MessageFormat.Target.Minecraft, (isEmote ? MessageFormat.Mode.Emote : MessageFormat.Mode.Message));
 				if (event.isNotice && botSettings.hideNotices.get()) {
-					System.out.println(chatComponent.getUnformattedText());
+					logger.info(chatComponent.getUnformattedText());
 					return;
 				}
 				String notifyMsg = chatComponent.getUnformattedText();
@@ -279,7 +279,7 @@ public class IRCEventHandler {
 				}
 				IChatComponent chatComponent = MessageFormat.formatChatComponent(format, connection, channel, sender, message, MessageFormat.Target.Minecraft, event.isEmote ? MessageFormat.Mode.Emote : MessageFormat.Mode.Message);
 				if (isNotice && botSettings.hideNotices.get()) {
-					System.out.println(chatComponent.getUnformattedText());
+					logger.info(chatComponent.getUnformattedText());
 					return;
 				}
 				ThemeSettings theme = ConfigHelper.getTheme(event.channel);
@@ -512,7 +512,7 @@ public class IRCEventHandler {
 						ChatComponentBuilder.create().color('c').lang("eirairc:error.generic", args[1]);
 						break;
 					default:
-						System.out.println("Unhandled error code: " + numeric + " (" + args.length + " arguments)");
+						logger.warn("Unhandled error code: {} ({} arguments)", numeric, args.length);
 						break;
 				}
 				break;
@@ -555,7 +555,7 @@ public class IRCEventHandler {
 				}
 				IChatComponent chatComponent = MessageFormat.formatChatComponent(format, event.connection, event.channel, event.sender, message, MessageFormat.Target.Minecraft, MessageFormat.Mode.Message);
 				if (event.isNotice && botSettings.hideNotices.get()) {
-					System.out.println(chatComponent.getUnformattedText());
+					logger.info(chatComponent.getUnformattedText());
 					return;
 				}
 				ThemeSettings theme = ConfigHelper.getTheme(event.channel);
@@ -615,7 +615,7 @@ public class IRCEventHandler {
 				}
 				IChatComponent chatComponent = MessageFormat.formatChatComponent(format, event.connection, null, event.sender, message, MessageFormat.Target.Minecraft, MessageFormat.Mode.Message);
 				if (event.isNotice && botSettings.hideNotices.get()) {
-					System.out.println(chatComponent.getUnformattedText());
+					logger.info(chatComponent.getUnformattedText());
 					return;
 				}
 				String notifyMsg = chatComponent.getUnformattedText();
