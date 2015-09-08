@@ -25,6 +25,8 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
@@ -40,6 +42,8 @@ import java.util.*;
 @SuppressWarnings("ALL")
 public class ScreenshotManager {
 
+	private static final Logger logger = LogManager.getLogger();
+	
 	private static ScreenshotManager instance;
 
 	public static void create() {
