@@ -50,7 +50,7 @@ public class CommandQuote implements SubCommand {
 		} else {
 			connection = context.getConnection();
 		}
-		String msg = StringUtils.join(ArrayUtils.subarray(args, msgIdx, args.length), " ");
+		String msg = StringUtils.join(args, " ", msgIdx, args.length);
 		connection.irc(msg);
 		return true;
 	}

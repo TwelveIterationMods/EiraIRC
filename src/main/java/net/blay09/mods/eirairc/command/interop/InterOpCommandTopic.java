@@ -45,7 +45,7 @@ public class InterOpCommandTopic implements SubCommand {
 			Utils.sendLocalizedMessage(sender, "commands.interop.disabled");
 			return true;
 		}
-		String topic = StringUtils.join(ArrayUtils.subarray(args, 1, args.length), " ").trim();
+		String topic = StringUtils.join(args, " ", 1, args.length).trim();
 		if(topic.isEmpty()) {
 			throw new WrongUsageException(getCommandUsage(sender));
 		}

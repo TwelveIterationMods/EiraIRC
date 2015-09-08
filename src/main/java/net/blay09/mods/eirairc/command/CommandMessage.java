@@ -56,7 +56,7 @@ public class CommandMessage implements SubCommand {
 				return true;
 			}
 		}
-		String message = StringUtils.join(ArrayUtils.subarray(args, 1, args.length), " ").trim();
+		String message = StringUtils.join(args, " ", 1, args.length).trim();
 		if(message.isEmpty()) {
 			throw new WrongUsageException(getCommandUsage(sender));
 		}

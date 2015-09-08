@@ -56,7 +56,7 @@ public class CommandConfig implements SubCommand {
 		}
 		String config = args[1];
 		if(args.length > 2) {
-			ConfigurationHandler.handleConfigCommand(sender, target, config, StringUtils.join(ArrayUtils.subarray(args, 2, args.length), " "));
+			ConfigurationHandler.handleConfigCommand(sender, target, config, StringUtils.join(args, " ", 2, args.length));
 		} else {
 			ConfigurationHandler.handleConfigCommand(sender, target, config);
 		}

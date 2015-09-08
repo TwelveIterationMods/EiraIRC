@@ -34,7 +34,7 @@ public class BotCommandOp implements IBotCommand {
 		String message = "";
 		if(args.length >= 1) {
 			if(commandSettings.allowArgs()) {
-				message = StringUtils.join(args, " ").trim();
+				message = StringUtils.join(args, ' ').trim();
 			} else {
 				message = args[0];
 			}
