@@ -12,8 +12,12 @@ public interface IRCChannel extends IRCContext {
 	String getTopic();
 
 	/**
+	 * @return true if this channel has a topic specified
+	 */
+	boolean hasTopic();
+
+	/**
 	 * @return a list of IRCUsers within this channel
 	 */
 	Collection<IRCUser> getUserList();
-
 }

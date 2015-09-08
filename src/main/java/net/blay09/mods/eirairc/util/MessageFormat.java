@@ -219,14 +219,18 @@ public class MessageFormat {
 							}
 							break;
 						case "MESSAGE":
-							BotSettings botSettings = ConfigHelper.getBotSettings(context);
-							if (target == Target.Minecraft) {
-								message = IRCFormatting.toMC(message, !botSettings.convertColors.get());
-								message = filterAllowedCharacters(message);
-							} else if (target == Target.IRC) {
-								message = IRCFormatting.toIRC(message, !botSettings.convertColors.get());
+							if(message != null) {
+								BotSettings botSettings = ConfigHelper.getBotSettings(context);
+								if (target == Target.Minecraft) {
+									message = IRCFormatting.toMC(message, !botSettings.convertColors.get());
+									message = filterAllowedCharacters(message);
+								} else if (target == Target.IRC) {
+									message = IRCFormatting.toIRC(message, !botSettings.convertColors.get());
+								}
+								component = createChatComponentForMessage(message);
+							} else {
+								component = new ChatComponentText("");
 							}
-							component = createChatComponentForMessage(message);
 							break;
 						default:
 							validToken = false;
@@ -330,14 +334,18 @@ public class MessageFormat {
 							}
 							break;
 						case "MESSAGE":
-							BotSettings botSettings = ConfigHelper.getBotSettings(targetContext);
-							if (target == Target.Minecraft) {
-								message = IRCFormatting.toMC(message, !botSettings.convertColors.get());
-								message = filterAllowedCharacters(message);
-							} else if (target == Target.IRC) {
-								message = IRCFormatting.toIRC(message, !botSettings.convertColors.get());
+							if(message != null) {
+								BotSettings botSettings = ConfigHelper.getBotSettings(targetContext);
+								if (target == Target.Minecraft) {
+									message = IRCFormatting.toMC(message, !botSettings.convertColors.get());
+									message = filterAllowedCharacters(message);
+								} else if (target == Target.IRC) {
+									message = IRCFormatting.toIRC(message, !botSettings.convertColors.get());
+								}
+								component = createChatComponentForMessage(message);
+							} else {
+								component = new ChatComponentText("");
 							}
-							component = createChatComponentForMessage(message);
 							break;
 						default:
 							validToken = false;

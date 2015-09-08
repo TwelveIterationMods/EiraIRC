@@ -58,6 +58,7 @@ public class IRCChannelImpl implements IRCChannel {
 		return ContextType.IRCChannel;
 	}
 
+	@Override
 	public boolean hasTopic() {
 		return topic != null;
 	}
@@ -66,6 +67,7 @@ public class IRCChannelImpl implements IRCChannel {
 		this.topic = topic;
 	}
 
+	@Override
 	public String getTopic() {
 		return topic;
 	}
