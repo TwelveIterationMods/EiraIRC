@@ -5,6 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.IChatComponent;
 import org.lwjgl.opengl.GL11;
 
@@ -62,11 +63,10 @@ public class OverlayJoinLeave extends Gui {
         final int height = 64;
         int guiTop = resolution.getScaledHeight() - height;
         int guiLeft = resolution.getScaledWidth();
-
-        GL11.glPushMatrix();
-        GL11.glTranslatef(guiLeft, guiTop, 0f);
-        GL11.glScalef(scale.get(), scale.get(), 1f);
-        GL11.glEnable(GL11.GL_BLEND);
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(guiLeft, guiTop, 0f);
+        GlStateManager.scale(scale.get(), scale.get(), 1f);
+        GlStateManager.enableBlend();
         for(int i = messages.size() - 1; i >= 0; i--) {
             JoinLeaveMessage message = messages.get(i);
             message.timeLeft -= renderTickTime;
@@ -80,8 +80,8 @@ public class OverlayJoinLeave extends Gui {
             String formattedText = message.chatComponent.getFormattedText();
             fontRenderer.drawString(formattedText, -fontRenderer.getStringWidth(formattedText) - 16, message.y, 16777215 | (alpha << 24), true);
         }
-        GL11.glDisable(GL11.GL_BLEND);
-        GL11.glPopMatrix();
+        GlStateManager.disableBlend();
+        GlStateManager.popMatrix();
     }
 
 }

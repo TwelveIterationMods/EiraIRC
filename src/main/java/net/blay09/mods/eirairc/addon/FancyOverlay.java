@@ -8,6 +8,7 @@ import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.MessageFormat;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ChatComponentTranslation;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.Event;
@@ -109,8 +110,10 @@ public class FancyOverlay {
     }
 
     @SubscribeEvent
-    public void renderTick(TickEvent.RenderTickEvent event) {
-        overlay.updateAndRender(event.renderTickTime);
+    public void renderOverlay(RenderGameOverlayEvent.Post event) {
+        if(event.type == RenderGameOverlayEvent.ElementType.CHAT) {
+            overlay.updateAndRender(event.partialTicks);
+        }
     }
 
 }
