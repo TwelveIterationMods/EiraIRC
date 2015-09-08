@@ -95,7 +95,7 @@ public class FancyOverlay {
     @SubscribeEvent
     public void onDisconnectedEvent(IRCDisconnectEvent event) {
         if(enabled.get()) {
-            overlay.addMessage(new ChatComponentTranslation("eirairc:general.disonnected", event.connection.getHost()));
+            overlay.addMessage(new ChatComponentTranslation("eirairc:general.disconnected", event.connection.getHost()));
             event.setResult(Event.Result.DENY);
         }
     }
