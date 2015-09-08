@@ -140,7 +140,7 @@ public class ConfigManager implements IConfigManager {
                         property.set(value);
                     }
                 } catch (IllegalArgumentException e) {
-                    logger.error("Invalid config value {} for option {} - valid values are: {}", stringValue.toLowerCase(), property.getName(), StringUtils.join(validValues, ", "));
+                    logger.error("Invalid config value {} for option {} - valid values are: {}", stringValue.toLowerCase(), property.getName(), StringUtils.join(validValues, ", ", 0, validValues.length)); // StringUtils.join(Serializable...) is a horrible thing to do, Apache
                 }
             }
         }

@@ -43,7 +43,7 @@ import java.util.*;
 public class ScreenshotManager {
 
 	private static final Logger logger = LogManager.getLogger();
-	
+
 	private static ScreenshotManager instance;
 
 	public static void create() {

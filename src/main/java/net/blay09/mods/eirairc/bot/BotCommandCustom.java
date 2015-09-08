@@ -41,7 +41,7 @@ public class BotCommandCustom implements IBotCommand {
 		} else {
 			String message = command;
 			if (commandSettings.allowArgs()) {
-				message += " " + StringUtils.join(args, " ", 0).trim();
+				message += " " + StringUtils.join(args, " ", 0, args.length).trim();
 			}
 			MinecraftServer.getServer().getCommandManager().executeCommand(new IRCUserCommandSender(channel, user, commandSettings.broadcastsResult(), runAsOp, outputFilter), message);
 		}

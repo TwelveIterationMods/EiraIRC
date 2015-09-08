@@ -50,7 +50,7 @@ public class BotCommandMessage implements IBotCommand {
 				return;
 			}
 		}
-		String message = StringUtils.join(args, " ", 1);
+		String message = StringUtils.join(args, " ", 1, args.length);
 		if(botSettings.filterLinks.get()) {
 			message = MessageFormat.filterLinks(message);
 		}

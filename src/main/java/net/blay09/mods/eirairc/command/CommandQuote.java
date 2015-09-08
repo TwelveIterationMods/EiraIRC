@@ -49,7 +49,7 @@ public class CommandQuote implements SubCommand {
 		} else {
 			connection = context.getConnection();
 		}
-		String msg = StringUtils.join(args, " ", msgIdx);
+		String msg = StringUtils.join(args, " ", msgIdx, args.length);
 		connection.irc(msg);
 		return true;
 	}
