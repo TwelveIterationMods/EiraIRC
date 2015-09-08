@@ -36,7 +36,7 @@ public class ConfigManager implements IConfigManager {
         if(colorGuiClass == null) {
             try {
                 colorGuiClass = Class.forName("net.blay09.mods.eirairc.client.BetterColorEntry");
-            } catch (ClassNotFoundException e) {}
+            } catch (ClassNotFoundException ignored) {}
         }
     }
 
@@ -303,6 +303,7 @@ public class ConfigManager implements IConfigManager {
                 } else if(type.getClass() == StringList.class) {
                     dummyProperty.set(((StringList) property.get()).getAsArray());
                 } else if(type.getClass() == EnumChatFormatting.class) {
+                    dummyProperty.setConfigEntryClass(colorGuiClass);
                     dummyProperty.set(IRCFormatting.getNameFromColor((EnumChatFormatting) property.get()));
                 } else if(type.getClass() == Enum.class) {
                     dummyProperty.set(((Enum) property.get()).name());

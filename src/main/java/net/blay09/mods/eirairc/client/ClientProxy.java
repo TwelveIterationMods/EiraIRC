@@ -260,7 +260,7 @@ public class ClientProxy extends CommonProxy {
 		}
 
 		// Temporary Workaround for Screenshot Share button since 1.7.10 doesn't have a KeyInput event for when GUI screens are visible
-		if(ClientGlobalConfig.keyScreenshotShare.getKeyCode() > 0 && Keyboard.isKeyDown(ClientGlobalConfig.keyScreenshotShare.getKeyCode())) {
+		if(!(currentScreen instanceof GuiControls) && ClientGlobalConfig.keyScreenshotShare.getKeyCode() > 0 && Keyboard.isKeyDown(ClientGlobalConfig.keyScreenshotShare.getKeyCode())) {
 			if(!wasScreenshotShareDown) {
 				Screenshot screenshot = ScreenshotManager.getInstance().takeScreenshot();
 				if(screenshot != null) {
