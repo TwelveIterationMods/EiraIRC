@@ -110,7 +110,7 @@ public class FancyOverlay {
     }
 
     @SubscribeEvent
-    public void renderOverlay(RenderGameOverlayEvent event) {
+    public void renderOverlay(RenderGameOverlayEvent.Post event) {
         if(event.type == RenderGameOverlayEvent.ElementType.CHAT) {
             overlay.updateAndRender(event.partialTicks);
         }
