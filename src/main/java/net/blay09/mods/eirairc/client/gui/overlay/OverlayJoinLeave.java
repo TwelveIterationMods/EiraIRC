@@ -66,7 +66,10 @@ public class OverlayJoinLeave extends Gui {
         GL11.glPushMatrix();
         GL11.glTranslatef(guiLeft, guiTop, 0f);
         GL11.glScalef(scale.get(), scale.get(), 1f);
-        GL11.glEnable(GL11.GL_BLEND);
+        boolean wasBlend = GL11.glIsEnabled(GL11.GL_BLEND);
+        if(!wasBlend) {
+            GL11.glEnable(GL11.GL_BLEND);
+        }
         for(int i = messages.size() - 1; i >= 0; i--) {
             JoinLeaveMessage message = messages.get(i);
             message.timeLeft -= renderTickTime;
@@ -80,7 +83,9 @@ public class OverlayJoinLeave extends Gui {
             String formattedText = message.chatComponent.getFormattedText();
             fontRenderer.drawStringWithShadow(formattedText, -fontRenderer.getStringWidth(formattedText) - 16, message.y, 16777215 | (alpha << 24));
         }
-        GL11.glDisable(GL11.GL_BLEND);
+        if(!wasBlend) {
+            GL11.glDisable(GL11.GL_BLEND);
+        }
         GL11.glPopMatrix();
     }
 
