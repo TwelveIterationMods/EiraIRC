@@ -96,7 +96,7 @@ public class Utils {
             return;
         }
         ChatComponentBuilder ccb = new ChatComponentBuilder(3);
-        ccb.lang("eirairc:commands.who.usersOnline", ccb.text("[" + connection.getHost() + "] ").color('b').text(userList.size()).pop(), ccb.color('e').text(channel.getName()).color('f').text(":").pop()).send(player);
+        ccb.lang("eirairc:commands.who.usersOnline", ccb.push().text("[" + connection.getHost() + "] ").color('b').text(userList.size()).pop(), ccb.color('e').text(channel.getName()).color('f').text(":").pop()).send(player);
         String s = " * ";
         for (IRCUser user : userList) {
             if (s.length() + user.getName().length() > Globals.CHAT_MAX_LENGTH) {
