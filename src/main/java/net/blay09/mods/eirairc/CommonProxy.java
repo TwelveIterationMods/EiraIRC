@@ -48,6 +48,7 @@ public class CommonProxy {
 
 	public void loadLegacyConfig(File configDir, Configuration legacyConfig) {
 		SharedGlobalConfig.loadLegacy(configDir, legacyConfig);
+		LocalConfig.load(configDir, false);
 	}
 
 	public boolean handleConfigCommand(ICommandSender sender, String key, String value) {
