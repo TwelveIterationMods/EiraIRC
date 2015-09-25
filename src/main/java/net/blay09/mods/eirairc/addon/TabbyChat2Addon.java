@@ -61,7 +61,7 @@ public class TabbyChat2Addon {
         if(event.sender == null) {
             return;
         }
-        Channel channel = TabbyAPI.getAPI().getChat().getChannel(event.sender.getName());
+        Channel channel = TabbyAPI.getAPI().getChat().getChannel(event.sender.getName(), true);
         channel.setPrefixHidden(true);
         channel.setPrefix("/irc msg " + event.sender.getIdentifier() + " ");
     }
