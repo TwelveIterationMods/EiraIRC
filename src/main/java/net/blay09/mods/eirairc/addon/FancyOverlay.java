@@ -3,11 +3,9 @@ package net.blay09.mods.eirairc.addon;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.Event;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
 import net.blay09.mods.eirairc.api.config.IConfigProperty;
 import net.blay09.mods.eirairc.api.event.*;
 import net.blay09.mods.eirairc.client.gui.overlay.OverlayJoinLeave;
-import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.MessageFormat;
 import net.minecraft.client.Minecraft;
@@ -31,10 +29,10 @@ public class FancyOverlay {
 
     @SubscribeEvent
     public void onInitConfig(InitConfigEvent.ClientGlobalSettings event) {
-        enabled = event.config.registerProperty("eirairc", "enableFancyOverlay", "eirairc:config.property.enableFancyOverlay", true);
-        visibleTime = event.config.registerProperty("eirairc", "fancyOverlayLifetime", "eirairc:config.property.fancyOverlayLifetime", 240);
+        enabled = event.config.registerProperty("eirairc", "enableFancyOverlay", "eirairc:config.property.eirairc_enableFancyOverlay", true);
+        visibleTime = event.config.registerProperty("eirairc", "fancyOverlayLifetime", "eirairc:config.property.eirairc_fancyOverlayLifetime", 240);
         visibleTime.setMinMax(120, 2400);
-        scale = event.config.registerProperty("eirairc", "fancyOverlayScale", "eirairc:config.property.fancyOverlayScale", 0.5f);
+        scale = event.config.registerProperty("eirairc", "fancyOverlayScale", "eirairc:config.property.eirairc_fancyOverlayScale", 0.5f);
         scale.setMinMax(0.5f, 1f);
         overlay.setVisibleTime(visibleTime);
         overlay.setScale(scale);
@@ -42,7 +40,10 @@ public class FancyOverlay {
 
     @SubscribeEvent
     public void onIRCUserJoin(IRCUserJoinEvent event) {
-        if(enabled.get() && SharedGlobalConfig.botSettings.relayIRCJoinLeave.get()) {
+        if(enabled.get()) {
+            if (ConfigHelper.getGeneralSettings(event.channel).muted.get() || !ConfigHelper.getBotSettings(event.channel).relayIRCJoinLeave.get()) {
+                return;
+            }
             String format = ConfigHelper.getBotSettings(event.channel).getMessageFormat().mcUserJoin;
             overlay.addMessage(MessageFormat.formatChatComponent(format, event.connection, event.channel, event.user, "", MessageFormat.Target.Minecraft, MessageFormat.Mode.Emote));
             event.setResult(Event.Result.DENY);
@@ -51,7 +52,10 @@ public class FancyOverlay {
 
     @SubscribeEvent
     public void onIRCNickChange(IRCUserNickChangeEvent event) {
-        if(enabled.get() && SharedGlobalConfig.botSettings.relayNickChanges.get()) {
+        if(enabled.get()) {
+            if (ConfigHelper.getGeneralSettings(event.user).muted.get() || !ConfigHelper.getBotSettings(event.user).relayNickChanges.get()) {
+                return;
+            }
             String format = ConfigHelper.getBotSettings(event.user).getMessageFormat().mcUserNickChange;
             format = format.replace("{OLDNICK}", event.oldNick);
             overlay.addMessage(MessageFormat.formatChatComponent(format, event.connection, null, event.user, "", MessageFormat.Target.Minecraft, MessageFormat.Mode.Emote));
@@ -61,7 +65,10 @@ public class FancyOverlay {
 
     @SubscribeEvent
     public void onIRCUserLeave(IRCUserLeaveEvent event) {
-        if(enabled.get() && SharedGlobalConfig.botSettings.relayIRCJoinLeave.get()) {
+        if(enabled.get()) {
+            if (ConfigHelper.getGeneralSettings(event.channel).muted.get() || !ConfigHelper.getBotSettings(event.channel).relayIRCJoinLeave.get()) {
+                return;
+            }
             String format = ConfigHelper.getBotSettings(event.channel).getMessageFormat().mcUserLeave;
             overlay.addMessage(MessageFormat.formatChatComponent(format, event.connection, event.channel, event.user, "", MessageFormat.Target.Minecraft, MessageFormat.Mode.Emote));
             event.setResult(Event.Result.DENY);
@@ -102,7 +109,10 @@ public class FancyOverlay {
 
     @SubscribeEvent
     public void onIRCUserQuit(IRCUserQuitEvent event) {
-        if(enabled.get() && SharedGlobalConfig.botSettings.relayIRCJoinLeave.get()) {
+        if(enabled.get()) {
+            if (ConfigHelper.getGeneralSettings(event.user).muted.get() || !ConfigHelper.getBotSettings(event.user).relayIRCJoinLeave.get()) {
+                return;
+            }
             String format = ConfigHelper.getBotSettings(event.user).getMessageFormat().mcUserQuit;
             overlay.addMessage(MessageFormat.formatChatComponent(format, event.connection, null, event.user, "", MessageFormat.Target.Minecraft, MessageFormat.Mode.Emote));
             event.setResult(Event.Result.DENY);
