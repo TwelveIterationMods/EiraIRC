@@ -26,16 +26,6 @@ public class TabbyChat2Addon {
 
         EiraIRCAPI.setChatHandler(new IChatHandler() {
             @Override
-            public void addChatMessage(IChatComponent component) {
-                addChatMessage(component, null);
-            }
-
-            @Override
-            public void addChatMessage(ICommandSender receiver, IChatComponent component) {
-                addChatMessage(component, null);
-            }
-
-            @Override
             public void addChatMessage(ICommandSender receiver, IChatComponent component, IRCContext source) {
                 addChatMessage(component, source);
             }
