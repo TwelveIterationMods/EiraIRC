@@ -1,6 +1,7 @@
 package net.blay09.mods.eirairc.util;
 
 import net.blay09.mods.eirairc.api.EiraIRCAPI;
+import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatStyle;
@@ -41,14 +42,22 @@ public class ChatComponentBuilder {
     }
 
     public void send() {
-        send(null);
+        send(null, null);
+    }
+
+    public void send(IRCContext source) {
+        send(null, source);
     }
 
     public void send(ICommandSender sender) {
+        send(sender, null);
+    }
+
+    public void send(ICommandSender sender, IRCContext source) {
         if(sender != null) {
-            EiraIRCAPI.getChatHandler().addChatMessage(sender, toChatComponent());
+            EiraIRCAPI.getChatHandler().addChatMessage(sender, toChatComponent(), source);
         } else {
-            EiraIRCAPI.getChatHandler().addChatMessage(toChatComponent());
+            EiraIRCAPI.getChatHandler().addChatMessage(toChatComponent(), source);
         }
         buffer[index]= new StringBuilder();
     }

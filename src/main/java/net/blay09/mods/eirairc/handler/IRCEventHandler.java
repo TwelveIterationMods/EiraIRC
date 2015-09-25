@@ -43,12 +43,12 @@ public class IRCEventHandler {
                 if (SharedGlobalConfig.botSettings.relayNickChanges.get()) {
                     String format = ConfigHelper.getBotSettings(user).getMessageFormat().mcUserNickChange;
                     format = format.replace("{OLDNICK}", oldNick);
-                    EiraIRCAPI.getChatHandler().addChatMessage(MessageFormat.formatChatComponent(format, connection, null, user, "", MessageFormat.Target.Minecraft, MessageFormat.Mode.Emote));
+                    EiraIRCAPI.getChatHandler().addChatMessage(MessageFormat.formatChatComponent(format, connection, null, user, "", MessageFormat.Target.Minecraft, MessageFormat.Mode.Emote), connection);
                 }
                 break;
             case ALLOW:
                 if (event.result != null) {
-                    EiraIRCAPI.getChatHandler().addChatMessage(event.result);
+                    EiraIRCAPI.getChatHandler().addChatMessage(event.result, connection);
                 }
                 break;
         }
@@ -68,12 +68,12 @@ public class IRCEventHandler {
                 }
                 if (botSettings.relayIRCJoinLeave.get()) {
                     String format = ConfigHelper.getBotSettings(channel).getMessageFormat().mcUserJoin;
-                    EiraIRCAPI.getChatHandler().addChatMessage(MessageFormat.formatChatComponent(format, connection, channel, user, "", MessageFormat.Target.Minecraft, MessageFormat.Mode.Emote));
+                    EiraIRCAPI.getChatHandler().addChatMessage(MessageFormat.formatChatComponent(format, connection, channel, user, "", MessageFormat.Target.Minecraft, MessageFormat.Mode.Emote), channel);
                 }
                 break;
             case ALLOW:
                 if (event.result != null) {
-                    EiraIRCAPI.getChatHandler().addChatMessage(event.result);
+                    EiraIRCAPI.getChatHandler().addChatMessage(event.result, channel);
                 }
                 break;
         }
@@ -89,12 +89,12 @@ public class IRCEventHandler {
                 }
                 if (ConfigHelper.getBotSettings(channel).relayIRCJoinLeave.get()) {
                     String format = ConfigHelper.getBotSettings(channel).getMessageFormat().mcUserLeave;
-                    EiraIRCAPI.getChatHandler().addChatMessage(MessageFormat.formatChatComponent(format, connection, channel, user, "", MessageFormat.Target.Minecraft, MessageFormat.Mode.Emote));
+                    EiraIRCAPI.getChatHandler().addChatMessage(MessageFormat.formatChatComponent(format, connection, channel, user, "", MessageFormat.Target.Minecraft, MessageFormat.Mode.Emote), channel);
                 }
                 break;
             case ALLOW:
                 if (event.result != null) {
-                    EiraIRCAPI.getChatHandler().addChatMessage(event.result);
+                    EiraIRCAPI.getChatHandler().addChatMessage(event.result, channel);
                 }
                 break;
         }
@@ -114,12 +114,12 @@ public class IRCEventHandler {
                 }
                 if (SharedGlobalConfig.botSettings.relayIRCJoinLeave.get()) {
                     String format = ConfigHelper.getBotSettings(user).getMessageFormat().mcUserQuit;
-                    EiraIRCAPI.getChatHandler().addChatMessage(MessageFormat.formatChatComponent(format, connection, null, user, quitMessage, MessageFormat.Target.Minecraft, MessageFormat.Mode.Emote));
+                    EiraIRCAPI.getChatHandler().addChatMessage(MessageFormat.formatChatComponent(format, connection, null, user, quitMessage, MessageFormat.Target.Minecraft, MessageFormat.Mode.Emote), connection);
                 }
                 break;
             case ALLOW:
                 if (event.result != null) {
-                    EiraIRCAPI.getChatHandler().addChatMessage(event.result);
+                    EiraIRCAPI.getChatHandler().addChatMessage(event.result, connection);
                 }
                 break;
         }
@@ -195,11 +195,11 @@ public class IRCEventHandler {
                 } else if (isNotice && noticeColor != null) {
                     chatComponent.getChatStyle().setColor(noticeColor);
                 }
-                EiraIRCAPI.getChatHandler().addChatMessage(chatComponent);
+                EiraIRCAPI.getChatHandler().addChatMessage(chatComponent, sender);
                 break;
             case ALLOW:
                 if (event.result != null) {
-                    EiraIRCAPI.getChatHandler().addChatMessage(event.result);
+                    EiraIRCAPI.getChatHandler().addChatMessage(event.result, sender);
                 }
                 break;
         }
@@ -283,11 +283,11 @@ public class IRCEventHandler {
                 } else if (isNotice && noticeColor != null) {
                     chatComponent.getChatStyle().setColor(noticeColor);
                 }
-                EiraIRCAPI.getChatHandler().addChatMessage(chatComponent);
+                EiraIRCAPI.getChatHandler().addChatMessage(chatComponent, channel);
                 break;
             case ALLOW:
                 if (event.result != null) {
-                    EiraIRCAPI.getChatHandler().addChatMessage(event.result);
+                    EiraIRCAPI.getChatHandler().addChatMessage(event.result, channel);
                 }
                 break;
         }
@@ -304,15 +304,15 @@ public class IRCEventHandler {
                 if(channel.hasTopic()) {
                     if (user == null) {
                         IChatComponent chatComponent = MessageFormat.formatChatComponent(ConfigHelper.getBotSettings(channel).getMessageFormat().mcTopic, connection, channel, null, channel.getTopic(), MessageFormat.Target.Minecraft, MessageFormat.Mode.Message);
-                        EiraIRCAPI.getChatHandler().addChatMessage(chatComponent);
+                        EiraIRCAPI.getChatHandler().addChatMessage(chatComponent, channel);
                     } else {
-                        ChatComponentBuilder.create().color('e').lang("eirairc:general.topicChange", user.getName(), channel.getName()).color('f').text(channel.getTopic()).send();
+                        ChatComponentBuilder.create().color('e').lang("eirairc:general.topicChange", user.getName(), channel.getName()).color('f').text(channel.getTopic()).send(channel);
                     }
                 }
                 break;
             case ALLOW:
                 if (event.result != null) {
-                    EiraIRCAPI.getChatHandler().addChatMessage(event.result);
+                    EiraIRCAPI.getChatHandler().addChatMessage(event.result, channel);
                 }
                 break;
         }
@@ -349,11 +349,11 @@ public class IRCEventHandler {
         MinecraftForge.EVENT_BUS.post(event);
         switch (event.getResult()) {
             case DEFAULT:
-                ChatComponentBuilder.create().lang("eirairc:general.connected", connection.getHost()).send();
+                ChatComponentBuilder.create().lang("eirairc:general.connected", connection.getHost()).send(connection);
                 break;
             case ALLOW:
                 if (event.result != null) {
-                    EiraIRCAPI.getChatHandler().addChatMessage(event.result);
+                    EiraIRCAPI.getChatHandler().addChatMessage(event.result, connection);
                 }
                 break;
         }
@@ -370,11 +370,11 @@ public class IRCEventHandler {
         MinecraftForge.EVENT_BUS.post(event);
         switch (event.getResult()) {
             case DEFAULT:
-                ChatComponentBuilder.create().color('c').lang("eirairc:error.couldNotConnect", connection.getHost(), exception).send();
+                ChatComponentBuilder.create().color('c').lang("eirairc:error.couldNotConnect", connection.getHost(), exception).send(connection);
                 break;
             case ALLOW:
                 if (event.result != null) {
-                    EiraIRCAPI.getChatHandler().addChatMessage(event.result);
+                    EiraIRCAPI.getChatHandler().addChatMessage(event.result, connection);
                 }
                 break;
         }
@@ -385,11 +385,11 @@ public class IRCEventHandler {
         MinecraftForge.EVENT_BUS.post(event);
         switch (event.getResult()) {
             case DEFAULT:
-                ChatComponentBuilder.create().lang("eirairc:general.reconnecting", connection.getHost(), waitingTime / 1000).send();
+                ChatComponentBuilder.create().lang("eirairc:general.reconnecting", connection.getHost(), waitingTime / 1000).send(connection);
                 break;
             case ALLOW:
                 if (event.result != null) {
-                    EiraIRCAPI.getChatHandler().addChatMessage(event.result);
+                    EiraIRCAPI.getChatHandler().addChatMessage(event.result, connection);
                 }
                 break;
         }
@@ -406,11 +406,11 @@ public class IRCEventHandler {
         MinecraftForge.EVENT_BUS.post(event);
         switch (event.getResult()) {
             case DEFAULT:
-                ChatComponentBuilder.create().lang("eirairc:general.disconnected", connection.getHost()).send();
+                ChatComponentBuilder.create().lang("eirairc:general.disconnected", connection.getHost()).send(connection);
                 break;
             case ALLOW:
                 if (event.result != null) {
-                    EiraIRCAPI.getChatHandler().addChatMessage(event.result);
+                    EiraIRCAPI.getChatHandler().addChatMessage(event.result, connection);
                 }
                 break;
         }
@@ -423,13 +423,13 @@ public class IRCEventHandler {
                 String failNick = args[1];
                 String tryNick = failNick + "_";
                 if (!connection.isSilentNickFailure()) {
-                    ChatComponentBuilder.create().color('c').lang("eirairc:error.nickInUse", failNick, tryNick).send();
+                    ChatComponentBuilder.create().color('c').lang("eirairc:error.nickInUse", failNick, tryNick).send(connection);
                 }
                 connection.setSilentNickFailure(false);
                 connection.fallbackNick(tryNick);
                 break;
             case IRCReplyCodes.ERR_ERRONEUSNICKNAME:
-                ChatComponentBuilder.create().color('c').lang("eirairc:error.nickInvalid", args[1]).send();
+                ChatComponentBuilder.create().color('c').lang("eirairc:error.nickInvalid", args[1]).send(connection);
                 ServerConfig serverConfig = ConfigHelper.getServerConfig(connection);
                 if (serverConfig.getNick() != null) {
                     serverConfig.setNick(connection.getNick());
@@ -438,7 +438,7 @@ public class IRCEventHandler {
             case IRCReplyCodes.ERR_MODELESS:
                 AuthManager.NickServData nickServData = AuthManager.getNickServData(connection.getIdentifier());
                 if(nickServData == null) {
-                    ChatComponentBuilder.create().color('c').lang("eirairc:error.notIdentified", args[1]).send();
+                    ChatComponentBuilder.create().color('c').lang("eirairc:error.notIdentified", args[1]).send(connection);
                 }
                 connection.joinAfterNickServ(args[1]);
                 break;
@@ -448,13 +448,13 @@ public class IRCEventHandler {
             case DEFAULT:
                 switch (numeric) {
                     case IRCReplyCodes.ERR_NONICKCHANGE:
-                        ChatComponentBuilder.create().color('c').lang("eirairc:error.noNickChange").send();
+                        ChatComponentBuilder.create().color('c').lang("eirairc:error.noNickChange").send(connection);
                         break;
                     case IRCReplyCodes.ERR_SERVICESDOWN:
-                        ChatComponentBuilder.create().color('c').lang("eirairc:error.servicesDown").send();
+                        ChatComponentBuilder.create().color('c').lang("eirairc:error.servicesDown").send(connection);
                         break;
                     case IRCReplyCodes.ERR_TARGETTOOFAST:
-                        ChatComponentBuilder.create().color('c').lang("eirairc:error.targetTooFast").send();
+                        ChatComponentBuilder.create().color('c').lang("eirairc:error.targetTooFast").send(connection);
                         break;
                     case IRCReplyCodes.ERR_CANNOTSENDTOCHAN:
                     case IRCReplyCodes.ERR_TOOMANYCHANNELS:
@@ -481,7 +481,7 @@ public class IRCEventHandler {
                     case IRCReplyCodes.ERR_CHANNELISFULL:
                     case IRCReplyCodes.ERR_KEYSET:
                     case IRCReplyCodes.ERR_NEEDMOREPARAMS:
-                        ChatComponentBuilder.create().color('c').lang("eirairc:error.genericTarget", args[1], args[2]);
+                        ChatComponentBuilder.create().color('c').lang("eirairc:error.genericTarget", args[1], args[2]).send(connection);
                         break;
                     case IRCReplyCodes.ERR_NOORIGIN:
                     case IRCReplyCodes.ERR_NORECIPIENT:
@@ -501,7 +501,7 @@ public class IRCEventHandler {
                     case IRCReplyCodes.ERR_ALREADYREGISTERED:
                     case IRCReplyCodes.ERR_NOPERMFORHOST:
                     case IRCReplyCodes.ERR_CANTKILLSERVER:
-                        ChatComponentBuilder.create().color('c').lang("eirairc:error.generic", args[1]);
+                        ChatComponentBuilder.create().color('c').lang("eirairc:error.generic", args[1]).send(connection);
                         break;
                     default:
                         logger.warn("Unhandled error code: {} ({} arguments)", numeric, args.length);
@@ -510,7 +510,7 @@ public class IRCEventHandler {
                 break;
             case ALLOW:
                 if (event.result != null) {
-                    EiraIRCAPI.getChatHandler().addChatMessage(event.result);
+                    EiraIRCAPI.getChatHandler().addChatMessage(event.result, connection);
                 }
                 break;
         }
@@ -555,11 +555,11 @@ public class IRCEventHandler {
                 if (event.isNotice && noticeColor != null) {
                     chatComponent.getChatStyle().setColor(noticeColor);
                 }
-                EiraIRCAPI.getChatHandler().addChatMessage(chatComponent);
+                EiraIRCAPI.getChatHandler().addChatMessage(chatComponent, channel);
                 break;
             case ALLOW:
                 if (event.result != null) {
-                    EiraIRCAPI.getChatHandler().addChatMessage(event.result);
+                    EiraIRCAPI.getChatHandler().addChatMessage(event.result, channel);
                 }
                 break;
         }
@@ -622,11 +622,11 @@ public class IRCEventHandler {
                 if (event.isNotice && noticeColor != null) {
                     chatComponent.getChatStyle().setColor(noticeColor);
                 }
-                EiraIRCAPI.getChatHandler().addChatMessage(chatComponent);
+                EiraIRCAPI.getChatHandler().addChatMessage(chatComponent, sender);
                 break;
             case ALLOW:
                 if (event.result != null) {
-                    EiraIRCAPI.getChatHandler().addChatMessage(event.result);
+                    EiraIRCAPI.getChatHandler().addChatMessage(event.result, sender);
                 }
                 break;
         }
@@ -639,7 +639,7 @@ public class IRCEventHandler {
         switch (event.getResult()) {
             case ALLOW:
                 if (event.result != null) {
-                    EiraIRCAPI.getChatHandler().addChatMessage(event.result);
+                    EiraIRCAPI.getChatHandler().addChatMessage(event.result, connection);
                 }
                 break;
         }
@@ -655,7 +655,7 @@ public class IRCEventHandler {
         switch (event.getResult()) {
             case ALLOW:
                 if (event.result != null) {
-                    EiraIRCAPI.getChatHandler().addChatMessage(event.result);
+                    EiraIRCAPI.getChatHandler().addChatMessage(event.result, channel);
                 }
                 break;
         }
@@ -668,7 +668,7 @@ public class IRCEventHandler {
         switch (event.getResult()) {
             case ALLOW:
                 if (event.result != null) {
-                    EiraIRCAPI.getChatHandler().addChatMessage(event.result);
+                    EiraIRCAPI.getChatHandler().addChatMessage(event.result, channel);
                 }
                 break;
         }

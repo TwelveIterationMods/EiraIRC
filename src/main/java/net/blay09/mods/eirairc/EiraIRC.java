@@ -5,6 +5,7 @@ package net.blay09.mods.eirairc;
 import net.blay09.mods.eirairc.addon.Compatibility;
 import net.blay09.mods.eirairc.api.EiraIRCAPI;
 import net.blay09.mods.eirairc.api.IChatHandler;
+import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.command.base.CommandIRC;
 import net.blay09.mods.eirairc.command.base.CommandServIRC;
 import net.blay09.mods.eirairc.command.base.IRCCommandHandler;
@@ -75,18 +76,14 @@ public class EiraIRC {
         EiraIRCAPI.internalSetupAPI(new InternalMethodsImpl());
         EiraIRCAPI.setChatHandler(new IChatHandler() {
             @Override
-            public void addChatMessage(IChatComponent component) {
-                addChatMessage(null, component);
+            public void addChatMessage(IChatComponent component, IRCContext source) {
+                addChatMessage(null, component, source);
             }
 
             @Override
-            public void addChatMessage(ICommandSender receiver, IChatComponent component) {
+            public void addChatMessage(ICommandSender receiver, IChatComponent component, IRCContext source) {
                 if (receiver != null) {
-                    if (!EiraIRCAPI.hasClientSideInstalled(receiver)) {
-                        receiver.addChatMessage(Utils.translateToDefault(component));
-                    } else {
-                        receiver.addChatMessage(component);
-                    }
+                    receiver.addChatMessage(component);
                 } else {
                     Utils.addMessageToChat(component);
                 }

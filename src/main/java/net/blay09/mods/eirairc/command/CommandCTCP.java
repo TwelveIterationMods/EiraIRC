@@ -77,7 +77,7 @@ public class CommandCTCP implements SubCommand {
         }
 
         IChatComponent chatComponent = MessageFormat.formatChatComponent(format, target.getConnection(), target, botUser, message, MessageFormat.Target.IRC, MessageFormat.Mode.Message);
-        EiraIRCAPI.getChatHandler().addChatMessage(sender, chatComponent);
+        EiraIRCAPI.getChatHandler().addChatMessage(sender, chatComponent, target);
         return true;
     }
 

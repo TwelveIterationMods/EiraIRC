@@ -152,7 +152,7 @@ public class MCEventHandler {
 			return;
 		}
 		relayChatClient(event.message, false, false, chatTarget);
-		EiraIRCAPI.getChatHandler().addChatMessage(chatComponent);
+		EiraIRCAPI.getChatHandler().addChatMessage(chatComponent, chatTarget);
 		event.setCanceled(true);
 	}
 	
@@ -187,7 +187,7 @@ public class MCEventHandler {
 		if(emoteColor != null) {
 			chatComponent.getChatStyle().setColor(emoteColor);
 		}
-		EiraIRCAPI.getChatHandler().addChatMessage(chatComponent);
+		EiraIRCAPI.getChatHandler().addChatMessage(chatComponent, chatTarget);
 		event.setCanceled(true);
 	}
 

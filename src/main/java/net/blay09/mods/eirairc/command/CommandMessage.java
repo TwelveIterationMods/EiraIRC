@@ -98,7 +98,7 @@ public class CommandMessage implements SubCommand {
 				chatComponent.getChatStyle().setColor(emoteColor);
 			}
 		}
-		EiraIRCAPI.getChatHandler().addChatMessage(sender, chatComponent);
+		EiraIRCAPI.getChatHandler().addChatMessage(sender, chatComponent, target);
 		return true;
 	}
 

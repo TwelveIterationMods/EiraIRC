@@ -10,6 +10,8 @@ import net.blay09.mods.eirairc.api.IChatHandler;
 import net.blay09.mods.eirairc.api.event.IRCChannelJoinedEvent;
 import net.blay09.mods.eirairc.api.event.IRCChannelLeftEvent;
 import net.blay09.mods.eirairc.api.event.IRCPrivateChatEvent;
+import net.blay09.mods.eirairc.api.irc.IRCContext;
+import net.minecraft.client.Minecraft;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.IChatComponent;
 import net.minecraftforge.common.MinecraftForge;
@@ -25,18 +27,28 @@ public class TabbyChat2Addon {
         EiraIRCAPI.setChatHandler(new IChatHandler() {
             @Override
             public void addChatMessage(IChatComponent component) {
-                String message = component.getUnformattedText();
-                if(message.length() > 0 && message.charAt(0) == '[') {
-                    int idx = message.indexOf(']');
-                    if(idx != -1) {
-                        TabbyAPI.getAPI().getChat().getChannel(message.substring(1, idx)).addMessage(component);
-                    }
-                }
+                addChatMessage(component, null);
             }
 
             @Override
             public void addChatMessage(ICommandSender receiver, IChatComponent component) {
-                addChatMessage(component);
+                addChatMessage(component, null);
+            }
+
+            @Override
+            public void addChatMessage(ICommandSender receiver, IChatComponent component, IRCContext source) {
+                addChatMessage(component, source);
+            }
+
+            @Override
+            public void addChatMessage(IChatComponent component, IRCContext source) {
+                if(source == null) {
+                    Minecraft.getMinecraft().thePlayer.addChatMessage(component);
+                    return;
+                }
+                Channel channel = TabbyAPI.getAPI().getChat().getChannel(source.getName(), source.getContextType() == IRCContext.ContextType.IRCUser);
+                channel.addMessage(component);
+                channel.setStatus(ChannelStatus.UNREAD);
             }
         });
     }
@@ -46,7 +58,6 @@ public class TabbyChat2Addon {
         Channel channel = TabbyAPI.getAPI().getChat().getChannel(event.channel.getName());
         channel.setPrefixHidden(true);
         channel.setPrefix("/irc msg " + event.channel.getIdentifier() + " ");
-        channel.setStatus(ChannelStatus.ACTIVE);
     }
 
     @SubscribeEvent
@@ -60,10 +71,9 @@ public class TabbyChat2Addon {
         if(event.sender == null) {
             return;
         }
-        Channel channel = TabbyAPI.getAPI().getChat().getChannel(event.sender.getName(), true);
+        Channel channel = TabbyAPI.getAPI().getChat().getChannel(event.sender.getName());
         channel.setPrefixHidden(true);
         channel.setPrefix("/irc msg " + event.sender.getIdentifier() + " ");
-        channel.setStatus(ChannelStatus.ACTIVE);
     }
 
 }
