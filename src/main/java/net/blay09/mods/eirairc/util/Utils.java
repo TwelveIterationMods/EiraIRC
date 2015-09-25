@@ -262,7 +262,7 @@ public class Utils {
     }
 
     public static boolean isServerSide() {
-        return MinecraftServer.getServer() != null && !MinecraftServer.getServer().isSinglePlayer();
+        return MinecraftServer.getServer() != null && MinecraftServer.getServer().isDedicatedServer();
     }
 
     public static String extractHost(String url) {

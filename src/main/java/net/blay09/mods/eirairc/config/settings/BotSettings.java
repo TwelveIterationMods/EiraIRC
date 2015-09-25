@@ -2,6 +2,7 @@
 
 package net.blay09.mods.eirairc.config.settings;
 
+import net.blay09.mods.eirairc.addon.Compatibility;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.base.MessageFormatConfig;
 import net.blay09.mods.eirairc.config.property.ConfigProperty;
@@ -42,6 +43,9 @@ public class BotSettings extends AbstractSettings {
 	}
 
 	public MessageFormatConfig getMessageFormat() {
+		if(Compatibility.isTabbyChat2Installed()) {
+			return ConfigurationHandler.getMessageFormat("TabbyChat2");
+		}
 		return ConfigurationHandler.getMessageFormat(messageFormat.get());
 	}
 

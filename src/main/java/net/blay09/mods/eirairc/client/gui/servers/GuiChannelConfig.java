@@ -13,7 +13,6 @@ import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.I19n;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.GuiYesNoCallback;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
 import net.minecraftforge.fml.client.config.GuiConfig;
@@ -139,7 +138,7 @@ public class GuiChannelConfig extends GuiTabPage implements GuiYesNoCallback {
 				setOverlay(new OverlayYesNo(this, I19n.format("eirairc:gui.channel.deleteConfirm"), I19n.format("eirairc:gui.channel.deleteNoUndo"), 0));
 			}
 		} else if(button == btnOK) {
-			gotoPrevious();
+			tabContainer.setCurrentTab(parent, false);
 		}
 	}
 

@@ -53,8 +53,8 @@ public class EiraMoticonsAddon implements IEmoticonLoader {
 
     @SubscribeEvent
     public void initConfig(InitConfigEvent.ThemeSettings event) {
-        event.config.registerProperty("eiramoticons", "alwaysShowSubBadge", "eirairc:config.property.alwaysShowSubBadge", false);
-        event.config.registerProperty("eiramoticons", "twitchNameBadges", "eirairc:config.property.twitchNameBadges", true);
+        event.config.registerProperty("eiramoticons", "alwaysShowSubBadge", "eirairc:config.property.eiramoticons_alwaysShowSubBadge", false);
+        event.config.registerProperty("eiramoticons", "twitchNameBadges", "eirairc:config.property.eiramoticons_twitchNameBadges", true);
     }
 
     @Optional.Method(modid = "eiramoticons")

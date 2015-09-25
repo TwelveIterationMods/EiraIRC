@@ -295,7 +295,7 @@ public class ClientProxy extends CommonProxy {
                     }
                     if (!users || newTarget != null) {
                         chatSession.setChatTarget(newTarget);
-                        if (ClientGlobalConfig.chatNoOverride.get() || Compatibility.isTabbyChat2Installed()) {
+                        if (ClientGlobalConfig.chatNoOverride.get()) {
                             ChatComponentBuilder ccb = new ChatComponentBuilder();
                             ccb.text(">> ").lang("eirairc:general.chattingTo", ccb.push().color('6').text(newTarget == null ? "Minecraft" : newTarget.getName()).pop()).text(" <<").send();
                         }
@@ -304,7 +304,7 @@ public class ClientProxy extends CommonProxy {
                 } else {
                     if (System.currentTimeMillis() - lastToggleTarget >= 1000) {
                         chatSession.setChatTarget(null);
-                        if (ClientGlobalConfig.chatNoOverride.get() || Compatibility.isTabbyChat2Installed()) {
+                        if (ClientGlobalConfig.chatNoOverride.get()) {
                             ChatComponentBuilder ccb = new ChatComponentBuilder();
                             ccb.text(">> ").lang("eirairc:general.chattingTo", ccb.push().color('6').text("Minecraft").pop()).text(" <<").send();
                         }
