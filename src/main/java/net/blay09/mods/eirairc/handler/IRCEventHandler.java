@@ -135,15 +135,11 @@ public class IRCEventHandler {
 				logger.info("Ignored message by " + sender.getName() + ": " + message);
 				return;
 			}
-			if (!isNotice) {
-				if (((IRCBotImpl) connection.getBot()).processCommand(null, sender, message)) {
-					return;
-				} else {
-					if (connection.getBot().isServerSide()) {
-						sender.notice(I19n.format("eirairc:bot.unknownCommand"));
-						return;
-					}
+			if (connection.getBot().isServerSide() && !isNotice) {
+				if (!((IRCBotImpl) connection.getBot()).processCommand(null, sender, message)) {
+					sender.notice(I19n.format("eirairc:bot.unknownCommand"));
 				}
+				return;
 			}
 			if (sender.getName().equals("tmi.twitch.tv") && isNotice && connection.getHost().equals(Globals.TWITCH_SERVER) && message.equals("Login unsuccessful")) {
 				connection.disconnect("");
