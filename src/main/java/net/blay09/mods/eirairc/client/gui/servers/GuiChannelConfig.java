@@ -141,7 +141,7 @@ public class GuiChannelConfig extends GuiTabPage implements GuiYesNoCallback {
                 setOverlay(new OverlayYesNo(this, I19n.format("eirairc:gui.channel.deleteConfirm"), I19n.format("eirairc:gui.channel.deleteNoUndo"), 0));
             }
         } else if (button == btnOK) {
-            gotoPrevious();
+            tabContainer.setCurrentTab(parent, false);
         }
     }
 
