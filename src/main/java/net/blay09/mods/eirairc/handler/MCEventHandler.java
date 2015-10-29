@@ -86,7 +86,10 @@ public class MCEventHandler {
 				if(emote.length() == 0) {
 					return;
 				}
-				IChatComponent chatComponent = new ChatComponentTranslation("* %s %s", event.sender.getDisplayName(), MessageFormat.createChatComponentForMessage(emote));
+				IChatComponent chatComponent = new ChatComponentTranslation("* ");
+				chatComponent.appendSibling(event.sender.getDisplayName());
+				chatComponent.appendText(" ");
+				chatComponent.appendSibling(MessageFormat.createChatComponentForMessage(emote));
 				EnumChatFormatting emoteColor = SharedGlobalConfig.theme.emoteTextColor.get();
 				if(emoteColor != null) {
 					chatComponent.getChatStyle().setColor(emoteColor);
