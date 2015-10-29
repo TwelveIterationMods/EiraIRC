@@ -31,6 +31,7 @@ import net.minecraft.command.server.CommandEmote;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
@@ -90,7 +91,10 @@ public class MCEventHandler {
 				if(emote.length() == 0) {
 					return;
 				}
-				IChatComponent chatComponent = new ChatComponentTranslation("* %s %s", event.sender.func_145748_c_(), MessageFormat.createChatComponentForMessage(emote)); // getFormattedCommandSenderName
+				IChatComponent chatComponent = new ChatComponentText("* ");
+				chatComponent.appendSibling(event.sender.func_145748_c_()); // getFormattedCommandSenderName
+				chatComponent.appendText(" ");
+				chatComponent.appendSibling(MessageFormat.createChatComponentForMessage(emote));
 				EnumChatFormatting emoteColor = SharedGlobalConfig.theme.emoteTextColor.get();
 				if(emoteColor != null) {
 					chatComponent.getChatStyle().setColor(emoteColor);
