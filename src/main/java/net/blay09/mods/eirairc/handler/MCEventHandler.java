@@ -80,6 +80,9 @@ public class MCEventHandler {
 
 	@SubscribeEvent
 	public void onServerCommand(CommandEvent event) {
+		if (!event.command.canCommandSenderUse(event.sender)) {
+			return;
+		}
 		if(event.command instanceof CommandEmote) {
 			if(event.sender instanceof EntityPlayer) {
 				String emote = StringUtils.join(event.parameters, " ", 0, event.parameters.length).trim();
