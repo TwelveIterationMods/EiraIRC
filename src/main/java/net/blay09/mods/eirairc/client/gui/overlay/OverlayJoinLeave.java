@@ -59,7 +59,7 @@ public class OverlayJoinLeave extends Gui {
         if(scale == null) {
             return;
         }
-        ScaledResolution resolution = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
+        ScaledResolution resolution = new ScaledResolution(mc);
         final int height = 64;
         int guiTop = resolution.getScaledHeight() - height;
         int guiLeft = resolution.getScaledWidth();

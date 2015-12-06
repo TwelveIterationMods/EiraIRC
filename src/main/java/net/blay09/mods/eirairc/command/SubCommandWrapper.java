@@ -22,7 +22,7 @@ public final class SubCommandWrapper implements ICommand {
 	}
 
 	@Override
-	public String getName() {
+	public String getCommandName() {
 		return command.getCommandName();
 	}
 	
@@ -32,18 +32,18 @@ public final class SubCommandWrapper implements ICommand {
 	}
 	
 	@Override
-	public final List<String> getAliases() {
+	public final List<String> getCommandAliases() {
 		String[] aliases = command.getAliases();
 		if(aliases != null) {
-			List<String> list = new ArrayList<String>();
+			List<String> list = new ArrayList<>();
 			Collections.addAll(list, aliases);
 			return list;
 		}
-		return new ArrayList<String>();
+		return Collections.emptyList();
 	}
 
 	@Override
-	public boolean canCommandSenderUse(ICommandSender sender) {
+	public boolean canCommandSenderUseCommand(ICommandSender sender) {
 		return command.canCommandSenderUseCommand(sender);
 	}
 
@@ -53,20 +53,20 @@ public final class SubCommandWrapper implements ICommand {
 	}
 
 	@Override
-	public void execute(ICommandSender sender, String[] args) throws CommandException {
+	public void processCommand(ICommandSender sender, String[] args) throws CommandException {
 		command.processCommand(sender, Utils.getSuggestedTarget(), args, Utils.isServerSide());
 	}
 
 	@Override
-	public List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
-		List<String> list = new ArrayList<String>();
+	public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
+		List<String> list = new ArrayList<>();
 		command.addTabCompletionOptions(list, sender, args);
 		return list;
 	}
 
 	@Override
-	public int compareTo(Object o) {
-		return getName().compareTo(((ICommand) o).getName());
+	public int compareTo(ICommand o) {
+		return getCommandName().compareTo(o.getCommandName());
 	}
 	
 }

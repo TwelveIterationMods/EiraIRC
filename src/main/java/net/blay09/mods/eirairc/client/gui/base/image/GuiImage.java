@@ -4,6 +4,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.texture.TextureUtil;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -62,11 +63,11 @@ public abstract class GuiImage {
 		GlStateManager.bindTexture(textureId);
 		Tessellator tessellator = Tessellator.getInstance();
 		WorldRenderer renderer = tessellator.getWorldRenderer();
-		renderer.startDrawingQuads();
-		renderer.addVertexWithUV(renderX, renderY + renderHeight, zLevel, 0, 1);
-		renderer.addVertexWithUV(renderX + renderWidth, renderY + renderHeight, zLevel, 1, 1);
-		renderer.addVertexWithUV(renderX + renderWidth, renderY, zLevel, 1, 0);
-		renderer.addVertexWithUV(renderX, renderY, zLevel, 0, 0);
+		renderer.func_181668_a(7, DefaultVertexFormats.field_181707_g); // startDrawingQuads
+		renderer.func_181662_b(renderX, renderY + renderHeight, zLevel).func_181673_a(0, 1).func_181675_d(); // addVertexPosition addVertexUV finishVertex
+		renderer.func_181662_b(renderX + renderWidth, renderY + renderHeight, zLevel).func_181673_a(1, 1).func_181675_d(); // addVertexPosition addVertexUV finishVertex
+		renderer.func_181662_b(renderX + renderWidth, renderY, zLevel).func_181673_a(1, 0).func_181675_d(); // addVertexPosition addVertexUV finishVertex
+		renderer.func_181662_b(renderX, renderY, zLevel).func_181673_a(0, 0).func_181675_d(); // addVertexPosition addVertexUV finishVertex
 		tessellator.draw();
 	}
 

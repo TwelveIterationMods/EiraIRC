@@ -8,6 +8,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.util.BlockPos;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class IgnoreCommand implements ICommand {
@@ -19,12 +20,12 @@ public class IgnoreCommand implements ICommand {
 	}
 	
 	@Override
-	public int compareTo(Object o) {
-		return getName().compareTo(((ICommand) o).getName());
+	public int compareTo(ICommand o) {
+		return getCommandName().compareTo(o.getCommandName());
 	}
 
 	@Override
-	public String getName() {
+	public String getCommandName() {
 		return name;
 	}
 
@@ -34,20 +35,20 @@ public class IgnoreCommand implements ICommand {
 	}
 
 	@Override
-	public List getAliases() {
-		return new ArrayList();
+	public List<String> getCommandAliases() {
+		return Collections.emptyList();
 	}
 
 	@Override
-	public void execute(ICommandSender sender, String[] args) {}
+	public void processCommand(ICommandSender sender, String[] args) {}
 
 	@Override
-	public boolean canCommandSenderUse(ICommandSender sender) {
+	public boolean canCommandSenderUseCommand(ICommandSender sender) {
 		return true;
 	}
 
 	@Override
-	public List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
+	public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
 		return null;
 	}
 

@@ -7,18 +7,15 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatStyle;
 import net.minecraft.util.IChatComponent;
 
+import java.util.Arrays;
+
 public class ChatComponentBuilder {
 
-    private final StringBuilder[] buffer;
+    private StringBuilder[] buffer = new StringBuilder[1];
 
     private int index = -1;
 
     public ChatComponentBuilder() {
-        this(1);
-    }
-
-    public ChatComponentBuilder(int bufferSize) {
-        buffer = new StringBuilder[bufferSize];
         push();
     }
 
@@ -64,6 +61,9 @@ public class ChatComponentBuilder {
 
     public ChatComponentBuilder push() {
         index++;
+        if(buffer.length <= index) {
+            buffer = Arrays.copyOf(buffer, index);
+        }
         buffer[index] = new StringBuilder();
         return this;
     }

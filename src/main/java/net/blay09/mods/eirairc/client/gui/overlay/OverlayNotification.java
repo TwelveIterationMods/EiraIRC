@@ -46,9 +46,9 @@ public class OverlayNotification extends Gui {
         GL11.glLoadIdentity();
         GL11.glMatrixMode(GL11.GL_MODELVIEW);
         GL11.glLoadIdentity();
-        windowWidth = this.theGame.displayWidth;
-        windowHeight = this.theGame.displayHeight;
-        ScaledResolution scaledResolution = new ScaledResolution(this.theGame, this.theGame.displayWidth, this.theGame.displayHeight);
+        windowWidth = theGame.displayWidth;
+        windowHeight = theGame.displayHeight;
+        ScaledResolution scaledResolution = new ScaledResolution(theGame);
         windowWidth = scaledResolution.getScaledWidth();
         windowHeight = scaledResolution.getScaledHeight();
         GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);

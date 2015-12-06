@@ -17,6 +17,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.*;
 import org.apache.commons.lang3.ArrayUtils;
@@ -80,7 +81,7 @@ public class Utils {
     }
 
     public static boolean isOP(ICommandSender sender) {
-        return MinecraftServer.getServer() == null || (MinecraftServer.getServer().isSinglePlayer() && !MinecraftServer.getServer().isDedicatedServer()) || sender.canUseCommand(3, "");
+        return MinecraftServer.getServer() == null || (MinecraftServer.getServer().isSinglePlayer() && !MinecraftServer.getServer().isDedicatedServer()) || sender.canCommandSenderUseCommand(3, "");
     }
 
     public static void addConnectionsToList(List<String> list) {
@@ -95,7 +96,7 @@ public class Utils {
             ChatComponentBuilder.create().lang("eirairc:commands.who.noUsersOnline", connection.getHost(), channel.getName()).send(player);
             return;
         }
-        ChatComponentBuilder ccb = new ChatComponentBuilder(3);
+        ChatComponentBuilder ccb = new ChatComponentBuilder();
         ccb.lang("eirairc:commands.who.usersOnline", ccb.push().text("[" + connection.getHost() + "] ").color('b').text(userList.size()).pop(), ccb.color('e').text(channel.getName()).color('f').text(":").pop()).send(player);
         String s = " * ";
         for (IRCUser user : userList) {
@@ -125,7 +126,7 @@ public class Utils {
         if (MinecraftServer.getServer() == null || MinecraftServer.getServer().isSinglePlayer()) {
             return;
         }
-        List<EntityPlayer> playerList = MinecraftServer.getServer().getConfigurationManager().playerEntityList;
+        List<EntityPlayerMP> playerList = MinecraftServer.getServer().getConfigurationManager().playerEntityList;
         if (playerList.size() == 0) {
             if (context instanceof IRCUser) {
                 context.notice(I19n.format("eirairc:bot.noPlayersOnline"));

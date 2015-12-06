@@ -33,20 +33,20 @@ public class DynmapWebChatAddon extends DynmapCommonAPIListener {
 		}
 
 		@Override
-		public String getName() {
+		public String getCommandSenderName() {
 			return "[" + source + "]" + ((name != null && !name.isEmpty()) ? " " + name : "");
 		}
 
 		@Override
 		public IChatComponent getDisplayName() {
-			return new ChatComponentText(this.getName());
+			return new ChatComponentText(getCommandSenderName());
 		}
 
 		@Override
 		public void addChatMessage(IChatComponent p_145747_1_) {}
 
 		@Override
-		public boolean canUseCommand(int permLevel, String commandName) {
+		public boolean canCommandSenderUseCommand(int permLevel, String commandName) {
 			return false;
 		}
 

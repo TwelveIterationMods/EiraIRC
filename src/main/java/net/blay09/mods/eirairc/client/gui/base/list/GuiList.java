@@ -104,7 +104,7 @@ public class GuiList<T extends GuiListEntry> extends Gui {
 		drawBackground();
 		List<String> tooltipList = null;
 		Minecraft mc = Minecraft.getMinecraft();
-		ScaledResolution scaledResolution = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
+		ScaledResolution scaledResolution = new ScaledResolution(mc);
 		float scale = scaledResolution.getScaleFactor();
 		GL11.glScissor(0, (int) (mc.displayHeight - (yPosition + height) * scale), (int) ((width + xPosition) * scale), (int) (height * scale));
 		GL11.glEnable(GL11.GL_SCISSOR_TEST);

@@ -4,6 +4,7 @@ import net.blay09.mods.eirairc.client.graphics.TextureAtlas;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.util.ResourceLocation;
@@ -31,11 +32,11 @@ public class EiraGui {
 
 		Tessellator tessellator = Tessellator.getInstance();
 		WorldRenderer renderer = tessellator.getWorldRenderer();
-		renderer.startDrawingQuads();
-		renderer.addVertexWithUV(x, y + height, 0, u, v2);
-		renderer.addVertexWithUV(x + width, y + height, 0, u2, v2);
-		renderer.addVertexWithUV(x + width, y, 0, u2, v);
-		renderer.addVertexWithUV(x, y, 0, u, v);
+		renderer.func_181668_a(7, DefaultVertexFormats.field_181707_g); // startDrawingQuads
+		renderer.func_181662_b(x, y + height, zLevel).func_181673_a(u, v2).func_181675_d(); // addVertexPosition addVertexUV finishVertex
+		renderer.func_181662_b(x + width, y + height, zLevel).func_181673_a(u2, v2).func_181675_d(); // addVertexPosition addVertexUV finishVertex
+		renderer.func_181662_b(x + width, y, zLevel).func_181673_a(u2, v).func_181675_d(); // addVertexPosition addVertexUV finishVertex
+		renderer.func_181662_b(x, y, zLevel).func_181673_a(u, v).func_181675_d(); // addVertexPosition addVertexUV finishVertex
 		tessellator.draw();
 	}
 

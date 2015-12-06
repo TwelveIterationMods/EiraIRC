@@ -116,7 +116,7 @@ public class IRCCommandHandler {
             sendUsageHelp(sender);
             return false;
         }
-        if (!cmd.canCommandSenderUse(sender)) {
+        if (!cmd.canCommandSenderUseCommand(sender)) {
             ChatComponentBuilder.create().color('c').lang("commands.generic.permission").send(sender);
             return true;
         }

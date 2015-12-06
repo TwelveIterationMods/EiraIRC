@@ -80,7 +80,7 @@ public class MCEventHandler {
 
 	@SubscribeEvent
 	public void onServerCommand(CommandEvent event) {
-		if (!event.command.canCommandSenderUse(event.sender)) {
+		if (!event.command.canCommandSenderUseCommand(event.sender)) {
 			return;
 		}
 		if(event.command instanceof CommandEmote) {
@@ -371,7 +371,7 @@ public class MCEventHandler {
 							BotSettings botSettings = ConfigHelper.getBotSettings(channel);
 							String name = Utils.getNickIRC((EntityPlayer) event.entityLiving, channel);
 							String ircMessage = event.entityLiving.getCombatTracker().getDeathMessage().getUnformattedText();
-							ircMessage = ircMessage.replace(event.entityLiving.getName(), name);
+							ircMessage = ircMessage.replace(event.entityLiving.getCommandSenderName(), name);
 							ircMessage = IRCFormatting.toIRC(ircMessage, !botSettings.convertColors.get());
 							if (!generalSettings.readOnly.get() && botSettings.relayDeathMessages.get()) {
 								channel.message(ircMessage);

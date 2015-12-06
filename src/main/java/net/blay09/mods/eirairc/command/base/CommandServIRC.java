@@ -15,12 +15,12 @@ import java.util.List;
 public class CommandServIRC implements ICommand {
 
 	@Override
-	public int compareTo(Object o) {
-		return getName().compareTo(((ICommand) o).getName());
+	public int compareTo(ICommand o) {
+		return getCommandName().compareTo((o.getCommandName()));
 	}
 
 	@Override
-	public String getName() {
+	public String getCommandName() {
 		return "servirc";
 	}
 
@@ -30,14 +30,14 @@ public class CommandServIRC implements ICommand {
 	}
 
 	@Override
-	public List getAliases() {
-		List<String> aliases = new ArrayList<String>();
+	public List getCommandAliases() {
+		List<String> aliases = new ArrayList<>();
 		aliases.add("sirc");
 		return aliases;
 	}
 
 	@Override
-	public void execute(ICommandSender sender, String[] args) {
+	public void processCommand(ICommandSender sender, String[] args) {
 		if(args.length == 0) {
 			IRCCommandHandler.sendUsageHelp(sender);
 			return;
@@ -55,12 +55,12 @@ public class CommandServIRC implements ICommand {
 	}
 
 	@Override
-	public boolean canCommandSenderUse(ICommandSender sender) {
+	public boolean canCommandSenderUseCommand(ICommandSender sender) {
 		return true;
 	}
 
 	@Override
-	public List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
+	public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
 		return IRCCommandHandler.addTabCompletionOptions(sender, args, pos);
 	}
 

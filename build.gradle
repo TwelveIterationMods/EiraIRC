@@ -1,6 +1,24 @@
-plugins {
-    id "net.minecraftforge.gradle.forge" version "2.0.1"
+// For those who want the bleeding edge
+buildscript {
+    repositories {
+        jcenter()
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT'
+    }
 }
+apply plugin: 'net.minecraftforge.gradle.forge'
+
+/*
+// for people who want stable - not yet functional for MC 1.8.8 - we require the forgegradle 2.1 snapshot
+plugins {
+    id "net.minecraftforge.gradle.forge" version "2.0.2"
+}
+*/
 
 apply plugin: 'maven'
 
@@ -9,17 +27,17 @@ def MAVEN_REPO = System.getenv("MAVEN_REPO") ?: ""
 def MAVEN_USERNAME = System.getenv("MAVEN_USERNAME") ?: ""
 def MAVEN_PASSWORD = System.getenv("MAVEN_PASSWORD") ?: ""
 
-version = "3.9." + BUILD_NUMBER
+version = "4.9." + BUILD_NUMBER
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 group = "net.blay09.mods"
 archivesBaseName = "eirairc"
 
 minecraft {
-    version = "1.8-11.14.3.1512"
+    version = "1.8.8-11.15.0.1609-1.8.8"
     runDir = "run"
     
-    mappings = "snapshot_20141130"
+    mappings = "stable_18"
 }
 
 processResources
@@ -50,7 +68,7 @@ repositories {
 }
 
 dependencies {
-    compile 'net.blay09.mods:eiramoticons:2.1.48:dev'
+    provided 'net.blay09.mods:eiramoticons:2.1.48:dev'
     compile 'us.dynmap:DynmapCoreAPI:2.1'
     provided 'mnm.mods:MnM-Utils:0.3.1-SNAPSHOT-14:dev'
     provided 'mnm.mods:TabbyChat:2.0.0-beta3.1-SNAPSHOT-14:dev'
@@ -59,6 +77,13 @@ dependencies {
 jar {
     from sourceSets.api.output
     appendix "mc" + minecraft.version
+}
+
+// It would seem the provided configuration ForgeGradle gives us doesn't work correctly in IDEA without these lines.
+idea {
+    module {
+        scopes.PROVIDED.plus += [configurations.provided];
+    }
 }
 
 sourceJar {

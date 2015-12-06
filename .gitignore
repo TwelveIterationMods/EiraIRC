@@ -1,18 +1,22 @@
-/bin
-/run
-/forge-1.7.2-10.12.0.1019-changelog.txt
-/MinecraftForge-Credits.txt
-/MinecraftForge-License.txt
-/README.txt
-/CREDITS-fml.txt
-/LICENSE-fml.txt
-/build
-/.gradle
-/.settings
-/.classpath
-/*.ipr
-/*.iws
-/*.iml
-/out
-/gradle.properties
-/gdx-texturepacker.jar
+# eclipse
+bin
+*.launch
+.settings
+.metadata
+.classpath
+.project
+
+# idea
+out
+*.ipr
+*.iws
+*.iml
+.idea
+
+# gradle
+build
+.gradle
+
+# other
+eclipse
+run

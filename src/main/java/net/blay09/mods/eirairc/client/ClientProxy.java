@@ -191,8 +191,7 @@ public class ClientProxy extends CommonProxy {
     @Override
     public boolean checkClientBridge(IRCChannelMessageEvent event) {
         if (event.sender != null && ClientGlobalConfig.clientBridge.get()) {
-            for (Object obj : FMLClientHandler.instance().getClientPlayerEntity().sendQueue.func_175106_d()) {
-                NetworkPlayerInfo playerInfo = (NetworkPlayerInfo) obj;
+            for (NetworkPlayerInfo playerInfo : FMLClientHandler.instance().getClientPlayerEntity().sendQueue.getPlayerInfoMap()) {
                 if (event.sender.getName().equalsIgnoreCase(playerInfo.getGameProfile().getName())) {
                     return true;
                 }
