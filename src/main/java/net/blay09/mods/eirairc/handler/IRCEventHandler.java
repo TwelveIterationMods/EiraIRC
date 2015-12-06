@@ -244,6 +244,7 @@ public class IRCEventHandler {
         }
 
         IRCChannelChatEvent event = new IRCChannelChatEvent(connection, channel, sender, rawMessage, message, isEmote, isNotice);
+        MinecraftForge.EVENT_BUS.post(event);
         switch (event.getResult()) {
             case DEFAULT:
                 if (ConfigHelper.getGeneralSettings(channel).muted.get()) {
