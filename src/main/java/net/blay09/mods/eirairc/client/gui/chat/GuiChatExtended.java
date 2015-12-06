@@ -74,9 +74,9 @@ public class GuiChatExtended extends GuiChat implements GuiYesNoCallback {
 	}
 
 	@Override
-	public void func_146404_p_() { // autocompletePlayerNames
+	public void autocompletePlayerNames() {
 		if(extension.autocompletePlayernames()) {
-			super.func_146404_p_(); // autocompletePlayerNames
+			super.autocompletePlayerNames();
 		}
 	}
 

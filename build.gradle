@@ -30,8 +30,10 @@ group = "net.blay09.mods"
 archivesBaseName = "eirairc"
 
 minecraft {
-    version = "1.7.10-10.13.3.1399-1.7.10"
+    version = "1.7.10-10.13.4.1566-1.7.10"
     runDir = "eclipse"
+	
+	mappings = "stable_12"
 }
 
 processResources
@@ -71,14 +73,9 @@ repositories {
     }
 }
 
-configurations {
-    deployerJars
-}
-
 dependencies {
     compile 'us.dynmap:DynmapCoreAPI:2.1'
-    compile 'net.blay09.mods:eiramoticons:1.0.77:dev'
-    deployerJars "org.apache.maven.wagon:wagon-ftp:2.2"
+    compile 'net.blay09.mods:eiramoticons:1.1.81:dev'
 }
 
 jar {
@@ -111,7 +108,6 @@ uploadArchives {
     dependsOn 'reobf'
     repositories {
         mavenDeployer {
-            configuration = configurations.deployerJars
             
             repository(url: MAVEN_REPO) {
                 authentication(userName: MAVEN_USERNAME, password: MAVEN_PASSWORD)

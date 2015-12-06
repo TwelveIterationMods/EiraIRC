@@ -57,7 +57,7 @@ public class GuiWelcome extends EiraGuiScreen {
 		chkDontShowAgain = new GuiCheckBox(1, menuX + 10, menuY + menuHeight - 30, I19n.format("eirairc:gui.welcome.dontShowAgain"), false);
 		buttonList.add(chkDontShowAgain);
 
-		btnSubmitChannel = new GuiLinkButton(2, menuX + menuWidth - 90, menuY + menuHeight - 20, mc.fontRenderer, "\u00a7n" + I19n.format("eirairc:gui.welcome.submit"));
+		btnSubmitChannel = new GuiLinkButton(2, menuX + menuWidth - 90, menuY + menuHeight - 20, mc.fontRendererObj, "\u00a7n" + I19n.format("eirairc:gui.welcome.submit"));
 		buttonList.add(btnSubmitChannel);
 
 		updateList(chkRecommendedOnly.isChecked());
@@ -98,7 +98,7 @@ public class GuiWelcome extends EiraGuiScreen {
 
 		boolean altBackground = false;
 		for(SuggestedChannel channel : outputList) {
-			lstChannels.addEntry(new GuiListSuggestedChannelEntry(mc.fontRenderer, channel, altBackground));
+			lstChannels.addEntry(new GuiListSuggestedChannelEntry(mc.fontRendererObj, channel, altBackground));
 			altBackground = !altBackground;
 		}
 	}
