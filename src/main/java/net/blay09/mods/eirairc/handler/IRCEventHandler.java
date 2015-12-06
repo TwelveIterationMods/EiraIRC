@@ -169,7 +169,7 @@ public class IRCEventHandler {
 				}
 				String format;
 				if (connection.isTwitch() && sender != null && sender.getName().equals("twitchnotify")) {
-					format = "{MESSAGE}";
+					format = "[{CHANNEL}] {MESSAGE}";
 				} else if (isNotice) {
 					format = botSettings.getMessageFormat().mcPrivateNotice;
 				} else if (isEmote) {
@@ -248,6 +248,7 @@ public class IRCEventHandler {
 		}
 
 		IRCChannelChatEvent event = new IRCChannelChatEvent(connection, channel, sender, rawMessage, message, isEmote, isNotice);
+		MinecraftForge.EVENT_BUS.post(event);
 		switch (event.getResult()) {
 			case DEFAULT:
 				if (ConfigHelper.getGeneralSettings(channel).muted.get()) {
@@ -265,7 +266,7 @@ public class IRCEventHandler {
 				}
 				String format;
 				if (connection.isTwitch() && sender != null && sender.getName().equals("twitchnotify")) {
-					format = "{MESSAGE}";
+					format = "[{CHANNEL}] {MESSAGE}";
 				} else if (isNotice) {
 					format = botSettings.getMessageFormat().mcChannelNotice;
 				} else if (isEmote) {
@@ -543,7 +544,7 @@ public class IRCEventHandler {
 				message = "[CTCP] " + message;
 				String format;
 				if (event.connection.isTwitch() && event.sender != null && event.sender.getName().equals("twitchnotify")) {
-					format = "{MESSAGE}";
+					format = "[{CHANNEL}] {MESSAGE}";
 				} else if (event.isNotice) {
 					format = botSettings.getMessageFormat().mcChannelNotice;
 				} else {
@@ -603,7 +604,7 @@ public class IRCEventHandler {
 				message = "[CTCP] " + message;
 				String format;
 				if (event.connection.isTwitch() && event.sender != null && event.sender.getName().equals("twitchnotify")) {
-					format = "{MESSAGE}";
+					format = "[{CHANNEL}] {MESSAGE}";
 				} else if (event.isNotice) {
 					format = botSettings.getMessageFormat().mcPrivateNotice;
 				} else {
