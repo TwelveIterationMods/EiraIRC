@@ -250,7 +250,11 @@ public class IRCEventHandler {
 		IRCChannelChatEvent event = new IRCChannelChatEvent(connection, channel, sender, rawMessage, message, isEmote, isNotice);
 		switch (event.getResult()) {
 			case DEFAULT:
-				if (ConfigHelper.getGeneralSettings(channel).muted.get()) {
+				GeneralSettings settings = ConfigHelper.getGeneralSettings(channel);
+				if (settings.muted.get()) {
+					return;
+				}
+				if(connection.isTwitch() && sender != null && settings.subOnly.get() && !((TwitchUser) sender).isTwitchSubscriber(channel)) {
 					return;
 				}
 				if (EiraIRC.proxy.checkClientBridge(event)) {
