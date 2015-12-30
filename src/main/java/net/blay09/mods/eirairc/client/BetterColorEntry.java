@@ -85,7 +85,7 @@ public class BetterColorEntry extends GuiConfigEntries.ListEntryBase {
         }
         GuiContainer.drawRect(owningEntryList.controlX, y + 3, owningEntryList.controlX + owningEntryList.controlWidth, y + 3 + slotHeight - 6, getIntColorFromIndex(0) | (128 << 24));
         String s = "\u00a7" + currentValue.getFormattingCode() + "Example Text";
-        mc.fontRenderer.drawStringWithShadow(s, owningScreen.entryList.controlX + owningEntryList.controlWidth / 2 - mc.fontRenderer.getStringWidth(s) / 2, y + slotHeight / 2 - mc.fontRenderer.FONT_HEIGHT / 2, -1);
+        mc.fontRendererObj.drawStringWithShadow(s, owningScreen.entryList.controlX + owningEntryList.controlWidth / 2 - mc.fontRendererObj.getStringWidth(s) / 2, y + slotHeight / 2 - mc.fontRendererObj.FONT_HEIGHT / 2, -1);
     }
 
     @Override

@@ -21,7 +21,7 @@ public class FancyOverlay {
     private IConfigProperty<Float> scale;
 
     public FancyOverlay() {
-        overlay = new OverlayJoinLeave(Minecraft.getMinecraft(), Minecraft.getMinecraft().fontRenderer);
+        overlay = new OverlayJoinLeave(Minecraft.getMinecraft(), Minecraft.getMinecraft().fontRendererObj);
 
         MinecraftForge.EVENT_BUS.register(this);
         FMLCommonHandler.instance().bus().register(this);

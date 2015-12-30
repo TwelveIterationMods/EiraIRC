@@ -95,7 +95,7 @@ public class MCEventHandler {
                     return;
                 }
                 IChatComponent chatComponent = new ChatComponentText("* ");
-                chatComponent.appendSibling(event.sender.func_145748_c_()); // getFormattedCommandSenderName
+                chatComponent.appendSibling(event.sender.getFormattedCommandSenderName());
                 chatComponent.appendText(" ");
                 chatComponent.appendSibling(MessageFormat.createChatComponentForMessage(emote));
                 EnumChatFormatting emoteColor = SharedGlobalConfig.theme.emoteTextColor.get();
@@ -202,7 +202,7 @@ public class MCEventHandler {
 
     @SubscribeEvent
     public void onServerChat(ServerChatEvent event) {
-        IChatComponent senderComponent = event.player.func_145748_c_(); // getFormattedCommandSenderName
+        IChatComponent senderComponent = event.player.getFormattedCommandSenderName();
         EnumChatFormatting nameColor = IRCFormatting.getColorFormattingForPlayer(event.player);
         if (nameColor != null && nameColor != EnumChatFormatting.WHITE) {
             senderComponent.getChatStyle().setColor(nameColor);
@@ -368,7 +368,7 @@ public class MCEventHandler {
                             GeneralSettings generalSettings = ConfigHelper.getGeneralSettings(channel);
                             BotSettings botSettings = ConfigHelper.getBotSettings(channel);
                             String name = Utils.getNickIRC((EntityPlayer) event.entityLiving, channel);
-                            String ircMessage = event.entityLiving.func_110142_aN().func_151521_b().getUnformattedText(); // getCombatTracker
+                            String ircMessage = event.entityLiving.getCombatTracker().func_151521_b().getUnformattedText();
                             ircMessage = ircMessage.replaceAll(Pattern.quote(event.entityLiving.getCommandSenderName()), name);
                             ircMessage = IRCFormatting.toIRC(ircMessage, !botSettings.convertColors.get());
                             if (!generalSettings.readOnly.get() && botSettings.relayDeathMessages.get()) {
@@ -383,11 +383,11 @@ public class MCEventHandler {
 
     @SubscribeEvent
     public void onAchievement(AchievementEvent event) {
-        if (((EntityPlayerMP) event.entityPlayer).func_147099_x().hasAchievementUnlocked(event.achievement)) { // getStatFile
+        if (((EntityPlayerMP) event.entityPlayer).getStatFile().hasAchievementUnlocked(event.achievement)) {
             // This is necessary because the Achievement event fires even if an achievement is already unlocked.
             return;
         }
-        if (!((EntityPlayerMP) event.entityPlayer).func_147099_x().canUnlockAchievement(event.achievement)) { // getStatFile
+        if (!((EntityPlayerMP) event.entityPlayer).getStatFile().canUnlockAchievement(event.achievement)) {
             // This is necessary because the Achievement event fires even if an achievement can not be unlocked yet.
             return;
         }
@@ -399,7 +399,7 @@ public class MCEventHandler {
                     if (channel != null) {
                         GeneralSettings generalSettings = ConfigHelper.getGeneralSettings(channel);
                         BotSettings botSettings = ConfigHelper.getBotSettings(channel);
-                        String ircMessage = MessageFormat.formatMessage(botSettings.getMessageFormat().ircAchievement, channel, event.entityPlayer, event.achievement.func_150951_e().getUnformattedText(), MessageFormat.Target.IRC, MessageFormat.Mode.Emote); // getStatName
+                        String ircMessage = MessageFormat.formatMessage(botSettings.getMessageFormat().ircAchievement, channel, event.entityPlayer, event.achievement.getStatName().getUnformattedText(), MessageFormat.Target.IRC, MessageFormat.Mode.Emote);
                         if (!generalSettings.readOnly.get() && botSettings.relayAchievements.get()) {
                             channel.message(ircMessage);
                         }

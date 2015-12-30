@@ -106,10 +106,10 @@ public class GuiChatExtension {
     }
 
     public void initGui(List buttonList) {
-        fontRenderer = parentScreen.mc.fontRenderer;
+        fontRenderer = parentScreen.mc.fontRendererObj;
 
         String s = I19n.format("eirairc:gui.options");
-        int bw = parentScreen.mc.fontRenderer.getStringWidth(s) + 20;
+        int bw = parentScreen.mc.fontRendererObj.getStringWidth(s) + 20;
         btnOptions = new GuiButton(0, parentScreen.width - bw, 0, bw, 20, s);
         buttonList.add(btnOptions);
 
@@ -153,7 +153,7 @@ public class GuiChatExtension {
         boolean terminalStyleInput = ClientGlobalConfig.terminalStyleInput.get();
         String terminalChannel = chatSession.getChatTarget() != null ? (chatSession.getChatTarget().getName() + ": ") : null;
         if(terminalStyleInput && terminalChannel != null) {
-            int terminalChannelWidth = parentScreen.mc.fontRenderer.getStringWidth(terminalChannel);
+            int terminalChannelWidth = parentScreen.mc.fontRendererObj.getStringWidth(terminalChannel);
             inputField.xPosition = 4 + terminalChannelWidth;
             inputField.width = parentScreen.width - 4 - terminalChannelWidth;
         } else {
@@ -166,7 +166,7 @@ public class GuiChatExtension {
         boolean terminalStyleInput = ClientGlobalConfig.terminalStyleInput.get();
         String terminalChannel = chatSession.getChatTarget() != null ? (chatSession.getChatTarget().getName() + ": ") : null;
         if(terminalStyleInput && terminalChannel != null) {
-            parentScreen.mc.fontRenderer.drawString(terminalChannel, 4, inputField.yPosition, 14737632);
+            parentScreen.mc.fontRendererObj.drawString(terminalChannel, 4, inputField.yPosition, 14737632);
         }
         if(!ClientGlobalConfig.disableChatToggle.get() && !ClientGlobalConfig.clientBridge.get()) {
             IRCContext target = chatSession.getChatTarget();
@@ -209,7 +209,7 @@ public class GuiChatExtension {
 
     public boolean mouseClicked(int mouseX, int mouseY, int button) {
         if(button == 0 && parentScreen.mc.gameSettings.chatLinks) {
-            IChatComponent clickedComponent = parentScreen.mc.ingameGUI.getChatGUI().func_146236_a(Mouse.getX(), Mouse.getY()); // getChatComponent
+            IChatComponent clickedComponent = parentScreen.mc.ingameGUI.getChatGUI().getChatComponent(Mouse.getX(), Mouse.getY());
             if(clickedComponent != null) {
                 ClickEvent clickEvent = clickedComponent.getChatStyle().getChatClickEvent();
                 if(clickEvent != null) {

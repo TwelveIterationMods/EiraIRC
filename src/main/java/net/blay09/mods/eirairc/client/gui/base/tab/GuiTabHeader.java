@@ -49,6 +49,6 @@ public class GuiTabHeader extends Gui {
 		regionRight.draw(x + width - regionRight.getRegionWidth(), y);
 		GL11.glDisable(GL11.GL_BLEND);
 
-		drawString(mc.fontRenderer, tabPage.getTitle(), x + 8, y + 8 - mc.fontRenderer.FONT_HEIGHT / 2, hovered ? -12345678 : Globals.TEXT_COLOR);
+		drawString(mc.fontRendererObj, tabPage.getTitle(), x + 8, y + 8 - mc.fontRendererObj.FONT_HEIGHT / 2, hovered ? -12345678 : Globals.TEXT_COLOR);
 	}
 }
