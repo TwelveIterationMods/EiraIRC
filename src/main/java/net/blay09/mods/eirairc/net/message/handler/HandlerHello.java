@@ -14,12 +14,13 @@ public class HandlerHello implements IMessageHandler<MessageHello, IMessage> {
 
 	@Override
 	public IMessage onMessage(MessageHello packet, MessageContext ctx) {
-		EntityPlayer entityPlayer = ctx.getServerHandler().playerEntity;
-		
-		EiraPlayerInfo playerInfo = EiraIRC.instance.getNetHandler().getPlayerInfo(entityPlayer.getName());
-		playerInfo.modInstalled = true;
-		playerInfo.modVersion = packet.getVersion();
+		EiraIRC.proxy.addScheduledTask(() -> {
+            EntityPlayer entityPlayer = ctx.getServerHandler().playerEntity;
 
+            EiraPlayerInfo playerInfo = EiraIRC.instance.getNetHandler().getPlayerInfo(entityPlayer.getName());
+            playerInfo.modInstalled = true;
+            playerInfo.modVersion = packet.getVersion();
+        });
 		return null;
 	}
 

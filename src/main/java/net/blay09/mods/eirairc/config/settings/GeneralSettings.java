@@ -3,7 +3,6 @@
 package net.blay09.mods.eirairc.config.settings;
 
 import net.blay09.mods.eirairc.config.property.ConfigProperty;
-import net.minecraftforge.common.config.Configuration;
 
 public class GeneralSettings extends AbstractSettings {
 

@@ -13,7 +13,7 @@ public class HandlerNotification implements IMessageHandler<MessageNotification,
 
 	@Override
 	public IMessage onMessage(MessageNotification message, MessageContext ctx) {
-		EiraIRC.proxy.publishNotification(NotificationType.fromId(message.getNotificationType()), message.getText());
+		EiraIRC.proxy.addScheduledTask(() -> EiraIRC.proxy.publishNotification(NotificationType.fromId(message.getNotificationType()), message.getText()));
 		return null;
 	}
 

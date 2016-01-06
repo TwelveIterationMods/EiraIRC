@@ -15,6 +15,7 @@ import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.event.HoverEvent;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.MinecraftForge;
@@ -108,5 +109,9 @@ public class CommonProxy {
 
 	public IConfigManager getClientGlobalConfig() {
 		return null;
+	}
+
+	public void addScheduledTask(Runnable runnable) {
+		MinecraftServer.getServer().addScheduledTask(runnable);
 	}
 }

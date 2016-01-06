@@ -36,7 +36,6 @@ import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -112,6 +111,11 @@ public class ClientProxy extends CommonProxy {
 
         EiraIRCAPI.registerUploadHoster(new DirectUploadHoster());
         EiraIRCAPI.registerUploadHoster(new ImgurHoster());
+    }
+
+    @Override
+    public void addScheduledTask(Runnable runnable) {
+        Minecraft.getMinecraft().addScheduledTask(runnable);
     }
 
     @Override

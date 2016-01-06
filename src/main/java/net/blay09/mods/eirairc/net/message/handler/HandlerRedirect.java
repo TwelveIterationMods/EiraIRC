@@ -13,12 +13,14 @@ public class HandlerRedirect implements IMessageHandler<MessageRedirect, IMessag
 
     @Override
     public IMessage onMessage(MessageRedirect message, MessageContext ctx) {
-        Gson gson = new Gson();
-        JsonObject jsonObject = gson.fromJson(message.getRedirectConfig(), JsonObject.class);
-        ServerConfig serverConfig = ServerConfig.loadFromJson(jsonObject);
-        serverConfig.setIsRemote(true);
+        EiraIRC.proxy.addScheduledTask(() -> {
+            Gson gson = new Gson();
+            JsonObject jsonObject = gson.fromJson(message.getRedirectConfig(), JsonObject.class);
+            ServerConfig serverConfig = ServerConfig.loadFromJson(jsonObject);
+            serverConfig.setIsRemote(true);
 
-        EiraIRC.proxy.handleRedirect(serverConfig);
+            EiraIRC.proxy.handleRedirect(serverConfig);
+        });
         return null;
     }
 }
