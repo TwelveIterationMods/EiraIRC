@@ -65,7 +65,7 @@ repositories {
 dependencies {
     provided 'net.blay09.mods:eiramoticons:2.1.48:dev'
     compile 'us.dynmap:DynmapCoreAPI:2.1'
-    compile name: 'TabbyChat-API', version: '2.0-SNAPSHOT-b202', classifier: 'api'
+    compile group: 'mnm.mods', name: 'TabbyChat-API', version: '2.0-SNAPSHOT-b202', classifier: 'api'
 }
 
 jar {
