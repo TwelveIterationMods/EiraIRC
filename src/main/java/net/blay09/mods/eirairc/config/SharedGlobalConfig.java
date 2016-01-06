@@ -10,7 +10,6 @@ import net.blay09.mods.eirairc.config.settings.GeneralSettings;
 import net.blay09.mods.eirairc.config.settings.ThemeSettings;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.I19n;
-import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
 import net.minecraftforge.common.config.Configuration;
 
@@ -92,39 +91,6 @@ public class SharedGlobalConfig {
         thisConfig.save();
     }
 
-    public static void loadLegacy(File configDir, Configuration legacyConfig) {
-        thisConfig = new Configuration(new File(configDir, "shared.cfg"));
-        manager.setParentConfig(thisConfig);
-        generalSettings.manager.setParentConfig(thisConfig);
-        botSettings.manager.setParentConfig(thisConfig);
-        theme.manager.setParentConfig(thisConfig);
-
-        // General
-        enablePlayerColors.set(legacyConfig.getBoolean("enableNameColors", "display", enablePlayerColors.getDefaultValue(), ""));
-        colorBlacklist.set(new StringList(legacyConfig.getStringList("colorBlackList", "serveronly", new String[0], "")));
-        debugMode.set(legacyConfig.getBoolean("debugMode", "global", debugMode.getDefaultValue(), ""));
-        hidePlayerTags.set(legacyConfig.getBoolean("hidePlayerTags", "display", hidePlayerTags.getDefaultValue(), ""));
-
-        // Network
-        sslTrustAllCerts.set(legacyConfig.getBoolean("sslTrustAllCerts", "network", sslTrustAllCerts.getDefaultValue(), ""));
-        sslCustomTrustStore.set(Utils.unquote(legacyConfig.getString("sslCustomTrustStore", "network", sslCustomTrustStore.getDefaultValue(), "")));
-        sslDisableDiffieHellman.set(legacyConfig.getBoolean("sslDisableDiffieHellman", "network", sslDisableDiffieHellman.getDefaultValue(), ""));
-        proxyHost.set(Utils.unquote(legacyConfig.getString("proxyHost", "network", proxyHost.getDefaultValue(), "")));
-        proxyUsername.set(Utils.unquote(legacyConfig.getString("proxyUsername", "network", proxyUsername.getDefaultValue(), "")));
-        proxyPassword.set(Utils.unquote(legacyConfig.getString("proxyPassword", "network", proxyPassword.getDefaultValue(), "")));
-
-        // Theme
-        theme.load(thisConfig, false);
-        theme.loadLegacy(legacyConfig, null);
-        botSettings.load(thisConfig, false);
-        botSettings.loadLegacy(legacyConfig, null);
-        generalSettings.load(thisConfig, false);
-        generalSettings.loadLegacy(legacyConfig, null);
-
-        save();
-    }
-
-    @SuppressWarnings("unchecked")
     public static boolean handleConfigCommand(ICommandSender sender, String key, String value) {
         if(manager.setFromString(key, value)) {
         } else if (theme.handleConfigCommand(sender, key, value)) {

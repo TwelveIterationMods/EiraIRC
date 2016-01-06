@@ -1,14 +1,14 @@
 // Copyright (c) 2015, Christopher "BlayTheNinth" Baker
 
-
 package net.blay09.mods.eirairc.irc;
 
-import java.util.ArrayList;
+import com.google.common.collect.Lists;
+
 import java.util.List;
 
 public class IRCParser {
 
-	private final List<String> args = new ArrayList<String>();
+	private final List<String> args = Lists.newArrayList();
 	private String data;
 	private int idx;
 	

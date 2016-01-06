@@ -3,7 +3,6 @@ package net.blay09.mods.eirairc.addon;
 import net.blay09.mods.eirairc.api.config.IConfigProperty;
 import net.blay09.mods.eirairc.api.event.*;
 import net.blay09.mods.eirairc.client.gui.overlay.OverlayJoinLeave;
-import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.MessageFormat;
 import net.minecraft.client.Minecraft;
@@ -13,7 +12,6 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 public class FancyOverlay {
 
@@ -26,7 +24,6 @@ public class FancyOverlay {
         overlay = new OverlayJoinLeave(Minecraft.getMinecraft(), Minecraft.getMinecraft().fontRendererObj);
 
         MinecraftForge.EVENT_BUS.register(this);
-        FMLCommonHandler.instance().bus().register(this);
     }
 
     @SubscribeEvent

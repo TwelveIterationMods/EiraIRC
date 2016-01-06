@@ -1,6 +1,5 @@
 // Copyright (c) 2015, Christopher "BlayTheNinth" Baker
 
-
 package net.blay09.mods.eirairc.bot;
 
 import com.google.gson.JsonObject;
@@ -8,7 +7,6 @@ import net.blay09.mods.eirairc.api.bot.IBotCommand;
 import net.blay09.mods.eirairc.api.bot.IRCBot;
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.api.irc.IRCUser;
-import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.server.MinecraftServer;
 import org.apache.commons.lang3.StringUtils;
 
@@ -78,14 +76,19 @@ public class BotCommandCustom implements IBotCommand {
 		cmd.runAsOp = object.has("runAsOp") && object.get("runAsOp").getAsBoolean();
 		if(object.has("override")) {
 			String overrideName = object.get("override").getAsString();
-			if(overrideName.equals("who")) {
-				cmd.overrideCommand = new BotCommandWho();
-			} else if(overrideName.equals("help")) {
-				cmd.overrideCommand = new BotCommandHelp();
-			} else if(overrideName.equals("msg")) {
-				cmd.overrideCommand = new BotCommandMessage();
-			} else if(overrideName.equals("op")) {
-				cmd.overrideCommand = new BotCommandOp();
+			switch (overrideName) {
+				case "who":
+					cmd.overrideCommand = new BotCommandWho();
+					break;
+				case "help":
+					cmd.overrideCommand = new BotCommandHelp();
+					break;
+				case "msg":
+					cmd.overrideCommand = new BotCommandMessage();
+					break;
+				case "op":
+					cmd.overrideCommand = new BotCommandOp();
+					break;
 			}
 		}
 		cmd.outputFilter = object.has("outputFilter") ? object.get("outputFilter").getAsString() : "";

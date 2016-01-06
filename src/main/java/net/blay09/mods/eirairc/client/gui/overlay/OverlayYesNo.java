@@ -7,7 +7,6 @@ import net.blay09.mods.eirairc.util.I19n;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 
-
 public class OverlayYesNo extends GuiOverlay {
 
 	private final int id;

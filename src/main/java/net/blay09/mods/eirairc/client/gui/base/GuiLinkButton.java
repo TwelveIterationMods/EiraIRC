@@ -4,7 +4,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 
-
 public class GuiLinkButton extends GuiButton {
 
 	private final FontRenderer fontRenderer;

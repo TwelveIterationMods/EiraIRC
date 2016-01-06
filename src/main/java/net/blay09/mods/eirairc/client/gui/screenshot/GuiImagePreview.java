@@ -1,5 +1,6 @@
 package net.blay09.mods.eirairc.client.gui.screenshot;
 
+import com.google.common.collect.Lists;
 import net.blay09.mods.eirairc.client.gui.EiraGui;
 import net.blay09.mods.eirairc.client.gui.EiraGuiScreen;
 import net.blay09.mods.eirairc.client.gui.base.GuiImageButton;
@@ -15,7 +16,6 @@ import net.minecraft.client.gui.GuiYesNoCallback;
 import net.minecraft.client.renderer.GlStateManager;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 
 public class GuiImagePreview extends EiraGuiScreen implements GuiYesNoCallback {
@@ -99,7 +99,7 @@ public class GuiImagePreview extends EiraGuiScreen implements GuiYesNoCallback {
 		}
 	}
 
-	private static final List<String> tooltipList = new ArrayList<String>();
+	private static final List<String> tooltipList = Lists.newArrayList();
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float par3) {
 		drawLightBackground(menuX, menuY, menuWidth, menuHeight);

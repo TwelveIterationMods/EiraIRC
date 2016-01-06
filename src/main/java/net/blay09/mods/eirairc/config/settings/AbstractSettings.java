@@ -68,7 +68,6 @@ public abstract class AbstractSettings {
         return null;
     }
 
-    @SuppressWarnings("unchecked")
     public boolean handleConfigCommand(ICommandSender sender, String key, String value) {
         return manager.setFromString(key, value);
     }

@@ -11,7 +11,6 @@ import net.minecraft.client.gui.GuiScreen;
 
 import java.net.URL;
 
-
 public class GuiScreenshotBigPreview extends EiraGuiScreen {
 
 	private final GuiImage image;

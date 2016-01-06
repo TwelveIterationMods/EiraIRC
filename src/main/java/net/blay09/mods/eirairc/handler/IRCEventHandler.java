@@ -13,7 +13,6 @@ import net.blay09.mods.eirairc.config.*;
 import net.blay09.mods.eirairc.config.settings.*;
 import net.blay09.mods.eirairc.irc.*;
 import net.blay09.mods.eirairc.util.*;
-import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 import net.minecraftforge.common.MinecraftForge;

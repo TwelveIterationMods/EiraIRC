@@ -25,26 +25,4 @@ public class ThemeSettings extends AbstractSettings {
 		super(parent, THEME);
 	}
 
-	public void loadLegacy(Configuration legacyConfig, String categoryName) {
-		if(categoryName != null) {
-			String emoteColor = Utils.unquote(legacyConfig.get(categoryName, "emoteColor", "").getString());
-			if(!emoteColor.isEmpty()) {
-				emoteTextColor.set(IRCFormatting.getColorFormattingLegacy(emoteColor));
-			}
-			String ircColor = Utils.unquote(legacyConfig.get(categoryName, "ircColor", "").getString());
-			if(!ircColor.isEmpty()) {
-				ircNameColor.set(IRCFormatting.getColorFormattingLegacy(ircColor));
-			}
-		} else {
-			emoteTextColor.set(IRCFormatting.getColorFormattingLegacy(Utils.unquote(legacyConfig.get("display", "emoteColor", "gold").getString())));
-			mcNameColor.set(IRCFormatting.getColorFormattingLegacy(Utils.unquote(legacyConfig.get("display", "defaultColor", "white").getString())));
-			mcOpNameColor.set(IRCFormatting.getColorFormattingLegacy(Utils.unquote(legacyConfig.get("display", "opColor", "red").getString())));
-			ircNameColor.set(IRCFormatting.getColorFormattingLegacy(Utils.unquote(legacyConfig.get("display", "ircColor", "gray").getString())));
-			ircPrivateNameColor.set(IRCFormatting.getColorFormattingLegacy(Utils.unquote(legacyConfig.get("display", "ircPrivateColor", "gray").getString())));
-			ircVoiceNameColor.set(IRCFormatting.getColorFormattingLegacy(Utils.unquote(legacyConfig.get("display", "ircVoiceColor", "gray").getString())));
-			ircOpNameColor.set(IRCFormatting.getColorFormattingLegacy(Utils.unquote(legacyConfig.get("display", "ircOpColor", "gold").getString())));
-			ircNoticeTextColor.set(IRCFormatting.getColorFormattingLegacy(Utils.unquote(legacyConfig.get("display", "ircNoticeColor", "gray").getString())));
-		}
-	}
-
 }

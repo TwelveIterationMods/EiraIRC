@@ -290,75 +290,6 @@ public enum IRCFormatting {
 		}
 	}
 
-	@Deprecated
-	public static EnumChatFormatting getColorFormattingLegacy(String colorName) {
-		if(colorName == null || colorName.isEmpty()) {
-			return null;
-		}
-		colorName = colorName.toLowerCase();
-		EnumChatFormatting colorFormatting = null;
-		switch (colorName) {
-			case "black":
-				colorFormatting = EnumChatFormatting.BLACK;
-				break;
-			case "darkblue":
-			case "dark blue":
-				colorFormatting = EnumChatFormatting.DARK_BLUE;
-				break;
-			case "green":
-				colorFormatting = EnumChatFormatting.DARK_GREEN;
-				break;
-			case "cyan":
-				colorFormatting = EnumChatFormatting.DARK_AQUA;
-				break;
-			case "darkred":
-			case "dark red":
-				colorFormatting = EnumChatFormatting.DARK_RED;
-				break;
-			case "purple":
-				colorFormatting = EnumChatFormatting.DARK_PURPLE;
-				break;
-			case "gold":
-			case "orange":
-				colorFormatting = EnumChatFormatting.GOLD;
-				break;
-			case "gray":
-			case "grey":
-				colorFormatting = EnumChatFormatting.GRAY;
-				break;
-			case "darkgray":
-			case "darkgrey":
-			case "dark gray":
-			case "dark grey":
-				colorFormatting = EnumChatFormatting.DARK_GRAY;
-				break;
-			case "blue":
-				colorFormatting = EnumChatFormatting.BLUE;
-				break;
-			case "lime":
-				colorFormatting = EnumChatFormatting.GREEN;
-				break;
-			case "lightblue":
-			case "light blue":
-				colorFormatting = EnumChatFormatting.AQUA;
-				break;
-			case "red":
-				colorFormatting = EnumChatFormatting.RED;
-				break;
-			case "magenta":
-			case "pink":
-				colorFormatting = EnumChatFormatting.LIGHT_PURPLE;
-				break;
-			case "yellow":
-				colorFormatting = EnumChatFormatting.YELLOW;
-				break;
-			case "white":
-				colorFormatting = EnumChatFormatting.WHITE;
-				break;
-		}
-		return colorFormatting;
-	}
-
 	public static EnumChatFormatting getColorFormattingForPlayer(EntityPlayer player) {
 		NBTTagCompound tagCompound = player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getCompoundTag(Globals.NBT_EIRAIRC);
 		ThemeSettings theme = SharedGlobalConfig.theme;
@@ -366,12 +297,6 @@ public enum IRCFormatting {
 		if(SharedGlobalConfig.enablePlayerColors.get()) {
 			if (tagCompound.hasKey(Globals.NBT_NAMECOLOR)) {
 				nameColorId = tagCompound.getInteger(Globals.NBT_NAMECOLOR);
-			} else if (tagCompound.hasKey(Globals.NBT_NAMECOLOR_DEPRECATED)) {
-				String colorName = tagCompound.getString(Globals.NBT_NAMECOLOR_DEPRECATED);
-				EnumChatFormatting color = getColorFormattingLegacy(colorName);
-				if (color != null) {
-					nameColorId = color.ordinal();
-				}
 			}
 		}
 		if(nameColorId != -1) {

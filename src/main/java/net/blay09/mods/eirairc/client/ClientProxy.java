@@ -31,7 +31,6 @@ import net.minecraft.client.gui.*;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.client.event.GuiOpenEvent;
@@ -40,7 +39,6 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -83,7 +81,6 @@ public class ClientProxy extends CommonProxy {
         ScreenshotManager.create();
 
         MinecraftForge.EVENT_BUS.register(this);
-        FMLCommonHandler.instance().bus().register(this);
 
         for (KeyBinding keyBinding : keyBindings) {
             ClientRegistry.registerKeyBinding(keyBinding);
@@ -143,12 +140,6 @@ public class ClientProxy extends CommonProxy {
     @Override
     public String getUsername() {
         return Minecraft.getMinecraft().getSession().getUsername();
-    }
-
-    @Override
-    public void loadLegacyConfig(File configDir, Configuration legacyConfig) {
-        super.loadLegacyConfig(configDir, legacyConfig);
-        ClientGlobalConfig.loadLegacy(configDir, legacyConfig);
     }
 
     @Override

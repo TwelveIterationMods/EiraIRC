@@ -1,5 +1,6 @@
 package net.blay09.mods.eirairc.client.gui.screenshot;
 
+import com.google.common.collect.Lists;
 import net.blay09.mods.eirairc.api.event.ScreenshotUploadEvent;
 import net.blay09.mods.eirairc.client.gui.EiraGui;
 import net.blay09.mods.eirairc.client.gui.EiraGuiScreen;
@@ -21,7 +22,6 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
@@ -48,7 +48,7 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 	private GuiScreenshotPage activePageButton;
 	private int currentIdx;
 	private String lastSearchText = "";
-	private final List<Screenshot> searchResults = new ArrayList<Screenshot>();
+	private final List<Screenshot> searchResults = Lists.newArrayList();
 	private Screenshot currentScreenshot;
 	private GuiImage imgPreview;
 
@@ -191,7 +191,7 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 		GuiScreenshotPage pageFavorited = new GuiScreenshotPage(11, pageLeft, pageTop, I19n.format("eirairc:gui.screenshots.favorited")) {
 			@Override
 			public void onClick() {
-				List<Screenshot> groupList = new ArrayList<Screenshot>();
+				List<Screenshot> groupList = Lists.newArrayList();
 				for(Screenshot screenshot : ScreenshotManager.getInstance().getScreenshots()) {
 					if(screenshot.isFavorited()) {
 						groupList.add(screenshot);
@@ -206,7 +206,7 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 		GuiScreenshotPage pageTimestamp = new GuiScreenshotPage(11, pageLeft, pageTop, I19n.format("eirairc:gui.screenshots.today")) {
 			@Override
 			public void onClick() {
-				List<Screenshot> groupList = new ArrayList<Screenshot>();
+				List<Screenshot> groupList = Lists.newArrayList();
 				long now = System.currentTimeMillis();
 				for(Screenshot screenshot : ScreenshotManager.getInstance().getScreenshots()) {
 					long diff = now - screenshot.getTimeStamp();
@@ -223,7 +223,7 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 		pageTimestamp = new GuiScreenshotPage(11, pageLeft, pageTop, I19n.format("eirairc:gui.screenshots.thisWeek")) {
 			@Override
 			public void onClick() {
-				List<Screenshot> groupList = new ArrayList<Screenshot>();
+				List<Screenshot> groupList = Lists.newArrayList();
 				long now = System.currentTimeMillis();
 				for(Screenshot screenshot : ScreenshotManager.getInstance().getScreenshots()) {
 					long diff = now - screenshot.getTimeStamp();
@@ -240,7 +240,7 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 		pageTimestamp = new GuiScreenshotPage(11, pageLeft, pageTop, I19n.format("eirairc:gui.screenshots.thisMonth")) {
 			@Override
 			public void onClick() {
-				List<Screenshot> groupList = new ArrayList<Screenshot>();
+				List<Screenshot> groupList = Lists.newArrayList();
 				long now = System.currentTimeMillis();
 				for(Screenshot screenshot : ScreenshotManager.getInstance().getScreenshots()) {
 					long diff = now - screenshot.getTimeStamp();
@@ -257,7 +257,7 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 		pageTimestamp = new GuiScreenshotPage(11, pageLeft, pageTop, I19n.format("eirairc:gui.screenshots.thisYear")) {
 			@Override
 			public void onClick() {
-				List<Screenshot> groupList = new ArrayList<Screenshot>();
+				List<Screenshot> groupList = Lists.newArrayList();
 				long now = System.currentTimeMillis();
 				for(Screenshot screenshot : ScreenshotManager.getInstance().getScreenshots()) {
 					long diff = now - screenshot.getTimeStamp();
@@ -274,7 +274,7 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 		pageTimestamp = new GuiScreenshotPage(11, pageLeft, pageTop, I19n.format("eirairc:gui.screenshots.older")) {
 			@Override
 			public void onClick() {
-				List<Screenshot> groupList = new ArrayList<Screenshot>();
+				List<Screenshot> groupList = Lists.newArrayList();
 				long now = System.currentTimeMillis();
 				for(Screenshot screenshot : ScreenshotManager.getInstance().getScreenshots()) {
 					long diff = now - screenshot.getTimeStamp();
@@ -416,7 +416,7 @@ public class GuiScreenshots extends EiraGuiScreen implements GuiYesNoCallback {
 		}
 	}
 
-	private static final List<String> tooltipList = new ArrayList<String>();
+	private static final List<String> tooltipList = Lists.newArrayList();
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float par3) {
 		drawLightBackground(menuX, menuY, menuWidth, menuHeight);

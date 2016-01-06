@@ -1,6 +1,5 @@
 // Copyright (c) 2015, Christopher "BlayTheNinth" Baker
 
-
 package net.blay09.mods.eirairc.util;
 
 import net.blay09.mods.eirairc.EiraIRC;
@@ -22,6 +21,5 @@ public class Globals {
 	public static final String DEFAULT_CHARSET = "UTF-8";
 
 	public static final String NBT_EIRAIRC = "EiraIRC";
-	public static final String NBT_NAMECOLOR_DEPRECATED = "NameColor";
 	public static final String NBT_NAMECOLOR = "NameColorID";
 }

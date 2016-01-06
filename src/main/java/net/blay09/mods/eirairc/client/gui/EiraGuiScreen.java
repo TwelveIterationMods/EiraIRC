@@ -1,5 +1,6 @@
 package net.blay09.mods.eirairc.client.gui;
 
+import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.client.gui.base.GuiLabel;
 import net.blay09.mods.eirairc.client.gui.base.list.GuiList;
 import net.blay09.mods.eirairc.client.gui.overlay.GuiOverlay;
@@ -15,10 +16,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class EiraGuiScreen extends GuiScreen {
 
-	private static final ResourceLocation texMenuBackground = new ResourceLocation("eirairc", "gfx/menubg.png");
+	private static final ResourceLocation texMenuBackground = new ResourceLocation(EiraIRC.MOD_ID, "gfx/menubg.png");
 
 	protected final GuiScreen parentScreen;
 	protected final List<GuiTextField> textFieldList = new ArrayList<>();
@@ -70,7 +70,7 @@ public class EiraGuiScreen extends GuiScreen {
 	public boolean controlClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
 		if(mouseButton == 0) {
 			for(int i = 0; i < buttonList.size(); i++) {
-				GuiButton button = (GuiButton) buttonList.get(i);
+				GuiButton button = buttonList.get(i);
 				if(button.mousePressed(mc, mouseX, mouseY)) {
 					GuiScreenEvent.ActionPerformedEvent.Pre event = new GuiScreenEvent.ActionPerformedEvent.Pre(this, button, buttonList);
 					if(MinecraftForge.EVENT_BUS.post(event))
@@ -160,22 +160,15 @@ public class EiraGuiScreen extends GuiScreen {
 			overlay.updateScreen();
 		}
 
-		for (GuiTextField textField : textFieldList) {
-			textField.updateCursorCounter();
-		}
+		textFieldList.forEach(GuiTextField::updateCursorCounter);
 	}
 
 	@Override
 	public void drawScreen (int mouseX, int mouseY, float p_73863_3_){
 		super.drawScreen(mouseX, mouseY, p_73863_3_);
 
-		for (GuiLabel label : labelList) {
-			label.drawLabel();
-		}
-
-		for (GuiTextField textField : textFieldList) {
-			textField.drawTextBox();
-		}
+		labelList.forEach(GuiLabel::drawLabel);
+		textFieldList.forEach(GuiTextField::drawTextBox);
 
 		for (GuiList list : listList) {
 			list.drawList(mouseX, mouseY);

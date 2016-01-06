@@ -11,8 +11,6 @@ import net.blay09.mods.eirairc.config.settings.ThemeSettings;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
-import net.minecraftforge.common.config.ConfigCategory;
-import net.minecraftforge.common.config.Configuration;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -96,37 +94,6 @@ public class ServerConfig {
 
 	public Collection<ChannelConfig> getChannelConfigs() {
 		return channels.values();
-	}
-
-	public void loadLegacy(Configuration legacyConfig, ConfigCategory category) {
-		String categoryName = category.getQualifiedName();
-		nick = Utils.unquote(legacyConfig.get(categoryName, "nick", "").getString());
-		if(nick.isEmpty()) {
-			nick = Utils.unquote(legacyConfig.get("global", "nick", Globals.DEFAULT_NICK).getString());
-		}
-		String nickServName = Utils.unquote(legacyConfig.get(categoryName, "nickServName", "").getString());
-		String nickServPassword = Utils.unquote(legacyConfig.get(categoryName, "nickServPassword", "").getString());
-		if(nickServName != null && !nickServName.isEmpty() && nickServPassword != null && !nickServPassword.isEmpty()) {
-			AuthManager.putNickServData(getIdentifier(), nickServName, nickServPassword);
-		}
-		String serverPassword = Utils.unquote(legacyConfig.get(categoryName, "serverPassword", "").getString());
-		if(serverPassword != null && !serverPassword.isEmpty()) {
-			AuthManager.putServerPassword(getIdentifier(), serverPassword);
-		}
-		isSSL = legacyConfig.get(categoryName, "secureConnection", isSSL).getBoolean(isSSL);
-		charset = Utils.unquote(legacyConfig.get("global", "charset", charset).getString());
-
-		String channelsCategoryName = categoryName + Configuration.CATEGORY_SPLITTER + "channels";
-		ConfigCategory channelsCategory = legacyConfig.getCategory(channelsCategoryName);
-		for(ConfigCategory channelCategory : channelsCategory.getChildren()) {
-			ChannelConfig channelConfig = new ChannelConfig(this);
-			channelConfig.loadLegacy(legacyConfig, channelCategory);
-			addChannelConfig(channelConfig);
-		}
-
-		theme.loadLegacy(legacyConfig, categoryName);
-		botSettings.loadLegacy(legacyConfig, categoryName);
-		generalSettings.loadLegacy(legacyConfig, categoryName);
 	}
 
 	public static ServerConfig loadFromJson(JsonObject object) {

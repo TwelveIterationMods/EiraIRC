@@ -9,8 +9,6 @@ import net.blay09.mods.eirairc.config.settings.ThemeSettings;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
-import net.minecraftforge.common.config.ConfigCategory;
-import net.minecraftforge.common.config.Configuration;
 
 import java.util.List;
 
@@ -76,15 +74,6 @@ public class ChannelConfig {
 			object.add("settings", generalSettingsObject);
 		}
 		return object;
-	}
-
-	public void loadLegacy(Configuration config, ConfigCategory category) {
-		String categoryName = category.getQualifiedName();
-		name = Utils.unquote(config.get(categoryName, "name", "").getString());
-		String password = Utils.unquote(config.get(categoryName, "password", "").getString());
-		if(password != null && !password.isEmpty()) {
-			AuthManager.putChannelPassword(getIdentifier(), password);
-		}
 	}
 
 	public void handleConfigCommand(ICommandSender sender, String key) {

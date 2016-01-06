@@ -16,14 +16,12 @@ import net.minecraftforge.fml.client.config.IConfigElement;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class GuiEiraIRCConfig extends GuiConfig {
 
     public GuiEiraIRCConfig(GuiScreen parentScreen) {
         super(parentScreen, getCategories(), Globals.MOD_ID, "global", false, false, I19n.format("eirairc:gui.config"));
     }
 
-    @SuppressWarnings("unchecked")
     private static List<IConfigElement> getCategories() {
         List<IConfigElement> list = new ArrayList<>();
         list.add(new DummyConfigElement.DummyCategoryElement(I18n.format("eirairc:config.category.general.shared"), "eirairc:config.category.general", getCombinedConfigElements(SharedGlobalConfig.thisConfig.getCategory(SharedGlobalConfig.GENERAL), ClientGlobalConfig.thisConfig.getCategory(ClientGlobalConfig.GENERAL))));
@@ -46,7 +44,6 @@ public class GuiEiraIRCConfig extends GuiConfig {
         return list;
     }
 
-    @SuppressWarnings("unchecked")
     public static List<IConfigElement> getAllConfigElements(Configuration config) {
         List<IConfigElement> list = new ArrayList<>();
         for (String category : config.getCategoryNames()) {

@@ -1,13 +1,13 @@
 package net.blay09.mods.eirairc.client.gui.base.list;
 
+import com.google.common.collect.Lists;
 import net.minecraft.client.gui.Gui;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public abstract class GuiListEntry extends Gui {
 
-	protected final List<String> tooltipList = new ArrayList<String>();
+	protected final List<String> tooltipList = Lists.newArrayList();
 	private boolean selected;
 	protected GuiList parentList;
 

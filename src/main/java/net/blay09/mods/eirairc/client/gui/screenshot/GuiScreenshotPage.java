@@ -7,7 +7,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import org.lwjgl.opengl.GL11;
 
-
 public abstract class GuiScreenshotPage extends GuiButton {
 
 	private final TextureRegion regionContent;

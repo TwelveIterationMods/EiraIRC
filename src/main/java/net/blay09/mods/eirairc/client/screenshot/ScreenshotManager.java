@@ -2,6 +2,7 @@
 
 package net.blay09.mods.eirairc.client.screenshot;
 
+import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
@@ -39,7 +40,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-@SuppressWarnings("ALL")
 public class ScreenshotManager {
 
 	private static final Logger logger = LogManager.getLogger();
@@ -61,22 +61,19 @@ public class ScreenshotManager {
 	private static int[] buffer;
 	
 	private final File screenshotDir = new File(Minecraft.getMinecraft().mcDataDir, "screenshots");
-	private final List<Screenshot> screenshots = new ArrayList<Screenshot>();
-	private final Comparator<Screenshot> comparator = new Comparator<Screenshot>() {
-		@Override
-		public int compare(Screenshot first, Screenshot second) {
-			long flm = first.getFile().lastModified();
-			long slm = second.getFile().lastModified();
-			if (flm < slm) {
-				return 1;
-			} else if(flm > slm) {
-				return -1;
-			}
-			return 0;
-		}
-	};
+	private final List<Screenshot> screenshots = Lists.newArrayList();
+	private final Comparator<Screenshot> comparator = (first, second) -> {
+        long flm = first.getFile().lastModified();
+        long slm = second.getFile().lastModified();
+        if (flm < slm) {
+            return 1;
+        } else if(flm > slm) {
+            return -1;
+        }
+        return 0;
+    };
 
-	private final List<AsyncUploadScreenshot> uploadTasks = new ArrayList<AsyncUploadScreenshot>();
+	private final List<AsyncUploadScreenshot> uploadTasks = Lists.newArrayList();
 	private long lastScreenshotScan;
 	
 	public void load() {
@@ -87,12 +84,9 @@ public class ScreenshotManager {
 		} catch (FileNotFoundException e) {
 			metadataObject = new JsonObject();
 		}
-		File[] screenshotFiles = screenshotDir.listFiles(new FilenameFilter() {
-			@Override
-			public boolean accept(File file, String fileName) {
-				return fileName.endsWith(".png");
-			}
-		});
+		File[] screenshotFiles = screenshotDir.listFiles((file, fileName) -> {
+            return fileName.endsWith(".png");
+        });
 		if (screenshotFiles != null) {
 			for(File screenshotFile : screenshotFiles) {
 				screenshots.add(new Screenshot(screenshotFile, metadataObject.getAsJsonObject(screenshotFile.getName())));
@@ -217,7 +211,7 @@ public class ScreenshotManager {
 		IRCContext chatTarget = EiraIRC.instance.getChatSessionHandler().getChatTarget();
 		String screenshotURL = screenshot.getDirectURL() != null ? screenshot.getDirectURL() : screenshot.getUploadURL();
 		if(chatTarget == null) {
-			String format = ConfigHelper.getBotSettings(chatTarget).getMessageFormat().ircScreenshotUpload;
+			String format = ConfigHelper.getBotSettings(null).getMessageFormat().ircScreenshotUpload;
 			format = format.replace("{URL}", screenshotURL);
 			format = format.replace("{NICK} ", "");
 			Minecraft.getMinecraft().thePlayer.sendChatMessage("/me " + format);
@@ -262,12 +256,7 @@ public class ScreenshotManager {
 	}
 
 	public void findNewScreenshots(boolean autoAction) {
-		File[] screenshotFiles = screenshotDir.listFiles(new FileFilter() {
-			@Override
-			public boolean accept(File file) {
-			return file.getName().endsWith(".png") && file.lastModified() > lastScreenshotScan;
-			}
-		});
+		File[] screenshotFiles = screenshotDir.listFiles(file -> file.getName().endsWith(".png") && file.lastModified() > lastScreenshotScan);
 		if (screenshotFiles != null) {
 			for(File screenshotFile : screenshotFiles) {
 				Screenshot screenshot = new Screenshot(screenshotFile, null);

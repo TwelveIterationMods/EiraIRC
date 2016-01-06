@@ -11,7 +11,6 @@ import net.minecraft.util.ResourceLocation;
 
 import java.io.IOException;
 
-
 public class EiraGui {
 
 	public static TextureAtlas atlas;
@@ -32,11 +31,11 @@ public class EiraGui {
 
 		Tessellator tessellator = Tessellator.getInstance();
 		WorldRenderer renderer = tessellator.getWorldRenderer();
-		renderer.func_181668_a(7, DefaultVertexFormats.field_181707_g); // startDrawingQuads
-		renderer.func_181662_b(x, y + height, zLevel).func_181673_a(u, v2).func_181675_d(); // addVertexPosition addVertexUV finishVertex
-		renderer.func_181662_b(x + width, y + height, zLevel).func_181673_a(u2, v2).func_181675_d(); // addVertexPosition addVertexUV finishVertex
-		renderer.func_181662_b(x + width, y, zLevel).func_181673_a(u2, v).func_181675_d(); // addVertexPosition addVertexUV finishVertex
-		renderer.func_181662_b(x, y, zLevel).func_181673_a(u, v).func_181675_d(); // addVertexPosition addVertexUV finishVertex
+		renderer.begin(7, DefaultVertexFormats.POSITION_TEX);
+		renderer.pos(x, y + height, zLevel).tex(u, v2).endVertex();
+		renderer.pos(x + width, y + height, zLevel).tex(u2, v2).endVertex();
+		renderer.pos(x + width, y, zLevel).tex(u2, v).endVertex();
+		renderer.pos(x, y, zLevel).tex(u, v).endVertex();
 		tessellator.draw();
 	}
 

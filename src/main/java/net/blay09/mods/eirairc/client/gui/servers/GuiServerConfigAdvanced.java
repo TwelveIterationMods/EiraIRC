@@ -17,9 +17,7 @@ import net.blay09.mods.eirairc.irc.IRCConnectionImpl;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.I19n;
-import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.GuiYesNoCallback;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
@@ -27,7 +25,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.input.Keyboard;
 
 import java.nio.charset.Charset;
-
 
 public class GuiServerConfigAdvanced extends GuiTabPage implements GuiYesNoCallback {
 
@@ -184,7 +181,6 @@ public class GuiServerConfigAdvanced extends GuiTabPage implements GuiYesNoCallb
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void actionPerformed(GuiButton button) {
         if (button == btnBack) {
             tabContainer.setCurrentTab(parent, false);

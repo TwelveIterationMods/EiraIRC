@@ -1,5 +1,6 @@
 package net.blay09.mods.eirairc.client.graphics;
 
+import com.google.common.collect.Lists;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 
@@ -7,13 +8,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.List;
-
 
 public class TextureAtlas {
 
-	private final List<TextureAtlasPage> pages = new ArrayList<TextureAtlasPage>();
+	private final List<TextureAtlasPage> pages = Lists.newArrayList();
 
 	public TextureAtlas(IResourceManager resourceManager, ResourceLocation resourceLocation) throws IOException {
 		String resourcePath = resourceLocation.getResourcePath();

@@ -1,5 +1,6 @@
 package net.blay09.mods.eirairc.client.gui.base.list;
 
+import com.google.common.collect.Lists;
 import net.blay09.mods.eirairc.client.gui.EiraGuiScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -7,7 +8,6 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.util.MathHelper;
 import org.lwjgl.opengl.GL11;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class GuiList<T extends GuiListEntry> extends Gui {
@@ -19,7 +19,7 @@ public class GuiList<T extends GuiListEntry> extends Gui {
 	private static final int DOUBLE_CLICK_TIME = 250;
 	private static final float TOOLTIP_TIME = 30;
 
-	private final List<T> entries = new ArrayList<T>();
+	private final List<T> entries = Lists.newArrayList();
 	private final EiraGuiScreen parentScreen;
 
 	private final int xPosition;

@@ -18,7 +18,6 @@ import net.minecraftforge.fml.client.config.GuiCheckBox;
 import net.minecraftforge.fml.client.config.GuiConfig;
 import org.lwjgl.input.Keyboard;
 
-
 public class GuiChannelConfig extends GuiTabPage implements GuiYesNoCallback {
 
 	private final GuiServerConfig parent;
@@ -122,7 +121,6 @@ public class GuiChannelConfig extends GuiTabPage implements GuiYesNoCallback {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public void actionPerformed(GuiButton button) {
 		if(button == btnTheme) {
 			mc.displayGuiScreen(new GuiConfig(tabContainer, GuiEiraIRCConfig.getAllConfigElements(config.getTheme().pullDummyConfig()), Globals.MOD_ID, "channel:" + config.getIdentifier(), false, false, I19n.format("eirairc:gui.config.theme", config.getName())));

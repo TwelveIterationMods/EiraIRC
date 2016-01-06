@@ -29,13 +29,13 @@ public class IRCUserCommandSender implements ICommandSender {
 	}
 
 	@Override
-	public String getCommandSenderName() {
+	public String getName() {
 		return "[EiraIRC] " + user.getName();
 	}
 
 	@Override
 	public IChatComponent getDisplayName() {
-		return new ChatComponentText(getCommandSenderName());
+		return new ChatComponentText(getName());
 	}
 
 	@Override

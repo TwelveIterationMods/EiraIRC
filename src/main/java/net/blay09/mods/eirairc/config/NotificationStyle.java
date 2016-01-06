@@ -1,6 +1,5 @@
 package net.blay09.mods.eirairc.config;
 
- // Notifications
 public enum NotificationStyle {
 	None,
 	TextOnly,

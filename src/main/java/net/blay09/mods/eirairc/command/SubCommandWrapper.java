@@ -2,6 +2,7 @@
 
 package net.blay09.mods.eirairc.command;
 
+import com.google.common.collect.Lists;
 import net.blay09.mods.eirairc.api.SubCommand;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.CommandException;
@@ -59,7 +60,7 @@ public final class SubCommandWrapper implements ICommand {
 
 	@Override
 	public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
-		List<String> list = new ArrayList<>();
+		List<String> list = Lists.newArrayList();
 		command.addTabCompletionOptions(list, sender, args);
 		return list;
 	}

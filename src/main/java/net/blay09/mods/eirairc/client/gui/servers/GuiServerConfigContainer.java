@@ -7,7 +7,6 @@ import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.minecraft.client.gui.GuiScreen;
 
-
 public class GuiServerConfigContainer extends GuiTabContainer {
 
 	public GuiServerConfigContainer(GuiScreen parentScreen) {

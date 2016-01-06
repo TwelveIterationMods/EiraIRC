@@ -1,8 +1,9 @@
 // Copyright (c) 2015, Christopher "BlayTheNinth" Baker
 
-
 package net.blay09.mods.eirairc.config;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
@@ -19,7 +20,6 @@ import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
@@ -33,13 +33,13 @@ public class ConfigurationHandler {
 
     private static final Logger logger = LogManager.getLogger();
 
-    private static final Map<String, ServerConfig> serverConfigs = new HashMap<>();
-    private static final Map<String, MessageFormatConfig> displayFormats = new HashMap<>();
-    private static final List<IBotCommand> customCommands = new ArrayList<>();
-    private static final List<RemoteBotCommand> remoteCommands = new ArrayList<>();
-    private static final List<SuggestedChannel> suggestedChannels = new ArrayList<>();
-    private static final Map<String, TrustedServer> trustedServers = new HashMap<>();
-    public static final List<String> failedToLoad = new ArrayList<>();
+    private static final Map<String, ServerConfig> serverConfigs = Maps.newHashMap();
+    private static final Map<String, MessageFormatConfig> displayFormats = Maps.newHashMap();
+    private static final List<IBotCommand> customCommands = Lists.newArrayList();
+    private static final List<RemoteBotCommand> remoteCommands = Lists.newArrayList();
+    private static final List<SuggestedChannel> suggestedChannels = Lists.newArrayList();
+    private static final Map<String, TrustedServer> trustedServers = Maps.newHashMap();
+    public static final List<String> failedToLoad = Lists.newArrayList();
 
     private static File baseConfigDir;
     private static MessageFormatConfig defaultDisplayFormat;
@@ -52,11 +52,8 @@ public class ConfigurationHandler {
             }
         }
         MessageFormatConfig.setupDefaultFormats(formatDir);
-        File[] files = formatDir.listFiles(new FilenameFilter() {
-            @Override
-            public boolean accept(File file, String name) {
-                return name.endsWith(".cfg");
-            }
+        File[] files = formatDir.listFiles((file, name) -> {
+            return name.endsWith(".cfg");
         });
         for (File file : files) {
             MessageFormatConfig dfc = new MessageFormatConfig(file);
@@ -252,19 +249,6 @@ public class ConfigurationHandler {
         }
     }
 
-    private static void loadLegacy(File configDir, Configuration legacyConfig) {
-        EiraIRC.proxy.loadLegacyConfig(configDir, legacyConfig);
-
-        ConfigCategory serversCategory = legacyConfig.getCategory("servers");
-        for (ConfigCategory serverCategory : serversCategory.getChildren()) {
-            ServerConfig serverConfig = new ServerConfig(Utils.unquote(legacyConfig.get(serverCategory.getQualifiedName(), "host", "").getString()));
-            serverConfig.loadLegacy(legacyConfig, serverCategory);
-            addServerConfig(serverConfig);
-        }
-
-        save();
-    }
-
     public static void load(File baseConfigDir) {
         ConfigurationHandler.baseConfigDir = baseConfigDir;
         File configDir = new File(baseConfigDir, "eirairc");
@@ -272,16 +256,7 @@ public class ConfigurationHandler {
         loadServices(configDir);
         loadDisplayFormats(new File(configDir, "formats"));
 
-        File legacyConfigFile = new File(baseConfigDir, "eirairc.cfg");
-        if (legacyConfigFile.exists()) {
-            Configuration legacyConfig = new Configuration(legacyConfigFile);
-            loadLegacy(configDir, legacyConfig);
-            if (!legacyConfigFile.renameTo(new File(baseConfigDir, "eirairc.cfg.old"))) {
-                logger.error("Couldn't get rid of old 'eirairc.cfg' file. Config will REGENERATE unless you delete it yourself.");
-            }
-        } else {
-            EiraIRC.proxy.loadConfig(configDir, true);
-        }
+        EiraIRC.proxy.loadConfig(configDir, true);
 
         loadCommands(configDir);
         loadServers(configDir);

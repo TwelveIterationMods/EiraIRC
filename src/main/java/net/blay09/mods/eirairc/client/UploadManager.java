@@ -1,18 +1,17 @@
 // Copyright (c) 2015, Christopher "BlayTheNinth" Baker
 
-
 package net.blay09.mods.eirairc.client;
 
+import com.google.common.collect.Maps;
 import net.blay09.mods.eirairc.api.upload.UploadHoster;
 import net.blay09.mods.eirairc.config.ClientGlobalConfig;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 
 public class UploadManager {
 
-	private static final Map<String, UploadHoster> uploadHosters = new HashMap<String, UploadHoster>();
+	private static final Map<String, UploadHoster> uploadHosters = Maps.newHashMap();
 	private static String[] availableHosters;
 	
 	public static UploadHoster getUploadHoster(String name) {

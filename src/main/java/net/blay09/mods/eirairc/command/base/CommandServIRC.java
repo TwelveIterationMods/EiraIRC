@@ -9,7 +9,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.BlockPos;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class CommandServIRC implements ICommand {
@@ -30,10 +30,8 @@ public class CommandServIRC implements ICommand {
 	}
 
 	@Override
-	public List getCommandAliases() {
-		List<String> aliases = new ArrayList<>();
-		aliases.add("sirc");
-		return aliases;
+	public List<String> getCommandAliases() {
+		return Collections.singletonList("sirc");
 	}
 
 	@Override

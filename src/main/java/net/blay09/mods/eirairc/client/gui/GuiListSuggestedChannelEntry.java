@@ -11,7 +11,6 @@ import net.blay09.mods.eirairc.util.I19n;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 
-
 public class GuiListSuggestedChannelEntry extends GuiListEntry {
 
 	private static final int TEXT_MARGIN = 5;

@@ -6,7 +6,6 @@ import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 
-
 public class TextureRegion {
 
 	private static final int TEXTURE_WIDTH = 256;
@@ -70,11 +69,11 @@ public class TextureRegion {
 
 		Tessellator tessellator = Tessellator.getInstance();
 		WorldRenderer renderer = tessellator.getWorldRenderer();
-		renderer.func_181668_a(7, DefaultVertexFormats.field_181707_g); // startDrawingQuads
-		renderer.func_181662_b(x, y + height, 0).func_181673_a(u, v2).func_181675_d(); // addVertexPosition addVertexUV finishVertex
-		renderer.func_181662_b(x + width, y + height, 0).func_181673_a(u2, v2).func_181675_d(); // addVertexPosition addVertexUV finishVertex
-		renderer.func_181662_b(x + width, y, 0).func_181673_a(u2, v).func_181675_d(); // addVertexPosition addVertexUV finishVertex
-		renderer.func_181662_b(x, y, 0).func_181673_a(u, v).func_181675_d(); // addVertexPosition addVertexUV finishVertex
+		renderer.begin(7, DefaultVertexFormats.POSITION_TEX);
+		renderer.pos(x, y + height, 0).tex(u, v2).endVertex();
+		renderer.pos(x + width, y + height, 0).tex(u2, v2).endVertex();
+		renderer.pos(x + width, y, 0).tex(u2, v).endVertex();
+		renderer.pos(x, y, 0).tex(u, v).endVertex();
 		tessellator.draw();
 	}
 

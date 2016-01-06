@@ -2,6 +2,7 @@
 
 package net.blay09.mods.eirairc.irc.ssl;
 
+import com.google.common.collect.Lists;
 import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
 import net.blay09.mods.eirairc.irc.IRCConnectionImpl;
@@ -16,7 +17,6 @@ import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.LinkedList;
 import java.util.List;
 
 public class IRCConnectionSSLImpl extends IRCConnectionImpl {
@@ -72,7 +72,7 @@ public class IRCConnectionSSLImpl extends IRCConnectionImpl {
 	}
 
 	private void disableDiffieHellman(SSLSocket sslSocket) {
-		List<String> limited = new LinkedList<String>();
+		List<String> limited = Lists.newLinkedList();
 		for(String suite : sslSocket.getEnabledCipherSuites()) {
 			if(!suite.contains("_DHE_")) {
 				limited.add(suite);

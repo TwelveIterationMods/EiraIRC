@@ -1,7 +1,6 @@
 package net.blay09.mods.eirairc.client.gui.servers;
 
 import net.blay09.mods.eirairc.ConnectionManager;
-import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.event.*;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
 import net.blay09.mods.eirairc.client.gui.EiraGui;
@@ -20,13 +19,10 @@ import net.blay09.mods.eirairc.config.ServerConfig;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Globals;
 import net.blay09.mods.eirairc.util.I19n;
-import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.GuiYesNoCallback;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.config.ConfigElement;
 import net.minecraftforge.fml.client.config.GuiConfig;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.input.Keyboard;
@@ -170,7 +166,6 @@ public class GuiServerConfig extends GuiTabPage implements GuiYesNoCallback {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public void actionPerformed(GuiButton button) {
 		if(button == btnTheme) {
 			mc.displayGuiScreen(new GuiConfig(tabContainer, GuiEiraIRCConfig.getAllConfigElements(config.getTheme().pullDummyConfig()), Globals.MOD_ID, "server:" + config.getAddress(), false, false, I19n.format("eirairc:gui.config.theme", config.getAddress())));

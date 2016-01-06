@@ -7,7 +7,6 @@ import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.gui.GuiButton;
 import org.lwjgl.opengl.GL11;
 
-
 public class GuiMenuButton extends GuiButton {
 
 	private final TextureRegion region;

@@ -1,6 +1,5 @@
 // Copyright (c) 2015, Christopher "BlayTheNinth" Baker
 
-
 package net.blay09.mods.eirairc;
 
 import net.blay09.mods.eirairc.api.config.IConfigManager;
@@ -19,7 +18,6 @@ import net.minecraft.event.HoverEvent;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
@@ -45,11 +43,6 @@ public class CommonProxy {
 	public void loadConfig(File configDir, boolean reloadFile) {
 		SharedGlobalConfig.load(configDir, reloadFile);
 		LocalConfig.load(configDir, reloadFile);
-	}
-
-	public void loadLegacyConfig(File configDir, Configuration legacyConfig) {
-		SharedGlobalConfig.loadLegacy(configDir, legacyConfig);
-		LocalConfig.load(configDir, false);
 	}
 
 	public void handleRedirect(ServerConfig serverConfig) {}

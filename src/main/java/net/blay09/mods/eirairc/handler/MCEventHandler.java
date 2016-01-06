@@ -1,13 +1,11 @@
 // Copyright (c) 2015, Christopher "BlayTheNinth" Baker
 
-
 package net.blay09.mods.eirairc.handler;
 
 import net.blay09.mods.eirairc.ConnectionManager;
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.EiraIRCAPI;
 import net.blay09.mods.eirairc.api.event.ClientChatEvent;
-import net.blay09.mods.eirairc.api.event.RelayChat;
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.api.irc.IRCConnection;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
@@ -214,12 +212,6 @@ public class MCEventHandler {
 		}
 	}
 
-	@SubscribeEvent
-	@SideOnly(Side.CLIENT)
-	public void relayChatClient(RelayChat event) {
-		relayChatClient(event.message, event.isEmote, event.isNotice, event.target);
-	}
-
 	@SideOnly(Side.CLIENT)
 	public void relayChatClient(String message, boolean isEmote, boolean isNotice, IRCContext target) {
 		if(target != null) {
@@ -298,12 +290,6 @@ public class MCEventHandler {
 		}
 	}
 
-	@SubscribeEvent
-	@SideOnly(Side.SERVER)
-	public void relayChatServer(RelayChat event) {
-		relayChatServer(event.sender, event.message, event.isEmote, event.isNotice, event.target);
-	}
-
 	public void relayChatServer(ICommandSender sender, String message, boolean isEmote, boolean isNotice, IRCContext target) {
 		if(target != null) {
 			if(!ConfigHelper.getGeneralSettings(target).readOnly.get()) {
@@ -371,7 +357,7 @@ public class MCEventHandler {
 							BotSettings botSettings = ConfigHelper.getBotSettings(channel);
 							String name = Utils.getNickIRC((EntityPlayer) event.entityLiving, channel);
 							String ircMessage = event.entityLiving.getCombatTracker().getDeathMessage().getUnformattedText();
-							ircMessage = ircMessage.replace(event.entityLiving.getCommandSenderName(), name);
+							ircMessage = ircMessage.replace(event.entityLiving.getName(), name);
 							ircMessage = IRCFormatting.toIRC(ircMessage, !botSettings.convertColors.get());
 							if (!generalSettings.readOnly.get() && botSettings.relayDeathMessages.get()) {
 								channel.message(ircMessage);

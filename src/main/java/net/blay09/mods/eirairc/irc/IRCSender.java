@@ -1,13 +1,11 @@
 package net.blay09.mods.eirairc.irc;
 
+import com.google.common.collect.Lists;
 import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.config.SharedGlobalConfig;
-import net.minecraft.client.Minecraft;
-import net.minecraft.crash.CrashReport;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.net.SocketException;
 import java.util.LinkedList;
 
 public class IRCSender implements Runnable {
@@ -16,7 +14,7 @@ public class IRCSender implements Runnable {
 
 	private final IRCConnectionImpl connection;
 	private Thread thread;
-	private final LinkedList<String> queue = new LinkedList<String>();
+	private final LinkedList<String> queue = Lists.newLinkedList();
 	private boolean running;
 	private BufferedWriter writer;
 
@@ -69,8 +67,6 @@ public class IRCSender implements Runnable {
 					Thread.sleep(antiFlood ? SharedGlobalConfig.antiFloodTime.get() : 100);
 				} catch (InterruptedException ignored) {}
 			}
-		} catch (SocketException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (Exception e) {

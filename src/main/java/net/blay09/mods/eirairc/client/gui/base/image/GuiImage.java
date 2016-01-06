@@ -17,16 +17,13 @@ public abstract class GuiImage {
 	private float imageHeight;
 
 	public void loadTexture() {
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					loadBuffer = loadImage();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}).start();
+		new Thread(() -> {
+            try {
+                loadBuffer = loadImage();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
 	}
 
 	public boolean isLoaded() {
@@ -63,11 +60,11 @@ public abstract class GuiImage {
 		GlStateManager.bindTexture(textureId);
 		Tessellator tessellator = Tessellator.getInstance();
 		WorldRenderer renderer = tessellator.getWorldRenderer();
-		renderer.func_181668_a(7, DefaultVertexFormats.field_181707_g); // startDrawingQuads
-		renderer.func_181662_b(renderX, renderY + renderHeight, zLevel).func_181673_a(0, 1).func_181675_d(); // addVertexPosition addVertexUV finishVertex
-		renderer.func_181662_b(renderX + renderWidth, renderY + renderHeight, zLevel).func_181673_a(1, 1).func_181675_d(); // addVertexPosition addVertexUV finishVertex
-		renderer.func_181662_b(renderX + renderWidth, renderY, zLevel).func_181673_a(1, 0).func_181675_d(); // addVertexPosition addVertexUV finishVertex
-		renderer.func_181662_b(renderX, renderY, zLevel).func_181673_a(0, 0).func_181675_d(); // addVertexPosition addVertexUV finishVertex
+		renderer.begin(7, DefaultVertexFormats.POSITION_TEX);
+		renderer.pos(renderX, renderY + renderHeight, zLevel).tex(0, 1).endVertex();
+		renderer.pos(renderX + renderWidth, renderY + renderHeight, zLevel).tex(1, 1).endVertex();
+		renderer.pos(renderX + renderWidth, renderY, zLevel).tex(1, 0).endVertex();
+		renderer.pos(renderX, renderY, zLevel).tex(0, 0).endVertex();
 		tessellator.draw();
 	}
 

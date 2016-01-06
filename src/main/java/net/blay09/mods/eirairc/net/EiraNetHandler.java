@@ -2,15 +2,15 @@
 
 package net.blay09.mods.eirairc.net;
 
+import com.google.common.collect.Maps;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class EiraNetHandler {
 
-	private final Map<String, EiraPlayerInfo> playerInfoMap = new HashMap<String, EiraPlayerInfo>();
+	private final Map<String, EiraPlayerInfo> playerInfoMap = Maps.newHashMap();
 	
 	public EiraPlayerInfo getPlayerInfo(String username) {
 		synchronized(playerInfoMap) {
@@ -26,7 +26,7 @@ public class EiraNetHandler {
 	@SubscribeEvent
 	public void onPlayerLogout(PlayerLoggedOutEvent event) {
 		synchronized(playerInfoMap) {
-			playerInfoMap.remove(event.player.getCommandSenderName());
+			playerInfoMap.remove(event.player.getName());
 		}
 	}
 	

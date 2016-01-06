@@ -196,7 +196,7 @@ public class MessageFormat {
 							component = new ChatComponentText(Utils.getCurrentServerName());
 							break;
 						case "USER":
-							component = new ChatComponentText(sender.getCommandSenderName());
+							component = new ChatComponentText(sender.getName());
 							break;
 						case "CHANNEL":
 							component = new ChatComponentText(context != null ? context.getName() : "");
@@ -215,7 +215,7 @@ public class MessageFormat {
 									}
 								}
 							} else {
-								component = new ChatComponentText(sender.getCommandSenderName());
+								component = new ChatComponentText(sender.getName());
 							}
 							break;
 						case "MESSAGE":

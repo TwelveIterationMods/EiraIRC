@@ -85,46 +85,10 @@ public class ClientGlobalConfig {
 		thisConfig.save();
 	}
 
-	public static void loadLegacy(File configDir, Configuration legacyConfig) {
-		thisConfig = new Configuration(new File(configDir, "client.cfg"));
-		manager.setParentConfig(thisConfig);
-
-		// General
-		registerShortCommands.set(legacyConfig.getBoolean("registerShortCommands", "global", registerShortCommands.get(), ""));
-		persistentConnection.set(legacyConfig.get("clientonly", "persistentConnection", persistentConnection.get()).getBoolean());
-
-		// Screenshots
-		screenshotHoster.set(Utils.unquote(legacyConfig.get("clientonly", "uploadHoster", screenshotHoster.get()).getString()));
-		screenshotAction.set(ScreenshotAction.values[legacyConfig.get("clientonly", "screenshotAction", 0).getInt()]);
-		uploadBufferSize.set(legacyConfig.get("clientonly", "uploadBufferSize", uploadBufferSize.get()).getInt());
-
-		// Keybinds
-		keyOpenMenu.setKeyCode(legacyConfig.get("keybinds", "keyMenu", keyOpenMenu.getKeyCodeDefault()).getInt());
-		keyToggleTarget.setKeyCode(legacyConfig.get("keybinds", "keyToggleTarget", keyToggleTarget.getKeyCodeDefault()).getInt());
-		keyScreenshotShare.setKeyCode(legacyConfig.get("keybinds", "keyScreenshotShare", keyScreenshotShare.getKeyCodeDefault()).getInt());
-		keyOpenScreenshots.setKeyCode(legacyConfig.get("keybinds", "keyOpenScreenshots", keyOpenScreenshots.getKeyCodeDefault()).getInt());
-
-		// Notifications
-		notificationSound.set(Utils.unquote(legacyConfig.get("notifications", "sound", notificationSound.get()).getString()));
-		notificationSoundVolume.set((float) legacyConfig.get("notifications", "soundVolume", notificationSoundVolume.get()).getDouble());
-		notificationSoundPitch.set((float) legacyConfig.get("notifications", "soundPitch", notificationSoundPitch.get()).getDouble());
-		ntfyFriendJoined.set(NotificationStyle.values[legacyConfig.get("notifications", "notifyFriendJoined", 0).getInt()]);
-		ntfyNameMentioned.set(NotificationStyle.values[legacyConfig.get("notifications", "notifyNameMentioned", 0).getInt()]);
-		ntfyPrivateMessage.set(NotificationStyle.values[legacyConfig.get("notifications", "notifyPrivateMessage", 0).getInt()]);
-
-		// Compatibility
-		clientBridge.set(legacyConfig.get("compatibility", "clientBridge", clientBridge.get()).getBoolean());
-		disableChatToggle.set(legacyConfig.get("compatibility", "disableChatToggle", disableChatToggle.get()).getBoolean());
-		chatNoOverride.set(legacyConfig.get("compatibility", "chatNoOverride", chatNoOverride.get()).getBoolean());
-
-		save();
-	}
-
 	public static String handleConfigCommand(ICommandSender sender, String key) {
 		return manager.getAsString(key);
 	}
 
-	@SuppressWarnings("unchecked")
 	public static boolean handleConfigCommand(ICommandSender sender, String key, String value) {
 		return manager.setFromString(key, value);
 	}

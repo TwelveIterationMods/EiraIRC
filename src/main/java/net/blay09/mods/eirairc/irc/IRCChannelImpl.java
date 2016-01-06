@@ -2,13 +2,13 @@
 
 package net.blay09.mods.eirairc.irc;
 
+import com.google.common.collect.Maps;
 import net.blay09.mods.eirairc.api.config.IConfigManager;
 import net.blay09.mods.eirairc.api.irc.IRCChannel;
 import net.blay09.mods.eirairc.api.irc.IRCUser;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 
 public class IRCChannelImpl implements IRCChannel {
@@ -16,7 +16,7 @@ public class IRCChannelImpl implements IRCChannel {
 	private IRCConnectionImpl connection;
 	private String name;
 	private String topic;
-	private Map<String, IRCUser> users = new HashMap<String, IRCUser>();
+	private Map<String, IRCUser> users = Maps.newHashMap();
 
 	public IRCChannelImpl(IRCConnectionImpl connection, String name) {
 		this.connection = connection;

@@ -2,7 +2,6 @@ package net.blay09.mods.eirairc.config;
 
 import com.google.gson.JsonObject;
 
-
 public class TrustedServer {
 
     private final String address;

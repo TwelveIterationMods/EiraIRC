@@ -10,7 +10,6 @@ import net.blay09.mods.eirairc.config.IgnoreList;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
-import net.minecraft.util.ChatComponentText;
 
 import java.util.List;
 

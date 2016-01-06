@@ -1,10 +1,8 @@
 // Copyright (c) 2015, Christopher "BlayTheNinth" Baker
 
-
 package net.blay09.mods.eirairc.command;
 
 import net.blay09.mods.eirairc.ConnectionManager;
-import net.blay09.mods.eirairc.EiraIRC;
 import net.blay09.mods.eirairc.api.SubCommand;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.config.AuthManager;

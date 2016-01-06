@@ -11,7 +11,7 @@ public interface TwitchUser {
     boolean isTwitchSubscriber(IRCChannel channel);
 
     /**
-     * @return true if this user is publically Twitch Turbo
+     * @return true if this user is publicly Twitch Turbo
      */
     boolean isTwitchTurbo();
 }

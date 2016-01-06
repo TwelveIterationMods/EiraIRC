@@ -5,7 +5,7 @@ package net.blay09.mods.eirairc.api.upload;
 import java.io.File;
 
 /**
- * An interface to use for upload hosters that can be used to upload screenhots to.
+ * An interface to use for upload hosters that can be used to upload screenshots to.
  */
 public interface UploadHoster {
 

@@ -1,6 +1,5 @@
 // Copyright (c) 2015, Christopher "BlayTheNinth" Baker
 
-
 package net.blay09.mods.eirairc.command.extension;
 
 import net.blay09.mods.eirairc.api.SubCommand;
@@ -65,12 +64,10 @@ public class CommandColor implements SubCommand {
 		NBTTagCompound persistentTag = entityPlayer.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG);
 		NBTTagCompound tagCompound = persistentTag.getCompoundTag(Globals.NBT_EIRAIRC);
 		if(isNone) {
-			tagCompound.removeTag(Globals.NBT_NAMECOLOR_DEPRECATED);
 			tagCompound.removeTag(Globals.NBT_NAMECOLOR);
 		} else {
 			EnumChatFormatting color = IRCFormatting.getColorFromName(colorName);
 			if(color != null) {
-				tagCompound.removeTag(Globals.NBT_NAMECOLOR_DEPRECATED);
 				tagCompound.setByte(Globals.NBT_NAMECOLOR, (byte) color.ordinal());
 			}
 		}

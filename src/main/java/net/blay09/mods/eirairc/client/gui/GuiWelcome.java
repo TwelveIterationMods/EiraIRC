@@ -1,9 +1,9 @@
 package net.blay09.mods.eirairc.client.gui;
 
+import com.google.common.collect.Lists;
 import net.blay09.mods.eirairc.client.gui.base.GuiLabel;
 import net.blay09.mods.eirairc.client.gui.base.GuiLinkButton;
 import net.blay09.mods.eirairc.client.gui.base.list.GuiList;
-import net.blay09.mods.eirairc.config.ClientGlobalConfig;
 import net.blay09.mods.eirairc.config.ConfigurationHandler;
 import net.blay09.mods.eirairc.config.LocalConfig;
 import net.blay09.mods.eirairc.config.SuggestedChannel;
@@ -14,11 +14,8 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
-
 
 public class GuiWelcome extends EiraGuiScreen {
 
@@ -73,7 +70,7 @@ public class GuiWelcome extends EiraGuiScreen {
 	public void updateList(boolean recommendedOnly) {
 		lstChannels.clear();
 		String modpackId = Utils.getModpackId();
-		List<SuggestedChannel> outputList = new ArrayList<SuggestedChannel>();
+		List<SuggestedChannel> outputList = Lists.newArrayList();
 		for(SuggestedChannel channel : ConfigurationHandler.getSuggestedChannels()) {
 			if(recommendedOnly) {
 				if(!channel.isRecommended()) {
@@ -87,12 +84,7 @@ public class GuiWelcome extends EiraGuiScreen {
 			outputList.add(channel);
 		}
 
-		Collections.sort(outputList, new Comparator<SuggestedChannel>() {
-			@Override
-			public int compare(SuggestedChannel o1, SuggestedChannel o2) {
-				return Integer.compare(o2.getScore(), o1.getScore());
-			}
-		});
+		Collections.sort(outputList, (o1, o2) -> Integer.compare(o2.getScore(), o1.getScore()));
 
 		boolean altBackground = false;
 		for(SuggestedChannel channel : outputList) {

@@ -1,6 +1,5 @@
 // Copyright (c) 2015, Christopher "BlayTheNinth" Baker
 
-
 package net.blay09.mods.eirairc.util;
 
 import net.blay09.mods.eirairc.api.config.IConfigManager;

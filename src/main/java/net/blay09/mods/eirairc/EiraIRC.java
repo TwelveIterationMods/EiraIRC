@@ -19,7 +19,6 @@ import net.blay09.mods.eirairc.net.EiraNetHandler;
 import net.blay09.mods.eirairc.net.NetworkHandler;
 import net.blay09.mods.eirairc.util.ConfigHelper;
 import net.blay09.mods.eirairc.util.Globals;
-import net.blay09.mods.eirairc.util.I19n;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.command.CommandHandler;
 import net.minecraft.command.ICommandSender;
@@ -27,7 +26,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.IChatComponent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -66,10 +64,9 @@ public class EiraIRC {
 
         proxy.init();
 
-        FMLCommonHandler.instance().bus().register(this);
-        FMLCommonHandler.instance().bus().register(mcEventHandler);
+        MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(mcEventHandler);
-        FMLCommonHandler.instance().bus().register(netHandler);
+        MinecraftForge.EVENT_BUS.register(netHandler);
 
         NetworkHandler.init();
 

@@ -7,7 +7,6 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.IChatComponent;
-import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,8 +48,8 @@ public class OverlayJoinLeave extends Gui {
         if(visibleTime == null) {
             return;
         }
-        for(int i = 0; i < messages.size(); i++) {
-            messages.get(i).y -= fontRenderer.FONT_HEIGHT + 2;
+        for (JoinLeaveMessage message : messages) {
+            message.y -= fontRenderer.FONT_HEIGHT + 2;
         }
         messages.add(new JoinLeaveMessage(component, 0, visibleTime.get()));
     }

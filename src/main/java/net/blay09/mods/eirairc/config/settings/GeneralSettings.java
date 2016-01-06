@@ -19,17 +19,4 @@ public class GeneralSettings extends AbstractSettings {
 		super(parent, SETTINGS);
 	}
 
-	public void loadLegacy(Configuration legacyConfig, String category) {
-		if(category != null) {
-			if (legacyConfig.hasKey(category, "autoConnect")) {
-				autoJoin.set(legacyConfig.get(category, "autoConnect", autoJoin.getDefaultValue()).getBoolean());
-			} else if (legacyConfig.hasKey(category, "autoJoin")) {
-				autoJoin.set(legacyConfig.get(category, "autoJoin", autoJoin.getDefaultValue()).getBoolean());
-			}
-			if (legacyConfig.hasKey(category, "autoWho")) {
-				autoWho.set(legacyConfig.get(category, "autoWho", autoWho.getDefaultValue()).getBoolean());
-			}
-		}
-	}
-
 }

@@ -22,7 +22,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 import net.minecraftforge.client.ClientCommandHandler;
-import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
@@ -105,7 +105,7 @@ public class GuiChatExtension {
         return false;
     }
 
-    public void initGui(List buttonList) {
+    public void initGui(List<GuiButton> buttonList) {
         fontRenderer = parentScreen.mc.fontRendererObj;
 
         String s = I19n.format("eirairc:gui.options");
@@ -194,7 +194,7 @@ public class GuiChatExtension {
         if(keyCode == 28 || keyCode == 156) {
             String s = inputField.getText().trim();
             if(s.length() > 0) {
-                if(!FMLCommonHandler.instance().bus().post(new ClientChatEvent(s))) {
+                if(!MinecraftForge.EVENT_BUS.post(new ClientChatEvent(s))) {
                     if(s.charAt(0) != '/' || ClientCommandHandler.instance.executeCommand(parentScreen.mc.thePlayer, s) != 1) {
                         parentScreen.mc.thePlayer.sendChatMessage(s);
                     }

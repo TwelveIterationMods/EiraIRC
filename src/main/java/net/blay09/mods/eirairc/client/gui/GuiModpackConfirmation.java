@@ -2,18 +2,13 @@ package net.blay09.mods.eirairc.client.gui;
 
 import net.blay09.mods.eirairc.client.gui.base.GuiLabel;
 import net.blay09.mods.eirairc.config.LocalConfig;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.lwjgl.opengl.GL11;
 
 import java.io.File;
 import java.io.IOException;

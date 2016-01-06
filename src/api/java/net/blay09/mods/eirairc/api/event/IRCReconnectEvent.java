@@ -10,14 +10,14 @@ import net.blay09.mods.eirairc.api.irc.IRCConnection;
 public class IRCReconnectEvent extends IRCEvent {
 
     /**
-     * the amount of milliseconds EiraIRC will wait before attempting to reeconnect
+     * the amount of milliseconds EiraIRC will wait before attempting to reconnect
      */
     public final int waitingTime;
 
     /**
      * INTERNAL EVENT. YOU SHOULD NOT POST THIS YOURSELF.
      * @param connection the connection that is being reconnected to
-     * @param waitingTime the amount of milliseconds EiraIRC will wait before attempting to reeconnect
+     * @param waitingTime the amount of milliseconds EiraIRC will wait before attempting to reconnect
      */
     public IRCReconnectEvent(IRCConnection connection, int waitingTime) {
         super(connection);

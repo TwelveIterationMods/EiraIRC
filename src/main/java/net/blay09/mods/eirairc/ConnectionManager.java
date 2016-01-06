@@ -44,11 +44,9 @@ public class ConnectionManager {
 
 	public static void stopIRC() {
 		List<IRCConnection> dcList = Lists.newArrayList();
-		for(IRCConnection connection : connections.values()) {
-			dcList.add(connection);
-		}
-		for(int i = 0; i < dcList.size(); i++) {
-			dcList.get(i).disconnect(ConfigHelper.getQuitMessage(dcList.get(i)));
+		dcList.addAll(connections.values());
+		for (IRCConnection connection : dcList) {
+			connection.disconnect(ConfigHelper.getQuitMessage(connection));
 		}
 		connections.clear();
 		EiraIRC.instance.getChatSessionHandler().clear();
