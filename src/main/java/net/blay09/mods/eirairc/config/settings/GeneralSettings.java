@@ -13,6 +13,7 @@ public class GeneralSettings extends AbstractSettings {
 	public final ConfigProperty<Boolean> showNameFlags = new ConfigProperty<>(manager, SETTINGS, "showNameFlags", false);
 	public final ConfigProperty<Boolean> readOnly = new ConfigProperty<>(manager, SETTINGS, "readOnly", false);
 	public final ConfigProperty<Boolean> muted = new ConfigProperty<>(manager, SETTINGS, "muted", false);
+	public final ConfigProperty<Boolean> subOnly = new ConfigProperty<>(manager, SETTINGS, "subOnly", false);
 
 	public GeneralSettings(GeneralSettings parent) {
 		super(parent, SETTINGS);

@@ -416,6 +416,8 @@ eirairc:config.property.muted=Muted
 eirairc:config.property.muted.tooltip=If set to true, EiraIRC will not show messages from this IRC context in chat at all.
 eirairc:config.property.showNameFlags=Show Name Flags
 eirairc:config.property.showNameFlags.tooltip=Should names be prefixed with @ for OPs and + for voice?
+eirairc:config.property.subOnly=Sub Only (Twitch)
+eirairc:config.property.subOnly.tooltip=Should only messages from Twitch subscribers be shown in Minecraft?
 
 # Properties (Theme)
 eirairc:config.property.mcNameColor=Name Color (Minecraft)
