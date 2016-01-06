@@ -249,24 +249,12 @@ public class ScreenshotManager {
 		}
 	}
 
-	public void handleNewScreenshot(Screenshot screenshot) {
-		if (Minecraft.getMinecraft().theWorld != null) {
-			ScreenshotAction action = ClientGlobalConfig.screenshotAction.get();
-			if(action == ScreenshotAction.UploadClipboard || action == ScreenshotAction.UploadShare) {
-				uploadScreenshot(screenshot, action);
-			}
-		}
-	}
 
-	public void findNewScreenshots(boolean autoAction) {
+	public void findNewScreenshots() {
 		File[] screenshotFiles = screenshotDir.listFiles(file -> file.getName().endsWith(".png") && file.lastModified() > lastScreenshotScan);
 		if (screenshotFiles != null) {
 			for(File screenshotFile : screenshotFiles) {
-				Screenshot screenshot = new Screenshot(screenshotFile, null);
-				if (autoAction) {
-					handleNewScreenshot(screenshot);
-				}
-				screenshots.add(screenshot);
+				screenshots.add(new Screenshot(screenshotFile, null));
 			}
 		}
 		Collections.sort(screenshots, comparator);

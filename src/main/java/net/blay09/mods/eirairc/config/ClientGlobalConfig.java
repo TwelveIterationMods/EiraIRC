@@ -37,13 +37,11 @@ public class ClientGlobalConfig {
 	// Screenshots
 	public static final ConfigProperty<Boolean> imageLinkPreview = new ConfigProperty<>(manager, SCREENSHOTS, "imageLinkPreview", true);
 	public static final ConfigProperty<String> screenshotHoster = new ConfigProperty<>(manager, SCREENSHOTS, "uploadHoster", "imgur");
-	public static final ConfigProperty<ScreenshotAction> screenshotAction = new ConfigProperty<>(manager, SCREENSHOTS, "autoAction", ScreenshotAction.None);
 	public static final ConfigProperty<Integer> uploadBufferSize = new ConfigProperty<>(manager, SCREENSHOTS, "uploadBufferSize", 1024);
 
 	// Notifications
 	public static final ConfigProperty<String> notificationSound = new ConfigProperty<>(manager, NOTIFICATIONS, "notificationSound", "note.harp");
 	public static final ConfigProperty<Float> notificationSoundVolume = new ConfigProperty<>(manager, NOTIFICATIONS, "notificationSoundVolume", 1f);
-	public static final ConfigProperty<Float> notificationSoundPitch = new ConfigProperty<>(manager, NOTIFICATIONS, "notificationSoundPitch", 1f);
 	public static final ConfigProperty<NotificationStyle> ntfyFriendJoined = new ConfigProperty<>(manager, NOTIFICATIONS, "friendJoined", NotificationStyle.TextOnly);
 	public static final ConfigProperty<NotificationStyle> ntfyNameMentioned = new ConfigProperty<>(manager, NOTIFICATIONS, "nameMentioned", NotificationStyle.TextAndSound);
 	public static final ConfigProperty<NotificationStyle> ntfyPrivateMessage = new ConfigProperty<>(manager, NOTIFICATIONS, "privateMessage", NotificationStyle.TextOnly);

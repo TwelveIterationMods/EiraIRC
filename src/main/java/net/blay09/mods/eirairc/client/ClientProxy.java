@@ -137,7 +137,7 @@ public class ClientProxy extends CommonProxy {
             notificationGUI.showNotification(type, text);
         }
         if (config == NotificationStyle.TextAndSound || config == NotificationStyle.SoundOnly) {
-            Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.create(new ResourceLocation(ClientGlobalConfig.notificationSound.get()), ClientGlobalConfig.notificationSoundPitch.get()));
+            Minecraft.getMinecraft().getSoundHandler().playSound(new PositionedSoundRecord(new ResourceLocation(ClientGlobalConfig.notificationSound.get()), ClientGlobalConfig.notificationSoundVolume.get(), 1f, 0f, 0f, 0f));
         }
     }
 
@@ -319,7 +319,7 @@ public class ClientProxy extends CommonProxy {
         } else if (screenshotCheck > 0) {
             screenshotCheck--;
             if (screenshotCheck == 0) {
-                ScreenshotManager.getInstance().findNewScreenshots(true);
+                ScreenshotManager.getInstance().findNewScreenshots();
             }
         }
 
