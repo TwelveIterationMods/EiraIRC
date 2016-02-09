@@ -101,7 +101,7 @@ public class ConfigManager implements IConfigManager {
             } else if(type.getClass() == StringList.class) {
                 String[] value = config.getStringList(property.getName(), property.getCategory(), ((StringList) property.getDefaultValue()).getAsArray(), I19n.format(property.getLangKey() + ".tooltip"), null, property.getLangKey());
                 if (value.length > 0) {
-                    property.set(value);
+                    property.set(new StringList(value));
                 }
             } else if(type.getClass() == EnumChatFormatting.class) {
                 String stringValue = config.getString(property.getName(), property.getCategory(), IRCFormatting.getNameFromColor((EnumChatFormatting) property.getDefaultValue()), I19n.format(property.getLangKey() + ".tooltip"), IRCFormatting.mcColorNames, property.getLangKey());
