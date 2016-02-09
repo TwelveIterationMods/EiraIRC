@@ -17,6 +17,7 @@ import net.blay09.mods.eirairc.addon.ImgurHoster;
 import net.blay09.mods.eirairc.api.EiraIRCAPI;
 import net.blay09.mods.eirairc.api.config.IConfigManager;
 import net.blay09.mods.eirairc.api.event.IRCChannelMessageEvent;
+import net.blay09.mods.eirairc.api.irc.IRCConnection;
 import net.blay09.mods.eirairc.api.irc.IRCContext;
 import net.blay09.mods.eirairc.client.gui.*;
 import net.blay09.mods.eirairc.client.gui.chat.GuiChatExtended;
@@ -36,6 +37,7 @@ import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.crash.CrashReport;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.ResourceLocation;
@@ -338,5 +340,10 @@ public class ClientProxy extends CommonProxy {
 		} else {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiEiraIRCRedirect(serverConfig));
 		}
+	}
+
+	@Override
+	public void handleException(IRCConnection connection, Exception e) {
+		Minecraft.getMinecraft().crashed(new CrashReport("Exception in IRC Connection " + connection.getHost(), e));
 	}
 }

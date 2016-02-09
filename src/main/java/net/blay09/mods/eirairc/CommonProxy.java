@@ -19,12 +19,15 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.event.HoverEvent;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class CommonProxy {
@@ -79,34 +82,15 @@ public class CommonProxy {
 	}
 
 	public void handleException(IRCConnection connection, Exception e) {
-		// It's a crash. Let's treat it like a crash.
-		Minecraft.getMinecraft().crashed(new CrashReport("Exception in IRC Connection", e));
-		/*ChatComponentText componentText = new ChatComponentText("EiraIRC encountered an unexpected error! The connection to ");
-		componentText.getChatStyle().setColor(EnumChatFormatting.DARK_RED);
-		componentText.getChatStyle().setBold(true);
-		ChatComponentText serverText = new ChatComponentText(connection.getIdentifier());
-		serverText.getChatStyle().setItalic(true);
-		componentText.appendSibling(serverText);
-		componentText.appendText(" was closed.");
-		Utils.addMessageToChat(componentText);
-
-		ChatComponentText logText = new ChatComponentText("See the ");
-		logText.getChatStyle().setColor(EnumChatFormatting.DARK_RED);
-		ChatComponentText logFileText = new ChatComponentText("log file");
-		if(Utils.isServerSide()) {
-			logFileText.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(e.getMessage())));
+		EiraIRC.logger.error("Encountered an unexpected exception", e);
+		CrashReport report = MinecraftServer.getServer().addServerInfoToCrashReport(new CrashReport("Exception in IRC Connection " + connection.getHost(), e));
+		File file1 = new File(new File("crash-reports"), "crash-" + (new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss")).format(new Date()) + "-server.txt");
+		if (report.saveToFile(file1)) {
+			EiraIRC.logger.error("This crash report has been saved to: " + file1.getAbsolutePath());
 		} else {
-			logFileText.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, "logs/fml-" + (Utils.isServerSide() ? "server" : "client") + "-latest.log"));
-			logFileText.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText("Click to open log file.")));
-			logFileText.getChatStyle().setUnderlined(true);
+			EiraIRC.logger.error("We were unable to save this crash report to disk.");
 		}
-		logFileText.getChatStyle().setBold(true);
-		logFileText.getChatStyle().setColor(EnumChatFormatting.BLUE);
-		logText.appendSibling(logFileText);
-		logText.appendText(" for more details.");
-		Utils.addMessageToChat(logText);
-
-		e.printStackTrace();*/
+		MinecraftServer.getServer().stopServer();
 	}
 
 	@SubscribeEvent
