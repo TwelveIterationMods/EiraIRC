@@ -28,6 +28,7 @@ import net.blay09.mods.eirairc.util.NotificationType;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.client.settings.KeyBinding;
@@ -187,8 +188,9 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public boolean checkClientBridge(IRCChannelMessageEvent event) {
-        if (event.sender != null && ClientGlobalConfig.clientBridge.get()) {
-            for (NetworkPlayerInfo playerInfo : FMLClientHandler.instance().getClientPlayerEntity().sendQueue.getPlayerInfoMap()) {
+        EntityPlayerSP entityPlayer = FMLClientHandler.instance().getClientPlayerEntity();
+        if (entityPlayer != null && event.sender != null && ClientGlobalConfig.clientBridge.get()) {
+            for (NetworkPlayerInfo playerInfo : entityPlayer.sendQueue.getPlayerInfoMap()) {
                 if (event.sender.getName().equalsIgnoreCase(playerInfo.getGameProfile().getName())) {
                     return true;
                 }
