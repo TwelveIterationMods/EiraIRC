@@ -32,11 +32,14 @@ import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @Mod(modid = EiraIRC.MOD_ID, acceptableRemoteVersions = "*", guiFactory = "net.blay09.mods.eirairc.client.gui.EiraIRCGuiFactory")
 public class EiraIRC {
 
     public static final String MOD_ID = "eirairc";
+    public static final Logger logger = LogManager.getLogger();
 
     @Instance(MOD_ID)
     public static EiraIRC instance;
