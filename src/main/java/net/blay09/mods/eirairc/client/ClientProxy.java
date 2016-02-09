@@ -34,19 +34,17 @@ import net.blay09.mods.eirairc.util.NotificationType;
 import net.blay09.mods.eirairc.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.crash.CrashReport;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.IChatComponent;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import org.lwjgl.input.Keyboard;
-import scala.tools.nsc.backend.icode.Members;
 
 import java.io.File;
 import java.io.IOException;
@@ -183,8 +181,9 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public boolean checkClientBridge(IRCChannelMessageEvent event) {
-		if(event.sender != null && ClientGlobalConfig.clientBridge.get()) {
-			for(Object obj : FMLClientHandler.instance().getClientPlayerEntity().sendQueue.playerInfoList) {
+		EntityClientPlayerMP entityPlayer = FMLClientHandler.instance().getClientPlayerEntity();
+		if(entityPlayer != null && event.sender != null && ClientGlobalConfig.clientBridge.get()) {
+			for(Object obj : entityPlayer.sendQueue.playerInfoList) {
 				GuiPlayerInfo playerInfo = (GuiPlayerInfo) obj;
 				if(event.sender.getName().equalsIgnoreCase(playerInfo.name)) {
 					return true;
