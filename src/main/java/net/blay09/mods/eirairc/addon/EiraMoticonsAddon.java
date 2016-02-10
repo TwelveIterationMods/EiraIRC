@@ -89,7 +89,7 @@ public class EiraMoticonsAddon implements IEmoticonLoader {
                             if (jsonChannel != null) {
                                 IEmoticon subBadge = EiraMoticonsAPI.registerEmoticon("EiraIRC:subBadge" + jsonChannel.get("title").getAsString(), instance);
                                 subBadge.setManualOnly(true);
-                                subBadge.setLoadData(new URL("http:" + jsonChannel.get("badge").getAsString()));
+                                subBadge.setLoadData(new URL(jsonChannel.get("badge").getAsString()));
                                 subBadge.setCustomTooltip(new String[]{I19n.format("eirairc:addons.twitch.channelSubscriber")});
                                 synchronized (subscriberBadgeMap) {
                                     subscriberBadgeMap.put(channel, subBadge);
